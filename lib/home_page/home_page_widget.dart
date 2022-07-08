@@ -1,0 +1,219 @@
+import '../flutter_flow/flutter_flow_animations.dart';
+import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/flutter_flow_util.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class HomePageWidget extends StatefulWidget {
+  const HomePageWidget({Key key}) : super(key: key);
+
+  @override
+  _HomePageWidgetState createState() => _HomePageWidgetState();
+}
+
+class _HomePageWidgetState extends State<HomePageWidget>
+    with TickerProviderStateMixin {
+  final animationsMap = {
+    'containerOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      duration: 1000,
+      delay: 1000,
+      hideBeforeAnimating: false,
+      fadeIn: true,
+      initialState: AnimationState(),
+      finalState: AnimationState(),
+    ),
+    'columnOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      duration: 100,
+      hideBeforeAnimating: false,
+      fadeIn: true,
+      initialState: AnimationState(),
+      finalState: AnimationState(),
+    ),
+    'imageOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      duration: 600,
+      delay: 1100,
+      hideBeforeAnimating: false,
+      fadeIn: true,
+      initialState: AnimationState(),
+      finalState: AnimationState(),
+    ),
+    'textOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      duration: 600,
+      delay: 1100,
+      hideBeforeAnimating: false,
+      fadeIn: true,
+      initialState: AnimationState(),
+      finalState: AnimationState(),
+    ),
+  };
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    startPageLoadAnimations(
+      animationsMap.values
+          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
+      this,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Text(
+              'Devopsdao',
+              style: FlutterFlowTheme.of(context).title2.override(
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontSize: 22,
+                  ),
+            ),
+          ],
+        ),
+        actions: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
+                child: Icon(
+                  Icons.settings_outlined,
+                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                  size: 24,
+                ),
+              ),
+            ],
+          ),
+        ],
+        centerTitle: false,
+        elevation: 2,
+      ),
+      backgroundColor: Color(0xFF1E2429),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            stops: [0, 0.5, 1],
+            begin: AlignmentDirectional(1, -1),
+            end: AlignmentDirectional(-1, 1),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/34.png',
+              width: 163,
+              height: 140,
+              fit: BoxFit.fitHeight,
+            ).animated([animationsMap['imageOnPageLoadAnimation']]),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+              child: Text(
+                'Welcome to Devopsdao',
+                style: FlutterFlowTheme.of(context).title1.override(
+                      fontFamily: 'Lexend Deca',
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ).animated([animationsMap['textOnPageLoadAnimation']]),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.44,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF39BAD2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'In your wallet',
+                            style:
+                                FlutterFlowTheme.of(context).bodyText2.override(
+                                      fontFamily: 'Poppins',
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBtnText,
+                                    ),
+                          ),
+                          Text(
+                            '\$1,275',
+                            style: FlutterFlowTheme.of(context).title1.override(
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBtnText,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.44,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF247888),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Pending',
+                            style:
+                                FlutterFlowTheme.of(context).bodyText2.override(
+                                      fontFamily: 'Poppins',
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBtnText,
+                                    ),
+                          ),
+                          Text(
+                            '\$325',
+                            style: FlutterFlowTheme.of(context).title1.override(
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBtnText,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ).animated([animationsMap['columnOnPageLoadAnimation']]),
+      ).animated([animationsMap['containerOnPageLoadAnimation']]),
+    );
+  }
+}
