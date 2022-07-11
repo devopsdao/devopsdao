@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({Key key}) : super(key: key);
+  const HomePageWidget({Key? key}) : super(key: key);
 
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
@@ -121,7 +121,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
               width: 163,
               height: 140,
               fit: BoxFit.fitHeight,
-            ).animated([animationsMap['imageOnPageLoadAnimation']]),
+            ).animated([animationsMap['imageOnPageLoadAnimation']!]),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(
@@ -132,7 +132,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
-              ).animated([animationsMap['textOnPageLoadAnimation']]),
+              ).animated([animationsMap['textOnPageLoadAnimation']!]),
             ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
@@ -212,8 +212,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
               ),
             ),
           ],
-        ).animated([animationsMap['columnOnPageLoadAnimation']]),
-      ).animated([animationsMap['containerOnPageLoadAnimation']]),
+        ).animated([animationsMap['columnOnPageLoadAnimation']!]),
+      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }

@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 
 class FlutterFlowIconButton extends StatelessWidget {
   const FlutterFlowIconButton(
-      {Key key,
+      {Key? key,
       this.borderColor,
       this.borderRadius,
       this.borderWidth,
       this.buttonSize,
       this.fillColor,
-      this.icon,
+      required this.icon,
       this.onPressed})
       : super(key: key);
 
-  final double borderRadius;
-  final double buttonSize;
-  final Color fillColor;
-  final Color borderColor;
-  final double borderWidth;
+  final double? borderRadius;
+  final double? buttonSize;
+  final Color? fillColor;
+  final Color? borderColor;
+  final double? borderWidth;
   final Widget icon;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) => Material(
         borderRadius:
-            borderRadius != null ? BorderRadius.circular(borderRadius) : null,
+            borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
         color: Colors.transparent,
         clipBehavior: Clip.antiAlias,
         child: Ink(
@@ -36,7 +36,7 @@ class FlutterFlowIconButton extends StatelessWidget {
               width: borderWidth ?? 0,
             ),
             borderRadius: borderRadius != null
-                ? BorderRadius.circular(borderRadius)
+                ? BorderRadius.circular(borderRadius!)
                 : null,
           ),
           child: IconButton(

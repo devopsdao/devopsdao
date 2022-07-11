@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PerformerPageWidget extends StatefulWidget {
-  const PerformerPageWidget({Key key}) : super(key: key);
+  const PerformerPageWidget({Key? key}) : super(key: key);
 
   @override
   _PerformerPageWidgetState createState() => _PerformerPageWidgetState();
@@ -365,7 +365,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
             ),
           ],
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']]),
+      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class JobExchangeWidget extends StatefulWidget {
-  const JobExchangeWidget({Key key}) : super(key: key);
+  const JobExchangeWidget({Key? key}) : super(key: key);
 
   @override
   _JobExchangeWidgetState createState() => _JobExchangeWidgetState();
@@ -373,7 +373,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
             ),
           ],
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']]),
+      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }

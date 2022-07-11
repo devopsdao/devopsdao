@@ -7,7 +7,7 @@ class FFLocalizations {
   final Locale locale;
 
   static FFLocalizations of(BuildContext context) =>
-      Localizations.of<FFLocalizations>(context, FFLocalizations);
+      Localizations.of<FFLocalizations>(context, FFLocalizations)!;
 
   static List<String> languages() => ['en'];
 
@@ -20,7 +20,7 @@ class FFLocalizations {
       (kTranslationsMap[key] ?? {})[locale.languageCode] ?? '';
 
   String getVariableText({
-    String enText = '',
+    String? enText = '',
   }) =>
       [enText][languageIndex] ?? '';
 }

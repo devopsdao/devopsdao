@@ -1,5 +1,4 @@
 // Export pages
-export 'welcome_screen/welcome_screen_widget.dart' show WelcomeScreenWidget;
 export 'home_page/home_page_widget.dart' show HomePageWidget;
 export 'create_job/create_job_widget.dart' show CreateJobWidget;
 export 'job_exchange/job_exchange_widget.dart' show JobExchangeWidget;

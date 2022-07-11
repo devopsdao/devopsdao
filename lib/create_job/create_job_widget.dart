@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateJobWidget extends StatefulWidget {
-  const CreateJobWidget({Key key}) : super(key: key);
+  const CreateJobWidget({Key? key}) : super(key: key);
 
   @override
   _CreateJobWidgetState createState() => _CreateJobWidgetState();
@@ -16,9 +16,9 @@ class CreateJobWidget extends StatefulWidget {
 
 class _CreateJobWidgetState extends State<CreateJobWidget>
     with TickerProviderStateMixin {
-  TextEditingController textController2;
-  TextEditingController titleFieldController;
-  TextEditingController textController3;
+  TextEditingController? textController2;
+  TextEditingController? titleFieldController;
+  TextEditingController? textController3;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final animationsMap = {
@@ -238,14 +238,14 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       color: Colors.transparent,
                       width: 1,
                     ),
-                    borderRadius: 12,
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ],
             ),
           ),
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']]),
+      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }

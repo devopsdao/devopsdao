@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SubmitterPageWidget extends StatefulWidget {
-  const SubmitterPageWidget({Key key}) : super(key: key);
+  const SubmitterPageWidget({Key? key}) : super(key: key);
 
   @override
   _SubmitterPageWidgetState createState() => _SubmitterPageWidgetState();
@@ -452,7 +452,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
             ),
           ],
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']]),
+      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }
