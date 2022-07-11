@@ -7,6 +7,7 @@ import 'flutter_flow/internationalization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'index.dart';
+import 'blockchain/walletconnect.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ void main() async {
   await FlutterFlowTheme.initialize();
 
   runApp(MyApp());
+  connectWallet();
 }
 
 class MyApp extends StatefulWidget {
