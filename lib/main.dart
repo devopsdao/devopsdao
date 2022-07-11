@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             )
-          : CreateJobWidget(),
+          : NavBarPage(),
     );
   }
 }

@@ -77,7 +77,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.1"
+    version: "3.1.0+1"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
@@ -148,13 +148,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  cryptography:
-    dependency: transitive
-    description:
-      name: cryptography
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -175,7 +168,7 @@ packages:
       name: easy_debounce
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2+1"
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -258,7 +251,7 @@ packages:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "2.2.0"
   http:
     dependency: "direct main"
     description:
@@ -300,7 +293,7 @@ packages:
       name: json_path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.1"
+    version: "0.3.1"
   json_rpc_2:
     dependency: transitive
     description:
@@ -336,6 +329,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   octo_image:
     dependency: transitive
     description:
@@ -356,7 +356,7 @@ packages:
       name: page_transition
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9"
+    version: "2.0.4"
   path:
     dependency: transitive
     description:
@@ -426,7 +426,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "4.4.0"
   platform:
     dependency: transitive
     description:
@@ -455,6 +455,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.3"
   pub_semver:
     dependency: transitive
     description:
@@ -489,7 +496,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.15"
+    version: "2.0.11"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -620,7 +627,7 @@ packages:
       name: timeago
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.2"
+    version: "3.1.0"
   typed_data:
     dependency: transitive
     description:
@@ -634,21 +641,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.4"
-  url_launcher_android:
-    dependency: transitive
-    description:
-      name: url_launcher_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.17"
-  url_launcher_ios:
-    dependency: transitive
-    description:
-      name: url_launcher_ios
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.17"
+    version: "6.0.15"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -698,13 +691,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
-  walletconnect_dart:
-    dependency: "direct main"
-    description:
-      name: walletconnect_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.11"
   watcher:
     dependency: transitive
     description:
