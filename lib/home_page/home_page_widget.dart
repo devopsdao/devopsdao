@@ -1,8 +1,10 @@
 import '../flutter_flow/flutter_flow_animations.dart';
+import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../blockchain/walletconnect.dart';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({Key? key}) : super(key: key);
@@ -20,16 +22,24 @@ class _HomePageWidgetState extends State<HomePageWidget>
       delay: 1000,
       hideBeforeAnimating: false,
       fadeIn: true,
-      initialState: AnimationState(),
-      finalState: AnimationState(),
+      initialState: AnimationState(
+        opacity: 0,
+      ),
+      finalState: AnimationState(
+        opacity: 1,
+      ),
     ),
     'columnOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       duration: 100,
       hideBeforeAnimating: false,
       fadeIn: true,
-      initialState: AnimationState(),
-      finalState: AnimationState(),
+      initialState: AnimationState(
+        opacity: 0,
+      ),
+      finalState: AnimationState(
+        opacity: 1,
+      ),
     ),
     'imageOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -37,8 +47,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
       delay: 1100,
       hideBeforeAnimating: false,
       fadeIn: true,
-      initialState: AnimationState(),
-      finalState: AnimationState(),
+      initialState: AnimationState(
+        scale: 0.4,
+        opacity: 0,
+      ),
+      finalState: AnimationState(
+        scale: 1,
+        opacity: 1,
+      ),
     ),
     'textOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -46,8 +62,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
       delay: 1100,
       hideBeforeAnimating: false,
       fadeIn: true,
-      initialState: AnimationState(),
-      finalState: AnimationState(),
+      initialState: AnimationState(
+        offset: Offset(0, 70),
+        opacity: 0,
+      ),
+      finalState: AnimationState(
+        offset: Offset(0, 0),
+        opacity: 1,
+      ),
     ),
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -83,6 +105,25 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              FlutterFlowIconButton(
+                borderColor: Colors.transparent,
+                borderRadius: 30,
+                borderWidth: 1,
+                buttonSize: 60,
+                icon: Icon(
+                  Icons.account_balance_wallet,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  await connectWallet();
+                },
+              ),
+            ],
+          ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [

@@ -67,6 +67,14 @@ Future<void> connectWallet() async {
       // onDisplayUri: (uri) => print(uri),
     );
     debugPrint("starting session");
+  } else {
+    debugPrint("already connected");
+    address = session?.accounts[0];
+    chainId = session?.chainId;
+
+    // debugPrint("Address: " + address!);
+    debugPrint("Address: " + address);
+    debugPrint("Chain Id: " + chainId.toString());
   }
 }
 // launchUrl(Uri.parse(uri));

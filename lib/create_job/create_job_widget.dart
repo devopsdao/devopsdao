@@ -28,8 +28,12 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
       delay: 1000,
       hideBeforeAnimating: false,
       fadeIn: true,
-      initialState: AnimationState(),
-      finalState: AnimationState(),
+      initialState: AnimationState(
+        opacity: 0,
+      ),
+      finalState: AnimationState(
+        opacity: 1,
+      ),
     ),
   };
 
