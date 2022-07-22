@@ -17,7 +17,7 @@ class TasksServices extends ChangeNotifier {
   bool isLoading = true;
 
   final String _privatekey =
-      '86c3bae65ccc930cf78255a7ab8671dd9eb923d8d8cd8e689ec38ff052d72c3c';
+      '01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f';
   late Web3Client _web3cient;
 
   TasksServices() {
@@ -91,6 +91,7 @@ class TasksServices extends ChangeNotifier {
             // id: (temp[0] as BigInt).toInt(),
             title: temp[0],
             description: temp[7],
+            contractOwner: temp[4].toString(),
           ),
         );
       }

@@ -1,3 +1,6 @@
+import 'package:provider/provider.dart';
+
+import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -43,6 +46,8 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
 
   @override
   Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -140,83 +145,97 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                         ),
                       ],
                     ),
+
                     Expanded(
                       child: TabBarView(
                         children: [
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 86,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 5,
-                                          color: Color(0x4D000000),
-                                          offset: Offset(0, 2),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    12, 8, 8, 8),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .subtitle1,
-                                                ),
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText2,
-                                                ),
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText2,
-                                                ),
-                                              ],
+                            child:
+
+                            tasksServices.isLoading ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                                : RefreshIndicator(
+                              onRefresh: () async {},
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.vertical,
+                                itemCount: tasksServices.tasks.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16, 8, 16, 0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 86,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            blurRadius: 5,
+                                            color: Color(0x4D000000),
+                                            offset: Offset(0, 2),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  12, 8, 8, 8),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    tasksServices.tasks[index].title,
+                                                    style: FlutterFlowTheme.of(context).subtitle1,
+                                                  ),
+                                                  Text(
+                                                    tasksServices.tasks[index].description,
+                                                    style: FlutterFlowTheme.of(
+                                                        context)
+                                                        .bodyText2,
+                                                  ),
+                                                  Text(
+                                                    tasksServices.tasks[index].contractOwner,
+                                                    style: FlutterFlowTheme.of(
+                                                        context)
+                                                        .bodyText2,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 12, 0),
-                                          child: Icon(
-                                            Icons.info_outlined,
-                                            color: Colors.black,
-                                            size: 24,
+                                          Padding(
+                                            padding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 12, 0),
+                                            child: Icon(
+                                              Icons.info_outlined,
+                                              color: Colors.black,
+                                              size: 24,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
+                                  );
+                                },
+                                // children: [
+                                //
+                                // ],
+                              ),
                             ),
+
+
+
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),

@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -6,6 +8,8 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../blockchain/task_services.dart';
 
 class CreateJobWidget extends StatefulWidget {
   const CreateJobWidget({Key? key}) : super(key: key);
@@ -53,6 +57,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
 
   @override
   Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
