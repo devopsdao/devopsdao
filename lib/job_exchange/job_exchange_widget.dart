@@ -138,10 +138,10 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                           text: 'New offers',
                         ),
                         Tab(
-                          text: 'Participation',
+                          text: 'Reserved tab',
                         ),
                         Tab(
-                          text: 'Lost',
+                          text: 'Reserved tab',
                         ),
                       ],
                     ),

@@ -20,7 +20,7 @@ class CreateJobWidget extends StatefulWidget {
 
 class _CreateJobWidgetState extends State<CreateJobWidget>
     with TickerProviderStateMixin {
-  TextEditingController? textController2;
+  TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
   TextEditingController? textController3;
   final formKey = GlobalKey<FormState>();
@@ -50,7 +50,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
       this,
     );
 
-    textController2 = TextEditingController();
+    descriptionController = TextEditingController();
     titleFieldController = TextEditingController();
     textController3 = TextEditingController(text: '0');
   }
@@ -151,9 +151,9 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                   maxLines: 1,
                 ),
                 TextFormField(
-                  controller: textController2,
+                  controller: descriptionController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController2',
+                    'descriptionController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -234,6 +234,11 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                 FFButtonWidget(
                   onPressed: () {
                     print('Button pressed ...');
+                    tasksServices.addTask(
+                      titleFieldController!.text,
+                      descriptionController!.text,
+                    );
+                    Navigator.pop(context);
                   },
                   text: 'Submit',
                   options: FFButtonOptions(

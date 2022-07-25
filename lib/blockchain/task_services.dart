@@ -107,8 +107,10 @@ class TasksServices extends ChangeNotifier {
             taskObject
         );
       }
-      if (temp[1] != "" && temp[1] == "new") {
+      if (temp[1] != "" && temp[1] == "new" && temp[4].toString() != _privatekey) {
         tasksNew.add(taskObject);
+      } else {
+
       }
       if (temp[1] != "" && temp[1] == "agreed") {
         tasksAgreed.add(taskObject);
