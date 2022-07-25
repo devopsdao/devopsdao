@@ -180,19 +180,19 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Hello World',
+                                                  'First Hello World project',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .subtitle1,
                                                 ),
                                                 Text(
-                                                  'Hello World',
+                                                  'Hello World project details',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyText2,
                                                 ),
                                                 Text(
-                                                  'Hello World',
+                                                  'Created on 2022.07.12',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyText2,

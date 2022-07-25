@@ -74,6 +74,15 @@ class _HomePageWidgetState extends State<HomePageWidget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String _displayUri = '';
+  String _account = '';
+
+  void _changeDisplayUri(String uri) {
+    setState(() {
+      _displayUri = uri;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -157,12 +166,21 @@ class _HomePageWidgetState extends State<HomePageWidget>
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/34.png',
-              width: 163,
-              height: 140,
-              fit: BoxFit.fitHeight,
-            ).animated([animationsMap['imageOnPageLoadAnimation']!]),
+            // Image.asset(
+            //   'assets/images/34.png',
+            //   width: 163,
+            //   height: 140,
+            //   fit: BoxFit.fitHeight,
+            // ).animated([animationsMap['imageOnPageLoadAnimation']!]),
+            Center(
+              child: _displayUri.isNotEmpty
+                  ? QrImage(
+                      data: _displayUri,
+                      version: QrVersions.auto,
+                      size: 200.0,
+                    )
+                  : Container(),
+            ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(

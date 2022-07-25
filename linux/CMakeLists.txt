@@ -1,4 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
+macro(print_all_variables)
+    message(STATUS "print_all_variables------------------------------------------{")
+    get_cmake_property(_variableNames VARIABLES)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+    message(STATUS "print_all_variables------------------------------------------}")
+endmacro()
+  set(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
+
+print_all_variables()
+
+function(PRINT_VAR VARNAME)
+  message(STATUS "${VARNAME}: ${${VARNAME}}")
+endfunction()
+PRINT_VAR("CXX")
+message(STATUS "${CXX}")
 project(runner LANGUAGES CXX)
 
 set(BINARY_NAME "devopsdao")
