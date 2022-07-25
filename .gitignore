@@ -30,8 +30,10 @@
 .packages
 .pub-cache/
 .pub/
-/build/
-!/build/contracts/
+
+!build/
+build/*
+!build/contracts/
 
 
 # Firebase – this is necessary if you use Firebase since it could otherwise 
