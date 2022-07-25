@@ -9,6 +9,7 @@
 .history
 .svn/
 
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -30,6 +31,8 @@
 .pub-cache/
 .pub/
 /build/
+!/build/contracts/
+
 
 # Firebase – this is necessary if you use Firebase since it could otherwise 
 # lead to leaking of private certificates to your repository, which is no bueno.
@@ -48,3 +51,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+node_modules/

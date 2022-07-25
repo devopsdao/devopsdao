@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -5,6 +7,8 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../blockchain/walletconnect.dart';
+
+import 'package:devopsdao/blockchain/task_services.dart';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({Key? key}) : super(key: key);
@@ -74,15 +78,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String _displayUri = '';
-  String _account = '';
-
-  void _changeDisplayUri(String uri) {
-    setState(() {
-      _displayUri = uri;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -93,8 +88,22 @@ class _HomePageWidgetState extends State<HomePageWidget>
     );
   }
 
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  // final TextEditingController valueController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
+    // valueController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -165,22 +174,19 @@ class _HomePageWidgetState extends State<HomePageWidget>
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
+
           children: [
-            // Image.asset(
-            //   'assets/images/34.png',
-            //   width: 163,
-            //   height: 140,
-            //   fit: BoxFit.fitHeight,
-            // ).animated([animationsMap['imageOnPageLoadAnimation']!]),
-            Center(
-              child: _displayUri.isNotEmpty
-                  ? QrImage(
-                      data: _displayUri,
-                      version: QrVersions.auto,
-                      size: 200.0,
-                    )
-                  : Container(),
-            ),
+            tasksServices.isLoading
+                ? const Center(
+              child: CircularProgressIndicator(),
+            ) : Image.asset(
+              'assets/images/34.png',
+              width: 163,
+              height: 140,
+              fit: BoxFit.fitHeight,
+            ).animated([animationsMap['imageOnPageLoadAnimation']!]),
+
+
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(

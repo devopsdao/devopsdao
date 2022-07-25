@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -8,12 +10,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'index.dart';
 
+import 'package:devopsdao/blockchain/task_services.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await FlutterFlowTheme.initialize();
 
-  runApp(MyApp());
+  // runApp(MyApp());
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TasksServices(),
+      child: MyApp(),
+    ),
+  );
+
 }
 
 class MyApp extends StatefulWidget {

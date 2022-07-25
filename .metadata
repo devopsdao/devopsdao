@@ -4,7 +4,11 @@
 # This file should be version controlled.
 
 version:
+<<<<<<< HEAD
   revision: f1875d570e39de09040c8f79aa13cc56baab8db1
+=======
+  revision: 676cefaaff197f27424942307668886253e1ec35
+>>>>>>> cdf30f6306a635e844001c38e32b63cdcbabb631
   channel: stable
 
 project_type: app
@@ -13,11 +17,34 @@ project_type: app
 migration:
   platforms:
     - platform: root
+<<<<<<< HEAD
       create_revision: f1875d570e39de09040c8f79aa13cc56baab8db1
       base_revision: f1875d570e39de09040c8f79aa13cc56baab8db1
     - platform: linux
       create_revision: f1875d570e39de09040c8f79aa13cc56baab8db1
       base_revision: f1875d570e39de09040c8f79aa13cc56baab8db1
+=======
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+    - platform: android
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+    - platform: ios
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+    - platform: linux
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+    - platform: macos
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+    - platform: web
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+    - platform: windows
+      create_revision: 676cefaaff197f27424942307668886253e1ec35
+      base_revision: 676cefaaff197f27424942307668886253e1ec35
+>>>>>>> cdf30f6306a635e844001c38e32b63cdcbabb631
 
   # User provided section
 
