@@ -16,14 +16,24 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksReview = [];
   List<Task> tasksCompleted = [];
   List<Task> tasksCanceled = [];
-  final String _rpcUrl =
-  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
-  final String _wsUrl =
-  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+  // final String _rpcUrl =
+  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
+  // final String _wsUrl =
+  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+  // bool isLoading = true;
+
+  final String _rpcUrl = Platform.isAndroid
+      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+      : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+  final String _wsUrl = Platform.isAndroid
+      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+      : 'wss://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
 
+  // final String _privatekey =
+  //     '01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f';
   final String _privatekey =
-      '01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f';
+      'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8';
   late Web3Client _web3cient;
 
   TasksServices() {
@@ -47,12 +57,11 @@ class TasksServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   Future<void> getABI() async {
     String abiFile =
-    await rootBundle.loadString('build/contracts/Factory.json');
+        await rootBundle.loadString('build/contracts/Factory.json');
     var jsonABI = jsonDecode(abiFile);
-    _abiCode =
-        ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
+    _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     _contractAddress =
-        EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
+        EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
 
   late EthPrivateKey _creds;
@@ -87,7 +96,6 @@ class TasksServices extends ChangeNotifier {
     tasksNew.clear();
     tasksAgreed.clear();
     for (var i = 0; i < totalTaskLen; i++) {
-
       var temp = await _web3cient.call(
           contract: _deployedContract,
           function: _tasks,
@@ -103,15 +111,13 @@ class TasksServices extends ChangeNotifier {
 
       if (temp[1] != "") {
         var taskState = temp[1];
-        tasks.add(
-            taskObject
-        );
+        tasks.add(taskObject);
       }
-      if (temp[1] != "" && temp[1] == "new" && temp[4].toString() != _privatekey) {
+      if (temp[1] != "" &&
+          temp[1] == "new" &&
+          temp[4].toString() != _privatekey) {
         tasksNew.add(taskObject);
-      } else {
-
-      }
+      } else {}
       if (temp[1] != "" && temp[1] == "agreed") {
         tasksAgreed.add(taskObject);
       }
@@ -123,15 +129,14 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> addTask(String title, String description) async {
     await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _createTask,
-        parameters: [title, description],
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-
-    );
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _createTask,
+          parameters: [title, description],
+          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
