@@ -10,6 +10,12 @@ import 'package:web_socket_channel/io.dart';
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
+  List<Task> tasksNew = [];
+  List<Task> tasksAgreed = [];
+  List<Task> tasksProgress = [];
+  List<Task> tasksReview = [];
+  List<Task> tasksCompleted = [];
+  List<Task> tasksCanceled = [];
   final String _rpcUrl =
   Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
   final String _wsUrl =
@@ -78,6 +84,8 @@ class TasksServices extends ChangeNotifier {
 
     int totalTaskLen = totalTaskList[0].toInt();
     tasks.clear();
+    tasksNew.clear();
+    tasksAgreed.clear();
     for (var i = 0; i < totalTaskLen; i++) {
 
       var temp = await _web3cient.call(
@@ -85,15 +93,25 @@ class TasksServices extends ChangeNotifier {
           function: _tasks,
           params: [BigInt.from(i)]);
       print(temp);
+      var taskObject = Task(
+        // id: (temp[0] as BigInt).toInt(),
+        title: temp[0],
+        description: temp[7],
+        contractOwner: temp[4].toString(),
+        jobState: temp[1],
+      );
+
       if (temp[1] != "") {
+        var taskState = temp[1];
         tasks.add(
-          Task(
-            // id: (temp[0] as BigInt).toInt(),
-            title: temp[0],
-            description: temp[7],
-            contractOwner: temp[4].toString(),
-          ),
+            taskObject
         );
+      }
+      if (temp[1] != "" && temp[1] == "new") {
+        tasksNew.add(taskObject);
+      }
+      if (temp[1] != "" && temp[1] == "agreed") {
+        tasksAgreed.add(taskObject);
       }
     }
     isLoading = false;

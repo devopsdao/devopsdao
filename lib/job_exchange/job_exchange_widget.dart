@@ -146,23 +146,25 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                       ],
                     ),
 
+                    tasksServices.isLoading ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                        :
                     Expanded(
                       child: TabBarView(
                         children: [
+
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
                             child:
-
-                            tasksServices.isLoading ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                                : RefreshIndicator(
+                            RefreshIndicator(
                               onRefresh: () async {},
                               child: ListView.builder(
                                 padding: EdgeInsets.zero,
                                 scrollDirection: Axis.vertical,
-                                itemCount: tasksServices.tasks.length,
+                                itemCount: tasksServices.tasksNew.length,
                                 itemBuilder: (context, index) {
+
                                   return Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16, 8, 16, 0),
@@ -194,17 +196,17 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    tasksServices.tasks[index].title,
+                                                    tasksServices.tasksNew[index].title,
                                                     style: FlutterFlowTheme.of(context).subtitle1,
                                                   ),
                                                   Text(
-                                                    tasksServices.tasks[index].description,
+                                                    tasksServices.tasksNew[index].description,
                                                     style: FlutterFlowTheme.of(
                                                         context)
                                                         .bodyText2,
                                                   ),
                                                   Text(
-                                                    tasksServices.tasks[index].contractOwner,
+                                                    tasksServices.tasksNew[index].contractOwner,
                                                     style: FlutterFlowTheme.of(
                                                         context)
                                                         .bodyText2,
@@ -239,77 +241,83 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 86,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 5,
-                                          color: Color(0x4D000000),
-                                          offset: Offset(0, 2),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    12, 8, 8, 8),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .subtitle1,
-                                                ),
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText2,
-                                                ),
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText2,
-                                                ),
-                                              ],
+                            child: RefreshIndicator(
+                              onRefresh: () async {},
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.vertical,
+                                itemCount: tasksServices.tasksAgreed.length,
+                                itemBuilder: (context, index) {
+
+                                  return Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16, 8, 16, 0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 86,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            blurRadius: 5,
+                                            color: Color(0x4D000000),
+                                            offset: Offset(0, 2),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  12, 8, 8, 8),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    tasksServices.tasksAgreed[index].title,
+                                                    style: FlutterFlowTheme.of(context).subtitle1,
+                                                  ),
+                                                  Text(
+                                                    tasksServices.tasksAgreed[index].description,
+                                                    style: FlutterFlowTheme.of(
+                                                        context)
+                                                        .bodyText2,
+                                                  ),
+                                                  Text(
+                                                    tasksServices.tasksAgreed[index].contractOwner,
+                                                    style: FlutterFlowTheme.of(
+                                                        context)
+                                                        .bodyText2,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 12, 0),
-                                          child: Icon(
-                                            Icons.info_outlined,
-                                            color: Colors.black,
-                                            size: 24,
+                                          Padding(
+                                            padding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 12, 0),
+                                            child: Icon(
+                                              Icons.info_outlined,
+                                              color: Colors.black,
+                                              size: 24,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
+                                  );
+                                },
+                                // children: [
+                                //
+                                // ],
+                              ),
                             ),
                           ),
                           Padding(
