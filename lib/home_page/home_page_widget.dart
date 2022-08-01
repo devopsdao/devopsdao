@@ -276,6 +276,41 @@ class _HomePageWidgetState extends State<HomePageWidget>
                 ],
               ),
             ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.92,
+                decoration: BoxDecoration(
+                  color: Color(0xFF39BAD2),
+                  borderRadius: BorderRadius.circular(8),
+                  shape: BoxShape.rectangle,
+                ),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Wallet address',
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                          fontFamily: 'Poppins',
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                        ),
+                      ),
+                      Text(
+                        '${tasksServices.ownAddress}',
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                          fontFamily: 'Poppins',
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         ).animated([animationsMap['columnOnPageLoadAnimation']!]),
       ).animated([animationsMap['containerOnPageLoadAnimation']!]),
