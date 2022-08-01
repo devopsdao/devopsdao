@@ -7,6 +7,7 @@ import 'task.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import 'Factory.g.dart';
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
@@ -81,7 +82,16 @@ class TasksServices extends ChangeNotifier {
     // _deleteTask = _deployedContract.function('deleteTask');
     _tasks = _deployedContract.function('getJobInfo');
     _taskCount = _deployedContract.function('countNew');
+    await monitorEvents();
     await fetchTasks();
+  }
+
+  Future<void> monitorEvents() async {
+    final factory = Factory(address: _contractAddress, client: _web3cient);
+    // listen for the Transfer event when it's emitted by the contract above
+    final subscription = factory.oneEventForAllEvents().take(1).listen((event) {
+      print('${event.contractAdr} index ${event.index}');
+    });
   }
 
   Future<void> fetchTasks() async {
