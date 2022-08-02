@@ -17,8 +17,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -31,8 +30,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -45,13 +43,11 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "stateMutability": "payable",
-      "type": "receive",
-      "payable": true
+      "type": "receive"
     },
     {
       "inputs": [],
@@ -64,8 +60,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.12+commit.f00d7308\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"contractAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"price\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Payable.sol\":\"Payable\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Payable.sol\":{\"keccak256\":\"0xffe37a030d7bd37cc019694c85a312c97a26227f3da08eef468af78a5dff2e11\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba2050e9dd0a0ec9b9f4eb58f1bcdcd5fbad4273cdcaac46e14845d489de2e13\",\"dweb:/ipfs/QmPVDbVdJjnrJRMPsJAZogrtfsrGwRJZCiSs3DPGVWfL4b\"]}},\"version\":1}",
@@ -590,459 +585,8 @@
   "sourceMap": "58:408:3:-:0;;;104:7;81:30;;188:136;;;;;;;;;;228:10;212:13;;:26;;;;;;;;;;;;;;;;;;274:4;248:15;;:31;;;;;;;;;;;;;;;;;;58:408;;;;;;",
   "deployedSourceMap": "58:408:3:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;330:99;;;;;;;;;;;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;81:30;;;;;;;;;;;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;117:28;;;;;;;;;;;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;151:30;;;;;;;;;;;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;330:99;373:7;399:15;;;;;;;;;;;:23;;;392:30;;330:99;:::o;81:30::-;;;;:::o;117:28::-;;;;;;;;;;;;;:::o;151:30::-;;;;;;;;;;;;;:::o;7:77:4:-;44:7;73:5;62:16;;7:77;;;:::o;90:118::-;177:24;195:5;177:24;:::i;:::-;172:3;165:37;90:118;;:::o;214:222::-;307:4;345:2;334:9;330:18;322:26;;358:71;426:1;415:9;411:17;402:6;358:71;:::i;:::-;214:222;;;;:::o;442:126::-;479:7;519:42;512:5;508:54;497:65;;442:126;;;:::o;574:96::-;611:7;640:24;658:5;640:24;:::i;:::-;629:35;;574:96;;;:::o;676:118::-;763:24;781:5;763:24;:::i;:::-;758:3;751:37;676:118;;:::o;800:222::-;893:4;931:2;920:9;916:18;908:26;;944:71;1012:1;1001:9;997:17;988:6;944:71;:::i;:::-;800:222;;;;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.12;\n\ncontract Payable {\n    uint256 public price = 2 ether;\n    address public contractOwner;\n    address public contractAddress;\n\n    constructor() {\n        contractOwner = msg.sender;\n        contractAddress = address(this);\n        // createTask(\"test\", price);\n    }\n\n    function getBalance() public view returns (uint256) {\n        return contractAddress.balance;\n    }\n\n    receive() external payable {}\n}\n",
-  "sourcePath": "/home/matt/Documents/programming/devopsdao_flow/contracts/Payable.sol",
+  "sourcePath": "/home/user/Documents/mainstream/devopsdao/contracts/Payable.sol",
   "ast": {
-    "absolutePath": "project:/contracts/Payable.sol",
-    "exportedSymbols": {
-      "Payable": [
-        898
-      ]
-    },
-    "id": 899,
-    "license": "MIT",
-    "nodeType": "SourceUnit",
-    "nodes": [
-      {
-        "id": 861,
-        "literals": [
-          "solidity",
-          "^",
-          "0.8",
-          ".12"
-        ],
-        "nodeType": "PragmaDirective",
-        "src": "32:24:3"
-      },
-      {
-        "abstract": false,
-        "baseContracts": [],
-        "canonicalName": "Payable",
-        "contractDependencies": [],
-        "contractKind": "contract",
-        "fullyImplemented": true,
-        "id": 898,
-        "linearizedBaseContracts": [
-          898
-        ],
-        "name": "Payable",
-        "nameLocation": "67:7:3",
-        "nodeType": "ContractDefinition",
-        "nodes": [
-          {
-            "constant": false,
-            "functionSelector": "a035b1fe",
-            "id": 864,
-            "mutability": "mutable",
-            "name": "price",
-            "nameLocation": "96:5:3",
-            "nodeType": "VariableDeclaration",
-            "scope": 898,
-            "src": "81:30:3",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_uint256",
-              "typeString": "uint256"
-            },
-            "typeName": {
-              "id": 862,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "81:7:3",
-              "typeDescriptions": {
-                "typeIdentifier": "t_uint256",
-                "typeString": "uint256"
-              }
-            },
-            "value": {
-              "hexValue": "32",
-              "id": 863,
-              "isConstant": false,
-              "isLValue": false,
-              "isPure": true,
-              "kind": "number",
-              "lValueRequested": false,
-              "nodeType": "Literal",
-              "src": "104:7:3",
-              "subdenomination": "ether",
-              "typeDescriptions": {
-                "typeIdentifier": "t_rational_2000000000000000000_by_1",
-                "typeString": "int_const 2000000000000000000"
-              },
-              "value": "2"
-            },
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "functionSelector": "ce606ee0",
-            "id": 866,
-            "mutability": "mutable",
-            "name": "contractOwner",
-            "nameLocation": "132:13:3",
-            "nodeType": "VariableDeclaration",
-            "scope": 898,
-            "src": "117:28:3",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 865,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "117:7:3",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "visibility": "public"
-          },
-          {
-            "constant": false,
-            "functionSelector": "f6b4dfb4",
-            "id": 868,
-            "mutability": "mutable",
-            "name": "contractAddress",
-            "nameLocation": "166:15:3",
-            "nodeType": "VariableDeclaration",
-            "scope": 898,
-            "src": "151:30:3",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_address",
-              "typeString": "address"
-            },
-            "typeName": {
-              "id": 867,
-              "name": "address",
-              "nodeType": "ElementaryTypeName",
-              "src": "151:7:3",
-              "stateMutability": "nonpayable",
-              "typeDescriptions": {
-                "typeIdentifier": "t_address",
-                "typeString": "address"
-              }
-            },
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 883,
-              "nodeType": "Block",
-              "src": "202:122:3",
-              "statements": [
-                {
-                  "expression": {
-                    "id": 874,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "leftHandSide": {
-                      "id": 871,
-                      "name": "contractOwner",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 866,
-                      "src": "212:13:3",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "nodeType": "Assignment",
-                    "operator": "=",
-                    "rightHandSide": {
-                      "expression": {
-                        "id": 872,
-                        "name": "msg",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 4294967281,
-                        "src": "228:3:3",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_magic_message",
-                          "typeString": "msg"
-                        }
-                      },
-                      "id": 873,
-                      "isConstant": false,
-                      "isLValue": false,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "memberName": "sender",
-                      "nodeType": "MemberAccess",
-                      "src": "228:10:3",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "src": "212:26:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "id": 875,
-                  "nodeType": "ExpressionStatement",
-                  "src": "212:26:3"
-                },
-                {
-                  "expression": {
-                    "id": 881,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "leftHandSide": {
-                      "id": 876,
-                      "name": "contractAddress",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 868,
-                      "src": "248:15:3",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "nodeType": "Assignment",
-                    "operator": "=",
-                    "rightHandSide": {
-                      "arguments": [
-                        {
-                          "id": 879,
-                          "name": "this",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 4294967268,
-                          "src": "274:4:3",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_Payable_$898",
-                            "typeString": "contract Payable"
-                          }
-                        }
-                      ],
-                      "expression": {
-                        "argumentTypes": [
-                          {
-                            "typeIdentifier": "t_contract$_Payable_$898",
-                            "typeString": "contract Payable"
-                          }
-                        ],
-                        "id": 878,
-                        "isConstant": false,
-                        "isLValue": false,
-                        "isPure": true,
-                        "lValueRequested": false,
-                        "nodeType": "ElementaryTypeNameExpression",
-                        "src": "266:7:3",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_address_$",
-                          "typeString": "type(address)"
-                        },
-                        "typeName": {
-                          "id": 877,
-                          "name": "address",
-                          "nodeType": "ElementaryTypeName",
-                          "src": "266:7:3",
-                          "typeDescriptions": {}
-                        }
-                      },
-                      "id": 880,
-                      "isConstant": false,
-                      "isLValue": false,
-                      "isPure": false,
-                      "kind": "typeConversion",
-                      "lValueRequested": false,
-                      "names": [],
-                      "nodeType": "FunctionCall",
-                      "src": "266:13:3",
-                      "tryCall": false,
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "src": "248:31:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "id": 882,
-                  "nodeType": "ExpressionStatement",
-                  "src": "248:31:3"
-                }
-              ]
-            },
-            "id": 884,
-            "implemented": true,
-            "kind": "constructor",
-            "modifiers": [],
-            "name": "",
-            "nameLocation": "-1:-1:-1",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 869,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "199:2:3"
-            },
-            "returnParameters": {
-              "id": 870,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "202:0:3"
-            },
-            "scope": 898,
-            "src": "188:136:3",
-            "stateMutability": "nonpayable",
-            "virtual": false,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 892,
-              "nodeType": "Block",
-              "src": "382:47:3",
-              "statements": [
-                {
-                  "expression": {
-                    "expression": {
-                      "id": 889,
-                      "name": "contractAddress",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 868,
-                      "src": "399:15:3",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "id": 890,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "balance",
-                    "nodeType": "MemberAccess",
-                    "src": "399:23:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 888,
-                  "id": 891,
-                  "nodeType": "Return",
-                  "src": "392:30:3"
-                }
-              ]
-            },
-            "functionSelector": "12065fe0",
-            "id": 893,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "getBalance",
-            "nameLocation": "339:10:3",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 885,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "349:2:3"
-            },
-            "returnParameters": {
-              "id": 888,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 887,
-                  "mutability": "mutable",
-                  "name": "",
-                  "nameLocation": "-1:-1:-1",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 893,
-                  "src": "373:7:3",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 886,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "373:7:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "visibility": "internal"
-                }
-              ],
-              "src": "372:9:3"
-            },
-            "scope": 898,
-            "src": "330:99:3",
-            "stateMutability": "view",
-            "virtual": false,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 896,
-              "nodeType": "Block",
-              "src": "462:2:3",
-              "statements": []
-            },
-            "id": 897,
-            "implemented": true,
-            "kind": "receive",
-            "modifiers": [],
-            "name": "",
-            "nameLocation": "-1:-1:-1",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 894,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "442:2:3"
-            },
-            "returnParameters": {
-              "id": 895,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "462:0:3"
-            },
-            "scope": 898,
-            "src": "435:29:3",
-            "stateMutability": "payable",
-            "virtual": false,
-            "visibility": "external"
-          }
-        ],
-        "scope": 899,
-        "src": "58:408:3",
-        "usedErrors": []
-      }
-    ],
-    "src": "32:435:3"
-  },
-  "legacyAST": {
     "absolutePath": "project:/contracts/Payable.sol",
     "exportedSymbols": {
       "Payable": [
@@ -1505,9 +1049,8 @@
       "transactionHash": "0x568c4c6a052156dc038f0dd31a25b97b237e9ef3444909af59541ec2f4c27f8e"
     }
   },
-  "schemaVersion": "3.4.6",
-  "updatedAt": "2022-07-15T15:17:49.420Z",
-  "networkType": "ethereum",
+  "schemaVersion": "3.4.8",
+  "updatedAt": "2022-07-25T15:39:29.795Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

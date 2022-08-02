@@ -3,15 +3,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'Factory.g.dart';
 import 'task.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import 'Factory.g.dart';
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
   List<Task> tasksNew = [];
+<<<<<<< HEAD
   List<Task> tasksOwner = [];
   List<Task> tasksWithMyParticipation = [];
   List<Task> tasksPerformer = [];
@@ -21,11 +22,21 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksReviewSubmitter = [];
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
-
-  //final String _rpcUrl =
-  //Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
-  //final String _wsUrl =
-  //Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+  final String _rpcUrl =
+  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
+  final String _wsUrl =
+  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+=======
+  List<Task> tasksAgreed = [];
+  List<Task> tasksProgress = [];
+  List<Task> tasksReview = [];
+  List<Task> tasksCompleted = [];
+  List<Task> tasksCanceled = [];
+  // final String _rpcUrl =
+  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
+  // final String _wsUrl =
+  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+  // bool isLoading = true;
 
   final String _rpcUrl = Platform.isAndroid
       ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
@@ -33,16 +44,19 @@ class TasksServices extends ChangeNotifier {
   final String _wsUrl = Platform.isAndroid
       ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
       : 'wss://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+>>>>>>> 784e619d6161c3e2faafc7f5c40c441c18b0289e
   bool isLoading = true;
 
+  // final String _privatekey =
+  //     '01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f';
   final String _privatekey =
-      'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
+<<<<<<< HEAD
+      'e1f0d3b368c3aaf8fde11e8da9a6ab2162fbd08f384145b480f16ab9cd746941';
+=======
+      'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8';
+>>>>>>> 784e619d6161c3e2faafc7f5c40c441c18b0289e
   late Web3Client _web3cient;
 
-
-  // faucet m's key:
-  // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
-  // internal key's
   // e1f0d3b368c3aaf8fde11e8da9a6ab2162fbd08f384145b480f16ab9cd746941 - second user
   // 01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f
 
@@ -67,11 +81,11 @@ class TasksServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   Future<void> getABI() async {
     String abiFile =
-    await rootBundle.loadString('build/contracts/Factory.json');
+        await rootBundle.loadString('build/contracts/Factory.json');
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
-    // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
-    _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
+    _contractAddress =
+        EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
 
   late EthPrivateKey _creds;
@@ -102,11 +116,11 @@ class TasksServices extends ChangeNotifier {
     // _deleteTask = _deployedContract.function('deleteTask');
     _tasks = _deployedContract.function('getJobInfo');
     _taskCount = _deployedContract.function('countNew');
+<<<<<<< HEAD
     _changeTaskStatus = _deployedContract.function('jobStateChange');
     _taskParticipation = _deployedContract.function('jobParticipate');
     _withdraw = _deployedContract.function('transferToaddress');
     _getBalance = _deployedContract.function('getBalance');
-    await monitorEvents();
     await fetchTasks();
   }
 
@@ -118,6 +132,10 @@ class TasksServices extends ChangeNotifier {
   //       params: [BigInt.from(temp[6].toInt())]
   //   );
   // }
+=======
+    await monitorEvents();
+    await fetchTasks();
+  }
 
   Future<void> monitorEvents() async {
     final factory = Factory(address: _contractAddress, client: _web3cient);
@@ -126,6 +144,7 @@ class TasksServices extends ChangeNotifier {
       print('${event.contractAdr} index ${event.index}');
     });
   }
+>>>>>>> 784e619d6161c3e2faafc7f5c40c441c18b0289e
 
   Future<void> fetchTasks() async {
     List totalTaskList = await _web3cient.call(
@@ -147,7 +166,6 @@ class TasksServices extends ChangeNotifier {
     tasksProgressSubmitter.clear();
 
     for (var i = 0; i < totalTaskLen; i++) {
-
       var temp = await _web3cient.call(
           contract: _deployedContract,
           function: _tasks,
@@ -174,20 +192,20 @@ class TasksServices extends ChangeNotifier {
         description: temp[7],
         // contractOwner: temp[4].toString(),
         contractOwner: temp[4],
-        contractAddress: temp[2],
         jobState: temp[1],
-        contributorsCount: temp[8].isEmpty ? 0 : temp[8].length(),
+        contractAddress: temp[2],
+        contributorsCount: temp[8].length,
         contributors: temp[8],
         participiant: temp[9],
-        // contractValue: value[0],
+        contractValue: value[0].toInt(),
       );
+
 
       if (temp[1] != "") {
         var taskState = temp[1];
-        tasks.add(
-            taskObject
-        );
+        tasks.add(taskObject);
       }
+<<<<<<< HEAD
       if(temp[1] != "" && temp[1] == "new" ) {
         if (temp[4] == ownAddress) {
           tasksOwner.add(taskObject);
@@ -204,6 +222,13 @@ class TasksServices extends ChangeNotifier {
         }
       }
 
+=======
+      if (temp[1] != "" &&
+          temp[1] == "new" &&
+          temp[4].toString() != _privatekey) {
+        tasksNew.add(taskObject);
+      } else {}
+>>>>>>> 784e619d6161c3e2faafc7f5c40c441c18b0289e
       if (temp[1] != "" && temp[1] == "agreed") {
         if (temp[4] == ownAddress) {
           tasksAgreedSubmitter.add(taskObject);
@@ -242,15 +267,14 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> addTask(String title, String description) async {
     await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _createTask,
-        parameters: [title, description],
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
-      ),
-
-    chainId: 3);
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _createTask,
+          parameters: [title, description],
+          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
@@ -267,7 +291,7 @@ class TasksServices extends ChangeNotifier {
         // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
       ),
 
-    chainId: 3);
+    );
     isLoading = true;
     fetchTasks();
   }
@@ -283,7 +307,7 @@ class TasksServices extends ChangeNotifier {
         parameters: [contractAddress, participiantAddress, state],
         // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
       ),
-    chainId: 3);
+    );
     isLoading = true;
     fetchTasks();
   }
@@ -297,7 +321,7 @@ class TasksServices extends ChangeNotifier {
         parameters: [contractAddress],
         // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
       ),
-    chainId: 3);
+    );
     isLoading = true;
     fetchTasks();
   }

@@ -10,7 +10,7 @@ class Task {
   final int contributorsCount;
   final List<dynamic> contributors;
   final EthereumAddress participiant;
-  final int contractValue;
+  // final int contractValue;
   Task({
     // required this.id,
     required this.title,
@@ -21,6 +21,6 @@ class Task {
     required this.contributorsCount,
     required this.contributors,
     required this.participiant,
-    required this.contractValue,
+    // required this.contractValue,
   });
 }
