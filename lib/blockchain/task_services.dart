@@ -39,7 +39,6 @@ class TasksServices extends ChangeNotifier {
       'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
   late Web3Client _web3cient;
 
-
   // faucet m's key:
   // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
   // internal key's
@@ -67,11 +66,12 @@ class TasksServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   Future<void> getABI() async {
     String abiFile =
-    await rootBundle.loadString('build/contracts/Factory.json');
+        await rootBundle.loadString('build/contracts/Factory.json');
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
-    _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
+    _contractAddress =
+        EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
 
   late EthPrivateKey _creds;
@@ -83,8 +83,6 @@ class TasksServices extends ChangeNotifier {
     // myBalance = await _creds.getBalance();
   }
   // EtherAmount myBalance = _web3cient.getBalance(_creds);
-
-
 
   late DeployedContract _deployedContract;
   late ContractFunction _createTask;
@@ -110,7 +108,6 @@ class TasksServices extends ChangeNotifier {
     await fetchTasks();
   }
 
-
   // Future<void> initMee() async {
   //   var myWalletValue = await _web3cient.call(
   //       contract: _deployedContract,
@@ -122,10 +119,15 @@ class TasksServices extends ChangeNotifier {
   Future<void> monitorEvents() async {
     final factory = Factory(address: _contractAddress, client: _web3cient);
     // listen for the Transfer event when it's emitted by the contract above
-    final subscription =
-        factory.oneEventForAllEvents().take(1).listen((event) async {
+    final subscription = factory.oneEventForAllEvents().take(1).listen((event) {
       print('received event ${event.contractAdr} index ${event.index}');
-      await fetchTasks();
+      // await fetchTasks();
+    });
+    final subscription2 =
+        factory.jobContractCreatedEvents().take(1).listen((event) {
+      print(
+          'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
+      // await fetchTasks();
     });
   }
 
@@ -149,18 +151,15 @@ class TasksServices extends ChangeNotifier {
     tasksProgressSubmitter.clear();
 
     for (var i = 0; i < totalTaskLen; i++) {
-
       var temp = await _web3cient.call(
           contract: _deployedContract,
           function: _tasks,
-          params: [BigInt.from(i)]
-      );
+          params: [BigInt.from(i)]);
       print(temp);
       var value = await _web3cient.call(
           contract: _deployedContract,
           function: _getBalance,
-          params: [BigInt.from(temp[6].toInt())]
-      );
+          params: [BigInt.from(temp[6].toInt())]);
 
       print(value);
       print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
@@ -186,11 +185,9 @@ class TasksServices extends ChangeNotifier {
 
       if (temp[1] != "") {
         var taskState = temp[1];
-        tasks.add(
-            taskObject
-        );
+        tasks.add(taskObject);
       }
-      if(temp[1] != "" && temp[1] == "new" ) {
+      if (temp[1] != "" && temp[1] == "new") {
         if (temp[4] == ownAddress) {
           tasksOwner.add(taskObject);
         } else if (temp[8].length != 0) {
@@ -244,15 +241,14 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> addTask(String title, String description) async {
     await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _createTask,
-        parameters: [title, description],
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
-      ),
-
-    chainId: 3);
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _createTask,
+          parameters: [title, description],
+          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
@@ -261,45 +257,43 @@ class TasksServices extends ChangeNotifier {
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
     await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _taskParticipation,
-        parameters: [contractAddress],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-
-    chainId: 3);
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _taskParticipation,
+          parameters: [contractAddress],
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
-      EthereumAddress participiantAddress,
-      String state) async {
+      EthereumAddress participiantAddress, String state) async {
     await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _changeTaskStatus,
-        parameters: [contractAddress, participiantAddress, state],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-    chainId: 3);
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _changeTaskStatus,
+          parameters: [contractAddress, participiantAddress, state],
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
 
   Future<void> withdraw(int contractAddress) async {
     await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _withdraw,
-        parameters: [contractAddress],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-    chainId: 3);
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _withdraw,
+          parameters: [contractAddress],
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
