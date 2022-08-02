@@ -89,8 +89,10 @@ class TasksServices extends ChangeNotifier {
   Future<void> monitorEvents() async {
     final factory = Factory(address: _contractAddress, client: _web3cient);
     // listen for the Transfer event when it's emitted by the contract above
-    final subscription = factory.oneEventForAllEvents().take(1).listen((event) {
-      print('${event.contractAdr} index ${event.index}');
+    final subscription =
+        factory.oneEventForAllEvents().take(1).listen((event) async {
+      print('received event ${event.contractAdr} index ${event.index}');
+      await fetchTasks();
     });
   }
 
