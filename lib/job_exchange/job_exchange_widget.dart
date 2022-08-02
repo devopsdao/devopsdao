@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
@@ -124,7 +125,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
           children: [
             Expanded(
               child: DefaultTabController(
-                length: 3,
+                length: 1,
                 initialIndex: 0,
                 child: Column(
                   children: [
@@ -137,12 +138,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                         Tab(
                           text: 'New offers',
                         ),
-                        Tab(
-                          text: 'Reserved tab',
-                        ),
-                        Tab(
-                          text: 'Reserved tab',
-                        ),
+                        // Tab(
+                        //   text: 'Reserved tab',
+                        // ),
+                        // Tab(
+                        //   text: 'Reserved tab',
+                        // ),
                       ],
                     ),
 
@@ -156,8 +157,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
 
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                            child:
-                            RefreshIndicator(
+                            child: RefreshIndicator(
                               onRefresh: () async {},
                               child: ListView.builder(
                                 padding: EdgeInsets.zero,
@@ -168,233 +168,271 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                   return Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         16, 8, 16, 0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 86,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 5,
-                                            color: Color(0x4D000000),
-                                            offset: Offset(0, 2),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  12, 8, 8, 8),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    tasksServices.tasksNew[index].title,
-                                                    style: FlutterFlowTheme.of(context).subtitle1,
-                                                  ),
-                                                  Text(
-                                                    tasksServices.tasksNew[index].description,
-                                                    style: FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText2,
-                                                  ),
-                                                  Text(
-                                                    tasksServices.tasksNew[index].contractOwner,
-                                                    style: FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText2,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0, 0, 12, 0),
-                                            child: Icon(
-                                              Icons.info_outlined,
-                                              color: Colors.black,
-                                              size: 24,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                                // children: [
-                                //
-                                // ],
-                              ),
-                            ),
-
-
-
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                            child: RefreshIndicator(
-                              onRefresh: () async {},
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.vertical,
-                                itemCount: tasksServices.tasksAgreed.length,
-                                itemBuilder: (context, index) {
-
-                                  return Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        16, 8, 16, 0),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 86,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 5,
-                                            color: Color(0x4D000000),
-                                            offset: Offset(0, 2),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  12, 8, 8, 8),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    tasksServices.tasksAgreed[index].title,
-                                                    style: FlutterFlowTheme.of(context).subtitle1,
-                                                  ),
-                                                  Text(
-                                                    tasksServices.tasksAgreed[index].description,
-                                                    style: FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText2,
-                                                  ),
-                                                  Text(
-                                                    tasksServices.tasksAgreed[index].contractOwner,
-                                                    style: FlutterFlowTheme.of(
-                                                        context)
-                                                        .bodyText2,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                0, 0, 12, 0),
-                                            child: Icon(
-                                              Icons.info_outlined,
-                                              color: Colors.black,
-                                              size: 24,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                                // children: [
-                                //
-                                // ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 86,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 5,
-                                          color: Color(0x4D000000),
-                                          offset: Offset(0, 2),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    12, 8, 8, 8),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .subtitle1,
-                                                ),
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText2,
-                                                ),
-                                                Text(
-                                                  'Hello World',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodyText2,
-                                                ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          // Toggle light when tapped.
+                                        });
+                                        showDialog(context: context, builder: (context) => AlertDialog(
+                                          title: Text(tasksServices.tasksNew[index].title),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                Text(tasksServices.tasksNew[index].description),
+                                                Text(tasksServices.tasksNew[index].contractOwner.toString()),
+                                                Text(tasksServices.tasksNew[index].contractAddress.toString()),
                                               ],
                                             ),
                                           ),
+                                          actions: [
+                                            TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
+                                            TextButton(child: Text('Participate'), onPressed: () {
+                                              print('Button pressed ...');
+                                              tasksServices.taskParticipation(tasksServices.tasksNew[index].contractAddress);
+                                              Navigator.pop(context);
+                                            })
+                                          ],
+                                        ));
+                                      },
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 86,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 5,
+                                              color: Color(0x4D000000),
+                                              offset: Offset(0, 2),
+                                            )
+                                          ],
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                        Padding(
-                                          padding:
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    12, 8, 8, 8),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      tasksServices.tasksNew[index].title,
+                                                      style: FlutterFlowTheme.of(context).subtitle1,
+                                                    ),
+                                                    Text(
+                                                      tasksServices.tasksNew[index].description,
+                                                      style: FlutterFlowTheme.of(
+                                                          context)
+                                                          .bodyText2,
+                                                    ),
+                                                    Text(
+                                                      tasksServices.tasksNew[index].contractOwner.toString(),
+                                                      style: FlutterFlowTheme.of(
+                                                          context)
+                                                          .bodyText2,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            tasksServices.tasksNew[index].contributorsCount != 0 ? Badge(
+                                              // position: BadgePosition.topEnd(top: 10, end: 10),
+                                              badgeContent: Text(
+                                                  tasksServices.tasksNew[index].contributorsCount.toString(),
+                                                  style: TextStyle(fontWeight: FontWeight.bold)
+                                              ),
+                                              animationDuration: Duration(milliseconds: 1000),
+                                              animationType: BadgeAnimationType.scale,
+                                              shape: BadgeShape.square,
+                                              borderRadius: BorderRadius.circular(5),
+                                              // child: Icon(Icons.settings),
+                                            )
+                                                :
+
+                                            Padding(
+                                              padding:
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0, 0, 12, 0),
-                                          child: Icon(
-                                            Icons.info_outlined,
-                                            color: Colors.black,
-                                            size: 24,
-                                          ),
+                                              child: Icon(
+                                                Icons.info_outlined,
+                                                color: Colors.black,
+                                                size: 24,
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
+                                  );
+                                },
+                              ),
                             ),
+
+
+
                           ),
+                          // Padding(
+                          //   padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                          //   child: RefreshIndicator(
+                          //     onRefresh: () async {},
+                          //     child: ListView.builder(
+                          //       padding: EdgeInsets.zero,
+                          //       scrollDirection: Axis.vertical,
+                          //       itemCount: tasksServices.tasksAgreed.length,
+                          //       itemBuilder: (context, index) {
+                          //
+                          //         return Padding(
+                          //           padding: EdgeInsetsDirectional.fromSTEB(
+                          //               16, 8, 16, 0),
+                          //           child: Container(
+                          //             width: double.infinity,
+                          //             height: 86,
+                          //             decoration: BoxDecoration(
+                          //               color: Colors.white,
+                          //               boxShadow: [
+                          //                 BoxShadow(
+                          //                   blurRadius: 5,
+                          //                   color: Color(0x4D000000),
+                          //                   offset: Offset(0, 2),
+                          //                 )
+                          //               ],
+                          //               borderRadius: BorderRadius.circular(8),
+                          //             ),
+                          //             child: Row(
+                          //               mainAxisSize: MainAxisSize.max,
+                          //               children: [
+                          //                 Expanded(
+                          //                   child: Padding(
+                          //                     padding:
+                          //                     EdgeInsetsDirectional.fromSTEB(
+                          //                         12, 8, 8, 8),
+                          //                     child: Column(
+                          //                       mainAxisSize: MainAxisSize.max,
+                          //                       crossAxisAlignment:
+                          //                       CrossAxisAlignment.start,
+                          //                       children: [
+                          //                         Text(
+                          //                           tasksServices.tasksAgreed[index].title,
+                          //                           style: FlutterFlowTheme.of(context).subtitle1,
+                          //                         ),
+                          //                         Text(
+                          //                           tasksServices.tasksAgreed[index].description,
+                          //                           style: FlutterFlowTheme.of(
+                          //                               context)
+                          //                               .bodyText2,
+                          //                         ),
+                          //                         Text(
+                          //                           tasksServices.tasksAgreed[index].contractOwner.toString(),
+                          //                           style: FlutterFlowTheme.of(
+                          //                               context)
+                          //                               .bodyText2,
+                          //                         ),
+                          //                       ],
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //                 Padding(
+                          //                   padding:
+                          //                   EdgeInsetsDirectional.fromSTEB(
+                          //                       0, 0, 12, 0),
+                          //                   child: Icon(
+                          //                     Icons.info_outlined,
+                          //                     color: Colors.black,
+                          //                     size: 24,
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         );
+                          //       },
+                          //       // children: [
+                          //       //
+                          //       // ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // Padding(
+                          //   padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                          //   child: ListView(
+                          //     padding: EdgeInsets.zero,
+                          //     scrollDirection: Axis.vertical,
+                          //     children: [
+                          //       Padding(
+                          //         padding: EdgeInsetsDirectional.fromSTEB(
+                          //             16, 8, 16, 0),
+                          //         child: Container(
+                          //           width: double.infinity,
+                          //           height: 86,
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             boxShadow: [
+                          //               BoxShadow(
+                          //                 blurRadius: 5,
+                          //                 color: Color(0x4D000000),
+                          //                 offset: Offset(0, 2),
+                          //               )
+                          //             ],
+                          //             borderRadius: BorderRadius.circular(8),
+                          //           ),
+                          //           child: Row(
+                          //             mainAxisSize: MainAxisSize.max,
+                          //             children: [
+                          //               Expanded(
+                          //                 child: Padding(
+                          //                   padding:
+                          //                       EdgeInsetsDirectional.fromSTEB(
+                          //                           12, 8, 8, 8),
+                          //                   child: Column(
+                          //                     mainAxisSize: MainAxisSize.max,
+                          //                     crossAxisAlignment:
+                          //                         CrossAxisAlignment.start,
+                          //                     children: [
+                          //                       Text(
+                          //                         'Hello World',
+                          //                         style: FlutterFlowTheme.of(
+                          //                                 context)
+                          //                             .subtitle1,
+                          //                       ),
+                          //                       Text(
+                          //                         'Hello World',
+                          //                         style: FlutterFlowTheme.of(
+                          //                                 context)
+                          //                             .bodyText2,
+                          //                       ),
+                          //                       Text(
+                          //                         'Hello World',
+                          //                         style: FlutterFlowTheme.of(
+                          //                                 context)
+                          //                             .bodyText2,
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //               Padding(
+                          //                 padding:
+                          //                     EdgeInsetsDirectional.fromSTEB(
+                          //                         0, 0, 12, 0),
+                          //                 child: Icon(
+                          //                   Icons.info_outlined,
+                          //                   color: Colors.black,
+                          //                   size: 24,
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
