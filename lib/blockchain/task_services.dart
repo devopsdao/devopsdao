@@ -32,11 +32,13 @@ class TasksServices extends ChangeNotifier {
       : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   final String _wsUrl = Platform.isAndroid
       ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-      : 'wss://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+      : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
 
+  // final String _privatekey =
+  //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
   final String _privatekey =
-      'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
+      'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8'; //u's ropsten key
   late Web3Client _web3client;
 
   // faucet m's key:
@@ -120,9 +122,10 @@ class TasksServices extends ChangeNotifier {
     final factory =
         Factory(address: _contractAddress, client: _web3client, chainId: 3);
     // listen for the Transfer event when it's emitted by the contract above
-    final subscription = factory.oneEventForAllEvents().take(1).listen((event) {
+    final subscription =
+        factory.oneEventForAllEvents().take(1).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
-      // await fetchTasks();
+      await fetchTasks();
     });
     final subscription2 =
         await factory.jobContractCreatedEvents().take(1).listen((event) {
@@ -258,11 +261,11 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _createTask,
           parameters: [title, description],
-          value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
+          //value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   Future<void> taskParticipation(EthereumAddress contractAddress) async {
@@ -278,7 +281,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
@@ -293,7 +296,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   Future<void> withdraw(int contractAddress) async {
@@ -307,7 +310,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   // Future<void> deleteTask(int id) async {
