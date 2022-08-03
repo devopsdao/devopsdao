@@ -112,11 +112,11 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
               children: [
                 TextFormField(
                   controller: titleFieldController,
-                  onChanged: (_) => EasyDebounce.debounce(
-                    'titleFieldController',
-                    Duration(milliseconds: 2000),
-                    () => setState(() {}),
-                  ),
+                  // onChanged: (_) => EasyDebounce.debounce(
+                  //   'titleFieldController',
+                  //   Duration(milliseconds: 2000),
+                  //   () => setState(() {}),
+                  // ),
                   autofocus: true,
                   obscureText: false,
                   decoration: InputDecoration(
