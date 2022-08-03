@@ -37,8 +37,7 @@ class TasksServices extends ChangeNotifier {
 
   final String _privatekey =
       'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
-  late Web3Client _web3cient;
-
+  late Web3Client _web3client;
 
   // faucet m's key:
   // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
@@ -51,7 +50,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    _web3cient = Web3Client(
+    _web3client = Web3Client(
       _rpcUrl,
       http.Client(),
       socketConnector: () {
@@ -75,19 +74,19 @@ class TasksServices extends ChangeNotifier {
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
-    _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
+    _contractAddress =
+        EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
-
-
 
   late EthPrivateKey _creds;
   EthereumAddress? ownAddress;
+  EthereumAddress? myBalance;
   Future<void> getCredentials() async {
     _creds = EthPrivateKey.fromHex(_privatekey);
     ownAddress = await _creds.extractAddress();
+    // myBalance = await _creds.getBalance();
   }
-
-
+  // EtherAmount myBalance = _web3client.getBalance(_creds);
 
   late DeployedContract _deployedContract;
   late ContractFunction _createTask;
@@ -103,7 +102,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> listenToEvents() async {
     final OneEventForAll = _deployedContract.event('OneEventForAll');
-    final subscription = _web3cient
+    final subscription = _web3client
         .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
         // .take(1)
         .listen((event) {
@@ -137,22 +136,40 @@ class TasksServices extends ChangeNotifier {
 
 
   // Future<void> myBalance() async {
-  //   final myWalletValue = await _web3cient.call(
+  //   final myWalletValue = await _web3client.call(
   //       contract: _deployedContract, function: _getBalance, params: [ownAddress]
   //   );
   //   print('We have ${myWalletValue.first} MetaCoins');
   // }
 
   Future<void> monitorEvents() async {
-    final factory = Factory(address: _contractAddress, client: _web3cient);
+    final factory =
+        Factory(address: _contractAddress, client: _web3client, chainId: 3);
     // listen for the Transfer event when it's emitted by the contract above
     final subscription = factory.oneEventForAllEvents().take(1).listen((event) {
-      print('${event.contractAdr} index ${event.index}');
+      print('received event ${event.contractAdr} index ${event.index}');
+      // await fetchTasks();
     });
+    final subscription2 =
+        await factory.jobContractCreatedEvents().take(1).listen((event) {
+      print(
+          'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
+      // await fetchTasks();
+    });
+
+    subscription.asFuture();
+    subscription2.asFuture();
+
+    final allJobs = await factory.allJobs();
+    print('allJobs');
+
+    BigInt index = BigInt.from(1);
+    final GetJobInfo = await factory.getJobInfo(index);
+    print('getJobInfo');
   }
 
   Future<void> fetchTasks() async {
-    List totalTaskList = await _web3cient.call(
+    List totalTaskList = await _web3client.call(
       contract: _deployedContract,
       function: _taskCount,
       params: [],
@@ -171,14 +188,13 @@ class TasksServices extends ChangeNotifier {
     tasksProgressSubmitter.clear();
 
     for (var i = 0; i < totalTaskLen; i++) {
-
-      var temp = await _web3cient.call(
+      var temp = await _web3client.call(
           contract: _deployedContract,
           function: _tasks,
           params: [BigInt.from(i)]
       );
       print(temp);
-      var value = await _web3cient.call(
+      var value = await _web3client.call(
           contract: _deployedContract,
           function: _getBalance,
           params: [BigInt.from(temp[6].toInt())]
@@ -213,7 +229,7 @@ class TasksServices extends ChangeNotifier {
             taskObject
         );
       }
-      if(temp[1] != "" && temp[1] == "new" ) {
+      if (temp[1] != "" && temp[1] == "new") {
         if (temp[4] == ownAddress) {
           tasksOwner.add(taskObject);
         } else if (temp[8].length != 0) {
@@ -266,7 +282,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> addTask(String title, String description) async {
-    await _web3cient.sendTransaction(
+    await _web3client.sendTransaction(
       _creds,
       Transaction.callContract(
         contract: _deployedContract,
@@ -283,53 +299,50 @@ class TasksServices extends ChangeNotifier {
   Future<void> taskParticipation(EthereumAddress contractAddress) async {
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
-    await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _taskParticipation,
-        parameters: [contractAddress],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-
-    chainId: 3);
+    await _web3client.sendTransaction(
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _taskParticipation,
+          parameters: [contractAddress],
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
-      EthereumAddress participiantAddress,
-      String state) async {
-    await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _changeTaskStatus,
-        parameters: [contractAddress, participiantAddress, state],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-    chainId: 3);
+      EthereumAddress participiantAddress, String state) async {
+    await _web3client.sendTransaction(
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _changeTaskStatus,
+          parameters: [contractAddress, participiantAddress, state],
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
 
   Future<void> withdraw(int contractAddress) async {
-    await _web3cient.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _withdraw,
-        parameters: [contractAddress],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
-      ),
-    chainId: 3);
+    await _web3client.sendTransaction(
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _withdraw,
+          parameters: [contractAddress],
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: 3);
     isLoading = true;
     fetchTasks();
   }
 
-
   // Future<void> deleteTask(int id) async {
-  //   await _web3cient.sendTransaction(
+  //   await _web3client.sendTransaction(
   //     _creds,
   //     Transaction.callContract(
   //       contract: _deployedContract,
