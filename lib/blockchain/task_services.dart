@@ -123,7 +123,7 @@ class TasksServices extends ChangeNotifier {
         Factory(address: _contractAddress, client: _web3client, chainId: 3);
     // listen for the Transfer event when it's emitted by the contract above
     final subscription =
-        factory.oneEventForAllEvents().take(1).listen((event) async {
+        factory.oneEventForAllEvents().take(10).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
       await fetchTasks();
     });
@@ -134,8 +134,8 @@ class TasksServices extends ChangeNotifier {
       // await fetchTasks();
     });
 
-    subscription.asFuture();
-    subscription2.asFuture();
+    // subscription.asFuture();
+    // subscription2.asFuture();
 
     final allJobs = await factory.allJobs();
     print('allJobs');
