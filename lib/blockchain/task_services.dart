@@ -22,27 +22,31 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
 
-  //final String _rpcUrl =
-  //Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
-  //final String _wsUrl =
-  //Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+  final String _rpcUrl =
+  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
+  final String _wsUrl =
+  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
 
-  final String _rpcUrl = Platform.isAndroid
-      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-      : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
-  final String _wsUrl = Platform.isAndroid
-      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-      : 'wss://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+  // final String _rpcUrl = Platform.isAndroid
+  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+  //     : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+  // final String _wsUrl = Platform.isAndroid
+  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+  //     : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
 
+  // final String _privatekey =
+  //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
   final String _privatekey =
-      'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
+      '29e52385859d9a1cd067552dcdb4c1734853343cf83dfbf31d76e1871cf1d7ec';
   late Web3Client _web3client;
 
   // faucet m's key:
   // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
+// r's key
+// f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8
   // internal key's
-  // e1f0d3b368c3aaf8fde11e8da9a6ab2162fbd08f384145b480f16ab9cd746941 - second user
+  // 29e52385859d9a1cd067552dcdb4c1734853343cf83dfbf31d76e1871cf1d7ec - second user
   // 01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f
 
   TasksServices() {
@@ -60,14 +64,10 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     await getCredentials();
     await getDeployedContract();
-    // await myBalance();
-    await listenToEvents();
-
   }
 
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;
-
   Future<void> getABI() async {
     String abiFile =
     await rootBundle.loadString('build/contracts/Factory.json');
@@ -139,16 +139,16 @@ class TasksServices extends ChangeNotifier {
   //   final myWalletValue = await _web3client.call(
   //       contract: _deployedContract, function: _getBalance, params: [ownAddress]
   //   );
-  //   print('We have ${myWalletValue.first} MetaCoins');
   // }
 
   Future<void> monitorEvents() async {
     final factory =
         Factory(address: _contractAddress, client: _web3client, chainId: 3);
     // listen for the Transfer event when it's emitted by the contract above
-    final subscription = factory.oneEventForAllEvents().take(1).listen((event) {
+    final subscription =
+        factory.oneEventForAllEvents().take(1).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
-      // await fetchTasks();
+      await fetchTasks();
     });
     final subscription2 =
         await factory.jobContractCreatedEvents().take(1).listen((event) {
@@ -191,17 +191,15 @@ class TasksServices extends ChangeNotifier {
       var temp = await _web3client.call(
           contract: _deployedContract,
           function: _tasks,
-          params: [BigInt.from(i)]
-      );
+          params: [BigInt.from(i)]);
       print(temp);
       var value = await _web3client.call(
           contract: _deployedContract,
           function: _getBalance,
-          params: [BigInt.from(temp[6].toInt())]
-      );
+          params: [BigInt.from(temp[6].toInt())]);
 
-      // print(value);
-      // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
+      print(value);
+      print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
       // print(price);
       // print('Data type: ${ownAddress.runtimeType}');
       //
@@ -225,9 +223,7 @@ class TasksServices extends ChangeNotifier {
 
       if (temp[1] != "") {
         var taskState = temp[1];
-        tasks.add(
-            taskObject
-        );
+        tasks.add(taskObject);
       }
       if (temp[1] != "" && temp[1] == "new") {
         if (temp[4] == ownAddress) {
@@ -283,17 +279,16 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> addTask(String title, String description) async {
     await _web3client.sendTransaction(
-      _creds,
-      Transaction.callContract(
-        contract: _deployedContract,
-        function: _createTask,
-        parameters: [title, description],
-        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, BigInt.from(0.0001)),
-      ),
-
-    chainId: 3);
+        _creds,
+        Transaction.callContract(
+          contract: _deployedContract,
+          function: _createTask,
+          parameters: [title, description],
+          //value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
+        ),
+        chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   Future<void> taskParticipation(EthereumAddress contractAddress) async {
@@ -309,7 +304,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
@@ -324,7 +319,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   Future<void> withdraw(int contractAddress) async {
@@ -338,7 +333,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: 3);
     isLoading = true;
-    fetchTasks();
+    // fetchTasks();
   }
 
   // Future<void> deleteTask(int id) async {
