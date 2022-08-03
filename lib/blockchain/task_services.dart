@@ -61,10 +61,14 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     await getCredentials();
     await getDeployedContract();
+    // await myBalance();
+    await listenToEvents();
+
   }
 
   late ContractAbi _abiCode;
   late EthereumAddress _contractAddress;
+
   Future<void> getABI() async {
     String abiFile =
     await rootBundle.loadString('build/contracts/Factory.json');
@@ -74,15 +78,14 @@ class TasksServices extends ChangeNotifier {
     _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
 
+
+
   late EthPrivateKey _creds;
   EthereumAddress? ownAddress;
-  EthereumAddress? myBalance;
   Future<void> getCredentials() async {
     _creds = EthPrivateKey.fromHex(_privatekey);
     ownAddress = await _creds.extractAddress();
-    // myBalance = await _creds.getBalance();
   }
-  // EtherAmount myBalance = _web3cient.getBalance(_creds);
 
 
 
@@ -95,6 +98,28 @@ class TasksServices extends ChangeNotifier {
   late ContractFunction _taskParticipation;
   late ContractFunction _withdraw;
   late ContractFunction _getBalance;
+
+
+
+  Future<void> listenToEvents() async {
+    final OneEventForAll = _deployedContract.event('OneEventForAll');
+    final subscription = _web3cient
+        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
+        // .take(1)
+        .listen((event) {
+      // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
+      //
+      // final from = decoded[0] as EthereumAddress;
+      // final to = decoded[1] as EthereumAddress;
+      // final value = decoded[2] as BigInt;
+      //
+      // print('$from sent $value MetaCoins to $to');
+      print('event fired');
+
+    });
+    await subscription.asFuture();
+    // await subscription.cancel();
+  }
 
   Future<void> getDeployedContract() async {
     _deployedContract = DeployedContract(_abiCode, _contractAddress);
@@ -111,12 +136,11 @@ class TasksServices extends ChangeNotifier {
   }
 
 
-  // Future<void> initMee() async {
-  //   var myWalletValue = await _web3cient.call(
-  //       contract: _deployedContract,
-  //       function: _getBalance,
-  //       params: [BigInt.from(temp[6].toInt())]
+  // Future<void> myBalance() async {
+  //   final myWalletValue = await _web3cient.call(
+  //       contract: _deployedContract, function: _getBalance, params: [ownAddress]
   //   );
+  //   print('We have ${myWalletValue.first} MetaCoins');
   // }
 
   Future<void> monitorEvents() async {
@@ -160,8 +184,8 @@ class TasksServices extends ChangeNotifier {
           params: [BigInt.from(temp[6].toInt())]
       );
 
-      print(value);
-      print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
+      // print(value);
+      // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
       // print(price);
       // print('Data type: ${ownAddress.runtimeType}');
       //
@@ -248,7 +272,7 @@ class TasksServices extends ChangeNotifier {
         contract: _deployedContract,
         function: _createTask,
         parameters: [title, description],
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 0.0001),
+        // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, BigInt.from(0.0001)),
       ),
 
     chainId: 3);
@@ -302,6 +326,7 @@ class TasksServices extends ChangeNotifier {
     isLoading = true;
     fetchTasks();
   }
+
 
   // Future<void> deleteTask(int id) async {
   //   await _web3cient.sendTransaction(
