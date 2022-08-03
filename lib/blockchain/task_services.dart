@@ -22,23 +22,23 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
 
-  final String _rpcUrl =
-  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
-  final String _wsUrl =
-  Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+  // final String _rpcUrl =
+  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
+  // final String _wsUrl =
+  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
 
-  // final String _rpcUrl = Platform.isAndroid
-  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-  //     : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
-  // final String _wsUrl = Platform.isAndroid
-  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-  //     : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+  final String _rpcUrl = Platform.isAndroid
+      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+      : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+  final String _wsUrl = Platform.isAndroid
+      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+      : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
 
   // final String _privatekey =
   //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
   final String _privatekey =
-      '29e52385859d9a1cd067552dcdb4c1734853343cf83dfbf31d76e1871cf1d7ec';
+      'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
   late Web3Client _web3client;
 
   // faucet m's key:
@@ -100,25 +100,25 @@ class TasksServices extends ChangeNotifier {
 
 
 
-  Future<void> listenToEvents() async {
-    final OneEventForAll = _deployedContract.event('OneEventForAll');
-    final subscription = _web3client
-        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
-        // .take(1)
-        .listen((event) {
-      // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
-      //
-      // final from = decoded[0] as EthereumAddress;
-      // final to = decoded[1] as EthereumAddress;
-      // final value = decoded[2] as BigInt;
-      //
-      // print('$from sent $value MetaCoins to $to');
-      print('event fired');
-
-    });
-    await subscription.asFuture();
-    // await subscription.cancel();
-  }
+  // Future<void> listenToEvents() async {
+  //   final OneEventForAll = _deployedContract.event('OneEventForAll');
+  //   final subscription = _web3client
+  //       .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
+  //       // .take(1)
+  //       .listen((event) {
+  //     // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
+  //     //
+  //     // final from = decoded[0] as EthereumAddress;
+  //     // final to = decoded[1] as EthereumAddress;
+  //     // final value = decoded[2] as BigInt;
+  //     //
+  //     // print('$from sent $value MetaCoins to $to');
+  //     print('event fired');
+  //
+  //   });
+  //   await subscription.asFuture();
+  //   // await subscription.cancel();
+  // }
 
   Future<void> getDeployedContract() async {
     _deployedContract = DeployedContract(_abiCode, _contractAddress);
@@ -146,7 +146,7 @@ class TasksServices extends ChangeNotifier {
         Factory(address: _contractAddress, client: _web3client, chainId: 3);
     // listen for the Transfer event when it's emitted by the contract above
     final subscription =
-        factory.oneEventForAllEvents().take(10).listen((event) async {
+        factory.oneEventForAllEvents().take(1).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
       await fetchTasks();
     });
@@ -198,8 +198,8 @@ class TasksServices extends ChangeNotifier {
           function: _getBalance,
           params: [BigInt.from(temp[6].toInt())]);
 
-      print(value);
-      print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
+      // print(value);
+      // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
       // print(price);
       // print('Data type: ${ownAddress.runtimeType}');
       //

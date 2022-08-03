@@ -25,7 +25,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
       duration: 1000,
       delay: 1000,
       hideBeforeAnimating: false,
-      fadeIn: true,
+      fadeIn: false, // changed to false(orig from FLOW true)
       initialState: AnimationState(
         opacity: 0,
       ),
