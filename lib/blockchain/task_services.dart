@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 
 class TasksServices extends ChangeNotifier {
-  // List<Task> tasks = [];
+  List<Task> tasks = [];
   List<Task> filterResults = [];
   List<Task> tasksNew = [];
   List<Task> tasksOwner = [];
@@ -230,7 +230,7 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  late String searchKeyword;
+  late String searchKeyword = '';
 
   Future<void> runFilter(String enteredKeyword) async {
     filterResults.clear();
@@ -269,7 +269,7 @@ class TasksServices extends ChangeNotifier {
 
     totalTaskLen = totalTaskList[0].toInt();
     filterResults.clear();
-    // tasks.clear();
+    tasks.clear();
     tasksNew.clear();
     tasksOwner.clear();
     tasksWithMyParticipation.clear();
@@ -299,7 +299,7 @@ class TasksServices extends ChangeNotifier {
       // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
       // print(price);
       // print('Data type: ${ownAddress.runtimeType}');
-      //
+
       // late int contributorsCount;
       // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
 
@@ -311,7 +311,6 @@ class TasksServices extends ChangeNotifier {
         contractOwner: temp[4],
         contractAddress: temp[2],
         jobState: temp[1],
-        // contributorsCount: temp[8].isEmpty ? 0 : temp[8].length(),
         contributorsCount: temp[8].length,
         contributors: temp[8],
         participiant: temp[9],
@@ -320,60 +319,64 @@ class TasksServices extends ChangeNotifier {
         contractValue: ethBalancePrecise,
       );
 
-      taskLoaded = temp[6].toInt();
+      taskLoaded = temp[6].toInt(); // this count we need to show the loading process. does not affect anything else
 
       if(isLoading == true) {
         notifyListeners();
       }
-      // if (temp[1] != "") {
-      //   var taskState = temp[1];
-      //   tasks.add(taskObject);
-      // }
-      if (temp[1] != "" && temp[1] == "new") {
-        if (temp[4] == ownAddress) {
-          tasksOwner.add(taskObject);
-        } else if (temp[8].length != 0) {
-          for (var p = 0; p < temp[8].length; p++) {
+      if (temp[1] != "") {
+        // var taskState = temp[1];
+        tasks.add(taskObject);
+      }
+    }
+
+    for (var k = 0; k < tasks.length; k++) {
+      final temp = tasks[k];
+      if (temp.jobState != "" && temp.jobState == "new") {
+        if (temp.contractOwner == ownAddress) {
+          tasksOwner.add(temp);
+        } else if (temp.contributors.length != 0) {
+          for (var p = 0; p < temp.contributors.length; p++) {
             // late EthereumAddress _tempParticipationsAddress;
             // _tempParticipationsAddress = temp[8][p];
-            if (temp[8][p] == ownAddress) {
-              tasksWithMyParticipation.add(taskObject);
+            if (temp.contributors[p] == ownAddress) {
+              tasksWithMyParticipation.add(temp);
             }
           }
         } else {
-          tasksNew.add(taskObject);
-          filterResults.add(taskObject);
+          tasksNew.add(temp);
+          filterResults.add(temp);
         }
       }
 
-      if (temp[1] != "" && temp[1] == "agreed") {
-        if (temp[4] == ownAddress) {
-          tasksAgreedSubmitter.add(taskObject);
-        } else if (temp[9] == ownAddress) {
-          tasksPerformer.add(taskObject);
+      if (temp.jobState != "" && temp.jobState == "agreed") {
+        if (temp.contractOwner == ownAddress) {
+          tasksAgreedSubmitter.add(temp);
+        } else if (temp.participiant == ownAddress) {
+          tasksPerformer.add(temp);
         }
       }
 
-      if (temp[1] != "" && temp[1] == "progress") {
-        if (temp[4] == ownAddress) {
-          tasksProgressSubmitter.add(taskObject);
-        } else if (temp[9] == ownAddress) {
-          tasksPerformer.add(taskObject);
+      if (temp.jobState != "" && temp.jobState == "progress") {
+        if (temp.contractOwner == ownAddress) {
+          tasksProgressSubmitter.add(temp);
+        } else if (temp.participiant == ownAddress) {
+          tasksPerformer.add(temp);
         }
       }
 
-      if (temp[1] != "" && temp[1] == "review") {
-        if (temp[4] == ownAddress) {
-          tasksReviewSubmitter.add(taskObject);
-        } else if (temp[9] == ownAddress) {
-          tasksPerformer.add(taskObject);
+      if (temp.jobState != "" && temp.jobState == "review") {
+        if (temp.contractOwner == ownAddress) {
+          tasksReviewSubmitter.add(temp);
+        } else if (temp.participiant == ownAddress) {
+          tasksPerformer.add(temp);
         }
       }
-      if (temp[1] != "" && (temp[1] == "completed" || temp[1] == "canceled")) {
-        if (temp[4] == ownAddress) {
-          tasksDoneSubmitter.add(taskObject);
-        } else if (temp[9] == ownAddress) {
-          tasksDonePerformer.add(taskObject);
+      if (temp.jobState != "" && (temp.jobState == "completed" || temp.jobState == "canceled")) {
+        if (temp.contractOwner == ownAddress) {
+          tasksDoneSubmitter.add(temp);
+        } else if (temp.participiant == ownAddress) {
+          tasksDonePerformer.add(temp);
         }
       }
     }
@@ -383,7 +386,6 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
     taskLoaded = 0;
     runFilter(searchKeyword);
-
   }
 
   Future<void> addTask(String title, String description, String price) async {
