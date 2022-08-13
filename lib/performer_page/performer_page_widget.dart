@@ -537,14 +537,20 @@ class myPerformerTabWidget extends StatelessWidget {
 
                         TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
                         if (obj[index].jobState == "agreed")
-                        TextButton(child: Text('Start the job'), onPressed: () {
+                        TextButton(
+                            child: Text('Start the job'),
+                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                            onPressed: () {
                           tasksServices.changeTaskStatus(
                             obj[index].contractAddress,
                             obj[index].participiant,
                             'progress');
                         }),
                         if (obj[index].jobState == "progress")
-                        TextButton(child: Text('Review'), onPressed: () {
+                        TextButton(
+                            child: Text('Review'),
+                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                            onPressed: () {
                           tasksServices.changeTaskStatus(
                               obj[index].contractAddress,
                               obj[index].participiant,
@@ -610,7 +616,7 @@ class myPerformerTabWidget extends StatelessWidget {
                                       .bodyText2,
                                 ),
                                 Text(
-                                  obj[index].contractOwner.toString(),
+                                  DateFormat('MM/dd/yyyy, hh:mm a').format(obj[index].createdTime),
                                   style: FlutterFlowTheme.of(
                                       context)
                                       .bodyText2,

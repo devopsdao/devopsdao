@@ -47,6 +47,9 @@ dependencies:
   web3dart: ^2.3.5
   web_socket_channel: ^2.2.0
   badges: ^2.0.3
+  rate_limiter: ^0.1.1
+  throttling: ^1.0.0
+
 
 dev_dependencies:
   flutter_test:

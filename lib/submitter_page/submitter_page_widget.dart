@@ -164,11 +164,11 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                     Expanded(
                       child: TabBarView(
                         children: [
-                          mySubmitterTabWidget (obj: tasksServices.tasksOwner, objectState: "new",), //new
-                          mySubmitterTabWidget (obj: tasksServices.tasksAgreedSubmitter, objectState: "agreed",), //agreed
-                          mySubmitterTabWidget (obj: tasksServices.tasksProgressSubmitter, objectState: "progress",), //progress
-                          mySubmitterTabWidget (obj: tasksServices.tasksReviewSubmitter, objectState: "review",), //review
-                          mySubmitterTabWidget (obj: tasksServices.tasksDoneSubmitter, objectState: "review",), //completed & canceled
+                          mySubmitterTabWidget (obj: tasksServices.tasksOwner), //new
+                          mySubmitterTabWidget (obj: tasksServices.tasksAgreedSubmitter), //agreed
+                          mySubmitterTabWidget (obj: tasksServices.tasksProgressSubmitter), //progress
+                          mySubmitterTabWidget (obj: tasksServices.tasksReviewSubmitter), //review
+                          mySubmitterTabWidget (obj: tasksServices.tasksDoneSubmitter), //completed & canceled
 
                           // Padding(
                           //   padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
@@ -718,12 +718,30 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
   // }
 }
 
-class mySubmitterTabWidget extends StatelessWidget {
-  final String objectState;
+class mySubmitterTabWidget extends StatefulWidget {
   final obj;
   const mySubmitterTabWidget({Key? key,
-    required this.objectState, this.obj,
+    required this.obj,
   }) : super(key: key);
+
+  @override
+  _mySubmitterTabWidgetState createState() => _mySubmitterTabWidgetState();
+}
+
+class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
+  late bool justLoaded = true;
+  // final obj;
+  // const _mySubmitterTabWidgetState({Key? key,
+  //   required this.obj,
+  // }) : super(key: key);
+
+
+
+  // @override
+  // State<StatefulWidget> createState() {
+  //   // TODO: implement createState
+  //   throw UnimplementedError();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -736,7 +754,7 @@ class mySubmitterTabWidget extends StatelessWidget {
         child: ListView.builder(
           padding: EdgeInsets.zero,
           scrollDirection: Axis.vertical,
-          itemCount: obj.length,
+          itemCount: widget.obj.length,
           itemBuilder: (context, index) {
 
             return Padding(
@@ -750,16 +768,10 @@ class mySubmitterTabWidget extends StatelessWidget {
                     //   // Toggle light when tapped.
                     // });
                     showDialog(context: context, builder: (context) => AlertDialog(
-                      title: Text(obj[index].title),
+                      title: Text(widget.obj[index].title),
                       content: SingleChildScrollView(
                         child: ListBody(
                           children: <Widget>[
-                            Text("Description: ${obj[index].description}",
-                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                            Text('Contract owner: ${obj[index].contractOwner.toString()}',
-                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                            Text('Contract address: ${obj[index].contractAddress.toString()}',
-                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                             Divider(
                               height: 20,
                               thickness: 1,
@@ -767,13 +779,70 @@ class mySubmitterTabWidget extends StatelessWidget {
                               endIndent: 40,
                               color: Colors.black,
                             ),
-                            obj[index].jobState == "new" ?
-                            Text('Choose contractor',
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Description: \n',
+                                      style: const TextStyle( fontWeight: FontWeight.bold)),
+                                  TextSpan(text: widget.obj[index].description)
+                                ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Contract owner: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: widget.obj[index].contractOwner.toString(),
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Contract address: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: widget.obj[index].contractAddress.toString(),
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7)
+                                  )
+                                ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Created: ',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)
+                                  )
+                                ]
+                            )),
+                            // Text("Description: ${tasksServices.tasksNew[index].description}",
+                            //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                            // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
+                            //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                            // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
+                            //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                            Divider(
+                              height: 20,
+                              thickness: 1,
+                              indent: 40,
+                              endIndent: 40,
+                              color: Colors.black,
+                            ),
+                            widget.obj[index].jobState == "new" ?
+                            Text('Choose contractor: ',
                               style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),)
                             :
                             Text('text',
                             style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                            if (obj[index].jobState == "new")
+                            if (widget.obj[index].jobState == "new")
                               Container(
                                 height: 300.0, // Change as per your requirement
                                 width: 300.0, // Change as per your requirement
@@ -783,7 +852,7 @@ class mySubmitterTabWidget extends StatelessWidget {
                                   //
                                   // shrinkWrap: true,
                                   // physics: NeverScrollableScrollPhysics(),
-                                    itemCount: obj[index].contributors.length,
+                                    itemCount: widget.obj[index].contributors.length,
                                     itemBuilder: (context2, index2) {
                                       return
                                         Column(
@@ -799,14 +868,20 @@ class mySubmitterTabWidget extends StatelessWidget {
                                                   textStyle: const TextStyle(fontSize: 13),
                                                 ),
                                                 onPressed: () {
+                                                  setState(() {
+                                                    widget.obj[index].justLoaded = false;
+                                                  });
                                                   tasksServices.changeTaskStatus(
-                                                      obj[index].contractAddress,
-                                                      obj[index].contributors[index2],
+                                                      widget.obj[index].contractAddress,
+                                                      widget.obj[index].contributors[index2],
                                                       'agreed'
                                                   );
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text(obj[index].contributors[index2].toString()),
+                                                child: Text(
+                                                  widget.obj[index].contributors[index2].toString(),
+                                                  style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7),
+                                                ),
                                               ),]
                                         );
                                     }
@@ -819,13 +894,25 @@ class mySubmitterTabWidget extends StatelessWidget {
                       ),
                       actions: [
                         TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
-                        if (obj[index].jobState == 'review')
-                          TextButton(child: Text('Complete Task'), onPressed: () {
-                            tasksServices.changeTaskStatus(obj[index].contractAddress, obj[index].participiant, 'completed');
+                        if (widget.obj[index].jobState == 'review')
+                          TextButton(
+                              child: Text('Complete Task'),
+                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                              onPressed: () {
+                            setState(() {
+                              justLoaded = false;
+                            });
+                            tasksServices.changeTaskStatus(widget.obj[index].contractAddress, widget.obj[index].participiant, 'completed');
                           }),
-                        if (obj[index].jobState == 'completed')
-                          TextButton(child: Text('Withdraw'), onPressed: () {
-                            tasksServices.withdraw(obj[index].contractAddress);
+                        if (widget.obj[index].jobState == 'completed')
+                          TextButton(
+                              child: Text('Withdraw'),
+                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                              onPressed: () {
+                            setState(() {
+                              justLoaded = false;
+                            });
+                            tasksServices.withdraw(widget.obj[index].contractAddress);
                           }),
                       ],
                     ));
@@ -859,17 +946,17 @@ class mySubmitterTabWidget extends StatelessWidget {
                               CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  obj[index].title,
+                                  widget.obj[index].title,
                                   style: FlutterFlowTheme.of(context).subtitle1,
                                 ),
                                 Text(
-                                  obj[index].description,
+                                  widget.obj[index].description,
                                   style: FlutterFlowTheme.of(
                                       context)
                                       .bodyText2,
                                 ),
                                 Text(
-                                  obj[index].contractOwner.toString(),
+                                  DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
                                   style: FlutterFlowTheme.of(
                                       context)
                                       .bodyText2,
@@ -880,7 +967,7 @@ class mySubmitterTabWidget extends StatelessWidget {
                           ),
                         ),
 
-                        if (obj[index].contributorsCount != 0 && obj[index].jobState == "new")
+                        if (widget.obj[index].contributorsCount != 0 && widget.obj[index].jobState == "new")
                         Padding(
                           padding:
                           EdgeInsetsDirectional.fromSTEB(
@@ -888,7 +975,7 @@ class mySubmitterTabWidget extends StatelessWidget {
                           child: Badge(
                             // position: BadgePosition.topEnd(top: 10, end: 10),
                             badgeContent: Text(
-                              obj[index].contributorsCount.toString(),
+                              widget.obj[index].contributorsCount.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                             ),
                             animationDuration: Duration(milliseconds: 300),
@@ -898,6 +985,13 @@ class mySubmitterTabWidget extends StatelessWidget {
                             // borderSide: BorderSide(color: Colors.black, width: 3),
                             // child: Icon(Icons.settings),
                           ),
+                        ),
+                        if (widget.obj[index].justLoaded == false)
+                        Padding(
+                          padding:
+                          EdgeInsetsDirectional.fromSTEB(
+                              0, 0, 12, 0),
+                          child: CircularProgressIndicator(),
                         ),
                       ],
                     ),
@@ -914,5 +1008,7 @@ class mySubmitterTabWidget extends StatelessWidget {
       ),
     );
   }
+
+
 }
 

@@ -228,7 +228,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     ),
                           ),
                           Text(
-                            '\$1,275',
+                            '${tasksServices.ethBalance} eth',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
