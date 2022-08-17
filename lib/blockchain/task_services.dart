@@ -295,6 +295,7 @@ class TasksServices extends ChangeNotifier {
 
     totalTaskLen = totalTaskList[0].toInt();
     tasks.clear();
+
     if (loopRunning) {
       stopLoopRunning = true;
     }
