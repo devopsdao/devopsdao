@@ -25,7 +25,6 @@ void main() async {
       child: MyApp(),
     ),
   );
-
 }
 
 class MyApp extends StatefulWidget {
@@ -117,6 +116,7 @@ class _NavBarPageState extends State<NavBarPage> {
       'jobExchange': JobExchangeWidget(),
       'submitterPage': SubmitterPageWidget(),
       'performerPage': PerformerPageWidget(),
+      'walletPage': MyWalletPage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
     return Scaffold(
@@ -161,6 +161,14 @@ class _NavBarPageState extends State<NavBarPage> {
               size: 24,
             ),
             label: 'Performer',
+            tooltip: '',
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.pen,
+              size: 24,
+            ),
+            label: 'Wallet',
             tooltip: '',
           )
         ],

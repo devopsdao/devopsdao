@@ -1,13 +1,19 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'Factory.g.dart';
 import 'task.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import 'walletconnect.dart';
+
+import '../wallet/ethereum_transaction_tester.dart';
+import '../wallet/transaction_tester.dart';
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
@@ -21,6 +27,8 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksReviewSubmitter = [];
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
+  late var credentials;
+  EthereumAddress? publicAddress;
 
   //final String _rpcUrl =
   //Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
@@ -35,11 +43,14 @@ class TasksServices extends ChangeNotifier {
       : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
 
+  final bool _walletconnect = true;
+
   // final String _privatekey =
   //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
   final String _privatekey =
       'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8'; //u's ropsten key
   late Web3Client _web3client;
+  late WalletConnectManager _wcclient;
 
   // faucet m's key:
   // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
@@ -60,8 +71,9 @@ class TasksServices extends ChangeNotifier {
       },
     );
     await getABI();
-    await getCredentials();
+    // await getCredentials();
     await getDeployedContract();
+    // _wcclient = WalletConnectManager();
   }
 
   late ContractAbi _abiCode;
@@ -76,13 +88,25 @@ class TasksServices extends ChangeNotifier {
         EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
 
-  late EthPrivateKey _creds;
+  late dynamic _creds;
   EthereumAddress? ownAddress;
   EthereumAddress? myBalance;
+  // Future<void> getCredentials() async {
+  //   _creds = EthPrivateKey.fromHex(_privatekey);
+  //   ownAddress = await _creds.extractAddress();
+  //   // myBalance = await _creds.getBalance();
+  // }
+
   Future<void> getCredentials() async {
-    _creds = EthPrivateKey.fromHex(_privatekey);
-    ownAddress = await _creds.extractAddress();
-    // myBalance = await _creds.getBalance();
+    if (_walletconnect == true) {
+      // TransactionTester? _transactionTester = EthereumTransactionTester();
+      // await _transactionTester?.sendTransactionWC();
+      _creds = credentials;
+    } else {
+      _creds = EthPrivateKey.fromHex(_privatekey);
+      ownAddress = await _creds.extractAddress();
+      // myBalance = await _creds.getBalance();
+    }
   }
   // EtherAmount myBalance = _web3client.getBalance(_creds);
 
@@ -177,6 +201,10 @@ class TasksServices extends ChangeNotifier {
 
       print(value);
       print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
+
+      if (publicAddress != null) {
+        print('public address walletconnect' + publicAddress.toString());
+      }
       // print(price);
       // print('Data type: ${ownAddress.runtimeType}');
       //
@@ -274,6 +302,7 @@ class TasksServices extends ChangeNotifier {
     await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
+          from: publicAddress,
           contract: _deployedContract,
           function: _taskParticipation,
           parameters: [contractAddress],

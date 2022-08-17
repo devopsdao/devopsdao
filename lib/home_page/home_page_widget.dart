@@ -7,6 +7,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../blockchain/walletconnect.dart';
+import '../blockchain/walletconnect2.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
@@ -137,7 +138,36 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   size: 30,
                 ),
                 onPressed: () async {
-                  await connectWallet();
+                  // final _wcclient = EthereumTransactionSender();
+                  // // // await _wcclient.disconnect();
+                  // final session = await _wcclient.connect();
+                  // await _wcclient.signTransaction(session);
+                  // final _wcclient = WalletConnectManager();
+                  // await _wcclient.connectWallet();
+                  // await _wcclient.sendTransaction2();
+                  // await _wcclient.disconnect();
+                  await tasksServices.getCredentials();
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              FlutterFlowIconButton(
+                borderColor: Colors.transparent,
+                borderRadius: 30,
+                borderWidth: 1,
+                buttonSize: 60,
+                icon: Icon(
+                  Icons.account_balance_wallet,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  // final _wcclient = EthereumTransactionSender();
+                  // // await _wcclient.connectWallet();
+                  // await _wcclient.disconnect();
                 },
               ),
             ],
@@ -174,19 +204,17 @@ class _HomePageWidgetState extends State<HomePageWidget>
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
             tasksServices.isLoading
                 ? const Center(
-              child: CircularProgressIndicator(),
-            ) : Image.asset(
-              'assets/images/34.png',
-              width: 163,
-              height: 140,
-              fit: BoxFit.fitHeight,
-            ).animated([animationsMap['imageOnPageLoadAnimation']!]),
-
-
+                    child: CircularProgressIndicator(),
+                  )
+                : Image.asset(
+                    'assets/images/34.png',
+                    width: 163,
+                    height: 140,
+                    fit: BoxFit.fitHeight,
+                  ).animated([animationsMap['imageOnPageLoadAnimation']!]),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(
@@ -295,16 +323,18 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       Text(
                         'Wallet address',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).primaryBtnText,
-                        ),
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
                       ),
                       Text(
                         '${tasksServices.ownAddress}',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).primaryBtnText,
-                        ),
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
                       ),
                     ],
                   ),
