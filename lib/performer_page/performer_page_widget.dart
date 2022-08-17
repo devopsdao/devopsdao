@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
+import '../custom_widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -24,7 +25,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
       duration: 1000,
       delay: 1000,
       hideBeforeAnimating: false,
-      fadeIn: true,
+      fadeIn: false, // changed to false(orig from FLOW true)
       initialState: AnimationState(
         opacity: 0,
       ),
@@ -74,6 +75,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
           ],
         ),
         actions: [
+          LoadButtonIndicator(),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -139,17 +141,15 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                       ],
                     ),
 
-                    tasksServices.isLoading ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
+                    tasksServices.isLoading ?
+                    LoadIndicator()
                         :
-
                     Expanded(
                       child: TabBarView(
                         children: [
-                          myPerformerTabWidget (obj: tasksServices.tasksWithMyParticipation, objectState: "",),
-                          myPerformerTabWidget (obj: tasksServices.tasksPerformer, objectState: "",),
-                          myPerformerTabWidget (obj: tasksServices.tasksDonePerformer, objectState: "",),
+                          myPerformerTabWidget (obj: tasksServices.tasksWithMyParticipation),
+                          myPerformerTabWidget (obj: tasksServices.tasksPerformer),
+                          myPerformerTabWidget (obj: tasksServices.tasksDonePerformer),
                           // Padding(
                           //   padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
                           //   child: RefreshIndicator(
@@ -491,12 +491,18 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
 }
 
 
-class myPerformerTabWidget extends StatelessWidget {
-  final String objectState;
+class myPerformerTabWidget extends StatefulWidget {
   final obj;
   const myPerformerTabWidget({Key? key,
-    required this.objectState, this.obj,
+    this.obj,
   }) : super(key: key);
+
+  @override
+  _myPerformerTabWidget createState() => _myPerformerTabWidget();
+}
+
+class _myPerformerTabWidget extends State<myPerformerTabWidget> {
+  late bool justLoaded = true;
 
   @override
   Widget build(BuildContext context) {
@@ -509,7 +515,7 @@ class myPerformerTabWidget extends StatelessWidget {
           child: ListView.builder(
             padding: EdgeInsets.zero,
             scrollDirection: Axis.vertical,
-            itemCount: obj.length,
+            itemCount: widget.obj.length,
             itemBuilder: (context, index) {
 
               return Padding(
@@ -521,35 +527,113 @@ class myPerformerTabWidget extends StatelessWidget {
                     // setState(() {
                     //   // Toggle light when tapped.
                     // });
-                    if (obj[index].jobState != "new")
+                    // if (obj[index].jobState != "new")
                     showDialog(context: context, builder: (context) => AlertDialog(
-                      title: Text(obj[index].title),
+                      title: Text(widget.obj[index].title),
                       content: SingleChildScrollView(
                         child: ListBody(
                           children: <Widget>[
-                            Text(obj[index].description),
-                            Text(obj[index].contractOwner.toString()),
-                            Text(obj[index].contractAddress.toString()),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Description: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(text: widget.obj[index].description)
+                                ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Contract value: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: widget.obj[index].contractValue.toString() + ' Eth',
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                ]
+
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Contract owner: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: widget.obj[index].contractOwner.toString(),
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Contract address: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: widget.obj[index].contractAddress.toString(),
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7)
+                                  )
+                                ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Created: ',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)
+                                  )
+                                ]
+                            )),
                           ],
                         ),
                       ),
                       actions: [
 
                         TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
-                        if (obj[index].jobState == "agreed")
-                        TextButton(child: Text('Start the job'), onPressed: () {
-                          tasksServices.changeTaskStatus(
-                            obj[index].contractAddress,
-                            obj[index].participiant,
+                        if (widget.obj[index].jobState == "agreed")
+                        TextButton(
+                          child: Text('Start the job'),
+                          style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                          onPressed: () {
+                            setState(() {
+                              widget.obj[index].justLoaded = false;
+                            });
+                            tasksServices.changeTaskStatus(
+                              widget.obj[index].contractAddress,
+                              widget.obj[index].participiant,
                             'progress');
+                            Navigator.pop(context);
                         }),
-                        if (obj[index].jobState == "progress")
-                        TextButton(child: Text('Review'), onPressed: () {
-                          tasksServices.changeTaskStatus(
-                              obj[index].contractAddress,
-                              obj[index].participiant,
+                        if (widget.obj[index].jobState == "progress")
+                        TextButton(
+                          child: Text('Review'),
+                          style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                          onPressed: () {
+                            setState(() {
+                              widget.obj[index].justLoaded = false;
+                            });
+                            tasksServices.changeTaskStatus(
+                              widget.obj[index].contractAddress,
+                              widget.obj[index].participiant,
                               'review');
+                            Navigator.pop(context);
                         }),
+                        if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
+                          TextButton(
+                              child: Text('Withdraw'),
+                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                              onPressed: () {
+                                setState(() {
+                                  widget.obj[index].justLoaded = false;
+                                });
+                                tasksServices.withdraw(widget.obj[index].contractAddress);
+                                Navigator.pop(context);
+                              }),
                         // if (obj[index].jobState == "Review")
                         //   TextButton(child: Text('Review'), onPressed: () {
                         //     tasksServices.changeTaskStatus(
@@ -567,9 +651,9 @@ class myPerformerTabWidget extends StatelessWidget {
                     BoxDecoration(
                       // color: obj[index].jobState != "new" ? Colors.white : Colors.white,
                       color: (() {
-                        if (obj[index].jobState == "agreed") {
+                        if (widget.obj[index].jobState == "agreed") {
                           return Colors.orange.shade200;
-                        } else if (obj[index].jobState == "review") {
+                        } else if (widget.obj[index].jobState == "review") {
                           return Colors.lightGreen.shade200;
                         } else {
                           return Colors.white;
@@ -598,28 +682,50 @@ class myPerformerTabWidget extends StatelessWidget {
                               CrossAxisAlignment.start,
                               children: [
 
-                                Text(
-                                  obj[index].title,
-                                  style: FlutterFlowTheme.of(context).subtitle1,
-
+                                Row(
+                                  children: [
+                                    Text(
+                                      widget.obj[index].title,
+                                      style: FlutterFlowTheme.of(context).subtitle1,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      widget.obj[index].jobState,
+                                      style: FlutterFlowTheme.of(
+                                          context)
+                                          .bodyText2,
+                                    ),
+                                  ],
                                 ),
                                 Text(
-                                  obj[index].description,
+                                  widget.obj[index].description,
                                   style: FlutterFlowTheme.of(
                                       context)
                                       .bodyText2,
                                 ),
-                                Text(
-                                  obj[index].contractOwner.toString(),
-                                  style: FlutterFlowTheme.of(
-                                      context)
-                                      .bodyText2,
+                                Row(
+                                  children: [
+                                    Text(
+                                      DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
+                                      style: FlutterFlowTheme.of(
+                                          context)
+                                          .bodyText2,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      widget.obj[index].contractValue.toString()
+                                          + ' Eth',
+                                      style: FlutterFlowTheme.of(
+                                          context)
+                                          .bodyText2,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        if (obj[index].jobState == "new")
+                        if (widget.obj[index].jobState == "new")
                         Padding(
                           padding:
                           EdgeInsetsDirectional.fromSTEB(
@@ -627,7 +733,7 @@ class myPerformerTabWidget extends StatelessWidget {
                           child: Badge(
                             // position: BadgePosition.topEnd(top: 10, end: 10),
                             badgeContent: Text(
-                                obj[index].contributorsCount.toString(),
+                                widget.obj[index].contributorsCount.toString(),
                                 style: TextStyle(fontWeight: FontWeight.bold)
                             ),
                             animationDuration: Duration(milliseconds: 300),
@@ -636,6 +742,13 @@ class myPerformerTabWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5),
                             // child: Icon(Icons.settings),
                           ),
+                        ),
+                        if (widget.obj[index].justLoaded == false)
+                        Padding(
+                          padding:
+                          EdgeInsetsDirectional.fromSTEB(
+                              0, 0, 12, 0),
+                          child: CircularProgressIndicator(),
                         ),
                       ],
                     ),

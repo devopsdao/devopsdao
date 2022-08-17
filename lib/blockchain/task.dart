@@ -1,7 +1,7 @@
 import 'package:web3dart/web3dart.dart';
 
 class Task {
-  // final int id;
+  // final String id;
   final String title;
   final String description;
   final EthereumAddress contractOwner;
@@ -10,7 +10,9 @@ class Task {
   final int contributorsCount;
   final List<dynamic> contributors;
   final EthereumAddress participiant;
-  // final int contractValue;
+  late bool justLoaded;
+  final DateTime createdTime;
+  final double contractValue;
   Task({
     // required this.id,
     required this.title,
@@ -21,6 +23,8 @@ class Task {
     required this.contributorsCount,
     required this.contributors,
     required this.participiant,
-    // required this.contractValue,
+    required this.justLoaded,
+    required this.createdTime,
+    required this.contractValue,
   });
 }

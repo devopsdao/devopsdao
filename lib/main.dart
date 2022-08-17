@@ -12,6 +12,8 @@ import 'index.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
+import 'job_exchange/job_exchange_widget.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -20,10 +22,17 @@ void main() async {
   // runApp(MyApp());
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => TasksServices(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => TasksServices()),
+        // ChangeNotifierProvider(create: (context) => ExchangeFilterWidget()),
+      ],
       child: MyApp(),
     ),
+    // ChangeNotifierProvider(
+    //   create: (context) => TasksServices(),
+    //   child: MyApp(),
+    // ),
   );
 }
 
