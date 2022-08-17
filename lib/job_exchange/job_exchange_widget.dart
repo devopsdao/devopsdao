@@ -4,71 +4,13 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
+import '../custom_widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
-class LoadIndicator extends StatefulWidget {
-  const LoadIndicator({Key? key}) : super(key: key);
 
-  @override
-  _LoadIndicator createState() => _LoadIndicator();
-}
-
-class _LoadIndicator extends State<LoadIndicator> {
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var taskLoadedState;
-
-    setState(() {
-      taskLoadedState = tasksServices.taskLoaded;
-    });
-    return Container(
-      child: Center(
-        child: Padding(
-            padding:
-            EdgeInsetsDirectional.fromSTEB(
-                0, 20, 0, 0),
-            child:
-            Align(
-                alignment: Alignment.center,
-                child:  Column(
-                  children: [
-                    RichText(text: TextSpan(
-                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'Collecting Tasks from blockchain: ${taskLoadedState} of ${tasksServices.totalTaskLen}',
-                              style: TextStyle(
-                                height: 2,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 16,
-                              )
-                          ),
-                          // TextSpan(
-                          //   text: '10 of 21',
-                          //   style: TextStyle(
-                          //     height: 2,
-                          //     fontWeight: FontWeight.bold,
-                          //     color: Colors.white,
-                          //     fontSize: 17,
-                          //   )
-                          // ),
-                        ]
-                    )),
-                    CircularProgressIndicator(),
-                  ],
-                )
-            )
-        ),
-      )
-    );
-  }
-
-}
 
 
 // class ExchangeFilterWidget extends ChangeNotifier {
@@ -184,6 +126,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
           ],
         ),
         actions: [
+          LoadButtonIndicator(),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -309,13 +252,13 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                           content: SingleChildScrollView(
                                             child: ListBody(
                                               children: <Widget>[
-                                                Divider(
-                                                  height: 20,
-                                                  thickness: 1,
-                                                  indent: 40,
-                                                  endIndent: 40,
-                                                  color: Colors.black,
-                                                ),
+                                                // Divider(
+                                                //   height: 20,
+                                                //   thickness: 1,
+                                                //   indent: 40,
+                                                //   endIndent: 40,
+                                                //   color: Colors.black,
+                                                // ),
                                                 RichText(
                                                   text: TextSpan(
                                                     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
@@ -379,13 +322,13 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                                 // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
                                                 //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                Divider(
-                                                  height: 20,
-                                                  thickness: 1,
-                                                  indent: 40,
-                                                  endIndent: 40,
-                                                  color: Colors.black,
-                                                ),
+                                                // Divider(
+                                                //   height: 20,
+                                                //   thickness: 0,
+                                                //   indent: 40,
+                                                //   endIndent: 40,
+                                                //   color: Colors.black,
+                                                // ),
                                               ],
                                             ),
                                           ),
@@ -439,14 +382,14 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                           style: FlutterFlowTheme.of(context).subtitle1,
                                                         ),
                                                         Spacer(),
-                                                        Text(
-                                                          'Value: ' +
-                                                              tasksServices.filterResults[index].contractValue.toString()
-                                                          + ' Eth',
-                                                          style: FlutterFlowTheme.of(
-                                                              context)
-                                                              .bodyText2,
-                                                        ),
+                                                        // Text(
+                                                        //   'Value: ' +
+                                                        //       tasksServices.filterResults[index].contractValue.toString()
+                                                        //   + ' Eth',
+                                                        //   style: FlutterFlowTheme.of(
+                                                        //       context)
+                                                        //       .bodyText2,
+                                                        // ),
                                                       ],
                                                     ),
 
@@ -457,11 +400,26 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                           .bodyText2,
                                                     ),
 
-                                                    Text(
-                                                      DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices.filterResults[index].createdTime),
-                                                      style: FlutterFlowTheme.of(                                                             context)
-                                                          .bodyText2,
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices.filterResults[index].createdTime),
+                                                          style: FlutterFlowTheme.of(
+                                                              context)
+                                                              .bodyText2,
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          tasksServices.filterResults[index].contractValue.toString()
+                                                              + ' Eth',
+                                                          style: FlutterFlowTheme.of(
+                                                              context)
+                                                              .bodyText2,
+                                                        ),
+                                                      ],
                                                     ),
+
+
 
 
                                                   ],

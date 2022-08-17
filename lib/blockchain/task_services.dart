@@ -41,11 +41,12 @@ class TasksServices extends ChangeNotifier {
       ? 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161'
       : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
+  bool isLoadingBackground = false;
 
   // final String _privatekey =
   //     'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8'; //m's ropsten key
   final String _privatekey =
-      'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0';
+      'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8';
   late Web3Client _web3client;
 
   // faucet m's key:
@@ -91,6 +92,7 @@ class TasksServices extends ChangeNotifier {
   late EthPrivateKey _creds;
   EthereumAddress? ownAddress;
   double? ethBalance;
+  double? pendingBalance = 0;
   // EthereumAddress? myBalance;
   Future<void> getCredentials() async {
     _creds = EthPrivateKey.fromHex(_privatekey);
@@ -109,6 +111,7 @@ class TasksServices extends ChangeNotifier {
   late ContractFunction _getBalance;
   // late Throttle throttledFunction;
   late Throttling thr;
+  late String searchKeyword = '';
 
 
 
@@ -155,7 +158,7 @@ class TasksServices extends ChangeNotifier {
     // );
     // throttledFunction();
 
-    thr = Throttling(duration: const Duration(seconds: 8));
+    thr = Throttling(duration: const Duration(seconds: 20));
     thr.throttle(() {
       fetchTasks();
     });
@@ -228,9 +231,8 @@ class TasksServices extends ChangeNotifier {
         fetchTasks();
       });
     }
+    await myBalance();
   }
-
-  late String searchKeyword = '';
 
   Future<void> runFilter(String enteredKeyword) async {
     filterResults.clear();
@@ -260,7 +262,11 @@ class TasksServices extends ChangeNotifier {
     filterResults = tasksNew.toList();
   }
 
+  late bool loopRunning = false;
+  late bool stopLoopRunning = false;
+
   Future<void> fetchTasks() async {
+    notifyListeners();
     List totalTaskList = await _web3client.call(
       contract: _deployedContract,
       function: _taskCount,
@@ -268,124 +274,164 @@ class TasksServices extends ChangeNotifier {
     );
 
     totalTaskLen = totalTaskList[0].toInt();
-    filterResults.clear();
     tasks.clear();
-    tasksNew.clear();
-    tasksOwner.clear();
-    tasksWithMyParticipation.clear();
-    tasksPerformer.clear();
-    tasksAgreedSubmitter.clear();
-    tasksReviewSubmitter.clear();
-    tasksDonePerformer.clear();
-    tasksDoneSubmitter.clear();
-    tasksProgressSubmitter.clear();
-
-    for (var i = 0; i < totalTaskLen; i++) {
-      var temp = await _web3client.call(
-          contract: _deployedContract,
-          function: _tasks,
-          params: [BigInt.from(i)]);
-      print(temp);
-      var value = await _web3client.call(
-          contract: _deployedContract,
-          function: _getBalance,
-          params: [BigInt.from(temp[6].toInt())]);
-
-      final BigInt weiBalance = value[0];
-      final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-      // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
-
-      // print(value);
-      // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
-      // print(price);
-      // print('Data type: ${ownAddress.runtimeType}');
-
-      // late int contributorsCount;
-      // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
-
-      var taskObject = Task(
-        // id: temp[6].toString(),
-        title: temp[0],
-        description: temp[7],
-        // contractOwner: temp[4].toString(),
-        contractOwner: temp[4],
-        contractAddress: temp[2],
-        jobState: temp[1],
-        contributorsCount: temp[8].length,
-        contributors: temp[8],
-        participiant: temp[9],
-        justLoaded: true,
-        createdTime: DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
-        contractValue: ethBalancePrecise,
-      );
-
-      taskLoaded = temp[6].toInt(); // this count we need to show the loading process. does not affect anything else
-
-      if(isLoading == true) {
-        notifyListeners();
-      }
-      if (temp[1] != "") {
-        // var taskState = temp[1];
-        tasks.add(taskObject);
-      }
+    if (loopRunning) {
+      stopLoopRunning = true;
     }
 
-    for (var k = 0; k < tasks.length; k++) {
-      final temp = tasks[k];
-      if (temp.jobState != "" && temp.jobState == "new") {
-        if (temp.contractOwner == ownAddress) {
-          tasksOwner.add(temp);
-        } else if (temp.contributors.length != 0) {
-          for (var p = 0; p < temp.contributors.length; p++) {
-            // late EthereumAddress _tempParticipationsAddress;
-            // _tempParticipationsAddress = temp[8][p];
-            if (temp.contributors[p] == ownAddress) {
-              tasksWithMyParticipation.add(temp);
+    if (loopRunning == false){
+      loopRunning = true;
+      for (var i = 0; i < totalTaskLen; i++) {
+        if (stopLoopRunning) {
+          tasks.clear();
+          stopLoopRunning = false;
+          loopRunning = false;
+          fetchTasks();
+          break;
+        }
+        var temp = await _web3client.call(
+            contract: _deployedContract,
+            function: _tasks,
+            params: [BigInt.from(i)]);
+        print(temp);
+        var value = await _web3client.call(
+            contract: _deployedContract,
+            function: _getBalance,
+            params: [BigInt.from(temp[6].toInt())]);
+
+        final BigInt weiBalance = value[0];
+        final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+        // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
+
+        // print(value);
+        // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
+        // print(price);
+        // print('Data type: ${ownAddress.runtimeType}');
+
+        // late int contributorsCount;
+        // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
+
+        var taskObject = Task(
+          // id: temp[6].toString(),
+          title: temp[0],
+          description: temp[7],
+          // contractOwner: temp[4].toString(),
+          contractOwner: temp[4],
+          contractAddress: temp[2],
+          jobState: temp[1],
+          contributorsCount: temp[8].length,
+          contributors: temp[8],
+          participiant: temp[9],
+          justLoaded: true,
+          createdTime: DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
+          contractValue: ethBalancePrecise,
+        );
+
+        taskLoaded = temp[6].toInt(); // this count we need to show the loading process. does not affect anything else
+
+        if(isLoading == true) {
+          notifyListeners();
+        }
+        if (temp[1] != "") {
+          // var taskState = temp[1];
+          tasks.add(taskObject);
+        }
+      }
+
+      if (loopRunning) {
+        filterResults.clear();
+        tasksNew.clear();
+        tasksOwner.clear();
+        tasksWithMyParticipation.clear();
+        tasksPerformer.clear();
+        tasksAgreedSubmitter.clear();
+        tasksReviewSubmitter.clear();
+        tasksDonePerformer.clear();
+        tasksDoneSubmitter.clear();
+        tasksProgressSubmitter.clear();
+
+        pendingBalance = 0;
+
+        for (var k = 0; k < tasks.length; k++) {
+
+          final temp = tasks[k];
+          // if (pendingBalance != null) {
+          //
+          // }
+          // final pendingBalance2 = temp.contractValue;
+          if (
+          temp.contractValue != 0
+              && temp.participiant == ownAddress
+          ) {
+            if (
+            temp.jobState == "agreed"
+                || temp.jobState == "progress"
+                || temp.jobState == "review"
+                || temp.jobState == "completed"
+            ) {
+              pendingBalance = pendingBalance! + temp.contractValue;
             }
           }
-        } else {
-          tasksNew.add(temp);
-          filterResults.add(temp);
-        }
-      }
 
-      if (temp.jobState != "" && temp.jobState == "agreed") {
-        if (temp.contractOwner == ownAddress) {
-          tasksAgreedSubmitter.add(temp);
-        } else if (temp.participiant == ownAddress) {
-          tasksPerformer.add(temp);
-        }
-      }
 
-      if (temp.jobState != "" && temp.jobState == "progress") {
-        if (temp.contractOwner == ownAddress) {
-          tasksProgressSubmitter.add(temp);
-        } else if (temp.participiant == ownAddress) {
-          tasksPerformer.add(temp);
-        }
-      }
+          if (temp.jobState != "" && temp.jobState == "new") {
+            if (temp.contractOwner == ownAddress) {
+              tasksOwner.add(temp);
+            } else if (temp.contributors.length != 0) {
+              for (var p = 0; p < temp.contributors.length; p++) {
+                // late EthereumAddress _tempParticipationsAddress;
+                // _tempParticipationsAddress = temp[8][p];
+                if (temp.contributors[p] == ownAddress) {
+                  tasksWithMyParticipation.add(temp);
+                }
+              }
+            } else {
+              tasksNew.add(temp);
+              filterResults.add(temp);
+            }
+          }
 
-      if (temp.jobState != "" && temp.jobState == "review") {
-        if (temp.contractOwner == ownAddress) {
-          tasksReviewSubmitter.add(temp);
-        } else if (temp.participiant == ownAddress) {
-          tasksPerformer.add(temp);
+          if (temp.jobState != "" && temp.jobState == "agreed") {
+            if (temp.contractOwner == ownAddress) {
+              tasksAgreedSubmitter.add(temp);
+            } else if (temp.participiant == ownAddress) {
+              tasksPerformer.add(temp);
+            }
+          }
+
+          if (temp.jobState != "" && temp.jobState == "progress") {
+            if (temp.contractOwner == ownAddress) {
+              tasksProgressSubmitter.add(temp);
+            } else if (temp.participiant == ownAddress) {
+              tasksPerformer.add(temp);
+            }
+          }
+
+          if (temp.jobState != "" && temp.jobState == "review") {
+            if (temp.contractOwner == ownAddress) {
+              tasksReviewSubmitter.add(temp);
+            } else if (temp.participiant == ownAddress) {
+              tasksPerformer.add(temp);
+            }
+          }
+          if (temp.jobState != "" && (temp.jobState == "completed" || temp.jobState == "canceled")) {
+            if (temp.contractOwner == ownAddress) {
+              tasksDoneSubmitter.add(temp);
+            } else if (temp.participiant == ownAddress) {
+              tasksDonePerformer.add(temp);
+            }
+          }
         }
+
+        isLoading = false;
+        isLoadingBackground = false;
+        await myBalance();
+        notifyListeners();
+        taskLoaded = 0;
+        runFilter(searchKeyword); // reset search bar
       }
-      if (temp.jobState != "" && (temp.jobState == "completed" || temp.jobState == "canceled")) {
-        if (temp.contractOwner == ownAddress) {
-          tasksDoneSubmitter.add(temp);
-        } else if (temp.participiant == ownAddress) {
-          tasksDonePerformer.add(temp);
-        }
-      }
+      loopRunning = false;
     }
-
-    isLoading = false;
-    await myBalance();
-    notifyListeners();
-    taskLoaded = 0;
-    runFilter(searchKeyword);
   }
 
   Future<void> addTask(String title, String description, String price) async {
@@ -403,7 +449,8 @@ class TasksServices extends ChangeNotifier {
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
         chainId: 3);
-    isLoading = true;
+    isLoading = false;
+    isLoadingBackground = true;
     // fetchTasks();
     tellMeHasItMined(txn);
   }
@@ -426,6 +473,7 @@ class TasksServices extends ChangeNotifier {
         chainId: 3
     );
     isLoading = false;
+    isLoadingBackground = true;
     print(txn);
     // txnRes = await _web3client
     //     .addedBlocks()
@@ -451,25 +499,28 @@ class TasksServices extends ChangeNotifier {
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: 3);
-    isLoading = true;
+    isLoading = false;
+    isLoadingBackground = true;
     // fetchTasks();
     tellMeHasItMined(txn);
   }
 
-  Future<void> withdraw(int contractAddress) async {
+  Future<void> withdraw(EthereumAddress contractAddress) async {
     late String txn;
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
           contract: _deployedContract,
           function: _withdraw,
-          parameters: [contractAddress],
+          parameters: [contractAddress, ownAddress],
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: 3);
-    isLoading = true;
+    isLoading = false;
+    isLoadingBackground = true;
     // fetchTasks();
     tellMeHasItMined(txn);
+
   }
 
   // Future<void> deleteTask(int id) async {

@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 
+import '../custom_widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -19,6 +20,8 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
+
+
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -78,6 +81,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _flag = true;
+  late AnimationController _animationController;
+  late Animation<double> _myAnimation;
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +92,11 @@ class _HomePageWidgetState extends State<HomePageWidget>
       animationsMap.values
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
+    );
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    _myAnimation = CurvedAnimation(
+        curve: Curves.linear,
+        parent: _animationController
     );
   }
 
@@ -123,6 +135,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
+          LoadButtonIndicator(),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -176,10 +189,11 @@ class _HomePageWidgetState extends State<HomePageWidget>
           mainAxisAlignment: MainAxisAlignment.center,
 
           children: [
-            tasksServices.isLoading
-                ? const Center(
-              child: CircularProgressIndicator(),
-            ) : Image.asset(
+            tasksServices.isLoading ?
+            LoadIndicator()
+                :
+
+            Image.asset(
               'assets/images/34.png',
               width: 163,
               height: 140,
@@ -262,7 +276,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     ),
                           ),
                           Text(
-                            '\$325',
+                            '${tasksServices.pendingBalance} eth',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)

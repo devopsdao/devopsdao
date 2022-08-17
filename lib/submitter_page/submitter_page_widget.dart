@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
+import '../custom_widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -80,6 +81,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
+              LoadButtonIndicator(),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
                 child: Icon(
@@ -156,9 +158,8 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       ],
                     ),
 
-                    tasksServices.isLoading ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
+                    tasksServices.isLoading ?
+                    LoadIndicator()
                         :
 
                     Expanded(
@@ -730,18 +731,6 @@ class mySubmitterTabWidget extends StatefulWidget {
 
 class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   late bool justLoaded = true;
-  // final obj;
-  // const _mySubmitterTabWidgetState({Key? key,
-  //   required this.obj,
-  // }) : super(key: key);
-
-
-
-  // @override
-  // State<StatefulWidget> createState() {
-  //   // TODO: implement createState
-  //   throw UnimplementedError();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -772,21 +761,33 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       content: SingleChildScrollView(
                         child: ListBody(
                           children: <Widget>[
-                            Divider(
-                              height: 20,
-                              thickness: 1,
-                              indent: 40,
-                              endIndent: 40,
-                              color: Colors.black,
-                            ),
+                            // Divider(
+                            //   height: 20,
+                            //   thickness: 1,
+                            //   indent: 40,
+                            //   endIndent: 40,
+                            //   color: Colors.black,
+                            // ),
                             RichText(text: TextSpan(
                                 style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
                                 children: <TextSpan>[
                                   TextSpan(
                                       text: 'Description: \n',
-                                      style: const TextStyle( fontWeight: FontWeight.bold)),
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                   TextSpan(text: widget.obj[index].description)
                                 ]
+                            )),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Contract value: \n',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: widget.obj[index].contractValue.toString() + ' Eth',
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                ]
+
                             )),
                             RichText(text: TextSpan(
                                 style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
@@ -829,19 +830,30 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                             // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
                             //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                            Divider(
-                              height: 20,
-                              thickness: 1,
-                              indent: 40,
-                              endIndent: 40,
-                              color: Colors.black,
-                            ),
-                            widget.obj[index].jobState == "new" ?
-                            Text('Choose contractor: ',
-                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),)
-                            :
-                            Text('text',
-                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                            // Divider(
+                            //   height: 20,
+                            //   thickness: 1,
+                            //   indent: 40,
+                            //   endIndent: 40,
+                            //   color: Colors.black,
+                            // ),
+                            if (widget.obj[index].jobState == "new" )
+                            // Text('Choose contractor: ',
+                            //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                            RichText(text: TextSpan(
+                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Choose contractor: ',
+                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+
+                                ]
+                            )),
+
+
+                            // if (widget.obj[index].jobState != "new" )
+                            // Text('text',
+                            // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                             if (widget.obj[index].jobState == "new")
                               Container(
                                 height: 300.0, // Change as per your requirement
@@ -849,70 +861,73 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 child: ListView.builder(
                                   // padding: EdgeInsets.zero,
                                   // scrollDirection: Axis.vertical,
-                                  //
                                   // shrinkWrap: true,
                                   // physics: NeverScrollableScrollPhysics(),
-                                    itemCount: widget.obj[index].contributors.length,
-                                    itemBuilder: (context2, index2) {
-                                      return
-                                        Column(
-                                            children: [
-                                              // Text(
-                                              //   tasksServices.tasksOwner[index].contributors[index2].toString(),
-                                              //   style: FlutterFlowTheme.of(
-                                              //       context2)
-                                              //       .bodyText2,
-                                              // ),
-                                              TextButton(
-                                                style: TextButton.styleFrom(
-                                                  textStyle: const TextStyle(fontSize: 13),
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    widget.obj[index].justLoaded = false;
-                                                  });
-                                                  tasksServices.changeTaskStatus(
-                                                      widget.obj[index].contractAddress,
-                                                      widget.obj[index].contributors[index2],
-                                                      'agreed'
-                                                  );
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  widget.obj[index].contributors[index2].toString(),
-                                                  style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7),
-                                                ),
-                                              ),]
-                                        );
+                                  itemCount: widget.obj[index].contributors.length,
+                                  itemBuilder: (context2, index2) {
+                                    return
+                                      Column(
+                                        children: [
+                                          // Text(
+                                          //   tasksServices.tasksOwner[index].contributors[index2].toString(),
+                                          //   style: FlutterFlowTheme.of(
+                                          //       context2)
+                                          //       .bodyText2,
+                                          // ),
+                                          TextButton(
+                                            style: TextButton.styleFrom(
+                                              textStyle: const TextStyle(fontSize: 13),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                widget.obj[index].justLoaded = false;
+                                              });
+                                              tasksServices.changeTaskStatus(
+                                                  widget.obj[index].contractAddress,
+                                                  widget.obj[index].contributors[index2],
+                                                  'agreed'
+                                              );
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              widget.obj[index].contributors[index2].toString(),
+                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7),
+                                            ),
+                                          ),
+                                        ]
+                                      );
                                     }
                                 ),
                               ),
-
                           ],
                         ),
-
                       ),
                       actions: [
                         TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
                         if (widget.obj[index].jobState == 'review')
                           TextButton(
-                              child: Text('Complete Task'),
-                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                              onPressed: () {
-                            setState(() {
-                              justLoaded = false;
-                            });
-                            tasksServices.changeTaskStatus(widget.obj[index].contractAddress, widget.obj[index].participiant, 'completed');
+                            child: Text('Complete Task'),
+                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                            onPressed: () {
+                              setState(() {
+                                widget.obj[index].justLoaded = false;
+                              });
+                              tasksServices.changeTaskStatus(
+                                widget.obj[index].contractAddress,
+                                widget.obj[index].participiant,
+                                'completed');
+                              Navigator.pop(context);
                           }),
                         if (widget.obj[index].jobState == 'completed')
                           TextButton(
-                              child: Text('Withdraw'),
-                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                              onPressed: () {
-                            setState(() {
-                              justLoaded = false;
-                            });
-                            tasksServices.withdraw(widget.obj[index].contractAddress);
+                            child: Text('Withdraw'),
+                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                            onPressed: () {
+                              setState(() {
+                                widget.obj[index].justLoaded = false;
+                              });
+                              tasksServices.withdraw(widget.obj[index].contractAddress);
+                              Navigator.pop(context);
                           }),
                       ],
                     ));
@@ -931,7 +946,6 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       ],
                       borderRadius: BorderRadius.circular(8),
                     ),
-
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -945,21 +959,48 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               crossAxisAlignment:
                               CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.obj[index].title,
-                                  style: FlutterFlowTheme.of(context).subtitle1,
+                                Row(
+                                  children: [
+                                    Text(
+                                      widget.obj[index].title,
+                                      style: FlutterFlowTheme.of(context).subtitle1,
+                                    ),
+                                    Spacer(),
+                                    // Text(
+                                    //   widget.obj[index].jobState,
+                                    //   style: FlutterFlowTheme.of(
+                                    //       context)
+                                    //       .bodyText2,
+                                    // ),
+                                  ],
                                 ),
+                                // Text(
+                                //   widget.obj[index].title,
+                                //   style: FlutterFlowTheme.of(context).subtitle1,
+                                // ),
                                 Text(
                                   widget.obj[index].description,
                                   style: FlutterFlowTheme.of(
                                       context)
                                       .bodyText2,
                                 ),
-                                Text(
-                                  DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
-                                  style: FlutterFlowTheme.of(
-                                      context)
-                                      .bodyText2,
+                                Row(
+                                  children: [
+                                    Text(
+                                      DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
+                                      style: FlutterFlowTheme.of(
+                                          context)
+                                          .bodyText2,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      widget.obj[index].contractValue.toString()
+                                          + ' Eth',
+                                      style: FlutterFlowTheme.of(
+                                          context)
+                                          .bodyText2,
+                                    ),
+                                  ],
                                 ),
 
                               ],
@@ -998,17 +1039,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                   ),
                 ),
               ),
-
             );
           },
-          // children: [
-          //
-          // ],
         ),
       ),
     );
   }
-
-
 }
 
