@@ -34,7 +34,6 @@ void main() async {
     //   child: MyApp(),
     // ),
   );
-
 }
 
 class MyApp extends StatefulWidget {
@@ -123,10 +122,11 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   Widget build(BuildContext context) {
     final tabs = {
-      'homePage': HomePageWidget(),
+      'homePage': HomePageWidget(displayUri: 'test',),
       'jobExchange': JobExchangeWidget(),
       'submitterPage': SubmitterPageWidget(),
       'performerPage': PerformerPageWidget(),
+      'walletPage': MyWalletPage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
     return Scaffold(
@@ -151,7 +151,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.work_outline_sharp,
+              Icons.compare_arrows,
               size: 24,
             ),
             label: 'Exchange',
@@ -171,6 +171,14 @@ class _NavBarPageState extends State<NavBarPage> {
               size: 24,
             ),
             label: 'Performer',
+            tooltip: '',
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.wallet,
+              size: 24,
+            ),
+            label: 'Wallet',
             tooltip: '',
           )
         ],

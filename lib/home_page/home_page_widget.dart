@@ -8,11 +8,14 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../blockchain/walletconnect.dart';
+import '../blockchain/walletconnect2.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
 class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({Key? key}) : super(key: key);
+  final String displayUri;
+  const HomePageWidget({Key? key, required this.displayUri}) : super(key: key);
+
 
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
@@ -20,6 +23,9 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
+
+
+
 
 
   final animationsMap = {
@@ -81,7 +87,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _flag = true;
+  // bool _flag = true;
   late AnimationController _animationController;
   late Animation<double> _myAnimation;
 
@@ -150,7 +156,71 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   size: 30,
                 ),
                 onPressed: () async {
-                  await connectWallet();
+                  await tasksServices.getCredentials();
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              FlutterFlowIconButton(
+                borderColor: Colors.transparent,
+                borderRadius: 30,
+                borderWidth: 1,
+                buttonSize: 60,
+                icon: Icon(
+                  Icons.account_balance_wallet,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () async {
+                  showDialog(context: context, builder: (context) => AlertDialog(
+                    title: Text('Connect your wallet'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          // RichText(text: TextSpan(
+                          //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                          //     children: <TextSpan>[
+                          //       TextSpan(
+                          //           text: 'Description: \n',
+                          //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                          //       TextSpan(text: widget.obj[index].description)
+                          //     ]
+                          // )),
+
+                          RichText(text: TextSpan(
+                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: 'Wallet link: \n',
+                                    style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text: widget.displayUri,
+                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
+                                )
+                              ]
+                          )),
+                        ],
+                      ),
+                    ),
+                    actions: [
+
+                      TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
+                      TextButton(
+                          child: Text('Connect'),
+                          style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                          onPressed: () {
+                            setState(() {
+
+                            });
+
+                            Navigator.pop(context);
+                          }
+                        ),
+                    ],
+                  ));
                 },
               ),
             ],

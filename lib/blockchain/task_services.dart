@@ -9,11 +9,16 @@ import 'package:throttling/throttling.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'Factory.g.dart';
 import 'task.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import 'walletconnect.dart';
+
+import '../wallet/ethereum_transaction_tester.dart';
+import '../wallet/transaction_tester.dart';
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
@@ -28,6 +33,8 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksReviewSubmitter = [];
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
+  late var credentials;
+  EthereumAddress? publicAddress;
 
   // final String _rpcUrl =
   // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
@@ -38,13 +45,14 @@ class TasksServices extends ChangeNotifier {
       ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
       : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   final String _wsUrl = Platform.isAndroid
-      ? 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
       : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
   bool isLoadingBackground = false;
+  final bool _walletconnect = false;
 
   // final String _privatekey =
-  //     'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8'; //m's ropsten key
+  //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
   final String _privatekey =
       'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8';
   late Web3Client _web3client;
@@ -55,6 +63,7 @@ class TasksServices extends ChangeNotifier {
 // f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8
   // internal key's
   // 29e52385859d9a1cd067552dcdb4c1734853343cf83dfbf31d76e1871cf1d7ec - second user
+  // e1f0d3b368c3aaf8fde11e8da9a6ab2162fbd08f384145b480f16ab9cd746941 - second user
   // 01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f
 
   TasksServices() {
@@ -81,7 +90,7 @@ class TasksServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   Future<void> getABI() async {
     String abiFile =
-    await rootBundle.loadString('build/contracts/Factory.json');
+        await rootBundle.loadString('build/contracts/Factory.json');
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
@@ -89,15 +98,22 @@ class TasksServices extends ChangeNotifier {
         EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
   }
 
-  late EthPrivateKey _creds;
+  late dynamic _creds;
   EthereumAddress? ownAddress;
   double? ethBalance;
   double? pendingBalance = 0;
-  // EthereumAddress? myBalance;
   Future<void> getCredentials() async {
-    _creds = EthPrivateKey.fromHex(_privatekey);
-    ownAddress = await _creds.extractAddress();
-    // myBalance = await _creds.getBalance();
+    if (_walletconnect == true && credentials != null) {
+      // TransactionTester? _transactionTester = EthereumTransactionTester();
+      // await _transactionTester?.sendTransactionWC();
+      _creds = credentials;
+      ownAddress = publicAddress;
+      myBalance();
+    } else {
+      _creds = EthPrivateKey.fromHex(_privatekey);
+      ownAddress = await _creds.extractAddress();
+      // myBalance = await _creds.getBalance();
+    }
   }
 
   late DeployedContract _deployedContract;
@@ -112,8 +128,6 @@ class TasksServices extends ChangeNotifier {
   // late Throttle throttledFunction;
   late Throttling thr;
   late String searchKeyword = '';
-
-
 
   // Future<void> listenToEvents() async {
   //   final OneEventForAll = _deployedContract.event('OneEventForAll');
@@ -166,18 +180,19 @@ class TasksServices extends ChangeNotifier {
     await monitorEvents();
   }
 
-
   Future<void> myBalance() async {
     // late EtherAmount myWalletValue = await _web3client.call(
     //     contract: _deployedContract, function: _getBalance, params: [ownAddress]
     // );
-    final EtherAmount balance = await _web3client.getBalance(ownAddress!);
-    final BigInt weiBalance = balance.getInWei;
-    // ethBalance = weiBalance.toDouble() * 100000;
-    final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-    ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
-    // print(ethBalance);
-    // print(ethBalance.toDouble() / 1000000000000000000);
+    if (ownAddress != null) {
+      final EtherAmount balance = await _web3client.getBalance(ownAddress!);
+      final BigInt weiBalance = balance.getInWei;
+      // ethBalance = weiBalance.toDouble() * 100000;
+      final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+      ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+      // print(ethBalance);
+      // print(ethBalance.toDouble() / 1000000000000000000);
+    }
   }
 
   Future<void> monitorEvents() async {
@@ -185,20 +200,19 @@ class TasksServices extends ChangeNotifier {
         Factory(address: _contractAddress, client: _web3client, chainId: 3);
     // listen for the Transfer event when it's emitted by the contract above
     final subscription =
-      factory.oneEventForAllEvents().take(1).listen((event) async {
-        print('received event ${event.contractAdr} index ${event.index}');
-        // EasyDebounce.debounce(
-        //     'fetchTasks',                 // <-- An ID for this particular debouncer
-        //     Duration(milliseconds: 10000),    // <-- The debounce duration
-        //         () => fetchTasks()                // <-- The target method
-        // );
-        // throttledFunction();
-        thr.throttle(() {
-          fetchTasks();
-        });
+        factory.oneEventForAllEvents().take(1).listen((event) async {
+      print('received event ${event.contractAdr} index ${event.index}');
+      // EasyDebounce.debounce(
+      //     'fetchTasks',                 // <-- An ID for this particular debouncer
+      //     Duration(milliseconds: 10000),    // <-- The debounce duration
+      //         () => fetchTasks()                // <-- The target method
+      // );
+      // throttledFunction();
+      thr.throttle(() {
+        fetchTasks();
+      });
       // await fetchTasks();
-      }
-    );
+    });
     // final subscription2 =
     //     await factory.jobContractCreatedEvents().take(1).listen((event) {
     //   print(
@@ -218,12 +232,14 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future tellMeHasItMined(String hash) async {
-    TransactionReceipt? transactionReceipt = await _web3client.getTransactionReceipt(hash);
+    TransactionReceipt? transactionReceipt =
+        await _web3client.getTransactionReceipt(hash);
     while (transactionReceipt == null) {
       Future.delayed(const Duration(milliseconds: 1000));
       transactionReceipt = await _web3client.getTransactionReceipt(hash);
     }
-    TransactionInformation transactionResult = await _web3client.getTransactionByHash(hash);
+    // TransactionInformation transactionResult =
+    //     await _web3client.getTransactionByHash(hash);
     // print(transactionReceipt);
     if (transactionReceipt.status == true) {
       print('tell me has it mined');
@@ -245,8 +261,12 @@ class TasksServices extends ChangeNotifier {
       // print(filterResults);
 
     } else {
-      for (int i = 0; i<tasksNew.length ; i++) {
-        if(tasksNew.elementAt(i).title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
+      for (int i = 0; i < tasksNew.length; i++) {
+        if (tasksNew
+            .elementAt(i)
+            .title
+            .toLowerCase()
+            .contains(enteredKeyword.toLowerCase())) {
           print('${tasksNew.elementAt(i).title}');
           filterResults.add(tasksNew.elementAt(i));
           // notifyListeners();
@@ -280,7 +300,7 @@ class TasksServices extends ChangeNotifier {
       stopLoopRunning = true;
     }
 
-    if (loopRunning == false){
+    if (loopRunning == false) {
       loopRunning = true;
       for (var i = 0; i < totalTaskLen; i++) {
         if (stopLoopRunning) {
@@ -324,13 +344,15 @@ class TasksServices extends ChangeNotifier {
           contributors: temp[8],
           participiant: temp[9],
           justLoaded: true,
-          createdTime: DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
+          createdTime:
+              DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
           contractValue: ethBalancePrecise,
         );
 
-        taskLoaded = temp[6].toInt(); // this count we need to show the loading process. does not affect anything else
+        taskLoaded = temp[6]
+            .toInt(); // this count we need to show the loading process. does not affect anything else
 
-        if(isLoading == true) {
+        if (isLoading == true) {
           notifyListeners();
         }
         if (temp[1] != "") {
@@ -354,26 +376,19 @@ class TasksServices extends ChangeNotifier {
         pendingBalance = 0;
 
         for (var k = 0; k < tasks.length; k++) {
-
           final temp = tasks[k];
           // if (pendingBalance != null) {
           //
           // }
           // final pendingBalance2 = temp.contractValue;
-          if (
-          temp.contractValue != 0
-              && temp.participiant == ownAddress
-          ) {
-            if (
-            temp.jobState == "agreed"
-                || temp.jobState == "progress"
-                || temp.jobState == "review"
-                || temp.jobState == "completed"
-            ) {
+          if (temp.contractValue != 0 && temp.participiant == ownAddress) {
+            if (temp.jobState == "agreed" ||
+                temp.jobState == "progress" ||
+                temp.jobState == "review" ||
+                temp.jobState == "completed") {
               pendingBalance = pendingBalance! + temp.contractValue;
             }
           }
-
 
           if (temp.jobState != "" && temp.jobState == "new") {
             if (temp.contractOwner == ownAddress) {
@@ -415,7 +430,8 @@ class TasksServices extends ChangeNotifier {
               tasksPerformer.add(temp);
             }
           }
-          if (temp.jobState != "" && (temp.jobState == "completed" || temp.jobState == "canceled")) {
+          if (temp.jobState != "" &&
+              (temp.jobState == "completed" || temp.jobState == "canceled")) {
             if (temp.contractOwner == ownAddress) {
               tasksDoneSubmitter.add(temp);
             } else if (temp.participiant == ownAddress) {
@@ -444,10 +460,12 @@ class TasksServices extends ChangeNotifier {
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
+          from: ownAddress,
           contract: _deployedContract,
           function: _createTask,
           parameters: [title, description],
-          value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
+          value:
+              EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
         chainId: 3);
     isLoading = false;
@@ -466,13 +484,13 @@ class TasksServices extends ChangeNotifier {
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
+          from: ownAddress,
           contract: _deployedContract,
           function: _taskParticipation,
           parameters: [contractAddress],
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
-        chainId: 3
-    );
+        chainId: 3);
     isLoading = false;
     isLoadingBackground = true;
     print(txn);
@@ -494,6 +512,7 @@ class TasksServices extends ChangeNotifier {
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
+          from: ownAddress,
           contract: _deployedContract,
           function: _changeTaskStatus,
           parameters: [contractAddress, participiantAddress, state],
@@ -511,6 +530,7 @@ class TasksServices extends ChangeNotifier {
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
+          from: ownAddress,
           contract: _deployedContract,
           function: _withdraw,
           parameters: [contractAddress, ownAddress],
@@ -521,7 +541,6 @@ class TasksServices extends ChangeNotifier {
     isLoadingBackground = true;
     // fetchTasks();
     tellMeHasItMined(txn);
-
   }
 
   // Future<void> deleteTask(int id) async {
