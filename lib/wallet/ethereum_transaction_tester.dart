@@ -42,44 +42,94 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
 }
 
 class EthereumTransactionTester extends TransactionTester {
-  final Web3Client ethereum;
-  final EthereumWalletConnectProvider provider;
+  late final Web3Client ethereum;
+  late final EthereumWalletConnectProvider provider;
   late final WalletConnectSession? session;
   late final EthereumAddress? publicAddress;
+  late final WalletConnect connector;
 
-  EthereumTransactionTester._internal({
-    required WalletConnect connector,
-    required this.ethereum,
-    required this.provider,
-  }) : super(connector: connector);
+  // EthereumTransactionTester(connector) : super(connector: connector);
 
-  factory EthereumTransactionTester() {
-    final ethereum = Web3Client('https://ropsten.infura.io/', Client());
+  EthereumTransactionTester() {
+    initWalletConnect();
+  }
 
-    final connector = WalletConnect(
+  // EthereumTransactionTester._internal({
+  //   required WalletConnect connector,
+  //   required this.ethereum,
+  //   required this.provider,
+  // }) : super(connector: connector);
+
+  // factory EthereumTransactionTester() {
+  //   final ethereum = Web3Client('https://ropsten.infura.io/', Client());
+
+  //   final sessionStorage = WalletConnectSecureStorage();
+
+  //   final connector = WalletConnect(
+  //     bridge: 'https://bridge.walletconnect.org',
+  //     session: session,
+  //     sessionStorage: sessionStorage,
+  //     clientMeta: PeerMeta(
+  //       name: 'Devopsdao Wallet connect session',
+  //       description: 'Devopsdao App',
+  //       url: 'https://devopsdao.com',
+  //       icons: [
+  //         'https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'
+  //       ],
+  //     ),
+  //   );
+
+  //   final provider = EthereumWalletConnectProvider(connector);
+
+  //   return EthereumTransactionTester._internal(
+  //     connector: connector,
+  //     ethereum: ethereum,
+  //     provider: provider,
+  //   );
+  // }
+  // late WalletConnect connector;
+
+  Future initWalletConnect() async {
+    final sessionStorage = WalletConnectSecureStorage();
+    final session = await sessionStorage.getSession();
+
+    // Create a connector
+    connector = WalletConnect(
       bridge: 'https://bridge.walletconnect.org',
-      clientMeta: PeerMeta(
-        name: 'Devopsdao Wallet connect session',
-        description: 'Devopsdao App',
-        url: 'https://devopsdao.com',
+      session: session,
+      sessionStorage: sessionStorage,
+      clientMeta: const PeerMeta(
+        name: 'WalletConnect',
+        description: 'WalletConnect Developer App',
+        url: 'https://walletconnect.org',
         icons: [
           'https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'
         ],
       ),
     );
+    provider = EthereumWalletConnectProvider(connector);
+  }
 
-    final provider = EthereumWalletConnectProvider(connector);
+  Future createSession({OnDisplayUriCallback? onDisplayUri}) async {
+    // Create a new session
+    if (connector.connected && !connector.bridgeConnected) {
+      print('Attempt to recover');
+      connector.reconnect();
+    }
+    if (!connector.connected) {
+      final session = connector.createSession(
+        chainId: 4160,
+        onDisplayUri: (uri) => print(uri),
+      );
 
-    return EthereumTransactionTester._internal(
-      connector: connector,
-      ethereum: ethereum,
-      provider: provider,
-    );
+      print('Connected: $session');
+    }
+    return session;
   }
 
   @override
   Future<SessionStatus> connect({OnDisplayUriCallback? onDisplayUri}) async {
-    WalletConnectSecureStorage sessionStorage = WalletConnectSecureStorage();
+    // WalletConnectSecureStorage sessionStorage = WalletConnectSecureStorage();
     // session = await sessionStorage.getSession();
     // // this.session = session;
     // this.publicAddress = EthereumAddress.fromHex(session!.accounts[0]);

@@ -20,6 +20,16 @@ import 'walletconnect.dart';
 import '../wallet/ethereum_transaction_tester.dart';
 import '../wallet/transaction_tester.dart';
 
+enum TransactionState {
+  disconnected,
+  connecting,
+  connected,
+  connectionFailed,
+  transferring,
+  success,
+  failed,
+}
+
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
   List<Task> filterResults = [];
@@ -35,6 +45,8 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksDonePerformer = [];
   late var credentials;
   EthereumAddress? publicAddress;
+
+  var walletConnectState;
 
   // final String _rpcUrl =
   // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';

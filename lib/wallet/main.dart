@@ -62,75 +62,77 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WalletConnectLifecycle(
-      connector: _transactionTester!.connector,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Column(
-          children: [
-            Row(
+    var tasksServices = context.watch<TasksServices>();
+    if (tasksServices.walletConnectState == null) {
+      tasksServices.walletConnectState = _state;
+    } else {
+      setState(() => _state = tasksServices.walletConnectState);
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text('Select network: ',
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: DropdownButton(
+                    value: _networks[_network!.index],
+                    items: _networks
+                        .map(
+                          (value) => DropdownMenuItem(
+                              value: value, child: Text(value)),
+                        )
+                        .toList(),
+                    onChanged: _changeNetworks),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Text('Select network: ',
-                        style: Theme.of(context).textTheme.headline6),
+                (_displayUri.isEmpty)
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          bottom: 16,
+                        ),
+                        child: Text(
+                          'Click on the button below to transfer ${_network == NetworkType.ethereum ? '0.0001 Eth from Ethereum' : '0.0001 Algo from the Algorand'} account connected through WalletConnect to the same account.',
+                          style: Theme.of(context).textTheme.headline6,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : QrImage(data: _displayUri),
+                ElevatedButton(
+                  onPressed: _transactionStateToAction(context, state: _state),
+                  child: Text(
+                    _transactionStateToString(state: _state),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: DropdownButton(
-                      value: _networks[_network!.index],
-                      items: _networks
-                          .map(
-                            (value) => DropdownMenuItem(
-                                value: value, child: Text(value)),
-                          )
-                          .toList(),
-                      onChanged: _changeNetworks),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _transactionTester?.disconnect();
+                  },
+                  child: Text(
+                    'Close',
+                  ),
                 ),
               ],
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  (_displayUri.isEmpty)
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          child: Text(
-                            'Click on the button below to transfer ${_network == NetworkType.ethereum ? '0.0001 Eth from Ethereum' : '0.0001 Algo from the Algorand'} account connected through WalletConnect to the same account.',
-                            style: Theme.of(context).textTheme.headline6,
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      : QrImage(data: _displayUri),
-                  ElevatedButton(
-                    onPressed:
-                        _transactionStateToAction(context, state: _state),
-                    child: Text(
-                      _transactionStateToString(state: _state),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _transactionTester?.disconnect();
-                    },
-                    child: Text(
-                      'Close',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -188,17 +190,23 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.connectionFailed:
         return () async {
           setState(() => _state = TransactionState.connecting);
+          tasksServices.walletConnectState = TransactionState.connecting;
           final session = await _transactionTester?.connect(
             onDisplayUri: (uri) => setState(() => _displayUri = uri),
           );
+          // final session = await _transactionTester?.createSession(
+          //   onDisplayUri: (uri) => setState(() => _displayUri = uri),
+          // );
 
           if (session == null) {
             print('Unable to connect');
             setState(() => _state = TransactionState.failed);
+            tasksServices.walletConnectState = TransactionState.failed;
             return;
           }
 
           setState(() => _state = TransactionState.connected);
+          tasksServices.walletConnectState = TransactionState.connected;
 
           tasksServices.credentials =
               await _transactionTester?.getCredentials();
