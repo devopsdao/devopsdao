@@ -3,9 +3,11 @@ import './ethereum_transaction_tester.dart';
 import 'package:web3dart/web3dart.dart';
 
 abstract class TransactionTester {
-  TransactionTester({required this.connector});
+  // TransactionTester({required this.connector});
 
-  final WalletConnect connector;
+  TransactionTester();
+
+  // final WalletConnect connector;
   late final EthereumAddress? publicAddress;
 
   Future<String> signTransaction(SessionStatus session);
@@ -19,6 +21,8 @@ abstract class TransactionTester {
   Future<String> signTransactions(SessionStatus session);
 
   Future<SessionStatus> connect({OnDisplayUriCallback? onDisplayUri});
+
+  Future createSession({OnDisplayUriCallback? onDisplayUri});
 
   Future<void> disconnect();
 }

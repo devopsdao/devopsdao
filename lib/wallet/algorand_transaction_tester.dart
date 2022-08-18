@@ -1,25 +1,59 @@
 import 'package:algorand_dart/algorand_dart.dart';
 import 'transaction_tester.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
+import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';
 
 class AlgorandTransactionTester extends TransactionTester {
-  final Algorand algorand;
-  final AlgorandWalletConnectProvider provider;
+  late final Algorand algorand;
+  late final AlgorandWalletConnectProvider provider;
+  late final WalletConnect connector;
 
-  AlgorandTransactionTester._internal({
-    required WalletConnect connector,
-    required this.algorand,
-    required this.provider,
-  }) : super(connector: connector);
+  AlgorandTransactionTester() {
+    initWalletConnect();
+  }
 
-  factory AlgorandTransactionTester() {
-    final algorand = Algorand(
-      algodClient: AlgodClient(apiUrl: AlgoExplorer.TESTNET_ALGOD_API_URL),
-    );
+  // AlgorandTransactionTester._internal({
+  //   required WalletConnect connector,
+  //   required this.algorand,
+  //   required this.provider,
+  // }) : super(connector: connector);
 
-    final connector = WalletConnect(
+  // factory AlgorandTransactionTester() {
+  //   final algorand = Algorand(
+  //     algodClient: AlgodClient(apiUrl: AlgoExplorer.TESTNET_ALGOD_API_URL),
+  //   );
+
+  //   final connector = WalletConnect(
+  //     bridge: 'https://bridge.walletconnect.org',
+  //     clientMeta: PeerMeta(
+  //       name: 'WalletConnect',
+  //       description: 'WalletConnect Developer App',
+  //       url: 'https://walletconnect.org',
+  //       icons: [
+  //         'https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'
+  //       ],
+  //     ),
+  //   );
+
+  //   final provider = AlgorandWalletConnectProvider(connector);
+
+  //   return AlgorandTransactionTester._internal(
+  //     connector: connector,
+  //     algorand: algorand,
+  //     provider: provider,
+  //   );
+  // }
+
+  Future initWalletConnect() async {
+    final sessionStorage = WalletConnectSecureStorage();
+    final session = await sessionStorage.getSession();
+
+    // Create a connector
+    connector = WalletConnect(
       bridge: 'https://bridge.walletconnect.org',
-      clientMeta: PeerMeta(
+      session: session,
+      sessionStorage: sessionStorage,
+      clientMeta: const PeerMeta(
         name: 'WalletConnect',
         description: 'WalletConnect Developer App',
         url: 'https://walletconnect.org',
@@ -28,14 +62,12 @@ class AlgorandTransactionTester extends TransactionTester {
         ],
       ),
     );
+  }
 
-    final provider = AlgorandWalletConnectProvider(connector);
-
-    return AlgorandTransactionTester._internal(
-      connector: connector,
-      algorand: algorand,
-      provider: provider,
-    );
+  @override
+  Future createSession({OnDisplayUriCallback? onDisplayUri}) async {
+    // TODO: implement createSession
+    throw UnimplementedError();
   }
 
   @override
