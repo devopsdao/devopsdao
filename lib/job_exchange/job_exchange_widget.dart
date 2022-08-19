@@ -49,7 +49,7 @@ class JobExchangeWidget extends StatefulWidget {
 
 class _JobExchangeWidgetState extends State<JobExchangeWidget>
     with TickerProviderStateMixin {
-  String _searchKeyword = '';
+  // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
 
   // _changeField() {

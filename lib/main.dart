@@ -151,7 +151,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.work_outline_sharp,
+              Icons.compare_arrows,
               size: 24,
             ),
             label: 'Exchange',
@@ -175,7 +175,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: FaIcon(
-              FontAwesomeIcons.pen,
+              FontAwesomeIcons.wallet,
               size: 24,
             ),
             label: 'Wallet',

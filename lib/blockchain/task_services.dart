@@ -251,8 +251,8 @@ class TasksServices extends ChangeNotifier {
       Future.delayed(const Duration(milliseconds: 1000));
       transactionReceipt = await _web3client.getTransactionReceipt(hash);
     }
-    TransactionInformation transactionResult =
-        await _web3client.getTransactionByHash(hash);
+    // TransactionInformation transactionResult =
+    //     await _web3client.getTransactionByHash(hash);
     // print(transactionReceipt);
     if (transactionReceipt.status == true) {
       print('tell me has it mined');
