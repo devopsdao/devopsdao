@@ -53,7 +53,7 @@ class MyWalletPage extends StatefulWidget {
 
 class _MyWalletPageState extends State<MyWalletPage> {
   String txId = '';
-  late String _displayUri;
+  String _displayUri = '';
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
@@ -63,6 +63,13 @@ class _MyWalletPageState extends State<MyWalletPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    if (tasksServices.walletConnectUri != '' &&
+        tasksServices.walletConnectState != TransactionState.disconnected) {
+      _displayUri = tasksServices.walletConnectUri;
+    }
+    if (tasksServices.walletConnectState == TransactionState.disconnected) {
+      tasksServices.walletConnectUri = '';
+    }
     if (tasksServices.walletConnectState == null) {
       tasksServices.walletConnectState = _state;
     } else {
@@ -124,6 +131,11 @@ class _MyWalletPageState extends State<MyWalletPage> {
                 ElevatedButton(
                   onPressed: () async {
                     await _transactionTester?.disconnect();
+                    setState(() => _state = TransactionState.disconnected);
+                    tasksServices.walletConnectState =
+                        TransactionState.disconnected;
+                    tasksServices.walletConnectUri = '';
+                    setState(() => _displayUri = '');
                   },
                   child: Text(
                     'Close',
@@ -189,11 +201,14 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.disconnected:
       case TransactionState.connectionFailed:
         return () async {
+          tasksServices.walletConnectUri = '';
+          setState(() => _displayUri = '');
           setState(() => _state = TransactionState.connecting);
           tasksServices.walletConnectState = TransactionState.connecting;
           final session = await _transactionTester?.connect(
             onDisplayUri: (uri) => setState(() => _displayUri = uri),
           );
+          tasksServices.walletConnectUri = _displayUri;
           // final session = await _transactionTester?.createSession(
           //   onDisplayUri: (uri) => setState(() => _displayUri = uri),
           // );
@@ -207,6 +222,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
           setState(() => _state = TransactionState.connected);
           tasksServices.walletConnectState = TransactionState.connected;
+          setState(() => _displayUri = '');
+          tasksServices.walletConnectUri = '';
 
           tasksServices.credentials =
               await _transactionTester?.getCredentials();
