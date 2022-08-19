@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'algorand_transaction_tester.dart';
 import 'ethereum_transaction_tester.dart';
 import 'transaction_tester.dart';
@@ -8,9 +9,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:devopsdao/blockchain/task_services.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(const MyApp());
+// }
 
 enum NetworkType {
   ethereum,
@@ -27,20 +28,20 @@ enum TransactionState {
   failed,
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mobile dApp',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyWalletPage(title: 'WalletConnect'),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Mobile dApp',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: const MyWalletPage(title: 'WalletConnect'),
+//     );
+//   }
+// }
 
 // class ConnectButton {
 //
@@ -119,6 +120,7 @@ class MyWalletPage extends StatefulWidget {
 class _MyWalletPageState extends State<MyWalletPage> {
   String txId = '';
   String _displayUri = '';
+  late SessionStatus? session;
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
@@ -284,6 +286,12 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.failed:
         return 'Transaction failed';
     }
+  }
+
+  Future<void> connectWallet() async {
+    session = await _transactionTester?.connect(
+      onDisplayUri: (uri) => setState(() => _displayUri = uri),
+    );
   }
 
   VoidCallback? _transactionStateToAction(BuildContext context,
