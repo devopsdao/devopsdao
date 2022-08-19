@@ -53,7 +53,7 @@ class MyWalletPage extends StatefulWidget {
 
 class _MyWalletPageState extends State<MyWalletPage> {
   String txId = '';
-  String _displayUri = '';
+  late String _displayUri;
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
