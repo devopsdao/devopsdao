@@ -61,7 +61,7 @@ class TasksServices extends ChangeNotifier {
       : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
   bool isLoading = true;
   bool isLoadingBackground = false;
-  final bool _walletconnect = false;
+  final bool _walletconnect = true;
 
   // final String _privatekey =
   //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
@@ -91,7 +91,7 @@ class TasksServices extends ChangeNotifier {
       },
     );
     await getABI();
-    await getCredentials();
+    // await getCredentials();
     await getDeployedContract();
   }
 

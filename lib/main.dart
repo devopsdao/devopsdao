@@ -122,7 +122,7 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   Widget build(BuildContext context) {
     final tabs = {
-      'homePage': HomePageWidget(displayUri: 'test',),
+      'homePage': HomePageWidget(),
       'jobExchange': JobExchangeWidget(),
       'submitterPage': SubmitterPageWidget(),
       'performerPage': PerformerPageWidget(),
