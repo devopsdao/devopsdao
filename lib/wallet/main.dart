@@ -346,69 +346,69 @@ class _MyWalletPageState extends State<MyWalletPage> {
   //   }
   // }
 
-  Future<void> connectWallet3(tasksServices) async {
-    if (tasksServices.transactionTester == null) {
-      tasksServices.transactionTester = EthereumTransactionTester();
-    }
-    _transactionTester = tasksServices.transactionTester;
+  // Future<void> connectWallet3(tasksServices) async {
+  //   if (tasksServices.transactionTester == null) {
+  //     tasksServices.transactionTester = EthereumTransactionTester();
+  //   }
+  //   _transactionTester = tasksServices.transactionTester;
 
-    var connector = await _transactionTester?.initWalletConnect();
+  //   var connector = await _transactionTester?.initWalletConnect();
 
-    //if (tasksServices.walletConnectState == null ||
-    // tasksServices.walletConnectState == TransactionState.disconnected) {
-    if (tasksServices.walletConnectConnected == false) {
-      print("disconnected");
-      tasksServices.walletConnectUri = '';
-      setState(() => _displayUri = '');
-      setState(() => _state = TransactionState.connecting);
-      // await _transactionTester?.disconnect();
-      // connector = await _transactionTester?.initWalletConnect();
-    }
-    tasksServices.walletConnectState = TransactionState.connecting;
-    // Subscribe to events
-    connector.on('connect', (session) {
-      print(session);
-      tasksServices.walletConnectState = TransactionState.connected;
-      setState(() => _state2 = tasksServices.walletConnectState);
-      tasksServices.walletConnectConnected = true;
-    });
-    connector.on('session_request', (payload) {
-      print(payload);
-      // tasksServices.walletConnectState = TransactionState.session_request;
-    });
-    connector.on('session_update', (payload) {
-      print(payload);
-      // tasksServices.walletConnectState = TransactionState.session_update;
-    });
-    connector.on('display_uri', (uri) {
-      print(uri);
-      // tasksServices.walletConnectState = TransactionState.session_update;
-    });
-    connector.on('disconnect', (session) {
-      print(session);
-      tasksServices.walletConnectState = TransactionState.disconnected;
-      setState(() => _state2 = tasksServices.walletConnectState);
-      tasksServices.walletConnectConnected = false;
-      tasksServices.walletConnectUri = '';
-      setState(() => _displayUri = '');
-    });
-    final SessionStatus? session = await _transactionTester?.connect(
-      onDisplayUri: (uri) => tasksServices.walletConnectUri = uri,
-    );
-    setState(() => _displayUri = tasksServices.walletConnectUri);
+  //   //if (tasksServices.walletConnectState == null ||
+  //   // tasksServices.walletConnectState == TransactionState.disconnected) {
+  //   if (tasksServices.walletConnectConnected == false) {
+  //     print("disconnected");
+  //     tasksServices.walletConnectUri = '';
+  //     setState(() => _displayUri = '');
+  //     setState(() => _state = TransactionState.connecting);
+  //     // await _transactionTester?.disconnect();
+  //     // connector = await _transactionTester?.initWalletConnect();
+  //   }
+  //   tasksServices.walletConnectState = TransactionState.connecting;
+  //   // Subscribe to events
+  //   connector.on('connect', (session) {
+  //     print(session);
+  //     tasksServices.walletConnectState = TransactionState.connected;
+  //     setState(() => _state2 = tasksServices.walletConnectState);
+  //     tasksServices.walletConnectConnected = true;
+  //   });
+  //   connector.on('session_request', (payload) {
+  //     print(payload);
+  //     // tasksServices.walletConnectState = TransactionState.session_request;
+  //   });
+  //   connector.on('session_update', (payload) {
+  //     print(payload);
+  //     // tasksServices.walletConnectState = TransactionState.session_update;
+  //   });
+  //   connector.on('display_uri', (uri) {
+  //     print(uri);
+  //     // tasksServices.walletConnectState = TransactionState.session_update;
+  //   });
+  //   connector.on('disconnect', (session) {
+  //     print(session);
+  //     tasksServices.walletConnectState = TransactionState.disconnected;
+  //     setState(() => _state2 = tasksServices.walletConnectState);
+  //     tasksServices.walletConnectConnected = false;
+  //     tasksServices.walletConnectUri = '';
+  //     setState(() => _displayUri = '');
+  //   });
+  //   final SessionStatus? session = await _transactionTester?.connect(
+  //     onDisplayUri: (uri) => tasksServices.walletConnectUri = uri,
+  //   );
+  //   setState(() => _displayUri = tasksServices.walletConnectUri);
 
-    if (session == null) {
-      print('Unable to connect');
-      tasksServices.walletConnectState = TransactionState.failed;
-    } else if (tasksServices.walletConnectState == TransactionState.connected) {
-      tasksServices.credentials = await _transactionTester?.getCredentials();
-      tasksServices.publicAddress =
-          await _transactionTester?.getPublicAddress(session);
-    } else {
-      tasksServices.walletConnectState = TransactionState.failed;
-    }
-    setState(() => _state2 = tasksServices.walletConnectState);
-  }
+  //   if (session == null) {
+  //     print('Unable to connect');
+  //     tasksServices.walletConnectState = TransactionState.failed;
+  //   } else if (tasksServices.walletConnectState == TransactionState.connected) {
+  //     tasksServices.credentials = await _transactionTester?.getCredentials();
+  //     tasksServices.publicAddress =
+  //         await _transactionTester?.getPublicAddress(session);
+  //   } else {
+  //     tasksServices.walletConnectState = TransactionState.failed;
+  //   }
+  //   setState(() => _state2 = tasksServices.walletConnectState);
+  // }
 
   VoidCallback? _transactionStateToAction(BuildContext context,
       {required TransactionState state2}) {
