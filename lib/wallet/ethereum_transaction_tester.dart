@@ -43,15 +43,15 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
 
 class EthereumTransactionTester extends TransactionTester {
   late final Web3Client ethereum;
-  late final EthereumWalletConnectProvider provider;
-  late final WalletConnectSession? session;
-  late final EthereumAddress? publicAddress;
-  late final WalletConnect connector;
+  late EthereumWalletConnectProvider provider;
+  late WalletConnectSession? session;
+  late EthereumAddress? publicAddress;
+  late WalletConnect connector;
 
   // EthereumTransactionTester(connector) : super(connector: connector);
 
   EthereumTransactionTester() {
-    initWalletConnect();
+    // initWalletConnect();
   }
 
   // EthereumTransactionTester._internal({
@@ -69,7 +69,7 @@ class EthereumTransactionTester extends TransactionTester {
   //     bridge: 'https://bridge.walletconnect.org',
   //     session: session,
   //     sessionStorage: sessionStorage,
-  //     clientMeta: PeerMeta(
+  //     clientMeta: PeerMeta
   //       name: 'Devopsdao Wallet connect session',
   //       description: 'Devopsdao App',
   //       url: 'https://devopsdao.com',
@@ -89,9 +89,9 @@ class EthereumTransactionTester extends TransactionTester {
   // }
   // late WalletConnect connector;
 
-  Future initWalletConnect() async {
+  Future<WalletConnect> initWalletConnect() async {
     final sessionStorage = WalletConnectSecureStorage();
-    final session = await sessionStorage.getSession();
+    session = await sessionStorage.getSession();
 
     // Create a connector
     connector = WalletConnect(
@@ -99,15 +99,17 @@ class EthereumTransactionTester extends TransactionTester {
       session: session,
       sessionStorage: sessionStorage,
       clientMeta: const PeerMeta(
-        name: 'WalletConnect',
-        description: 'WalletConnect Developer App',
-        url: 'https://walletconnect.org',
+        name: 'Devopsdao',
+        description: 'Devopsdao WalletConnect',
+        url: 'https://devopsdao.com',
         icons: [
           'https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'
         ],
       ),
     );
     provider = EthereumWalletConnectProvider(connector);
+
+    return connector;
   }
 
   Future createSession({OnDisplayUriCallback? onDisplayUri}) async {

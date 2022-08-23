@@ -18,18 +18,12 @@ class HomePageWidget extends StatefulWidget {
   // final String displayUri;
   const HomePageWidget({Key? key}) : super(key: key);
 
-
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
-
-
-
-
-
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -101,11 +95,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
     );
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    _myAnimation = CurvedAnimation(
-        curve: Curves.linear,
-        parent: _animationController
-    );
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    _myAnimation =
+        CurvedAnimation(curve: Curves.linear, parent: _animationController);
   }
 
   final TextEditingController titleController = TextEditingController();
@@ -177,50 +170,62 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   size: 30,
                 ),
                 onPressed: () async {
-                  showDialog(context: context, builder: (context) => AlertDialog(
-                    title: Text('Connect your wallet'),
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: <Widget>[
-                          // RichText(text: TextSpan(
-                          //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                          //     children: <TextSpan>[
-                          //       TextSpan(
-                          //           text: 'Description: \n',
-                          //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                          //       TextSpan(text: widget.obj[index].description)
-                          //     ]
-                          // )),
-                          Container(
-                            height: 400,
-                            width: 300,
-                            child: MyWalletPage(title: '',),
-                          ),
+                  // tasksServices.connectWallet();
+                  // () async {
+                  //   await tasksServices.connectWallet();
+                  //   print(
+                  //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
+                  // }();
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('Connect your wallet'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  // RichText(text: TextSpan(
+                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                  //     children: <TextSpan>[
+                                  //       TextSpan(
+                                  //           text: 'Description: \n',
+                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  //       TextSpan(text: widget.obj[index].description)
+                                  //     ]
+                                  // )),
+                                  Container(
+                                    height: 400,
+                                    width: 300,
+                                    child: MyWalletPage(
+                                      title: '',
+                                    ),
+                                  ),
 
-
-                          // RichText(text: TextSpan(
-                          //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                          //     children: <TextSpan>[
-                          //
-                          //       TextSpan(
-                          //           text: 'Wallet link: \n',
-                          //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                          //       // TextSpan(
-                          //       //     text: widget.displayUri,
-                          //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
-                          //       // )
-                          //     ]
-                          // )),
-                        ],
-                      ),
-                    ),
-                    actions: [
-
-                      TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
-                      DisconnectButton(title: ''),
-                      ConnectButton(title: '',),
-                    ],
-                  ));
+                                  // RichText(text: TextSpan(
+                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                  //     children: <TextSpan>[
+                                  //
+                                  //       TextSpan(
+                                  //           text: 'Wallet link: \n',
+                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  //       // TextSpan(
+                                  //       //     text: widget.displayUri,
+                                  //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
+                                  //       // )
+                                  //     ]
+                                  // )),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () => Navigator.pop(context)),
+                              DisconnectButton(title: ''),
+                              ConnectButton(
+                                title: '',
+                              ),
+                            ],
+                          ));
                 },
               ),
             ],
@@ -257,20 +262,15 @@ class _HomePageWidgetState extends State<HomePageWidget>
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
-            tasksServices.isLoading ?
-            LoadIndicator()
-                :
-
-            Image.asset(
-              'assets/images/34.png',
-              width: 163,
-              height: 140,
-              fit: BoxFit.fitHeight,
-            ).animated([animationsMap['imageOnPageLoadAnimation']!]),
-
-
+            tasksServices.isLoading
+                ? LoadIndicator()
+                : Image.asset(
+                    'assets/images/34.png',
+                    width: 163,
+                    height: 140,
+                    fit: BoxFit.fitHeight,
+                  ).animated([animationsMap['imageOnPageLoadAnimation']!]),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(
@@ -379,16 +379,18 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       Text(
                         'Wallet address',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).primaryBtnText,
-                        ),
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
                       ),
                       Text(
                         '${tasksServices.ownAddress}',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).primaryBtnText,
-                        ),
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
                       ),
                     ],
                   ),

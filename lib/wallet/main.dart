@@ -59,12 +59,12 @@ class _ConnectButton extends State<ConnectButton> {
   TransactionState _state = TransactionState.disconnected;
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.walletConnectState == null) {
-      tasksServices.walletConnectState = _state;
-    } else {
-      setState(() => _state = tasksServices.walletConnectState);
-    }
+    // var tasksServices = context.watch<TasksServices>();
+    // if (tasksServices.walletConnectState == null) {
+    //   tasksServices.walletConnectState = _state;
+    // } else {
+    //   setState(() => _state = tasksServices.walletConnectState);
+    // }
     return TextButton(
         child: Text('Connect'),
         style: TextButton.styleFrom(
@@ -90,12 +90,12 @@ class _DisconnectButton extends State<DisconnectButton> {
   TransactionState _state = TransactionState.disconnected;
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.walletConnectState == null) {
-      tasksServices.walletConnectState = _state;
-    } else {
-      setState(() => _state = tasksServices.walletConnectState);
-    }
+    // var tasksServices = context.watch<TasksServices>();
+    // if (tasksServices.walletConnectState == null) {
+    //   tasksServices.walletConnectState = _state;
+    // } else {
+    //   setState(() => _state = tasksServices.walletConnectState);
+    // }
     return TextButton(
         child: Text('Disconnect'),
         style: TextButton.styleFrom(
@@ -120,28 +120,37 @@ class MyWalletPage extends StatefulWidget {
 class _MyWalletPageState extends State<MyWalletPage> {
   String txId = '';
   String _displayUri = '';
-  late SessionStatus? session;
+  var session;
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
   TransactionState _state = TransactionState.disconnected;
-  TransactionTester? _transactionTester = EthereumTransactionTester();
+  TransactionState _state2 = TransactionState.disconnected;
+  // TransactionTester? _transactionTester = EthereumTransactionTester();
+  late TransactionTester? _transactionTester;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.walletConnectUri != '' &&
-        tasksServices.walletConnectState != TransactionState.disconnected) {
-      _displayUri = tasksServices.walletConnectUri;
-    }
+    _displayUri = tasksServices.walletConnectUri;
+    // if (tasksServices.walletConnectUri != '') {
+    //   _displayUri = tasksServices.walletConnectUri;
+    // }
     if (tasksServices.walletConnectState == TransactionState.disconnected) {
       tasksServices.walletConnectUri = '';
     }
-    if (tasksServices.walletConnectState == null) {
-      tasksServices.walletConnectState = _state;
-    } else {
-      setState(() => _state = tasksServices.walletConnectState);
-    }
+
+    // setState(() => _state2 = tasksServices.walletConnectState);
+    // if (tasksServices.walletConnectState == null) {
+    //   tasksServices.walletConnectState = _state;
+    // } else {
+    //   setState(() => _state = tasksServices.walletConnectState);
+    // }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +163,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                   bottom: 16,
                 ),
                 child: Text(
-                  'Click on the button below to transfer ${_network == NetworkType.ethereum ? '0.0001 Eth from Ethereum' : '0.0001 Algo from the Algorand'} account connected through WalletConnect to the same account.',
+                  'Click to connect ${_network == NetworkType.ethereum ? 'to Ethereum' : 'to Algorand'}',
                   style: Theme.of(context).textTheme.headline6,
                   textAlign: TextAlign.center,
                 ),
@@ -165,19 +174,35 @@ class _MyWalletPageState extends State<MyWalletPage> {
                 gapless: false,
               ),
         ElevatedButton(
-          onPressed: _transactionStateToAction(context, state: _state),
+          onPressed: _transactionStateToAction(context, state2: _state2),
+          // onPressed: (() {}),
           child: Text(
             _transactionStateToString(state: _state),
           ),
         ),
-        // ElevatedButton(
-        //   onPressed: () async {
-        //     await _transactionTester?.disconnect();
-        //   },
-        //   child: Text(
-        //     'Close',
-        //   ),
-        // ),
+        ElevatedButton(
+          onPressed: () async {
+            await tasksServices.transactionTester?.disconnect();
+            //await tasksServices.connectWallet();
+            // tasksServices.walletConnectState = TransactionState.disconnected;
+            // setState(() => _state = TransactionState.disconnected);
+          },
+          child: Text(
+            'Disconnect',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
+          child: Text(
+            _transactionStateToString2(state: _state2),
+            style: Theme.of(context).textTheme.headline6,
+            textAlign: TextAlign.center,
+          ),
+        )
       ],
     );
 
@@ -276,7 +301,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.connecting:
         return 'Connecting';
       case TransactionState.connected:
-        return 'Session connected, preparing transaction...';
+        return 'Session connected..';
       case TransactionState.connectionFailed:
         return 'Connection failed';
       case TransactionState.transferring:
@@ -288,16 +313,110 @@ class _MyWalletPageState extends State<MyWalletPage> {
     }
   }
 
-  Future<void> connectWallet() async {
-    session = await _transactionTester?.connect(
-      onDisplayUri: (uri) => setState(() => _displayUri = uri),
+  String _transactionStateToString2({required TransactionState state}) {
+    switch (state) {
+      case TransactionState.disconnected:
+        return 'Disconnected';
+      case TransactionState.connecting:
+        return 'Connecting';
+      case TransactionState.connected:
+        return 'Connected';
+      case TransactionState.connectionFailed:
+        return 'Connection failed';
+      case TransactionState.transferring:
+        return 'Transaction in progress...';
+      case TransactionState.success:
+        return 'Transaction successful';
+      case TransactionState.failed:
+        return 'Transaction failed';
+    }
+  }
+
+  // Future<void> connectWallet(BuildContext context) async {
+  //   var tasksServices = context.watch<TasksServices>();
+  //   session = await _transactionTester?.connect(
+  //     onDisplayUri: (uri) => setState(() => _displayUri = uri),
+  //   );
+  //   if (session == null) {
+  //     print('Unable to connect');
+  //     // setState(() => _state = TransactionState.failed);
+  //     tasksServices.walletConnectState = TransactionState.failed;
+  //   } else {
+  //     tasksServices.walletConnectState = TransactionState.connected;
+  //   }
+  // }
+
+  Future<void> connectWallet3(tasksServices) async {
+    if (tasksServices.transactionTester == null) {
+      tasksServices.transactionTester = EthereumTransactionTester();
+    }
+    _transactionTester = tasksServices.transactionTester;
+
+    var connector = await _transactionTester?.initWalletConnect();
+
+    //if (tasksServices.walletConnectState == null ||
+    // tasksServices.walletConnectState == TransactionState.disconnected) {
+    if (tasksServices.walletConnectConnected == false) {
+      print("disconnected");
+      tasksServices.walletConnectUri = '';
+      setState(() => _displayUri = '');
+      setState(() => _state = TransactionState.connecting);
+      // await _transactionTester?.disconnect();
+      // connector = await _transactionTester?.initWalletConnect();
+    }
+    tasksServices.walletConnectState = TransactionState.connecting;
+    // Subscribe to events
+    connector.on('connect', (session) {
+      print(session);
+      tasksServices.walletConnectState = TransactionState.connected;
+      setState(() => _state2 = tasksServices.walletConnectState);
+      tasksServices.walletConnectConnected = true;
+    });
+    connector.on('session_request', (payload) {
+      print(payload);
+      // tasksServices.walletConnectState = TransactionState.session_request;
+    });
+    connector.on('session_update', (payload) {
+      print(payload);
+      // tasksServices.walletConnectState = TransactionState.session_update;
+    });
+    connector.on('display_uri', (uri) {
+      print(uri);
+      // tasksServices.walletConnectState = TransactionState.session_update;
+    });
+    connector.on('disconnect', (session) {
+      print(session);
+      tasksServices.walletConnectState = TransactionState.disconnected;
+      setState(() => _state2 = tasksServices.walletConnectState);
+      tasksServices.walletConnectConnected = false;
+      tasksServices.walletConnectUri = '';
+      setState(() => _displayUri = '');
+    });
+    final SessionStatus? session = await _transactionTester?.connect(
+      onDisplayUri: (uri) => tasksServices.walletConnectUri = uri,
     );
+    setState(() => _displayUri = tasksServices.walletConnectUri);
+
+    if (session == null) {
+      print('Unable to connect');
+      tasksServices.walletConnectState = TransactionState.failed;
+    } else if (tasksServices.walletConnectState == TransactionState.connected) {
+      tasksServices.credentials = await _transactionTester?.getCredentials();
+      tasksServices.publicAddress =
+          await _transactionTester?.getPublicAddress(session);
+    } else {
+      tasksServices.walletConnectState = TransactionState.failed;
+    }
+    setState(() => _state2 = tasksServices.walletConnectState);
   }
 
   VoidCallback? _transactionStateToAction(BuildContext context,
-      {required TransactionState state}) {
+      {required TransactionState state2}) {
     var tasksServices = context.watch<TasksServices>();
-    switch (state) {
+    if (tasksServices.walletConnectState != null) {
+      setState(() => _state2 = tasksServices.walletConnectState);
+    }
+    switch (state2) {
       // Progress, action disabled
       case TransactionState.connecting:
       case TransactionState.transferring:
@@ -308,47 +427,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.disconnected:
       case TransactionState.connectionFailed:
         return () async {
-          tasksServices.walletConnectUri = '';
-          setState(() => _displayUri = '');
-          setState(() => _state = TransactionState.connecting);
-          tasksServices.walletConnectState = TransactionState.connecting;
-          final session = await _transactionTester?.connect(
-            onDisplayUri: (uri) => setState(() => _displayUri = uri),
-          );
-          tasksServices.walletConnectUri = _displayUri;
-          // final session = await _transactionTester?.createSession(
-          //   onDisplayUri: (uri) => setState(() => _displayUri = uri),
-          // );
-
-          if (session == null) {
-            print('Unable to connect');
-            setState(() => _state = TransactionState.failed);
-            tasksServices.walletConnectState = TransactionState.failed;
-            return;
-          }
-
-          setState(() => _state = TransactionState.connected);
-          tasksServices.walletConnectState = TransactionState.connected;
-          setState(() => _displayUri = '');
-          tasksServices.walletConnectUri = '';
-
-          tasksServices.credentials =
-              await _transactionTester?.getCredentials();
-          tasksServices.publicAddress =
-              await _transactionTester?.getPublicAddress(session);
-          // tasksServices.publicAddress = _transactionTester?.publicAddress;
-          // Future.delayed(const Duration(seconds: 1), () async {
-          //   // Initiate the transaction
-          //   setState(() => _state = TransactionState.transferring);
-
-          //   try {
-          //     await _transactionTester?.signTransaction(session);
-          //     setState(() => _state = TransactionState.success);
-          //   } catch (e) {
-          //     print('Transaction error: $e');
-          //     setState(() => _state = TransactionState.failed);
-          //   }
-          // });
+          // connectWallet3(tasksServices);
+          tasksServices.connectWallet4();
         };
 
       // Finished

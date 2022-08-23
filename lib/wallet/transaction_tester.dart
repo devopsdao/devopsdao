@@ -7,6 +7,8 @@ abstract class TransactionTester {
 
   TransactionTester();
 
+  initWalletConnect();
+
   // final WalletConnect connector;
   late final EthereumAddress? publicAddress;
 
@@ -21,6 +23,8 @@ abstract class TransactionTester {
   Future<String> signTransactions(SessionStatus session);
 
   Future<SessionStatus> connect({OnDisplayUriCallback? onDisplayUri});
+
+  // Future<SessionStatus> updateSession(SessionStatus? session);
 
   Future createSession({OnDisplayUriCallback? onDisplayUri});
 
