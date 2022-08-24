@@ -18,7 +18,6 @@ class HomePageWidget extends StatefulWidget {
   // final String displayUri;
   const HomePageWidget({Key? key}) : super(key: key);
 
-
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
@@ -137,26 +136,26 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
-          LoadButtonIndicator(),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderRadius: 30,
-                borderWidth: 1,
-                buttonSize: 60,
-                icon: Icon(
-                  Icons.account_balance_wallet,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  await tasksServices.getCredentials();
-                },
-              ),
-            ],
-          ),
+          // LoadButtonIndicator(),
+          // Row(
+          //   mainAxisSize: MainAxisSize.max,
+          //   children: [
+          //     FlutterFlowIconButton(
+          //       borderColor: Colors.transparent,
+          //       borderRadius: 30,
+          //       borderWidth: 1,
+          //       buttonSize: 60,
+          //       icon: Icon(
+          //         Icons.account_balance_wallet,
+          //         color: Colors.white,
+          //         size: 30,
+          //       ),
+          //       onPressed: () async {
+          //         await tasksServices.getCredentials();
+          //       },
+          //     ),
+          //   ],
+          // ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [

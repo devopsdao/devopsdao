@@ -154,7 +154,7 @@ class EthereumTransactionTester extends TransactionTester {
       to: sender,
       from: sender,
       gasPrice: EtherAmount.inWei(BigInt.one),
-      maxGas: 100000,
+      maxGas: 1000000,
       value: EtherAmount.fromUnitAndValue(EtherUnit.finney, 1),
     );
 

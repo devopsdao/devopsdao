@@ -141,8 +141,6 @@ class Factory extends _i1.GeneratedContract {
         contract: self, event: event, fromBlock: fromBlock, toBlock: toBlock);
     return client.events(filter).map((_i1.FilterEvent result) {
       final decoded = event.decodeResults(result.topics!, result.data!);
-      print('OneEventForAll');
-
       return OneEventForAll(decoded);
     });
   }

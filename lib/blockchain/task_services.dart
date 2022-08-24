@@ -71,6 +71,7 @@ class TasksServices extends ChangeNotifier {
   final String _wsUrl = Platform.isAndroid
       ? 'wss://wss.api.moonbase.moonbeam.network'
       : 'wss://wss.api.moonbase.moonbeam.network';
+  final int _chainId = 1287;
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
@@ -118,8 +119,8 @@ class TasksServices extends ChangeNotifier {
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
-    _contractAddress =
-        EthereumAddress.fromHex(jsonABI["networks"]["1287"]["address"]);
+    _contractAddress = EthereumAddress.fromHex(
+        jsonABI["networks"][_chainId.toString()]["address"]);
   }
 
   // var session;
@@ -161,6 +162,9 @@ class TasksServices extends ChangeNotifier {
       () async {
         credentials = await transactionTester?.getCredentials();
         publicAddress = await transactionTester?.getPublicAddress(session);
+        _creds = credentials;
+        ownAddress = publicAddress;
+        myBalance();
       }();
       notifyListeners();
     });
@@ -286,14 +290,15 @@ class TasksServices extends ChangeNotifier {
       // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+      notifyListeners();
       // print(ethBalance);
       // print(ethBalance.toDouble() / 1000000000000000000);
     }
   }
 
   Future<void> monitorEvents() async {
-    final factory =
-        Factory(address: _contractAddress, client: _web3client, chainId: 3);
+    final factory = Factory(
+        address: _contractAddress, client: _web3client, chainId: _chainId);
     // listen for the Transfer event when it's emitted by the contract above
     final subscription =
         factory.oneEventForAllEvents().take(1).listen((event) async {
@@ -309,12 +314,12 @@ class TasksServices extends ChangeNotifier {
       });
       // await fetchTasks();
     });
-    // final subscription2 =
-    //     await factory.jobContractCreatedEvents().take(1).listen((event) {
-    //   print(
-    //       'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
-    //   // await fetchTasks();
-    // });
+    final subscription2 =
+        await factory.jobContractCreatedEvents().take(1).listen((event) {
+      print(
+          'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
+      // await fetchTasks();
+    });
 
     // subscription.asFuture();
     // subscription2.asFuture();
@@ -563,7 +568,7 @@ class TasksServices extends ChangeNotifier {
           value:
               EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
-        chainId: 3);
+        chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
     // fetchTasks();
@@ -586,7 +591,7 @@ class TasksServices extends ChangeNotifier {
           parameters: [contractAddress],
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
-        chainId: 3);
+        chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
     print(txn);
@@ -614,7 +619,7 @@ class TasksServices extends ChangeNotifier {
           parameters: [contractAddress, participiantAddress, state],
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
-        chainId: 3);
+        chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
     // fetchTasks();
@@ -632,7 +637,7 @@ class TasksServices extends ChangeNotifier {
           parameters: [contractAddress, ownAddress],
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
-        chainId: 3);
+        chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
     // fetchTasks();
