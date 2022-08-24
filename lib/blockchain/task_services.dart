@@ -161,6 +161,9 @@ class TasksServices extends ChangeNotifier {
       () async {
         credentials = await transactionTester?.getCredentials();
         publicAddress = await transactionTester?.getPublicAddress(session);
+        _creds = credentials;
+        ownAddress = publicAddress;
+        myBalance();
       }();
       notifyListeners();
     });
@@ -286,6 +289,7 @@ class TasksServices extends ChangeNotifier {
       // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+      notifyListeners();
       // print(ethBalance);
       // print(ethBalance.toDouble() / 1000000000000000000);
     }
@@ -309,12 +313,12 @@ class TasksServices extends ChangeNotifier {
       });
       // await fetchTasks();
     });
-    // final subscription2 =
-    //     await factory.jobContractCreatedEvents().take(1).listen((event) {
-    //   print(
-    //       'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
-    //   // await fetchTasks();
-    // });
+    final subscription2 =
+        await factory.jobContractCreatedEvents().take(1).listen((event) {
+      print(
+          'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
+      // await fetchTasks();
+    });
 
     // subscription.asFuture();
     // subscription2.asFuture();
