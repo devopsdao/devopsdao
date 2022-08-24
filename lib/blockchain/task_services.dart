@@ -19,16 +19,18 @@ import 'walletconnect.dart';
 
 import '../wallet/ethereum_transaction_tester.dart';
 import '../wallet/transaction_tester.dart';
+import '../wallet/main.dart';
 
-enum TransactionState {
-  disconnected,
-  connecting,
-  connected,
-  connectionFailed,
-  transferring,
-  success,
-  failed,
-}
+import 'package:wallet_connect/wallet_connect.dart';
+// enum TransactionState {
+//   disconnected,
+//   connecting,
+//   connected,
+//   connectionFailed,
+//   transferring,
+//   success,
+//   failed,
+// }
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
@@ -45,8 +47,10 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksDonePerformer = [];
   late var credentials;
   EthereumAddress? publicAddress;
+  var transactionTester;
 
   var walletConnectState;
+  bool walletConnectConnected = false;
   String walletConnectUri = '';
 
   // final String _rpcUrl =
@@ -109,6 +113,74 @@ class TasksServices extends ChangeNotifier {
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress =
         EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
+  }
+
+  // var session;
+  // // _transactionTester?.initWalletConnect();
+  // Future<void> connectWallet() async {
+  //   TransactionTester? _transactionTester = EthereumTransactionTester();
+  //   await _transactionTester.initWalletConnect();
+  //   _transactionTester.disconnect();
+  //   session = _transactionTester.connect(
+  //     onDisplayUri: (uri) => {print(uri), walletConnectUri = uri},
+  //   );
+  //   if (session == null) {
+  //     print('Unable to connect');
+  //     // setState(() => _state = TransactionState.failed);
+  //     walletConnectState = TransactionState.failed;
+  //   } else {
+  //     walletConnectState = TransactionState.connected;
+  //   }
+  // }
+
+  Future<void> connectWallet4() async {
+    if (transactionTester == null) {
+      transactionTester = EthereumTransactionTester();
+    }
+
+    var connector = await transactionTester?.initWalletConnect();
+
+    //if (tasksServices.walletConnectState == null ||
+    // tasksServices.walletConnectState == TransactionState.disconnected) {
+    if (walletConnectConnected == false) {
+      print("disconnected");
+      walletConnectUri = '';
+    }
+    // Subscribe to events
+    connector.on('connect', (session) {
+      print(session);
+      walletConnectState = TransactionState.connected;
+      walletConnectConnected = true;
+      notifyListeners();
+    });
+    connector.on('session_request', (payload) {
+      print(payload);
+      // tasksServices.walletConnectState = TransactionState.session_request;
+    });
+    connector.on('session_update', (payload) {
+      print(payload);
+      // tasksServices.walletConnectState = TransactionState.session_update;
+    });
+    connector.on('disconnect', (session) {
+      print(session);
+      walletConnectState = TransactionState.disconnected;
+      walletConnectConnected = false;
+      walletConnectUri = '';
+      notifyListeners();
+    });
+    final SessionStatus? session = await transactionTester?.connect(
+      onDisplayUri: (uri) => {walletConnectUri = uri, notifyListeners()},
+    );
+
+    if (session == null) {
+      print('Unable to connect');
+      walletConnectState = TransactionState.failed;
+    } else if (walletConnectState == TransactionState.connected) {
+      credentials = await transactionTester?.getCredentials();
+      publicAddress = await transactionTester?.getPublicAddress(session);
+    } else {
+      walletConnectState = TransactionState.failed;
+    }
   }
 
   late dynamic _creds;

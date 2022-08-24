@@ -12,7 +12,10 @@ import '../blockchain/walletconnect2.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
+import '../wallet/main.dart';
+
 class HomePageWidget extends StatefulWidget {
+  // final String displayUri;
   const HomePageWidget({Key? key}) : super(key: key);
 
   @override
@@ -21,8 +24,15 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
+<<<<<<< HEAD
+  // GlobalKey<_MyWalletPageState> _key = GlobalKey<_MyWalletPageState>();
 
 
+  // final MyWalletPage myWalletPage;
+  // _HomePageWidgetState (this.myWalletPage)
+
+=======
+>>>>>>> 976936dd3e3d55f1f0e26763851b8f3b5c61233c
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -82,7 +92,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _flag = true;
+  // bool _flag = true;
   late AnimationController _animationController;
   late Animation<double> _myAnimation;
 
@@ -94,11 +104,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
     );
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    _myAnimation = CurvedAnimation(
-        curve: Curves.linear,
-        parent: _animationController
-    );
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    _myAnimation =
+        CurvedAnimation(curve: Curves.linear, parent: _animationController);
   }
 
   final TextEditingController titleController = TextEditingController();
@@ -151,14 +160,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   size: 30,
                 ),
                 onPressed: () async {
-                  // final _wcclient = EthereumTransactionSender();
-                  // // // await _wcclient.disconnect();
-                  // final session = await _wcclient.connect();
-                  // await _wcclient.signTransaction(session);
-                  // final _wcclient = WalletConnectManager();
-                  // await _wcclient.connectWallet();
-                  // await _wcclient.sendTransaction2();
-                  // await _wcclient.disconnect();
                   await tasksServices.getCredentials();
                 },
               ),
@@ -178,9 +179,62 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   size: 30,
                 ),
                 onPressed: () async {
-                  // final _wcclient = EthereumTransactionSender();
-                  // // await _wcclient.connectWallet();
-                  // await _wcclient.disconnect();
+                  // tasksServices.connectWallet();
+                  // () async {
+                  //   await tasksServices.connectWallet();
+                  //   print(
+                  //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
+                  // }();
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('Connect your wallet'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  // RichText(text: TextSpan(
+                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                  //     children: <TextSpan>[
+                                  //       TextSpan(
+                                  //           text: 'Description: \n',
+                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  //       TextSpan(text: widget.obj[index].description)
+                                  //     ]
+                                  // )),
+                                  Container(
+                                    height: 400,
+                                    width: 300,
+                                    child: MyWalletPage(
+                                      title: '',
+                                    ),
+                                  ),
+
+                                  // RichText(text: TextSpan(
+                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                  //     children: <TextSpan>[
+                                  //
+                                  //       TextSpan(
+                                  //           text: 'Wallet link: \n',
+                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  //       // TextSpan(
+                                  //       //     text: widget.displayUri,
+                                  //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
+                                  //       // )
+                                  //     ]
+                                  // )),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () => Navigator.pop(context)),
+                              DisconnectButton(title: ''),
+                              ConnectButton(
+                                title: '',
+                              ),
+                            ],
+                          ));
                 },
               ),
             ],
@@ -218,31 +272,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-<<<<<<< HEAD
             tasksServices.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ? LoadIndicator()
                 : Image.asset(
                     'assets/images/34.png',
                     width: 163,
                     height: 140,
                     fit: BoxFit.fitHeight,
                   ).animated([animationsMap['imageOnPageLoadAnimation']!]),
-=======
-            tasksServices.isLoading ?
-            LoadIndicator()
-                :
-
-            Image.asset(
-              'assets/images/34.png',
-              width: 163,
-              height: 140,
-              fit: BoxFit.fitHeight,
-            ).animated([animationsMap['imageOnPageLoadAnimation']!]),
-
-
->>>>>>> b036d2485ab8d954c211d353bc06b292c040071c
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(
