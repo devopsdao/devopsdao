@@ -25,10 +25,11 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
+  // GlobalKey<_MyWalletPageState> _key = GlobalKey<_MyWalletPageState>();
 
 
-
-
+  // final MyWalletPage myWalletPage;
+  // _HomePageWidgetState (this.myWalletPage)
 
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
