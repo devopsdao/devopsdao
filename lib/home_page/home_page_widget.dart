@@ -18,12 +18,18 @@ class HomePageWidget extends StatefulWidget {
   // final String displayUri;
   const HomePageWidget({Key? key}) : super(key: key);
 
+
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
+
+
+
+
+
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,

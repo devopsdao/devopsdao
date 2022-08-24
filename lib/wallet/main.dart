@@ -114,7 +114,7 @@ class MyWalletPage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyWalletPage> createState() => _MyWalletPageState();
+  _MyWalletPageState createState() => _MyWalletPageState();
 }
 
 class _MyWalletPageState extends State<MyWalletPage> {
