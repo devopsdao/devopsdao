@@ -45,7 +45,7 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksReviewSubmitter = [];
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
-  late var credentials;
+  var credentials;
   EthereumAddress? publicAddress;
   var transactionTester;
 
@@ -58,12 +58,19 @@ class TasksServices extends ChangeNotifier {
   // final String _wsUrl =
   // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
 
+  // final String _rpcUrl = Platform.isAndroid
+  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+  //     : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+  // final String _wsUrl = Platform.isAndroid
+  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+  //     : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+
   final String _rpcUrl = Platform.isAndroid
-      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-      : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+      ? 'https://rpc.api.moonbase.moonbeam.network'
+      : 'https://rpc.api.moonbase.moonbeam.network';
   final String _wsUrl = Platform.isAndroid
-      ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-      : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+      ? 'wss://wss.api.moonbase.moonbeam.network'
+      : 'wss://wss.api.moonbase.moonbeam.network';
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
@@ -112,7 +119,7 @@ class TasksServices extends ChangeNotifier {
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress =
-        EthereumAddress.fromHex(jsonABI["networks"]["3"]["address"]);
+        EthereumAddress.fromHex(jsonABI["networks"]["1287"]["address"]);
   }
 
   // var session;
@@ -151,6 +158,10 @@ class TasksServices extends ChangeNotifier {
       print(session);
       walletConnectState = TransactionState.connected;
       walletConnectConnected = true;
+      () async {
+        credentials = await transactionTester?.getCredentials();
+        publicAddress = await transactionTester?.getPublicAddress(session);
+      }();
       notifyListeners();
     });
     connector.on('session_request', (payload) {
@@ -175,7 +186,7 @@ class TasksServices extends ChangeNotifier {
     if (session == null) {
       print('Unable to connect');
       walletConnectState = TransactionState.failed;
-    } else if (walletConnectState == TransactionState.connected) {
+    } else if (walletConnectConnected == true) {
       credentials = await transactionTester?.getCredentials();
       publicAddress = await transactionTester?.getPublicAddress(session);
     } else {

@@ -135,7 +135,8 @@ class EthereumTransactionTester extends TransactionTester {
     // session = await sessionStorage.getSession();
     // // this.session = session;
     // this.publicAddress = EthereumAddress.fromHex(session!.accounts[0]);
-    final session = connector.connect(chainId: 3, onDisplayUri: onDisplayUri);
+    final session =
+        connector.connect(chainId: 1287, onDisplayUri: onDisplayUri);
 
     return session;
   }
