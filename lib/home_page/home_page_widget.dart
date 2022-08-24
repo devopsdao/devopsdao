@@ -25,11 +25,6 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
-
-
-
-
-
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -184,54 +179,9 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   // }();
                   showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                            title: Text('Connect your wallet'),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: <Widget>[
-                                  // RichText(text: TextSpan(
-                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                  //     children: <TextSpan>[
-                                  //       TextSpan(
-                                  //           text: 'Description: \n',
-                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  //       TextSpan(text: widget.obj[index].description)
-                                  //     ]
-                                  // )),
-                                  Container(
-                                    height: 400,
-                                    width: 300,
-                                    child: MyWalletPage(
-                                      title: '',
-                                    ),
-                                  ),
-
-                                  // RichText(text: TextSpan(
-                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                  //     children: <TextSpan>[
-                                  //
-                                  //       TextSpan(
-                                  //           text: 'Wallet link: \n',
-                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  //       // TextSpan(
-                                  //       //     text: widget.displayUri,
-                                  //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
-                                  //       // )
-                                  //     ]
-                                  // )),
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                  child: Text('Close'),
-                                  onPressed: () => Navigator.pop(context)),
-                              DisconnectButton(title: ''),
-                              ConnectButton(
-                                title: '',
-                              ),
-                            ],
-                          ));
+                      builder: (context) => MyWalletPage(
+                        title: '',
+                      ),);
                 },
               ),
             ],

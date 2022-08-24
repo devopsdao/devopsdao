@@ -46,67 +46,71 @@ enum TransactionState {
 // class ConnectButton {
 //
 // }
-class ConnectButton extends StatefulWidget {
-  const ConnectButton({Key? key, required this.title}) : super(key: key);
+// class ConnectButton extends StatefulWidget {
+//   const ConnectButton({Key? key, required this.title}) : super(key: key);
+//
+//   final String title;
+//
+//   @override
+//   State<ConnectButton> createState() => _ConnectButton();
+// }
+//
+// class _ConnectButton extends State<ConnectButton> {
+//   TransactionState _state = TransactionState.disconnected;
+//   @override
+//   Widget build(BuildContext context) {
+//     // var tasksServices = context.watch<TasksServices>();
+//     // if (tasksServices.walletConnectState == null) {
+//     //   tasksServices.walletConnectState = _state;
+//     // } else {
+//     //   setState(() => _state = tasksServices.walletConnectState);
+//     // }
+//     return TextButton(
+//         child: Text('Connect'),
+//         style: TextButton.styleFrom(
+//             primary: Colors.white, backgroundColor: Colors.green),
+//         onPressed: () {
+//           // _transactionStateToAction(context, state: _state);
+//           setState(() {});
+//           Navigator.pop(context);
+//         });
+//
+//   }
+//
+// }
 
-  final String title;
 
-  @override
-  State<ConnectButton> createState() => _ConnectButton();
-}
-
-class _ConnectButton extends State<ConnectButton> {
-  TransactionState _state = TransactionState.disconnected;
-  @override
-  Widget build(BuildContext context) {
-    // var tasksServices = context.watch<TasksServices>();
-    // if (tasksServices.walletConnectState == null) {
-    //   tasksServices.walletConnectState = _state;
-    // } else {
-    //   setState(() => _state = tasksServices.walletConnectState);
-    // }
-    return TextButton(
-        child: Text('Connect'),
-        style: TextButton.styleFrom(
-            primary: Colors.white, backgroundColor: Colors.green),
-        onPressed: () {
-          // _transactionStateToAction(context, state: _state);
-          setState(() {});
-          Navigator.pop(context);
-        });
-  }
-}
-
-class DisconnectButton extends StatefulWidget {
-  const DisconnectButton({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<DisconnectButton> createState() => _DisconnectButton();
-}
-
-class _DisconnectButton extends State<DisconnectButton> {
-  TransactionState _state = TransactionState.disconnected;
-  @override
-  Widget build(BuildContext context) {
-    // var tasksServices = context.watch<TasksServices>();
-    // if (tasksServices.walletConnectState == null) {
-    //   tasksServices.walletConnectState = _state;
-    // } else {
-    //   setState(() => _state = tasksServices.walletConnectState);
-    // }
-    return TextButton(
-        child: Text('Disconnect'),
-        style: TextButton.styleFrom(
-            primary: Colors.white, backgroundColor: Colors.red),
-        onPressed: () {
-          // _transactionStateToAction(context, state: _state);
-          setState(() {});
-          Navigator.pop(context);
-        });
-  }
-}
+// class DisconnectButton extends StatefulWidget {
+//   const DisconnectButton({Key? key, required this.title}) : super(key: key);
+//
+//   final String title;
+//
+//   @override
+//   State<DisconnectButton> createState() => _DisconnectButton();
+// }
+//
+// class _DisconnectButton extends State<DisconnectButton> {
+//   TransactionState _state = TransactionState.disconnected;
+//   @override
+//   Widget build(BuildContext context) {
+//     var tasksServices = context.watch<TasksServices>();
+//     // if (tasksServices.walletConnectState == null) {
+//     //   tasksServices.walletConnectState = _state;
+//     // } else {
+//     //   setState(() => _state = tasksServices.walletConnectState);
+//     // }
+//     return TextButton(
+//         child: Text('Disconnect'),
+//         style: TextButton.styleFrom(
+//             primary: Colors.white, backgroundColor: Colors.red),
+//         onPressed: () async {
+//           await tasksServices.transactionTester?.disconnect();
+//           // _transactionStateToAction(context, state: _state);
+//           setState(() {});
+//           // Navigator.pop(context);
+//         });
+//   }
+// }
 
 class MyWalletPage extends StatefulWidget {
   const MyWalletPage({Key? key, required this.title}) : super(key: key);
@@ -152,59 +156,124 @@ class _MyWalletPageState extends State<MyWalletPage> {
     //   setState(() => _state = tasksServices.walletConnectState);
     // }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        (_displayUri.isEmpty)
-            ? Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                ),
-                child: Text(
-                  'Click to connect ${_network == NetworkType.ethereum ? 'to Ethereum' : 'to Algorand'}',
-                  style: Theme.of(context).textTheme.headline6,
-                  textAlign: TextAlign.center,
-                ),
-              )
-            : QrImage(
-                data: _displayUri,
-                size: 300,
-                gapless: false,
+    return AlertDialog(
+      title: Text('Connect your wallet'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            // RichText(text: TextSpan(
+            //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+            //     children: <TextSpan>[
+            //       TextSpan(
+            //           text: 'Description: \n',
+            //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+            //       TextSpan(text: widget.obj[index].description)
+            //     ]
+            // )),
+            Container(
+              height: 400,
+              width: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  (_displayUri.isEmpty)
+                      ? Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
+                    // child: Text(
+                    //   'Click to connect ${_network == NetworkType.ethereum ? 'to Ethereum' : 'to Algorand'}',
+                    //   style: Theme.of(context).textTheme.headline6,
+                    //   textAlign: TextAlign.center,
+                    // ),
+                  )
+                      : QrImage(
+                    data: _displayUri,
+                    size: 300,
+                    gapless: false,
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: _transactionStateToAction(context, state2: _state2),
+                  //   // onPressed: (() {}),
+                  //   child: Text(
+                  //     _transactionStateToString(state: _state),
+                  //   ),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     await tasksServices.transactionTester?.disconnect();
+                  //     //await tasksServices.connectWallet();
+                  //     // tasksServices.walletConnectState = TransactionState.disconnected;
+                  //     // setState(() => _state = TransactionState.disconnected);
+                  //   },
+                  //   child: Text(
+                  //     'Disconnect',
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
+
+                    child: Text(
+                      tasksServices.walletConnectConnected ? 'Wallet connected' : 'Wallet disconnected',
+                      style: Theme.of(context).textTheme.headline6,
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
               ),
-        ElevatedButton(
+            ),
+
+            // RichText(text: TextSpan(
+            //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+            //     children: <TextSpan>[
+            //
+            //       TextSpan(
+            //           text: 'Wallet link: \n',
+            //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+            //       // TextSpan(
+            //       //     text: widget.displayUri,
+            //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
+            //       // )
+            //     ]
+            // )),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+            child: Text('Close'),
+            onPressed: () => Navigator.pop(context)),
+        if(tasksServices.walletConnectConnected)
+        TextButton(
+            child: Text('Disconnect'),
+            style: TextButton.styleFrom(
+                primary: Colors.white, backgroundColor: Colors.red),
+            onPressed: () async {
+              await tasksServices.transactionTester?.disconnect();
+              // _transactionStateToAction(context, state: _state);
+              setState(() {});
+              // Navigator.pop(context);
+            }),
+        if(!tasksServices.walletConnectConnected)
+        TextButton(
+          child: Text('Connect'),
+          style: TextButton.styleFrom(
+            primary: Colors.white, backgroundColor: Colors.green),
           onPressed: _transactionStateToAction(context, state2: _state2),
-          // onPressed: (() {}),
-          child: Text(
-            _transactionStateToString(state: _state),
-          ),
+            // _transactionStateToAction(context, state: _state);
+            // setState(() {});
+            // Navigator.pop(context)
+
         ),
-        ElevatedButton(
-          onPressed: () async {
-            await tasksServices.transactionTester?.disconnect();
-            //await tasksServices.connectWallet();
-            // tasksServices.walletConnectState = TransactionState.disconnected;
-            // setState(() => _state = TransactionState.disconnected);
-          },
-          child: Text(
-            'Disconnect',
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
-            bottom: 16,
-          ),
-          child: Text(
-            _transactionStateToString2(state: _state2),
-            style: Theme.of(context).textTheme.headline6,
-            textAlign: TextAlign.center,
-          ),
-        )
       ],
     );
+
 
     // return Scaffold(
     //   appBar: AppBar(
