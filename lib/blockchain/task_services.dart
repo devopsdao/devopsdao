@@ -3,8 +3,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:easy_debounce/easy_debounce.dart';
-import 'package:rate_limiter/rate_limiter.dart';
+import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:throttling/throttling.dart';
 
 import 'package:flutter/material.dart';
@@ -15,13 +14,10 @@ import 'task.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
-import 'walletconnect.dart';
 
 import '../wallet/ethereum_transaction_tester.dart';
-import '../wallet/transaction_tester.dart';
 import '../wallet/main.dart';
 
-import 'package:wallet_connect/wallet_connect.dart';
 // enum TransactionState {
 //   disconnected,
 //   connecting,
@@ -185,7 +181,10 @@ class TasksServices extends ChangeNotifier {
       notifyListeners();
     });
     final SessionStatus? session = await transactionTester?.connect(
-      onDisplayUri: (uri) => {walletConnectUri = uri, notifyListeners()},
+      onDisplayUri: (uri) => {
+        Platform.isAndroid ? launchURL(uri) : walletConnectUri = uri,
+        notifyListeners()
+      },
     );
 
     if (session == null) {
@@ -301,7 +300,7 @@ class TasksServices extends ChangeNotifier {
     final factory = Factory(
         address: _contractAddress, client: _web3client, chainId: _chainId);
     // listen for the Transfer event when it's emitted by the contract above
-    
+    final subscription =
         factory.oneEventForAllEvents().take(1).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
       // EasyDebounce.debounce(
@@ -315,7 +314,7 @@ class TasksServices extends ChangeNotifier {
       });
       // await fetchTasks();
     });
-
+    final subscription2 =
         await factory.jobContractCreatedEvents().take(1).listen((event) {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
@@ -555,6 +554,8 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> addTask(String title, String description, String price) async {
     late int priceInGwei = (double.parse(price) * 1000000000).toInt();
+    // late EtherAmount priceInGwei =
+    //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
     // late int priceInGwei = priceInDouble.toInt();
     // print(priceInGwei);
     late String txn;
@@ -566,6 +567,11 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _createTask,
           parameters: [title, description],
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              .getValueInUnit(EtherUnit.gwei)
+              .toInt(),
+          // value: priceInGwei
           value:
               EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
@@ -590,6 +596,10 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _taskParticipation,
           parameters: [contractAddress],
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              .getValueInUnit(EtherUnit.gwei)
+              .toInt(),
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
@@ -618,6 +628,10 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _changeTaskStatus,
           parameters: [contractAddress, participiantAddress, state],
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              .getValueInUnit(EtherUnit.gwei)
+              .toInt(),
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
@@ -636,6 +650,10 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _withdraw,
           parameters: [contractAddress, ownAddress],
+          gasPrice: EtherAmount.inWei(BigInt.one),
+          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              .getValueInUnit(EtherUnit.gwei)
+              .toInt(),
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
