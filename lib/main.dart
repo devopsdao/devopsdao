@@ -174,14 +174,14 @@ class _NavBarPageState extends State<NavBarPage> {
             label: 'Performer',
             tooltip: '',
           ),
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.wallet,
-              size: 24,
-            ),
-            label: 'Wallet',
-            tooltip: '',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: FaIcon(
+          //     FontAwesomeIcons.wallet,
+          //     size: 24,
+          //   ),
+          //   label: 'Wallet',
+          //   tooltip: '',
+          // ),
         ],
       ),
     );

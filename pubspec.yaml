@@ -24,31 +24,30 @@ dependencies:
   algorand_dart: ^1.0.3
   auto_size_text: 3.0.0
   badges: ^2.0.3
-  cached_network_image: 3.1.0+1
+  cached_network_image: ^3.2.1
   cupertino_icons: ^1.0.0
-  easy_debounce: 2.0.1
+  easy_debounce: ^2.0.2+1
   eth_sig_util: ^0.0.9
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^5.4.3+7
   flutter_localizations:
     sdk: flutter
   flutter_secure_storage_linux: ^1.1.0
   font_awesome_flutter: 10.1.0
-  google_fonts: 2.2.0
+  google_fonts: ^3.0.1
   http: ^0.13.4
   intl: 0.17.0
-  json_path: 0.3.1
+  json_path: ^0.4.2
   loading_animation_widget: null
-  page_transition: 2.0.4
+  page_transition: ^2.0.9
   provider: ^6.0.2
   qr_flutter: ^4.0.0
   rate_limiter: ^0.1.1
   scan: ^1.6.0
-  shared_preferences: 2.0.11
+  shared_preferences: ^2.0.15
   throttling: ^1.0.0
-  timeago: 3.1.0
-  url_launcher: 6.0.15
+  timeago: ^3.3.0
+  url_launcher: ^6.1.5
   walletconnect_dart: ^0.0.11
   walletconnect_secure_storage: ^1.0.0
   web3dart: ^2.3.5
