@@ -334,6 +334,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                           ),
                                           actions: [
                                             TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
+                                            if(tasksServices.filterResults[index].contractOwner != tasksServices.ownAddress)
                                             TextButton(
                                               child: Text('Participate'),
                                               style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
