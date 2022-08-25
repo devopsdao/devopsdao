@@ -92,6 +92,11 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> init() async {
+    if (transactionTester == null) {
+      transactionTester = EthereumTransactionTester();
+    }
+    await transactionTester?.initSession();
+    await transactionTester?.removeSession();
     _web3client = Web3Client(
       _rpcUrl,
       http.Client(),
@@ -138,11 +143,11 @@ class TasksServices extends ChangeNotifier {
   // }
 
   Future<void> connectWallet4() async {
-    if (transactionTester == null) {
-      transactionTester = EthereumTransactionTester();
-    }
+    // if (transactionTester == null) {
+    //   transactionTester = EthereumTransactionTester();
+    // }
 
-    var connector = await transactionTester?.initWalletConnect();
+    var connector = await transactionTester.initWalletConnect();
 
     //if (tasksServices.walletConnectState == null ||
     // tasksServices.walletConnectState == TransactionState.disconnected) {
@@ -232,7 +237,8 @@ class TasksServices extends ChangeNotifier {
   Future<void> listenToEvents() async {
     final OneEventForAll = _deployedContract.event('OneEventForAll');
     final subscription = _web3client
-        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
+        .events(FilterOptions.events(
+            contract: _deployedContract, event: OneEventForAll))
         // .take(1)
         .listen((event) {
       // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
@@ -243,7 +249,6 @@ class TasksServices extends ChangeNotifier {
       //
       // print('$from sent $value MetaCoins to $to');
       print('event fired');
-
     });
     await subscription.asFuture();
     // await subscription.cancel();
