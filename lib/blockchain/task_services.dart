@@ -230,10 +230,10 @@ class TasksServices extends ChangeNotifier {
   late String searchKeyword = '';
 
   Future<void> listenToEvents() async {
-    final fromBlock = new BlockNum.genesis();
+    // final fromBlock = new BlockNum.genesis();
     final OneEventForAll = _deployedContract.event('OneEventForAll');
     final subscription = _web3client
-        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll, fromBlock: fromBlock))
+        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
         .take(1)
         .listen((event) {
       // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
