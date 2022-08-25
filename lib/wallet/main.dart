@@ -79,7 +79,6 @@ enum TransactionState {
 //
 // }
 
-
 // class DisconnectButton extends StatefulWidget {
 //   const DisconnectButton({Key? key, required this.title}) : super(key: key);
 //
@@ -178,22 +177,22 @@ class _MyWalletPageState extends State<MyWalletPage> {
                 children: [
                   (_displayUri.isEmpty)
                       ? Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                    ),
-                    // child: Text(
-                    //   'Click to connect ${_network == NetworkType.ethereum ? 'to Ethereum' : 'to Algorand'}',
-                    //   style: Theme.of(context).textTheme.headline6,
-                    //   textAlign: TextAlign.center,
-                    // ),
-                  )
+                          padding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            bottom: 16,
+                          ),
+                          // child: Text(
+                          //   'Click to connect ${_network == NetworkType.ethereum ? 'to Ethereum' : 'to Algorand'}',
+                          //   style: Theme.of(context).textTheme.headline6,
+                          //   textAlign: TextAlign.center,
+                          // ),
+                        )
                       : QrImage(
-                    data: _displayUri,
-                    size: 300,
-                    gapless: false,
-                  ),
+                          data: _displayUri,
+                          size: 300,
+                          gapless: false,
+                        ),
                   // ElevatedButton(
                   //   onPressed: _transactionStateToAction(context, state2: _state2),
                   //   // onPressed: (() {}),
@@ -218,9 +217,10 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       right: 16,
                       bottom: 16,
                     ),
-
                     child: Text(
-                      tasksServices.walletConnectConnected ? 'Wallet connected' : 'Wallet disconnected',
+                      tasksServices.walletConnectConnected
+                          ? 'Wallet connected'
+                          : 'Wallet disconnected',
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
                     ),
@@ -247,33 +247,30 @@ class _MyWalletPageState extends State<MyWalletPage> {
       ),
       actions: [
         TextButton(
-            child: Text('Close'),
-            onPressed: () => Navigator.pop(context)),
-        if(tasksServices.walletConnectConnected)
-        TextButton(
-            child: Text('Disconnect'),
+            child: Text('Close'), onPressed: () => Navigator.pop(context)),
+        if (tasksServices.walletConnectConnected)
+          TextButton(
+              child: Text('Disconnect'),
+              style: TextButton.styleFrom(
+                  primary: Colors.white, backgroundColor: Colors.red),
+              onPressed: () async {
+                await tasksServices.transactionTester?.disconnect();
+                // _transactionStateToAction(context, state: _state);
+                setState(() {});
+                // Navigator.pop(context);
+              }),
+        if (!tasksServices.walletConnectConnected)
+          TextButton(
+            child: Text('Connect'),
             style: TextButton.styleFrom(
-                primary: Colors.white, backgroundColor: Colors.red),
-            onPressed: () async {
-              await tasksServices.transactionTester?.disconnect();
-              // _transactionStateToAction(context, state: _state);
-              setState(() {});
-              // Navigator.pop(context);
-            }),
-        if(!tasksServices.walletConnectConnected)
-        TextButton(
-          child: Text('Connect'),
-          style: TextButton.styleFrom(
-            primary: Colors.white, backgroundColor: Colors.green),
-          onPressed: _transactionStateToAction(context, state2: _state2),
+                primary: Colors.white, backgroundColor: Colors.green),
+            onPressed: _transactionStateToAction(context, state2: _state2),
             // _transactionStateToAction(context, state: _state);
             // setState(() {});
             // Navigator.pop(context)
-
-        ),
+          ),
       ],
     );
-
 
     // return Scaffold(
     //   appBar: AppBar(

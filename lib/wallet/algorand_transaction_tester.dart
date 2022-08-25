@@ -44,6 +44,10 @@ class AlgorandTransactionTester extends TransactionTester {
   //   );
   // }
 
+  Future<void> initSession() async {
+    throw UnimplementedError();
+  }
+
   Future initWalletConnect() async {
     final sessionStorage = WalletConnectSecureStorage();
     final session = await sessionStorage.getSession();
@@ -78,6 +82,11 @@ class AlgorandTransactionTester extends TransactionTester {
   @override
   Future<void> disconnect() async {
     await connector.close(forceClose: true);
+  }
+
+  @override
+  Future<void> removeSession() async {
+    throw UnimplementedError();
   }
 
   @override

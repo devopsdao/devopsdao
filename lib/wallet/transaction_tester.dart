@@ -7,6 +7,8 @@ abstract class TransactionTester {
 
   TransactionTester();
 
+  Future<void> initSession();
+
   initWalletConnect();
 
   // final WalletConnect connector;
@@ -29,4 +31,6 @@ abstract class TransactionTester {
   Future createSession({OnDisplayUriCallback? onDisplayUri});
 
   Future<void> disconnect();
+
+  Future<void> removeSession();
 }
