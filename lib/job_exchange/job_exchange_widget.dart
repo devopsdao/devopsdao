@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -344,6 +347,14 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 });
                                                 tasksServices.taskParticipation(tasksServices.filterResults[index].contractAddress);
                                                 Navigator.pop(context);
+
+
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) => WalletAction()
+                                                );
+
+
                                             }),
 
                                           ],
