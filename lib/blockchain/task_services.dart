@@ -106,11 +106,6 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     // await getCredentials();
     await getDeployedContract();
-    if (transactionTester == null) {
-      transactionTester = EthereumTransactionTester();
-    }
-    await transactionTester?.initSession();
-    await transactionTester?.removeSession();
   }
 
   late ContractAbi _abiCode;
@@ -147,6 +142,10 @@ class TasksServices extends ChangeNotifier {
   // }
 
   Future<void> connectWallet4() async {
+    if (transactionTester == null) {
+      transactionTester = EthereumTransactionTester();
+    }
+
     var connector = await transactionTester?.initWalletConnect();
 
     //if (tasksServices.walletConnectState == null ||
@@ -209,6 +208,7 @@ class TasksServices extends ChangeNotifier {
       // await _transactionTester?.sendTransactionWC();
       _creds = credentials;
       ownAddress = publicAddress;
+      fetchTasks();
       myBalance();
     } else {
       _creds = EthPrivateKey.fromHex(_privatekey);
@@ -230,25 +230,25 @@ class TasksServices extends ChangeNotifier {
   late Throttling thr;
   late String searchKeyword = '';
 
-  // Future<void> listenToEvents() async {
-  //   final OneEventForAll = _deployedContract.event('OneEventForAll');
-  //   final subscription = _web3client
-  //       .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
-  //       // .take(1)
-  //       .listen((event) {
-  //     // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
-  //     //
-  //     // final from = decoded[0] as EthereumAddress;
-  //     // final to = decoded[1] as EthereumAddress;
-  //     // final value = decoded[2] as BigInt;
-  //     //
-  //     // print('$from sent $value MetaCoins to $to');
-  //     print('event fired');
-  //
-  //   });
-  //   await subscription.asFuture();
-  //   // await subscription.cancel();
-  // }
+  Future<void> listenToEvents() async {
+    final OneEventForAll = _deployedContract.event('OneEventForAll');
+    final subscription = _web3client
+        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
+        // .take(1)
+        .listen((event) {
+      // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
+      //
+      // final from = decoded[0] as EthereumAddress;
+      // final to = decoded[1] as EthereumAddress;
+      // final value = decoded[2] as BigInt;
+      //
+      // print('$from sent $value MetaCoins to $to');
+      print('event fired');
+
+    });
+    await subscription.asFuture();
+    // await subscription.cancel();
+  }
 
   Future<void> getDeployedContract() async {
     _deployedContract = DeployedContract(_abiCode, _contractAddress);
@@ -279,6 +279,7 @@ class TasksServices extends ChangeNotifier {
     });
     await myBalance();
     await monitorEvents();
+    await listenToEvents();
   }
 
   Future<void> myBalance() async {
@@ -301,7 +302,7 @@ class TasksServices extends ChangeNotifier {
     final factory = Factory(
         address: _contractAddress, client: _web3client, chainId: _chainId);
     // listen for the Transfer event when it's emitted by the contract above
-    
+    final subscription =
         factory.oneEventForAllEvents().take(1).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
       // EasyDebounce.debounce(
@@ -315,7 +316,7 @@ class TasksServices extends ChangeNotifier {
       });
       // await fetchTasks();
     });
-
+    final subscription2 =
         await factory.jobContractCreatedEvents().take(1).listen((event) {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
@@ -595,7 +596,7 @@ class TasksServices extends ChangeNotifier {
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
-    print(txn);
+    // print(txn);
     // txnRes = await _web3client
     //     .addedBlocks()
     //     .asyncMap((_) => _web3client.getTransactionReceipt(txn))
