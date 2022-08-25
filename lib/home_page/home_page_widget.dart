@@ -180,7 +180,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       context: context,
                       builder: (context) => MyWalletPage(
                         title: '',
-                      ),);
+                      ),
+                  );
                 },
               ),
             ],

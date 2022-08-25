@@ -300,7 +300,7 @@ class TasksServices extends ChangeNotifier {
     final factory = Factory(
         address: _contractAddress, client: _web3client, chainId: _chainId);
     // listen for the Transfer event when it's emitted by the contract above
-    final subscription =
+    
         factory.oneEventForAllEvents().take(1).listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
       // EasyDebounce.debounce(
@@ -314,7 +314,7 @@ class TasksServices extends ChangeNotifier {
       });
       // await fetchTasks();
     });
-    final subscription2 =
+
         await factory.jobContractCreatedEvents().take(1).listen((event) {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');

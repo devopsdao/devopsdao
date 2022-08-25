@@ -145,7 +145,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
     // }
-    if (tasksServices.walletConnectState == TransactionState.disconnected) {
+    if (tasksServices.walletConnectConnected) {
       tasksServices.walletConnectUri = '';
     }
 
@@ -220,7 +220,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                     ),
 
                     child: Text(
-                      tasksServices.walletConnectConnected ? 'Wallet connected' : 'Wallet disconnected',
+                      tasksServices.walletConnectConnected ? 'Wallet connected!' : 'Wallet disconnected',
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
                     ),
