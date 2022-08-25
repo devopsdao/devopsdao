@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -345,7 +347,14 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 });
                                                 tasksServices.taskParticipation(tasksServices.filterResults[index].contractAddress);
                                                 Navigator.pop(context);
-                                                WalletAction();
+
+
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) => WalletAction()
+                                                );
+
+
                                             }),
 
                                           ],

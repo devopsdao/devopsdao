@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -74,6 +75,11 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
           ),
           onPressed: () async {
             Navigator.pop(context);
+
+            // showDialog(
+            //     context: context,
+            //     builder: (context) => WalletAction()
+            // );
           },
         ),
         title: Text(
@@ -84,7 +90,9 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                 fontSize: 22,
               ),
         ),
-        actions: [],
+        actions: [
+
+        ],
         centerTitle: false,
         elevation: 2,
       ),
@@ -256,6 +264,10 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                           valueController!.text,
                         );
                         Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction()
+                        );
                       },
                       text: 'Submit',
                       options: FFButtonOptions(

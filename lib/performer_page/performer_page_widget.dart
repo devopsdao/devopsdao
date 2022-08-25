@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -278,6 +279,12 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                               widget.obj[index].participiant,
                             'progress');
                             Navigator.pop(context);
+
+                            showDialog(
+                                context: context,
+                                builder: (context) => WalletAction()
+                            );
+
                         }),
                         if (widget.obj[index].jobState == "progress")
                         TextButton(
@@ -292,6 +299,11 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                               widget.obj[index].participiant,
                               'review');
                             Navigator.pop(context);
+
+                            showDialog(
+                                context: context,
+                                builder: (context) => WalletAction()
+                            );
                         }),
                         if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
                           TextButton(
@@ -303,6 +315,11 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                 });
                                 tasksServices.withdraw(widget.obj[index].contractAddress);
                                 Navigator.pop(context);
+
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => WalletAction()
+                                );
                               }),
                         // if (obj[index].jobState == "Review")
                         //   TextButton(child: Text('Review'), onPressed: () {

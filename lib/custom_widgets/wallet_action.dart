@@ -21,7 +21,7 @@ class _WalletAction extends State<WalletAction> {
     var tasksServices = context.watch<TasksServices>();
 
     return AlertDialog(
-      title: Text('Connect your wallet'),
+      // title: Text('Connect your wallet'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -35,7 +35,7 @@ class _WalletAction extends State<WalletAction> {
             //     ]
             // )),
             Container(
-              height: 400,
+              height: 150,
               width: 300,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -48,9 +48,7 @@ class _WalletAction extends State<WalletAction> {
                     ),
 
                     child: Text(
-                      tasksServices.walletConnectConnected
-                          ? 'Wallet connected'
-                          : 'Wallet disconnected',
+                      'Please confirm the transaction in your wallet!',
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
                     ),
@@ -64,17 +62,17 @@ class _WalletAction extends State<WalletAction> {
       actions: [
         TextButton(
             child: Text('Close'), onPressed: () => Navigator.pop(context)),
-        if (tasksServices.walletConnectConnected)
-          TextButton(
-              child: Text('Disconnect'),
-              style: TextButton.styleFrom(
-                  primary: Colors.white, backgroundColor: Colors.red),
-              onPressed: () async {
-                await tasksServices.transactionTester?.disconnect();
-                // _transactionStateToAction(context, state: _state);
-                setState(() {});
-                // Navigator.pop(context);
-              }),
+        // if (tasksServices.walletConnectConnected)
+        //   TextButton(
+        //       child: Text('Disconnect'),
+        //       style: TextButton.styleFrom(
+        //           primary: Colors.white, backgroundColor: Colors.red),
+        //       onPressed: () async {
+        //         await tasksServices.transactionTester?.disconnect();
+        //         // _transactionStateToAction(context, state: _state);
+        //         setState(() {});
+        //         // Navigator.pop(context);
+        //       }),
         // if (!tasksServices.walletConnectConnected)
         //   TextButton(
         //     child: Text('Connect'),

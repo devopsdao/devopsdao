@@ -5,6 +5,7 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -382,6 +383,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 widget.obj[index].participiant,
                                 'completed');
                               Navigator.pop(context);
+
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => WalletAction()
+                              );
                           }),
                         if (widget.obj[index].jobState == 'completed')
                           TextButton(
@@ -393,6 +399,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               });
                               tasksServices.withdraw(widget.obj[index].contractAddress);
                               Navigator.pop(context);
+
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => WalletAction()
+                              );
                           }),
                       ],
                     ));

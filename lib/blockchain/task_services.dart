@@ -239,7 +239,7 @@ class TasksServices extends ChangeNotifier {
     final OneEventForAll = _deployedContract.event('OneEventForAll');
     final subscription = _web3client
         .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
-        .take(1)
+        .take(10)
         .listen((event) {
       // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
       //
