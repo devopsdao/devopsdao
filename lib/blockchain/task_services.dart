@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -61,12 +61,15 @@ class TasksServices extends ChangeNotifier {
   //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
   //     : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
 
-  final String _rpcUrl = Platform.isAndroid
-      ? 'https://rpc.api.moonbase.moonbeam.network'
-      : 'https://rpc.api.moonbase.moonbeam.network';
-  final String _wsUrl = Platform.isAndroid
-      ? 'wss://wss.api.moonbase.moonbeam.network'
-      : 'wss://wss.api.moonbase.moonbeam.network';
+  String platform = 'mobile';
+  final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
+  final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
+  // final String _rpcUrl = Platform.isAndroid
+  //     ? 'https://rpc.api.moonbase.moonbeam.network'
+  //     : 'https://rpc.api.moonbase.moonbeam.network';
+  // final String _wsUrl = Platform.isAndroid
+  //     ? 'wss://wss.api.moonbase.moonbeam.network'
+  //     : 'wss://wss.api.moonbase.moonbeam.network';
   final int _chainId = 1287;
   bool isLoading = true;
   bool isLoadingBackground = false;
@@ -88,6 +91,15 @@ class TasksServices extends ChangeNotifier {
   // 01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f
 
   TasksServices() {
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        platform = 'mobile';
+      } else if (Platform.isLinux) {
+        platform = 'linux';
+      }
+    } catch (e) {
+      platform = 'web';
+    }
     init();
   }
 
@@ -165,6 +177,7 @@ class TasksServices extends ChangeNotifier {
         publicAddress = await transactionTester?.getPublicAddress(session);
         _creds = credentials;
         ownAddress = publicAddress;
+        fetchTasks();
         myBalance();
       }();
       notifyListeners();
@@ -186,7 +199,7 @@ class TasksServices extends ChangeNotifier {
     });
     final SessionStatus? session = await transactionTester?.connect(
       onDisplayUri: (uri) => {
-        Platform.isAndroid ? launchURL(uri) : walletConnectUri = uri,
+        platform == 'mobile' ? launchURL(uri) : walletConnectUri = uri,
         notifyListeners()
       },
     );
@@ -206,20 +219,20 @@ class TasksServices extends ChangeNotifier {
   EthereumAddress? ownAddress;
   double? ethBalance;
   double? pendingBalance = 0;
-  Future<void> getCredentials() async {
-    if (_walletconnect == true && credentials != null) {
-      // TransactionTester? _transactionTester = EthereumTransactionTester();
-      // await _transactionTester?.sendTransactionWC();
-      _creds = credentials;
-      ownAddress = publicAddress;
-      fetchTasks();
-      myBalance();
-    } else {
-      _creds = EthPrivateKey.fromHex(_privatekey);
-      ownAddress = await _creds.extractAddress();
-      // myBalance = await _creds.getBalance();
-    }
-  }
+  // Future<void> getCredentials() async {
+  //   if (_walletconnect == true && credentials != null) {
+  //     // TransactionTester? _transactionTester = EthereumTransactionTester();
+  //     // await _transactionTester?.sendTransactionWC();
+  //     _creds = credentials;
+  //     ownAddress = publicAddress;
+  //     await fetchTasks();
+  //     myBalance();
+  //   } else {
+  //     _creds = EthPrivateKey.fromHex(_privatekey);
+  //     ownAddress = await _creds.extractAddress();
+  //     // myBalance = await _creds.getBalance();
+  //   }
+  // }
 
   late DeployedContract _deployedContract;
   late ContractFunction _createTask;
@@ -238,7 +251,10 @@ class TasksServices extends ChangeNotifier {
     final fromBlock = new BlockNum.genesis();
     final OneEventForAll = _deployedContract.event('OneEventForAll');
     final subscription = _web3client
-        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll, fromBlock: fromBlock))
+        .events(FilterOptions.events(
+            contract: _deployedContract,
+            event: OneEventForAll,
+            fromBlock: fromBlock))
         .take(1)
         .listen((event) {
       // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
@@ -249,7 +265,6 @@ class TasksServices extends ChangeNotifier {
       //
       // print('$from sent $value MetaCoins to $to');
       print('event fired');
-
     });
     // await subscription.asFuture();
     // await subscription.cancel();
