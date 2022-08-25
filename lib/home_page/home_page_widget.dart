@@ -175,10 +175,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
                   // }();
                   showDialog(
-                    context: context,
-                    builder: (context) => MyWalletPage(
-                      title: '',
-                    ),
+                      context: context,
+                      builder: (context) => MyWalletPage(
+                        title: '',
+                      ),
                   );
                 },
               ),

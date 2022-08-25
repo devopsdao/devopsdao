@@ -7,8 +7,6 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../blockchain/walletconnect.dart';
-import '../blockchain/walletconnect2.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
@@ -24,15 +22,6 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget>
     with TickerProviderStateMixin {
-<<<<<<< HEAD
-  // GlobalKey<_MyWalletPageState> _key = GlobalKey<_MyWalletPageState>();
-
-
-  // final MyWalletPage myWalletPage;
-  // _HomePageWidgetState (this.myWalletPage)
-
-=======
->>>>>>> 976936dd3e3d55f1f0e26763851b8f3b5c61233c
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -145,26 +134,26 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
-          LoadButtonIndicator(),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderRadius: 30,
-                borderWidth: 1,
-                buttonSize: 60,
-                icon: Icon(
-                  Icons.account_balance_wallet,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  await tasksServices.getCredentials();
-                },
-              ),
-            ],
-          ),
+          // LoadButtonIndicator(),
+          // Row(
+          //   mainAxisSize: MainAxisSize.max,
+          //   children: [
+          //     FlutterFlowIconButton(
+          //       borderColor: Colors.transparent,
+          //       borderRadius: 30,
+          //       borderWidth: 1,
+          //       buttonSize: 60,
+          //       icon: Icon(
+          //         Icons.account_balance_wallet,
+          //         color: Colors.white,
+          //         size: 30,
+          //       ),
+          //       onPressed: () async {
+          //         await tasksServices.getCredentials();
+          //       },
+          //     ),
+          //   ],
+          // ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -186,55 +175,18 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
                   // }();
                   showDialog(
+<<<<<<< HEAD
+                    context: context,
+                    builder: (context) => MyWalletPage(
+                      title: '',
+                    ),
+=======
                       context: context,
-                      builder: (context) => AlertDialog(
-                            title: Text('Connect your wallet'),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: <Widget>[
-                                  // RichText(text: TextSpan(
-                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                  //     children: <TextSpan>[
-                                  //       TextSpan(
-                                  //           text: 'Description: \n',
-                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  //       TextSpan(text: widget.obj[index].description)
-                                  //     ]
-                                  // )),
-                                  Container(
-                                    height: 400,
-                                    width: 300,
-                                    child: MyWalletPage(
-                                      title: '',
-                                    ),
-                                  ),
-
-                                  // RichText(text: TextSpan(
-                                  //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                  //     children: <TextSpan>[
-                                  //
-                                  //       TextSpan(
-                                  //           text: 'Wallet link: \n',
-                                  //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  //       // TextSpan(
-                                  //       //     text: widget.displayUri,
-                                  //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
-                                  //       // )
-                                  //     ]
-                                  // )),
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                  child: Text('Close'),
-                                  onPressed: () => Navigator.pop(context)),
-                              DisconnectButton(title: ''),
-                              ConnectButton(
-                                title: '',
-                              ),
-                            ],
-                          ));
+                      builder: (context) => MyWalletPage(
+                        title: '',
+                      ),
+>>>>>>> 78ea319af36c5dc36eee32e021783bcd50e9c78b
+                  );
                 },
               ),
             ],
