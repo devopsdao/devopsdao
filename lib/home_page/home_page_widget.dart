@@ -7,8 +7,6 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../blockchain/walletconnect.dart';
-import '../blockchain/walletconnect2.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
