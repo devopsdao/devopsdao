@@ -106,6 +106,11 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     // await getCredentials();
     await getDeployedContract();
+    if (transactionTester == null) {
+      transactionTester = EthereumTransactionTester();
+    }
+    await transactionTester?.initSession();
+    await transactionTester?.removeSession();
   }
 
   late ContractAbi _abiCode;
@@ -142,10 +147,6 @@ class TasksServices extends ChangeNotifier {
   // }
 
   Future<void> connectWallet4() async {
-    if (transactionTester == null) {
-      transactionTester = EthereumTransactionTester();
-    }
-
     var connector = await transactionTester?.initWalletConnect();
 
     //if (tasksServices.walletConnectState == null ||

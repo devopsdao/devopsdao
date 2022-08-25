@@ -127,7 +127,7 @@ class _NavBarPageState extends State<NavBarPage> {
       'submitterPage': SubmitterPageWidget(),
       'performerPage': PerformerPageWidget(),
       'walletPage': MyWalletPage(title: 'WalletConnect'),
-      'orangePage': MyOrangePage(title: 'WalletConnect'),
+      // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
     return Scaffold(
@@ -182,14 +182,6 @@ class _NavBarPageState extends State<NavBarPage> {
             label: 'Wallet',
             tooltip: '',
           ),
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.wallet,
-              size: 24,
-            ),
-            label: 'Orange',
-            tooltip: '',
-          )
         ],
       ),
     );

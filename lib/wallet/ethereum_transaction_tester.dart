@@ -45,6 +45,7 @@ class EthereumTransactionTester extends TransactionTester {
   late final Web3Client ethereum;
   late EthereumWalletConnectProvider provider;
   late WalletConnectSession? session;
+  late WalletConnectSecureStorage sessionStorage;
   late EthereumAddress? publicAddress;
   late WalletConnect connector;
 
@@ -89,11 +90,14 @@ class EthereumTransactionTester extends TransactionTester {
   // }
   // late WalletConnect connector;
 
-  Future<WalletConnect> initWalletConnect() async {
-    final sessionStorage = WalletConnectSecureStorage();
+  Future<void> initSession() async {
+    sessionStorage = WalletConnectSecureStorage();
     session = await sessionStorage.getSession();
+  }
 
+  Future<WalletConnect> initWalletConnect() async {
     // Create a connector
+    session = await sessionStorage.getSession();
     connector = WalletConnect(
       bridge: 'https://bridge.walletconnect.org',
       session: session,
@@ -144,6 +148,12 @@ class EthereumTransactionTester extends TransactionTester {
   @override
   Future<void> disconnect() async {
     await connector.killSession();
+    await sessionStorage.removeSession();
+  }
+
+  @override
+  Future<void> removeSession() async {
+    await sessionStorage.removeSession();
   }
 
   @override
