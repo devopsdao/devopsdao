@@ -97,6 +97,7 @@ class EthereumTransactionTester extends TransactionTester {
 
   Future<WalletConnect> initWalletConnect() async {
     // Create a connector
+    await initSession();
     session = await sessionStorage.getSession();
     connector = WalletConnect(
       bridge: 'https://bridge.walletconnect.org',
