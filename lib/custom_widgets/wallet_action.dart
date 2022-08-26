@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -46,9 +45,10 @@ class _WalletAction extends State<WalletAction> {
                       right: 16,
                       bottom: 16,
                     ),
-
                     child: Text(
-                      'Please confirm the transaction in your wallet!',
+                      tasksServices.walletConnectActionApproved
+                          ? 'Transaction approved'
+                          : 'Please confirm the transaction in your wallet!',
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
                     ),

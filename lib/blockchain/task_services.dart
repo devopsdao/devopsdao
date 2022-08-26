@@ -47,6 +47,7 @@ class TasksServices extends ChangeNotifier {
   var walletConnectState;
   bool walletConnectConnected = false;
   String walletConnectUri = '';
+  bool walletConnectActionApproved = false;
 
   // final String _rpcUrl =
   // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
@@ -187,6 +188,10 @@ class TasksServices extends ChangeNotifier {
     });
     connector.on('session_update', (payload) {
       print(payload);
+      if (payload.approved == true) {
+        // walletConnectActionApproved = true;
+        // notifyListeners();
+      }
       // tasksServices.walletConnectState = TransactionState.session_update;
     });
     connector.on('disconnect', (session) {
@@ -250,8 +255,9 @@ class TasksServices extends ChangeNotifier {
     // final fromBlock = new BlockNum.genesis();
     final OneEventForAll = _deployedContract.event('OneEventForAll');
     final subscription = _web3client
-        .events(FilterOptions.events(contract: _deployedContract, event: OneEventForAll))
-        .take(10)
+        .events(FilterOptions.events(
+            contract: _deployedContract, event: OneEventForAll))
+        // .take(10)
         .listen((event) {
       // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
       //
@@ -261,7 +267,6 @@ class TasksServices extends ChangeNotifier {
       //
       // print('$from sent $value MetaCoins to $to');
       print('event fired');
-
     });
     // await subscription.asFuture();
     // await subscription.cancel();
@@ -319,8 +324,7 @@ class TasksServices extends ChangeNotifier {
     final factory = Factory(
         address: _contractAddress, client: _web3client, chainId: _chainId);
     // listen for the Transfer event when it's emitted by the contract above
-    final subscription =
-        factory.oneEventForAllEvents().take(1).listen((event) async {
+    final subscription = factory.oneEventForAllEvents().listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
       // EasyDebounce.debounce(
       //     'fetchTasks',                 // <-- An ID for this particular debouncer
@@ -334,7 +338,7 @@ class TasksServices extends ChangeNotifier {
       // await fetchTasks();
     });
     final subscription2 =
-        await factory.jobContractCreatedEvents().take(1).listen((event) {
+        await factory.jobContractCreatedEvents().listen((event) {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
       // await fetchTasks();
@@ -577,8 +581,8 @@ class TasksServices extends ChangeNotifier {
     //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
     // late int priceInGwei = priceInDouble.toInt();
     // print(priceInGwei);
+    walletConnectActionApproved = false;
     late String txn;
-
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
@@ -586,17 +590,19 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _createTask,
           parameters: [title, description],
-          gasPrice: EtherAmount.inWei(BigInt.one),
-          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              .getValueInUnit(EtherUnit.gwei)
-              .toInt(),
+          // gasPrice: EtherAmount.inWei(BigInt.one),
+          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+          //     .getValueInUnit(EtherUnit.gwei)
+          //     .toInt(),
           // value: priceInGwei
-          value:
-              EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
+          // value:
+          // EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
+    walletConnectActionApproved = true;
+    notifyListeners();
     // fetchTasks();
     tellMeHasItMined(txn);
   }
@@ -604,10 +610,10 @@ class TasksServices extends ChangeNotifier {
   Future<void> taskParticipation(EthereumAddress contractAddress) async {
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
+    walletConnectActionApproved = false;
     late String txn;
     // late TransactionInformation txnRes;
     // late TransactionReceipt? txnRes;
-
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
@@ -615,15 +621,18 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _taskParticipation,
           parameters: [contractAddress],
-          gasPrice: EtherAmount.inWei(BigInt.one),
-          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              .getValueInUnit(EtherUnit.gwei)
-              .toInt(),
+          // gasPrice: EtherAmount.inWei(BigInt.one),
+          // maxGas: 100000,
+          // maxFeePerGas: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1000),
+          // maxPriorityFeePerGas:
+          //     EtherAmount.fromUnitAndValue(EtherUnit.ether, 1000),
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
+    walletConnectActionApproved = true;
+    notifyListeners();
     // print(txn);
     // txnRes = await _web3client
     //     .addedBlocks()
@@ -639,6 +648,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
       EthereumAddress participiantAddress, String state) async {
+    walletConnectActionApproved = false;
     late String txn;
     txn = await _web3client.sendTransaction(
         _creds,
@@ -647,20 +657,23 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _changeTaskStatus,
           parameters: [contractAddress, participiantAddress, state],
-          gasPrice: EtherAmount.inWei(BigInt.one),
-          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              .getValueInUnit(EtherUnit.gwei)
-              .toInt(),
+          // gasPrice: EtherAmount.inWei(BigInt.one),
+          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+          //     .getValueInUnit(EtherUnit.gwei)
+          //     .toInt(),
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
+    walletConnectActionApproved = true;
+    notifyListeners();
     // fetchTasks();
     tellMeHasItMined(txn);
   }
 
   Future<void> withdraw(EthereumAddress contractAddress) async {
+    walletConnectActionApproved = false;
     late String txn;
     txn = await _web3client.sendTransaction(
         _creds,
@@ -669,15 +682,17 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _withdraw,
           parameters: [contractAddress, ownAddress],
-          gasPrice: EtherAmount.inWei(BigInt.one),
-          maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              .getValueInUnit(EtherUnit.gwei)
-              .toInt(),
+          // gasPrice: EtherAmount.inWei(BigInt.one),
+          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+          //     .getValueInUnit(EtherUnit.gwei)
+          //     .toInt(),
           // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
+    walletConnectActionApproved = true;
+    notifyListeners();
     // fetchTasks();
     tellMeHasItMined(txn);
   }
