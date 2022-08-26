@@ -20,15 +20,23 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
 
   @override
   Future<String> sendTransaction(Transaction transaction) async {
-    final hash = await provider.sendTransaction(
-      from: transaction.from!.hex,
-      to: transaction.to?.hex,
-      data: transaction.data,
-      gas: transaction.maxGas,
-      gasPrice: transaction.gasPrice?.getInWei,
-      value: transaction.value?.getInWei,
-      nonce: transaction.nonce,
-    );
+    String hash = 'failed';
+    try {
+      hash = await provider.sendTransaction(
+        from: transaction.from!.hex,
+        to: transaction.to?.hex,
+        data: transaction.data,
+        gas: transaction.maxGas,
+        gasPrice: transaction.gasPrice?.getInWei,
+        value: transaction.value?.getInWei,
+        nonce: transaction.nonce,
+      );
+    } catch (e) {
+      if (e.toString() ==
+          'JSON-RPC error -32000: User rejected the transaction') {
+        hash = 'rejected';
+      }
+    }
 
     return hash;
   }
