@@ -179,7 +179,9 @@ class TasksServices extends ChangeNotifier {
         _creds = credentials;
         ownAddress = publicAddress;
         fetchTasks();
+
         myBalance();
+        isLoading = true;
       }();
       notifyListeners();
     });
@@ -483,9 +485,9 @@ class TasksServices extends ChangeNotifier {
         taskLoaded = temp[6]
             .toInt(); // this count we need to show the loading process. does not affect anything else
 
-        if (isLoading == true) {
+        // if (isLoading == true) {
           notifyListeners();
-        }
+        // }
         if (temp[1] != "") {
           // var taskState = temp[1];
           tasks.add(taskObject);
