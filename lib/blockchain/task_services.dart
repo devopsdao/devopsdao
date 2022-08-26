@@ -47,7 +47,8 @@ class TasksServices extends ChangeNotifier {
   var walletConnectState;
   bool walletConnectConnected = false;
   String walletConnectUri = '';
-  bool walletConnectActionApproved = false;
+  // bool walletConnectActionApproved = false;
+  String lastTxn = '';
 
   // final String _rpcUrl =
   // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
@@ -356,22 +357,28 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future tellMeHasItMined(String hash) async {
-    TransactionReceipt? transactionReceipt =
-        await _web3client.getTransactionReceipt(hash);
-    while (transactionReceipt == null) {
-      Future.delayed(const Duration(milliseconds: 1000));
-      transactionReceipt = await _web3client.getTransactionReceipt(hash);
+    if (hash.length == 66) {
+      TransactionReceipt? transactionReceipt =
+          await _web3client.getTransactionReceipt(hash);
+      while (transactionReceipt == null) {
+        Future.delayed(const Duration(milliseconds: 1000));
+        transactionReceipt = await _web3client.getTransactionReceipt(hash);
+      }
+      // TransactionInformation transactionResult =
+      //     await _web3client.getTransactionByHash(hash);
+      // print(transactionReceipt);
+      if (transactionReceipt.status == true) {
+        lastTxn = 'minted';
+        notifyListeners();
+        print('tell me has it mined');
+        thr.throttle(() {
+          fetchTasks();
+        });
+      }
+      await myBalance();
+    } else {
+      isLoadingBackground = false;
     }
-    // TransactionInformation transactionResult =
-    //     await _web3client.getTransactionByHash(hash);
-    // print(transactionReceipt);
-    if (transactionReceipt.status == true) {
-      print('tell me has it mined');
-      thr.throttle(() {
-        fetchTasks();
-      });
-    }
-    await myBalance();
   }
 
   Future<void> runFilter(String enteredKeyword) async {
@@ -581,7 +588,7 @@ class TasksServices extends ChangeNotifier {
     //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
     // late int priceInGwei = priceInDouble.toInt();
     // print(priceInGwei);
-    walletConnectActionApproved = false;
+    lastTxn = 'pending';
     late String txn;
     txn = await _web3client.sendTransaction(
         _creds,
@@ -601,7 +608,7 @@ class TasksServices extends ChangeNotifier {
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
-    walletConnectActionApproved = true;
+    lastTxn = txn;
     notifyListeners();
     // fetchTasks();
     tellMeHasItMined(txn);
@@ -610,7 +617,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> taskParticipation(EthereumAddress contractAddress) async {
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
-    walletConnectActionApproved = false;
+    lastTxn = 'pending';
     late String txn;
     // late TransactionInformation txnRes;
     // late TransactionReceipt? txnRes;
@@ -631,7 +638,7 @@ class TasksServices extends ChangeNotifier {
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
-    walletConnectActionApproved = true;
+    lastTxn = txn;
     notifyListeners();
     // print(txn);
     // txnRes = await _web3client
@@ -648,7 +655,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
       EthereumAddress participiantAddress, String state) async {
-    walletConnectActionApproved = false;
+    lastTxn = 'pending';
     late String txn;
     txn = await _web3client.sendTransaction(
         _creds,
@@ -666,14 +673,14 @@ class TasksServices extends ChangeNotifier {
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
-    walletConnectActionApproved = true;
+    lastTxn = txn;
     notifyListeners();
     // fetchTasks();
     tellMeHasItMined(txn);
   }
 
   Future<void> withdraw(EthereumAddress contractAddress) async {
-    walletConnectActionApproved = false;
+    lastTxn = 'pending';
     late String txn;
     txn = await _web3client.sendTransaction(
         _creds,
@@ -691,7 +698,7 @@ class TasksServices extends ChangeNotifier {
         chainId: _chainId);
     isLoading = false;
     isLoadingBackground = true;
-    walletConnectActionApproved = true;
+    lastTxn = txn;
     notifyListeners();
     // fetchTasks();
     tellMeHasItMined(txn);

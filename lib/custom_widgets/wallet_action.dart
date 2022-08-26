@@ -40,19 +40,45 @@ class _WalletAction extends State<WalletAction> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                    ),
-                    child: Text(
-                      tasksServices.walletConnectActionApproved
-                          ? 'Transaction approved'
-                          : 'Please confirm the transaction in your wallet!',
-                      style: Theme.of(context).textTheme.headline6,
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        bottom: 16,
+                      ),
+                      child: Column(
+                        children: [
+                          if (tasksServices.lastTxn == 'pending')
+                            Text(
+                              'Please confirm the transaction in your wallet!',
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
+                            )
+                          else if (tasksServices.lastTxn == 'rejected')
+                            Text(
+                              'Transaction has been rejected',
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
+                            )
+                          else if (tasksServices.lastTxn == 'failed')
+                            Text(
+                              'Transaction has failed, please retry',
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
+                            )
+                          else if (tasksServices.lastTxn == 'minted')
+                            Text(
+                              'Transaction has been minted in the blockchain',
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
+                            )
+                          else
+                            Text(
+                              'Transaction confirmed :)',
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
+                            ),
+                        ],
+                      ))
                 ],
               ),
             ),
