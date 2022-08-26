@@ -83,27 +83,37 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var taskLoadedState;
 
-    return Container(
-        child: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          borderWidth: 1,
-          buttonSize: 60,
-          icon:
-          tasksServices.isLoadingBackground ? LoadingAnimationWidget.staggeredDotsWave(
-            color: Colors.white,
-            size: 30,
-          ) : Icon(
-            Icons.refresh,
-            color: Colors.white,
-            size: 30,
+    setState(() {
+      taskLoadedState = tasksServices.taskLoaded;
+    });
+
+    return Row(
+      children: [
+        Text(taskLoadedState.toString()),
+        Container(
+          child: FlutterFlowIconButton(
+            borderColor: Colors.transparent,
+            borderRadius: 30,
+            borderWidth: 1,
+            buttonSize: 60,
+            icon:
+            tasksServices.isLoadingBackground ? LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.white,
+              size: 30,
+            ) : Icon(
+              Icons.refresh,
+              color: Colors.white,
+              size: 30,
+            ),
+            onPressed: () async {
+              tasksServices.isLoadingBackground = true;
+              tasksServices.fetchTasks();
+            },
           ),
-          onPressed: () async {
-            tasksServices.isLoadingBackground = true;
-            tasksServices.fetchTasks();
-          },
         ),
+      ],
     );
   }
 }

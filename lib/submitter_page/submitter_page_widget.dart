@@ -371,6 +371,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   'agreed'
                                               );
                                               Navigator.pop(context);
+
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) => WalletAction()
+                                              );
                                             },
                                             child: Text(
                                               widget.obj[index].contributors[index2].toString(),
