@@ -47,6 +47,7 @@ class TasksServices extends ChangeNotifier {
   var walletConnectState;
   bool walletConnectConnected = false;
   String walletConnectUri = '';
+  String walletConnectSessionUri = '';
   // bool walletConnectActionApproved = false;
   String lastTxn = '';
 
@@ -167,6 +168,7 @@ class TasksServices extends ChangeNotifier {
     if (walletConnectConnected == false) {
       print("disconnected");
       walletConnectUri = '';
+      walletConnectSessionUri = '';
     }
     // Subscribe to events
     connector.on('connect', (session) {
@@ -200,10 +202,12 @@ class TasksServices extends ChangeNotifier {
       walletConnectState = TransactionState.disconnected;
       walletConnectConnected = false;
       walletConnectUri = '';
+      walletConnectSessionUri = '';
       notifyListeners();
     });
     final SessionStatus? session = await transactionTester?.connect(
       onDisplayUri: (uri) => {
+        walletConnectSessionUri = uri.split("?").first,
         platform == 'mobile' ? launchURL(uri) : walletConnectUri = uri,
         notifyListeners()
       },
