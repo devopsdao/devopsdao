@@ -143,6 +143,23 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       tabs: [
                         Tab(
                           text: 'Selection',
+                          // icon: Badge(
+                          //   // position: BadgePosition.topEnd(top: 10, end: 10),
+                          //   badgeContent: Container(
+                          //     width: 17,
+                          //     height: 17,
+                          //     alignment: Alignment.center,
+                          //     child: Text(
+                          //         tasksServices.tasksOwner.length.toString(),
+                          //         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                          //     ),
+                          //   ),
+                          //   animationDuration: Duration(milliseconds: 300),
+                          //   animationType: BadgeAnimationType.scale,
+                          //   shape: BadgeShape.circle,
+                          //   borderRadius: BorderRadius.circular(5),
+                          //   // child: Icon(Icons.settings),
+                          // ),
                         ),
                         Tab(
                           text: 'agreed',
@@ -491,15 +508,19 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               0, 0, 12, 0),
                           child: Badge(
                             // position: BadgePosition.topEnd(top: 10, end: 10),
-                            badgeContent: Text(
-                              widget.obj[index].contributorsCount.toString(),
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            badgeContent: Container(
+                              width: 17,
+                              height: 17,
+                              alignment: Alignment.center,
+                              child: Text(
+                                  widget.obj[index].contributorsCount.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                              ),
                             ),
                             animationDuration: Duration(milliseconds: 300),
                             animationType: BadgeAnimationType.scale,
-                            shape: BadgeShape.square,
+                            shape: BadgeShape.circle,
                             borderRadius: BorderRadius.circular(5),
-                            // borderSide: BorderSide(color: Colors.black, width: 3),
                             // child: Icon(Icons.settings),
                           ),
                         ),

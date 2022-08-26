@@ -419,13 +419,18 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                               0, 0, 18, 0),
                           child: Badge(
                             // position: BadgePosition.topEnd(top: 10, end: 10),
-                            badgeContent: Text(
-                                widget.obj[index].contributorsCount.toString(),
-                                style: TextStyle(fontWeight: FontWeight.bold)
+                            badgeContent: Container(
+                              width: 17,
+                              height: 17,
+                              alignment: Alignment.center,
+                              child: Text(
+                                  widget.obj[index].contributorsCount.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                              ),
                             ),
                             animationDuration: Duration(milliseconds: 300),
                             animationType: BadgeAnimationType.scale,
-                            shape: BadgeShape.square,
+                            shape: BadgeShape.circle,
                             borderRadius: BorderRadius.circular(5),
                             // child: Icon(Icons.settings),
                           ),

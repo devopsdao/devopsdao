@@ -442,13 +442,18 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
 
                                             Badge(
                                               // position: BadgePosition.topEnd(top: 10, end: 10),
-                                              badgeContent: Text(
-                                                  tasksServices.filterResults[index].contributorsCount.toString(),
-                                                  style: TextStyle(fontWeight: FontWeight.bold)
+                                              badgeContent: Container(
+                                                width: 17,
+                                                height: 17,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                    tasksServices.filterResults[index].contributorsCount.toString(),
+                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                                                ),
                                               ),
-                                              animationDuration: Duration(milliseconds: 1000),
+                                              animationDuration: Duration(milliseconds: 300),
                                               animationType: BadgeAnimationType.scale,
-                                              shape: BadgeShape.square,
+                                              shape: BadgeShape.circle,
                                               borderRadius: BorderRadius.circular(5),
                                               // child: Icon(Icons.settings),
                                             ),
