@@ -48,11 +48,29 @@ class _WalletAction extends State<WalletAction> {
                       child: Column(
                         children: [
                           if (tasksServices.lastTxn == 'pending')
-                            Text(
-                              'Please confirm the transaction in your wallet!',
-                              style: Theme.of(context).textTheme.headline6,
-                              textAlign: TextAlign.center,
+                            Container(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Please confirm the transaction in your wallet!',
+                                    style: Theme.of(context).textTheme.headline6,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  if (tasksServices.platform == 'mobile')
+                                  TextButton(
+                                    child: Text('Go To Wallet'),
+                                    style: TextButton.styleFrom(
+                                        primary: Colors.white, backgroundColor: Colors.green),
+                                    onPressed: () async {
+                                      await tasksServices.walletConnectSessionUri;
+                                      // _transactionStateToAction(context, state: _state);
+                                      setState(() {});
+                                      // Navigator.pop(context);
+                                    }),
+                                ],
+                              ),
                             )
+
                           else if (tasksServices.lastTxn == 'rejected')
                             Text(
                               'Transaction has been rejected',
