@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -16,6 +17,9 @@ import 'package:web_socket_channel/io.dart';
 
 import '../wallet/ethereum_transaction_tester.dart';
 import '../wallet/main.dart';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 // enum TransactionState {
 //   disconnected,
@@ -83,6 +87,8 @@ class TasksServices extends ChangeNotifier {
       'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8';
   late Web3Client _web3client;
 
+  bool isDeviceConnected = false;
+
   // faucet m's key:
   // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
 // r's key
@@ -106,6 +112,15 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> init() async {
+    isDeviceConnected = false;
+
+    final StreamSubscription subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        isDeviceConnected = await InternetConnectionChecker().hasConnection;
+      }
+    });
     if (transactionTester == null) {
       transactionTester = EthereumTransactionTester();
     }
@@ -490,7 +505,7 @@ class TasksServices extends ChangeNotifier {
             .toInt(); // this count we need to show the loading process. does not affect anything else
 
         // if (isLoading == true) {
-          notifyListeners();
+        notifyListeners();
         // }
         if (temp[1] != "") {
           // var taskState = temp[1];

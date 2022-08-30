@@ -153,37 +153,69 @@ class _HomePageWidgetState extends State<HomePageWidget>
           //       },
           //     ),
           //   ],
-          // ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              FlutterFlowIconButton(
-                borderColor: Colors.transparent,
-                borderRadius: 30,
-                borderWidth: 1,
-                buttonSize: 60,
-                icon: Icon(
-                  Icons.account_balance_wallet,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  // tasksServices.connectWallet();
-                  // () async {
-                  //   await tasksServices.connectWallet();
-                  //   print(
-                  //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
-                  // }();
-                  showDialog(
+          // ),/
+          if (tasksServices.isDeviceConnected)
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30,
+                  borderWidth: 1,
+                  buttonSize: 60,
+                  icon: Icon(
+                    Icons.account_balance_wallet,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    // tasksServices.connectWallet();
+                    // () async {
+                    //   await tasksServices.connectWallet();
+                    //   print(
+                    //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
+                    // }();
+                    showDialog(
                       context: context,
                       builder: (context) => MyWalletPage(
                         title: '',
                       ),
-                  );
-                },
-              ),
-            ],
-          ),
+                    );
+                  },
+                ),
+              ],
+            )
+          else
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30,
+                  borderWidth: 1,
+                  buttonSize: 60,
+                  icon: Icon(
+                    Icons.cloud_off,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    // tasksServices.connectWallet();
+                    // () async {
+                    //   await tasksServices.connectWallet();
+                    //   print(
+                    //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
+                    // }();
+                    showDialog(
+                      context: context,
+                      builder: (context) => MyWalletPage(
+                        title: '',
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [

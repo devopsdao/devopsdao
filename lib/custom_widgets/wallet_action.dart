@@ -1,6 +1,8 @@
+import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../blockchain/task_services.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -51,26 +53,65 @@ class _WalletAction extends State<WalletAction> {
                             Container(
                               child: Column(
                                 children: [
-                                  Text(
-                                    'Please confirm the transaction in your wallet!',
-                                    style: Theme.of(context).textTheme.headline6,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  if (tasksServices.platform == 'mobile')
-                                  TextButton(
-                                    child: Text('Go To Wallet'),
-                                    style: TextButton.styleFrom(
-                                        primary: Colors.white, backgroundColor: Colors.green),
-                                    onPressed: () async {
-                                      await tasksServices.walletConnectSessionUri;
-                                      // _transactionStateToAction(context, state: _state);
-                                      setState(() {});
-                                      // Navigator.pop(context);
-                                    }),
+                                  RichText(
+                                      text: TextSpan(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                        children: [
+                                          if (tasksServices.lastTxn ==
+                                              'pending')
+                                            TextSpan(
+                                                text:
+                                                    'Confirm the transaction'),
+                                          if (tasksServices.lastTxn ==
+                                              'pending')
+                                            WidgetSpan(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 2.0),
+                                                child:
+                                                    Icon(Icons.airport_shuttle),
+                                              ),
+                                            )
+                                          else if (tasksServices
+                                                  .lastTxn.length ==
+                                              66)
+                                            WidgetSpan(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 2.0),
+                                                child: Icon(Icons.verified),
+                                              ),
+                                            )
+                                        ],
+                                      ),
+                                      textAlign: TextAlign.center),
+                                  // Text(
+                                  //   'Please confirm the transaction in your wallet!',
+                                  //   style:
+                                  //       Theme.of(context).textTheme.headline6,
+                                  //   textAlign: TextAlign.center,
+                                  // ),
+                                  if (tasksServices.lastTxn == 'pending' &&
+                                      tasksServices.platform == 'mobile')
+                                    TextButton(
+                                        child: Text('Go To Wallet'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () async {
+                                          launchURL(tasksServices
+                                              .walletConnectSessionUri);
+                                          // _transactionStateToAction(context, state: _state);
+                                          setState(() {});
+                                          // Navigator.pop(context);
+                                        }),
                                 ],
                               ),
                             )
-
                           else if (tasksServices.lastTxn == 'rejected')
                             Text(
                               'Transaction has been rejected',
@@ -89,7 +130,7 @@ class _WalletAction extends State<WalletAction> {
                               style: Theme.of(context).textTheme.headline6,
                               textAlign: TextAlign.center,
                             )
-                          else
+                          else if (tasksServices.lastTxn.length == 66)
                             Text(
                               'Transaction confirmed :)',
                               style: Theme.of(context).textTheme.headline6,

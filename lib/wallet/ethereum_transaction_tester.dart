@@ -21,6 +21,10 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
   @override
   Future<String> sendTransaction(Transaction transaction) async {
     String hash = 'failed';
+    if (provider.connector.connected && !provider.connector.bridgeConnected) {
+      print('Attempt to recover');
+      provider.connector.reconnect();
+    }
     try {
       hash = await provider.sendTransaction(
         from: transaction.from!.hex,
@@ -156,7 +160,9 @@ class EthereumTransactionTester extends TransactionTester {
 
   @override
   Future<void> disconnect() async {
-    await connector.killSession();
+    if (connector.connected) {
+      await connector.killSession();
+    }
     await sessionStorage.removeSession();
   }
 
