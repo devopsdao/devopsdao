@@ -546,12 +546,17 @@ class TasksServices extends ChangeNotifier {
             if (temp.contractOwner == ownAddress) {
               tasksOwner.add(temp);
             } else if (temp.contributors.length != 0) {
+              var taskExist = false;
               for (var p = 0; p < temp.contributors.length; p++) {
-                // late EthereumAddress _tempParticipationsAddress;
-                // _tempParticipationsAddress = temp[8][p];
                 if (temp.contributors[p] == ownAddress) {
-                  tasksWithMyParticipation.add(temp);
+                  taskExist = true;
                 }
+              }
+              if (taskExist) {
+                tasksWithMyParticipation.add(temp);
+              } else {
+                tasksNew.add(temp);
+                filterResults.add(temp);
               }
             } else {
               tasksNew.add(temp);

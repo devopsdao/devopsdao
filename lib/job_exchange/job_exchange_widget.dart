@@ -440,23 +440,30 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                             ),
                                             if (tasksServices.filterResults[index].contributorsCount != 0 )
 
-                                            Badge(
-                                              // position: BadgePosition.topEnd(top: 10, end: 10),
-                                              badgeContent: Container(
-                                                width: 17,
-                                                height: 17,
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                    tasksServices.filterResults[index].contributorsCount.toString(),
-                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                                              Padding(
+                                                padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 0, 18, 0),
+                                                child: Badge(
+                                                  // position: BadgePosition.topEnd(top: 10, end: 10),
+                                                  badgeContent: Container(
+                                                    width: 17,
+                                                    height: 17,
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                        tasksServices.filterResults[index].contributorsCount.toString(),
+                                                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                                                    ),
+                                                  ),
+                                                  animationDuration: Duration(milliseconds: 300),
+                                                  animationType: BadgeAnimationType.scale,
+                                                  shape: BadgeShape.circle,
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  // child: Icon(Icons.settings),
                                                 ),
                                               ),
-                                              animationDuration: Duration(milliseconds: 300),
-                                              animationType: BadgeAnimationType.scale,
-                                              shape: BadgeShape.circle,
-                                              borderRadius: BorderRadius.circular(5),
-                                              // child: Icon(Icons.settings),
-                                            ),
+
+
 
                                             if (tasksServices.filterResults[index].justLoaded == false)
                                             Padding(

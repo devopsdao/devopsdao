@@ -411,22 +411,22 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                   builder: (context) => WalletAction()
                               );
                           }),
-                        if (widget.obj[index].jobState == 'completed')
-                          TextButton(
-                            child: Text('Withdraw'),
-                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                            onPressed: () {
-                              setState(() {
-                                widget.obj[index].justLoaded = false;
-                              });
-                              tasksServices.withdraw(widget.obj[index].contractAddress);
-                              Navigator.pop(context);
-
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => WalletAction()
-                              );
-                          }),
+                        // if (widget.obj[index].jobState == 'completed')
+                        //   TextButton(
+                        //     child: Text('Withdraw'),
+                        //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                        //     onPressed: () {
+                        //       setState(() {
+                        //         widget.obj[index].justLoaded = false;
+                        //       });
+                        //       tasksServices.withdraw(widget.obj[index].contractAddress);
+                        //       Navigator.pop(context);
+                        //
+                        //       showDialog(
+                        //           context: context,
+                        //           builder: (context) => WalletAction()
+                        //       );
+                        //   }),
                       ],
                     ));
                   },
