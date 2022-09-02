@@ -109,6 +109,7 @@ class TasksServices extends ChangeNotifier {
     } catch (e) {
       platform = 'web';
     }
+    print("platform:" + platform);
     init();
   }
 
