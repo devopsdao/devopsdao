@@ -371,40 +371,72 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
 
                                 Row(
                                   children: [
-                                    Text(
-                                      widget.obj[index].title,
-                                      style: FlutterFlowTheme.of(context).subtitle1,
+                                    Expanded( flex: 7, child:
+                                      Text(
+                                        widget.obj[index].title,
+                                        style: FlutterFlowTheme.of(context).subtitle1,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                      ),
                                     ),
-                                    Spacer(),
-                                    Text(
-                                      widget.obj[index].jobState,
-                                      style: FlutterFlowTheme.of(
-                                          context)
-                                          .bodyText2,
+                                    // Spacer(),
+                                    Expanded( flex: 3, child:
+                                      Text(
+                                        widget.obj[index].jobState,
+                                        style: FlutterFlowTheme.of(
+                                            context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  widget.obj[index].description,
-                                  style: FlutterFlowTheme.of(
-                                      context)
-                                      .bodyText2,
-                                ),
                                 Row(
                                   children: [
-                                    Text(
-                                      DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
-                                      style: FlutterFlowTheme.of(
-                                          context)
-                                          .bodyText2,
+                                    Expanded(
+                                      child: Text(
+                                          widget.obj[index].description,
+                                          style: FlutterFlowTheme.of(
+                                              context)
+                                              .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                      ),
+                                    )
+                                  ],
+                                ),
+
+                                Row(
+                                  children: [
+                                    Expanded( flex: 7, child:
+                                      Text(
+                                        DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
+                                        style: FlutterFlowTheme.of(
+                                            context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                      ),
                                     ),
-                                    Spacer(),
-                                    Text(
-                                      widget.obj[index].contractValue.toString()
-                                          + ' Eth',
-                                      style: FlutterFlowTheme.of(
-                                          context)
-                                          .bodyText2,
+                                    // Spacer(),
+                                    Expanded( flex: 3, child:
+                                      Text(
+                                        widget.obj[index].contractValue.toString()
+                                            + ' Eth',
+                                        style: FlutterFlowTheme.of(
+                                            context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
                                     ),
                                   ],
                                 ),

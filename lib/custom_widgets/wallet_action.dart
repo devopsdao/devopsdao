@@ -57,9 +57,9 @@ class _WalletAction extends State<WalletAction> {
                 children: [
                   Padding(
                       padding: const EdgeInsets.only(
-                        top: 17,
-                        left: 17,
-                        right: 17,
+                        top: 18,
+                        left: 18,
+                        right: 18,
                         // bottom: 16,
                       ),
                       child: Column(
@@ -86,7 +86,7 @@ class _WalletAction extends State<WalletAction> {
                           //                     alignment: Alignment.center,
                           //                     child: Text(
                           //                       'Confirm the transaction',
-                          //                       style: Theme.of(context).textTheme.headline6,
+                          //                       style: Theme.of(context).textTheme.bodyText1,
                           //                       textAlign: TextAlign.center,
                           //                     ),
                           //                   ),
@@ -118,7 +118,7 @@ class _WalletAction extends State<WalletAction> {
                           //         //     text: TextSpan(
                           //         //       style: Theme.of(context)
                           //         //           .textTheme
-                          //         //           .headline6,
+                          //         //           .bodyText1,
                           //         //       children: [
                           //         //         if (tasksServices.lastTxn ==
                           //         //             'pending')
@@ -153,42 +153,31 @@ class _WalletAction extends State<WalletAction> {
                           //         // Text(
                           //         //   'Please confirm the transaction in your wallet!',
                           //         //   style:
-                          //         //       Theme.of(context).textTheme.headline6,
+                          //         //       Theme.of(context).textTheme.bodyText1,
                           //         //   textAlign: TextAlign.center,
                           //         // ),
                           //         if (tasksServices.lastTxn == 'pending' &&
                           //             tasksServices.platform == 'mobile')
-                          //           // TextButton(
-                          //           //     child: Text('Go To Wallet'),
-                          //           //     style: TextButton.styleFrom(
-                          //           //         primary: Colors.white,
-                          //           //         backgroundColor: Colors.green),
-                          //           //     onPressed: () async {
-                          //           //       launchURL(tasksServices
-                          //           //           .walletConnectSessionUri);
-                          //           //       // _transactionStateToAction(context, state: _state);
-                          //           //       setState(() {});
-                          //           //       // Navigator.pop(context);
-                          //           //     }),
-                          //           Row(
-                          //             children: [
-                          //               Container(
-                          //                   width: 45,
-                          //                   height:  35,
-                          //                   child: Row(
-                          //                     children: [
-                          //                       Icon(Icons.arrow_circle_up_outlined, size: 30.0, color: Colors.yellow,),
-                          //                     ],
-                          //                   )
-                          //               ),
-                          //               Container(
-                          //                 alignment: Alignment.center,
-                          //                 child: Text(
-                          //                   'Go To Wallet',
-                          //                   style: Theme.of(context).textTheme.headline6,
-                          //                   textAlign: TextAlign.center,
-                          //                 ),
-                          //               ),
+
+                                    // Row(
+                                    //   children: [
+                                    //     Container(
+                                    //         width: 45,
+                                    //         height:  35,
+                                    //         child: Row(
+                                    //           children: [
+                                    //             Icon(Icons.arrow_circle_up_outlined, size: 30.0, color: Colors.yellow,),
+                                    //           ],
+                                    //         )
+                                    //     ),
+                                    //     Container(
+                                    //       alignment: Alignment.center,
+                                    //       child: Text(
+                                    //         'Go To Wallet',
+                                    //         style: Theme.of(context).textTheme.bodyText1,
+                                    //         textAlign: TextAlign.center,
+                                    //       ),
+                                    //     ),
                           //             ],
                           //           ),
                           //       ],
@@ -210,7 +199,7 @@ class _WalletAction extends State<WalletAction> {
                                   alignment: Alignment.center,
                                   child: Text(
                                     'Transaction has been rejected',
-                                    style: Theme.of(context).textTheme.headline6,
+                                    style: Theme.of(context).textTheme.bodyText1,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -218,7 +207,7 @@ class _WalletAction extends State<WalletAction> {
                             )
                             // Text(
                             //   'Transaction has been rejected',
-                            //   style: Theme.of(context).textTheme.headline6,
+                            //   style: Theme.of(context).textTheme.bodyText1,
                             //   textAlign: TextAlign.center,
                             // )
                           else if (tasksServices.lastTxn == 'failed')
@@ -237,7 +226,7 @@ class _WalletAction extends State<WalletAction> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       'Transaction has failed, \nplease retry',
-                                      style: Theme.of(context).textTheme.headline6,
+                                      style: Theme.of(context).textTheme.bodyText1,
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -245,7 +234,7 @@ class _WalletAction extends State<WalletAction> {
                               )
                             // Text(
                             //   'Transaction has failed, please retry',
-                            //   style: Theme.of(context).textTheme.headline6,
+                            //   style: Theme.of(context).textTheme.bodyText1,
                             //   textAlign: TextAlign.center,
                             // )
                           else if (tasksServices.lastTxn == 'minted' ||
@@ -277,7 +266,7 @@ class _WalletAction extends State<WalletAction> {
                                       alignment: Alignment.center,
                                       child: Text(
                                         'Confirm the transaction',
-                                        style: Theme.of(context).textTheme.headline6,
+                                        style: Theme.of(context).textTheme.bodyText1,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -302,7 +291,7 @@ class _WalletAction extends State<WalletAction> {
                                     Center(
                                       child: Text(
                                         'Transaction confirmed',
-                                        style: Theme.of(context).textTheme.headline6,
+                                        style: Theme.of(context).textTheme.bodyText1,
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -331,7 +320,7 @@ class _WalletAction extends State<WalletAction> {
 
                                         child: Text(
                                           'Minted in the blockchain',
-                                          style: Theme.of(context).textTheme.headline6,
+                                          style: Theme.of(context).textTheme.bodyText1,
                                           textAlign: TextAlign.left,
                                         ),
                                     ),
@@ -376,6 +365,19 @@ class _WalletAction extends State<WalletAction> {
         ),
       ),
       actions: [
+        if(transactionStagesMinted == 'initial')
+        TextButton(
+            child: Text('Go To Wallet'),
+            style: TextButton.styleFrom(
+                primary: Colors.white,
+                backgroundColor: Colors.green),
+            onPressed: () async {
+              launchURL(tasksServices
+                  .walletConnectSessionUri);
+              // _transactionStateToAction(context, state: _state);
+              setState(() {});
+              // Navigator.pop(context);
+            }),
         TextButton(
             child: Text('Close'), onPressed: () => Navigator.pop(context)),
         // if (tasksServices.walletConnectConnected)
