@@ -209,20 +209,20 @@ class _WalletAction extends State<WalletAction> {
                                         ),
                                       ],
                                     )),
-                                if (tasksServices.lastTxn == 'pending' &&
-                                    (tasksServices.platform == 'mobile'))
-                                  TextButton(
-                                      child: Text('Go To Wallet'),
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                          backgroundColor: Colors.green),
-                                      onPressed: () async {
-                                        launchURL(tasksServices
-                                            .walletConnectSessionUri);
-                                        // _transactionStateToAction(context, state: _state);
-                                        setState(() {});
-                                        // Navigator.pop(context);
-                                      }),
+                                // if (tasksServices.lastTxn == 'pending' &&
+                                //     (tasksServices.platform == 'mobile'))
+                                //   TextButton(
+                                //       child: Text('Go To Wallet'),
+                                //       style: TextButton.styleFrom(
+                                //           foregroundColor: Colors.white,
+                                //           backgroundColor: Colors.green),
+                                //       onPressed: () async {
+                                //         launchURL(tasksServices
+                                //             .walletConnectSessionUri);
+                                //         // _transactionStateToAction(context, state: _state);
+                                //         setState(() {});
+                                //         // Navigator.pop(context);
+                                //       }),
                                 //),
                                 Container(
                                   alignment: Alignment.center,
