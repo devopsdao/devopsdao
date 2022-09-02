@@ -197,21 +197,39 @@ class _WalletAction extends State<WalletAction> {
                           if (tasksServices.lastTxn == 'rejected')
                             Row(
                               children: [
-                                Container(
+                            Container(
                                     width: 45,
                                     height:  35,
                                     child: Row(
-                                      children: [
+                                children: [
                                         Icon(Icons.dangerous_outlined, size: 30.0, color: Colors.red,),
                                       ],
-                                    )
-                                ),
+                                            )
+                                  //   textAlign: TextAlign.center,
+                                  // ),
+                                  if (tasksServices.lastTxn == 'pending' &&
+                                      (tasksServices.platform == 'mobile' ||
+                                          tasksServices.platform == 'web'))
+                                    TextButton(
+                                        child: Text('Go To Wallet'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () async {
+                                          launchURL(tasksServices
+                                              .walletConnectSessionUri);
+                                          // _transactionStateToAction(context, state: _state);
+                                          setState(() {});
+                                          // Navigator.pop(context);
+                                        }),
+                                ],
+                              ),
                                 Container(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'Transaction has been rejected',
-                                    style: Theme.of(context).textTheme.headline6,
-                                    textAlign: TextAlign.center,
+                              'Transaction has been rejected',
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
                                   ),
                                 ),
                               ],
@@ -237,12 +255,12 @@ class _WalletAction extends State<WalletAction> {
                                     alignment: Alignment.center,
                                     child: Text(
                                       'Transaction has failed, \nplease retry',
-                                      style: Theme.of(context).textTheme.headline6,
-                                      textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ],
-                              )
+                            )
                             // Text(
                             //   'Transaction has failed, please retry',
                             //   style: Theme.of(context).textTheme.headline6,
@@ -277,8 +295,8 @@ class _WalletAction extends State<WalletAction> {
                                       alignment: Alignment.center,
                                       child: Text(
                                         'Confirm the transaction',
-                                        style: Theme.of(context).textTheme.headline6,
-                                        textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
                                       ),
                                     ),
 
@@ -297,14 +315,14 @@ class _WalletAction extends State<WalletAction> {
                                             else if (transactionStagesConfirmed == 'done')
                                               Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
                                           ],
-                                        )
+                            )
                                     ),
                                     Center(
                                       child: Text(
                                         'Transaction confirmed',
-                                        style: Theme.of(context).textTheme.headline6,
-                                        textAlign: TextAlign.center,
-                                      ),
+                              style: Theme.of(context).textTheme.headline6,
+                              textAlign: TextAlign.center,
+                            ),
                                     ),
                                   ],
                                 ),
