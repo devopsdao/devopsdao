@@ -193,20 +193,44 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                         // borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
-
                         controller: _searchKeywordController,
                         onChanged: (_searchKeyword) {
-                          // searchKeyword = value;
                           tasksServices.runFilter(_searchKeyword);
-                          // print(tasksServices.tasksNew);
                         },
                         decoration: InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                          hintText: '[Find task by Title...]',
+                          hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                          labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                          labelText: 'Search',
+                          suffixIcon: Icon(Icons.search, color: Colors.white,),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                        ),
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                          lineHeight: 2,
                         ),
                       ),
+                    ),
                     // TabBar(
                     //   labelColor: Colors.white,с
                     //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
@@ -389,11 +413,18 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Text(
-                                                          tasksServices.filterResults[index].title,
-                                                          style: FlutterFlowTheme.of(context).subtitle1,
+                                                        Expanded( child:
+                                                           Text(
+                                                            // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
+                                                            tasksServices.filterResults[index].title,
+                                                            style: FlutterFlowTheme.of(context).subtitle1,
+                                                             softWrap: false,
+                                                            overflow: TextOverflow.fade,
+                                                            maxLines: 1,
+                                                          ),
                                                         ),
-                                                        Spacer(),
+
+                                                        // Spacer(),
                                                         // Text(
                                                         //   'Value: ' +
                                                         //       tasksServices.filterResults[index].contractValue.toString()
@@ -404,29 +435,43 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                         // ),
                                                       ],
                                                     ),
-
-                                                    Text(
-                                                      tasksServices.filterResults[index].description,
-                                                      style: FlutterFlowTheme.of(
-                                                          context)
-                                                          .bodyText2,
+                                                    Expanded( child:
+                                                      Text(
+                                                        tasksServices.filterResults[index].description,
+                                                        style: FlutterFlowTheme.of(
+                                                            context)
+                                                            .bodyText2,
+                                                        softWrap: false,
+                                                        overflow: TextOverflow.fade,
+                                                        maxLines: 1,
+                                                      ),
                                                     ),
-
                                                     Row(
                                                       children: [
-                                                        Text(
-                                                          DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices.filterResults[index].createdTime),
-                                                          style: FlutterFlowTheme.of(
-                                                              context)
-                                                              .bodyText2,
+                                                        Expanded( flex: 7, child:
+                                                          Text(
+                                                            DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices.filterResults[index].createdTime),
+                                                            style: FlutterFlowTheme.of(
+                                                                context)
+                                                                .bodyText2,
+                                                            softWrap: false,
+                                                            overflow: TextOverflow.fade,
+                                                            maxLines: 1,
+                                                          ),
                                                         ),
-                                                        Spacer(),
-                                                        Text(
-                                                          tasksServices.filterResults[index].contractValue.toString()
-                                                              + ' Eth',
-                                                          style: FlutterFlowTheme.of(
-                                                              context)
-                                                              .bodyText2,
+                                                        // Spacer(),
+                                                        Expanded( flex: 3, child:
+                                                          Text(
+                                                            tasksServices.filterResults[index].contractValue.toString()
+                                                                + ' Eth',
+                                                            style: FlutterFlowTheme.of(
+                                                                context)
+                                                                .bodyText2,
+                                                            softWrap: false,
+                                                            overflow: TextOverflow.fade,
+                                                            maxLines: 1,
+                                                            textAlign: TextAlign.end,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
@@ -467,8 +512,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
 
                                             if (tasksServices.filterResults[index].justLoaded == false)
                                             Padding(
-                                              padding:
-                                              EdgeInsetsDirectional.fromSTEB(
+                                              padding: EdgeInsetsDirectional.fromSTEB(
                                                   0, 0, 12, 0),
                                               child: CircularProgressIndicator(),
                                             ),

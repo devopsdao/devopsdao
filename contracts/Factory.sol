@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
+import { IDistributionExecutable } from './IDistributionExecutable.sol';
+
 contract Factory {
+    
+
     Job[] public jobArray;
     // address contractOwner;
     uint256 public countNew = 0;
@@ -23,6 +27,7 @@ contract Factory {
         address jobAddress,
         string title,
         string description
+        
     );
 
     // initial: new, contractor choosed: agreed, work in progress: progress, completed: completed, canceled
@@ -93,6 +98,7 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
+
     function jobStateChange(
         Job job,
         address payable _participantAddress,
@@ -131,6 +137,14 @@ contract Factory {
     {
         // addressToSend.transfer(0.5 ether);
         jobArray[job.index()].transferToaddress(addressToSend);
+        emit OneEventForAll(address(job), job.index());
+    }
+
+    function transferToaddressChain(Job job, address payable addressToSend, string memory chain)
+        external
+        payable
+    {
+        jobArray[job.index()].transferToaddressChain(addressToSend, chain);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -182,6 +196,10 @@ contract Factory {
 }
 
 contract Job {
+    IDistributionExecutable public immutable distributor;
+	
+	
+
     address[] public Participants;
     // uint256 public data;
     string public title;
@@ -196,6 +214,7 @@ contract Job {
     address public contractOwner;
     address payable public participantAddress;
     uint256 public createTime;
+    address[] public _destinationAddresses;
 
     // uint256 public balance;
 
@@ -217,6 +236,7 @@ contract Job {
         address _contractOwner
     ) payable {
         // data = _data;
+        distributor = IDistributionExecutable(_contractOwner);
         title = _title;
         jobState = "new";
         contractAddress = address(this);
@@ -303,6 +323,20 @@ contract Job {
             keccak256(bytes(jobState)) == keccak256(bytes("completed"))
         ) {
             participantAddress.transfer(contractAddress.balance);
+        }
+        // msg.sender.transfer(address(this).balance);
+    }
+
+    function transferToaddressChain(address payable _addressToSend, string memory chain) public payable {
+        if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
+            if (_addressToSend == contractOwner) {
+                _addressToSend.transfer(contractAddress.balance);
+            }
+        } else if (
+            keccak256(bytes(jobState)) == keccak256(bytes("completed"))
+        ) {
+            _destinationAddresses.push(_addressToSend);
+            distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
         }
         // msg.sender.transfer(address(this).balance);
     }
