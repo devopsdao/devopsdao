@@ -732,6 +732,56 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn);
   }
 
+  Future<double> getGasPrice(env, source, destination, tokenAddress) async {
+    if (env == 'local') ;
+    if (env != 'testnet') throw 'env needs to be "local" or "testnet".';
+    String api_url = 'https://devnet.api.gmp.axelarscan.io';
+    final params = {
+      'method': 'getGasPrice',
+      'destinationChain': destination.name,
+      'sourceChain': source.name,
+    };
+
+    final String AddressZero = "0x0000000000000000000000000000000000000000";
+    if (tokenAddress != AddressZero) {
+      params['sourceTokenAddress'] = tokenAddress;
+    } else {
+      params['sourceTokenSymbol'] = source.tokenSymbol;
+    }
+
+    final uri = Uri.https(api_url, '/', params);
+
+    var response = await http.get(uri);
+
+    var decodedResponse = jsonDecode(response.body) as Map;
+
+    final result = decodedResponse['data']['result'];
+    final dest = result.destination_native_token;
+    final destPrice = 1e18 * dest.gas_price * dest.token_price.usd;
+    return destPrice / result.source_token.token_price.usd;
+
+    // const params = {
+    //     method: 'getGasPrice',
+    //     destinationChain: destination.name,
+    //     sourceChain: source.name,
+    // };
+
+    // // set gas token address to params
+    // if (tokenAddress != AddressZero) {
+    //     params.sourceTokenAddress = tokenAddress;
+    // }
+    // else {
+    //     params.sourceTokenSymbol = source.tokenSymbol;
+    // }
+    // send request
+    // const response = await requester.get('/', { params })
+    //     .catch(error => { return { data: { error } }; });
+    // const result = response.data.result;
+    // const dest = result.destination_native_token;
+    // const destPrice = 1e18*dest.gas_price*dest.token_price.usd;
+    // return destPrice / result.source_token.token_price.usd;
+  }
+
   // Future<void> deleteTask(int id) async {
   //   await _web3client.sendTransaction(
   //     _creds,
