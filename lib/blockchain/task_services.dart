@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:js';
+// import 'package:js/js.dart';
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:throttling/throttling.dart';
@@ -114,6 +114,9 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> init() async {
+    var axellarGasPrice =
+        await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
+    print(axellarGasPrice);
     isDeviceConnected = false;
 
     final StreamSubscription subscription = Connectivity()
@@ -732,21 +735,26 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn);
   }
 
-  Future<double> getGasPrice(env, source, destination, tokenAddress) async {
+  Future<double> getGasPrice(sourceChain, destinationChain,
+      {tokenAddress, tokenSymbol}) async {
+    final env = 'testnet';
     if (env == 'local') ;
+    final String AddressZero = "0x0000000000000000000000000000000000000000";
     if (env != 'testnet') throw 'env needs to be "local" or "testnet".';
-    String api_url = 'https://devnet.api.gmp.axelarscan.io';
+
+    if (tokenAddress == AddressZero && tokenSymbol == '')
+      throw 'Either tokenAddress or tokenSymbol must be set.';
+    String api_url = 'devnet.api.gmp.axelarscan.io';
     final params = {
       'method': 'getGasPrice',
-      'destinationChain': destination.name,
-      'sourceChain': source.name,
+      'destinationChain': destinationChain,
+      'sourceChain': sourceChain,
     };
 
-    final String AddressZero = "0x0000000000000000000000000000000000000000";
-    if (tokenAddress != AddressZero) {
+    if (tokenAddress != AddressZero && tokenAddress != null) {
       params['sourceTokenAddress'] = tokenAddress;
     } else {
-      params['sourceTokenSymbol'] = source.tokenSymbol;
+      params['sourceTokenSymbol'] = tokenSymbol;
     }
 
     final uri = Uri.https(api_url, '/', params);
@@ -755,10 +763,12 @@ class TasksServices extends ChangeNotifier {
 
     var decodedResponse = jsonDecode(response.body) as Map;
 
-    final result = decodedResponse['data']['result'];
-    final dest = result.destination_native_token;
-    final destPrice = 1e18 * dest.gas_price * dest.token_price.usd;
-    return destPrice / result.source_token.token_price.usd;
+    final result = decodedResponse['result'];
+    final dest = result['destination_native_token'];
+    final destPrice =
+        1e18 * double.parse(dest['gas_price']) * (dest['token_price']['usd']);
+    final gasPrice = destPrice / (result['source_token']['token_price']['usd']);
+    return gasPrice;
 
     // const params = {
     //     method: 'getGasPrice',

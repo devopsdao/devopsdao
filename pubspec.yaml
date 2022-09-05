@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.4
   internet_connection_checker: ^0.0.1+4
   intl: 0.17.0
+  js: ^0.6.4
   json_path: ^0.4.2
   loading_animation_widget: null
   page_transition: ^2.0.9
