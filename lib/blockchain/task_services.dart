@@ -246,6 +246,65 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<List<dynamic>> web3Call({
+    EthereumAddress? sender,
+    required DeployedContract contract,
+    required ContractFunction function,
+    required List<dynamic> params,
+    BlockNum? atBlock,
+  }) {
+    var response;
+    try {
+      response = _web3client.call(
+          sender: sender,
+          contract: contract,
+          function: function,
+          params: params,
+          atBlock: atBlock);
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
+  Future<String> web3Transaction(Credentials cred, Transaction transaction,
+      {int? chainId = 1, bool fetchChainIdFromNetworkId = false}) async {
+    var response;
+    try {
+      response = _web3client.sendTransaction(cred, transaction,
+          chainId: chainId,
+          fetchChainIdFromNetworkId: fetchChainIdFromNetworkId);
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
+  Future<TransactionReceipt?> web3GetTransactionReceipt(String hash) async {
+    var response;
+    try {
+      response = _web3client.getTransactionReceipt(hash);
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
+  Future<EtherAmount> web3GetBalance(EthereumAddress address,
+      {BlockNum? atBlock}) async {
+    var response;
+    try {
+      response = _web3client.getBalance(address, atBlock: atBlock);
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
   late dynamic _creds;
   EthereumAddress? ownAddress;
   double? ethBalance;
@@ -336,7 +395,7 @@ class TasksServices extends ChangeNotifier {
     //     contract: _deployedContract, function: _getBalance, params: [ownAddress]
     // );
     if (ownAddress != null) {
-      final EtherAmount balance = await _web3client.getBalance(ownAddress!);
+      final EtherAmount balance = await web3GetBalance(ownAddress!);
       final BigInt weiBalance = balance.getInWei;
       // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
@@ -385,10 +444,10 @@ class TasksServices extends ChangeNotifier {
   Future tellMeHasItMined(String hash) async {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt =
-          await _web3client.getTransactionReceipt(hash);
+          await web3GetTransactionReceipt(hash);
       while (transactionReceipt == null) {
         Future.delayed(const Duration(milliseconds: 1000));
-        transactionReceipt = await _web3client.getTransactionReceipt(hash);
+        transactionReceipt = await web3GetTransactionReceipt(hash);
       }
       // TransactionInformation transactionResult =
       //     await _web3client.getTransactionByHash(hash);
@@ -444,7 +503,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> fetchTasks() async {
     notifyListeners();
-    List totalTaskList = await _web3client.call(
+    List totalTaskList = await web3Call(
       contract: _deployedContract,
       function: _taskCount,
       params: [],
@@ -467,15 +526,21 @@ class TasksServices extends ChangeNotifier {
           fetchTasks();
           break;
         }
-        var temp = await _web3client.call(
-            contract: _deployedContract,
-            function: _tasks,
-            params: [BigInt.from(i)]);
-        print(temp);
-        var value = await _web3client.call(
-            contract: _deployedContract,
-            function: _getBalance,
-            params: [BigInt.from(temp[6].toInt())]);
+        var temp;
+        var value;
+        try {
+          temp = await web3Call(
+              contract: _deployedContract,
+              function: _tasks,
+              params: [BigInt.from(i)]);
+          print(temp);
+          value = await web3Call(
+              contract: _deployedContract,
+              function: _getBalance,
+              params: [BigInt.from(temp[6].toInt())]);
+        } catch (e) {
+          print(e);
+        }
 
         final BigInt weiBalance = value[0];
         final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
@@ -621,7 +686,7 @@ class TasksServices extends ChangeNotifier {
     // print(priceInGwei);
     lastTxn = 'pending';
     late String txn;
-    txn = await _web3client.sendTransaction(
+    txn = await web3Transaction(
         _creds,
         Transaction.callContract(
           from: ownAddress,
@@ -633,8 +698,8 @@ class TasksServices extends ChangeNotifier {
           //     .getValueInUnit(EtherUnit.gwei)
           //     .toInt(),
           // value: priceInGwei
-          // value:
-          // EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
+          value:
+              EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
         chainId: _chainId);
     isLoading = false;
@@ -652,7 +717,7 @@ class TasksServices extends ChangeNotifier {
     late String txn;
     // late TransactionInformation txnRes;
     // late TransactionReceipt? txnRes;
-    txn = await _web3client.sendTransaction(
+    txn = await web3Transaction(
         _creds,
         Transaction.callContract(
           from: ownAddress,
@@ -688,7 +753,7 @@ class TasksServices extends ChangeNotifier {
       EthereumAddress participiantAddress, String state) async {
     lastTxn = 'pending';
     late String txn;
-    txn = await _web3client.sendTransaction(
+    txn = await web3Transaction(
         _creds,
         Transaction.callContract(
           from: ownAddress,
@@ -713,7 +778,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> withdraw(EthereumAddress contractAddress) async {
     lastTxn = 'pending';
     late String txn;
-    txn = await _web3client.sendTransaction(
+    txn = await web3Transaction(
         _creds,
         Transaction.callContract(
           from: ownAddress,
