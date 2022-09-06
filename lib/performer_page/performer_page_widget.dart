@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/selectNetworkMenu.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -261,6 +262,8 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   )
                                 ]
                             )),
+                            if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
+                              SelectNetworkMenu()
                           ],
                         ),
                       ),
@@ -304,23 +307,25 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                 context: context,
                                 builder: (context) => WalletAction()
                             );
-                        }),
+                          }
+                        ),
                         if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
                           TextButton(
-                              child: Text('Withdraw'),
-                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                              onPressed: () {
-                                setState(() {
-                                  widget.obj[index].justLoaded = false;
-                                });
-                                tasksServices.withdraw(widget.obj[index].contractAddress);
-                                Navigator.pop(context);
+                            child: Text('Withdraw'),
+                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                            onPressed: () {
+                              setState(() {
+                                widget.obj[index].justLoaded = false;
+                              });
+                              tasksServices.withdraw(widget.obj[index].contractAddress);
+                              Navigator.pop(context);
 
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => WalletAction()
-                                );
-                              }),
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => WalletAction()
+                              );
+                            }
+                          ),
                         // if (obj[index].jobState == "Review")
                         //   TextButton(child: Text('Review'), onPressed: () {
                         //     tasksServices.changeTaskStatus(

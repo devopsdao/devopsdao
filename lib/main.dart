@@ -80,7 +80,9 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(brightness: Brightness.light),
       darkTheme: ThemeData(brightness: Brightness.dark),
-      themeMode: _themeMode,
+      // Theme mode settings:
+      // themeMode: _themeMode,
+      themeMode: ThemeMode.light,
       home: displaySplashImage
           ? Container(
               color: Colors.black,

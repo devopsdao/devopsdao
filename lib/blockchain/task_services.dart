@@ -114,9 +114,9 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    var axellarGasPrice =
-        await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
-    print(axellarGasPrice);
+    // var axellarGasPrice =
+    //     await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
+    // print(axellarGasPrice);
     isDeviceConnected = false;
 
     final StreamSubscription subscription = Connectivity()
@@ -273,6 +273,7 @@ class TasksServices extends ChangeNotifier {
   late ContractFunction _changeTaskStatus;
   late ContractFunction _taskParticipation;
   late ContractFunction _withdraw;
+  late ContractFunction _withdrawToChain;
   late ContractFunction _getBalance;
   // late Throttle throttledFunction;
   late Throttling thr;
@@ -309,6 +310,7 @@ class TasksServices extends ChangeNotifier {
     _taskParticipation = _deployedContract.function('jobParticipate');
     _withdraw = _deployedContract.function('transferToaddress');
     _getBalance = _deployedContract.function('getBalance');
+    // _withdrawToChain = _deployedContract.function('transferToaddressChain');
 
     // EasyDebounce.debounce(
     //     'fetchTasks',                 // <-- An ID for this particular debouncer
@@ -735,7 +737,33 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn);
   }
 
-  Future<double> getGasPrice(sourceChain, destinationChain,
+  Future<void> withdraToChain(EthereumAddress contractAddress) async {
+    lastTxn = 'pending';
+    late String txn;
+    txn = await _web3client.sendTransaction(
+        _creds,
+        Transaction.callContract(
+          from: ownAddress,
+          contract: _deployedContract,
+          function: _withdrawToChain,
+          parameters: [contractAddress, ownAddress],
+          // gasPrice: EtherAmount.inWei(BigInt.one),
+          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+          //     .getValueInUnit(EtherUnit.gwei)
+          //     .toInt(),
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+        ),
+        chainId: _chainId);
+    isLoading = false;
+    isLoadingBackground = true;
+    lastTxn = txn;
+    notifyListeners();
+    // fetchTasks();
+    tellMeHasItMined(txn);
+  }
+
+  double gasPriceValue = 0;
+  Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
     final env = 'testnet';
     if (env == 'local') ;
@@ -768,7 +796,10 @@ class TasksServices extends ChangeNotifier {
     final destPrice =
         1e18 * double.parse(dest['gas_price']) * (dest['token_price']['usd']);
     final gasPrice = destPrice / (result['source_token']['token_price']['usd']);
-    return gasPrice;
+    print(gasPrice);
+    gasPriceValue = gasPrice;
+    notifyListeners();
+    // return gasPrice;
 
     // const params = {
     //     method: 'getGasPrice',
