@@ -811,7 +811,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = 'pending';
     late String txn;
     // const gasLimit = 3e3;
-    late int priceInGwei = (3 * gasPriceValue).toInt();
+    late int priceInGwei = (3000 * gasPriceValue).toInt();
     print("gasPriceValue");
     print(gasPriceValue);
     EtherAmount value =
@@ -833,8 +833,7 @@ class TasksServices extends ChangeNotifier {
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)
           //     .toInt(),
-          value:
-              EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei.toInt()),
+          value: EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei),
         ),
         chainId: _chainId);
     isLoading = false;
