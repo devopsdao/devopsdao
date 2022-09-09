@@ -78,6 +78,7 @@ class TasksServices extends ChangeNotifier {
   //     ? 'wss://wss.api.moonbase.moonbeam.network'
   //     : 'wss://wss.api.moonbase.moonbeam.network';
   final int _chainId = 1287;
+  final int _chainIdGoerli = 1287;
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
@@ -149,6 +150,7 @@ class TasksServices extends ChangeNotifier {
   late num totalTaskLen = 0;
   int? taskLoaded;
   late EthereumAddress _contractAddress;
+  late EthereumAddress _contractAddressGoerli;
   Future<void> getABI() async {
     String abiFile =
         await rootBundle.loadString('build/contracts/Factory.json');
@@ -157,6 +159,8 @@ class TasksServices extends ChangeNotifier {
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress = EthereumAddress.fromHex(
         jsonABI["networks"][_chainId.toString()]["address"]);
+    _contractAddressGoerli = EthereumAddress.fromHex(
+        jsonABI["networks"][_chainIdGoerli.toString()]["address"]);
   }
 
   // var session;
@@ -806,18 +810,25 @@ class TasksServices extends ChangeNotifier {
   Future<void> withdrawToChain(EthereumAddress contractAddress) async {
     lastTxn = 'pending';
     late String txn;
+    const gasLimit = 3e6;
+    late int priceInGwei = (gasLimit * gasPriceValue * 1000000000).toInt();
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
           from: ownAddress,
           contract: _deployedContract,
           function: _withdrawToChain,
-          parameters: [contractAddress, ownAddress, destinationChain],
+          parameters: [
+            contractAddress,
+            _contractAddressGoerli,
+            destinationChain
+          ],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)
           //     .toInt(),
-          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
+          value:
+              EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
         ),
         chainId: _chainId);
     isLoading = false;

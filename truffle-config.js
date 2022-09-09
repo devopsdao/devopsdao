@@ -68,6 +68,15 @@ module.exports = {
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
 
+    goerli: {
+      provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`),
+      network_id: 5,       // Ropsten's id
+      gas: 5500000,        // Ropsten has a lower block limit than mainnet
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+
     moonbase: {
       provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://rpc.api.moonbase.moonbeam.network`),
       network_id: 1287,       // Moonbase's id

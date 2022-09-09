@@ -361,7 +361,7 @@ contract Job {
         } else if (
             keccak256(bytes(jobState)) == keccak256(bytes("completed"))
         ) {
-            _destinationAddresses.push(_addressToSend);
+            _destinationAddresses.push(participantAddress);
             distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
         }
         // msg.sender.transfer(address(this).balance);
