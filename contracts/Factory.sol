@@ -378,6 +378,7 @@ contract Job {
             // _destinationAddresses.push(_addressToSend);
             // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
             // string memory _addressToSend2 = bytes(_addressToSend);
+            IERC20(_addressToSend).approve(address(gateway), contractAddress.balance);
             gateway.sendToken(chain, toAsciiString(_addressToSend), "DEV", contractAddress.balance);
         }
         // msg.sender.transfer(address(this).balance);
