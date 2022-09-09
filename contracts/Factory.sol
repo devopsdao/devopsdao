@@ -161,6 +161,15 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
+    function transferToaddressChain2(Job job, address payable addressToSend, string memory chain)
+        external
+        payable
+    {
+        jobArray[job.index()].transferToaddressChain2(addressToSend, chain);
+        emit OneEventForAll(address(job), job.index());
+    }
+    
+
     // function jobCanceled(Job job) external {
     //     jobArray[job.index()].jobCanceled();
     //     countCanceled++;
