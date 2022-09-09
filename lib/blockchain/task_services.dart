@@ -812,7 +812,7 @@ class TasksServices extends ChangeNotifier {
           from: ownAddress,
           contract: _deployedContract,
           function: _withdrawToChain,
-          parameters: [contractAddress, ownAddress],
+          parameters: [contractAddress, ownAddress, destinationChain],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)
@@ -829,6 +829,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   double gasPriceValue = 0;
+  String destinationChain = 'Moonbeam';
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
     final env = 'testnet';

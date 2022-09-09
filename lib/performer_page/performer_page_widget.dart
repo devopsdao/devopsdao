@@ -317,7 +317,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                 setState(() {
                                   widget.obj[index].justLoaded = false;
                                 });
-                                tasksServices.withdraToChain(widget.obj[index].contractAddress);
+                                tasksServices.withdrawToChain(widget.obj[index].contractAddress);
                                 Navigator.pop(context);
 
                                 showDialog(
