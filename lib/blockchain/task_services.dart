@@ -141,7 +141,7 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     // await getCredentials();
     await getDeployedContract();
-    await withdrawToChain(contractAddress);
+    //await withdrawToChain(contractAddress);
   }
 
   late ContractAbi _abiCode;
