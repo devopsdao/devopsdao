@@ -3,6 +3,12 @@ pragma solidity ^0.8.12;
 
 import { IDistributionExecutable } from './IDistributionExecutable.sol';
 
+
+import { AxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/executables/AxelarExecutable.sol';
+import { IAxelarGateway } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol';
+import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IERC20.sol';
+import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
+
 contract Factory {
     
 
@@ -29,6 +35,13 @@ contract Factory {
         string description
         
     );
+
+
+    // constructor(address gateway_) {
+    //     if (gateway_ == address(0)) revert InvalidAddress();
+
+    //     gateway = IAxelarGateway(gateway_);
+    // }
 
     // initial: new, contractor choosed: agreed, work in progress: progress, completed: completed, canceled
 
@@ -198,6 +211,7 @@ contract Factory {
 contract Job {
     IDistributionExecutable public immutable distributor;
 	
+    IAxelarGateway public immutable gateway;
 	
 
     address[] public Participants;
@@ -245,6 +259,9 @@ contract Job {
         createTime = block.timestamp;
         index = _index;
         description = _description;
+
+        address gateway_ = 0x5769D84DD62a6fD969856c75c7D321b84d455929;
+        gateway = IAxelarGateway(gateway_);
         // balance = contractAddress.balance;
         // createJob(_content, _index);
         // myStruct = jobStructData(
@@ -340,6 +357,40 @@ contract Job {
         }
         // msg.sender.transfer(address(this).balance);
     }
+
+    function transferToaddressChain2(address payable _addressToSend, string memory chain) public payable {
+        if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
+            if (_addressToSend == contractOwner) {
+                _addressToSend.transfer(contractAddress.balance);
+            }
+        } else if (
+            keccak256(bytes(jobState)) == keccak256(bytes("completed"))
+        ) {
+            // _destinationAddresses.push(_addressToSend);
+            // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
+            // string memory _addressToSend2 = bytes(_addressToSend);
+            gateway.sendToken(chain, toAsciiString(_addressToSend), "DEV", contractAddress.balance);
+        }
+        // msg.sender.transfer(address(this).balance);
+    }
+
+    function toAsciiString(address x) internal pure returns (string memory) {
+        bytes memory s = new bytes(40);
+        for (uint i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
+            bytes1 hi = bytes1(uint8(b) / 16);
+            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+            s[2*i] = char(hi);
+            s[2*i+1] = char(lo);            
+        }
+        return string(s);
+    }
+    
+    function char(bytes1 b) internal pure returns (bytes1 c) {
+        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
+        else return bytes1(uint8(b) + 0x57);
+    }
+    
 
     function jobParticipate(address _participantAddress) external {
         bool existed = false;

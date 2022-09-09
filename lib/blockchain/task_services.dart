@@ -141,6 +141,7 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     // await getCredentials();
     await getDeployedContract();
+    //await withdrawToChain(contractAddress);
   }
 
   late ContractAbi _abiCode;
@@ -369,7 +370,7 @@ class TasksServices extends ChangeNotifier {
     _taskParticipation = _deployedContract.function('jobParticipate');
     _withdraw = _deployedContract.function('transferToaddress');
     _getBalance = _deployedContract.function('getBalance');
-    // _withdrawToChain = _deployedContract.function('transferToaddressChain');
+    _withdrawToChain = _deployedContract.function('transferToaddressChain2');
 
     // EasyDebounce.debounce(
     //     'fetchTasks',                 // <-- An ID for this particular debouncer
@@ -802,7 +803,7 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn);
   }
 
-  Future<void> withdraToChain(EthereumAddress contractAddress) async {
+  Future<void> withdrawToChain(EthereumAddress contractAddress) async {
     lastTxn = 'pending';
     late String txn;
     txn = await _web3client.sendTransaction(
