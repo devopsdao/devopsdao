@@ -810,8 +810,14 @@ class TasksServices extends ChangeNotifier {
   Future<void> withdrawToChain(EthereumAddress contractAddress) async {
     lastTxn = 'pending';
     late String txn;
-    const gasLimit = 3e6;
-    late int priceInGwei = (gasLimit * gasPriceValue * 1000000000).toInt();
+    //const gasLimit = 3e6;
+    late int priceInGwei = (gasPriceValue).toInt();
+    print("gasPriceValue");
+    print(gasPriceValue);
+    EtherAmount value =
+        EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
+    print("value");
+    print(value);
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(
