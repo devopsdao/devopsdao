@@ -311,6 +311,23 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                         ),
                         if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
                           TextButton(
+                              child: Text('Withdraw to Chain'),
+                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                              onPressed: () {
+                                setState(() {
+                                  widget.obj[index].justLoaded = false;
+                                });
+                                tasksServices.withdraToChain(widget.obj[index].contractAddress);
+                                Navigator.pop(context);
+
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => WalletAction()
+                                );
+                              }
+                          ),
+                        if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
+                          TextButton(
                             child: Text('Withdraw'),
                             style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
                             onPressed: () {

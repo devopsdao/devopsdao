@@ -38,6 +38,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
           icon: const Icon(Icons.arrow_downward),
           elevation: 16,
           style: const TextStyle(color: Colors.black),
+          hint: Text('Choose network (${dropdownValue})'),
           underline: Container(
             height: 2,
             color: Colors.green,

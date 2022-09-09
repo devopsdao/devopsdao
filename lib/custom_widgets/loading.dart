@@ -1,4 +1,5 @@
 
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -8,6 +9,8 @@ import '../blockchain/task_services.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
+
+import '../flutter_flow/flutter_flow_theme.dart';
 
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
@@ -91,7 +94,24 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
 
     return Row(
       children: [
-        Text(taskLoadedState.toString()),
+        // Text(taskLoadedState.toString()),
+        Badge(
+          // position: BadgePosition.topEnd(top: 10, end: 10),
+          badgeContent: Container(
+            width: 18,
+            height: 18,
+            alignment: Alignment.center,
+            child: Text(
+              taskLoadedState.toString(),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+          ),
+          badgeColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+          animationDuration: Duration(milliseconds: 300),
+          animationType: BadgeAnimationType.scale,
+          shape: BadgeShape.circle,
+          borderRadius: BorderRadius.circular(5),
+        ),
         Container(
           child: FlutterFlowIconButton(
             borderColor: Colors.transparent,

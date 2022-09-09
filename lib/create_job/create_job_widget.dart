@@ -21,7 +21,9 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
     with TickerProviderStateMixin {
   TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
-  TextEditingController? valueController;
+  // TextEditingController? valueController;
+  TextEditingController valueController = TextEditingController();
+  double _currentPriceValue = 0.0;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final animationsMap = {
@@ -51,7 +53,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
 
     descriptionController = TextEditingController();
     titleFieldController = TextEditingController();
-    valueController = TextEditingController();
+    // valueController = TextEditingController();
   }
 
   @override
@@ -210,6 +212,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       maxLines: 4,
                       keyboardType: TextInputType.multiline,
                     ),
+
                     TextFormField(
                       controller: valueController,
                       // onChanged: (_) => EasyDebounce.debounce(
@@ -256,12 +259,38 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       maxLines: 1,
                       keyboardType: TextInputType.number,
                     ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 15),
+                      child: SliderTheme(
+                        data: SliderThemeData(
+                          // thumbColor: Colors.red,
+                          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 14),
+                          activeTrackColor: Colors.white,
+                          inactiveTrackColor: Colors.white,
+                          trackHeight: 5.0,
+                        ),
+                        child: Slider(
+                          value: _currentPriceValue,
+                          min: 0,
+                          max: 0.125,
+                          divisions: 100,
+                          label: _currentPriceValue.toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              _currentPriceValue = value;
+                              valueController.text = value.toString();
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Spacer(),
                     FFButtonWidget(
                       onPressed: () {
                         tasksServices.addTask(
                           titleFieldController!.text,
                           descriptionController!.text,
-                          valueController!.text,
+                          valueController.text,
                         );
                         Navigator.pop(context);
                         showDialog(
@@ -297,3 +326,29 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
     );
   }
 }
+
+// class PriceSlider extends StatefulWidget {
+//   const PriceSlider({Key? key}) : super(key: key);
+//
+//   @override
+//   State<PriceSlider> createState() => _PriceSlider();
+// }
+//
+// class _PriceSlider extends State<PriceSlider> {
+//   double _currentPriceValue = 0.0;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Slider(
+//       value: _currentPriceValue,
+//       max: 100,
+//       divisions: 5,
+//       label: _currentPriceValue.round().toString(),
+//       onChanged: (double value) {
+//         setState(() {
+//           _currentPriceValue = value;
+//         });
+//       },
+//     );
+//   }
+// }

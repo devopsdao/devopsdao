@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 
+import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -234,6 +235,23 @@ class _HomePageWidgetState extends State<HomePageWidget>
         elevation: 2,
       ),
       backgroundColor: Color(0xFF1E2429),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateJobWidget(),
+            ),
+          );
+        },
+        backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+        elevation: 8,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
