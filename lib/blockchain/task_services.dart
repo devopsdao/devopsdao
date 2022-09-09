@@ -834,7 +834,7 @@ class TasksServices extends ChangeNotifier {
           //     .getValueInUnit(EtherUnit.gwei)
           //     .toInt(),
           value:
-              EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
+              EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei.toInt()),
         ),
         chainId: _chainId);
     isLoading = false;
