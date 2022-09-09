@@ -815,7 +815,7 @@ class TasksServices extends ChangeNotifier {
     print("gasPriceValue");
     print(gasPriceValue);
     EtherAmount value =
-        EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
+        EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei);
     print("value");
     print(value);
     txn = await _web3client.sendTransaction(
