@@ -811,9 +811,10 @@ class TasksServices extends ChangeNotifier {
     lastTxn = 'pending';
     late String txn;
     // const gasLimit = 3e3;
-    late int priceInGwei = (3000 * gasPriceValue).toInt();
+    late int priceInGwei = (30000 * gasPriceValue).toInt();
     print("gasPriceValue");
     print(gasPriceValue);
+    // print(destinationChain);
     EtherAmount value =
         EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei);
     print("value");
@@ -826,8 +827,13 @@ class TasksServices extends ChangeNotifier {
           function: _withdrawToChain,
           parameters: [
             contractAddress,
+<<<<<<< HEAD
             _contractAddressRopsten,
             destinationChain
+=======
+            _contractAddressGoerli,
+            "ethereum"
+>>>>>>> 03397833e4b5a079c0051089bc6a839cead07797
           ],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
@@ -845,9 +851,10 @@ class TasksServices extends ChangeNotifier {
   }
 
   double gasPriceValue = 0;
-  String destinationChain = 'Moonbeam';
+  String saveDestinationChain = 'moonbeam';
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
+    // saveDestinationChain = destinationChain;
     final env = 'testnet';
     if (env == 'local') ;
     final String AddressZero = "0x0000000000000000000000000000000000000000";
