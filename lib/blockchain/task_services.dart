@@ -857,7 +857,7 @@ class TasksServices extends ChangeNotifier {
 
     if (tokenAddress == AddressZero && tokenSymbol == '')
       throw 'Either tokenAddress or tokenSymbol must be set.';
-    String api_url = 'devnet.api.gmp.axelarscan.io';
+    String api_url = 'testnet.api.gmp.axelarscan.io';
     final params = {
       'method': 'getGasPrice',
       'destinationChain': destinationChain,

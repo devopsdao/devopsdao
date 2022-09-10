@@ -1,10 +1,12 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 
+<<<<<<< HEAD
+const List<String> selectNetwork = <String>['Moonbeam', 'Ethereum', 'Binance', 'fantom', 'avalanche', 'polygon'];
+=======
 const List<String> selectNetwork = <String>[
   'Moonbeam',
   'Ethereum',
@@ -13,6 +15,7 @@ const List<String> selectNetwork = <String>[
   'Avalanche',
   'Polygon'
 ];
+>>>>>>> ade2c8889d08e20f142876c3609a9fe0142227ed
 
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
