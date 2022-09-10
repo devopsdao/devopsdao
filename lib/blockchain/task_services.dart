@@ -825,16 +825,7 @@ class TasksServices extends ChangeNotifier {
           from: ownAddress,
           contract: _deployedContract,
           function: _withdrawToChain,
-          parameters: [
-            contractAddress,
-<<<<<<< HEAD
-            _contractAddressRopsten,
-            destinationChain
-=======
-            _contractAddressGoerli,
-            "ethereum"
->>>>>>> 03397833e4b5a079c0051089bc6a839cead07797
-          ],
+          parameters: [contractAddress, _contractAddressRopsten, 'Ethereum'],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)
