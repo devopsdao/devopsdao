@@ -1,11 +1,17 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 
-const List<String> selectNetwork = <String>['Moonbeam', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];
+const List<String> selectNetwork = <String>[
+  'Moonbeam',
+  'Ethereum',
+  'Binance',
+  'Fantom',
+  'Avalanche',
+  'Polygon'
+];
 
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
@@ -57,14 +63,17 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
             );
           }).toList(),
         ),
-        RichText(text: TextSpan(
-            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.9),
-            children: <TextSpan>[
+        RichText(
+            text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 0.9),
+                children: <TextSpan>[
               TextSpan(
                   text: 'Gas Fee: ${tasksServices.gasPriceValue}',
-                  style: const TextStyle(height: 1.8, fontWeight: FontWeight.bold)),
-            ]
-        )),
+                  style: const TextStyle(
+                      height: 1.8, fontWeight: FontWeight.bold)),
+            ])),
       ],
     );
   }
