@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 
-const List<String> selectNetwork = <String>['Moonbeam', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];
+const List<String> selectNetwork = <String>['Moonbeam', 'Ethereum', 'Binance', 'fantom', 'avalanche', 'polygon'];
 
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
