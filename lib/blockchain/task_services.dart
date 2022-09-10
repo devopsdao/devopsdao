@@ -78,7 +78,7 @@ class TasksServices extends ChangeNotifier {
   //     ? 'wss://wss.api.moonbase.moonbeam.network'
   //     : 'wss://wss.api.moonbase.moonbeam.network';
   final int _chainId = 1287;
-  final int _chainIdGoerli = 1287;
+  final int _chainIdRopsten = 3;
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
@@ -150,7 +150,7 @@ class TasksServices extends ChangeNotifier {
   late num totalTaskLen = 0;
   int? taskLoaded;
   late EthereumAddress _contractAddress;
-  late EthereumAddress _contractAddressGoerli;
+  late EthereumAddress _contractAddressRopsten;
   Future<void> getABI() async {
     String abiFile =
         await rootBundle.loadString('build/contracts/Factory.json');
@@ -159,8 +159,8 @@ class TasksServices extends ChangeNotifier {
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress = EthereumAddress.fromHex(
         jsonABI["networks"][_chainId.toString()]["address"]);
-    _contractAddressGoerli = EthereumAddress.fromHex(
-        jsonABI["networks"][_chainIdGoerli.toString()]["address"]);
+    _contractAddressRopsten = EthereumAddress.fromHex(
+        jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
   }
 
   // var session;
@@ -826,7 +826,7 @@ class TasksServices extends ChangeNotifier {
           function: _withdrawToChain,
           parameters: [
             contractAddress,
-            _contractAddressGoerli,
+            _contractAddressRopsten,
             destinationChain
           ],
           // gasPrice: EtherAmount.inWei(BigInt.one),
