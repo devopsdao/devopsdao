@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'Factory.g.dart';
+import 'IERC20.g.dart';
 import 'task.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -683,6 +684,12 @@ class TasksServices extends ChangeNotifier {
       }
       loopRunning = false;
     }
+  }
+
+  Future<void> approveSpend(EthereumAddress ownAddress, BigInt amount) async {
+    final ierc20 = IERC20(
+        address: _contractAddress, client: _web3client, chainId: _chainId);
+    ierc20.approve(ownAddress, amount, credentials: _creds);
   }
 
   String taskTokenSymbol = '';
