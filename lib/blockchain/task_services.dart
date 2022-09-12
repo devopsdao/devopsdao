@@ -694,7 +694,7 @@ class TasksServices extends ChangeNotifier {
 
   String taskTokenSymbol = '';
   Future<void> addTask(String title, String description, String price) async {
-    if(taskTokenSymbol != '') {
+    if (taskTokenSymbol != '') {
       late int priceInGwei = (double.parse(price) * 1000000000).toInt();
       // late EtherAmount priceInGwei =
       //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
@@ -702,7 +702,7 @@ class TasksServices extends ChangeNotifier {
       // print(priceInGwei);
       lastTxn = 'pending';
       late String txn;
-      if(taskTokenSymbol == 'Eth') {
+      if (taskTokenSymbol == 'ETH') {
         txn = await web3Transaction(
             _creds,
             Transaction.callContract(
@@ -715,8 +715,8 @@ class TasksServices extends ChangeNotifier {
               //     .getValueInUnit(EtherUnit.gwei)
               //     .toInt(),
               // value: priceInGwei
-              value:
-              EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
+              value: EtherAmount.fromUnitAndValue(
+                  EtherUnit.gwei, priceInGwei.toInt()),
             ),
             chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
