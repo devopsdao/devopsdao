@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 import '../custom_widgets/loading.dart';
-import '../custom_widgets/selectNetworkMenu.dart';
+import '../custom_widgets/selectMenu.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';

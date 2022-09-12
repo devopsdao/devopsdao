@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../custom_widgets/selectMenu.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -284,6 +285,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                         ),
                       ),
                     ),
+                    SelectTokenMenu(),
                     Spacer(),
                     FFButtonWidget(
                       onPressed: () {

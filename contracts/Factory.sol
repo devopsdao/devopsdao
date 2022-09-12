@@ -10,7 +10,7 @@ import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interf
 import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
 
 contract Factory {
-    
+
 
     Job[] public jobArray;
     // address contractOwner;
@@ -32,8 +32,9 @@ contract Factory {
     event JobContractCreated(
         address jobAddress,
         string title,
-        string description
-        
+        string description,
+        string symbol
+
     );
 
 
@@ -47,19 +48,20 @@ contract Factory {
 
     // function indexCalculation(string memory _state) public returns (uint256) {}
 
-    function createJobContract(string memory _title, string memory _description)
-        external
-        payable
+    function createJobContract(string memory _title, string memory _description, string memory _symbol)
+    external
+    payable
     {
         Job job = new Job{value: msg.value}(
             _title,
             _description,
+            _symbol,
             jobArray.length,
             msg.sender
         );
         jobArray.push(job);
         countNew++;
-        emit JobContractCreated(address(job), _title, _description);
+        emit JobContractCreated(address(job), _title, _description, _symbol);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -145,8 +147,8 @@ contract Factory {
     // }
 
     function transferToaddress(Job job, address payable addressToSend)
-        external
-        payable
+    external
+    payable
     {
         // addressToSend.transfer(0.5 ether);
         jobArray[job.index()].transferToaddress(addressToSend);
@@ -154,21 +156,21 @@ contract Factory {
     }
 
     function transferToaddressChain(Job job, address payable addressToSend, string memory chain)
-        external
-        payable
+    external
+    payable
     {
         jobArray[job.index()].transferToaddressChain(addressToSend, chain);
         emit OneEventForAll(address(job), job.index());
     }
 
-    function transferToaddressChain2(Job job, address payable addressToSend, string memory chain)
-        external
-        payable
+    function transferToaddressChain2(Job job, address payable addressToSend, string memory chain, uint256 amount)
+    external
+    payable
     {
-        jobArray[job.index()].transferToaddressChain2(addressToSend, chain);
+        jobArray[job.index()].transferToaddressChain2(addressToSend, chain, amount);
         emit OneEventForAll(address(job), job.index());
     }
-    
+
 
     // function jobCanceled(Job job) external {
     //     jobArray[job.index()].jobCanceled();
@@ -195,20 +197,21 @@ contract Factory {
     // }
 
     function getJobInfo(uint256 _classIndex)
-        external
-        view
-        returns (
-            string memory,
-            string memory,
-            address,
-            address,
-            address,
-            uint256,
-            uint256,
-            string memory,
-            address[] memory,
-            address
-        )
+    external
+    view
+    returns (
+        string memory,
+        string memory,
+        address,
+        address,
+        address,
+        uint256,
+        uint256,
+        string memory,
+        address[] memory,
+        address,
+        string memory
+    )
     {
         Job _retBal = Job(payable(address(jobArray[_classIndex])));
         return _retBal.getJob();
@@ -219,9 +222,9 @@ contract Factory {
 
 contract Job {
     IDistributionExecutable public immutable distributor;
-	
+
     IAxelarGateway public immutable gateway;
-	
+
 
     address[] public Participants;
     // uint256 public data;
@@ -238,6 +241,8 @@ contract Job {
     address payable public participantAddress;
     uint256 public createTime;
     address[] public _destinationAddresses;
+    string public symbol;
+    uint256 amount2;
 
     // uint256 public balance;
 
@@ -255,6 +260,7 @@ contract Job {
     constructor(
         string memory _title,
         string memory _description,
+        string memory _symbol,
         uint256 _index,
         address _contractOwner
     ) payable {
@@ -268,6 +274,7 @@ contract Job {
         createTime = block.timestamp;
         index = _index;
         description = _description;
+        symbol = _symbol;
 
         address gateway_ = 0x5769D84DD62a6fD969856c75c7D321b84d455929;
         gateway = IAxelarGateway(gateway_);
@@ -299,32 +306,34 @@ contract Job {
     // }
 
     function getJob()
-        public
-        view
-        returns (
-            string memory _content,
-            string memory _jobState,
-            address _contractAddress,
-            address _contractParent,
-            address _contractOwner,
-            uint256 _createTime,
-            uint256 _index,
-            string memory _description,
-            address[] memory _participants,
-            address _participantAddress
-        )
+    public
+    view
+    returns (
+        string memory _content,
+        string memory _jobState,
+        address _contractAddress,
+        address _contractParent,
+        address _contractOwner,
+        uint256 _createTime,
+        uint256 _index,
+        string memory _description,
+        address[] memory _participants,
+        address _participantAddress,
+        string memory _symbol
+    )
     {
         return (
-            title,
-            jobState,
-            contractAddress,
-            contractParent,
-            contractOwner,
-            createTime,
-            index,
-            description,
-            Participants,
-            participantAddress
+        title,
+        jobState,
+        contractAddress,
+        contractParent,
+        contractOwner,
+        createTime,
+        index,
+        description,
+        Participants,
+        participantAddress,
+        symbol
         );
     }
 
@@ -348,6 +357,7 @@ contract Job {
         } else if (
             keccak256(bytes(jobState)) == keccak256(bytes("completed"))
         ) {
+
             participantAddress.transfer(contractAddress.balance);
         }
         // msg.sender.transfer(address(this).balance);
@@ -367,7 +377,7 @@ contract Job {
         // msg.sender.transfer(address(this).balance);
     }
 
-    function transferToaddressChain2(address payable _addressToSend, string memory chain) public payable {
+    function transferToaddressChain2(address payable _addressToSend, string memory chain, uint256 amount) public payable {
         if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
             if (_addressToSend == contractOwner) {
                 _addressToSend.transfer(contractAddress.balance);
@@ -375,11 +385,24 @@ contract Job {
         } else if (
             keccak256(bytes(jobState)) == keccak256(bytes("completed"))
         ) {
-            // _destinationAddresses.push(_addressToSend);
-            // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
-            // string memory _addressToSend2 = bytes(_addressToSend);
-            IERC20(_addressToSend).approve(address(gateway), contractAddress.balance);
-            gateway.sendToken(chain, toAsciiString(_addressToSend), "WDEV", contractAddress.balance);
+            bytes memory symbolTest = bytes(symbol);
+            if (symbolTest.length == 0) {
+                // do nothing
+            } else if (keccak256(symbolTest) == keccak256(bytes("Eth"))) {
+                participantAddress.transfer(contractAddress.balance);
+            } else if (keccak256(symbolTest) == keccak256(bytes("WDEV"))) {
+                // _destinationAddresses.push(_addressToSend);
+                // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
+                // string memory _addressToSend2 = bytes(_addressToSend);
+                IERC20(_addressToSend).approve(address(gateway), contractAddress.balance);
+                gateway.sendToken(chain, toAsciiString(_addressToSend), "WDEV", contractAddress.balance);
+            } else if (keccak256(symbolTest) == keccak256(bytes("aUSDC"))) {
+                address tokenAddress = gateway.tokenAddresses(symbol);
+                amount = IERC20(tokenAddress).balanceOf(contractAddress);
+                IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount);
+                IERC20(tokenAddress).approve(address(gateway), amount);
+            }
+
         }
         // msg.sender.transfer(address(this).balance);
     }
@@ -391,16 +414,16 @@ contract Job {
             bytes1 hi = bytes1(uint8(b) / 16);
             bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
             s[2*i] = char(hi);
-            s[2*i+1] = char(lo);            
+            s[2*i+1] = char(lo);
         }
         return string(s);
     }
-    
+
     function char(bytes1 b) internal pure returns (bytes1 c) {
         if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
         else return bytes1(uint8(b) + 0x57);
     }
-    
+
 
     function jobParticipate(address _participantAddress) external {
         bool existed = false;

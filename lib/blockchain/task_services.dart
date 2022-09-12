@@ -685,36 +685,57 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  String taskTokenSymbol = '';
   Future<void> addTask(String title, String description, String price) async {
-    late int priceInGwei = (double.parse(price) * 1000000000).toInt();
-    // late EtherAmount priceInGwei =
-    //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
-    // late int priceInGwei = priceInDouble.toInt();
-    // print(priceInGwei);
-    lastTxn = 'pending';
-    late String txn;
-    txn = await web3Transaction(
-        _creds,
-        Transaction.callContract(
-          from: ownAddress,
-          contract: _deployedContract,
-          function: _createTask,
-          parameters: [title, description],
-          // gasPrice: EtherAmount.inWei(BigInt.one),
-          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-          //     .getValueInUnit(EtherUnit.gwei)
-          //     .toInt(),
-          // value: priceInGwei
-          value:
+    if(taskTokenSymbol != '') {
+      late int priceInGwei = (double.parse(price) * 1000000000).toInt();
+      // late EtherAmount priceInGwei =
+      //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
+      // late int priceInGwei = priceInDouble.toInt();
+      // print(priceInGwei);
+      lastTxn = 'pending';
+      late String txn;
+      if(taskTokenSymbol == 'Eth') {
+        txn = await web3Transaction(
+            _creds,
+            Transaction.callContract(
+              from: ownAddress,
+              contract: _deployedContract,
+              function: _createTask,
+              parameters: [title, description],
+              // gasPrice: EtherAmount.inWei(BigInt.one),
+              // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              //     .getValueInUnit(EtherUnit.gwei)
+              //     .toInt(),
+              // value: priceInGwei
+              value:
               EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
-        ),
-        chainId: _chainId);
-    isLoading = false;
-    isLoadingBackground = true;
-    lastTxn = txn;
-    notifyListeners();
-    // fetchTasks();
-    tellMeHasItMined(txn);
+            ),
+            chainId: _chainId);
+      } else if (taskTokenSymbol == 'aUSDC') {
+        txn = await web3Transaction(
+            _creds,
+            Transaction.callContract(
+              from: ownAddress,
+              contract: _deployedContract,
+              function: _createTask,
+              parameters: [title, description],
+              // gasPrice: EtherAmount.inWei(BigInt.one),
+              // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              //     .getValueInUnit(EtherUnit.gwei)
+              //     .toInt(),
+              // value: priceInGwei
+              // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
+            ),
+            chainId: _chainId);
+      }
+      isLoading = false;
+      isLoadingBackground = true;
+      lastTxn = txn;
+      notifyListeners();
+      // fetchTasks();
+      tellMeHasItMined(txn);
+    }
   }
 
   Future<void> taskParticipation(EthereumAddress contractAddress) async {
@@ -842,7 +863,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   double gasPriceValue = 0;
-  String saveDestinationChain = 'moonbeam';
+  // String saveDestinationChain = 'moonbeam';
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
     // saveDestinationChain = destinationChain;

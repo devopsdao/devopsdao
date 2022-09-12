@@ -14,6 +14,12 @@ const List<String> selectNetwork = <String>[
   'Polygon'
 ];
 
+const List<String> selectToken = <String>[
+  'Eth',
+  'WDEV',
+  'aUSDC'
+];
+
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
 
@@ -75,6 +81,62 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                   style: const TextStyle(
                       height: 1.8, fontWeight: FontWeight.bold)),
             ])),
+      ],
+    );
+  }
+}
+
+class SelectTokenMenu extends StatefulWidget {
+  const SelectTokenMenu({Key? key}) : super(key: key);
+
+  @override
+  State<SelectTokenMenu> createState() => _SelectTokenMenuState();
+}
+
+class _SelectTokenMenuState extends State<SelectTokenMenu> {
+  String dropdownValue = selectToken.first;
+
+  @override
+  Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(text: TextSpan(
+            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.3, color: Colors.white),
+            children: <TextSpan>[
+              TextSpan(
+                  text: 'Select Token: ',
+                  style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+            ]
+        )),
+        DropdownButton<String>(
+          isExpanded: true,
+          value: dropdownValue,
+          icon: const Icon(Icons.arrow_downward),
+          elevation: 16,
+          dropdownColor: Colors.blueGrey,
+          style: const TextStyle(color: Colors.white),
+          hint: Text('Choose token (${dropdownValue})'),
+          underline: Container(
+            height: 2,
+            color: Colors.white,
+          ),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              dropdownValue = value!;
+              tasksServices.taskTokenSymbol = value;
+            });
+          },
+          items: selectToken.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
       ],
     );
   }
