@@ -10,6 +10,7 @@ import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interf
 import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
 
 contract Factory {
+    IAxelarGateway public immutable gateway;
 
 
     Job[] public jobArray;
@@ -38,17 +39,16 @@ contract Factory {
     );
 
 
-    // constructor(address gateway_) {
-    //     if (gateway_ == address(0)) revert InvalidAddress();
-
-    //     gateway = IAxelarGateway(gateway_);
-    // }
+    constructor() {
+        address gateway_ = 0x5769D84DD62a6fD969856c75c7D321b84d455929;
+        gateway = IAxelarGateway(gateway_);
+    }
 
     // initial: new, contractor choosed: agreed, work in progress: progress, completed: completed, canceled
 
     // function indexCalculation(string memory _state) public returns (uint256) {}
 
-    function createJobContract(string memory _title, string memory _description, string memory _symbol)
+    function createJobContract(string memory _title, string memory _description, string memory _symbol, uint256 _amount)
     external
     payable
     {
@@ -59,6 +59,12 @@ contract Factory {
             jobArray.length,
             msg.sender
         );
+
+        address tokenAddress = gateway.tokenAddresses(_symbol);
+        // amount = IERC20(tokenAddress).balanceOf(contractAddress);
+        IERC20(tokenAddress).transferFrom(msg.sender, address(job), _amount);
+        // IERC20(tokenAddress).approve(address(gateway), _amount);
+
         jobArray.push(job);
         countNew++;
         emit JobContractCreated(address(job), _title, _description, _symbol);
@@ -78,35 +84,6 @@ contract Factory {
         }
     }
 
-    // function allJobsNew() external view returns (Job[] memory _jobs) {
-    //     // _jobs = new Job[](jobArray.length - indexCalculation("new"));
-    //     _jobs = new Job[](countNew);
-
-    //     uint256 count;
-    //     for (uint256 i = 0; i < jobArray.length; i++) {
-    //         if (
-    //             keccak256(bytes(jobArray[i].jobState())) ==
-    //             keccak256(bytes("new"))
-    //         ) {
-    //             _jobs[count] = jobArray[i];
-    //             count++;
-    //         }
-    //     }
-    // }
-
-    // function allCompletedJobs() external view returns (Job[] memory _jobs) {
-    //     _jobs = new Job[](countCompleted);
-    //     uint256 count;
-    //     for (uint256 i = 0; i < jobArray.length; i++) {
-    //         if (
-    //             keccak256(bytes(jobArray[i].jobState())) !=
-    //             keccak256(bytes("completed"))
-    //         ) {
-    //             _jobs[count] = jobArray[i];
-    //             count++;
-    //         }
-    //     }
-    // }
 
     function jobParticipate(Job job) external {
         jobArray[job.index()].jobParticipate(msg.sender);
@@ -163,11 +140,11 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
-    function transferToaddressChain2(Job job, address payable addressToSend, string memory chain, uint256 amount)
+    function transferToaddressChain2(Job job, address payable addressToSend, string memory chain)
     external
     payable
     {
-        jobArray[job.index()].transferToaddressChain2(addressToSend, chain, amount);
+        jobArray[job.index()].transferToaddressChain2(addressToSend, chain);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -242,7 +219,7 @@ contract Job {
     uint256 public createTime;
     address[] public _destinationAddresses;
     string public symbol;
-    uint256 amount2;
+    uint256 amount;
 
     // uint256 public balance;
 
@@ -377,7 +354,7 @@ contract Job {
         // msg.sender.transfer(address(this).balance);
     }
 
-    function transferToaddressChain2(address payable _addressToSend, string memory chain, uint256 amount) public payable {
+    function transferToaddressChain2(address payable _addressToSend, string memory chain) public payable {
         if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
             if (_addressToSend == contractOwner) {
                 _addressToSend.transfer(contractAddress.balance);
