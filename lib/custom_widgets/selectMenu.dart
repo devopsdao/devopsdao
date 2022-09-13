@@ -15,7 +15,7 @@ const List<String> selectNetwork = <String>[
 ];
 
 const List<String> selectToken = <String>[
-  'Eth',
+  'ETH',
   'WDEV',
   'aUSDC'
 ];
