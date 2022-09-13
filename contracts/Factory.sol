@@ -349,7 +349,7 @@ contract Job {
             keccak256(bytes(jobState)) == keccak256(bytes("completed"))
         ) {
             _destinationAddresses.push(participantAddress);
-            distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'DEV', contractAddress.balance);
+            distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'WETH', contractAddress.balance);
         }
         // msg.sender.transfer(address(this).balance);
     }
@@ -365,14 +365,14 @@ contract Job {
             bytes memory symbolTest = bytes(symbol);
             if (symbolTest.length == 0) {
                 // do nothing
-            } else if (keccak256(symbolTest) == keccak256(bytes("Eth"))) {
+            } else if (keccak256(symbolTest) == keccak256(bytes("ETH"))) {
                 participantAddress.transfer(contractAddress.balance);
-            } else if (keccak256(symbolTest) == keccak256(bytes("WDEV"))) {
+            } else if (keccak256(symbolTest) == keccak256(bytes("WETH")) && keccak256(bytes(chain)) != keccak256(bytes("Moonbase"))) {
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
                 IERC20(_addressToSend).approve(address(gateway), contractAddress.balance);
-                gateway.sendToken(chain, toAsciiString(_addressToSend), "WDEV", contractAddress.balance);
+                gateway.sendToken(chain, toAsciiString(_addressToSend), "WETH", contractAddress.balance);
             } else if (keccak256(symbolTest) == keccak256(bytes("aUSDC"))) {
                 address tokenAddress = gateway.tokenAddresses(symbol);
                 amount = IERC20(tokenAddress).balanceOf(contractAddress);

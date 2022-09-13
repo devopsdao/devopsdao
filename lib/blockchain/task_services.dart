@@ -311,9 +311,33 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<EtherAmount> web3GetBalanceToken(
+      EthereumAddress address, String symbol,
+      {BlockNum? atBlock}) async {
+    var response;
+    try {
+      EthereumAddress contractAddress =
+          EthereumAddress.fromHex('0xc778417E063141139Fce010982780140Aa0cD5Ab');
+      if (symbol == 'WETH') {
+        contractAddress = EthereumAddress.fromHex(
+            '0xc778417E063141139Fce010982780140Aa0cD5Ab');
+      }
+
+      IERC20 ierc20 = IERC20(
+          address: contractAddress, client: _web3client, chainId: _chainId);
+
+      response = ierc20.balanceOf(address);
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
   late dynamic _creds;
   EthereumAddress? ownAddress;
   double? ethBalance;
+  double? ethBalanceToken;
   double? pendingBalance = 0;
   // Future<void> getCredentials() async {
   //   if (_walletconnect == true && credentials != null) {
@@ -408,6 +432,15 @@ class TasksServices extends ChangeNotifier {
       // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+
+      final EtherAmount balanceToken =
+          await web3GetBalanceToken(ownAddress!, 'WETH');
+      final BigInt weiBalanceToken = balanceToken.getInWei;
+      // ethBalance = weiBalance.toDouble() * 100000;
+      final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 18);
+      ethBalanceToken =
+          (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+
       notifyListeners();
       // print(ethBalance);
       // print(ethBalance.toDouble() / 1000000000000000000);
@@ -686,9 +719,16 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> approveSpend(EthereumAddress ownAddress, BigInt amount) async {
+  Future<void> approveSpend(
+      EthereumAddress ownAddress, String symbol, BigInt amount) async {
+    EthereumAddress contractAddress = EthereumAddress.fromHex(
+        '0xc778417E063141139Fce010982780140Aa0cD5Ab'); //default to WETH
+    if (symbol == 'WETH') {
+      contractAddress =
+          EthereumAddress.fromHex('0xc778417E063141139Fce010982780140Aa0cD5Ab');
+    }
     final ierc20 = IERC20(
-        address: _contractAddress, client: _web3client, chainId: _chainId);
+        address: contractAddress, client: _web3client, chainId: _chainId);
     ierc20.approve(ownAddress, amount, credentials: _creds);
   }
 
@@ -726,7 +766,7 @@ class TasksServices extends ChangeNotifier {
               from: ownAddress,
               contract: _deployedContract,
               function: _createTask,
-              parameters: [title, description],
+              parameters: [title, description, taskTokenSymbol, price],
               // gasPrice: EtherAmount.inWei(BigInt.one),
               // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
               //     .getValueInUnit(EtherUnit.gwei)

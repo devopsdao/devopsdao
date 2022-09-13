@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,15 @@ const List<String> selectNetwork = <String>[
   'Polygon'
 ];
 
+<<<<<<< HEAD
+const List<String> selectToken = <String>[
+  'ETH',
+  'WDEV',
+  'aUSDC'
+];
+=======
 const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
+>>>>>>> e62ae99f48de840697aafb53d862b18064b5d80b
 
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
