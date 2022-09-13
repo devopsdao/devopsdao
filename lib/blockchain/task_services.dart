@@ -320,12 +320,15 @@ class TasksServices extends ChangeNotifier {
       if (symbol == 'WETH') {
         contractAddress = EthereumAddress.fromHex(
             '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
+      } else if (symbol == 'aUSDC') {
+        contractAddress = EthereumAddress.fromHex(
+            '0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
       }
 
       IERC20 ierc20 = IERC20(
           address: contractAddress, client: _web3client, chainId: _chainId);
 
-      response = ierc20.balanceOf(address);
+      response = await ierc20.balanceOf(address);
     } catch (e) {
       print(e);
     } finally {
@@ -433,10 +436,10 @@ class TasksServices extends ChangeNotifier {
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
       final BigInt weiBalanceToken =
-          await web3GetBalanceToken(ownAddress!, 'WETH');
+          await web3GetBalanceToken(ownAddress!, 'aUSDC');
       //final BigInt weiBalanceToken = balanceToken.getInWei;
       // ethBalance = weiBalance.toDouble() * 100000;
-      final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 18);
+      final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken =
           (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
@@ -725,6 +728,9 @@ class TasksServices extends ChangeNotifier {
     if (symbol == 'WETH') {
       contractAddress =
           EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
+    } else if (symbol == 'aUSDC') {
+      contractAddress =
+          EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
     }
     final ierc20 = IERC20(
         address: contractAddress, client: _web3client, chainId: _chainId);
