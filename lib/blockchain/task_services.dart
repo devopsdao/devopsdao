@@ -311,16 +311,15 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<EtherAmount> web3GetBalanceToken(
-      EthereumAddress address, String symbol,
+  Future<BigInt> web3GetBalanceToken(EthereumAddress address, String symbol,
       {BlockNum? atBlock}) async {
     var response;
     try {
       EthereumAddress contractAddress =
-          EthereumAddress.fromHex('0xc778417E063141139Fce010982780140Aa0cD5Ab');
+          EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
       if (symbol == 'WETH') {
         contractAddress = EthereumAddress.fromHex(
-            '0xc778417E063141139Fce010982780140Aa0cD5Ab');
+            '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
       }
 
       IERC20 ierc20 = IERC20(
@@ -433,9 +432,9 @@ class TasksServices extends ChangeNotifier {
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
-      final EtherAmount balanceToken =
+      final BigInt weiBalanceToken =
           await web3GetBalanceToken(ownAddress!, 'WETH');
-      final BigInt weiBalanceToken = balanceToken.getInWei;
+      //final BigInt weiBalanceToken = balanceToken.getInWei;
       // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 18);
       ethBalanceToken =
@@ -722,10 +721,10 @@ class TasksServices extends ChangeNotifier {
   Future<void> approveSpend(
       EthereumAddress ownAddress, String symbol, BigInt amount) async {
     EthereumAddress contractAddress = EthereumAddress.fromHex(
-        '0xc778417E063141139Fce010982780140Aa0cD5Ab'); //default to WETH
+        '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca'); //default to WETH
     if (symbol == 'WETH') {
       contractAddress =
-          EthereumAddress.fromHex('0xc778417E063141139Fce010982780140Aa0cD5Ab');
+          EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
     }
     final ierc20 = IERC20(
         address: contractAddress, client: _web3client, chainId: _chainId);
