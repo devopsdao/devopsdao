@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,11 +13,7 @@ const List<String> selectNetwork = <String>[
   'Polygon'
 ];
 
-const List<String> selectToken = <String>[
-  'Eth',
-  'WDEV',
-  'aUSDC'
-];
+const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
@@ -60,7 +55,8 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
             // This is called when the user selects an item.
             setState(() {
               dropdownValue = value!;
-              tasksServices.getGasPrice('Moonbeam', value, tokenSymbol: 'DEV');
+              tasksServices.getGasPrice('Moonbeam', value,
+                  tokenSymbol: dropdownValue);
             });
           },
           items: selectNetwork.map<DropdownMenuItem<String>>((String value) {
@@ -103,14 +99,17 @@ class _SelectTokenMenuState extends State<SelectTokenMenu> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(text: TextSpan(
-            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.3, color: Colors.white),
-            children: <TextSpan>[
+        RichText(
+            text: TextSpan(
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 1.3, color: Colors.white),
+                children: <TextSpan>[
               TextSpan(
                   text: 'Select Token: ',
-                  style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-            ]
-        )),
+                  style:
+                      const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+            ])),
         DropdownButton<String>(
           isExpanded: true,
           value: dropdownValue,

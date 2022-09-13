@@ -316,7 +316,15 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     ),
                           ),
                           Text(
-                            '${tasksServices.ethBalance} eth',
+                            '${tasksServices.ethBalance} ETH',
+                            style: FlutterFlowTheme.of(context).title1.override(
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBtnText,
+                                ),
+                          ),
+                          Text(
+                            '${tasksServices.ethBalanceToken} WETH',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
