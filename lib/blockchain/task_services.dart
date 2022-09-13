@@ -734,7 +734,9 @@ class TasksServices extends ChangeNotifier {
     }
     final ierc20 = IERC20(
         address: contractAddress, client: _web3client, chainId: _chainId);
-    ierc20.approve(ownAddress, amount, credentials: _creds);
+    final result =
+        await ierc20.approve(_contractAddress, amount, credentials: _creds);
+    print(result);
   }
 
   String taskTokenSymbol = '';
@@ -769,6 +771,7 @@ class TasksServices extends ChangeNotifier {
             ),
             chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
+        await approveSpend(ownAddress!, taskTokenSymbol, priceInBigInt);
         txn = await web3Transaction(
             _creds,
             Transaction.callContract(
