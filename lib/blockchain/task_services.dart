@@ -739,8 +739,12 @@ class TasksServices extends ChangeNotifier {
 
   String taskTokenSymbol = '';
   Future<void> addTask(String title, String description, String price) async {
+    print(title);
+    // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
       late int priceInGwei = (double.parse(price) * 1000000000).toInt();
+      late double priceInDouble = double.parse(price);
+      final BigInt priceInBigInt = BigInt.from(priceInDouble * 1e6);
       // late EtherAmount priceInGwei =
       //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
       // late int priceInGwei = priceInDouble.toInt();
@@ -771,7 +775,7 @@ class TasksServices extends ChangeNotifier {
               from: ownAddress,
               contract: _deployedContract,
               function: _createTask,
-              parameters: [title, description, taskTokenSymbol, price],
+              parameters: [title, description, taskTokenSymbol, priceInBigInt],
               // gasPrice: EtherAmount.inWei(BigInt.one),
               // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
               //     .getValueInUnit(EtherUnit.gwei)
@@ -780,6 +784,7 @@ class TasksServices extends ChangeNotifier {
               // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
             ),
             chainId: _chainId);
+        print(txn);
       }
       isLoading = false;
       isLoadingBackground = true;

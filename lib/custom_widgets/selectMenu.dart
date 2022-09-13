@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -125,9 +124,9 @@ class _SelectTokenMenuState extends State<SelectTokenMenu> {
           ),
           onChanged: (String? value) {
             // This is called when the user selects an item.
+            tasksServices.taskTokenSymbol = value!;
             setState(() {
-              dropdownValue = value!;
-              tasksServices.taskTokenSymbol = value;
+              dropdownValue = value;
             });
           },
           items: selectToken.map<DropdownMenuItem<String>>((String value) {
