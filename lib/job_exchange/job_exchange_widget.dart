@@ -424,7 +424,10 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                       tasksServices.taskParticipation(tasksServices
                                                                           .filterResults[
                                                                               index]
-                                                                          .contractAddress);
+                                                                          .contractAddress,
+                                                                          tasksServices
+                                                                              .filterResults[
+                                                                          index].nanoId);
                                                                       Navigator.pop(
                                                                           context);
 
@@ -432,7 +435,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                           context:
                                                                               context,
                                                                           builder: (context) =>
-                                                                              WalletAction());
+                                                                              WalletAction(tasksServices
+                                                                                  .filterResults[
+                                                                              index].nanoId));
                                                                     }),
                                                             ],
                                                           ));

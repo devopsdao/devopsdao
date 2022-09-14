@@ -10,28 +10,37 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import 'package:devopsdao/blockchain/task_services.dart';
 
 class WalletAction extends StatefulWidget {
-  const WalletAction({Key? key}) : super(key: key);
+  final String nanoId;
+  const WalletAction(this.nanoId, {Key? key}) : super(key: key);
 
   @override
   _WalletAction createState() => _WalletAction();
 }
 
 class _WalletAction extends State<WalletAction> {
-  String transactionStagesPending = 'initial';
+  String transactionStagesPending = 'loading';
   String transactionStagesConfirmed = 'initial';
   String transactionStagesMinted = 'initial';
+  String transactionStagesApprove = 'initial';
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-
-    if (tasksServices.lastTxn == 'pending') {
-      transactionStagesPending = 'loading';
-    } else if (tasksServices.lastTxn.length == 66) {
+    if (tasksServices.transactionStatuses[tasksServices.lastTxn] == 'confirmed') {
       transactionStagesPending = 'done';
       transactionStagesConfirmed = 'done';
       transactionStagesMinted = 'loading';
-    } else if (tasksServices.lastTxn == 'minted') {
+      transactionStagesApprove = 'initial';
+    } else if (tasksServices.transactionStatuses[tasksServices.lastTxn] == 'minted') {
       transactionStagesMinted = 'done';
+      transactionStagesApprove = 'loading';
+      if(tasksServices.taskTokenSymbol == 'ETH') {
+        transactionStagesApprove = 'done';
+      } else {
+        transactionStagesApprove = 'approve';
+      }
+    } else if (tasksServices.lastTxn == 'something') {
+
     }
 
     return AlertDialog(
@@ -64,125 +73,6 @@ class _WalletAction extends State<WalletAction> {
                       ),
                       child: Column(
                         children: [
-                          // if (tasksServices.lastTxn == 'pending')
-                          //   Container(
-                          //     child: Column(
-                          //       children: [
-                          //         if (tasksServices.lastTxn == 'pending')
-                          //           Column(
-                          //             children: [
-                          //               Row(
-                          //                 children: [
-                          //                   Container(
-                          //                       width: 45,
-                          //                       height:  35,
-                          //                       child: Row(
-                          //                         children: [
-                          //                           Icon(Icons.arrow_circle_up_outlined, size: 30.0, color: Colors.yellow,),
-                          //                         ],
-                          //                       )
-                          //                   ),
-                          //                   Container(
-                          //                     alignment: Alignment.center,
-                          //                     child: Text(
-                          //                       'Confirm the transaction',
-                          //                       style: Theme.of(context).textTheme.bodyText1,
-                          //                       textAlign: TextAlign.center,
-                          //                     ),
-                          //                   ),
-                          //
-                          //                 ],
-                          //               ),
-                          //               Container(
-                          //                   height:  35,
-                          //                   child: Row(
-                          //                     mainAxisAlignment: MainAxisAlignment.center,
-                          //                     crossAxisAlignment: CrossAxisAlignment.center,
-                          //                     children: [
-                          //                       Padding(
-                          //                         padding: const EdgeInsets.only(
-                          //                           top: 25,
-                          //                         ),
-                          //                         child: LoadingAnimationWidget.prograssiveDots(
-                          //                           color: Colors.black54,
-                          //                           size: 44,
-                          //                         ),
-                          //                       )
-                          //                     ],
-                          //                   )
-                          //               ),
-                          //             ],
-                          //           ),
-                          //
-                          //         // RichText(
-                          //         //     text: TextSpan(
-                          //         //       style: Theme.of(context)
-                          //         //           .textTheme
-                          //         //           .bodyText1,
-                          //         //       children: [
-                          //         //         if (tasksServices.lastTxn ==
-                          //         //             'pending')
-                          //         //           TextSpan(
-                          //         //               text:
-                          //         //                   'Confirm the transaction'),
-                          //         //         if (tasksServices.lastTxn ==
-                          //         //             'pending')
-                          //         //           WidgetSpan(
-                          //         //             child: Padding(
-                          //         //               padding:
-                          //         //                   const EdgeInsets.symmetric(
-                          //         //                       horizontal: 2.0),
-                          //         //               child:
-                          //         //                   Icon(Icons.airport_shuttle),
-                          //         //             ),
-                          //         //           )
-                          //         //         else if (tasksServices
-                          //         //                 .lastTxn.length ==
-                          //         //             66)
-                          //         //           WidgetSpan(
-                          //         //             child: Padding(
-                          //         //               padding:
-                          //         //                   const EdgeInsets.symmetric(
-                          //         //                       horizontal: 2.0),
-                          //         //               child: Icon(Icons.verified),
-                          //         //             ),
-                          //         //           )
-                          //         //       ],
-                          //         //     ),
-                          //         //     textAlign: TextAlign.center),
-                          //         // Text(
-                          //         //   'Please confirm the transaction in your wallet!',
-                          //         //   style:
-                          //         //       Theme.of(context).textTheme.bodyText1,
-                          //         //   textAlign: TextAlign.center,
-                          //         // ),
-                          //         if (tasksServices.lastTxn == 'pending' &&
-                          //             tasksServices.platform == 'mobile')
-
-                                    // Row(
-                                    //   children: [
-                                    //     Container(
-                                    //         width: 45,
-                                    //         height:  35,
-                                    //         child: Row(
-                                    //           children: [
-                                    //             Icon(Icons.arrow_circle_up_outlined, size: 30.0, color: Colors.yellow,),
-                                    //           ],
-                                    //         )
-                                    //     ),
-                                    //     Container(
-                                    //       alignment: Alignment.center,
-                                    //       child: Text(
-                                    //         'Go To Wallet',
-                                    //         style: Theme.of(context).textTheme.bodyText1,
-                                    //         textAlign: TextAlign.center,
-                                    //       ),
-                                    //     ),
-                          //             ],
-                          //           ),
-                          //       ],
-                          //     ),
-                          //   )
                           if (tasksServices.lastTxn == 'rejected')
                             Row(
                               children: [
@@ -323,6 +213,52 @@ class _WalletAction extends State<WalletAction> {
                                           style: Theme.of(context).textTheme.bodyText1,
                                           textAlign: TextAlign.left,
                                         ),
+                                    ),
+                                  ],
+                                ),
+
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: 45,
+                                        height:  45,
+                                        child: Row(
+                                          children: [
+                                            if(transactionStagesApprove == 'initial')
+                                              Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
+                                            else if(transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
+                                              LoadingAnimationWidget.threeRotatingDots(
+                                                color: Colors.black54,
+                                                size: 30,
+                                              )
+                                            else if(transactionStagesApprove == 'done')
+                                                Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                                          ],
+                                        )
+                                    ),
+                                    if(transactionStagesApprove == 'initial')
+                                    Container(
+                                      child: Text(
+                                        'Token transaction approved',
+                                        style: Theme.of(context).textTheme.bodyText1,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    if(transactionStagesApprove == 'approve')
+                                    Container(
+                                      child: Text(
+                                        'Please approve token transaction!',
+                                        style: Theme.of(context).textTheme.bodyText1,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    if(transactionStagesApprove == 'done')
+                                    Container(
+                                      child: Text(
+                                        'Token transaction approved',
+                                        style: Theme.of(context).textTheme.bodyText1,
+                                        textAlign: TextAlign.left,
+                                      ),
                                     ),
                                   ],
                                 ),

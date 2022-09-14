@@ -368,13 +368,14 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               tasksServices.changeTaskStatus(
                                                   widget.obj[index].contractAddress,
                                                   widget.obj[index].contributors[index2],
-                                                  'agreed'
+                                                  'agreed',
+                                                  widget.obj[index].nanoId
                                               );
                                               Navigator.pop(context);
 
                                               showDialog(
                                                   context: context,
-                                                  builder: (context) => WalletAction()
+                                                  builder: (context) => WalletAction(widget.obj[index].nanoId)
                                               );
                                             },
                                             child: Text(
@@ -403,12 +404,13 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               tasksServices.changeTaskStatus(
                                 widget.obj[index].contractAddress,
                                 widget.obj[index].participiant,
-                                'completed');
+                                'completed',
+                                  widget.obj[index].nanoId);
                               Navigator.pop(context);
 
                               showDialog(
                                   context: context,
-                                  builder: (context) => WalletAction()
+                                  builder: (context) => WalletAction(widget.obj[index].nanoId)
                               );
                           }),
                         // if (widget.obj[index].jobState == 'completed')

@@ -280,12 +280,13 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                             tasksServices.changeTaskStatus(
                               widget.obj[index].contractAddress,
                               widget.obj[index].participiant,
-                            'progress');
+                            'progress',
+                            widget.obj[index].nanoId);
                             Navigator.pop(context);
 
                             showDialog(
                                 context: context,
-                                builder: (context) => WalletAction()
+                                builder: (context) => WalletAction(widget.obj[index].nanoId)
                             );
 
                         }),
@@ -300,12 +301,13 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                             tasksServices.changeTaskStatus(
                               widget.obj[index].contractAddress,
                               widget.obj[index].participiant,
-                              'review');
+                              'review',
+                               widget.obj[index].nanoId);
                             Navigator.pop(context);
 
                             showDialog(
                                 context: context,
-                                builder: (context) => WalletAction()
+                                builder: (context) => WalletAction(widget.obj[index].nanoId)
                             );
                           }
                         ),
@@ -317,12 +319,12 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                 setState(() {
                                   widget.obj[index].justLoaded = false;
                                 });
-                                tasksServices.withdrawToChain(widget.obj[index].contractAddress);
+                                tasksServices.withdrawToChain(widget.obj[index].contractAddress, widget.obj[index].nanoId);
                                 Navigator.pop(context);
 
                                 showDialog(
                                     context: context,
-                                    builder: (context) => WalletAction()
+                                    builder: (context) => WalletAction(widget.obj[index].nanoId)
                                 );
                               }
                           ),
@@ -334,12 +336,12 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                               setState(() {
                                 widget.obj[index].justLoaded = false;
                               });
-                              tasksServices.withdraw(widget.obj[index].contractAddress);
+                              tasksServices.withdraw(widget.obj[index].contractAddress, widget.obj[index].nanoId);
                               Navigator.pop(context);
 
                               showDialog(
                                   context: context,
-                                  builder: (context) => WalletAction()
+                                  builder: (context) => WalletAction(widget.obj[index].nanoId)
                               );
                             }
                           ),

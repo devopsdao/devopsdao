@@ -55,6 +55,7 @@ dependencies:
   walletconnect_secure_storage: ^1.0.0
   web3dart: ^2.3.5
   web_socket_channel: ^2.2.0
+  nanoid: ^1.0.0
 
 dev_dependencies:
   build_runner: ^2.2.0

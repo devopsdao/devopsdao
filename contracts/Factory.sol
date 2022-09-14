@@ -32,10 +32,12 @@ contract Factory {
 
     event JobContractCreated(
         address jobAddress,
+        address jobOwner,
+        string nanoId,
         string title,
         string description,
-        string symbol
-
+        string symbol,
+        uint256 amount
     );
 
 
@@ -48,11 +50,12 @@ contract Factory {
 
     // function indexCalculation(string memory _state) public returns (uint256) {}
 
-    function createJobContract(string memory _title, string memory _description, string memory _symbol, uint256 _amount)
+    function createJobContract(string memory _title, string memory _description, string memory _symbol, uint256 _amount, string memory _nanoId)
     external
     payable
     {
         Job job = new Job{value: msg.value}(
+            _nanoId,
             _title,
             _description,
             _symbol,
@@ -67,7 +70,7 @@ contract Factory {
 
         jobArray.push(job);
         countNew++;
-        emit JobContractCreated(address(job), _title, _description, _symbol);
+        emit JobContractCreated(address(job), msg.sender, _nanoId, _title, _description, _symbol, _amount);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -187,7 +190,9 @@ contract Factory {
         string memory,
         address[] memory,
         address,
+        string memory,
         string memory
+        
     )
     {
         Job _retBal = Job(payable(address(jobArray[_classIndex])));
@@ -205,6 +210,7 @@ contract Job {
 
     address[] public Participants;
     // uint256 public data;
+    string public nanoId;
     string public title;
     string public description;
     string public jobState;
@@ -221,20 +227,8 @@ contract Job {
     string public symbol;
     uint256 amount;
 
-    // uint256 public balance;
-
-    // struct jobStructData {
-    //     uint256 data;
-    //     bool jobState;
-    //     address contractAddress;
-    //     address contractParent;
-    //     uint256 createTime;
-    //     uint256 index;
-    // }
-
-    // jobStructData public myStruct;
-
     constructor(
+        string memory _nanoId,
         string memory _title,
         string memory _description,
         string memory _symbol,
@@ -242,6 +236,7 @@ contract Job {
         address _contractOwner
     ) payable {
         // data = _data;
+        nanoId = _nanoId;
         distributor = IDistributionExecutable(_contractOwner);
         title = _title;
         jobState = "new";
@@ -296,7 +291,8 @@ contract Job {
         string memory _description,
         address[] memory _participants,
         address _participantAddress,
-        string memory _symbol
+        string memory _symbol,
+        string memory _nanoId
     )
     {
         return (
@@ -310,7 +306,8 @@ contract Job {
         description,
         Participants,
         participantAddress,
-        symbol
+        symbol,
+        nanoId
         );
     }
 
@@ -380,7 +377,6 @@ contract Job {
                 IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount);
                 IERC20(tokenAddress).approve(address(gateway), amount);
             }
-
         }
         // msg.sender.transfer(address(this).balance);
     }
