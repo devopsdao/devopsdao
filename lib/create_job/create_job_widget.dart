@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 
 import '../custom_widgets/selectMenu.dart';
@@ -287,16 +288,19 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                   SelectTokenMenu(),
                   Spacer(),
                   FFButtonWidget(
+
                     onPressed: () {
+                      final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
                       tasksServices.addTask(
                         titleFieldController!.text,
                         descriptionController!.text,
                         valueController.text,
+                        nanoId
                       );
                       Navigator.pop(context);
                       showDialog(
                           context: context,
-                          builder: (context) => WalletAction()
+                          builder: (context) => WalletAction(nanoId)
                       );
                     },
                     text: 'Submit',

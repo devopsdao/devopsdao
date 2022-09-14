@@ -755,7 +755,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = '';
-  Future<void> addTask(String title, String description, String price) async {
+  Future<void> addTask(String title, String description, String price, String nanoId) async {
     print(title);
     // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
@@ -768,7 +768,7 @@ class TasksServices extends ChangeNotifier {
       // print(priceInGwei);
       // lastTxn = 'pending';
       late String txn;
-      final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
+
 
       if (taskTokenSymbol == 'ETH') {
         txn = await web3Transaction(
