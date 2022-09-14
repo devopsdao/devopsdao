@@ -48,7 +48,7 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
 
-  late Map<String, Map<String, Map <String, String>>> transactionStatuses;
+  late Map<String, Map<String, Map<String, String>>> transactionStatuses;
 
   var credentials;
   EthereumAddress? publicAddress;
@@ -164,8 +164,8 @@ class TasksServices extends ChangeNotifier {
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress = EthereumAddress.fromHex(
         jsonABI["networks"][_chainId.toString()]["address"]);
-    _contractAddressRopsten = EthereumAddress.fromHex(
-        jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
+    // _contractAddressRopsten = EthereumAddress.fromHex(
+    //     jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
   }
 
   // var session;
@@ -452,6 +452,7 @@ class TasksServices extends ChangeNotifier {
       // print(ethBalance.toDouble() / 1000000000000000000);
     }
   }
+
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
     final factory = Factory(
@@ -474,11 +475,17 @@ class TasksServices extends ChangeNotifier {
         await factory.jobContractCreatedEvents().listen((event) async {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
-      if(event.jobOwner == ownAddress) {
+      if (event.jobOwner == ownAddress) {
         // lastJobContract = event.jobAddress;
-        transactionStatuses[event.nanoId]!['task']!['jobAddress'] = event.jobAddress as String;
+        transactionStatuses[event.nanoId]!['task']!['jobAddress'] =
+            event.jobAddress as String;
         notifyListeners();
-        await approveSpend(transactionStatuses[event.nanoId]!['task']!['jobAddress'] as EthereumAddress, ownAddress!, taskTokenSymbol, event.amount );
+        await approveSpend(
+            transactionStatuses[event.nanoId]!['task']!['jobAddress']
+                as EthereumAddress,
+            ownAddress!,
+            taskTokenSymbol,
+            event.amount);
       }
       // await fetchTasks();
     });
@@ -494,7 +501,8 @@ class TasksServices extends ChangeNotifier {
     // print('getJobInfo');
   }
 
-  Future tellMeHasItMined(String hash, String _taskAction, String _nanoId) async {
+  Future tellMeHasItMined(
+      String hash, String _taskAction, String _nanoId) async {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt =
           await web3GetTransactionReceipt(hash);
@@ -610,22 +618,21 @@ class TasksServices extends ChangeNotifier {
         // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
 
         var taskObject = Task(
-          // id: temp[6].toString(),
-          title: temp[0],
-          description: temp[7],
-          // contractOwner: temp[4].toString(),
-          contractOwner: temp[4],
-          contractAddress: temp[2],
-          jobState: temp[1],
-          contributorsCount: temp[8].length,
-          contributors: temp[8],
-          participiant: temp[9],
-          justLoaded: true,
-          createdTime:
-              DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
-          contractValue: ethBalancePrecise,
-          nanoId: temp[11]
-        );
+            // id: temp[6].toString(),
+            title: temp[0],
+            description: temp[7],
+            // contractOwner: temp[4].toString(),
+            contractOwner: temp[4],
+            contractAddress: temp[2],
+            jobState: temp[1],
+            contributorsCount: temp[8].length,
+            contributors: temp[8],
+            participiant: temp[9],
+            justLoaded: true,
+            createdTime:
+                DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
+            contractValue: ethBalancePrecise,
+            nanoId: temp[11]);
 
         taskLoaded = temp[6]
             .toInt(); // this count we need to show the loading process. does not affect anything else
@@ -734,7 +741,7 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> approveSpend( EthereumAddress _contractAddress,
+  Future<void> approveSpend(EthereumAddress _contractAddress,
       EthereumAddress ownAddress, String symbol, BigInt amount) async {
     EthereumAddress tokenContractAddress = EthereumAddress.fromHex(
         '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca'); //default to WETH
@@ -750,12 +757,11 @@ class TasksServices extends ChangeNotifier {
     final result =
         await ierc20.approve(_contractAddress, amount, credentials: _creds);
     print(result);
-
-
   }
 
   String taskTokenSymbol = '';
-  Future<void> addTask(String title, String description, String price, String nanoId) async {
+  Future<void> addTask(
+      String title, String description, String price, String nanoId) async {
     print(title);
     // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
@@ -768,7 +774,6 @@ class TasksServices extends ChangeNotifier {
       // print(priceInGwei);
       // lastTxn = 'pending';
       late String txn;
-
 
       if (taskTokenSymbol == 'ETH') {
         txn = await web3Transaction(
@@ -788,14 +793,19 @@ class TasksServices extends ChangeNotifier {
             ),
             chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
-
         txn = await web3Transaction(
             _creds,
             Transaction.callContract(
               from: ownAddress,
               contract: _deployedContract,
               function: _createTask,
-              parameters: [title, description, taskTokenSymbol, priceInBigInt, nanoId],
+              parameters: [
+                title,
+                description,
+                taskTokenSymbol,
+                priceInBigInt,
+                nanoId
+              ],
               // gasPrice: EtherAmount.inWei(BigInt.one),
               // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
               //     .getValueInUnit(EtherUnit.gwei)
@@ -803,8 +813,7 @@ class TasksServices extends ChangeNotifier {
               // value: priceInGwei
               // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
             ),
-            chainId: _chainId
-        );
+            chainId: _chainId);
         print(txn);
       }
       isLoading = false;
@@ -818,7 +827,8 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> taskParticipation(EthereumAddress contractAddress, String nanoId) async {
+  Future<void> taskParticipation(
+      EthereumAddress contractAddress, String nanoId) async {
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
     // lastTxn = 'pending';
@@ -887,7 +897,7 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'changeTaskStatus', nanoId);
   }
 
-  Future<void> withdraw(EthereumAddress contractAddress, String nanoId ) async {
+  Future<void> withdraw(EthereumAddress contractAddress, String nanoId) async {
     // lastTxn = 'pending';
     late String txn;
     txn = await web3Transaction(
@@ -914,7 +924,8 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
 
-  Future<void> withdrawToChain(EthereumAddress contractAddress, String nanoId) async {
+  Future<void> withdrawToChain(
+      EthereumAddress contractAddress, String nanoId) async {
     // lastTxn = 'pending';
     late String txn;
     // const gasLimit = 3e3;
