@@ -288,13 +288,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2+1"
-  eip55:
-    dependency: transitive
-    description:
-      name: eip55
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   equatable:
     dependency: transitive
     description:
@@ -1047,7 +1040,7 @@ packages:
       name: web3dart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.1"
+    version: "2.3.5"
   web_socket_channel:
     dependency: "direct main"
     description:
