@@ -27,24 +27,26 @@ class _WalletAction extends State<WalletAction> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if(tasksServices.transactionStatuses[widget.nanoId] != null) {
-      if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'confirmed') {
-        transactionStagesPending = 'done';
-        transactionStagesConfirmed = 'done';
-        transactionStagesMinted = 'loading';
-        transactionStagesApprove = 'initial';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'minted') {
-        transactionStagesMinted = 'done';
-        transactionStagesApprove = 'loading';
-        if(tasksServices.taskTokenSymbol == 'ETH') {
-          transactionStagesApprove = 'done';
-        } else {
-          transactionStagesApprove = 'approve';
-        }
-      } else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'something') {
-
+    // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
+    //
+    // }
+    if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
+      transactionStagesPending = 'done';
+      transactionStagesConfirmed = 'done';
+      transactionStagesMinted = 'loading';
+      transactionStagesApprove = 'initial';
+    } else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'minted') {
+      transactionStagesMinted = 'done';
+      transactionStagesApprove = 'loading';
+      if(tasksServices.taskTokenSymbol == 'ETH') {
+        transactionStagesApprove = 'done';
+      } else {
+        transactionStagesApprove = 'approve';
       }
+    } else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'something') {
+
     }
+
 
 
     return AlertDialog(
@@ -77,7 +79,7 @@ class _WalletAction extends State<WalletAction> {
                       ),
                       child: Column(
                         children: [
-                          if (tasksServices.lastTxn == 'rejected')
+                          if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] == 'rejected')
                             Row(
                               children: [
                                 Container(
@@ -104,7 +106,7 @@ class _WalletAction extends State<WalletAction> {
                             //   style: Theme.of(context).textTheme.bodyText1,
                             //   textAlign: TextAlign.center,
                             // )
-                          else if (tasksServices.lastTxn == 'failed')
+                          else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] == 'failed')
                               Row(
                                 children: [
                                   Container(
@@ -125,15 +127,15 @@ class _WalletAction extends State<WalletAction> {
                                     ),
                                   ),
                                 ],
-                              ),
+                              )
                             // Text(
                             //   'Transaction has failed, please retry',
                             //   style: Theme.of(context).textTheme.bodyText1,
                             //   textAlign: TextAlign.center,
                             // )
-                          // else if (tasksServices.lastTxn == 'minted' ||
-                          //       tasksServices.lastTxn.length == 66 ||
-                          //       tasksServices.lastTxn == 'pending')
+                          else if (
+                                tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] != 'failed' ||
+                                tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] != 'rejected')
 
                             Column(
                               children: [
