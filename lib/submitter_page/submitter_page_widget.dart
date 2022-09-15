@@ -375,7 +375,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
 
                                               showDialog(
                                                   context: context,
-                                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId)
+                                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'changeTaskStatus',)
                                               );
                                             },
                                             child: Text(
@@ -410,7 +410,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
 
                               showDialog(
                                   context: context,
-                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId)
+                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'changeTaskStatus',)
                               );
                           }),
                         // if (widget.obj[index].jobState == 'completed')

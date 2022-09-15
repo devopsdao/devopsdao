@@ -760,7 +760,7 @@ class TasksServices extends ChangeNotifier {
     print(result);
   }
 
-  String taskTokenSymbol = '';
+  String taskTokenSymbol = 'ETH';
   Future<void> addTask(
       String title, String description, String price, String nanoId) async {
     print(title);
@@ -832,7 +832,6 @@ class TasksServices extends ChangeNotifier {
 
       // fetchTasks();
       tellMeHasItMined(txn, 'addTask', nanoId);
-      WalletAction(nanoId: nanoId);
       notifyListeners();
     }
   }
