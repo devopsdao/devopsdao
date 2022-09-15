@@ -299,7 +299,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       Navigator.pop(context);
                       showDialog(
                         context: context,
-                        builder:  (context) => WalletAction(nanoId: nanoId)
+                        builder:  (context) => WalletAction(nanoId: nanoId, taskName: 'addTask',)
                       );
                     },
                     text: 'Submit',

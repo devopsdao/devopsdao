@@ -286,7 +286,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
 
                             showDialog(
                                 context: context,
-                                builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId)
+                                builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'changeTaskStatus',)
                             );
 
                         }),
@@ -307,7 +307,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
 
                             showDialog(
                                 context: context,
-                                builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId)
+                                builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'changeTaskStatus',)
                             );
                           }
                         ),
@@ -324,7 +324,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
 
                                 showDialog(
                                     context: context,
-                                    builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId)
+                                    builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'withdrawToChain',)
                                 );
                               }
                           ),
@@ -341,7 +341,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
 
                               showDialog(
                                   context: context,
-                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId)
+                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'withdraw',)
                               );
                             }
                           ),

@@ -441,7 +441,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                           builder: (context) =>
                                                                               WalletAction(nanoId: tasksServices
                                                                                   .filterResults[
-                                                                              index].nanoId));
+                                                                              index].nanoId, taskName: 'taskParticipation',));
                                                                     }),
                                                             ],
                                                           ));
