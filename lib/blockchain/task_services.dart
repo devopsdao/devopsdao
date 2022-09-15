@@ -48,7 +48,8 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
 
-  late Map<String, Map<String, Map<String, String>>> transactionStatuses;
+  Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
+
 
   var credentials;
   EthereumAddress? publicAddress;

@@ -93,8 +93,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter();
+    }
+    if (tasksServices.ownAddress != null) {
+      _isFloatButtonVisible = true;
     }
 
     return Scaffold(
@@ -141,7 +145,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
         elevation: 2,
       ),
       backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: _isFloatButtonVisible ? FloatingActionButton(
         onPressed: () async {
           await Navigator.push(
             context,
@@ -157,7 +161,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
           color: Color(0xFFFCFCFC),
           size: 28,
         ),
-      ),
+      ) : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
