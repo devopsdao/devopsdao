@@ -766,6 +766,9 @@ class TasksServices extends ChangeNotifier {
     print(title);
     // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
+      transactionStatuses[nanoId] = {
+        'addTask': {'status': 'initial', 'txn': 'initial'}
+      };
       late int priceInGwei = (double.parse(price) * 1000000000).toInt();
       late double priceInDouble = double.parse(price);
       final BigInt priceInBigInt = BigInt.from(priceInDouble * 1e6);
@@ -778,27 +781,27 @@ class TasksServices extends ChangeNotifier {
 
       if (taskTokenSymbol == 'ETH') {
         txn = await web3Transaction(
-            _creds,
-            Transaction.callContract(
-              from: ownAddress,
-              contract: _deployedContract,
-              function: _createTask,
-              parameters: [
-                nanoId,
-                title,
-                description,
-                taskTokenSymbol,
-                priceInBigInt,
-              ],
-              // gasPrice: EtherAmount.inWei(BigInt.one),
-              // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              //     .getValueInUnit(EtherUnit.gwei)
-              //     .toInt(),
-              // value: priceInGwei
-              value: EtherAmount.fromUnitAndValue(
-                  EtherUnit.gwei, priceInGwei.toInt()),
-            ),
-            chainId: _chainId);
+          _creds,
+          Transaction.callContract(
+            from: ownAddress,
+            contract: _deployedContract,
+            function: _createTask,
+            parameters: [
+              nanoId,
+              title,
+              description,
+              taskTokenSymbol,
+              priceInBigInt,
+            ],
+            // gasPrice: EtherAmount.inWei(BigInt.one),
+            // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+            //     .getValueInUnit(EtherUnit.gwei)
+            //     .toInt(),
+            // value: priceInGwei
+            value: EtherAmount.fromUnitAndValue(
+                EtherUnit.gwei, priceInGwei.toInt()),
+          ),
+          chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
         txn = await web3Transaction(
             _creds,
@@ -838,6 +841,9 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> taskParticipation(
       EthereumAddress contractAddress, String nanoId) async {
+    transactionStatuses[nanoId] = {
+      'taskParticipation': {'status': 'initial', 'txn': 'initial'}
+    };
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
     // lastTxn = 'pending';
@@ -880,6 +886,9 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
       EthereumAddress participiantAddress, String state, String nanoId) async {
+    transactionStatuses[nanoId] = {
+      'taskParticipation': {'status': 'initial', 'txn': 'initial'}
+    };
     // lastTxn = 'pending';
     late String txn;
     txn = await web3Transaction(

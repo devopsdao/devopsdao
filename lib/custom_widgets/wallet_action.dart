@@ -4,6 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../blockchain/task_services.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
@@ -27,28 +28,29 @@ class _WalletAction extends State<WalletAction> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.transactionStatuses[widget.nanoId] != null) {
-      if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]![
-              'status'] ==
-          'confirmed') {
-        transactionStagesPending = 'done';
-        transactionStagesConfirmed = 'done';
-        transactionStagesMinted = 'loading';
-        transactionStagesApprove = 'initial';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]![
-              widget.taskName]!['status'] ==
-          'minted') {
-        transactionStagesMinted = 'done';
-        transactionStagesApprove = 'loading';
-        if (tasksServices.taskTokenSymbol == 'ETH') {
-          transactionStagesApprove = 'done';
-        } else {
-          transactionStagesApprove = 'approve';
-        }
-      } else if (tasksServices.transactionStatuses[widget.nanoId]![
-              widget.taskName]!['status'] ==
-          'something') {}
-    }
+    // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
+    //
+    // }
+    if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]
+            ?['status'] ==
+        'confirmed') {
+      transactionStagesPending = 'done';
+      transactionStagesConfirmed = 'done';
+      transactionStagesMinted = 'loading';
+      transactionStagesApprove = 'initial';
+    } else if (tasksServices
+            .transactionStatuses[widget.nanoId]![widget.taskName]!['status'] ==
+        'minted') {
+      transactionStagesMinted = 'done';
+      transactionStagesApprove = 'loading';
+      if (tasksServices.taskTokenSymbol == 'ETH') {
+        transactionStagesApprove = 'done';
+      } else {
+        transactionStagesApprove = 'approve';
+      }
+    } else if (tasksServices
+            .transactionStatuses[widget.nanoId]![widget.taskName]!['status'] ==
+        'something') {}
 
     return AlertDialog(
       // title: Text('Connect your wallet'),
@@ -80,7 +82,9 @@ class _WalletAction extends State<WalletAction> {
                       ),
                       child: Column(
                         children: [
-                          if (tasksServices.lastTxn == 'rejected')
+                          if (tasksServices.transactionStatuses[widget.nanoId]![
+                                  widget.taskName]!['txn'] ==
+                              'rejected')
                             Row(
                               children: [
                                 Container(
@@ -111,7 +115,9 @@ class _WalletAction extends State<WalletAction> {
                           //   style: Theme.of(context).textTheme.bodyText1,
                           //   textAlign: TextAlign.center,
                           // )
-                          else if (tasksServices.lastTxn == 'failed')
+                          else if (tasksServices.transactionStatuses[
+                                  widget.nanoId]![widget.taskName]!['txn'] ==
+                              'failed')
                             Row(
                               children: [
                                 Container(
@@ -136,228 +142,233 @@ class _WalletAction extends State<WalletAction> {
                                   ),
                                 ),
                               ],
-                            ),
+                            )
                           // Text(
                           //   'Transaction has failed, please retry',
                           //   style: Theme.of(context).textTheme.bodyText1,
                           //   textAlign: TextAlign.center,
                           // )
-                          // else if (tasksServices.lastTxn == 'minted' ||
-                          //       tasksServices.lastTxn.length == 66 ||
-                          //       tasksServices.lastTxn == 'pending')
-
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                      width: 45,
-                                      height: 45,
-                                      child: Row(
-                                        children: [
-                                          if (transactionStagesPending ==
-                                              'initial')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.black26,
-                                            )
-                                          else if (transactionStagesPending ==
-                                              'loading')
-                                            LoadingAnimationWidget
-                                                .threeRotatingDots(
-                                              color: Colors.black54,
-                                              size: 30,
-                                            )
-                                          else if (transactionStagesPending ==
-                                              'done')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.green,
-                                            )
-                                        ],
-                                      )),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Confirm the transaction',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      textAlign: TextAlign.center,
+                          else if (tasksServices.transactionStatuses[widget
+                                      .nanoId]![widget.taskName]!['txn'] !=
+                                  'failed' ||
+                              tasksServices.transactionStatuses[widget.nanoId]![
+                                      widget.taskName]!['txn'] !=
+                                  'rejected')
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: 45,
+                                        height: 45,
+                                        child: Row(
+                                          children: [
+                                            if (transactionStagesPending ==
+                                                'initial')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.black26,
+                                              )
+                                            else if (transactionStagesPending ==
+                                                'loading')
+                                              LoadingAnimationWidget
+                                                  .threeRotatingDots(
+                                                color: Colors.black54,
+                                                size: 30,
+                                              )
+                                            else if (transactionStagesPending ==
+                                                'done')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.green,
+                                              )
+                                          ],
+                                        )),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Confirm the transaction',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                      width: 45,
-                                      height: 45,
-                                      child: Row(
-                                        children: [
-                                          if (transactionStagesConfirmed ==
-                                              'initial')
-                                            // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.black26,
-                                            )
-                                          else if (transactionStagesConfirmed ==
-                                              'done')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.green,
-                                            )
-                                        ],
-                                      )),
-                                  Center(
-                                    child: Text(
-                                      'Transaction confirmed',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      textAlign: TextAlign.center,
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: 45,
+                                        height: 45,
+                                        child: Row(
+                                          children: [
+                                            if (transactionStagesConfirmed ==
+                                                'initial')
+                                              // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.black26,
+                                              )
+                                            else if (transactionStagesConfirmed ==
+                                                'done')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.green,
+                                              )
+                                          ],
+                                        )),
+                                    Center(
+                                      child: Text(
+                                        'Transaction confirmed',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                      width: 45,
-                                      height: 45,
-                                      child: Row(
-                                        children: [
-                                          if (transactionStagesMinted ==
-                                              'initial')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.black26,
-                                            )
-                                          else if (transactionStagesMinted ==
-                                              'loading')
-                                            LoadingAnimationWidget
-                                                .threeRotatingDots(
-                                              color: Colors.black54,
-                                              size: 30,
-                                            )
-                                          else if (transactionStagesMinted ==
-                                              'done')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.green,
-                                            )
-                                        ],
-                                      )),
-                                  Container(
-                                    child: Text(
-                                      'Minted in the blockchain',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              Row(
-                                children: [
-                                  Container(
-                                      width: 45,
-                                      height: 45,
-                                      child: Row(
-                                        children: [
-                                          if (transactionStagesApprove ==
-                                              'initial')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.black26,
-                                            )
-                                          else if (transactionStagesApprove ==
-                                                  'loading' ||
-                                              transactionStagesApprove ==
-                                                  'approve')
-                                            LoadingAnimationWidget
-                                                .threeRotatingDots(
-                                              color: Colors.black54,
-                                              size: 30,
-                                            )
-                                          else if (transactionStagesApprove ==
-                                              'done')
-                                            Icon(
-                                              Icons.task_alt,
-                                              size: 30.0,
-                                              color: Colors.green,
-                                            )
-                                        ],
-                                      )),
-                                  if (transactionStagesApprove == 'initial')
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: 45,
+                                        height: 45,
+                                        child: Row(
+                                          children: [
+                                            if (transactionStagesMinted ==
+                                                'initial')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.black26,
+                                              )
+                                            else if (transactionStagesMinted ==
+                                                'loading')
+                                              LoadingAnimationWidget
+                                                  .threeRotatingDots(
+                                                color: Colors.black54,
+                                                size: 30,
+                                              )
+                                            else if (transactionStagesMinted ==
+                                                'done')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.green,
+                                              )
+                                          ],
+                                        )),
                                     Container(
                                       child: Text(
-                                        'Token transaction approved',
+                                        'Minted in the blockchain',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1,
                                         textAlign: TextAlign.left,
                                       ),
                                     ),
-                                  if (transactionStagesApprove == 'approve')
-                                    Container(
-                                      child: Text(
-                                        'Please approve token transaction!',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  if (transactionStagesApprove == 'done')
-                                    Container(
-                                      child: Text(
-                                        'Token transaction approved',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                ],
-                              ),
+                                  ],
+                                ),
 
-                              // Container(
-                              //
-                              //     // width: 45,
-                              //     height:  35,
-                              //     child: Row(
-                              //
-                              //       mainAxisAlignment: MainAxisAlignment.center,
-                              //       crossAxisAlignment: CrossAxisAlignment.center,
-                              //       children: [
-                              //         if(tasksServices.lastTxn != 'minted')
-                              //         Padding(
-                              //           padding: const EdgeInsets.only(
-                              //             top: 25,
-                              //             // left: 17,
-                              //             // right: 17,
-                              //             // bottom: 16,
-                              //         ),
-                              //           child: LoadingAnimationWidget.prograssiveDots(
-                              //             color: Colors.black54,
-                              //             size: 44,
-                              //           ),
-                              //         )
-                              //         //
-                              //
-                              //       ],
-                              //     )
-                              // ),
-                            ],
-                          )
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: 45,
+                                        height: 45,
+                                        child: Row(
+                                          children: [
+                                            if (transactionStagesApprove ==
+                                                'initial')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.black26,
+                                              )
+                                            else if (transactionStagesApprove ==
+                                                    'loading' ||
+                                                transactionStagesApprove ==
+                                                    'approve')
+                                              LoadingAnimationWidget
+                                                  .threeRotatingDots(
+                                                color: Colors.black54,
+                                                size: 30,
+                                              )
+                                            else if (transactionStagesApprove ==
+                                                'done')
+                                              Icon(
+                                                Icons.task_alt,
+                                                size: 30.0,
+                                                color: Colors.green,
+                                              )
+                                          ],
+                                        )),
+                                    if (transactionStagesApprove == 'initial')
+                                      Container(
+                                        child: Text(
+                                          'Token transaction approved',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    if (transactionStagesApprove == 'approve')
+                                      Container(
+                                        child: Text(
+                                          'Please approve token transaction!',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    if (transactionStagesApprove == 'done')
+                                      Container(
+                                        child: Text(
+                                          'Token transaction approved',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+
+                                // Container(
+                                //
+                                //     // width: 45,
+                                //     height:  35,
+                                //     child: Row(
+                                //
+                                //       mainAxisAlignment: MainAxisAlignment.center,
+                                //       crossAxisAlignment: CrossAxisAlignment.center,
+                                //       children: [
+                                //         if(tasksServices.lastTxn != 'minted')
+                                //         Padding(
+                                //           padding: const EdgeInsets.only(
+                                //             top: 25,
+                                //             // left: 17,
+                                //             // right: 17,
+                                //             // bottom: 16,
+                                //         ),
+                                //           child: LoadingAnimationWidget.prograssiveDots(
+                                //             color: Colors.black54,
+                                //             size: 44,
+                                //           ),
+                                //         )
+                                //         //
+                                //
+                                //       ],
+                                //     )
+                                // ),
+                              ],
+                            )
                         ],
                       ))
                 ],
