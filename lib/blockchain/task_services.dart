@@ -50,7 +50,6 @@ class TasksServices extends ChangeNotifier {
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
-
   var credentials;
   EthereumAddress? publicAddress;
   var transactionTester;
@@ -783,7 +782,13 @@ class TasksServices extends ChangeNotifier {
               from: ownAddress,
               contract: _deployedContract,
               function: _createTask,
-              parameters: [title, description],
+              parameters: [
+                nanoId,
+                title,
+                description,
+                taskTokenSymbol,
+                priceInBigInt,
+              ],
               // gasPrice: EtherAmount.inWei(BigInt.one),
               // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
               //     .getValueInUnit(EtherUnit.gwei)
@@ -801,11 +806,11 @@ class TasksServices extends ChangeNotifier {
               contract: _deployedContract,
               function: _createTask,
               parameters: [
+                nanoId,
                 title,
                 description,
                 taskTokenSymbol,
-                priceInBigInt,
-                nanoId
+                priceInBigInt
               ],
               // gasPrice: EtherAmount.inWei(BigInt.one),
               // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
@@ -820,8 +825,9 @@ class TasksServices extends ChangeNotifier {
       isLoading = false;
       isLoadingBackground = true;
       lastTxn = txn;
-      transactionStatuses[nanoId]!['addTask']!['status'] = 'confirmed';
-      transactionStatuses[nanoId]!['addTask']!['txn'] = txn;
+      transactionStatuses[nanoId] = {
+        'addTask': {'status': 'confirmed', 'txn': txn}
+      };
       notifyListeners();
       // fetchTasks();
       tellMeHasItMined(txn, 'addTask', nanoId);

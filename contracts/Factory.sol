@@ -31,9 +31,9 @@ contract Factory {
     event OneEventForAll(address contractAdr, uint256 index);
 
     event JobContractCreated(
+        string nanoId,
         address jobAddress,
         address jobOwner,
-        string nanoId,
         string title,
         string description,
         string symbol,
@@ -50,7 +50,7 @@ contract Factory {
 
     // function indexCalculation(string memory _state) public returns (uint256) {}
 
-    function createJobContract(string memory _title, string memory _description, string memory _symbol, uint256 _amount, string memory _nanoId)
+    function createJobContract(string memory _nanoId, string memory _title, string memory _description, string memory _symbol, uint256 _amount)
     external
     payable
     {
@@ -63,14 +63,16 @@ contract Factory {
             msg.sender
         );
 
-        address tokenAddress = gateway.tokenAddresses(_symbol);
-        // amount = IERC20(tokenAddress).balanceOf(contractAddress);
-        IERC20(tokenAddress).transferFrom(msg.sender, address(job), _amount);
+        // if (keccak256(bytes(_symbol)) != keccak256(bytes("ETH"))) {
+        //     address tokenAddress = gateway.tokenAddresses(_symbol);
+        //     // amount = IERC20(tokenAddress).balanceOf(contractAddress);
+        //     IERC20(tokenAddress).transferFrom(msg.sender, address(job), _amount);
+        // }
         // IERC20(tokenAddress).approve(address(gateway), _amount);
 
         jobArray.push(job);
         countNew++;
-        emit JobContractCreated(address(job), msg.sender, _nanoId, _title, _description, _symbol, _amount);
+        emit JobContractCreated(_nanoId, address(job), msg.sender, _title, _description, _symbol, _amount);
         emit OneEventForAll(address(job), job.index());
     }
 
