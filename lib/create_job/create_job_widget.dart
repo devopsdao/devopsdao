@@ -288,7 +288,6 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                   SelectTokenMenu(),
                   Spacer(),
                   FFButtonWidget(
-
                     onPressed: () {
                       final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
                       tasksServices.addTask(
@@ -299,8 +298,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       );
                       Navigator.pop(context);
                       showDialog(
-                          context: context,
-                          builder: (context) => WalletAction(nanoId)
+                        context: context,
+                        builder:  (context) => WalletAction(nanoId: nanoId)
                       );
                     },
                     text: 'Submit',

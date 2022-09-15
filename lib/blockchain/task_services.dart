@@ -11,6 +11,7 @@ import 'package:throttling/throttling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
+import '../custom_widgets/wallet_action.dart';
 import 'Factory.g.dart';
 import 'IERC20.g.dart';
 import 'task.dart';
@@ -828,9 +829,11 @@ class TasksServices extends ChangeNotifier {
       transactionStatuses[nanoId] = {
         'addTask': {'status': 'confirmed', 'txn': txn}
       };
-      notifyListeners();
+
       // fetchTasks();
       tellMeHasItMined(txn, 'addTask', nanoId);
+      WalletAction(nanoId: nanoId);
+      notifyListeners();
     }
   }
 

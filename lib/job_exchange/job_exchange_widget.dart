@@ -439,7 +439,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                           context:
                                                                               context,
                                                                           builder: (context) =>
-                                                                              WalletAction(tasksServices
+                                                                              WalletAction(nanoId: tasksServices
                                                                                   .filterResults[
                                                                               index].nanoId));
                                                                     }),

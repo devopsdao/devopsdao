@@ -11,7 +11,7 @@ import 'package:devopsdao/blockchain/task_services.dart';
 
 class WalletAction extends StatefulWidget {
   final String nanoId;
-  const WalletAction(this.nanoId, {Key? key}) : super(key: key);
+  const WalletAction({Key? key, required this.nanoId}) : super(key: key);
 
   @override
   _WalletAction createState() => _WalletAction();
@@ -26,7 +26,7 @@ class _WalletAction extends State<WalletAction> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.transactionStatuses[tasksServices.lastTxn] == 'confirmed') {
+    if (tasksServices.transactionStatuses[widget.nanoId] == 'confirmed') {
       transactionStagesPending = 'done';
       transactionStagesConfirmed = 'done';
       transactionStagesMinted = 'loading';
