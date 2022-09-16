@@ -97,6 +97,8 @@ class TasksServices extends ChangeNotifier {
 
   bool isDeviceConnected = false;
 
+  late IERC20 ierc20;
+
   // faucet m's key:
   // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
 // r's key
@@ -148,6 +150,7 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     // await getCredentials();
     await getDeployedContract();
+
     //await withdrawToChain(contractAddress);
   }
 
@@ -320,18 +323,18 @@ class TasksServices extends ChangeNotifier {
       {BlockNum? atBlock}) async {
     var response;
     try {
-      EthereumAddress contractAddress =
-          EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
-      if (symbol == 'WETH') {
-        contractAddress = EthereumAddress.fromHex(
-            '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
-      } else if (symbol == 'aUSDC') {
-        contractAddress = EthereumAddress.fromHex(
-            '0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
-      }
+      // EthereumAddress contractAddress =
+      //     EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
+      // if (symbol == 'WETH') {
+      //   contractAddress = EthereumAddress.fromHex(
+      //       '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
+      // } else if (symbol == 'aUSDC') {
+      //   contractAddress = EthereumAddress.fromHex(
+      //       '0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+      // }
 
-      IERC20 ierc20 = IERC20(
-          address: contractAddress, client: _web3client, chainId: _chainId);
+      // IERC20 ierc20 = IERC20(
+      //     address: contractAddress, client: _web3client, chainId: _chainId);
 
       response = await ierc20.balanceOf(address);
     } catch (e) {
@@ -421,6 +424,22 @@ class TasksServices extends ChangeNotifier {
     // );
     // throttledFunction();
 
+    // EthereumAddress tokenContractAddress = EthereumAddress.fromHex(
+    //     '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca'); //default to WETH
+    // if (symbol == 'WETH') {
+    //   tokenContractAddress =
+    //       EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
+    // } else if (symbol == 'aUSDC') {
+    //   tokenContractAddress =
+    //       EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+    // }
+
+    EthereumAddress tokenContractAddress =
+        EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+
+    ierc20 = IERC20(
+        address: tokenContractAddress, client: _web3client, chainId: _chainId);
+
     thr = Throttling(duration: const Duration(seconds: 20));
     thr.throttle(() {
       fetchTasks();
@@ -482,6 +501,25 @@ class TasksServices extends ChangeNotifier {
         transactionStatuses[event.nanoId]!['task'] = {
           'jobAddress': event.jobAddress.toString()
         };
+        //notifyListeners();
+      }
+      // await fetchTasks();
+    });
+
+    // EthereumAddress contractAddress =
+    //     EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+    // IERC20 ierc20 = IERC20(
+    //     address: contractAddress, client: _web3client, chainId: _chainId);
+    final subscription3 = ierc20.approvalEvents().listen((event) async {
+      print(
+          'received event approvalEvents ${event.owner} spender ${event.spender} value ${event.value}');
+      if (event.owner == ownAddress) {
+        // lastJobContract = event.jobAddress;
+        // transactionStatuses[event.nanoId]!['task'] = {
+        //   'jobAddress': event.jobAddress.toString()
+        // };
+
+        print(event.owner);
         //notifyListeners();
       }
       // await fetchTasks();
@@ -750,25 +788,20 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> approveSpend(EthereumAddress _contractAddress,
-      EthereumAddress ownAddress, String symbol, BigInt amount) async {
-    EthereumAddress tokenContractAddress = EthereumAddress.fromHex(
-        '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca'); //default to WETH
-    if (symbol == 'WETH') {
-      tokenContractAddress =
-          EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
-    } else if (symbol == 'aUSDC') {
-      tokenContractAddress =
-          EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
-    }
-    final ierc20 = IERC20(
-        address: tokenContractAddress, client: _web3client, chainId: _chainId);
+  Future<void> approveSpend(
+      EthereumAddress _contractAddress,
+      EthereumAddress ownAddress,
+      String symbol,
+      BigInt amount,
+      String nanoId) async {
     final transaction = Transaction(
       from: ownAddress,
     );
     final result = await ierc20.approve(_contractAddress, amount,
         credentials: _creds, transaction: transaction);
     print(result);
+    await tellMeHasItMined(result, 'addTask', nanoId);
+    print('mined');
   }
 
   String taskTokenSymbol = 'ETH';
@@ -814,8 +847,8 @@ class TasksServices extends ChangeNotifier {
             ),
             chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
-        await approveSpend(
-            _contractAddress, ownAddress!, taskTokenSymbol, priceInBigInt);
+        await approveSpend(_contractAddress, ownAddress!, taskTokenSymbol,
+            priceInBigInt, nanoId);
         txn = await web3Transaction(
             _creds,
             Transaction.callContract(
@@ -829,8 +862,8 @@ class TasksServices extends ChangeNotifier {
                 taskTokenSymbol,
                 priceInBigInt
               ],
-              gasPrice: EtherAmount.inWei(BigInt.one),
-              maxGas: 100000,
+              // gasPrice: EtherAmount.inWei(BigInt.one),
+              // maxGas: 100000,
               // value: priceInGwei
               // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
             ),
