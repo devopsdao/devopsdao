@@ -23,8 +23,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
     with TickerProviderStateMixin {
   TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
-  // TextEditingController? valueController;
-  TextEditingController valueController = TextEditingController();
+  TextEditingController? valueController;
+  // TextEditingController valueController = TextEditingController();
   double _currentPriceValue = 0.0;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -54,7 +54,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
     );
     descriptionController = TextEditingController();
     titleFieldController = TextEditingController();
-    // valueController = TextEditingController();
+    valueController = TextEditingController();
   }
 
   @override
@@ -279,7 +279,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                         onChanged: (double value) {
                           setState(() {
                             _currentPriceValue = value;
-                            valueController.text = value.toString();
+                            valueController!.text = value.toString();
                           });
                         },
                       ),
@@ -293,7 +293,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       tasksServices.addTask(
                         titleFieldController!.text,
                         descriptionController!.text,
-                        valueController.text,
+                        valueController!.text,
                         nanoId
                       );
                       Navigator.pop(context);
