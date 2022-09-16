@@ -78,15 +78,13 @@ module.exports = {
     },
 
     moonbase: {
-      provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f`),
+      provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81`),
+      // provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f`),
       network_id: 1287,       // Moonbase's id
-      gas: 5500000,        // Moonbase has a lower block limit than mainnet
-      confirmations: 1,    // # of confs to wait between deployments. (default: 0)
+      gas: 5500000,        // Ropsten has a lower block limit than mainnet
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-      skipDryRun: true,
-      websocket: true,
-      timeoutBlocks: 900000,
-      networkCheckTimeout: 900000000     // Skip dry run before migrations? (default: false for public nets )
+      skipDryRun: true     
     },
     // Useful for private networks
     // private: {

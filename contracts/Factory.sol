@@ -367,12 +367,12 @@ contract Job {
                 // do nothing
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
                 participantAddress.transfer(contractAddress.balance);
-            } else if (keccak256(symbolBytes) == keccak256(bytes("WETH")) && keccak256(chainBytes) != keccak256(bytes("Moonbase"))) {
+            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) != keccak256(bytes("Moonbase"))) {
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
                 IERC20(_addressToSend).approve(address(gateway), contractAddress.balance);
-                gateway.sendToken(chain, toAsciiString(_addressToSend), "WETH", contractAddress.balance);
+                gateway.sendToken(chain, toAsciiString(_addressToSend), "aUSDC", contractAddress.balance);
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC"))) {
                 address tokenAddress = gateway.tokenAddresses(symbol);
                 amount = IERC20(tokenAddress).balanceOf(contractAddress);
