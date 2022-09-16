@@ -81,12 +81,12 @@ module.exports = {
       provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f`),
       network_id: 1287,       // Moonbase's id
       gas: 5500000,        // Moonbase has a lower block limit than mainnet
-      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      confirmations: 1,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true,
       websocket: true,
-      timeoutBlocks: 90000,
-      networkCheckTimeout: 90000000     // Skip dry run before migrations? (default: false for public nets )
+      timeoutBlocks: 900000,
+      networkCheckTimeout: 900000000     // Skip dry run before migrations? (default: false for public nets )
     },
     // Useful for private networks
     // private: {

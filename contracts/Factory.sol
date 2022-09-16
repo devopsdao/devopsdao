@@ -63,11 +63,11 @@ contract Factory {
             msg.sender
         );
 
-        // if (keccak256(bytes(_symbol)) != keccak256(bytes("ETH"))) {
-        //     address tokenAddress = gateway.tokenAddresses(_symbol);
-        //     // amount = IERC20(tokenAddress).balanceOf(contractAddress);
-        //     IERC20(tokenAddress).transferFrom(msg.sender, address(job), _amount);
-        // }
+        if (keccak256(bytes(_symbol)) != keccak256(bytes("ETH"))) {
+            address tokenAddress = gateway.tokenAddresses(_symbol);
+            // amount = IERC20(tokenAddress).balanceOf(contractAddress);
+            IERC20(tokenAddress).transferFrom(msg.sender, address(job), _amount);
+        }
         // IERC20(tokenAddress).approve(address(gateway), _amount);
 
         jobArray.push(job);
