@@ -392,6 +392,10 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                         ),
                       ),
                       actions: [
+                        TextButton(
+                          child: Text('Topup contract'),
+                          onPressed: () => Navigator.pop(context),
+                          style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),),
                         TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
                         if (widget.obj[index].jobState == 'review')
                           TextButton(

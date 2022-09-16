@@ -222,7 +222,8 @@ class _WalletAction extends State<WalletAction> {
                                     ),
                                   ],
                                 ),
-
+                                // Prevent to show *Token transaction approved* for other
+                                if(tasksServices.transactionStatuses[widget.nanoId]!.containsKey("addTask"))
                                 Row(
                                   children: [
                                     Container(
@@ -242,6 +243,7 @@ class _WalletAction extends State<WalletAction> {
                                           ],
                                         )
                                     ),
+
                                     if(transactionStagesApprove == 'initial')
                                     Container(
                                       child: Text(

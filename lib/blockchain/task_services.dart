@@ -887,7 +887,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
       EthereumAddress participiantAddress, String state, String nanoId) async {
     transactionStatuses[nanoId] = {
-      'taskParticipation': {'status': 'initial', 'txn': 'initial'}
+      'changeTaskStatus': {'status': 'initial', 'txn': 'initial'}
     };
     // lastTxn = 'pending';
     late String txn;
