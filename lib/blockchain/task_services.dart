@@ -829,10 +829,8 @@ class TasksServices extends ChangeNotifier {
                 taskTokenSymbol,
                 priceInBigInt
               ],
-              // gasPrice: EtherAmount.inWei(BigInt.one),
-              // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              //     .getValueInUnit(EtherUnit.gwei)
-              //     .toInt(),
+              gasPrice: EtherAmount.inWei(BigInt.one),
+              maxGas: 100000,
               // value: priceInGwei
               // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
             ),
