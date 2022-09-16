@@ -83,7 +83,7 @@ module.exports = {
       network_id: 1287,       // Moonbase's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
-      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      timeoutBlocks: 0,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true     
     },
     // Useful for private networks
