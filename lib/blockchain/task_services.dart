@@ -588,22 +588,33 @@ class TasksServices extends ChangeNotifier {
         }
         var temp;
         var value;
+        double? ethBalancePrecise;
+        double? ethBalanceToken;
         try {
           temp = await web3Call(
               contract: _deployedContract,
               function: _tasks,
               params: [BigInt.from(i)]);
           print(temp);
-          value = await web3Call(
-              contract: _deployedContract,
-              function: _getBalance,
-              params: [BigInt.from(temp[6].toInt())]);
+          if (temp[10] == 'ETH') {
+            value = await web3Call(
+                contract: _deployedContract,
+                function: _getBalance,
+                params: [BigInt.from(temp[6].toInt())]);
+            final BigInt weiBalance = value[0];
+            ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+          } else {
+            final BigInt weiBalanceToken =
+                await web3GetBalanceToken(ownAddress!, temp[10]);
+            final ethBalancePreciseToken =
+                weiBalanceToken.toDouble() / pow(10, 6);
+            ethBalanceToken =
+                (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+          }
         } catch (e) {
           print(e);
         }
 
-        final BigInt weiBalance = value[0];
-        final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
         // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
 
         // print(value);
