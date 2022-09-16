@@ -142,19 +142,21 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                         ),
                       ],
                     ),
-
-                    tasksServices.isLoading ?
-                    LoadIndicator()
-                        :
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          myPerformerTabWidget (obj: tasksServices.tasksWithMyParticipation),
-                          myPerformerTabWidget (obj: tasksServices.tasksPerformer),
-                          myPerformerTabWidget (obj: tasksServices.tasksDonePerformer),
-                        ],
-                      ),
-                    ),
+                    tasksServices.isLoading
+                        ? LoadIndicator()
+                        : Expanded(
+                            child: TabBarView(
+                              children: [
+                                myPerformerTabWidget(
+                                    obj:
+                                        tasksServices.tasksWithMyParticipation),
+                                myPerformerTabWidget(
+                                    obj: tasksServices.tasksPerformer),
+                                myPerformerTabWidget(
+                                    obj: tasksServices.tasksDonePerformer),
+                              ],
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -166,10 +168,10 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
   }
 }
 
-
 class myPerformerTabWidget extends StatefulWidget {
   final obj;
-  const myPerformerTabWidget({Key? key,
+  const myPerformerTabWidget({
+    Key? key,
     this.obj,
   }) : super(key: key);
 
@@ -194,314 +196,419 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
             itemCount: widget.obj.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(
-                    16, 8, 16, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: InkWell(
-                  onTap: () {
-                    // setState(() {
-                    //   // Toggle light when tapped.
-                    // });
-                    // if (obj[index].jobState != "new")
-                    showDialog(context: context, builder: (context) => AlertDialog(
-                      title: Text(widget.obj[index].title),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            RichText(text: TextSpan(
-                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Description: \n',
-                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  TextSpan(text: widget.obj[index].description)
-                                ]
-                            )),
-                            RichText(text: TextSpan(
-                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Contract value: \n',
-                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                      text: widget.obj[index].contractValue.toString() + ' Eth',
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                ]
-                            )),
-                            RichText(text: TextSpan(
-                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Contract owner: \n',
-                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                      text: widget.obj[index].contractOwner.toString(),
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                ]
-                            )),
-                            RichText(text: TextSpan(
-                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Contract address: \n',
-                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                      text: widget.obj[index].contractAddress.toString(),
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7)
-                                  )
-                                ]
-                            )),
-                            RichText(text: TextSpan(
-                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Created: ',
-                                      style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                      text: DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)
-                                  )
-                                ]
-                            )),
-                            if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
-                              SelectNetworkMenu()
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        TextButton(child: Text('Close'), onPressed: () => Navigator.pop(context)),
-                        if (widget.obj[index].jobState == "agreed")
-                        TextButton(
-                          child: Text('Start the job'),
-                          style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                          onPressed: () {
-                            setState(() {
-                              widget.obj[index].justLoaded = false;
-                            });
-                            tasksServices.changeTaskStatus(
-                              widget.obj[index].contractAddress,
-                              widget.obj[index].participiant,
-                            'progress',
-                            widget.obj[index].nanoId);
-                            Navigator.pop(context);
+                    onTap: () {
+                      // setState(() {
+                      //   // Toggle light when tapped.
+                      // });
+                      // if (obj[index].jobState != "new")
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(widget.obj[index].title),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Description: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget
+                                                    .obj[index].description)
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Contract value: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget.obj[index]
+                                                        .contractValue
+                                                        .toString() +
+                                                    ' Eth',
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor:
+                                                                1.0)),
+                                            TextSpan(
+                                                text: widget.obj[index]
+                                                        .contractValueToken
+                                                        .toString() +
+                                                    ' Token',
+                                                style: DefaultTextStyle.of(
+                                                        context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 1.0))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Contract owner: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget
+                                                    .obj[index].contractOwner
+                                                    .toString(),
+                                                style: DefaultTextStyle.of(
+                                                        context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 0.7))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Contract address: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget
+                                                    .obj[index].contractAddress
+                                                    .toString(),
+                                                style: DefaultTextStyle.of(
+                                                        context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 0.7))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Created: ',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: DateFormat(
+                                                        'MM/dd/yyyy, hh:mm a')
+                                                    .format(widget.obj[index]
+                                                        .createdTime),
+                                                style: DefaultTextStyle.of(
+                                                        context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 1.0))
+                                          ])),
+                                      if (widget.obj[index].jobState ==
+                                              "completed" &&
+                                          widget.obj[index].contractValue != 0)
+                                        SelectNetworkMenu()
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      child: Text('Close'),
+                                      onPressed: () => Navigator.pop(context)),
+                                  if (widget.obj[index].jobState == "agreed")
+                                    TextButton(
+                                        child: Text('Start the job'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.obj[index].justLoaded =
+                                                false;
+                                          });
+                                          tasksServices.changeTaskStatus(
+                                              widget.obj[index].contractAddress,
+                                              widget.obj[index].participiant,
+                                              'progress',
+                                              widget.obj[index].nanoId);
+                                          Navigator.pop(context);
 
-                            showDialog(
-                                context: context,
-                                builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'changeTaskStatus',)
-                            );
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  WalletAction(
+                                                    nanoId: widget
+                                                        .obj[index].nanoId,
+                                                    taskName:
+                                                        'changeTaskStatus',
+                                                  ));
+                                        }),
+                                  if (widget.obj[index].jobState == "progress")
+                                    TextButton(
+                                        child: Text('Review'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.obj[index].justLoaded =
+                                                false;
+                                          });
+                                          tasksServices.changeTaskStatus(
+                                              widget.obj[index].contractAddress,
+                                              widget.obj[index].participiant,
+                                              'review',
+                                              widget.obj[index].nanoId);
+                                          Navigator.pop(context);
 
-                        }),
-                        if (widget.obj[index].jobState == "progress")
-                        TextButton(
-                          child: Text('Review'),
-                          style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                          onPressed: () {
-                            setState(() {
-                              widget.obj[index].justLoaded = false;
-                            });
-                            tasksServices.changeTaskStatus(
-                              widget.obj[index].contractAddress,
-                              widget.obj[index].participiant,
-                              'review',
-                               widget.obj[index].nanoId);
-                            Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  WalletAction(
+                                                    nanoId: widget
+                                                        .obj[index].nanoId,
+                                                    taskName:
+                                                        'changeTaskStatus',
+                                                  ));
+                                        }),
+                                  if (widget.obj[index].jobState ==
+                                          "completed" &&
+                                      widget.obj[index].contractValue != 0)
+                                    TextButton(
+                                        child: Text('Withdraw to Chain'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.obj[index].justLoaded =
+                                                false;
+                                          });
+                                          tasksServices.withdrawToChain(
+                                              widget.obj[index].contractAddress,
+                                              widget.obj[index].nanoId);
+                                          Navigator.pop(context);
 
-                            showDialog(
-                                context: context,
-                                builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'changeTaskStatus',)
-                            );
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  WalletAction(
+                                                    nanoId: widget
+                                                        .obj[index].nanoId,
+                                                    taskName: 'withdrawToChain',
+                                                  ));
+                                        }),
+                                  if (widget.obj[index].jobState ==
+                                          "completed" &&
+                                      widget.obj[index].contractValue != 0)
+                                    TextButton(
+                                        child: Text('Withdraw'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.obj[index].justLoaded =
+                                                false;
+                                          });
+                                          tasksServices.withdraw(
+                                              widget.obj[index].contractAddress,
+                                              widget.obj[index].nanoId);
+                                          Navigator.pop(context);
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  WalletAction(
+                                                    nanoId: widget
+                                                        .obj[index].nanoId,
+                                                    taskName: 'withdraw',
+                                                  ));
+                                        }),
+                                  // if (obj[index].jobState == "Review")
+                                  //   TextButton(child: Text('Review'), onPressed: () {
+                                  //     tasksServices.changeTaskStatus(
+                                  //         obj[index].contractAddress,
+                                  //         obj[index].participiant,
+                                  //         'review');
+                                  //   }),
+                                ],
+                              ));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 86,
+                      decoration: BoxDecoration(
+                        // color: obj[index].jobState != "new" ? Colors.white : Colors.white,
+                        color: (() {
+                          if (widget.obj[index].jobState == "agreed") {
+                            return Colors.orange.shade200;
+                          } else if (widget.obj[index].jobState == "review") {
+                            return Colors.lightGreen.shade200;
+                          } else {
+                            return Colors.white;
                           }
-                        ),
-                        if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
-                          TextButton(
-                              child: Text('Withdraw to Chain'),
-                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                              onPressed: () {
-                                setState(() {
-                                  widget.obj[index].justLoaded = false;
-                                });
-                                tasksServices.withdrawToChain(widget.obj[index].contractAddress, widget.obj[index].nanoId);
-                                Navigator.pop(context);
-
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'withdrawToChain',)
-                                );
-                              }
-                          ),
-                        if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
-                          TextButton(
-                            child: Text('Withdraw'),
-                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                            onPressed: () {
-                              setState(() {
-                                widget.obj[index].justLoaded = false;
-                              });
-                              tasksServices.withdraw(widget.obj[index].contractAddress, widget.obj[index].nanoId);
-                              Navigator.pop(context);
-
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'withdraw',)
-                              );
-                            }
-                          ),
-                        // if (obj[index].jobState == "Review")
-                        //   TextButton(child: Text('Review'), onPressed: () {
-                        //     tasksServices.changeTaskStatus(
-                        //         obj[index].contractAddress,
-                        //         obj[index].participiant,
-                        //         'review');
-                        //   }),
-                      ],
-                    ));
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 86,
-                    decoration:
-                    BoxDecoration(
-                      // color: obj[index].jobState != "new" ? Colors.white : Colors.white,
-                      color: (() {
-                        if (widget.obj[index].jobState == "agreed") {
-                          return Colors.orange.shade200;
-                        } else if (widget.obj[index].jobState == "review") {
-                          return Colors.lightGreen.shade200;
-                        } else {
-                          return Colors.white;
-                        }
-                      }()),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x4D000000),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                            EdgeInsetsDirectional.fromSTEB(
-                                12, 8, 8, 8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-
-                                Row(
-                                  children: [
-                                    Expanded( flex: 7, child:
-                                      Text(
-                                        widget.obj[index].title,
-                                        style: FlutterFlowTheme.of(context).subtitle1,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
+                        }()),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 5,
+                            color: Color(0x4D000000),
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 7,
+                                        child: Text(
+                                          widget.obj[index].title,
+                                          style: FlutterFlowTheme.of(context)
+                                              .subtitle1,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                    ),
-                                    // Spacer(),
-                                    Expanded( flex: 3, child:
-                                      Text(
-                                        widget.obj[index].jobState,
-                                        style: FlutterFlowTheme.of(
-                                            context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                          widget.obj[index].description,
-                                          style: FlutterFlowTheme.of(
-                                              context)
+                                      // Spacer(),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          widget.obj[index].jobState,
+                                          style: FlutterFlowTheme.of(context)
                                               .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
+                                        ),
                                       ),
-                                    )
-                                  ],
-                                ),
-
-                                Row(
-                                  children: [
-                                    Expanded( flex: 7, child:
-                                      Text(
-                                        DateFormat('MM/dd/yyyy, hh:mm a').format(widget.obj[index].createdTime),
-                                        style: FlutterFlowTheme.of(
-                                            context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          widget.obj[index].description,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 7,
+                                        child: Text(
+                                          DateFormat('MM/dd/yyyy, hh:mm a')
+                                              .format(widget
+                                                  .obj[index].createdTime),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                    ),
-                                    // Spacer(),
-                                    Expanded( flex: 3, child:
-                                      Text(
-                                        widget.obj[index].contractValue.toString()
-                                            + ' Eth',
-                                        style: FlutterFlowTheme.of(
-                                            context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
+                                      // Spacer(),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          widget.obj[index].contractValue
+                                                  .toString() +
+                                              ' Eth',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (widget.obj[index].jobState == "new")
-                        Padding(
-                          padding:
-                          EdgeInsetsDirectional.fromSTEB(
-                              0, 0, 18, 0),
-                          child: Badge(
-                            // position: BadgePosition.topEnd(top: 10, end: 10),
-                            badgeContent: Container(
-                              width: 17,
-                              height: 17,
-                              alignment: Alignment.center,
-                              child: Text(
-                                  widget.obj[index].contributorsCount.toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            animationDuration: Duration(milliseconds: 300),
-                            animationType: BadgeAnimationType.scale,
-                            shape: BadgeShape.circle,
-                            borderRadius: BorderRadius.circular(5),
-                            // child: Icon(Icons.settings),
                           ),
-                        ),
-                        if (widget.obj[index].justLoaded == false)
-                        Padding(
-                          padding:
-                          EdgeInsetsDirectional.fromSTEB(
-                              0, 0, 12, 0),
-                          child: CircularProgressIndicator(),
-                        ),
-                      ],
-                    ),
-                  )
-                ),
+                          if (widget.obj[index].jobState == "new")
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 18, 0),
+                              child: Badge(
+                                // position: BadgePosition.topEnd(top: 10, end: 10),
+                                badgeContent: Container(
+                                  width: 17,
+                                  height: 17,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      widget.obj[index].contributorsCount
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                ),
+                                animationDuration: Duration(milliseconds: 300),
+                                animationType: BadgeAnimationType.scale,
+                                shape: BadgeShape.circle,
+                                borderRadius: BorderRadius.circular(5),
+                                // child: Icon(Icons.settings),
+                              ),
+                            ),
+                          if (widget.obj[index].justLoaded == false)
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                              child: CircularProgressIndicator(),
+                            ),
+                        ],
+                      ),
+                    )),
               );
             },
           ),

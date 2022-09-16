@@ -145,23 +145,25 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
         elevation: 2,
       ),
       backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: _isFloatButtonVisible ? FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateJobWidget(),
-            ),
-          );
-        },
-        backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-        elevation: 8,
-        child: Icon(
-          Icons.add,
-          color: Color(0xFFFCFCFC),
-          size: 28,
-        ),
-      ) : null,
+      floatingActionButton: _isFloatButtonVisible
+          ? FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateJobWidget(),
+                  ),
+                );
+              },
+              backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+              elevation: 8,
+              child: Icon(
+                Icons.add,
+                color: Color(0xFFFCFCFC),
+                size: 28,
+              ),
+            )
+          : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -327,6 +329,11 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                             text: tasksServices.filterResults[index].contractValue.toString() +
                                                                                 ' Eth',
                                                                             style:
+                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                                                        TextSpan(
+                                                                            text: tasksServices.filterResults[index].contractValueToken.toString() +
+                                                                                ' Token',
+                                                                            style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                                                       ])),
                                                                   RichText(
@@ -425,13 +432,14 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                             .filterResults[index]
                                                                             .justLoaded = false;
                                                                       });
-                                                                      tasksServices.taskParticipation(tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .contractAddress,
+                                                                      tasksServices.taskParticipation(
                                                                           tasksServices
                                                                               .filterResults[
-                                                                          index].nanoId);
+                                                                                  index]
+                                                                              .contractAddress,
+                                                                          tasksServices
+                                                                              .filterResults[index]
+                                                                              .nanoId);
                                                                       Navigator.pop(
                                                                           context);
 
@@ -439,9 +447,10 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                           context:
                                                                               context,
                                                                           builder: (context) =>
-                                                                              WalletAction(nanoId: tasksServices
-                                                                                  .filterResults[
-                                                                              index].nanoId, taskName: 'taskParticipation',));
+                                                                              WalletAction(
+                                                                                nanoId: tasksServices.filterResults[index].nanoId,
+                                                                                taskName: 'taskParticipation',
+                                                                              ));
                                                                     }),
                                                             ],
                                                           ));
