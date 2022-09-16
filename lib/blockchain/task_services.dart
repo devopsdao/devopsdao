@@ -482,7 +482,7 @@ class TasksServices extends ChangeNotifier {
         transactionStatuses[event.nanoId] = {
           'task': {'jobAddress': event.jobAddress.toString(), 'txn': 'initial'}
         };
-        notifyListeners();
+        //notifyListeners();
         await approveSpend(
             event.jobAddress, ownAddress!, taskTokenSymbol, event.amount);
       }
@@ -827,8 +827,9 @@ class TasksServices extends ChangeNotifier {
       isLoading = false;
       isLoadingBackground = true;
       lastTxn = txn;
-      transactionStatuses[nanoId] = {
-        'addTask': {'status': 'confirmed', 'txn': txn}
+      transactionStatuses[nanoId]!['addTask'] = {
+        'status': 'confirmed',
+        'txn': txn
       };
 
       // fetchTasks();
