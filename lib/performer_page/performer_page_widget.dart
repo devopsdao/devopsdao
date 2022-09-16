@@ -311,7 +311,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                             );
                           }
                         ),
-                        if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
+                        // if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
                           TextButton(
                               child: Text('Withdraw to Chain'),
                               style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
