@@ -483,8 +483,6 @@ class TasksServices extends ChangeNotifier {
           'jobAddress': event.jobAddress.toString()
         };
         //notifyListeners();
-        await approveSpend(
-            event.jobAddress, ownAddress!, taskTokenSymbol, event.amount);
       }
       // await fetchTasks();
     });
@@ -753,8 +751,11 @@ class TasksServices extends ChangeNotifier {
     }
     final ierc20 = IERC20(
         address: tokenContractAddress, client: _web3client, chainId: _chainId);
-    final result =
-        await ierc20.approve(_contractAddress, amount, credentials: _creds);
+    final transaction = Transaction(
+      from: ownAddress,
+    );
+    final result = await ierc20.approve(_contractAddress, amount,
+        credentials: _creds, transaction: transaction);
     print(result);
   }
 
@@ -801,6 +802,8 @@ class TasksServices extends ChangeNotifier {
             ),
             chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
+        await approveSpend(
+            _contractAddress, ownAddress!, taskTokenSymbol, priceInBigInt);
         txn = await web3Transaction(
             _creds,
             Transaction.callContract(
