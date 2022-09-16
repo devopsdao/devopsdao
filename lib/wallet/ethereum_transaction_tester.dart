@@ -36,6 +36,7 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
         nonce: transaction.nonce,
       );
     } catch (e) {
+      print(e.toString());
       if (e.toString() ==
           'JSON-RPC error -32000: User rejected the transaction') {
         hash = 'rejected';

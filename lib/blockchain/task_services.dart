@@ -479,8 +479,8 @@ class TasksServices extends ChangeNotifier {
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
       if (event.jobOwner == ownAddress) {
         // lastJobContract = event.jobAddress;
-        transactionStatuses[event.nanoId] = {
-          'task': {'jobAddress': event.jobAddress.toString(), 'txn': 'initial'}
+        transactionStatuses[event.nanoId]!['task'] = {
+          'jobAddress': event.jobAddress.toString()
         };
         //notifyListeners();
         await approveSpend(
