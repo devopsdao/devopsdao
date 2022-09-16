@@ -400,33 +400,31 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                         'changeTaskStatus',
                                                   ));
                                         }),
-                                  if (widget.obj[index].jobState ==
-                                          "completed" &&
-                                      widget.obj[index].contractValue != 0)
-                                    TextButton(
-                                        child: Text('Withdraw to Chain'),
-                                        style: TextButton.styleFrom(
-                                            primary: Colors.white,
-                                            backgroundColor: Colors.green),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.obj[index].justLoaded =
-                                                false;
-                                          });
-                                          tasksServices.withdrawToChain(
-                                              widget.obj[index].contractAddress,
-                                              widget.obj[index].nanoId);
-                                          Navigator.pop(context);
+                                  // if (widget.obj[index].jobState ==
+                                  //         "completed" &&
+                                  //     widget.obj[index].contractValue != 0)
+                                  TextButton(
+                                      child: Text('Withdraw to Chain'),
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          backgroundColor: Colors.green),
+                                      onPressed: () {
+                                        setState(() {
+                                          widget.obj[index].justLoaded = false;
+                                        });
+                                        tasksServices.withdrawToChain(
+                                            widget.obj[index].contractAddress,
+                                            widget.obj[index].nanoId);
+                                        Navigator.pop(context);
 
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  WalletAction(
-                                                    nanoId: widget
-                                                        .obj[index].nanoId,
-                                                    taskName: 'withdrawToChain',
-                                                  ));
-                                        }),
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => WalletAction(
+                                                  nanoId:
+                                                      widget.obj[index].nanoId,
+                                                  taskName: 'withdrawToChain',
+                                                ));
+                                      }),
                                   if (widget.obj[index].jobState ==
                                           "completed" &&
                                       widget.obj[index].contractValue != 0)
