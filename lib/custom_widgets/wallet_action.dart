@@ -35,7 +35,7 @@ class _WalletAction extends State<WalletAction> {
       transactionStagesConfirmed = 'done';
       transactionStagesMinted = 'loading';
       transactionStagesApprove = 'initial';
-    } else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'minted') {
+    } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'minted') {
       transactionStagesMinted = 'done';
       transactionStagesApprove = 'loading';
       if(tasksServices.taskTokenSymbol == 'ETH') {
@@ -43,12 +43,11 @@ class _WalletAction extends State<WalletAction> {
       } else {
         transactionStagesApprove = 'approve';
       }
-    } else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['status'] == 'something') {
+    } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'something') {
 
     }
 
 
-    print(widget.nanoId);
     return AlertDialog(
       // title: Text('Connect your wallet'),
       content: SingleChildScrollView(
@@ -79,7 +78,7 @@ class _WalletAction extends State<WalletAction> {
                       ),
                       child: Column(
                         children: [
-                          if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] == 'rejected')
+                          if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'rejected')
                             Row(
                               children: [
                                 Container(
@@ -106,7 +105,7 @@ class _WalletAction extends State<WalletAction> {
                             //   style: Theme.of(context).textTheme.bodyText1,
                             //   textAlign: TextAlign.center,
                             // )
-                          else if (tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] == 'failed')
+                          else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'failed')
                               Row(
                                 children: [
                                   Container(
@@ -134,8 +133,8 @@ class _WalletAction extends State<WalletAction> {
                             //   textAlign: TextAlign.center,
                             // )
                           else if (
-                                tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] != 'failed' ||
-                                tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] != 'rejected')
+                                tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'failed' ||
+                                tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'rejected')
 
                             Column(
                               children: [
@@ -224,11 +223,11 @@ class _WalletAction extends State<WalletAction> {
                                 ),
                                 // Prevent to show *Token transaction approved* for other
 
-                                if(!tasksServices.transactionStatuses[widget.nanoId]!.containsKey("taskParticipation") &&
-                                  !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("changeTaskStatus") &&
-                                  !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("withdraw") &&
-                                  !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("withdrawToChain")
-                                )
+                                // if(!tasksServices.transactionStatuses[widget.nanoId].containsKey("taskParticipation") &&
+                                //   !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("changeTaskStatus") &&
+                                //   !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("withdraw") &&
+                                //   !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("withdrawToChain")
+                                // )
                                 Row(
                                   children: [
                                     Container(

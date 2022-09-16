@@ -9,6 +9,8 @@ import { IAxelarGateway } from '@axelar-network/axelar-gmp-sdk-solidity/contract
 import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IERC20.sol';
 import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
 
+error InvalidToken (string token);
+
 contract Factory {
     IAxelarGateway public immutable gateway;
 
@@ -364,6 +366,9 @@ contract Job {
             bytes memory symbolBytes = bytes(symbol);
             bytes memory chainBytes = bytes(chain);
             if (symbolBytes.length == 0) {
+                revert InvalidToken({
+                    token: symbol
+                });
                 // do nothing
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
                 participantAddress.transfer(contractAddress.balance);
@@ -371,13 +376,15 @@ contract Job {
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
-                IERC20(_addressToSend).approve(address(gateway), contractAddress.balance);
-                gateway.sendToken(chain, toAsciiString(_addressToSend), "aUSDC", contractAddress.balance);
+                address tokenAddress = gateway.tokenAddresses(symbol);
+                amount = IERC20(tokenAddress).balanceOf(contractAddress);
+                IERC20(_addressToSend).approve(address(gateway), amount);
+                gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC"))) {
                 address tokenAddress = gateway.tokenAddresses(symbol);
                 amount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).transferFrom(msg.sender, address(this), amount);
-                IERC20(tokenAddress).approve(address(gateway), amount);
+                IERC20(tokenAddress).transferFrom(address(this), participantAddress, amount);
+                // IERC20(tokenAddress).approve(address(gateway), amount);
             }
         }
         // msg.sender.transfer(address(this).balance);

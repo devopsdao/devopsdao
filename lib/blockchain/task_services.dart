@@ -963,6 +963,9 @@ class TasksServices extends ChangeNotifier {
   Future<void> withdraw(EthereumAddress contractAddress, String nanoId) async {
     // lastTxn = 'pending';
     late String txn;
+    transactionStatuses[nanoId] = {
+      'withdraw': {'status': 'initial', 'txn': 'initial'}
+    };
     txn = await web3Transaction(
         _creds,
         Transaction.callContract(
@@ -990,6 +993,9 @@ class TasksServices extends ChangeNotifier {
   Future<void> withdrawToChain(
       EthereumAddress contractAddress, String nanoId) async {
     // lastTxn = 'pending';
+    transactionStatuses[nanoId] = {
+      'withdrawToChain': {'status': 'initial', 'txn': 'initial'}
+    };
     late String txn;
     // const gasLimit = 3e3;
     late int priceInGwei = (30000 * gasPriceValue).toInt();
@@ -1006,7 +1012,7 @@ class TasksServices extends ChangeNotifier {
           from: ownAddress,
           contract: _deployedContract,
           function: _withdrawToChain,
-          parameters: [contractAddress, _contractAddressRopsten, 'Ethereum'],
+          parameters: [contractAddress, _contractAddressRopsten, 'Moonbase'],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)
