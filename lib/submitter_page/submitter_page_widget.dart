@@ -630,6 +630,20 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        widget.obj[index].contractValueToken
+                                                .toString() +
+                                            ' Eth',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
