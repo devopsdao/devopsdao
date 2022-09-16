@@ -168,7 +168,6 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
   }
 }
 
-
 class myPerformerTabWidget extends StatefulWidget {
   final obj;
   const myPerformerTabWidget({
@@ -478,6 +477,100 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                           } else {
                             return Colors.white;
                           }
+<<<<<<< HEAD
+                        ),
+                        // if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
+                          TextButton(
+                              child: Text('Withdraw to Chain'),
+                              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                              onPressed: () {
+                                setState(() {
+                                  widget.obj[index].justLoaded = false;
+                                });
+                                tasksServices.withdrawToChain(widget.obj[index].contractAddress, widget.obj[index].nanoId);
+                                Navigator.pop(context);
+
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'withdrawToChain',)
+                                );
+                              }
+                          ),
+                        if (widget.obj[index].jobState == "completed" && widget.obj[index].contractValue != 0)
+                          TextButton(
+                            child: Text('Withdraw'),
+                            style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                            onPressed: () {
+                              setState(() {
+                                widget.obj[index].justLoaded = false;
+                              });
+                              tasksServices.withdraw(widget.obj[index].contractAddress, widget.obj[index].nanoId);
+                              Navigator.pop(context);
+
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => WalletAction(nanoId: widget.obj[index].nanoId, taskName: 'withdraw',)
+                              );
+                            }
+                          ),
+                        // if (obj[index].jobState == "Review")
+                        //   TextButton(child: Text('Review'), onPressed: () {
+                        //     tasksServices.changeTaskStatus(
+                        //         obj[index].contractAddress,
+                        //         obj[index].participiant,
+                        //         'review');
+                        //   }),
+                      ],
+                    ));
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 86,
+                    decoration:
+                    BoxDecoration(
+                      // color: obj[index].jobState != "new" ? Colors.white : Colors.white,
+                      color: (() {
+                        if (widget.obj[index].jobState == "agreed") {
+                          return Colors.orange.shade200;
+                        } else if (widget.obj[index].jobState == "review") {
+                          return Colors.lightGreen.shade200;
+                        } else {
+                          return Colors.white;
+                        }
+                      }()),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: Color(0x4D000000),
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding:
+                            EdgeInsetsDirectional.fromSTEB(
+                                12, 8, 8, 8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+
+                                Row(
+                                  children: [
+                                    Expanded( flex: 7, child:
+                                      Text(
+                                        widget.obj[index].title,
+                                        style: FlutterFlowTheme.of(context).subtitle1,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+=======
                         }()),
                         boxShadow: [
                           BoxShadow(
@@ -511,6 +604,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                           overflow: TextOverflow.fade,
                                           maxLines: 1,
                                         ),
+>>>>>>> 5e5bef171a084b247444408608851dada1bb4214
                                       ),
                                       // Spacer(),
                                       Expanded(

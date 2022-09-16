@@ -165,8 +165,8 @@ class TasksServices extends ChangeNotifier {
     // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress = EthereumAddress.fromHex(
         jsonABI["networks"][_chainId.toString()]["address"]);
-    // _contractAddressRopsten = EthereumAddress.fromHex(
-    //     jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
+    _contractAddressRopsten = EthereumAddress.fromHex(
+        jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
   }
 
   // var session;
