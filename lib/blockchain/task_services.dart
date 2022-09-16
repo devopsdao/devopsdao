@@ -588,8 +588,8 @@ class TasksServices extends ChangeNotifier {
         }
         var temp;
         var value;
-        double? ethBalancePrecise;
-        double? ethBalanceToken;
+        double ethBalancePrecise = 0;
+        double ethBalanceToken = 0;
         try {
           temp = await web3Call(
               contract: _deployedContract,
@@ -640,6 +640,7 @@ class TasksServices extends ChangeNotifier {
             createdTime:
                 DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
             contractValue: ethBalancePrecise,
+            contractValueToken: ethBalanceToken,
             nanoId: temp[11]);
 
         taskLoaded = temp[6]

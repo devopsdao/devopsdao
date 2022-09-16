@@ -13,6 +13,7 @@ class Task {
   late bool justLoaded;
   final DateTime createdTime;
   final double contractValue;
+  final double contractValueToken;
   final String nanoId;
   Task({
     // required this.id,
@@ -27,6 +28,7 @@ class Task {
     required this.justLoaded,
     required this.createdTime,
     required this.contractValue,
+    required this.contractValueToken,
     required this.nanoId,
   });
 }
