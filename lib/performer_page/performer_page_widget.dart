@@ -401,9 +401,9 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                         'changeTaskStatus',
                                                   ));
                                         }),
-                                  if (widget.obj[index].jobState ==
-                                          "completed" &&
-                                      widget.obj[index].contractValue != 0)
+                                  // if (widget.obj[index].jobState ==
+                                  //         "completed" &&
+                                  //     widget.obj[index].contractValue != 0)
                                     TextButton(
                                         child: Text('Withdraw to Chain'),
                                         style: TextButton.styleFrom(
