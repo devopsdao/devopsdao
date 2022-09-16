@@ -377,13 +377,14 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> listenToEvents() async {
     // final fromBlock = new BlockNum.genesis();
-    final OneEventForAll = _deployedContract.event('OneEventForAll');
+    final JobContractCreated = _deployedContract.event('JobContractCreated');
     final subscription = _web3client
         .events(FilterOptions.events(
-            contract: _deployedContract, event: OneEventForAll))
+            contract: _deployedContract, event: JobContractCreated))
         // .take(10)
         .listen((event) {
-      // final decoded = OneEventForAll.decodeResults(event.topics, event.data);
+      final decoded =
+          JobContractCreated.decodeResults(event.topics!, event.data!);
       //
       // final from = decoded[0] as EthereumAddress;
       // final to = decoded[1] as EthereumAddress;
@@ -473,20 +474,17 @@ class TasksServices extends ChangeNotifier {
       // await fetchTasks();
     });
     final subscription2 =
-        await factory.jobContractCreatedEvents().listen((event) async {
+        factory.jobContractCreatedEvents().listen((event) async {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
       if (event.jobOwner == ownAddress) {
         // lastJobContract = event.jobAddress;
-        transactionStatuses[event.nanoId]!['task']!['jobAddress'] =
-            event.jobAddress as String;
-        notifyListeners();
+        transactionStatuses[event.nanoId] = {
+          'task': {'jobAddress': event.jobAddress.toString(), 'txn': 'initial'}
+        };
+        //notifyListeners();
         await approveSpend(
-            transactionStatuses[event.nanoId]!['task']!['jobAddress']
-                as EthereumAddress,
-            ownAddress!,
-            taskTokenSymbol,
-            event.amount);
+            event.jobAddress, ownAddress!, taskTokenSymbol, event.amount);
       }
       // await fetchTasks();
     });
@@ -781,27 +779,27 @@ class TasksServices extends ChangeNotifier {
 
       if (taskTokenSymbol == 'ETH') {
         txn = await web3Transaction(
-          _creds,
-          Transaction.callContract(
-            from: ownAddress,
-            contract: _deployedContract,
-            function: _createTask,
-            parameters: [
-              nanoId,
-              title,
-              description,
-              taskTokenSymbol,
-              priceInBigInt,
-            ],
-            // gasPrice: EtherAmount.inWei(BigInt.one),
-            // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-            //     .getValueInUnit(EtherUnit.gwei)
-            //     .toInt(),
-            // value: priceInGwei
-            value: EtherAmount.fromUnitAndValue(
-                EtherUnit.gwei, priceInGwei.toInt()),
-          ),
-          chainId: _chainId);
+            _creds,
+            Transaction.callContract(
+              from: ownAddress,
+              contract: _deployedContract,
+              function: _createTask,
+              parameters: [
+                nanoId,
+                title,
+                description,
+                taskTokenSymbol,
+                priceInBigInt,
+              ],
+              // gasPrice: EtherAmount.inWei(BigInt.one),
+              // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
+              //     .getValueInUnit(EtherUnit.gwei)
+              //     .toInt(),
+              // value: priceInGwei
+              value: EtherAmount.fromUnitAndValue(
+                  EtherUnit.gwei, priceInGwei.toInt()),
+            ),
+            chainId: _chainId);
       } else if (taskTokenSymbol == 'aUSDC') {
         txn = await web3Transaction(
             _creds,
@@ -829,8 +827,9 @@ class TasksServices extends ChangeNotifier {
       isLoading = false;
       isLoadingBackground = true;
       lastTxn = txn;
-      transactionStatuses[nanoId] = {
-        'addTask': {'status': 'confirmed', 'txn': txn}
+      transactionStatuses[nanoId]!['addTask'] = {
+        'status': 'confirmed',
+        'txn': txn
       };
 
       // fetchTasks();
