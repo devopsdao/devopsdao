@@ -31,9 +31,9 @@
 .pub-cache/
 .pub/
 
-!build/
+!build
 build/*
-!build/contracts/
+!build/contracts
 
 
 # Firebase – this is necessary if you use Firebase since it could otherwise 
