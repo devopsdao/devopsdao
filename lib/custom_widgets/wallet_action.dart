@@ -140,25 +140,20 @@ class _WalletAction extends State<WalletAction> {
                                         Theme.of(context).textTheme.bodyText1,
                                     textAlign: TextAlign.center,
                                   ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Transaction has failed, \nplease retry',
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            // Text(
-                            //   'Transaction has failed, please retry',
-                            //   style: Theme.of(context).textTheme.bodyText1,
-                            //   textAlign: TextAlign.center,
-                            // )
-                          else if (
-                                tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] != 'failed' ||
-                                tasksServices.transactionStatuses[widget.nanoId]![widget.taskName]!['txn'] != 'rejected')
-
+                                ),
+                              ],
+                            )
+                          // Text(
+                          //   'Transaction has failed, please retry',
+                          //   style: Theme.of(context).textTheme.bodyText1,
+                          //   textAlign: TextAlign.center,
+                          // )
+                          else if (tasksServices.transactionStatuses[widget
+                                      .nanoId]![widget.taskName]!['txn'] !=
+                                  'failed' ||
+                              tasksServices.transactionStatuses[widget.nanoId]![
+                                      widget.taskName]!['txn'] !=
+                                  'rejected')
                             Column(
                               children: [
                                 Row(
@@ -201,7 +196,6 @@ class _WalletAction extends State<WalletAction> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-
                                   ],
                                 ),
                                 Row(
@@ -343,7 +337,6 @@ class _WalletAction extends State<WalletAction> {
                                           textAlign: TextAlign.left,
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
 
