@@ -8,6 +8,7 @@ import { AxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contra
 import { IAxelarGateway } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol';
 import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IERC20.sol';
 import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
+import { StringToAddress, AddressToString } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/StringAddressUtils.sol';
 
 error InvalidToken (string token);
 
@@ -210,7 +211,8 @@ contract Job {
     IDistributionExecutable public immutable distributor;
 
     IAxelarGateway public immutable gateway;
-
+    using AddressToString for address;
+    using StringToAddress for string;
 
     address[] public Participants;
     // uint256 public data;
@@ -355,13 +357,17 @@ contract Job {
         // msg.sender.transfer(address(this).balance);
     }
 
+    function addressToString(address address_) external pure returns (string memory) {
+        return address_.toString();
+    }
+
     function transferToaddressChain2(address payable _addressToSend, string memory chain) public payable {
         if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
-            if (_addressToSend == contractOwner) {
-                _addressToSend.transfer(contractAddress.balance);
+            if (participantAddress == contractOwner) {
+                participantAddress.transfer(contractAddress.balance);
             }
         } else if (
-            keccak256(bytes(jobState)) == keccak256(bytes("completed"))
+            keccak256(bytes(jobState)) == keccak256(bytes("completed")) || 1==1
         ) {
             bytes memory symbolBytes = bytes(symbol);
             bytes memory chainBytes = bytes(chain);
@@ -372,19 +378,27 @@ contract Job {
                 // do nothing
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
                 participantAddress.transfer(contractAddress.balance);
-            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) != keccak256(bytes("Moonbase"))) {
+            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Ethereum"))) {
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
-                address tokenAddress = gateway.tokenAddresses(symbol);
+                address tokenAddress = gateway.tokenAddresses("aUSDC");
                 amount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(_addressToSend).approve(address(gateway), amount);
-                gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
-            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC"))) {
-                address tokenAddress = gateway.tokenAddresses(symbol);
+                IERC20(tokenAddress).approve(address(gateway), amount);
+                // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
+                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", amount);
+                
+            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
+                address tokenAddress = 0xD1633F7Fb3d716643125d6415d4177bC36b7186b;
                 amount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).transferFrom(address(this), participantAddress, amount);
+                // IERC20(tokenAddress).approve(contractAddress, amount);
+                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, amount);
                 // IERC20(tokenAddress).approve(address(gateway), amount);
+            }
+            else{
+                revert InvalidToken({
+                    token: symbol
+                });
             }
         }
         // msg.sender.transfer(address(this).balance);

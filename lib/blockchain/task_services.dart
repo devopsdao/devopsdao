@@ -128,13 +128,16 @@ class TasksServices extends ChangeNotifier {
     // print(axellarGasPrice);
     isDeviceConnected = false;
 
-    final StreamSubscription subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
-      if (result != ConnectivityResult.none) {
-        isDeviceConnected = await InternetConnectionChecker().hasConnection;
-      }
-    });
+    if (platform != 'web') {
+      final StreamSubscription subscription = Connectivity()
+          .onConnectivityChanged
+          .listen((ConnectivityResult result) async {
+        if (result != ConnectivityResult.none) {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+        }
+      });
+    }
+
     if (transactionTester == null) {
       transactionTester = EthereumTransactionTester();
     }
