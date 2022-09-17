@@ -391,7 +391,7 @@ contract Job {
                 uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
                 IERC20(tokenAddress).approve(address(gateway), contractAmount);
                 // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
-                gateway.sendToken("ethereum", this.addressToString(participantAddress), "aUSDC", contractAmount);
+                gateway.sendToken("avalanche", this.addressToString(participantAddress), "aUSDC", contractAmount);
                 
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
                 // revert InvalidToken({
