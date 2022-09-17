@@ -33,6 +33,7 @@ contract Factory {
 
     event OneEventForAll(address contractAdr, uint256 index);
 
+
     event JobContractCreated(
         string nanoId,
         address jobAddress,
@@ -233,6 +234,8 @@ contract Job {
     string public symbol;
     uint256 amount;
 
+    event Logs(address contractAdr, string message);
+
     constructor(
         string memory _nanoId,
         string memory _title,
@@ -377,22 +380,28 @@ contract Job {
                 });
                 // do nothing
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
+                emit Logs(address(contractAddress), "withdrawing ETH");
                 participantAddress.transfer(contractAddress.balance);
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Ethereum"))) {
+                emit Logs(address(contractAddress), string.concat("withdrawing aUSDC on Ethereum via Axelar",this.addressToString(participantAddress)));
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
                 address tokenAddress = gateway.tokenAddresses("aUSDC");
-                amount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).approve(address(gateway), amount);
+                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
+                IERC20(tokenAddress).approve(address(gateway), contractAmount);
                 // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
-                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", amount);
+                gateway.sendToken("ethereum", this.addressToString(participantAddress), "aUSDC", contractAmount);
                 
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
+                // revert InvalidToken({
+                //     token: string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress))
+                // });
+                emit Logs(address(contractAddress), string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress)));
                 address tokenAddress = 0xD1633F7Fb3d716643125d6415d4177bC36b7186b;
-                amount = IERC20(tokenAddress).balanceOf(contractAddress);
-                // IERC20(tokenAddress).approve(contractAddress, amount);
-                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, amount);
+                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
+                IERC20(tokenAddress).approve(contractAddress, contractAmount);
+                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, contractAmount);
                 // IERC20(tokenAddress).approve(address(gateway), amount);
             }
             else{
