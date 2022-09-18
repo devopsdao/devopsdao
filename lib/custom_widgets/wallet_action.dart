@@ -19,10 +19,13 @@ class WalletAction extends StatefulWidget {
 }
 
 class _WalletAction extends State<WalletAction> {
-  String transactionStagesPending = 'loading';
+  String transactionStagesApprove = 'initial';
+  String transactionStagesWaiting = 'initial';
+  String transactionStagesPending = 'initial';
   String transactionStagesConfirmed = 'initial';
   String transactionStagesMinted = 'initial';
-  String transactionStagesApprove = 'initial';
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +33,78 @@ class _WalletAction extends State<WalletAction> {
     // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
     //
     // }
-    if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
-      transactionStagesPending = 'done';
-      transactionStagesConfirmed = 'done';
-      transactionStagesMinted = 'loading';
-      transactionStagesApprove = 'initial';
-    } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'minted') {
-      transactionStagesMinted = 'done';
-      transactionStagesApprove = 'loading';
-      if(tasksServices.taskTokenSymbol == 'ETH') {
-        transactionStagesApprove = 'done';
-      } else {
-        transactionStagesApprove = 'approve';
-      }
-    } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'something') {
+    // String? statusPrint = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
+    // print('lastStatus: ' + statusPrint!);
+    // String? txnPrint = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
+    // print('statusApproved: ' + txnPrint!);
 
+    // if (widget.taskName == 'addTask' && tasksServices.taskTokenSymbol != 'ETH') {
+    //   transactionStagesApprove = 'approve';
+    //   transactionStagesPending = 'initial';
+    // } else {
+    //   transactionStagesPending = 'loading';
+    // }
+
+    if (widget.taskName == 'addTask' && tasksServices.taskTokenSymbol != 'ETH') {
+      if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'pending') {
+        if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+            .taskName]?['tokenApproved'] == 'initial') {
+          transactionStagesApprove = 'approve';
+          transactionStagesWaiting = 'initial';
+          transactionStagesPending = 'initial';
+          transactionStagesConfirmed = 'initial';
+          transactionStagesMinted = 'initial';
+        } else {
+          transactionStagesApprove = 'done';
+          transactionStagesWaiting = 'loading';
+          transactionStagesPending = 'initial';
+          transactionStagesConfirmed = 'initial';
+          transactionStagesMinted = 'initial';
+        }
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'minted' &&
+          tasksServices.transactionStatuses[widget.nanoId]?[widget
+              .taskName]?['tokenApproved'] == 'approved') {
+        transactionStagesApprove = 'done';
+        transactionStagesWaiting = 'done';
+        transactionStagesPending = 'loading';
+        transactionStagesConfirmed = 'initial';
+        transactionStagesMinted = 'initial';
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'confirmed' &&
+          tasksServices.transactionStatuses[widget.nanoId]?[widget
+              .taskName]?['tokenApproved'] == 'complete') {
+        transactionStagesApprove = 'done';
+        transactionStagesWaiting = 'done';
+        transactionStagesPending = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'minted' &&
+          tasksServices.transactionStatuses[widget.nanoId]?[widget
+              .taskName]?['tokenApproved'] == 'complete') {
+        transactionStagesApprove = 'done';
+        transactionStagesWaiting = 'done';
+        transactionStagesPending = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    } else {
+      if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'pending') {
+        transactionStagesPending = 'loading';
+        transactionStagesConfirmed = 'initial';
+        transactionStagesMinted = 'initial';
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'confirmed') {
+        transactionStagesPending = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget
+          .taskName]?['status'] == 'minted') {
+        transactionStagesMinted = 'done';
+      }
     }
 
 
@@ -134,10 +194,59 @@ class _WalletAction extends State<WalletAction> {
                             // )
                           else if (
                                 tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'failed' ||
-                                tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'rejected')
+                                tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'rejected'
+                            )
 
                             Column(
                               children: [
+                                if(widget.taskName == 'addTask' && tasksServices.taskTokenSymbol != 'ETH')
+                                  Row(
+                                    children: [
+                                      Container(
+                                          width: 45,
+                                          height:  45,
+                                          child: Row(
+                                            children: [
+                                              if(transactionStagesApprove == 'initial')
+                                                Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
+                                              else if(transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
+                                                LoadingAnimationWidget.threeRotatingDots(
+                                                  color: Colors.black54,
+                                                  size: 30,
+                                                )
+                                              else if(transactionStagesApprove == 'done')
+                                                  Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                                            ],
+                                          )
+                                      ),
+
+                                      if(transactionStagesApprove == 'initial')
+                                        Container(
+                                          child: Text(
+                                            'Token transaction approved',
+                                            style: Theme.of(context).textTheme.bodyText1,
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ),
+                                      if(transactionStagesApprove == 'approve')
+                                        Container(
+                                          child: Text(
+                                            'Please approve token transaction!',
+                                            style: Theme.of(context).textTheme.bodyText1,
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ),
+                                      if(transactionStagesApprove == 'done')
+                                        Container(
+                                          child: Text(
+                                            'Token transaction approved',
+                                            style: Theme.of(context).textTheme.bodyText1,
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                if(widget.taskName == 'addTask' && tasksServices.taskTokenSymbol != 'ETH')
                                 Row(
                                   children: [
                                     Container(
@@ -145,22 +254,22 @@ class _WalletAction extends State<WalletAction> {
                                         height:  45,
                                         child: Row(
                                           children: [
-                                            if (transactionStagesPending == 'initial')
+                                            if (transactionStagesWaiting == 'initial')
                                               Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
-                                            else if (transactionStagesPending == 'loading')
+                                            else if (transactionStagesWaiting == 'loading')
                                               LoadingAnimationWidget.threeRotatingDots(
                                                 color: Colors.black54,
                                                 size: 30,
                                               )
-                                            else if (transactionStagesPending == 'done')
-                                              Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                                            else if (transactionStagesWaiting == 'done')
+                                                Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
                                           ],
                                         )
                                     ),
                                     Container(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Confirm the transaction',
+                                        'Wait for confirmation',
                                         style: Theme.of(context).textTheme.bodyText1,
                                         textAlign: TextAlign.center,
                                       ),
@@ -168,6 +277,36 @@ class _WalletAction extends State<WalletAction> {
 
                                   ],
                                 ),
+                                // Row(
+                                //   children: [
+                                //     Container(
+                                //         width: 45,
+                                //         height:  45,
+                                //         child: Row(
+                                //           children: [
+                                //             if (transactionStagesPending == 'initial')
+                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
+                                //             else if (transactionStagesPending == 'loading')
+                                //               LoadingAnimationWidget.threeRotatingDots(
+                                //                 color: Colors.black54,
+                                //                 size: 30,
+                                //               )
+                                //             else if (transactionStagesPending == 'done')
+                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                                //           ],
+                                //         )
+                                //     ),
+                                //     Container(
+                                //       alignment: Alignment.center,
+                                //       child: Text(
+                                //         'Confirm the transaction',
+                                //         style: Theme.of(context).textTheme.bodyText1,
+                                //         textAlign: TextAlign.center,
+                                //       ),
+                                //     ),
+                                //
+                                //   ],
+                                // ),
                                 Row(
                                   children: [
                                     Container(
@@ -223,57 +362,7 @@ class _WalletAction extends State<WalletAction> {
                                 ),
                                 // Prevent to show *Token transaction approved* for other
 
-                                // if(!tasksServices.transactionStatuses[widget.nanoId].containsKey("taskParticipation") &&
-                                //   !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("changeTaskStatus") &&
-                                //   !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("withdraw") &&
-                                //   !tasksServices.transactionStatuses[widget.nanoId]!.containsKey("withdrawToChain")
-                                // )
-                                Row(
-                                  children: [
-                                    Container(
-                                        width: 45,
-                                        height:  45,
-                                        child: Row(
-                                          children: [
-                                            if(transactionStagesApprove == 'initial')
-                                              Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
-                                            else if(transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
-                                              LoadingAnimationWidget.threeRotatingDots(
-                                                color: Colors.black54,
-                                                size: 30,
-                                              )
-                                            else if(transactionStagesApprove == 'done')
-                                                Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                          ],
-                                        )
-                                    ),
 
-                                    if(transactionStagesApprove == 'initial')
-                                    Container(
-                                      child: Text(
-                                        'Token transaction approved',
-                                        style: Theme.of(context).textTheme.bodyText1,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    if(transactionStagesApprove == 'approve')
-                                    Container(
-                                      child: Text(
-                                        'Please approve token transaction!',
-                                        style: Theme.of(context).textTheme.bodyText1,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    if(transactionStagesApprove == 'done')
-                                    Container(
-                                      child: Text(
-                                        'Token transaction approved',
-                                        style: Theme.of(context).textTheme.bodyText1,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                  ],
-                                ),
 
                                 // Container(
                                 //

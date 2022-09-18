@@ -1,7 +1,6 @@
 import 'package:web3dart/web3dart.dart';
 
 class Task {
-  // final String id;
   final String title;
   final String description;
   final EthereumAddress contractOwner;
@@ -16,7 +15,6 @@ class Task {
   final double contractValueToken;
   final String nanoId;
   Task({
-    // required this.id,
     required this.title,
     required this.description,
     required this.contractOwner,

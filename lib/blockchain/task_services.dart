@@ -802,7 +802,9 @@ class TasksServices extends ChangeNotifier {
     );
     final result = await ierc20.approve(_contractAddress, amount,
         credentials: _creds, transaction: transaction);
-    print(result);
+    print('result of approveSpend: '+ result);
+    transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'approved';
+    notifyListeners();
     await tellMeHasItMined(result, 'addTask', nanoId);
     print('mined');
   }
@@ -814,7 +816,7 @@ class TasksServices extends ChangeNotifier {
     // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
-        'addTask': {'status': 'initial', 'txn': 'initial'}
+        'addTask': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'}
       };
       late int priceInGwei = (double.parse(price) * 1000000000).toInt();
       late double priceInDouble = double.parse(price);
@@ -876,10 +878,9 @@ class TasksServices extends ChangeNotifier {
       isLoading = false;
       isLoadingBackground = true;
       lastTxn = txn;
-      transactionStatuses[nanoId]!['addTask'] = {
-        'status': 'confirmed',
-        'txn': txn
-      };
+      transactionStatuses[nanoId]!['addTask']!['status'] = 'confirmed';
+      transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'complete';
+      transactionStatuses[nanoId]!['addTask']!['txn'] = txn;
 
       // fetchTasks();
       tellMeHasItMined(txn, 'addTask', nanoId);
@@ -890,7 +891,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> taskParticipation(
       EthereumAddress contractAddress, String nanoId) async {
     transactionStatuses[nanoId] = {
-      'taskParticipation': {'status': 'initial', 'txn': 'initial'}
+      'taskParticipation': {'status': 'pending', 'txn': 'initial'}
     };
     // var convertedContractAddrToInt = int.parse(contractAddress);
     // assert(myInt is int);
@@ -935,7 +936,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
       EthereumAddress participiantAddress, String state, String nanoId) async {
     transactionStatuses[nanoId] = {
-      'changeTaskStatus': {'status': 'initial', 'txn': 'initial'}
+      'changeTaskStatus': {'status': 'pending', 'txn': 'initial'}
     };
     // lastTxn = 'pending';
     late String txn;
@@ -967,7 +968,7 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = 'pending';
     late String txn;
     transactionStatuses[nanoId] = {
-      'withdraw': {'status': 'initial', 'txn': 'initial'}
+      'withdraw': {'status': 'pending', 'txn': 'initial'}
     };
     txn = await web3Transaction(
         _creds,
@@ -997,7 +998,7 @@ class TasksServices extends ChangeNotifier {
       EthereumAddress contractAddress, String nanoId) async {
     // lastTxn = 'pending';
     transactionStatuses[nanoId] = {
-      'withdrawToChain': {'status': 'initial', 'txn': 'initial'}
+      'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
     // const gasLimit = 3e3;
