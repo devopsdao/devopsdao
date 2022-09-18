@@ -10,7 +10,7 @@ import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interf
 import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
 import { StringToAddress, AddressToString } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/StringAddressUtils.sol';
 
-error InvalidToken (string token);
+error RevertReason (string message);
 
 contract Factory {
     IAxelarGateway public immutable gateway;
@@ -375,15 +375,21 @@ contract Job {
             bytes memory symbolBytes = bytes(symbol);
             bytes memory chainBytes = bytes(chain);
             if (symbolBytes.length == 0) {
-                revert InvalidToken({
-                    token: symbol
+                revert RevertReason({
+                    message: "empty token"
                 });
                 // do nothing
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
-                emit Logs(address(contractAddress), string.concat("withdrawing Ethereum",this.addressToString(participantAddress)));
+                emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to Ethereum address: ",this.addressToString(participantAddress)));
                 participantAddress.transfer(contractAddress.balance);
-            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Ethereum"))) {
-                emit Logs(address(contractAddress), string.concat("withdrawing aUSDC on Ethereum via Axelar",this.addressToString(participantAddress)));
+            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
+                keccak256(chainBytes) == keccak256(bytes("Ethereum")) || 
+                keccak256(chainBytes) == keccak256(bytes("Binance")) ||
+                keccak256(chainBytes) == keccak256(bytes("Fantom")) ||
+                keccak256(chainBytes) == keccak256(bytes("Avalanche")) ||
+                keccak256(chainBytes) == keccak256(bytes("Polygon"))
+            )) {
+                emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to ", chain, "address:",this.addressToString(participantAddress)));
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
@@ -391,13 +397,13 @@ contract Job {
                 uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
                 IERC20(tokenAddress).approve(address(gateway), contractAmount);
                 // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
-                gateway.sendToken("avalanche", this.addressToString(participantAddress), "aUSDC", contractAmount);
+                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", contractAmount);
                 
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
                 // revert InvalidToken({
                 //     token: string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress))
                 // });
-                emit Logs(address(contractAddress), string.concat("withdrawing aUSDC on Moonbase, participantAddress",this.addressToString(participantAddress)));
+                emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to ", chain, "address:",this.addressToString(participantAddress)));
                 address tokenAddress = gateway.tokenAddresses("aUSDC");
                 uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
                 IERC20(tokenAddress).approve(contractAddress, contractAmount);
@@ -405,8 +411,8 @@ contract Job {
                 // IERC20(tokenAddress).approve(address(gateway), amount);
             }
             else{
-                revert InvalidToken({
-                    token: symbol
+                revert RevertReason({
+                    message: "invalid destination network or token"
                 });
             }
         }

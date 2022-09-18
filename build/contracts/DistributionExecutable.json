@@ -2725,12 +2725,12 @@
     "1287": {
       "events": {},
       "links": {},
-      "address": "0x3cf73cDdb464982f268903d98Bc42bB42D4BbEc5",
-      "transactionHash": "0x28fbf70aa9e54531948743412f31da3d83abcfa3923ee69b6c15adabd4d05f63"
+      "address": "0x60F12e332D7621BD0F58C0d262BFE1b04349d83c",
+      "transactionHash": "0x005fe35f74c07cb1d74061077595d9ff193b4785f1bc1c9cc52684b965c308f8"
     }
   },
   "schemaVersion": "3.4.10",
-  "updatedAt": "2022-09-17T14:29:30.525Z",
+  "updatedAt": "2022-09-18T17:36:13.223Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
