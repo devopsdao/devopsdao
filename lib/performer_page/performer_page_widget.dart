@@ -402,7 +402,8 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                         }),
                                   if (widget.obj[index].jobState ==
                                           "completed" &&
-                                      widget.obj[index].contractValue != 0)
+                                      widget.obj[index].contractValue != 0 ||
+                                      widget.obj[index].contractValueToken != 0)
                                   TextButton(
                                       child: Text('Withdraw'),
                                       style: TextButton.styleFrom(
