@@ -631,12 +631,12 @@ class TasksServices extends ChangeNotifier {
         var value;
         double ethBalancePrecise = 0;
         double ethBalanceToken = 0;
-        try {
-          temp = await web3Call(
-              contract: _deployedContract,
-              function: _tasks,
-              params: [BigInt.from(i)]);
-          print(temp);
+        temp = await web3Call(
+            contract: _deployedContract,
+            function: _tasks,
+            params: [BigInt.from(i)]);
+        print(temp);
+        if (temp != null) {
           if (temp[10] == 'ETH') {
             value = await web3Call(
                 contract: _deployedContract,
@@ -652,47 +652,45 @@ class TasksServices extends ChangeNotifier {
             ethBalanceToken =
                 (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
           }
-        } catch (e) {
-          print(e);
-        }
 
-        // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
+          // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
 
-        // print(value);
-        // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
-        // print(price);
-        // print('Data type: ${ownAddress.runtimeType}');
+          // print(value);
+          // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
+          // print(price);
+          // print('Data type: ${ownAddress.runtimeType}');
 
-        // late int contributorsCount;
-        // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
+          // late int contributorsCount;
+          // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
 
-        var taskObject = Task(
-            // id: temp[6].toString(),
-            title: temp[0],
-            description: temp[7],
-            // contractOwner: temp[4].toString(),
-            contractOwner: temp[4],
-            contractAddress: temp[2],
-            jobState: temp[1],
-            contributorsCount: temp[8].length,
-            contributors: temp[8],
-            participiant: temp[9],
-            justLoaded: true,
-            createdTime:
-                DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
-            contractValue: ethBalancePrecise,
-            contractValueToken: ethBalanceToken,
-            nanoId: temp[11]);
+          var taskObject = Task(
+              // id: temp[6].toString(),
+              title: temp[0],
+              description: temp[7],
+              // contractOwner: temp[4].toString(),
+              contractOwner: temp[4],
+              contractAddress: temp[2],
+              jobState: temp[1],
+              contributorsCount: temp[8].length,
+              contributors: temp[8],
+              participiant: temp[9],
+              justLoaded: true,
+              createdTime:
+                  DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
+              contractValue: ethBalancePrecise,
+              contractValueToken: ethBalanceToken,
+              nanoId: temp[11]);
 
-        taskLoaded = temp[6]
-            .toInt(); // this count we need to show the loading process. does not affect anything else
+          taskLoaded = temp[6]
+              .toInt(); // this count we need to show the loading process. does not affect anything else
 
-        // if (isLoading == true) {
-        notifyListeners();
-        // }
-        if (temp[1] != "") {
-          // var taskState = temp[1];
-          tasks.add(taskObject);
+          // if (isLoading == true) {
+          notifyListeners();
+          // }
+          if (temp[1] != "") {
+            // var taskState = temp[1];
+            tasks.add(taskObject);
+          }
         }
       }
 
@@ -802,7 +800,7 @@ class TasksServices extends ChangeNotifier {
     );
     final result = await ierc20.approve(_contractAddress, amount,
         credentials: _creds, transaction: transaction);
-    print('result of approveSpend: '+ result);
+    print('result of approveSpend: ' + result);
     transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'approved';
     notifyListeners();
     await tellMeHasItMined(result, 'addTask', nanoId);
@@ -816,7 +814,11 @@ class TasksServices extends ChangeNotifier {
     // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
-        'addTask': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'}
+        'addTask': {
+          'status': 'pending',
+          'tokenApproved': 'initial',
+          'txn': 'initial'
+        }
       };
       late int priceInGwei = (double.parse(price) * 1000000000).toInt();
       late double priceInDouble = double.parse(price);
@@ -1016,7 +1018,7 @@ class TasksServices extends ChangeNotifier {
           from: ownAddress,
           contract: _deployedContract,
           function: _withdrawToChain,
-          parameters: [contractAddress, _contractAddressRopsten, 'Ethereum'],
+          parameters: [contractAddress, _contractAddressRopsten, 'Moonbase'],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)

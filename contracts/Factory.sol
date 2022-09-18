@@ -380,7 +380,7 @@ contract Job {
                 });
                 // do nothing
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
-                emit Logs(address(contractAddress), "withdrawing ETH");
+                emit Logs(address(contractAddress), string.concat("withdrawing Ethereum",this.addressToString(participantAddress)));
                 participantAddress.transfer(contractAddress.balance);
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Ethereum"))) {
                 emit Logs(address(contractAddress), string.concat("withdrawing aUSDC on Ethereum via Axelar",this.addressToString(participantAddress)));
@@ -397,8 +397,8 @@ contract Job {
                 // revert InvalidToken({
                 //     token: string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress))
                 // });
-                emit Logs(address(contractAddress), string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress)));
-                address tokenAddress = 0xD1633F7Fb3d716643125d6415d4177bC36b7186b;
+                emit Logs(address(contractAddress), string.concat("withdrawing aUSDC on Moonbase, participantAddress",this.addressToString(participantAddress)));
+                address tokenAddress = gateway.tokenAddresses("aUSDC");
                 uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
                 IERC20(tokenAddress).approve(contractAddress, contractAmount);
                 IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, contractAmount);
