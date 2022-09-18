@@ -287,7 +287,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               text: widget
                                                       .obj[index].contractValue
                                                       .toString() +
-                                                  ' Eth',
+                                                  ' Eth \n',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -297,7 +297,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               text: widget.obj[index]
                                                       .contractValueToken
                                                       .toString() +
-                                                  ' Token',
+                                                  ' aUSDC',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -638,6 +638,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       ),
                                     ),
                                     // Spacer(),
+                                    if(widget.obj[index].contractValue != 0)
                                     Expanded(
                                       flex: 3,
                                       child: Text(
@@ -652,12 +653,13 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
+                                    if(widget.obj[index].contractValueToken != 0)
                                     Expanded(
                                       flex: 3,
                                       child: Text(
                                         widget.obj[index].contractValueToken
                                                 .toString() +
-                                            ' Eth',
+                                            ' aUSDC',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
                                         softWrap: false,
@@ -666,6 +668,20 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
+                                    if(widget.obj[index].contractValue == 0 &&
+                                        widget.obj[index].contractValueToken == 0)
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          'Has no money',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ],

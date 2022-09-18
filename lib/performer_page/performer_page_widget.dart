@@ -246,7 +246,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                 text: widget.obj[index]
                                                         .contractValue
                                                         .toString() +
-                                                    ' Eth',
+                                                    ' Eth \n',
                                                 style:
                                                     DefaultTextStyle.of(context)
                                                         .style
@@ -257,7 +257,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                 text: widget.obj[index]
                                                         .contractValueToken
                                                         .toString() +
-                                                    ' Token',
+                                                    ' aUSDC',
                                                 style: DefaultTextStyle.of(
                                                         context)
                                                     .style
@@ -543,7 +543,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex: 6,
+                                        flex: 7,
                                         child: Text(
                                           DateFormat('MM/dd/yyyy, hh:mm a')
                                               .format(widget
@@ -556,6 +556,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                         ),
                                       ),
                                       // Spacer(),
+                                      if(widget.obj[index].contractValue != 0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
@@ -570,6 +571,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
+                                      if(widget.obj[index].contractValueToken != 0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
@@ -584,6 +586,20 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
+                                      if(widget.obj[index].contractValue == 0 &&
+                                          widget.obj[index].contractValueToken == 0)
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            'Has no money',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ],

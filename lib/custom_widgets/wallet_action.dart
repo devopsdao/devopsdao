@@ -231,7 +231,7 @@ class _WalletAction extends State<WalletAction> {
                                       if(transactionStagesApprove == 'approve')
                                         Container(
                                           child: Text(
-                                            'Please approve token transaction!',
+                                            'Please approve\ntoken transaction!',
                                             style: Theme.of(context).textTheme.bodyText1,
                                             textAlign: TextAlign.left,
                                           ),

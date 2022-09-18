@@ -98,6 +98,7 @@ class _SelectTokenMenuState extends State<SelectTokenMenu> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    dropdownValue = tasksServices.taskTokenSymbol;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
