@@ -13,7 +13,8 @@ const List<String> selectNetwork = <String>[
   'Polygon'
 ];
 
-const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
+// const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
+const List<String> selectToken = <String>['ETH', 'aUSDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
   const SelectNetworkMenu({Key? key}) : super(key: key);
