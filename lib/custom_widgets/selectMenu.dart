@@ -54,10 +54,11 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
           ),
           onChanged: (String? value) {
             // This is called when the user selects an item.
+            tasksServices.destinationChain = value!;
             setState(() {
-              dropdownValue = value!;
-              tasksServices.getGasPrice('Moonbeam', value,
-                  tokenSymbol: dropdownValue);
+              dropdownValue = value;
+              // tasksServices.getGasPrice('Moonbeam', value,
+              //     tokenSymbol: dropdownValue);
             });
           },
           items: selectNetwork.map<DropdownMenuItem<String>>((String value) {

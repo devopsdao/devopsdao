@@ -996,6 +996,7 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
 
+  String destinationChain = 'Moonbase';
   Future<void> withdrawToChain(
       EthereumAddress contractAddress, String nanoId) async {
     // lastTxn = 'pending';
@@ -1018,7 +1019,11 @@ class TasksServices extends ChangeNotifier {
           from: ownAddress,
           contract: _deployedContract,
           function: _withdrawToChain,
-          parameters: [contractAddress, _contractAddressRopsten, 'Moonbase'],
+          parameters: [
+            contractAddress,
+            _contractAddressRopsten,
+            destinationChain
+          ],
           // gasPrice: EtherAmount.inWei(BigInt.one),
           // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
           //     .getValueInUnit(EtherUnit.gwei)
