@@ -1013,6 +1013,7 @@ class TasksServices extends ChangeNotifier {
         EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei);
     print("value");
     print(value);
+    print("destinationChain: " + destinationChain);
     txn = await _web3client.sendTransaction(
         _creds,
         Transaction.callContract(

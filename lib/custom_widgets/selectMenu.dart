@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 
 const List<String> selectNetwork = <String>[
-  'Moonbeam',
+  'Moonbase',
   'Ethereum',
   'Binance',
   'Fantom',
@@ -29,6 +29,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    dropdownValue = tasksServices.destinationChain;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
