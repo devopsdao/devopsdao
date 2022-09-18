@@ -482,28 +482,28 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       primary: Colors.white,
                                       backgroundColor: Colors.green),
                                 ),
-                                TextButton(
-                                    child: Text('Withdraw to Chain'),
-                                    style: TextButton.styleFrom(
-                                        primary: Colors.white,
-                                        backgroundColor: Colors.green),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.obj[index].justLoaded = false;
-                                      });
-                                      tasksServices.withdrawToChain(
-                                          widget.obj[index].contractAddress,
-                                          widget.obj[index].nanoId);
-                                      Navigator.pop(context);
-
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => WalletAction(
-                                                nanoId:
-                                                    widget.obj[index].nanoId,
-                                                taskName: 'withdrawToChain',
-                                              ));
-                                    }),
+                                // TextButton(
+                                //     child: Text('Withdraw to Chain'),
+                                //     style: TextButton.styleFrom(
+                                //         primary: Colors.white,
+                                //         backgroundColor: Colors.green),
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         widget.obj[index].justLoaded = false;
+                                //       });
+                                //       tasksServices.withdrawToChain(
+                                //           widget.obj[index].contractAddress,
+                                //           widget.obj[index].nanoId);
+                                //       Navigator.pop(context);
+                                //
+                                //       showDialog(
+                                //           context: context,
+                                //           builder: (context) => WalletAction(
+                                //                 nanoId:
+                                //                     widget.obj[index].nanoId,
+                                //                 taskName: 'withdrawToChain',
+                                //               ));
+                                //     }),
                                 TextButton(
                                     child: Text('Close'),
                                     onPressed: () => Navigator.pop(context)),

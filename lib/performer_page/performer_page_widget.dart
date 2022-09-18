@@ -400,11 +400,11 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                         'changeTaskStatus',
                                                   ));
                                         }),
-                                  // if (widget.obj[index].jobState ==
-                                  //         "completed" &&
-                                  //     widget.obj[index].contractValue != 0)
+                                  if (widget.obj[index].jobState ==
+                                          "completed" &&
+                                      widget.obj[index].contractValue != 0)
                                   TextButton(
-                                      child: Text('Withdraw to Chain'),
+                                      child: Text('Withdraw'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
                                           backgroundColor: Colors.green),
@@ -425,33 +425,33 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                   taskName: 'withdrawToChain',
                                                 ));
                                       }),
-                                  if (widget.obj[index].jobState ==
-                                          "completed" &&
-                                      widget.obj[index].contractValue != 0)
-                                    TextButton(
-                                        child: Text('Withdraw'),
-                                        style: TextButton.styleFrom(
-                                            primary: Colors.white,
-                                            backgroundColor: Colors.green),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.obj[index].justLoaded =
-                                                false;
-                                          });
-                                          tasksServices.withdraw(
-                                              widget.obj[index].contractAddress,
-                                              widget.obj[index].nanoId);
-                                          Navigator.pop(context);
-
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  WalletAction(
-                                                    nanoId: widget
-                                                        .obj[index].nanoId,
-                                                    taskName: 'withdraw',
-                                                  ));
-                                        }),
+                                  // if (widget.obj[index].jobState ==
+                                  //         "completed" &&
+                                  //     widget.obj[index].contractValue != 0)
+                                    // TextButton(
+                                    //     child: Text('Withdraw'),
+                                    //     style: TextButton.styleFrom(
+                                    //         primary: Colors.white,
+                                    //         backgroundColor: Colors.green),
+                                    //     onPressed: () {
+                                    //       setState(() {
+                                    //         widget.obj[index].justLoaded =
+                                    //             false;
+                                    //       });
+                                    //       tasksServices.withdraw(
+                                    //           widget.obj[index].contractAddress,
+                                    //           widget.obj[index].nanoId);
+                                    //       Navigator.pop(context);
+                                    //
+                                    //       showDialog(
+                                    //           context: context,
+                                    //           builder: (context) =>
+                                    //               WalletAction(
+                                    //                 nanoId: widget
+                                    //                     .obj[index].nanoId,
+                                    //                 taskName: 'withdraw',
+                                    //               ));
+                                    //     }),
                                   // if (obj[index].jobState == "Review")
                                   //   TextButton(child: Text('Review'), onPressed: () {
                                   //     tasksServices.changeTaskStatus(
@@ -541,7 +541,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        flex: 7,
+                                        flex: 6,
                                         child: Text(
                                           DateFormat('MM/dd/yyyy, hh:mm a')
                                               .format(widget
@@ -573,7 +573,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                         child: Text(
                                           widget.obj[index].contractValueToken
                                                   .toString() +
-                                              ' Eth',
+                                              ' aUSDC',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
