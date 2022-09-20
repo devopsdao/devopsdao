@@ -363,7 +363,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     ),
                           ),
                           Text(
-                            '${tasksServices.pendingBalance} eth',
+                            '${tasksServices.pendingBalance} ETH',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
