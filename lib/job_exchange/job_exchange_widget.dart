@@ -327,12 +327,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                                 const TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
                                                                             text: tasksServices.filterResults[index].contractValue.toString() +
-                                                                                ' Eth',
+                                                                                ' ETH\n',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
                                                                         TextSpan(
                                                                             text: tasksServices.filterResults[index].contractValueToken.toString() +
-                                                                                ' Token',
+                                                                                ' aUSDC',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                                                       ])),
@@ -413,7 +413,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                           index]
                                                                       .contractOwner !=
                                                                   tasksServices
-                                                                      .ownAddress)
+                                                                      .ownAddress && tasksServices.ownAddress != null)
                                                                 TextButton(
                                                                     child: Text(
                                                                         'Participate'),
@@ -557,29 +557,72 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                 ),
                                                               ),
                                                               // Spacer(),
-                                                              Expanded(
-                                                                flex: 3,
-                                                                child: Text(
-                                                                  tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .contractValue
-                                                                          .toString() +
-                                                                      ' Eth',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText2,
-                                                                  softWrap:
-                                                                      false,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .fade,
-                                                                  maxLines: 1,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .end,
+                                                              // Expanded(
+                                                              //   flex: 3,
+                                                              //   child: Text(
+                                                              //     tasksServices.filterResults[
+                                                              //                 index]
+                                                              //             .contractValue
+                                                              //             .toString() +
+                                                              //         ' Eth',
+                                                              //     style: FlutterFlowTheme.of(
+                                                              //             context)
+                                                              //         .bodyText2,
+                                                              //     softWrap:
+                                                              //         false,
+                                                              //     overflow:
+                                                              //         TextOverflow
+                                                              //             .fade,
+                                                              //     maxLines: 1,
+                                                              //     textAlign:
+                                                              //         TextAlign
+                                                              //             .end,
+                                                              //   ),
+                                                              // ),
+                                                              if(tasksServices.filterResults[index].contractValue != 0)
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    tasksServices.filterResults[index].contractValue
+                                                                        .toString() +
+                                                                        ' ETH',
+                                                                    style: FlutterFlowTheme.of(context)
+                                                                        .bodyText2,
+                                                                    softWrap: false,
+                                                                    overflow: TextOverflow.fade,
+                                                                    maxLines: 1,
+                                                                    textAlign: TextAlign.end,
+                                                                  ),
                                                                 ),
-                                                              ),
+                                                              if(tasksServices.filterResults[index].contractValueToken != 0)
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    tasksServices.filterResults[index].contractValueToken
+                                                                        .toString() +
+                                                                        ' aUSDC',
+                                                                    style: FlutterFlowTheme.of(context)
+                                                                        .bodyText2,
+                                                                    softWrap: false,
+                                                                    overflow: TextOverflow.fade,
+                                                                    maxLines: 1,
+                                                                    textAlign: TextAlign.end,
+                                                                  ),
+                                                                ),
+                                                              if(tasksServices.filterResults[index].contractValue == 0 &&
+                                                                  tasksServices.filterResults[index].contractValueToken == 0)
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    'Has no money',
+                                                                    style: FlutterFlowTheme.of(context)
+                                                                        .bodyText2,
+                                                                    softWrap: false,
+                                                                    overflow: TextOverflow.fade,
+                                                                    maxLines: 1,
+                                                                    textAlign: TextAlign.end,
+                                                                  ),
+                                                                ),
                                                             ],
                                                           ),
                                                         ],

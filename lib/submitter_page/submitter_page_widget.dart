@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
+import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
@@ -140,38 +141,23 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       labelStyle: FlutterFlowTheme.of(context).bodyText1,
                       indicatorColor: Color(0xFF47CBE4),
                       indicatorWeight: 3,
+                      isScrollable: true,
                       tabs: [
                         Tab(
-                          text: 'Selection',
-                          // icon: Badge(
-                          //   // position: BadgePosition.topEnd(top: 10, end: 10),
-                          //   badgeContent: Container(
-                          //     width: 17,
-                          //     height: 17,
-                          //     alignment: Alignment.center,
-                          //     child: Text(
-                          //         tasksServices.tasksOwner.length.toString(),
-                          //         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)
-                          //     ),
-                          //   ),
-                          //   animationDuration: Duration(milliseconds: 300),
-                          //   animationType: BadgeAnimationType.scale,
-                          //   shape: BadgeShape.circle,
-                          //   borderRadius: BorderRadius.circular(5),
-                          //   // child: Icon(Icons.settings),
-                          // ),
+                         child: BadgeTab(taskCount: tasksServices.tasksOwner.length, tabText: 'Selection',),
                         ),
                         Tab(
-                          text: 'agreed',
+                          child: BadgeTab(taskCount: tasksServices.tasksAgreedSubmitter.length, tabText: 'Agreed'),
                         ),
                         Tab(
-                          text: 'Progress',
+                          child:
+                                BadgeTab(taskCount: tasksServices.tasksProgressSubmitter.length, tabText: 'Progress'),
                         ),
                         Tab(
-                          text: 'Review',
+                          child: BadgeTab(taskCount: tasksServices.tasksReviewSubmitter.length, tabText: 'Review'),
                         ),
                         Tab(
-                          text: 'Done',
+                          child: BadgeTab(taskCount: tasksServices.tasksDoneSubmitter.length, tabText: 'Done'),
                         ),
                       ],
                     ),
@@ -287,7 +273,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               text: widget
                                                       .obj[index].contractValue
                                                       .toString() +
-                                                  ' Eth \n',
+                                                  ' ETH \n',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -644,7 +630,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       child: Text(
                                         widget.obj[index].contractValue
                                                 .toString() +
-                                            ' Eth',
+                                            ' ETH',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
                                         softWrap: false,

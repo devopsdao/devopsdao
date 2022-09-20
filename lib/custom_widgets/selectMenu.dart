@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 
 const List<String> selectNetwork = <String>[
@@ -17,13 +20,16 @@ const List<String> selectNetwork = <String>[
 const List<String> selectToken = <String>['ETH', 'aUSDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
-  const SelectNetworkMenu({Key? key}) : super(key: key);
+  final Task object;
+  const SelectNetworkMenu({Key? key, required this.object}) : super(key: key);
 
   @override
   State<SelectNetworkMenu> createState() => _SelectNetworkMenuState();
 }
 
 class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
+  String assetName = '';
+  double asset = 0.0;
   String dropdownValue = selectNetwork.first;
 
   @override
@@ -58,8 +64,20 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
             tasksServices.destinationChain = value!;
             setState(() {
               dropdownValue = value;
-              tasksServices.getGasPrice('Moonbeam', value,
-                  tokenSymbol: dropdownValue);
+              // tasksServices.getGasPrice('Moonbeam', value,
+              //     tokenSymbol: dropdownValue);
+              if (widget.object.contractValue > 0) {
+                assetName = 'ETH';
+                asset = widget.object.contractValue;
+              } else if (widget.object.contractValueToken > 0) {
+                assetName = 'aUSDC';
+                asset = widget.object.contractValueToken;
+              }
+              tasksServices.getTransferFee(
+                  sourceChainName: 'Moonbeam',
+                  destinationChainName: value,
+                  assetDenom: assetName,
+                  amountInDenom: asset);
             });
           },
           items: selectNetwork.map<DropdownMenuItem<String>>((String value) {
@@ -76,7 +94,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                     .apply(fontSizeFactor: 0.9),
                 children: <TextSpan>[
               TextSpan(
-                  text: 'Gas Fee: ${tasksServices.transferFee}',
+                  text: 'Transfer Fee: ${tasksServices.transferFee}',
                   style: const TextStyle(
                       height: 1.8, fontWeight: FontWeight.bold)),
             ])),

@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
+import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/selectMenu.dart';
 import '../custom_widgets/wallet_action.dart';
@@ -120,22 +121,23 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                       labelColor: Colors.white,
                       labelStyle: FlutterFlowTheme.of(context).bodyText1,
                       indicatorColor: Color(0xFF47CBE4),
-                      indicatorWeight: 4,
+                      indicatorWeight: 3,
+                      isScrollable: true,
                       tabs: [
                         Tab(
-                          text: 'I\'m in',
+                          child: BadgeTab(taskCount: tasksServices.tasksWithMyParticipation.length, tabText: 'I\'m in',),
                           icon: FaIcon(
                             FontAwesomeIcons.smileBeam,
                           ),
                         ),
                         Tab(
-                          text: 'Working on',
+                          child: BadgeTab(taskCount: tasksServices.tasksPerformer.length, tabText: 'Working on',),
                           icon: Icon(
                             Icons.card_travel_outlined,
                           ),
                         ),
                         Tab(
-                          text: 'Done',
+                          child: BadgeTab(taskCount: tasksServices.tasksDonePerformer.length, tabText: 'Done',),
                           icon: Icon(
                             Icons.done_outline,
                           ),
@@ -246,7 +248,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                 text: widget.obj[index]
                                                         .contractValue
                                                         .toString() +
-                                                    ' Eth \n',
+                                                    ' ETH \n',
                                                 style:
                                                     DefaultTextStyle.of(context)
                                                         .style
@@ -337,7 +339,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                               "completed" &&
                                           widget.obj[index].contractValue != 0 ||
                                           widget.obj[index].contractValueToken != 0)
-                                        SelectNetworkMenu()
+                                        SelectNetworkMenu(object: widget.obj[index],)
                                     ],
                                   ),
                                 ),
@@ -562,7 +564,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                         child: Text(
                                           widget.obj[index].contractValue
                                                   .toString() +
-                                              ' Eth',
+                                              ' ETH',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
