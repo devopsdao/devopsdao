@@ -76,7 +76,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                     .apply(fontSizeFactor: 0.9),
                 children: <TextSpan>[
               TextSpan(
-                  text: 'Gas Fee: ${tasksServices.gasPriceValue}',
+                  text: 'Gas Fee: ${tasksServices.transferFee}',
                   style: const TextStyle(
                       height: 1.8, fontWeight: FontWeight.bold)),
             ])),

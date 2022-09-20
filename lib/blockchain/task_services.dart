@@ -1145,6 +1145,8 @@ class TasksServices extends ChangeNotifier {
 
     var decodedResponse = jsonDecode(response.body) as Map;
     print(decodedResponse);
+    int transferFeeDenum = int.parse(decodedResponse['fee']['amount']);
+    transferFee = transferFeeDenum / 1000000;
 
     notifyListeners();
   }
