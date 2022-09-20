@@ -339,7 +339,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                               "completed" &&
                                           widget.obj[index].contractValue != 0 ||
                                           widget.obj[index].contractValueToken != 0)
-                                        SelectNetworkMenu()
+                                        SelectNetworkMenu(object: widget.obj[index],)
                                     ],
                                   ),
                                 ),
