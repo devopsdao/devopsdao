@@ -58,8 +58,8 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
             tasksServices.destinationChain = value!;
             setState(() {
               dropdownValue = value;
-              // tasksServices.getGasPrice('Moonbeam', value,
-              //     tokenSymbol: dropdownValue);
+              tasksServices.getGasPrice('Moonbeam', value,
+                  tokenSymbol: dropdownValue);
             });
           },
           items: selectNetwork.map<DropdownMenuItem<String>>((String value) {

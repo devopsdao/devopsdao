@@ -124,7 +124,13 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> init() async {
     // var axellarGasPrice =
-    //     await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
+    await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'aUSDC');
+
+    // await getTransferFee(
+    //     sourceChainName: 'moonbase',
+    //     destinationChainName: 'ethereum',
+    //     assetDenom: 'aUSDC',
+    //     amountInDenom: 1);
     // print(axellarGasPrice);
     isDeviceConnected = false;
 
@@ -1044,6 +1050,7 @@ class TasksServices extends ChangeNotifier {
 
   double gasPriceValue = 0;
   // String saveDestinationChain = 'moonbeam';
+  //ported to dart from https://github.com/axelarnetwork/axelar-local-gmp-examples/blob/c80cdda1cbce5ff5e30eeb120ac3d4981ea7271b/scripts/utils.js#L24
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
     // saveDestinationChain = destinationChain;
@@ -1078,6 +1085,7 @@ class TasksServices extends ChangeNotifier {
     final destPrice =
         1e18 * double.parse(dest['gas_price']) * (dest['token_price']['usd']);
     final gasPrice = destPrice / (result['source_token']['token_price']['usd']);
+    print('gas price:');
     print(gasPrice);
     gasPriceValue = gasPrice;
     notifyListeners();
@@ -1103,6 +1111,40 @@ class TasksServices extends ChangeNotifier {
     // const dest = result.destination_native_token;
     // const destPrice = 1e18*dest.gas_price*dest.token_price.usd;
     // return destPrice / result.source_token.token_price.usd;
+  }
+
+  /**
+   * Gest the transfer fee for a given transaction
+   * ported to Dart from https://github.com/axelarnetwork/axelarjs-sdk/blob/main/src/libs/AxelarQueryAPI.ts#L85
+   * example testnet query: "https://axelartest-lcd.quickapi.com/axelar/nexus/v1beta1/transfer_fee?source_chain=ethereum&destination_chain=terra&amount=100000000uusd"
+   * @param sourceChainName
+   * @param destinationChainName
+   * @param assetDenom
+   * @param amountInDenom
+   * @returns
+   */
+  double transferFee = 0;
+  Future<void> getTransferFee(
+      {String sourceChainName = 'Moonbase',
+      String destinationChainName = 'Ethereum',
+      String assetDenom = 'aUSDC',
+      double amountInDenom = 0}) async {
+    if (amountInDenom <= 0) throw 'amountInDenom must be more than zero';
+    String api_url = 'axelar-testnet-rpc.axelar-dev.workers.dev';
+    final params = {
+      'sourceChain': sourceChainName,
+      'destinationChain': destinationChainName,
+      'amount': '${amountInDenom.toString()}${assetDenom}',
+    };
+
+    final uri = Uri.https(api_url, '/', params);
+
+    var response = await http.get(uri);
+
+    var decodedResponse = jsonDecode(response.body) as Map;
+    print(decodedResponse);
+
+    notifyListeners();
   }
 
   // Future<void> deleteTask(int id) async {
