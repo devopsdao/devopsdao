@@ -126,11 +126,11 @@ class TasksServices extends ChangeNotifier {
     // var axellarGasPrice =
     await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'aUSDC');
 
-    // await getTransferFee(
-    //     sourceChainName: 'moonbase',
-    //     destinationChainName: 'ethereum',
-    //     assetDenom: 'aUSDC',
-    //     amountInDenom: 1);
+    await getTransferFee(
+        sourceChainName: 'moonbeam',
+        destinationChainName: 'ethereum',
+        assetDenom: 'uausdc',
+        amountInDenom: 100000);
     // print(axellarGasPrice);
     isDeviceConnected = false;
 
@@ -1125,19 +1125,21 @@ class TasksServices extends ChangeNotifier {
    */
   double transferFee = 0;
   Future<void> getTransferFee(
-      {String sourceChainName = 'Moonbase',
+      {String sourceChainName = 'Moonbeam',
       String destinationChainName = 'Ethereum',
       String assetDenom = 'aUSDC',
       double amountInDenom = 0}) async {
     if (amountInDenom <= 0) throw 'amountInDenom must be more than zero';
-    String api_url = 'axelar-testnet-rpc.axelar-dev.workers.dev';
+    String api_url = 'axelartest-lcd.quickapi.com';
+
     final params = {
-      'sourceChain': sourceChainName,
-      'destinationChain': destinationChainName,
+      'source_chain': sourceChainName,
+      'destination_chain': destinationChainName,
       'amount': '${amountInDenom.toString()}${assetDenom}',
     };
 
-    final uri = Uri.https(api_url, '/', params);
+    final uri =
+        Uri.https(api_url, '/axelar/nexus/v1beta1/transfer_fee', params);
 
     var response = await http.get(uri);
 
