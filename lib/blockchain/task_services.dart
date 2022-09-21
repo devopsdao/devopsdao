@@ -1125,9 +1125,9 @@ class TasksServices extends ChangeNotifier {
    */
   double transferFee = 0;
   Future<void> getTransferFee(
-      {String sourceChainName = 'Moonbeam',
-      String destinationChainName = 'Ethereum',
-      String assetDenom = 'aUSDC',
+      {String sourceChainName = 'moonbeam',
+      String destinationChainName = 'ethereum',
+      String assetDenom = 'uausdc',
       double amountInDenom = 0}) async {
     if (amountInDenom <= 0) throw 'amountInDenom must be more than zero';
     String api_url = 'axelartest-lcd.quickapi.com';
@@ -1145,6 +1145,8 @@ class TasksServices extends ChangeNotifier {
 
     var decodedResponse = jsonDecode(response.body) as Map;
     print(decodedResponse);
+    int transferFeeDenum = int.parse(decodedResponse['fee']['amount']);
+    transferFee = transferFeeDenum / 1000000;
 
     notifyListeners();
   }

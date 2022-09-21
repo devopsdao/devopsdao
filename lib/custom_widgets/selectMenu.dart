@@ -66,14 +66,18 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
               dropdownValue = value;
               // tasksServices.getGasPrice('Moonbeam', value,
               //     tokenSymbol: dropdownValue);
-              if(widget.object.contractValue > 0) {
+              if (widget.object.contractValue > 0) {
                 assetName = 'ETH';
                 asset = widget.object.contractValue;
               } else if (widget.object.contractValueToken > 0) {
-                assetName = 'aUSDC';
+                assetName = 'uausdc';
                 asset = widget.object.contractValueToken;
+                tasksServices.getTransferFee(
+                    sourceChainName: 'moonbeam',
+                    destinationChainName: value.toLowerCase(),
+                    assetDenom: assetName,
+                    amountInDenom: 100000);
               }
-              tasksServices.getTransferFee(sourceChainName: 'Moonbeam', destinationChainName: value, assetDenom: assetName, amountInDenom: asset );
             });
           },
           items: selectNetwork.map<DropdownMenuItem<String>>((String value) {
