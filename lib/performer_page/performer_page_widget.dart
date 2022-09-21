@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 import '../custom_widgets/badgetab.dart';
+import '../custom_widgets/buttons.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/selectMenu.dart';
 import '../custom_widgets/wallet_action.dart';
@@ -335,10 +336,10 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                     .style
                                                     .apply(fontSizeFactor: 1.0))
                                           ])),
-                                      // if (widget.obj[index].jobState ==
-                                      //         "completed" &&
-                                      //     (widget.obj[index].contractValue != 0 ||
-                                      //     widget.obj[index].contractValueToken != 0))
+                                      if (widget.obj[index].jobState ==
+                                              "completed" &&
+                                          (widget.obj[index].contractValue != 0 ||
+                                          widget.obj[index].contractValueToken != 0))
                                         SelectNetworkMenu(object: widget.obj[index],)
                                     ],
                                   ),
@@ -407,33 +408,35 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                           "completed" &&
                                       (widget.obj[index].contractValue != 0 ||
                                       widget.obj[index].contractValueToken != 0))
-                                  TextButton(
-                                      child: Text('Withdraw'),
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                          backgroundColor: Colors.green),
-                                      onPressed: () {
-                                        if (widget.obj[index].jobState ==
-                                            "completed" &&
-                                            (widget.obj[index].contractValue != 0 ||
-                                                widget.obj[index].contractValueToken != 0)) {
-                                          setState(() {
-                                            widget.obj[index].justLoaded = false;
-                                          });
-                                          tasksServices.withdrawToChain(
-                                              widget.obj[index].contractAddress,
-                                              widget.obj[index].nanoId);
-                                          Navigator.pop(context);
-
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => WalletAction(
-                                                nanoId:
-                                                widget.obj[index].nanoId,
-                                                taskName: 'withdrawToChain',
-                                              ));
-                                        }
-                                      }),
+                                    WithdrawButton(object: widget.obj[index]),
+                                  // TextButton(
+                                  //     child: Text('Withdraw'),
+                                  //     style: TextButton.styleFrom(
+                                  //         primary: Colors.white,
+                                  //         disabledBackgroundColor: Colors.white10,
+                                  //         backgroundColor: Colors.green),
+                                  //     onPressed: false ? () {
+                                  //       if (widget.obj[index].jobState ==
+                                  //           "completed" &&
+                                  //           (widget.obj[index].contractValue != 0 ||
+                                  //               widget.obj[index].contractValueToken != 0)) {
+                                  //         setState(() {
+                                  //           widget.obj[index].justLoaded = false;
+                                  //         });
+                                  //         tasksServices.withdrawToChain(
+                                  //             widget.obj[index].contractAddress,
+                                  //             widget.obj[index].nanoId);
+                                  //         Navigator.pop(context);
+                                  //
+                                  //         showDialog(
+                                  //             context: context,
+                                  //             builder: (context) => WalletAction(
+                                  //               nanoId:
+                                  //               widget.obj[index].nanoId,
+                                  //               taskName: 'withdrawToChain',
+                                  //             ));
+                                  //       }
+                                  //     } : null),
                                   // if (widget.obj[index].jobState ==
                                   //         "completed" &&
                                   //     widget.obj[index].contractValue != 0)

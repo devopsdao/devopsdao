@@ -56,8 +56,8 @@ class _WalletAction extends State<WalletAction> {
           transactionStagesConfirmed = 'initial';
           transactionStagesMinted = 'initial';
         } else {
-          transactionStagesApprove = 'done';
-          transactionStagesWaiting = 'loading';
+          transactionStagesApprove = 'loading';
+          transactionStagesWaiting = 'initial';
           transactionStagesPending = 'initial';
           transactionStagesConfirmed = 'initial';
           transactionStagesMinted = 'initial';

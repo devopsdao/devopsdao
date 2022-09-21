@@ -1151,6 +1151,12 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  Future<void> myNotifyListeners() async {
+    notifyListeners();
+  }
+
+
   // Future<void> deleteTask(int id) async {
   //   await _web3client.sendTransaction(
   //     _creds,
