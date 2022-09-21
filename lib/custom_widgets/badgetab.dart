@@ -26,18 +26,18 @@ class _BadgeTabState extends State<BadgeTab> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
 
-    return
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if(widget.taskCount > 0)
-          Badge(
-            // position: BadgePosition.topEnd(top: 10, end: 10),
+  return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if(widget.taskCount > 0)
+          // Expanded(
+          //   flex: 1,
+          //   child:
+            Badge(
             badgeContent: Container(
               width: 9,
-              height: 10,
+              height: 11,
               alignment: Alignment.center,
               child: Text(
                   widget.taskCount.toString(),
@@ -45,8 +45,18 @@ class _BadgeTabState extends State<BadgeTab> {
               ),
             ),
           ),
-          Text('${widget.taskCount > 0 ? ' ' + widget.tabText : widget.tabText}'),
-        ],
-      );
+    // ),
+        Expanded(
+          flex: 1,
+          child: Text('${widget.taskCount > 0 ? ' ' + widget.tabText : widget.tabText}',
+            softWrap: false,
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+            textAlign: TextAlign.center,),
+        )
+
+
+      ],
+    );
   }
 }

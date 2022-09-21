@@ -141,7 +141,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       labelStyle: FlutterFlowTheme.of(context).bodyText1,
                       indicatorColor: Color(0xFF47CBE4),
                       indicatorWeight: 3,
-                      isScrollable: true,
+                      // isScrollable: true,
                       tabs: [
                         Tab(
                          child: BadgeTab(taskCount: tasksServices.tasksOwner.length, tabText: 'Selection',),
