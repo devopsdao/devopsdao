@@ -141,13 +141,13 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
-    function transferToaddressChain(Job job, address payable addressToSend, string memory chain)
-    external
-    payable
-    {
-        jobArray[job.index()].transferToaddressChain(addressToSend, chain);
-        emit OneEventForAll(address(job), job.index());
-    }
+    // function transferToaddressChain(Job job, address payable addressToSend, string memory chain)
+    // external
+    // payable
+    // {
+    //     jobArray[job.index()].transferToaddressChain(addressToSend, chain);
+    //     emit OneEventForAll(address(job), job.index());
+    // }
 
     function transferToaddressChain2(Job job, address payable addressToSend, string memory chain)
     external
@@ -346,19 +346,19 @@ contract Job {
         // msg.sender.transfer(address(this).balance);
     }
 
-    function transferToaddressChain(address payable _addressToSend, string memory chain) public payable {
-        if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
-            if (_addressToSend == contractOwner) {
-                _addressToSend.transfer(contractAddress.balance);
-            }
-        } else if (
-            keccak256(bytes(jobState)) == keccak256(bytes("completed"))
-        ) {
-            _destinationAddresses.push(participantAddress);
-            distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'WETH', contractAddress.balance);
-        }
-        // msg.sender.transfer(address(this).balance);
-    }
+    // function transferToaddressChain(address payable _addressToSend, string memory chain) public payable {
+    //     if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
+    //         if (_addressToSend == contractOwner) {
+    //             _addressToSend.transfer(contractAddress.balance);
+    //         }
+    //     } else if (
+    //         keccak256(bytes(jobState)) == keccak256(bytes("completed"))
+    //     ) {
+    //         _destinationAddresses.push(participantAddress);
+    //         distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'WETH', contractAddress.balance);
+    //     }
+    //     // msg.sender.transfer(address(this).balance);
+    // }
 
     function addressToString(address address_) external pure returns (string memory) {
         return address_.toString();
@@ -382,7 +382,20 @@ contract Job {
             } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
                 emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to Ethereum address: ",this.addressToString(participantAddress)));
                 participantAddress.transfer(contractAddress.balance);
-            } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
+            } 
+            else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
+                keccak256(chainBytes) == keccak256(bytes("Ethereum"))
+            )) {
+                emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany", symbol, " to ", chain, "address:",this.addressToString(participantAddress)));
+                // string memory _addressToSend2 = bytes(_addressToSend);
+                address tokenAddress = gateway.tokenAddresses("aUSDC");
+                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
+                IERC20(tokenAddress).approve(address(distributor), contractAmount);
+
+                _destinationAddresses.push(_addressToSend);
+                distributor.sendToMany(chain, this.addressToString(_addressToSend), _destinationAddresses, 'aUSDC', contractAddress.balance);
+            }
+            else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
                 keccak256(chainBytes) == keccak256(bytes("Ethereum")) || 
                 keccak256(chainBytes) == keccak256(bytes("Binance")) ||
                 keccak256(chainBytes) == keccak256(bytes("Fantom")) ||
@@ -398,7 +411,6 @@ contract Job {
                 IERC20(tokenAddress).approve(address(gateway), contractAmount);
                 // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
                 gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", contractAmount);
-                
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
                 // revert InvalidToken({
                 //     token: string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress))

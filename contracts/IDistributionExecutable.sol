@@ -10,7 +10,7 @@ interface IDistributionExecutable {
 
     function sendToMany(
         string calldata destinationChain,
-        address destinationAddress,
+        string memory destinationAddress,
         address[] calldata destinationAddresses,
         string calldata symbol,
         uint256 amount
