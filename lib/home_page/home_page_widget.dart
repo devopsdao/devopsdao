@@ -240,23 +240,25 @@ class _HomePageWidgetState extends State<HomePageWidget>
         elevation: 2,
       ),
       backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: _isFloatButtonVisible ? FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateJobWidget(),
-            ),
-          );
-        },
-        backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-        elevation: 8,
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
-        ),
-      ) : null,
+      floatingActionButton: _isFloatButtonVisible
+          ? FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateJobWidget(),
+                  ),
+                );
+              },
+              backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+              elevation: 8,
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 28,
+              ),
+            )
+          : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -373,10 +375,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           Text(
                             '${tasksServices.pendingBalanceToken} aUSDC',
                             style: FlutterFlowTheme.of(context).title1.override(
-                              fontFamily: 'Poppins',
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBtnText,
-                            ),
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBtnText,
+                                ),
                           ),
                         ],
                       ),
@@ -409,7 +411,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   FlutterFlowTheme.of(context).primaryBtnText,
                             ),
                       ),
-                      Text(
+                      SelectableText(
                         '${tasksServices.ownAddress}',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
                               fontFamily: 'Poppins',
