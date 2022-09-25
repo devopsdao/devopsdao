@@ -142,6 +142,8 @@ class TasksServices extends ChangeNotifier {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
         }
       });
+    } else {
+      isDeviceConnected = await InternetConnectionChecker().hasConnection;
     }
 
     if (transactionTester == null) {
@@ -200,6 +202,7 @@ class TasksServices extends ChangeNotifier {
   // }
 
   int networkID = 0;
+  bool validNetworkID = false;
   Future<void> connectWallet4() async {
     // if (transactionTester == null) {
     //   transactionTester = EthereumTransactionTester();
@@ -230,6 +233,9 @@ class TasksServices extends ChangeNotifier {
         isLoading = true;
 
         networkID = await _web3client.getNetworkId();
+        if (networkID == 1287) {
+          validNetworkID = true;
+        }
         // print(networkID);
       }();
       notifyListeners();
