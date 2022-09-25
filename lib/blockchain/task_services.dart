@@ -124,7 +124,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> init() async {
     // var axellarGasPrice =
-    await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'aUSDC');
+    await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
 
     await getTransferFee(
         sourceChainName: 'moonbeam',
@@ -1011,7 +1011,7 @@ class TasksServices extends ChangeNotifier {
     };
     late String txn;
     // const gasLimit = 3e3;
-    late int priceInGwei = (30000 * gasPriceValue).toInt();
+    late int priceInGwei = (80000000 * gasPriceValue).toInt();
     print("gasPriceValue");
     print(gasPriceValue);
     // print(destinationChain);
@@ -1151,11 +1151,9 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> myNotifyListeners() async {
     notifyListeners();
   }
-
 
   // Future<void> deleteTask(int id) async {
   //   await _web3client.sendTransaction(
