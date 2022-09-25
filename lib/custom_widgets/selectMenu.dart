@@ -17,7 +17,7 @@ const List<String> selectNetwork = <String>[
 ];
 
 // const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
-const List<String> selectToken = <String>['ETH', 'aUSDC'];
+const List<String> selectToken = <String>['DEV', 'aUSDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
   final Task object;
