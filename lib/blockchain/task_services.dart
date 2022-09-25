@@ -645,19 +645,19 @@ class TasksServices extends ChangeNotifier {
         print(temp);
         if (temp != null) {
           // if (temp[10] == 'ETH') {
-            value = await web3Call(
-                contract: _deployedContract,
-                function: _getBalance,
-                params: [BigInt.from(temp[6].toInt())]);
-            final BigInt weiBalance = value[0];
-            ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+          value = await web3Call(
+              contract: _deployedContract,
+              function: _getBalance,
+              params: [BigInt.from(temp[6].toInt())]);
+          final BigInt weiBalance = value[0];
+          ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
           // } else {
-            final BigInt weiBalanceToken =
-                await web3GetBalanceToken(temp[2], temp[10]);
-            final ethBalancePreciseToken =
-                weiBalanceToken.toDouble() / pow(10, 6);
-            ethBalanceToken =
-                (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+          final BigInt weiBalanceToken =
+              await web3GetBalanceToken(temp[2], temp[10]);
+          final ethBalancePreciseToken =
+              weiBalanceToken.toDouble() / pow(10, 6);
+          ethBalanceToken =
+              (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
           // }
 
           // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
@@ -688,7 +688,8 @@ class TasksServices extends ChangeNotifier {
               contractValueToken: ethBalanceToken,
               nanoId: temp[11]);
 
-          taskLoaded = temp[6].toInt() + 1; // this count we need to show the loading process. does not affect anything else
+          taskLoaded = temp[6].toInt() +
+              1; // this count we need to show the loading process. does not affect anything else
 
           // if (isLoading == true) {
           notifyListeners();
@@ -721,13 +722,15 @@ class TasksServices extends ChangeNotifier {
           //
           // }
           // final pendingBalance2 = temp.contractValue;
-          if ((temp.contractValue != 0 || temp.contractValueToken != 0) && temp.participiant == ownAddress) {
+          if ((temp.contractValue != 0 || temp.contractValueToken != 0) &&
+              temp.participiant == ownAddress) {
             if (temp.jobState == "agreed" ||
                 temp.jobState == "progress" ||
                 temp.jobState == "review" ||
                 temp.jobState == "completed") {
               pendingBalance = pendingBalance! + temp.contractValue;
-              pendingBalanceToken = pendingBalanceToken! + temp.contractValueToken;
+              pendingBalanceToken =
+                  pendingBalanceToken! + temp.contractValueToken;
             }
           }
 
@@ -915,18 +918,22 @@ class TasksServices extends ChangeNotifier {
     if (taskTokenSymbol == 'ETH') {
       // await approveSpend(_contractAddress, ownAddress!, taskTokenSymbol,
       //     priceInBigInt, nanoId);
-      final transaction =  Transaction(
-            from: ownAddress,
-            to: addressToSend,
-            value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
-          );
+      final transaction = Transaction(
+        from: ownAddress,
+        to: addressToSend,
+        value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
+      );
+
+      txn = await web3Transaction(_creds, transaction, chainId: _chainId);
       // print(txn);
 
-      txn = await ierc20.transfer(addressToSend, priceInBigInt,
-          credentials: _creds, transaction: transaction);
-print(txn);
+      // txn = await ierc20.transfer(addressToSend, priceInBigInt,
+      //     credentials: _creds, transaction: transaction);
+      print(txn);
     } else if (taskTokenSymbol == 'aUSDC') {
-      final transaction = Transaction(from: ownAddress,);
+      final transaction = Transaction(
+        from: ownAddress,
+      );
       txn = await ierc20.transfer(addressToSend, priceInBigInt,
           credentials: _creds, transaction: transaction);
     }
@@ -1047,8 +1054,6 @@ print(txn);
     // fetchTasks();
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
-
-
 
   String destinationChain = 'Moonbase';
   Future<void> withdrawToChain(
