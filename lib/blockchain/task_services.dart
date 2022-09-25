@@ -202,8 +202,8 @@ class TasksServices extends ChangeNotifier {
   //   }
   // }
 
-  int networkID = 0;
-  bool validNetworkID = false;
+  int chainID = 0;
+  bool validChainID = false;
   Future<void> connectWallet4() async {
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
@@ -230,11 +230,12 @@ class TasksServices extends ChangeNotifier {
           myBalance();
           isLoading = true;
 
-          networkID = await _web3client.getNetworkId();
-          if (networkID == 1287) {
-            validNetworkID = true;
+          // chainID = await _web3client.getCchainID();
+          chainID = session.chainId;
+          if (chainID == 1287) {
+            validChainID = true;
           } else {
-            validNetworkID = false;
+            validChainID = false;
           }
           // print(networkID);
         }();
