@@ -5,9 +5,7 @@ import '../custom_widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
@@ -88,6 +86,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
   @override
   void initState() {
+
     super.initState();
     startPageLoadAnimations(
       animationsMap.values
@@ -115,6 +114,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    tasksServices.validNetworkID.addListener(() {
+
+    });
+
     bool _isFloatButtonVisible = false;
 
     if (tasksServices.ownAddress != null) {

@@ -51,6 +51,9 @@ class TasksServices extends ChangeNotifier {
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
+  ValueNotifier<bool> validNetworkID = ValueNotifier<bool>(true);
+  ValueNotifier<bool> initComplete = ValueNotifier<bool>(false);
+
   var credentials;
   EthereumAddress? publicAddress;
   var transactionTester;
@@ -924,7 +927,6 @@ class TasksServices extends ChangeNotifier {
 
       txn = await ierc20.transfer(addressToSend, priceInBigInt,
           credentials: _creds, transaction: transaction);
-print(txn);
     } else if (taskTokenSymbol == 'aUSDC') {
       final transaction = Transaction(from: ownAddress,);
       txn = await ierc20.transfer(addressToSend, priceInBigInt,

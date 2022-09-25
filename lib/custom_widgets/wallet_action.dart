@@ -25,11 +25,17 @@ class _WalletAction extends State<WalletAction> {
   String transactionStagesConfirmed = 'initial';
   String transactionStagesMinted = 'initial';
 
+  @override
+  void initState() {
 
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
     // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
     //
     // }

@@ -156,19 +156,22 @@ class _PaymentState extends State<Payment> {
               onChanged: (String? value) {
                 // This is called when the user selects an item.
                 tasksServices.taskTokenSymbol = value!;
-                if (value == 'ETH') {
-                  Interface.tokensEntered = 0.0;
-                  valueController!.text = '0.0';
-                  _currentPriceValue = 0.0;
-                  minPrice = 0.0;
-                  maxPrice = 0.125;
-                } else {
-                  Interface.tokensEntered = 0.0;
-                  valueController!.text = '0.0';
-                  _currentPriceValue = 0.0;
-                  minPrice = 0.0;
-                  maxPrice = 25.0;
+                if (dropdownValue != value) {
+                  if (value == 'ETH') {
+                    Interface.tokensEntered = 0.0;
+                    valueController!.text = '0.0';
+                    _currentPriceValue = 0.0;
+                    minPrice = 0.0;
+                    maxPrice = 0.125;
+                  } else {
+                    Interface.tokensEntered = 0.0;
+                    valueController!.text = '0.0';
+                    _currentPriceValue = 0.0;
+                    minPrice = 0.0;
+                    maxPrice = 25.0;
+                  }
                 }
+
                 setState(() {
                   dropdownValue = value;
                 });
