@@ -147,20 +147,34 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       // isScrollable: true,
                       tabs: [
                         Tab(
-                         child: BadgeTab(taskCount: tasksServices.tasksOwner.length, tabText: 'Selection',),
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksOwner.length,
+                            tabText: 'Selection',
+                          ),
                         ),
                         Tab(
-                          child: BadgeTab(taskCount: tasksServices.tasksAgreedSubmitter.length, tabText: 'Agreed'),
+                          child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksAgreedSubmitter.length,
+                              tabText: 'Agreed'),
                         ),
                         Tab(
-                          child:
-                                BadgeTab(taskCount: tasksServices.tasksProgressSubmitter.length, tabText: 'Progress'),
+                          child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksProgressSubmitter.length,
+                              tabText: 'Progress'),
                         ),
                         Tab(
-                          child: BadgeTab(taskCount: tasksServices.tasksReviewSubmitter.length, tabText: 'Review'),
+                          child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksReviewSubmitter.length,
+                              tabText: 'Review'),
                         ),
                         Tab(
-                          child: BadgeTab(taskCount: tasksServices.tasksDoneSubmitter.length, tabText: 'Done'),
+                          child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksDoneSubmitter.length,
+                              tabText: 'Done'),
                         ),
                       ],
                     ),
@@ -277,7 +291,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               text: widget
                                                       .obj[index].contractValue
                                                       .toString() +
-                                                  ' ETH \n',
+                                                  ' DEV \n',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -468,36 +482,48 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 TextButton(
                                   child: Text('Topup contract'),
                                   onPressed: () {
-                                    showDialog(context: context, builder: (context) => AlertDialog(
-                                      title: Text('Topup contract'),
-                                      // backgroundColor: Colors.black,
-                                      content: Payment(purpose: 'topup',),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            tasksServices.addTokens(
-                                                widget.obj[index].contractAddress,
-                                                Interface.tokensEntered,
-                                                widget.obj[index].nanoId);
-                                            Navigator.pop(context);
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text('Topup contract'),
+                                              // backgroundColor: Colors.black,
+                                              content: Payment(
+                                                purpose: 'topup',
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    tasksServices.addTokens(
+                                                        widget.obj[index]
+                                                            .contractAddress,
+                                                        Interface.tokensEntered,
+                                                        widget
+                                                            .obj[index].nanoId);
+                                                    Navigator.pop(context);
 
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) => WalletAction(
-                                                  nanoId:
-                                                  widget.obj[index].nanoId,
-                                                  taskName: 'addTokens',
-                                                ));
-                                        },
-                                          child: Text('Topup!'),
-                                          style: TextButton.styleFrom(
-                                              primary: Colors.white,
-                                              backgroundColor: Colors.green),),
-                                        TextButton(
-                                            child: Text('Close'),
-                                            onPressed: () => Navigator.pop(context)),
-                                      ],
-                                    ));
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            WalletAction(
+                                                              nanoId: widget
+                                                                  .obj[index]
+                                                                  .nanoId,
+                                                              taskName:
+                                                                  'addTokens',
+                                                            ));
+                                                  },
+                                                  child: Text('Topup!'),
+                                                  style: TextButton.styleFrom(
+                                                      primary: Colors.white,
+                                                      backgroundColor:
+                                                          Colors.green),
+                                                ),
+                                                TextButton(
+                                                    child: Text('Close'),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context)),
+                                              ],
+                                            ));
                                   },
                                   style: TextButton.styleFrom(
                                       primary: Colors.white,
@@ -661,38 +687,40 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       ),
                                     ),
                                     // Spacer(),
-                                    if(widget.obj[index].contractValue != 0)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        widget.obj[index].contractValue
-                                                .toString() +
-                                            ' ETH',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
+                                    if (widget.obj[index].contractValue != 0)
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          widget.obj[index].contractValue
+                                                  .toString() +
+                                              ' ETH',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
+                                        ),
                                       ),
-                                    ),
-                                    if(widget.obj[index].contractValueToken != 0)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        widget.obj[index].contractValueToken
-                                                .toString() +
-                                            ' aUSDC',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
+                                    if (widget.obj[index].contractValueToken !=
+                                        0)
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          widget.obj[index].contractValueToken
+                                                  .toString() +
+                                              ' aUSDC',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
+                                        ),
                                       ),
-                                    ),
-                                    if(widget.obj[index].contractValue == 0 &&
-                                        widget.obj[index].contractValueToken == 0)
+                                    if (widget.obj[index].contractValue == 0 &&
+                                        widget.obj[index].contractValueToken ==
+                                            0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(

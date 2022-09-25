@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +7,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 
-const List<String> selectToken = <String>['ETH', 'aUSDC'];
+const List<String> selectToken = <String>['DEV', 'aUSDC'];
 
 class Payment extends StatefulWidget {
   final String purpose;
@@ -25,8 +24,6 @@ class _PaymentState extends State<Payment> {
   double minPrice = 0.0;
   double maxPrice = 0.125;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -37,11 +34,15 @@ class _PaymentState extends State<Payment> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var Interface = context.watch<InterfaceServices>();
-    dropdownValue = tasksServices.taskTokenSymbol;
+    if (tasksServices.taskTokenSymbol == 'ETH') {
+      dropdownValue = 'DEV';
+    } else {
+      dropdownValue = tasksServices.taskTokenSymbol;
+    }
 
     late Color setBlackAndWhite;
     late Color setGrey;
-    if(widget.purpose == 'create') {
+    if (widget.purpose == 'create') {
       setBlackAndWhite = Colors.white;
       setGrey = Colors.blueGrey;
     } else {
@@ -53,14 +54,12 @@ class _PaymentState extends State<Payment> {
       children: [
         TextFormField(
           controller: valueController,
-
           inputFormatters: [
             LengthLimitingTextInputFormatter(8),
             FilteringTextInputFormatter.allow(RegExp(r'\d*\.?\d*')),
           ],
           autofocus: true,
           obscureText: false,
-
           decoration: InputDecoration(
             labelText: 'Value:',
             labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
@@ -88,10 +87,10 @@ class _PaymentState extends State<Payment> {
             ),
           ),
           style: FlutterFlowTheme.of(context).bodyText1.override(
-            fontFamily: 'Poppins',
-            color: setBlackAndWhite,
-            lineHeight: 2,
-          ),
+                fontFamily: 'Poppins',
+                color: setBlackAndWhite,
+                lineHeight: 2,
+              ),
           maxLines: 1,
           keyboardType: TextInputType.number,
           onChanged: (text) {
@@ -100,7 +99,6 @@ class _PaymentState extends State<Payment> {
               Interface.tokensEntered = double.parse(text);
             });
           },
-
         ),
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 15),
@@ -136,11 +134,11 @@ class _PaymentState extends State<Payment> {
                         .style
                         .apply(fontSizeFactor: 1.3, color: setBlackAndWhite),
                     children: <TextSpan>[
-                      TextSpan(
-                          text: 'Select Token: ',
-                          style:
-                          const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                    ])),
+                  TextSpan(
+                      text: 'Select Token: ',
+                      style: const TextStyle(
+                          height: 2, fontWeight: FontWeight.bold)),
+                ])),
             DropdownButton<String>(
               isExpanded: true,
               value: dropdownValue,
@@ -155,8 +153,12 @@ class _PaymentState extends State<Payment> {
               ),
               onChanged: (String? value) {
                 // This is called when the user selects an item.
-                tasksServices.taskTokenSymbol = value!;
-                if (value == 'ETH') {
+                if (value == 'DEV') {
+                  tasksServices.taskTokenSymbol = 'ETH';
+                } else {
+                  tasksServices.taskTokenSymbol = value!;
+                }
+                if (value == 'DEV') {
                   Interface.tokensEntered = 0.0;
                   valueController!.text = '0.0';
                   _currentPriceValue = 0.0;
@@ -170,7 +172,7 @@ class _PaymentState extends State<Payment> {
                   maxPrice = 25.0;
                 }
                 setState(() {
-                  dropdownValue = value;
+                  dropdownValue = value!;
                 });
               },
               items: selectToken.map<DropdownMenuItem<String>>((String value) {
