@@ -51,10 +51,8 @@ class TasksServices extends ChangeNotifier {
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
-  // ValueNotifier<bool> validNetworkID = ValueNotifier<bool>(false);
-  // ValueNotifier<bool> initComplete = ValueNotifier<bool>(false);
-  bool validNetworkID = false;
-  bool initComplete = false;
+  ValueNotifier<bool> validNetworkID = ValueNotifier<bool>(true);
+  ValueNotifier<bool> initComplete = ValueNotifier<bool>(false);
 
   var credentials;
   EthereumAddress? publicAddress;
@@ -127,6 +125,7 @@ class TasksServices extends ChangeNotifier {
     init();
   }
 
+  bool initComplete = false;
   Future<void> init() async {
     // var axellarGasPrice =
     await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
@@ -209,6 +208,7 @@ class TasksServices extends ChangeNotifier {
   // }
 
   int networkID = 0;
+  bool validNetworkID = false;
   Future<void> connectWallet4() async {
     // if (transactionTester == null) {
     //   transactionTester = EthereumTransactionTester();
@@ -943,9 +943,14 @@ class TasksServices extends ChangeNotifier {
       txn = await web3Transaction(_creds, transaction, chainId: _chainId);
       // print(txn);
 
+<<<<<<< HEAD
+      txn = await ierc20.transfer(addressToSend, priceInBigInt,
+          credentials: _creds, transaction: transaction);
+=======
       // txn = await ierc20.transfer(addressToSend, priceInBigInt,
       //     credentials: _creds, transaction: transaction);
       print(txn);
+>>>>>>> 8ad5b072b1f3192f9ca31257183baf456e8443d4
     } else if (taskTokenSymbol == 'aUSDC') {
       final transaction = Transaction(
         from: ownAddress,
@@ -1070,8 +1075,6 @@ class TasksServices extends ChangeNotifier {
     // fetchTasks();
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
-
-
 
   String destinationChain = 'Moonbase';
   Future<void> withdrawToChain(

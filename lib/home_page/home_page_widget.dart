@@ -114,9 +114,21 @@ class _HomePageWidgetState extends State<HomePageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    tasksServices.validNetworkID.addListener(() {
+    // tasksServices.initComplete.value = false;
+    // tasksServices.initComplete.addListener(() {
+    //   print(tasksServices.initComplete.value);
+    //   if(tasksServices.initComplete.value) {
+    //
+    //   }
+    // });
 
-    });
+    // tasksServices.validNetworkID.value = false;
+    // tasksServices.validNetworkID.addListener(() {
+    //   print(tasksServices.validNetworkID.value);
+    //   if(tasksServices.validNetworkID.value) {
+    //
+    //   }
+    // });
 
     bool _isFloatButtonVisible = false;
 
@@ -163,7 +175,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
           //     ),
           //   ],
           // ),/
-          if (tasksServices.isDeviceConnected)
+          if (tasksServices.isDeviceConnected ||
+              tasksServices.platform == 'web')
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -184,12 +197,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     //   print(
                     //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
                     // }();
+
                     showDialog(
                       context: context,
                       builder: (context) => MyWalletPage(
                         title: '',
                       ),
                     );
+
                   },
                 ),
               ],
@@ -215,12 +230,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     //   print(
                     //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
                     // }();
-                    showDialog(
-                      context: context,
-                      builder: (context) => MyWalletPage(
-                        title: '',
-                      ),
-                    );
+
                   },
                 ),
               ],
@@ -243,23 +253,25 @@ class _HomePageWidgetState extends State<HomePageWidget>
         elevation: 2,
       ),
       backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: _isFloatButtonVisible ? FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateJobWidget(),
-            ),
-          );
-        },
-        backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-        elevation: 8,
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
-        ),
-      ) : null,
+      floatingActionButton: _isFloatButtonVisible
+          ? FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateJobWidget(),
+                  ),
+                );
+              },
+              backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+              elevation: 8,
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 28,
+              ),
+            )
+          : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -376,10 +388,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           Text(
                             '${tasksServices.pendingBalanceToken} aUSDC',
                             style: FlutterFlowTheme.of(context).title1.override(
-                              fontFamily: 'Poppins',
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBtnText,
-                            ),
+                                  fontFamily: 'Poppins',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBtnText,
+                                ),
                           ),
                         ],
                       ),
@@ -412,7 +424,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   FlutterFlowTheme.of(context).primaryBtnText,
                             ),
                       ),
-                      Text(
+                      SelectableText(
                         '${tasksServices.ownAddress}',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
                               fontFamily: 'Poppins',
