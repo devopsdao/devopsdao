@@ -239,7 +239,6 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       style: TextStyle(color: Colors.redAccent, fontSize: 20),
                       textAlign: TextAlign.center,
                     ),
-
                   )
                 ],
               ),

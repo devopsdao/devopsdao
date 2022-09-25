@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +23,6 @@ class _PaymentState extends State<Payment> {
   double _currentPriceValue = 0.0;
   double minPrice = 0.0;
   double maxPrice = 0.125;
-
-
 
   @override
   void initState() {
@@ -57,14 +54,12 @@ class _PaymentState extends State<Payment> {
       children: [
         TextFormField(
           controller: valueController,
-
           inputFormatters: [
             LengthLimitingTextInputFormatter(8),
             FilteringTextInputFormatter.allow(RegExp(r'\d*\.?\d*')),
           ],
           autofocus: true,
           obscureText: false,
-
           decoration: InputDecoration(
             labelText: 'Value:',
             labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
@@ -104,7 +99,6 @@ class _PaymentState extends State<Payment> {
               Interface.tokensEntered = double.parse(text);
             });
           },
-
         ),
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 15),
@@ -159,6 +153,23 @@ class _PaymentState extends State<Payment> {
               ),
               onChanged: (String? value) {
                 // This is called when the user selects an item.
+<<<<<<< HEAD
+                tasksServices.taskTokenSymbol = value!;
+                if (dropdownValue != value) {
+                  if (value == 'ETH') {
+                    Interface.tokensEntered = 0.0;
+                    valueController!.text = '0.0';
+                    _currentPriceValue = 0.0;
+                    minPrice = 0.0;
+                    maxPrice = 0.125;
+                  } else {
+                    Interface.tokensEntered = 0.0;
+                    valueController!.text = '0.0';
+                    _currentPriceValue = 0.0;
+                    minPrice = 0.0;
+                    maxPrice = 25.0;
+                  }
+=======
                 if (value == 'DEV') {
                   tasksServices.taskTokenSymbol = 'ETH';
                 } else {
@@ -176,7 +187,9 @@ class _PaymentState extends State<Payment> {
                   _currentPriceValue = 0.0;
                   minPrice = 0.0;
                   maxPrice = 25.0;
+>>>>>>> a8a4fc9a7a6582b4e7580a3c49352c9cdbf67260
                 }
+
                 setState(() {
                   dropdownValue = value!;
                 });

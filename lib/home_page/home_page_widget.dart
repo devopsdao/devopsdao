@@ -336,7 +336,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     ),
                           ),
                           Text(
-                            '${tasksServices.ethBalance} ETH',
+                            '${tasksServices.ethBalance} DEV',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
@@ -378,7 +378,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     ),
                           ),
                           Text(
-                            '${tasksServices.pendingBalance} ETH',
+                            '${tasksServices.pendingBalance} DEV',
                             style: FlutterFlowTheme.of(context).title1.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
@@ -424,14 +424,28 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   FlutterFlowTheme.of(context).primaryBtnText,
                             ),
                       ),
-                      SelectableText(
-                        '${tasksServices.ownAddress}',
-                        style: FlutterFlowTheme.of(context).bodyText2.override(
-                              fontFamily: 'Poppins',
-                              color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
-                            ),
-                      ),
+                      if (tasksServices.ownAddress != null)
+                        SelectableText(
+                          '${tasksServices.ownAddress}',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyText2
+                              .override(
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                        )
+                      else
+                        Text(
+                          'Not Connected',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyText2
+                              .override(
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                        ),
                     ],
                   ),
                 ),

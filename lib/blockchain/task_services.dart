@@ -129,7 +129,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> init() async {
     // var axellarGasPrice =
-    await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
+    // await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
 
     await getTransferFee(
         sourceChainName: 'moonbeam',
@@ -147,8 +147,6 @@ class TasksServices extends ChangeNotifier {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
         }
       });
-    } else {
-      isDeviceConnected = await InternetConnectionChecker().hasConnection;
     }
 
     if (transactionTester == null) {
@@ -175,7 +173,7 @@ class TasksServices extends ChangeNotifier {
   late ContractAbi _abiCode;
 
   late num totalTaskLen = 0;
-  int? taskLoaded;
+  int taskLoaded = 0;
   late EthereumAddress _contractAddress;
   late EthereumAddress _contractAddressRopsten;
   Future<void> getABI() async {
@@ -210,79 +208,90 @@ class TasksServices extends ChangeNotifier {
 
   int networkID = 0;
   Future<void> connectWallet4() async {
+    if (transactionTester != null) {
+      var connector = await transactionTester.initWalletConnect();
+
+      //if (tasksServices.walletConnectState == null ||
+      // tasksServices.walletConnectState == TransactionState.disconnected) {
+      if (walletConnectConnected == false) {
+        print("disconnected");
+        walletConnectUri = '';
+        walletConnectSessionUri = '';
+      }
+      // Subscribe to events
+      connector.on('connect', (session) {
+        print(session);
+        walletConnectState = TransactionState.connected;
+        walletConnectConnected = true;
+        () async {
+          credentials = await transactionTester?.getCredentials();
+          publicAddress = await transactionTester?.getPublicAddress(session);
+          _creds = credentials;
+          ownAddress = publicAddress;
+          fetchTasks();
+
+          myBalance();
+          isLoading = true;
+
+          networkID = await _web3client.getNetworkId();
+          if (networkID == 1287) {
+            validNetworkID = true;
+          } else {
+            validNetworkID = false;
+          }
+          // print(networkID);
+        }();
+        notifyListeners();
+      });
+      connector.on('session_request', (payload) {
+        print(payload);
+        // tasksServices.walletConnectState = TransactionState.session_request;
+      });
+      connector.on('session_update', (payload) {
+        print(payload);
+        if (payload.approved == true) {
+          // walletConnectActionApproved = true;
+          // notifyListeners();
+        }
+        // tasksServices.walletConnectState = TransactionState.session_update;
+      });
+      connector.on('disconnect', (session) {
+        print(session);
+        walletConnectState = TransactionState.disconnected;
+        walletConnectConnected = false;
+        walletConnectUri = '';
+        walletConnectSessionUri = '';
+
+        ownAddress = null;
+        ethBalance = 0;
+        ethBalanceToken = 0;
+        pendingBalance = 0;
+        pendingBalanceToken = 0;
+        notifyListeners();
+      });
+      final SessionStatus? session = await transactionTester?.connect(
+        onDisplayUri: (uri) => {
+          walletConnectSessionUri = uri.split("?").first,
+          platform == 'mobile' ? launchURL(uri) : walletConnectUri = uri,
+          notifyListeners()
+        },
+      );
+
+      if (session == null) {
+        print('Unable to connect');
+        walletConnectState = TransactionState.failed;
+      } else if (walletConnectConnected == true) {
+        credentials = await transactionTester?.getCredentials();
+        publicAddress = await transactionTester?.getPublicAddress(session);
+      } else {
+        walletConnectState = TransactionState.failed;
+      }
+    } else {
+      print("not initialized");
+    }
     // if (transactionTester == null) {
     //   transactionTester = EthereumTransactionTester();
     // }
-
-    var connector = await transactionTester.initWalletConnect();
-
-    //if (tasksServices.walletConnectState == null ||
-    // tasksServices.walletConnectState == TransactionState.disconnected) {
-    if (walletConnectConnected == false) {
-      print("disconnected");
-      walletConnectUri = '';
-      walletConnectSessionUri = '';
-    }
-    // Subscribe to events
-    connector.on('connect', (session) {
-      print(session);
-      walletConnectState = TransactionState.connected;
-      walletConnectConnected = true;
-      () async {
-        credentials = await transactionTester?.getCredentials();
-        publicAddress = await transactionTester?.getPublicAddress(session);
-        _creds = credentials;
-        ownAddress = publicAddress;
-        fetchTasks();
-
-        myBalance();
-        isLoading = true;
-
-        networkID = await _web3client.getNetworkId();
-        if (networkID == 1287) {
-          validNetworkID = true;
-        }
-        // print(networkID);
-      }();
-      notifyListeners();
-    });
-    connector.on('session_request', (payload) {
-      print(payload);
-      // tasksServices.walletConnectState = TransactionState.session_request;
-    });
-    connector.on('session_update', (payload) {
-      print(payload);
-      if (payload.approved == true) {
-        // walletConnectActionApproved = true;
-        // notifyListeners();
-      }
-      // tasksServices.walletConnectState = TransactionState.session_update;
-    });
-    connector.on('disconnect', (session) {
-      print(session);
-      walletConnectState = TransactionState.disconnected;
-      walletConnectConnected = false;
-      walletConnectUri = '';
-      walletConnectSessionUri = '';
-      notifyListeners();
-    });
-    final SessionStatus? session = await transactionTester?.connect(
-      onDisplayUri: (uri) => {
-        walletConnectSessionUri = uri.split("?").first,
-        platform == 'mobile' ? launchURL(uri) : walletConnectUri = uri,
-        notifyListeners()
-      },
-    );
-
-    if (session == null) {
-      print('Unable to connect');
-      walletConnectState = TransactionState.failed;
-    } else if (walletConnectConnected == true) {
-      credentials = await transactionTester?.getCredentials();
-      publicAddress = await transactionTester?.getPublicAddress(session);
-    } else {
-      walletConnectState = TransactionState.failed;
-    }
   }
 
   Future<List<dynamic>> web3Call({
@@ -348,19 +357,6 @@ class TasksServices extends ChangeNotifier {
       {BlockNum? atBlock}) async {
     var response;
     try {
-      // EthereumAddress contractAddress =
-      //     EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
-      // if (symbol == 'WETH') {
-      //   contractAddress = EthereumAddress.fromHex(
-      //       '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
-      // } else if (symbol == 'aUSDC') {
-      //   contractAddress = EthereumAddress.fromHex(
-      //       '0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
-      // }
-
-      // IERC20 ierc20 = IERC20(
-      //     address: contractAddress, client: _web3client, chainId: _chainId);
-
       response = await ierc20.balanceOf(address);
     } catch (e) {
       print(e);
@@ -371,24 +367,10 @@ class TasksServices extends ChangeNotifier {
 
   late dynamic _creds;
   EthereumAddress? ownAddress;
-  double? ethBalance;
-  double? ethBalanceToken;
+  double? ethBalance = 0;
+  double? ethBalanceToken = 0;
   double? pendingBalance = 0;
   double? pendingBalanceToken = 0;
-  // Future<void> getCredentials() async {
-  //   if (_walletconnect == true && credentials != null) {
-  //     // TransactionTester? _transactionTester = EthereumTransactionTester();
-  //     // await _transactionTester?.sendTransactionWC();
-  //     _creds = credentials;
-  //     ownAddress = publicAddress;
-  //     await fetchTasks();
-  //     myBalance();
-  //   } else {
-  //     _creds = EthPrivateKey.fromHex(_privatekey);
-  //     ownAddress = await _creds.extractAddress();
-  //     // myBalance = await _creds.getBalance();
-  //   }
-  // }
 
   late DeployedContract _deployedContract;
   late ContractFunction _createTask;
@@ -438,28 +420,7 @@ class TasksServices extends ChangeNotifier {
     _getBalance = _deployedContract.function('getBalance');
     _withdrawToChain = _deployedContract.function('transferToaddressChain2');
 
-    // EasyDebounce.debounce(
-    //     'fetchTasks',                 // <-- An ID for this particular debouncer
-    //     Duration(milliseconds: 10000),    // <-- The debounce duration
-    //         () => fetchTasks()                // <-- The target method
-    // );
-    // EasyDebounce.fire('fetchTasks');
-    // EasyDebounce.cancel('fetchTasks');
-    // throttledFunction = fetchTasks.throttled(
-    //   const Duration(seconds: 10),
-    // );
-    // throttledFunction();
-
-    // EthereumAddress tokenContractAddress = EthereumAddress.fromHex(
-    //     '0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca'); //default to WETH
-    // if (symbol == 'WETH') {
-    //   tokenContractAddress =
-    //       EthereumAddress.fromHex('0xc40Fdaa2cB43C85eAA6D43856df42E7A80669fca');
-    // } else if (symbol == 'aUSDC') {
-    //   tokenContractAddress =
-    //       EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
-    // }
-
+    //aUSDC contract
     EthereumAddress tokenContractAddress =
         EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
 
@@ -476,9 +437,6 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> myBalance() async {
-    // late EtherAmount myWalletValue = await _web3client.call(
-    //     contract: _deployedContract, function: _getBalance, params: [ownAddress]
-    // );
     if (ownAddress != null) {
       final EtherAmount balance = await web3GetBalance(ownAddress!);
       final BigInt weiBalance = balance.getInWei;
@@ -488,15 +446,11 @@ class TasksServices extends ChangeNotifier {
 
       final BigInt weiBalanceToken =
           await web3GetBalanceToken(ownAddress!, 'aUSDC');
-      //final BigInt weiBalanceToken = balanceToken.getInWei;
-      // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken =
           (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
       notifyListeners();
-      // print(ethBalance);
-      // print(ethBalance.toDouble() / 1000000000000000000);
     }
   }
 

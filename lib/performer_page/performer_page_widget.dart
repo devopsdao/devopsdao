@@ -129,7 +129,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                           child: BadgeTab(
                             taskCount:
                                 tasksServices.tasksWithMyParticipation.length,
-                            tabText: 'I\'m in',
+                            tabText: 'Applied for',
                           ),
                           icon: FaIcon(
                             FontAwesomeIcons.smileBeam,
@@ -259,7 +259,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                 text: widget.obj[index]
                                                         .contractValue
                                                         .toString() +
-                                                    ' ETH \n',
+                                                    ' DEV \n',
                                                 style:
                                                     DefaultTextStyle.of(context)
                                                         .style
@@ -360,7 +360,6 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   ),
                                 ),
                                 actions: [
-
                                   if (widget.obj[index].jobState == "agreed")
                                     TextButton(
                                         child: Text('Start the job'),
