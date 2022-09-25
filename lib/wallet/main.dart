@@ -227,7 +227,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                     ),
 
                   ),
-                  if(!tasksServices.validNetworkID && tasksServices.walletConnectConnected)
+                  if(!tasksServices.validChainID && tasksServices.walletConnectConnected)
                   Padding(
                     padding: const EdgeInsets.only(
                       left: 16,

@@ -46,15 +46,15 @@ class _BadgeTabState extends State<BadgeTab> {
             ),
           ),
     // ),
-    //     Expanded(
-    //       flex: 1,
-    //       child:
+        Expanded(
+          flex: 1,
+          child:
           Text(' ${widget.taskCount > 0 ? ' ' + widget.tabText : widget.tabText}',
             softWrap: false,
             overflow: TextOverflow.fade,
             maxLines: 1,
             textAlign: TextAlign.center,),
-        // )
+        )
 
 
       ],

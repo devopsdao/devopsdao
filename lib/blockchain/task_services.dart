@@ -51,11 +51,6 @@ class TasksServices extends ChangeNotifier {
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
-  // ValueNotifier<bool> validNetworkID = ValueNotifier<bool>(false);
-  // ValueNotifier<bool> initComplete = ValueNotifier<bool>(false);
-  bool validNetworkID = false;
-  bool initComplete = false;
-
   var credentials;
   EthereumAddress? publicAddress;
   var transactionTester;
@@ -127,6 +122,7 @@ class TasksServices extends ChangeNotifier {
     init();
   }
 
+  bool initComplete = false;
   Future<void> init() async {
     // var axellarGasPrice =
     // await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
@@ -206,7 +202,8 @@ class TasksServices extends ChangeNotifier {
   //   }
   // }
 
-  int networkID = 0;
+  int chainID = 0;
+  bool validChainID = false;
   Future<void> connectWallet4() async {
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
@@ -233,11 +230,12 @@ class TasksServices extends ChangeNotifier {
           myBalance();
           isLoading = true;
 
-          networkID = await _web3client.getNetworkId();
-          if (networkID == 1287) {
-            validNetworkID = true;
+          // chainID = await _web3client.getCchainID();
+          chainID = session.chainId;
+          if (chainID == 1287) {
+            validChainID = true;
           } else {
-            validNetworkID = false;
+            validChainID = false;
           }
           // print(networkID);
         }();
@@ -1024,8 +1022,6 @@ class TasksServices extends ChangeNotifier {
     // fetchTasks();
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
-
-
 
   String destinationChain = 'Moonbase';
   Future<void> withdrawToChain(

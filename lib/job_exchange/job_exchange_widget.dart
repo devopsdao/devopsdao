@@ -97,7 +97,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter();
     }
-    if (tasksServices.ownAddress != null) {
+    if (tasksServices.ownAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
     }
 
@@ -127,19 +127,19 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
         ),
         actions: [
           LoadButtonIndicator(),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-                child: Icon(
-                  Icons.settings_outlined,
-                  color: FlutterFlowTheme.of(context).primaryBtnText,
-                  size: 24,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisSize: MainAxisSize.max,
+          //   children: [
+          //     Padding(
+          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
+          //       child: Icon(
+          //         Icons.settings_outlined,
+          //         color: FlutterFlowTheme.of(context).primaryBtnText,
+          //         size: 24,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
         centerTitle: false,
         elevation: 2,
@@ -408,7 +408,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                           index]
                                                                       .contractOwner !=
                                                                   tasksServices
-                                                                      .ownAddress && tasksServices.ownAddress != null)
+                                                                      .ownAddress &&
+                                                                  tasksServices.ownAddress != null &&
+                                                                  tasksServices.validChainID)
                                                                 TextButton(
                                                                     child: Text(
                                                                         'Participate'),

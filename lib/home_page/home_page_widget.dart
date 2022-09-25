@@ -132,7 +132,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
     bool _isFloatButtonVisible = false;
 
-    if (tasksServices.ownAddress != null) {
+    if (tasksServices.ownAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
     }
 

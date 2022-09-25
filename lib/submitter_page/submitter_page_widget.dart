@@ -83,20 +83,20 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
           ],
         ),
         actions: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              LoadButtonIndicator(),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-                child: Icon(
-                  Icons.settings_outlined,
-                  color: FlutterFlowTheme.of(context).primaryBtnText,
-                  size: 24,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisSize: MainAxisSize.max,
+          //   children: [
+          //     LoadButtonIndicator(),
+          //     Padding(
+          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
+          //       child: Icon(
+          //         Icons.settings_outlined,
+          //         color: FlutterFlowTheme.of(context).primaryBtnText,
+          //         size: 24,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
         centerTitle: false,
         elevation: 2,
