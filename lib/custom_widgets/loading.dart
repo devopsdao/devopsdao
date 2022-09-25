@@ -95,6 +95,7 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
     return Row(
       children: [
         // Text(taskLoadedState.toString()),
+        if(tasksServices.isLoadingBackground)
         Badge(
           // position: BadgePosition.topEnd(top: 10, end: 10),
           badgeContent: Container(
