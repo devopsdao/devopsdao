@@ -479,56 +479,58 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 ),
                               ),
                               actions: [
-                                TextButton(
-                                  child: Text('Topup contract'),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                              title: Text('Topup contract'),
-                                              // backgroundColor: Colors.black,
-                                              content: Payment(
-                                                purpose: 'topup',
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    tasksServices.addTokens(
-                                                        widget.obj[index]
-                                                            .contractAddress,
-                                                        Interface.tokensEntered,
-                                                        widget
-                                                            .obj[index].nanoId);
-                                                    Navigator.pop(context);
 
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            WalletAction(
-                                                              nanoId: widget
-                                                                  .obj[index]
-                                                                  .nanoId,
-                                                              taskName:
-                                                                  'addTokens',
-                                                            ));
-                                                  },
-                                                  child: Text('Topup!'),
-                                                  style: TextButton.styleFrom(
-                                                      primary: Colors.white,
-                                                      backgroundColor:
-                                                          Colors.green),
-                                                ),
-                                                TextButton(
-                                                    child: Text('Close'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(context)),
-                                              ],
-                                            ));
-                                  },
-                                  style: TextButton.styleFrom(
-                                      primary: Colors.white,
-                                      backgroundColor: Colors.green),
-                                ),
+          /////////////topup
+                                // TextButton(
+                                //   child: Text('Topup contract'),
+                                //   onPressed: () {
+                                //     showDialog(
+                                //         context: context,
+                                //         builder: (context) => AlertDialog(
+                                //               title: Text('Topup contract'),
+                                //               // backgroundColor: Colors.black,
+                                //               content: Payment(
+                                //                 purpose: 'topup',
+                                //               ),
+                                //               actions: [
+                                //                 TextButton(
+                                //                   onPressed: () {
+                                //                     tasksServices.addTokens(
+                                //                         widget.obj[index]
+                                //                             .contractAddress,
+                                //                         Interface.tokensEntered,
+                                //                         widget
+                                //                             .obj[index].nanoId);
+                                //                     Navigator.pop(context);
+                                //
+                                //                     showDialog(
+                                //                         context: context,
+                                //                         builder: (context) =>
+                                //                             WalletAction(
+                                //                               nanoId: widget
+                                //                                   .obj[index]
+                                //                                   .nanoId,
+                                //                               taskName:
+                                //                                   'addTokens',
+                                //                             ));
+                                //                   },
+                                //                   child: Text('Topup!'),
+                                //                   style: TextButton.styleFrom(
+                                //                       primary: Colors.white,
+                                //                       backgroundColor:
+                                //                           Colors.green),
+                                //                 ),
+                                //                 TextButton(
+                                //                     child: Text('Close'),
+                                //                     onPressed: () =>
+                                //                         Navigator.pop(context)),
+                                //               ],
+                                //             ));
+                                //   },
+                                //   style: TextButton.styleFrom(
+                                //       primary: Colors.white,
+                                //       backgroundColor: Colors.green),
+                                // ),
 
                                 // TextButton(
                                 //     child: Text('Withdraw to Chain'),
