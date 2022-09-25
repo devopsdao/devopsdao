@@ -14,5 +14,5 @@ interface IDistributionExecutable {
         address[] calldata destinationAddresses,
         string calldata symbol,
         uint256 amount
-    ) external;
+    ) external payable;
 }

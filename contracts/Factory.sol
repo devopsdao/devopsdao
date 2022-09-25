@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
+// import { IDistributionExecutable } from './IDistributionExecutable.sol';
 import { IDistributionExecutable } from './IDistributionExecutable.sol';
 
 
-import { AxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/executables/AxelarExecutable.sol';
+// import { AxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/executables/AxelarExecutable.sol';
 import { IAxelarGateway } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol';
 import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IERC20.sol';
-import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
+// import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
 import { StringToAddress, AddressToString } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/StringAddressUtils.sol';
 
 error RevertReason (string message);
@@ -153,7 +154,7 @@ contract Factory {
     external
     payable
     {
-        jobArray[job.index()].transferToaddressChain2(addressToSend, chain);
+        jobArray[job.index()].transferToaddressChain2{value: msg.value}(addressToSend, chain);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -209,7 +210,7 @@ contract Factory {
 }
 
 contract Job {
-    IDistributionExecutable public immutable distributor;
+    // IDistributionExecutable public immutable distributor;
 
     IAxelarGateway public immutable gateway;
     using AddressToString for address;
@@ -235,6 +236,7 @@ contract Job {
     uint256 amount;
 
     event Logs(address contractAdr, string message);
+    event LogsValue(address contractAdr, string message, uint value);
 
     constructor(
         string memory _nanoId,
@@ -246,7 +248,6 @@ contract Job {
     ) payable {
         // data = _data;
         nanoId = _nanoId;
-        distributor = IDistributionExecutable(_contractOwner);
         title = _title;
         jobState = "new";
         contractAddress = address(this);
@@ -259,6 +260,10 @@ contract Job {
 
         address gateway_ = 0x5769D84DD62a6fD969856c75c7D321b84d455929;
         gateway = IAxelarGateway(gateway_);
+
+        // address distributor_ = 0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A;
+        // distributor = IDistributionExecutable(distributor_);
+        // distributor = DistributionExecutable(gateway_);
         // balance = contractAddress.balance;
         // createJob(_content, _index);
         // myStruct = jobStructData(
@@ -364,6 +369,35 @@ contract Job {
         return address_.toString();
     }
 
+    function uint2str(
+        uint256 _i
+      )
+        internal
+        pure
+        returns (string memory str)
+      {
+        if (_i == 0)
+        {
+          return "0";
+        }
+        uint256 j = _i;
+        uint256 length;
+        while (j != 0)
+        {
+          length++;
+          j /= 10;
+        }
+        bytes memory bstr = new bytes(length);
+        uint256 k = length;
+        j = _i;
+        while (j != 0)
+        {
+          bstr[--k] = bytes1(uint8(48 + j % 10));
+          j /= 10;
+        }
+        str = string(bstr);
+      }
+
     function transferToaddressChain2(address payable _addressToSend, string memory chain) public payable {
         if (keccak256(bytes(jobState)) == keccak256(bytes("canceled"))) {
             if (participantAddress == contractOwner) {
@@ -384,16 +418,16 @@ contract Job {
                 participantAddress.transfer(contractAddress.balance);
             } 
             else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
-                keccak256(chainBytes) == keccak256(bytes("Ethereum"))
+                keccak256(chainBytes) == keccak256(bytes("Polygon"))
             )) {
-                emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany", symbol, " to ", chain, "address:",this.addressToString(participantAddress)));
+                emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany ", symbol, " to ", chain, "value: ", uint2str(msg.value), " address:",this.addressToString(participantAddress)));
+                emit LogsValue(address(this), string.concat("msg.sender: ", this.addressToString(msg.sender)," call value: "), msg.value);
                 // string memory _addressToSend2 = bytes(_addressToSend);
                 address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).approve(address(distributor), contractAmount);
-
-                _destinationAddresses.push(_addressToSend);
-                distributor.sendToMany(chain, this.addressToString(_addressToSend), _destinationAddresses, 'aUSDC', contractAddress.balance);
+                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress)/10;
+                IERC20(tokenAddress).approve(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A, contractAmount);
+                _destinationAddresses.push(participantAddress);
+                IDistributionExecutable(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A).sendToMany{value: msg.value}("polygon", this.addressToString(0xEAAA71f74b01617BA2235083334a1c952BAC0a6C), _destinationAddresses, 'aUSDC', contractAmount);
             }
             else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
                 keccak256(chainBytes) == keccak256(bytes("Ethereum")) || 

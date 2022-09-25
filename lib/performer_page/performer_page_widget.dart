@@ -126,19 +126,29 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                       // isScrollable: true,
                       tabs: [
                         Tab(
-                          child: BadgeTab(taskCount: tasksServices.tasksWithMyParticipation.length, tabText: 'I\'m in',),
+                          child: BadgeTab(
+                            taskCount:
+                                tasksServices.tasksWithMyParticipation.length,
+                            tabText: 'I\'m in',
+                          ),
                           icon: FaIcon(
                             FontAwesomeIcons.smileBeam,
                           ),
                         ),
                         Tab(
-                          child: BadgeTab(taskCount: tasksServices.tasksPerformer.length, tabText: 'Working on',),
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksPerformer.length,
+                            tabText: 'Working on',
+                          ),
                           icon: Icon(
                             Icons.card_travel_outlined,
                           ),
                         ),
                         Tab(
-                          child: BadgeTab(taskCount: tasksServices.tasksDonePerformer.length, tabText: 'Done',),
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksDonePerformer.length,
+                            tabText: 'Done',
+                          ),
                           icon: Icon(
                             Icons.done_outline,
                           ),
@@ -336,11 +346,16 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                     .style
                                                     .apply(fontSizeFactor: 1.0))
                                           ])),
-                                      if (widget.obj[index].jobState ==
-                                              "completed" &&
-                                          (widget.obj[index].contractValue != 0 ||
-                                          widget.obj[index].contractValueToken != 0))
-                                        SelectNetworkMenu(object: widget.obj[index],)
+                                      // if (widget.obj[index].jobState ==
+                                      //         "completed" &&
+                                      //     (widget.obj[index].contractValue !=
+                                      //             0 ||
+                                      //         widget.obj[index]
+                                      //                 .contractValueToken !=
+                                      //             0))
+                                      SelectNetworkMenu(
+                                        object: widget.obj[index],
+                                      )
                                     ],
                                   ),
                                 ),
@@ -402,11 +417,13 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                         'changeTaskStatus',
                                                   ));
                                         }),
-                                  if (widget.obj[index].jobState ==
-                                          "completed" &&
-                                      (widget.obj[index].contractValue != 0 ||
-                                      widget.obj[index].contractValueToken != 0))
-                                    WithdrawButton(object: widget.obj[index]),
+                                  // if (widget.obj[index].jobState ==
+                                  //         "completed" &&
+                                  //     (widget.obj[index].contractValue != 0 ||
+                                  //         widget.obj[index]
+                                  //                 .contractValueToken !=
+                                  //             0))
+                                  WithdrawButton(object: widget.obj[index]),
                                   // TextButton(
                                   //     child: Text('Withdraw'),
                                   //     style: TextButton.styleFrom(
@@ -438,30 +455,30 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   // if (widget.obj[index].jobState ==
                                   //         "completed" &&
                                   //     widget.obj[index].contractValue != 0)
-                                    // TextButton(
-                                    //     child: Text('Withdraw'),
-                                    //     style: TextButton.styleFrom(
-                                    //         primary: Colors.white,
-                                    //         backgroundColor: Colors.green),
-                                    //     onPressed: () {
-                                    //       setState(() {
-                                    //         widget.obj[index].justLoaded =
-                                    //             false;
-                                    //       });
-                                    //       tasksServices.withdraw(
-                                    //           widget.obj[index].contractAddress,
-                                    //           widget.obj[index].nanoId);
-                                    //       Navigator.pop(context);
-                                    //
-                                    //       showDialog(
-                                    //           context: context,
-                                    //           builder: (context) =>
-                                    //               WalletAction(
-                                    //                 nanoId: widget
-                                    //                     .obj[index].nanoId,
-                                    //                 taskName: 'withdraw',
-                                    //               ));
-                                    //     }),
+                                  // TextButton(
+                                  //     child: Text('Withdraw'),
+                                  //     style: TextButton.styleFrom(
+                                  //         primary: Colors.white,
+                                  //         backgroundColor: Colors.green),
+                                  //     onPressed: () {
+                                  //       setState(() {
+                                  //         widget.obj[index].justLoaded =
+                                  //             false;
+                                  //       });
+                                  //       tasksServices.withdraw(
+                                  //           widget.obj[index].contractAddress,
+                                  //           widget.obj[index].nanoId);
+                                  //       Navigator.pop(context);
+                                  //
+                                  //       showDialog(
+                                  //           context: context,
+                                  //           builder: (context) =>
+                                  //               WalletAction(
+                                  //                 nanoId: widget
+                                  //                     .obj[index].nanoId,
+                                  //                 taskName: 'withdraw',
+                                  //               ));
+                                  //     }),
                                   // if (obj[index].jobState == "Review")
                                   //   TextButton(child: Text('Review'), onPressed: () {
                                   //     tasksServices.changeTaskStatus(
@@ -567,38 +584,43 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                         ),
                                       ),
                                       // Spacer(),
-                                      if(widget.obj[index].contractValue != 0)
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          widget.obj[index].contractValue
-                                                  .toString() +
-                                              ' ETH',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          textAlign: TextAlign.end,
+                                      if (widget.obj[index].contractValue != 0)
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            widget.obj[index].contractValue
+                                                    .toString() +
+                                                ' ETH',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.end,
+                                          ),
                                         ),
-                                      ),
-                                      if(widget.obj[index].contractValueToken != 0)
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          widget.obj[index].contractValueToken
-                                                  .toString() +
-                                              ' aUSDC',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          textAlign: TextAlign.end,
+                                      if (widget
+                                              .obj[index].contractValueToken !=
+                                          0)
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            widget.obj[index].contractValueToken
+                                                    .toString() +
+                                                ' aUSDC',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.end,
+                                          ),
                                         ),
-                                      ),
-                                      if(widget.obj[index].contractValue == 0 &&
-                                          widget.obj[index].contractValueToken == 0)
+                                      if (widget.obj[index].contractValue ==
+                                              0 &&
+                                          widget.obj[index]
+                                                  .contractValueToken ==
+                                              0)
                                         Expanded(
                                           flex: 3,
                                           child: Text(

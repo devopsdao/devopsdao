@@ -77,6 +77,15 @@ module.exports = {
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
 
+    polygon: {
+      provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://matic-mumbai.chainstacklabs.com`),
+      network_id: 80001,       // Ropsten's id
+      gas: 5500000,        // Ropsten has a lower block limit than mainnet
+      confirmations: 0,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+
     moonbase: {
       // provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81`),
       provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f`),
