@@ -160,9 +160,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
           //     ),
           //   ],
           // ),/
-          if (tasksServices.isDeviceConnected
-          // || tasksServices.platform == 'web')
-          )
+          if (tasksServices.isDeviceConnected ||
+              tasksServices.platform == 'web')
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [

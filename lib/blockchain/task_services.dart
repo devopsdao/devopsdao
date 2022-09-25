@@ -122,6 +122,7 @@ class TasksServices extends ChangeNotifier {
     init();
   }
 
+  bool initComplete = false;
   Future<void> init() async {
     // var axellarGasPrice =
     await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
@@ -161,6 +162,8 @@ class TasksServices extends ChangeNotifier {
     await getABI();
     // await getCredentials();
     await getDeployedContract();
+
+    initComplete = true;
 
     //await withdrawToChain(contractAddress);
   }
