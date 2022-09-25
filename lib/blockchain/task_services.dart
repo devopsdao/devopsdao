@@ -199,6 +199,7 @@ class TasksServices extends ChangeNotifier {
   //   }
   // }
 
+  int networkID = 0;
   Future<void> connectWallet4() async {
     // if (transactionTester == null) {
     //   transactionTester = EthereumTransactionTester();
@@ -227,6 +228,9 @@ class TasksServices extends ChangeNotifier {
 
         myBalance();
         isLoading = true;
+
+        networkID = await _web3client.getNetworkId();
+        // print(networkID);
       }();
       notifyListeners();
     });

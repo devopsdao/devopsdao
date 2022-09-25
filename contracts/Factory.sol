@@ -418,7 +418,7 @@ contract Job {
                 participantAddress.transfer(contractAddress.balance);
             } 
             else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
-                keccak256(chainBytes) == keccak256(bytes("Polygon"))
+                keccak256(chainBytes) == keccak256(bytes("PolygonAxelar"))
             )) {
                 emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany ", symbol, " to ", chain, "value: ", uint2str(msg.value), " address:",this.addressToString(participantAddress)));
                 emit LogsValue(address(this), string.concat("msg.sender: ", this.addressToString(msg.sender)," call value: "), msg.value);
