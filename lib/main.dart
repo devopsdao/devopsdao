@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'blockchain/interface.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -25,7 +26,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TasksServices()),
-        // ChangeNotifierProvider(create: (context) => ExchangeFilterWidget()),
+        ChangeNotifierProvider(create: (context) => InterfaceServices()),
       ],
       child: MyApp(),
     ),

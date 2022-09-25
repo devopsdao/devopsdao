@@ -24,7 +24,7 @@ class _WithdrawButtonState extends State<WithdrawButton> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    print(tasksServices.destinationChain);
+    // print(tasksServices.destinationChain);
     if(widget.object.contractValue != 0) {
       _buttonState = true;
     } else if (widget.object.contractValueToken != 0) {

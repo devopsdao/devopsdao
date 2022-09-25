@@ -358,6 +358,7 @@ class TasksServices extends ChangeNotifier {
   double? ethBalance;
   double? ethBalanceToken;
   double? pendingBalance = 0;
+  double? pendingBalanceToken = 0;
   // Future<void> getCredentials() async {
   //   if (_walletconnect == true && credentials != null) {
   //     // TransactionTester? _transactionTester = EthereumTransactionTester();
@@ -643,21 +644,21 @@ class TasksServices extends ChangeNotifier {
             params: [BigInt.from(i)]);
         print(temp);
         if (temp != null) {
-          if (temp[10] == 'ETH') {
+          // if (temp[10] == 'ETH') {
             value = await web3Call(
                 contract: _deployedContract,
                 function: _getBalance,
                 params: [BigInt.from(temp[6].toInt())]);
             final BigInt weiBalance = value[0];
             ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-          } else {
+          // } else {
             final BigInt weiBalanceToken =
                 await web3GetBalanceToken(temp[2], temp[10]);
             final ethBalancePreciseToken =
                 weiBalanceToken.toDouble() / pow(10, 6);
             ethBalanceToken =
                 (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-          }
+          // }
 
           // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
 
@@ -687,8 +688,7 @@ class TasksServices extends ChangeNotifier {
               contractValueToken: ethBalanceToken,
               nanoId: temp[11]);
 
-          taskLoaded = temp[6]
-              .toInt(); // this count we need to show the loading process. does not affect anything else
+          taskLoaded = temp[6].toInt() + 1; // this count we need to show the loading process. does not affect anything else
 
           // if (isLoading == true) {
           notifyListeners();
@@ -713,6 +713,7 @@ class TasksServices extends ChangeNotifier {
         tasksProgressSubmitter.clear();
 
         pendingBalance = 0;
+        pendingBalanceToken = 0;
 
         for (var k = 0; k < tasks.length; k++) {
           final temp = tasks[k];
@@ -720,12 +721,13 @@ class TasksServices extends ChangeNotifier {
           //
           // }
           // final pendingBalance2 = temp.contractValue;
-          if (temp.contractValue != 0 && temp.participiant == ownAddress) {
+          if ((temp.contractValue != 0 || temp.contractValueToken != 0) && temp.participiant == ownAddress) {
             if (temp.jobState == "agreed" ||
                 temp.jobState == "progress" ||
                 temp.jobState == "review" ||
                 temp.jobState == "completed") {
               pendingBalance = pendingBalance! + temp.contractValue;
+              pendingBalanceToken = pendingBalanceToken! + temp.contractValueToken;
             }
           }
 
@@ -788,7 +790,7 @@ class TasksServices extends ChangeNotifier {
         isLoadingBackground = false;
         await myBalance();
         notifyListeners();
-        taskLoaded = 0;
+        // taskLoaded = 0;
         runFilter(searchKeyword); // reset search bar
       }
       loopRunning = false;
@@ -815,8 +817,8 @@ class TasksServices extends ChangeNotifier {
 
   String taskTokenSymbol = 'ETH';
   Future<void> addTask(
-      String title, String description, String price, String nanoId) async {
-    print(title);
+      String title, String description, double price, String nanoId) async {
+    print(price);
     // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
@@ -824,11 +826,11 @@ class TasksServices extends ChangeNotifier {
           'status': 'pending',
           'tokenApproved': 'initial',
           'txn': 'initial'
-        }
+        } //
       };
-      late int priceInGwei = (double.parse(price) * 1000000000).toInt();
-      late double priceInDouble = double.parse(price);
-      final BigInt priceInBigInt = BigInt.from(priceInDouble * 1e6);
+      late int priceInGwei = (price * 1000000000).toInt();
+      // late double priceInDouble = price;
+      final BigInt priceInBigInt = BigInt.from(price * 1e6);
       // late EtherAmount priceInGwei =
       //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
       // late int priceInGwei = priceInDouble.toInt();
@@ -894,6 +896,50 @@ class TasksServices extends ChangeNotifier {
       tellMeHasItMined(txn, 'addTask', nanoId);
       notifyListeners();
     }
+  }
+
+  Future<void> addTokens(
+      EthereumAddress addressToSend, double price, String nanoId) async {
+    print(price);
+    transactionStatuses[nanoId] = {
+      'addTokens': {
+        'status': 'pending',
+        'tokenApproved': 'initial',
+        'txn': 'initial'
+      }
+    };
+    late int priceInGwei = (price * 1000000000).toInt();
+    final BigInt priceInBigInt = BigInt.from(price * 1e6);
+    late String txn;
+
+    if (taskTokenSymbol == 'ETH') {
+      // await approveSpend(_contractAddress, ownAddress!, taskTokenSymbol,
+      //     priceInBigInt, nanoId);
+      final transaction =  Transaction(
+            from: ownAddress,
+            to: addressToSend,
+            value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
+          );
+      // print(txn);
+
+      txn = await ierc20.transfer(addressToSend, priceInBigInt,
+          credentials: _creds, transaction: transaction);
+print(txn);
+    } else if (taskTokenSymbol == 'aUSDC') {
+      final transaction = Transaction(from: ownAddress,);
+      txn = await ierc20.transfer(addressToSend, priceInBigInt,
+          credentials: _creds, transaction: transaction);
+    }
+    isLoading = false;
+    isLoadingBackground = true;
+    lastTxn = txn;
+    transactionStatuses[nanoId]!['addTokens']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['addTokens']!['tokenApproved'] = 'complete';
+    transactionStatuses[nanoId]!['addTokens']!['txn'] = txn;
+
+    // fetchTasks();
+    tellMeHasItMined(txn, 'addTokens', nanoId);
+    notifyListeners();
   }
 
   Future<void> taskParticipation(
@@ -1001,6 +1047,8 @@ class TasksServices extends ChangeNotifier {
     // fetchTasks();
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
+
+
 
   String destinationChain = 'Moonbase';
   Future<void> withdrawToChain(

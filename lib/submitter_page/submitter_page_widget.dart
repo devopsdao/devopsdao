@@ -1,6 +1,8 @@
 import 'package:badges/badges.dart';
+import 'package:devopsdao/custom_widgets/payment.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
@@ -53,6 +55,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
     bool _lightIsOn = false;
 
     return Scaffold(
@@ -211,6 +214,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var Interface = context.watch<InterfaceServices>();
     // TODO: implement build
     return Container(
       child: Padding(
@@ -463,11 +467,43 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               actions: [
                                 TextButton(
                                   child: Text('Topup contract'),
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () {
+                                    showDialog(context: context, builder: (context) => AlertDialog(
+                                      title: Text('Topup contract'),
+                                      // backgroundColor: Colors.black,
+                                      content: Payment(purpose: 'topup',),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            tasksServices.addTokens(
+                                                widget.obj[index].contractAddress,
+                                                Interface.tokensEntered,
+                                                widget.obj[index].nanoId);
+                                            Navigator.pop(context);
+
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => WalletAction(
+                                                  nanoId:
+                                                  widget.obj[index].nanoId,
+                                                  taskName: 'addTokens',
+                                                ));
+                                        },
+                                          child: Text('Topup!'),
+                                          style: TextButton.styleFrom(
+                                              primary: Colors.white,
+                                              backgroundColor: Colors.green),),
+                                        TextButton(
+                                            child: Text('Close'),
+                                            onPressed: () => Navigator.pop(context)),
+                                      ],
+                                    ));
+                                  },
                                   style: TextButton.styleFrom(
                                       primary: Colors.white,
                                       backgroundColor: Colors.green),
                                 ),
+
                                 // TextButton(
                                 //     child: Text('Withdraw to Chain'),
                                 //     style: TextButton.styleFrom(
@@ -490,9 +526,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 //                 taskName: 'withdrawToChain',
                                 //               ));
                                 //     }),
-                                TextButton(
-                                    child: Text('Close'),
-                                    onPressed: () => Navigator.pop(context)),
+
                                 if (widget.obj[index].jobState == 'review')
                                   TextButton(
                                       child: Text('Sign Review'),
@@ -518,6 +552,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   taskName: 'changeTaskStatus',
                                                 ));
                                       }),
+                                TextButton(
+                                    child: Text('Close'),
+                                    onPressed: () => Navigator.pop(context)),
                                 // if (widget.obj[index].jobState == 'completed')
                                 //   TextButton(
                                 //     child: Text('Withdraw'),

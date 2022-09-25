@@ -345,9 +345,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   ),
                                 ),
                                 actions: [
-                                  TextButton(
-                                      child: Text('Close'),
-                                      onPressed: () => Navigator.pop(context)),
+
                                   if (widget.obj[index].jobState == "agreed")
                                     TextButton(
                                         child: Text('Start the job'),
@@ -471,6 +469,9 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                   //         obj[index].participiant,
                                   //         'review');
                                   //   }),
+                                  TextButton(
+                                      child: Text('Close'),
+                                      onPressed: () => Navigator.pop(context)),
                                 ],
                               ));
                     },

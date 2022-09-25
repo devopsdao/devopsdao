@@ -402,12 +402,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                               ),
                                                             ),
                                                             actions: [
-                                                              TextButton(
-                                                                  child: Text(
-                                                                      'Close'),
-                                                                  onPressed: () =>
-                                                                      Navigator.pop(
-                                                                          context)),
+
                                                               if (tasksServices
                                                                       .filterResults[
                                                                           index]
@@ -452,6 +447,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                                 taskName: 'taskParticipation',
                                                                               ));
                                                                     }),
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      'Close'),
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context)),
                                                             ],
                                                           ));
                                             },

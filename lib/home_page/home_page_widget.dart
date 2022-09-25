@@ -222,19 +222,19 @@ class _HomePageWidgetState extends State<HomePageWidget>
                 ),
               ],
             ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-                child: Icon(
-                  Icons.settings_outlined,
-                  color: FlutterFlowTheme.of(context).primaryBtnText,
-                  size: 24,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisSize: MainAxisSize.max,
+          //   children: [
+          //     Padding(
+          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
+          //       child: Icon(
+          //         Icons.settings_outlined,
+          //         color: FlutterFlowTheme.of(context).primaryBtnText,
+          //         size: 24,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
         centerTitle: false,
         elevation: 2,
@@ -369,6 +369,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBtnText,
                                 ),
+                          ),
+                          Text(
+                            '${tasksServices.pendingBalanceToken} aUSDC',
+                            style: FlutterFlowTheme.of(context).title1.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBtnText,
+                            ),
                           ),
                         ],
                       ),
