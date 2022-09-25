@@ -79,7 +79,7 @@ contract Factory {
         countNew++;
         emit JobContractCreated(_nanoId, address(job), msg.sender, _title, _description, _symbol, _amount);
         emit OneEventForAll(address(job), job.index());
-    }1
+    }
 
     // function findJobs(uint256 _myIndex) external view returns (address) {
     //     return address(jobArray[_myIndex]);
