@@ -225,21 +225,21 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
                     ),
-
                   ),
-                  if(!tasksServices.validChainID && tasksServices.walletConnectConnected)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                    ),
-                    child: Text(
-                          'Wrong network, please connect to Moonbase Alpha',
-                      style: TextStyle(color: Colors.redAccent, fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+                  if (!tasksServices.validChainID &&
+                      tasksServices.walletConnectConnected)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        bottom: 16,
+                      ),
+                      child: Text(
+                        'Wrong network, please connect to Moonbase Alpha',
+                        style: TextStyle(color: Colors.redAccent, fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
                 ],
               ),
             ),
@@ -261,7 +261,6 @@ class _MyWalletPageState extends State<MyWalletPage> {
         ),
       ),
       actions: [
-
         if (tasksServices.walletConnectConnected)
           TextButton(
               child: Text('Disconnect'),
@@ -278,8 +277,13 @@ class _MyWalletPageState extends State<MyWalletPage> {
           TextButton(
             child: Text('Connect'),
             style: TextButton.styleFrom(
-                primary: Colors.white, backgroundColor: Colors.green, disabledBackgroundColor: Colors.white10,),
-            onPressed: tasksServices.initComplete ?  _transactionStateToAction(context, state2: _state2) : null,
+              primary: Colors.white,
+              backgroundColor: Colors.green,
+              disabledBackgroundColor: Colors.white10,
+            ),
+            onPressed: tasksServices.initComplete
+                ? _transactionStateToAction(context, state2: _state2)
+                : null,
             // _transactionStateToAction(context, state: _state);
             // setState(() {});
             // Navigator.pop(context)
@@ -511,7 +515,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.connectionFailed:
         return () async {
           // connectWallet3(tasksServices);
-          tasksServices.connectWallet4();
+          tasksServices.connectWallet();
         };
 
       // Finished

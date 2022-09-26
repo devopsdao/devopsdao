@@ -25,16 +25,6 @@ import '../wallet/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-// enum TransactionState {
-//   disconnected,
-//   connecting,
-//   connected,
-//   connectionFailed,
-//   transferring,
-//   success,
-//   failed,
-// }
-
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
   List<Task> filterResults = [];
@@ -62,51 +52,21 @@ class TasksServices extends ChangeNotifier {
   // bool walletConnectActionApproved = false;
   String lastTxn = '';
 
-  // final String _rpcUrl =
-  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
-  // final String _wsUrl =
-  // Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
-
-  // final String _rpcUrl = Platform.isAndroid
-  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-  //     : 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
-  // final String _wsUrl = Platform.isAndroid
-  //     ? 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
-  //     : 'wss://ropsten.infura.io/ws/v3/9aa3d95b3bc440fa88ea12eaa4456161';
-
   String platform = 'mobile';
   final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
   final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
-  // final String _rpcUrl = Platform.isAndroid
-  //     ? 'https://rpc.api.moonbase.moonbeam.network'
-  //     : 'https://rpc.api.moonbase.moonbeam.network';
-  // final String _wsUrl = Platform.isAndroid
-  //     ? 'wss://wss.api.moonbase.moonbeam.network'
-  //     : 'wss://wss.api.moonbase.moonbeam.network';
+
   final int _chainId = 1287;
   final int _chainIdRopsten = 3;
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
 
-  // final String _privatekey =
-  //     'f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0'; //m's ropsten key
-  final String _privatekey =
-      'f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8';
   late Web3Client _web3client;
 
   bool isDeviceConnected = false;
 
   late IERC20 ierc20;
-
-  // faucet m's key:
-  // f9a150364de5359a07b91b1af8ac1c75ad9e084d7bd2c0e09beb5df7fa6cafa0
-// r's key
-// f819f5453032c5166a3a459506058cb46c37d6eca694dafa76f2b6fe33d430e8
-  // internal key's
-  // 29e52385859d9a1cd067552dcdb4c1734853343cf83dfbf31d76e1871cf1d7ec - second user
-  // e1f0d3b368c3aaf8fde11e8da9a6ab2162fbd08f384145b480f16ab9cd746941 - second user
-  // 01fe73c191d0433fd7f64390a02469f30044a40a48a548591b630952e084884f
 
   TasksServices() {
     try {
@@ -124,15 +84,11 @@ class TasksServices extends ChangeNotifier {
 
   bool initComplete = false;
   Future<void> init() async {
-    // var axellarGasPrice =
-    // await getGasPrice('moonbeam', 'polygon', tokenSymbol: 'DEV');
-
     await getTransferFee(
         sourceChainName: 'moonbeam',
         destinationChainName: 'ethereum',
         assetDenom: 'uausdc',
         amountInDenom: 100000);
-    // print(axellarGasPrice);
     isDeviceConnected = false;
 
     if (platform != 'web') {
@@ -158,12 +114,9 @@ class TasksServices extends ChangeNotifier {
       },
     );
     await getABI();
-    // await getCredentials();
     await getDeployedContract();
 
     initComplete = true;
-
-    //await withdrawToChain(contractAddress);
   }
 
   late ContractAbi _abiCode;
@@ -177,39 +130,18 @@ class TasksServices extends ChangeNotifier {
         await rootBundle.loadString('build/contracts/Factory.json');
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
-    // _contractAddress = EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
     _contractAddress = EthereumAddress.fromHex(
         jsonABI["networks"][_chainId.toString()]["address"]);
     _contractAddressRopsten = EthereumAddress.fromHex(
         jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
   }
 
-  // var session;
-  // // _transactionTester?.initWalletConnect();
-  // Future<void> connectWallet() async {
-  //   TransactionTester? _transactionTester = EthereumTransactionTester();
-  //   await _transactionTester.initWalletConnect();
-  //   _transactionTester.disconnect();
-  //   session = _transactionTester.connect(
-  //     onDisplayUri: (uri) => {print(uri), walletConnectUri = uri},
-  //   );
-  //   if (session == null) {
-  //     print('Unable to connect');
-  //     // setState(() => _state = TransactionState.failed);
-  //     walletConnectState = TransactionState.failed;
-  //   } else {
-  //     walletConnectState = TransactionState.connected;
-  //   }
-  // }
-
   int chainID = 0;
   bool validChainID = false;
-  Future<void> connectWallet4() async {
+  Future<void> connectWallet() async {
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
 
-      //if (tasksServices.walletConnectState == null ||
-      // tasksServices.walletConnectState == TransactionState.disconnected) {
       if (walletConnectConnected == false) {
         print("disconnected");
         walletConnectUri = '';
@@ -230,20 +162,17 @@ class TasksServices extends ChangeNotifier {
           myBalance();
           isLoading = true;
 
-          // chainID = await _web3client.getCchainID();
           chainID = session.chainId;
           if (chainID == 1287) {
             validChainID = true;
           } else {
             validChainID = false;
           }
-          // print(networkID);
         }();
         notifyListeners();
       });
       connector.on('session_request', (payload) {
         print(payload);
-        // tasksServices.walletConnectState = TransactionState.session_request;
       });
       connector.on('session_update', (payload) {
         print(payload);
@@ -251,7 +180,6 @@ class TasksServices extends ChangeNotifier {
           // walletConnectActionApproved = true;
           // notifyListeners();
         }
-        // tasksServices.walletConnectState = TransactionState.session_update;
       });
       connector.on('disconnect', (session) {
         print(session);
@@ -287,9 +215,6 @@ class TasksServices extends ChangeNotifier {
     } else {
       print("not initialized");
     }
-    // if (transactionTester == null) {
-    //   transactionTester = EthereumTransactionTester();
-    // }
   }
 
   Future<List<dynamic>> web3Call({
@@ -380,30 +305,20 @@ class TasksServices extends ChangeNotifier {
   late ContractFunction _withdraw;
   late ContractFunction _withdrawToChain;
   late ContractFunction _getBalance;
-  // late Throttle throttledFunction;
   late Throttling thr;
   late String searchKeyword = '';
 
   Future<void> listenToEvents() async {
-    // final fromBlock = new BlockNum.genesis();
     final JobContractCreated = _deployedContract.event('JobContractCreated');
     final subscription = _web3client
         .events(FilterOptions.events(
             contract: _deployedContract, event: JobContractCreated))
-        // .take(10)
         .listen((event) {
       final decoded =
           JobContractCreated.decodeResults(event.topics!, event.data!);
       //
-      // final from = decoded[0] as EthereumAddress;
-      // final to = decoded[1] as EthereumAddress;
-      // final value = decoded[2] as BigInt;
-      //
-      // print('$from sent $value MetaCoins to $to');
       print('event fired');
     });
-    // await subscription.asFuture();
-    // await subscription.cancel();
   }
 
   Future<void> getDeployedContract() async {
@@ -438,7 +353,6 @@ class TasksServices extends ChangeNotifier {
     if (ownAddress != null) {
       final EtherAmount balance = await web3GetBalance(ownAddress!);
       final BigInt weiBalance = balance.getInWei;
-      // ethBalance = weiBalance.toDouble() * 100000;
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
@@ -447,7 +361,6 @@ class TasksServices extends ChangeNotifier {
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken =
           (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-
       notifyListeners();
     }
   }
@@ -459,59 +372,28 @@ class TasksServices extends ChangeNotifier {
     // listen for the Transfer event when it's emitted by the contract above
     final subscription = factory.oneEventForAllEvents().listen((event) async {
       print('received event ${event.contractAdr} index ${event.index}');
-      // EasyDebounce.debounce(
-      //     'fetchTasks',                 // <-- An ID for this particular debouncer
-      //     Duration(milliseconds: 10000),    // <-- The debounce duration
-      //         () => fetchTasks()                // <-- The target method
-      // );
-      // throttledFunction();
       thr.throttle(() {
         fetchTasks();
       });
-      // await fetchTasks();
     });
     final subscription2 =
         factory.jobContractCreatedEvents().listen((event) async {
       print(
           'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
       if (event.jobOwner == ownAddress) {
-        // lastJobContract = event.jobAddress;
         transactionStatuses[event.nanoId]!['task'] = {
           'jobAddress': event.jobAddress.toString()
         };
-        //notifyListeners();
       }
-      // await fetchTasks();
     });
 
-    // EthereumAddress contractAddress =
-    //     EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
-    // IERC20 ierc20 = IERC20(
-    //     address: contractAddress, client: _web3client, chainId: _chainId);
     final subscription3 = ierc20.approvalEvents().listen((event) async {
       print(
           'received event approvalEvents ${event.owner} spender ${event.spender} value ${event.value}');
       if (event.owner == ownAddress) {
-        // lastJobContract = event.jobAddress;
-        // transactionStatuses[event.nanoId]!['task'] = {
-        //   'jobAddress': event.jobAddress.toString()
-        // };
-
         print(event.owner);
-        //notifyListeners();
       }
-      // await fetchTasks();
     });
-
-    // subscription.asFuture();
-    // subscription2.asFuture();
-
-    // final allJobs = await factory.allJobs();
-    // print('allJobs');
-    //
-    // BigInt index = BigInt.from(1);
-    // final GetJobInfo = await factory.getJobInfo(index);
-    // print('getJobInfo');
   }
 
   Future tellMeHasItMined(
@@ -523,12 +405,8 @@ class TasksServices extends ChangeNotifier {
         Future.delayed(const Duration(milliseconds: 1000));
         transactionReceipt = await web3GetTransactionReceipt(hash);
       }
-      // TransactionInformation transactionResult =
-      //     await _web3client.getTransactionByHash(hash);
-      // print(transactionReceipt);
+
       if (transactionReceipt.status == true) {
-        // lastTxn = 'minted';
-        // transactionStatuses[hash] = 'minted';
         transactionStatuses[_nanoId]![_taskAction]!['status'] = 'minted';
         transactionStatuses[_nanoId]![_taskAction]!['txn'] = hash;
         notifyListeners();
@@ -547,12 +425,9 @@ class TasksServices extends ChangeNotifier {
     filterResults.clear();
     print(enteredKeyword);
     searchKeyword = enteredKeyword;
-    // filterResults = _allTasks.toList();
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all tasks
       filterResults = tasksNew.toList();
-      // print(filterResults);
-
     } else {
       for (int i = 0; i < tasksNew.length; i++) {
         if (tasksNew
@@ -560,7 +435,6 @@ class TasksServices extends ChangeNotifier {
             .title
             .toLowerCase()
             .contains(enteredKeyword.toLowerCase())) {
-          // print('${tasksNew.elementAt(i).title}');
           filterResults.add(tasksNew.elementAt(i));
         }
       }
@@ -602,68 +476,49 @@ class TasksServices extends ChangeNotifier {
           fetchTasks();
           break;
         }
-        var temp;
+        var task;
         var value;
         double ethBalancePrecise = 0;
         double ethBalanceToken = 0;
-        temp = await web3Call(
+        task = await web3Call(
             contract: _deployedContract,
             function: _tasks,
             params: [BigInt.from(i)]);
-        print(temp);
-        if (temp != null) {
-          // if (temp[10] == 'ETH') {
+        if (task != null) {
           value = await web3Call(
               contract: _deployedContract,
               function: _getBalance,
-              params: [BigInt.from(temp[6].toInt())]);
+              params: [BigInt.from(task[6].toInt())]);
           final BigInt weiBalance = value[0];
           ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-          // } else {
           final BigInt weiBalanceToken =
-              await web3GetBalanceToken(temp[2], temp[10]);
+              await web3GetBalanceToken(task[2], task[10]);
           final ethBalancePreciseToken =
               weiBalanceToken.toDouble() / pow(10, 6);
           ethBalanceToken =
               (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-          // }
-
-          // ethBalance = (((ethBalancePrecise * 10000).ceil()) / 10000).toDouble();
-
-          // print(value);
-          // print(EtherAmount.fromUnitAndValue(EtherUnit.wei, value[0]));
-          // print(price);
-          // print('Data type: ${ownAddress.runtimeType}');
-
-          // late int contributorsCount;
-          // temp[8].length != 0 ? contributorsCount = temp[8].length : contributorsCount = 0;
 
           var taskObject = Task(
-              // id: temp[6].toString(),
-              title: temp[0],
-              description: temp[7],
-              // contractOwner: temp[4].toString(),
-              contractOwner: temp[4],
-              contractAddress: temp[2],
-              jobState: temp[1],
-              contributorsCount: temp[8].length,
-              contributors: temp[8],
-              participiant: temp[9],
+              title: task[0],
+              description: task[7],
+              contractOwner: task[4],
+              contractAddress: task[2],
+              jobState: task[1],
+              contributorsCount: task[8].length,
+              contributors: task[8],
+              participiant: task[9],
               justLoaded: true,
               createdTime:
-                  DateTime.fromMillisecondsSinceEpoch(temp[5].toInt() * 1000),
+                  DateTime.fromMillisecondsSinceEpoch(task[5].toInt() * 1000),
               contractValue: ethBalancePrecise,
               contractValueToken: ethBalanceToken,
-              nanoId: temp[11]);
+              nanoId: task[11]);
 
-          taskLoaded = temp[6].toInt() +
+          taskLoaded = task[6].toInt() +
               1; // this count we need to show the loading process. does not affect anything else
 
-          // if (isLoading == true) {
           notifyListeners();
-          // }
-          if (temp[1] != "") {
-            // var taskState = temp[1];
+          if (task[1] != "") {
             tasks.add(taskObject);
           }
         }
@@ -685,74 +540,70 @@ class TasksServices extends ChangeNotifier {
         pendingBalanceToken = 0;
 
         for (var k = 0; k < tasks.length; k++) {
-          final temp = tasks[k];
-          // if (pendingBalance != null) {
-          //
-          // }
-          // final pendingBalance2 = temp.contractValue;
-          if ((temp.contractValue != 0 || temp.contractValueToken != 0) &&
-              temp.participiant == ownAddress) {
-            if (temp.jobState == "agreed" ||
-                temp.jobState == "progress" ||
-                temp.jobState == "review" ||
-                temp.jobState == "completed") {
-              pendingBalance = pendingBalance! + temp.contractValue;
+          final task = tasks[k];
+          if ((task.contractValue != 0 || task.contractValueToken != 0) &&
+              task.participiant == ownAddress) {
+            if (task.jobState == "agreed" ||
+                task.jobState == "progress" ||
+                task.jobState == "review" ||
+                task.jobState == "completed") {
+              pendingBalance = pendingBalance! + task.contractValue;
               pendingBalanceToken =
-                  pendingBalanceToken! + temp.contractValueToken;
+                  pendingBalanceToken! + task.contractValueToken;
             }
           }
 
-          if (temp.jobState != "" && temp.jobState == "new") {
-            if (temp.contractOwner == ownAddress) {
-              tasksOwner.add(temp);
-            } else if (temp.contributors.length != 0) {
+          if (task.jobState != "" && task.jobState == "new") {
+            if (task.contractOwner == ownAddress) {
+              tasksOwner.add(task);
+            } else if (task.contributors.length != 0) {
               var taskExist = false;
-              for (var p = 0; p < temp.contributors.length; p++) {
-                if (temp.contributors[p] == ownAddress) {
+              for (var p = 0; p < task.contributors.length; p++) {
+                if (task.contributors[p] == ownAddress) {
                   taskExist = true;
                 }
               }
               if (taskExist) {
-                tasksWithMyParticipation.add(temp);
+                tasksWithMyParticipation.add(task);
               } else {
-                tasksNew.add(temp);
-                filterResults.add(temp);
+                tasksNew.add(task);
+                filterResults.add(task);
               }
             } else {
-              tasksNew.add(temp);
-              filterResults.add(temp);
+              tasksNew.add(task);
+              filterResults.add(task);
             }
           }
 
-          if (temp.jobState != "" && temp.jobState == "agreed") {
-            if (temp.contractOwner == ownAddress) {
-              tasksAgreedSubmitter.add(temp);
-            } else if (temp.participiant == ownAddress) {
-              tasksPerformer.add(temp);
+          if (task.jobState != "" && task.jobState == "agreed") {
+            if (task.contractOwner == ownAddress) {
+              tasksAgreedSubmitter.add(task);
+            } else if (task.participiant == ownAddress) {
+              tasksPerformer.add(task);
             }
           }
 
-          if (temp.jobState != "" && temp.jobState == "progress") {
-            if (temp.contractOwner == ownAddress) {
-              tasksProgressSubmitter.add(temp);
-            } else if (temp.participiant == ownAddress) {
-              tasksPerformer.add(temp);
+          if (task.jobState != "" && task.jobState == "progress") {
+            if (task.contractOwner == ownAddress) {
+              tasksProgressSubmitter.add(task);
+            } else if (task.participiant == ownAddress) {
+              tasksPerformer.add(task);
             }
           }
 
-          if (temp.jobState != "" && temp.jobState == "review") {
-            if (temp.contractOwner == ownAddress) {
-              tasksReviewSubmitter.add(temp);
-            } else if (temp.participiant == ownAddress) {
-              tasksPerformer.add(temp);
+          if (task.jobState != "" && task.jobState == "review") {
+            if (task.contractOwner == ownAddress) {
+              tasksReviewSubmitter.add(task);
+            } else if (task.participiant == ownAddress) {
+              tasksPerformer.add(task);
             }
           }
-          if (temp.jobState != "" &&
-              (temp.jobState == "completed" || temp.jobState == "canceled")) {
-            if (temp.contractOwner == ownAddress) {
-              tasksDoneSubmitter.add(temp);
-            } else if (temp.participiant == ownAddress) {
-              tasksDonePerformer.add(temp);
+          if (task.jobState != "" &&
+              (task.jobState == "completed" || task.jobState == "canceled")) {
+            if (task.contractOwner == ownAddress) {
+              tasksDoneSubmitter.add(task);
+            } else if (task.participiant == ownAddress) {
+              tasksDonePerformer.add(task);
             }
           }
         }
@@ -761,7 +612,6 @@ class TasksServices extends ChangeNotifier {
         isLoadingBackground = false;
         await myBalance();
         notifyListeners();
-        // taskLoaded = 0;
         runFilter(searchKeyword); // reset search bar
       }
       loopRunning = false;
@@ -800,13 +650,7 @@ class TasksServices extends ChangeNotifier {
         } //
       };
       late int priceInGwei = (price * 1000000000).toInt();
-      // late double priceInDouble = price;
       final BigInt priceInBigInt = BigInt.from(price * 1e6);
-      // late EtherAmount priceInGwei =
-      //     EtherAmount.fromUnitAndValue(EtherUnit.ether, int.parse(price));
-      // late int priceInGwei = priceInDouble.toInt();
-      // print(priceInGwei);
-      // lastTxn = 'pending';
       late String txn;
 
       if (taskTokenSymbol == 'ETH') {
@@ -823,11 +667,6 @@ class TasksServices extends ChangeNotifier {
                 taskTokenSymbol,
                 priceInBigInt,
               ],
-              // gasPrice: EtherAmount.inWei(BigInt.one),
-              // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-              //     .getValueInUnit(EtherUnit.gwei)
-              //     .toInt(),
-              // value: priceInGwei
               value: EtherAmount.fromUnitAndValue(
                   EtherUnit.gwei, priceInGwei.toInt()),
             ),
@@ -848,10 +687,6 @@ class TasksServices extends ChangeNotifier {
                 taskTokenSymbol,
                 priceInBigInt
               ],
-              // gasPrice: EtherAmount.inWei(BigInt.one),
-              // maxGas: 100000,
-              // value: priceInGwei
-              // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei.toInt()),
             ),
             chainId: _chainId);
         print(txn);
@@ -863,7 +698,6 @@ class TasksServices extends ChangeNotifier {
       transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'complete';
       transactionStatuses[nanoId]!['addTask']!['txn'] = txn;
 
-      // fetchTasks();
       tellMeHasItMined(txn, 'addTask', nanoId);
       notifyListeners();
     }
@@ -884,8 +718,6 @@ class TasksServices extends ChangeNotifier {
     late String txn;
 
     if (taskTokenSymbol == 'ETH') {
-      // await approveSpend(_contractAddress, ownAddress!, taskTokenSymbol,
-      //     priceInBigInt, nanoId);
       final transaction = Transaction(
         from: ownAddress,
         to: addressToSend,
@@ -893,10 +725,6 @@ class TasksServices extends ChangeNotifier {
       );
 
       txn = await web3Transaction(_creds, transaction, chainId: _chainId);
-      // print(txn);
-
-      // txn = await ierc20.transfer(addressToSend, priceInBigInt,
-      //     credentials: _creds, transaction: transaction);
       print(txn);
     } else if (taskTokenSymbol == 'aUSDC') {
       final transaction = Transaction(
@@ -912,7 +740,6 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['addTokens']!['tokenApproved'] = 'complete';
     transactionStatuses[nanoId]!['addTokens']!['txn'] = txn;
 
-    // fetchTasks();
     tellMeHasItMined(txn, 'addTokens', nanoId);
     notifyListeners();
   }
@@ -922,12 +749,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'taskParticipation': {'status': 'pending', 'txn': 'initial'}
     };
-    // var convertedContractAddrToInt = int.parse(contractAddress);
-    // assert(myInt is int);
-    // lastTxn = 'pending';
     late String txn;
-    // late TransactionInformation txnRes;
-    // late TransactionReceipt? txnRes;
     txn = await web3Transaction(
         _creds,
         Transaction.callContract(
@@ -935,12 +757,6 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _taskParticipation,
           parameters: [contractAddress],
-          // gasPrice: EtherAmount.inWei(BigInt.one),
-          // maxGas: 100000,
-          // maxFeePerGas: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1000),
-          // maxPriorityFeePerGas:
-          //     EtherAmount.fromUnitAndValue(EtherUnit.ether, 1000),
-          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
     isLoading = false;
@@ -949,16 +765,6 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['taskParticipation']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskParticipation']!['txn'] = txn;
     notifyListeners();
-    // print(txn);
-    // txnRes = await _web3client
-    //     .addedBlocks()
-    //     .asyncMap((_) => _web3client.getTransactionReceipt(txn))
-    //     .firstWhere((receipt) => receipt != null);
-
-    // txnRes = await _web3client.getTransactionByHash(txn);
-    // txnRes = await _web3client.getTransactionReceipt(txn);
-    // print(txnRes);
-    // fetchTasks();
     tellMeHasItMined(txn, 'taskParticipation', nanoId);
   }
 
@@ -976,11 +782,6 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _changeTaskStatus,
           parameters: [contractAddress, participiantAddress, state],
-          // gasPrice: EtherAmount.inWei(BigInt.one),
-          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-          //     .getValueInUnit(EtherUnit.gwei)
-          //     .toInt(),
-          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
     isLoading = false;
@@ -989,12 +790,10 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['changeTaskStatus']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['changeTaskStatus']!['txn'] = txn;
     notifyListeners();
-    // fetchTasks();
     tellMeHasItMined(txn, 'changeTaskStatus', nanoId);
   }
 
   Future<void> withdraw(EthereumAddress contractAddress, String nanoId) async {
-    // lastTxn = 'pending';
     late String txn;
     transactionStatuses[nanoId] = {
       'withdraw': {'status': 'pending', 'txn': 'initial'}
@@ -1006,11 +805,6 @@ class TasksServices extends ChangeNotifier {
           contract: _deployedContract,
           function: _withdraw,
           parameters: [contractAddress, ownAddress],
-          // gasPrice: EtherAmount.inWei(BigInt.one),
-          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-          //     .getValueInUnit(EtherUnit.gwei)
-          //     .toInt(),
-          // value: EtherAmount.fromUnitAndValue(EtherUnit.ether, 1),
         ),
         chainId: _chainId);
     isLoading = false;
@@ -1019,23 +813,19 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['withdraw']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdraw']!['txn'] = txn;
     notifyListeners();
-    // fetchTasks();
     tellMeHasItMined(txn, 'withdraw', nanoId);
   }
 
   String destinationChain = 'Moonbase';
   Future<void> withdrawToChain(
       EthereumAddress contractAddress, String nanoId) async {
-    // lastTxn = 'pending';
     transactionStatuses[nanoId] = {
       'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    // const gasLimit = 3e3;
     late int priceInGwei = (80000000 * gasPriceValue).toInt();
     print("gasPriceValue");
     print(gasPriceValue);
-    // print(destinationChain);
     EtherAmount value =
         EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei);
     print("value");
@@ -1052,10 +842,6 @@ class TasksServices extends ChangeNotifier {
             _contractAddressRopsten,
             destinationChain
           ],
-          // gasPrice: EtherAmount.inWei(BigInt.one),
-          // maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1000)
-          //     .getValueInUnit(EtherUnit.gwei)
-          //     .toInt(),
           value: EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei),
         ),
         chainId: _chainId);
@@ -1065,16 +851,12 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
     notifyListeners();
-    // fetchTasks();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
   double gasPriceValue = 0;
-  // String saveDestinationChain = 'moonbeam';
-  //ported to dart from https://github.com/axelarnetwork/axelar-local-gmp-examples/blob/c80cdda1cbce5ff5e30eeb120ac3d4981ea7271b/scripts/utils.js#L24
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
-    // saveDestinationChain = destinationChain;
     final env = 'testnet';
     if (env == 'local') ;
     final String AddressZero = "0x0000000000000000000000000000000000000000";
@@ -1110,28 +892,6 @@ class TasksServices extends ChangeNotifier {
     print(gasPrice);
     gasPriceValue = gasPrice;
     notifyListeners();
-    // return gasPrice;
-
-    // const params = {
-    //     method: 'getGasPrice',
-    //     destinationChain: destination.name,
-    //     sourceChain: source.name,
-    // };
-
-    // // set gas token address to params
-    // if (tokenAddress != AddressZero) {
-    //     params.sourceTokenAddress = tokenAddress;
-    // }
-    // else {
-    //     params.sourceTokenSymbol = source.tokenSymbol;
-    // }
-    // send request
-    // const response = await requester.get('/', { params })
-    //     .catch(error => { return { data: { error } }; });
-    // const result = response.data.result;
-    // const dest = result.destination_native_token;
-    // const destPrice = 1e18*dest.gas_price*dest.token_price.usd;
-    // return destPrice / result.source_token.token_price.usd;
   }
 
   /**
@@ -1175,18 +935,4 @@ class TasksServices extends ChangeNotifier {
   Future<void> myNotifyListeners() async {
     notifyListeners();
   }
-
-  // Future<void> deleteTask(int id) async {
-  //   await _web3client.sendTransaction(
-  //     _creds,
-  //     Transaction.callContract(
-  //       contract: _deployedContract,
-  //       function: _deleteTask,
-  //       parameters: [BigInt.from(id)],
-  //     ),
-  //   );
-  //   isLoading = true;
-  //   notifyListeners();
-  //   fetchTasks();
-  // }
 }
