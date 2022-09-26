@@ -83,6 +83,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
           ],
         ),
         actions: [
+          LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
