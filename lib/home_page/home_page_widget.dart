@@ -154,7 +154,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
-          // LoadButtonIndicator(),
+          LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
