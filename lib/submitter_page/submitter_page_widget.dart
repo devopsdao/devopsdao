@@ -71,7 +71,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Submitter page',
+                  'Customer',
                   style: FlutterFlowTheme.of(context).title2.override(
                         fontFamily: 'Poppins',
                         color: Colors.white,
@@ -234,469 +234,423 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
     return Container(
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          scrollDirection: Axis.vertical,
-          itemCount: widget.obj.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-              child: Container(
-                // color: Colors.white,
-                child: InkWell(
-                  onTap: () {
-                    // setState(() {
-                    //   // Toggle light when tapped.
-                    // });
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text(widget.obj[index].title),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: <Widget>[
-                                    // Divider(
-                                    //   height: 20,
-                                    //   thickness: 1,
-                                    //   indent: 40,
-                                    //   endIndent: 40,
-                                    //   color: Colors.black,
-                                    // ),
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'Description: \n',
-                                              style: const TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text:
-                                                  widget.obj[index].description)
-                                        ])),
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'Contract value: \n',
-                                              style: const TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: widget
-                                                      .obj[index].contractValue
-                                                      .toString() +
-                                                  ' DEV \n',
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0)),
-                                          TextSpan(
-                                              text: widget.obj[index]
-                                                      .contractValueToken
-                                                      .toString() +
-                                                  ' aUSDC',
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0))
-                                        ])),
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'Contract owner: \n',
-                                              style: const TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: widget
-                                                  .obj[index].contractOwner
-                                                  .toString(),
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 0.7))
-                                        ])),
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'Contract address: \n',
-                                              style: const TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: widget
-                                                  .obj[index].contractAddress
-                                                  .toString(),
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 0.7))
-                                        ])),
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'Created: ',
-                                              style: const TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: DateFormat(
-                                                      'MM/dd/yyyy, hh:mm a')
-                                                  .format(widget
-                                                      .obj[index].createdTime),
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0))
-                                        ])),
-                                    // Text("Description: ${tasksServices.tasksNew[index].description}",
-                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
-                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
-                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    // Divider(
-                                    //   height: 20,
-                                    //   thickness: 1,
-                                    //   indent: 40,
-                                    //   endIndent: 40,
-                                    //   color: Colors.black,
-                                    // ),
-                                    if (widget.obj[index].jobState == "new")
-                                      // Text('Choose contractor: ',
-                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            tasksServices.isLoadingBackground = true;
+            tasksServices.fetchTasks();
+          },
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.vertical,
+            itemCount: widget.obj.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                child: Container(
+                  // color: Colors.white,
+                  child: InkWell(
+                    onTap: () {
+                      // setState(() {
+                      //   // Toggle light when tapped.
+                      // });
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(widget.obj[index].title),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      // Divider(
+                                      //   height: 20,
+                                      //   thickness: 1,
+                                      //   indent: 40,
+                                      //   endIndent: 40,
+                                      //   color: Colors.black,
+                                      // ),
                                       RichText(
                                           text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
                                               children: <TextSpan>[
                                             TextSpan(
-                                                text: 'Choose contractor: ',
+                                                text: 'Description: \n',
                                                 style: const TextStyle(
                                                     height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
+                                                    fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text:
+                                                    widget.obj[index].description)
                                           ])),
-
-                                    // if (widget.obj[index].jobState != "new" )
-                                    // Text('text',
-                                    // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    if (widget.obj[index].jobState == "new")
-                                      Container(
-                                        height:
-                                            300.0, // Change as per your requirement
-                                        width:
-                                            300.0, // Change as per your requirement
-                                        child: ListView.builder(
-                                            // padding: EdgeInsets.zero,
-                                            // scrollDirection: Axis.vertical,
-                                            // shrinkWrap: true,
-                                            // physics: NeverScrollableScrollPhysics(),
-                                            itemCount: widget
-                                                .obj[index].contributors.length,
-                                            itemBuilder: (context2, index2) {
-                                              return Column(children: [
-                                                // Text(
-                                                //   tasksServices.tasksOwner[index].contributors[index2].toString(),
-                                                //   style: FlutterFlowTheme.of(
-                                                //       context2)
-                                                //       .bodyText2,
-                                                // ),
-                                                TextButton(
-                                                  style: TextButton.styleFrom(
-                                                    textStyle: const TextStyle(
-                                                        fontSize: 13),
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      widget.obj[index]
-                                                          .justLoaded = false;
-                                                    });
-                                                    tasksServices.changeTaskStatus(
-                                                        widget.obj[index]
-                                                            .contractAddress,
-                                                        widget.obj[index]
-                                                                .contributors[
-                                                            index2],
-                                                        'agreed',
-                                                        widget
-                                                            .obj[index].nanoId);
-                                                    Navigator.pop(context);
-
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            WalletAction(
-                                                              nanoId: widget
-                                                                  .obj[index]
-                                                                  .nanoId,
-                                                              taskName:
-                                                                  'changeTaskStatus',
-                                                            ));
-                                                  },
-                                                  child: Text(
-                                                    widget.obj[index]
-                                                        .contributors[index2]
-                                                        .toString(),
-                                                    style: DefaultTextStyle.of(
-                                                            context)
+                                      RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Contract value: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget
+                                                        .obj[index].contractValue
+                                                        .toString() +
+                                                    ' DEV \n',
+                                                style:
+                                                    DefaultTextStyle.of(context)
                                                         .style
                                                         .apply(
-                                                            fontSizeFactor:
-                                                                0.7),
+                                                            fontSizeFactor: 1.0)),
+                                            TextSpan(
+                                                text: widget.obj[index]
+                                                        .contractValueToken
+                                                        .toString() +
+                                                    ' aUSDC',
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 1.0))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Contract owner: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget
+                                                    .obj[index].contractOwner
+                                                    .toString(),
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 0.7))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Contract address: \n',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: widget
+                                                    .obj[index].contractAddress
+                                                    .toString(),
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 0.7))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Created: ',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: DateFormat(
+                                                        'MM/dd/yyyy, hh:mm a')
+                                                    .format(widget
+                                                        .obj[index].createdTime),
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 1.0))
+                                          ])),
+                                      // Text("Description: ${tasksServices.tasksNew[index].description}",
+                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                      // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
+                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                      // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
+                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                      // Divider(
+                                      //   height: 20,
+                                      //   thickness: 1,
+                                      //   indent: 40,
+                                      //   endIndent: 40,
+                                      //   color: Colors.black,
+                                      // ),
+                                      if (widget.obj[index].jobState == "new")
+                                        // Text('Choose contractor: ',
+                                        //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                        RichText(
+                                            text: TextSpan(
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 1.0),
+                                                children: <TextSpan>[
+                                              TextSpan(
+                                                  text: 'Choose contractor: ',
+                                                  style: const TextStyle(
+                                                      height: 2,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            ])),
+
+                                      // if (widget.obj[index].jobState != "new" )
+                                      // Text('text',
+                                      // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                      if (widget.obj[index].jobState == "new")
+                                        Container(
+                                          height:
+                                              300.0, // Change as per your requirement
+                                          width:
+                                              300.0, // Change as per your requirement
+                                          child: ListView.builder(
+                                              // padding: EdgeInsets.zero,
+                                              // scrollDirection: Axis.vertical,
+                                              // shrinkWrap: true,
+                                              // physics: NeverScrollableScrollPhysics(),
+                                              itemCount: widget
+                                                  .obj[index].contributors.length,
+                                              itemBuilder: (context2, index2) {
+                                                return Column(children: [
+                                                  // Text(
+                                                  //   tasksServices.tasksOwner[index].contributors[index2].toString(),
+                                                  //   style: FlutterFlowTheme.of(
+                                                  //       context2)
+                                                  //       .bodyText2,
+                                                  // ),
+                                                  TextButton(
+                                                    style: TextButton.styleFrom(
+                                                      textStyle: const TextStyle(
+                                                          fontSize: 13),
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        widget.obj[index]
+                                                            .justLoaded = false;
+                                                      });
+                                                      tasksServices.changeTaskStatus(
+                                                          widget.obj[index]
+                                                              .contractAddress,
+                                                          widget.obj[index]
+                                                                  .contributors[
+                                                              index2],
+                                                          'agreed',
+                                                          widget
+                                                              .obj[index].nanoId);
+                                                      Navigator.pop(context);
+
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              WalletAction(
+                                                                nanoId: widget
+                                                                    .obj[index]
+                                                                    .nanoId,
+                                                                taskName:
+                                                                    'changeTaskStatus',
+                                                              ));
+                                                    },
+                                                    child: Text(
+                                                      widget.obj[index]
+                                                          .contributors[index2]
+                                                          .toString(),
+                                                      style: DefaultTextStyle.of(
+                                                              context)
+                                                          .style
+                                                          .apply(
+                                                              fontSizeFactor:
+                                                                  0.7),
+                                                    ),
                                                   ),
-                                                ),
-                                              ]);
-                                            }),
-                                      ),
-                                  ],
+                                                ]);
+                                              }),
+                                        ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              actions: [
+                                actions: [
 
-          /////////////topup
-                                // TextButton(
-                                //   child: Text('Topup contract'),
-                                //   onPressed: () {
-                                //     showDialog(
-                                //         context: context,
-                                //         builder: (context) => AlertDialog(
-                                //               title: Text('Topup contract'),
-                                //               // backgroundColor: Colors.black,
-                                //               content: Payment(
-                                //                 purpose: 'topup',
-                                //               ),
-                                //               actions: [
-                                //                 TextButton(
-                                //                   onPressed: () {
-                                //                     tasksServices.addTokens(
-                                //                         widget.obj[index]
-                                //                             .contractAddress,
-                                //                         Interface.tokensEntered,
-                                //                         widget
-                                //                             .obj[index].nanoId);
-                                //                     Navigator.pop(context);
-                                //
-                                //                     showDialog(
-                                //                         context: context,
-                                //                         builder: (context) =>
-                                //                             WalletAction(
-                                //                               nanoId: widget
-                                //                                   .obj[index]
-                                //                                   .nanoId,
-                                //                               taskName:
-                                //                                   'addTokens',
-                                //                             ));
-                                //                   },
-                                //                   child: Text('Topup!'),
-                                //                   style: TextButton.styleFrom(
-                                //                       primary: Colors.white,
-                                //                       backgroundColor:
-                                //                           Colors.green),
-                                //                 ),
-                                //                 TextButton(
-                                //                     child: Text('Close'),
-                                //                     onPressed: () =>
-                                //                         Navigator.pop(context)),
-                                //               ],
-                                //             ));
-                                //   },
-                                //   style: TextButton.styleFrom(
-                                //       primary: Colors.white,
-                                //       backgroundColor: Colors.green),
-                                // ),
+            /////////////topup
+                                  // TextButton(
+                                  //   child: Text('Topup contract'),
+                                  //   onPressed: () {
+                                  //     showDialog(
+                                  //         context: context,
+                                  //         builder: (context) => AlertDialog(
+                                  //               title: Text('Topup contract'),
+                                  //               // backgroundColor: Colors.black,
+                                  //               content: Payment(
+                                  //                 purpose: 'topup',
+                                  //               ),
+                                  //               actions: [
+                                  //                 TextButton(
+                                  //                   onPressed: () {
+                                  //                     tasksServices.addTokens(
+                                  //                         widget.obj[index]
+                                  //                             .contractAddress,
+                                  //                         Interface.tokensEntered,
+                                  //                         widget
+                                  //                             .obj[index].nanoId);
+                                  //                     Navigator.pop(context);
+                                  //
+                                  //                     showDialog(
+                                  //                         context: context,
+                                  //                         builder: (context) =>
+                                  //                             WalletAction(
+                                  //                               nanoId: widget
+                                  //                                   .obj[index]
+                                  //                                   .nanoId,
+                                  //                               taskName:
+                                  //                                   'addTokens',
+                                  //                             ));
+                                  //                   },
+                                  //                   child: Text('Topup!'),
+                                  //                   style: TextButton.styleFrom(
+                                  //                       primary: Colors.white,
+                                  //                       backgroundColor:
+                                  //                           Colors.green),
+                                  //                 ),
+                                  //                 TextButton(
+                                  //                     child: Text('Close'),
+                                  //                     onPressed: () =>
+                                  //                         Navigator.pop(context)),
+                                  //               ],
+                                  //             ));
+                                  //   },
+                                  //   style: TextButton.styleFrom(
+                                  //       primary: Colors.white,
+                                  //       backgroundColor: Colors.green),
+                                  // ),
 
-                                // TextButton(
-                                //     child: Text('Withdraw to Chain'),
-                                //     style: TextButton.styleFrom(
-                                //         primary: Colors.white,
-                                //         backgroundColor: Colors.green),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         widget.obj[index].justLoaded = false;
-                                //       });
-                                //       tasksServices.withdrawToChain(
-                                //           widget.obj[index].contractAddress,
-                                //           widget.obj[index].nanoId);
-                                //       Navigator.pop(context);
-                                //
-                                //       showDialog(
-                                //           context: context,
-                                //           builder: (context) => WalletAction(
-                                //                 nanoId:
-                                //                     widget.obj[index].nanoId,
-                                //                 taskName: 'withdrawToChain',
-                                //               ));
-                                //     }),
+                                  // TextButton(
+                                  //     child: Text('Withdraw to Chain'),
+                                  //     style: TextButton.styleFrom(
+                                  //         primary: Colors.white,
+                                  //         backgroundColor: Colors.green),
+                                  //     onPressed: () {
+                                  //       setState(() {
+                                  //         widget.obj[index].justLoaded = false;
+                                  //       });
+                                  //       tasksServices.withdrawToChain(
+                                  //           widget.obj[index].contractAddress,
+                                  //           widget.obj[index].nanoId);
+                                  //       Navigator.pop(context);
+                                  //
+                                  //       showDialog(
+                                  //           context: context,
+                                  //           builder: (context) => WalletAction(
+                                  //                 nanoId:
+                                  //                     widget.obj[index].nanoId,
+                                  //                 taskName: 'withdrawToChain',
+                                  //               ));
+                                  //     }),
 
-                                if (widget.obj[index].jobState == 'review')
+                                  if (widget.obj[index].jobState == 'review')
+                                    TextButton(
+                                        child: Text('Sign Review'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.green),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.obj[index].justLoaded = false;
+                                          });
+                                          tasksServices.changeTaskStatus(
+                                              widget.obj[index].contractAddress,
+                                              widget.obj[index].participiant,
+                                              'completed',
+                                              widget.obj[index].nanoId);
+                                          Navigator.pop(context);
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => WalletAction(
+                                                    nanoId:
+                                                        widget.obj[index].nanoId,
+                                                    taskName: 'changeTaskStatus',
+                                                  ));
+                                        }),
                                   TextButton(
-                                      child: Text('Sign Review'),
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                          backgroundColor: Colors.green),
-                                      onPressed: () {
-                                        setState(() {
-                                          widget.obj[index].justLoaded = false;
-                                        });
-                                        tasksServices.changeTaskStatus(
-                                            widget.obj[index].contractAddress,
-                                            widget.obj[index].participiant,
-                                            'completed',
-                                            widget.obj[index].nanoId);
-                                        Navigator.pop(context);
-
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WalletAction(
-                                                  nanoId:
-                                                      widget.obj[index].nanoId,
-                                                  taskName: 'changeTaskStatus',
-                                                ));
-                                      }),
-                                TextButton(
-                                    child: Text('Close'),
-                                    onPressed: () => Navigator.pop(context)),
-                                // if (widget.obj[index].jobState == 'completed')
-                                //   TextButton(
-                                //     child: Text('Withdraw'),
-                                //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         widget.obj[index].justLoaded = false;
-                                //       });
-                                //       tasksServices.withdraw(widget.obj[index].contractAddress);
-                                //       Navigator.pop(context);
-                                //
-                                //       showDialog(
-                                //           context: context,
-                                //           builder: (context) => WalletAction()
-                                //       );
-                                //   }),
-                              ],
-                            ));
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 86,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x4D000000),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 7,
-                                      child: Text(
-                                        widget.obj[index].title,
-                                        style: FlutterFlowTheme.of(context)
-                                            .subtitle1,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
+                                      child: Text('Close'),
+                                      onPressed: () => Navigator.pop(context)),
+                                  // if (widget.obj[index].jobState == 'completed')
+                                  //   TextButton(
+                                  //     child: Text('Withdraw'),
+                                  //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                                  //     onPressed: () {
+                                  //       setState(() {
+                                  //         widget.obj[index].justLoaded = false;
+                                  //       });
+                                  //       tasksServices.withdraw(widget.obj[index].contractAddress);
+                                  //       Navigator.pop(context);
+                                  //
+                                  //       showDialog(
+                                  //           context: context,
+                                  //           builder: (context) => WalletAction()
+                                  //       );
+                                  //   }),
+                                ],
+                              ));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 86,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 5,
+                            color: Color(0x4D000000),
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 7,
+                                        child: Text(
+                                          widget.obj[index].title,
+                                          style: FlutterFlowTheme.of(context)
+                                              .subtitle1,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                    ),
-                                    // Spacer(),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        widget.obj[index].jobState,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // Text(
-                                //   widget.obj[index].title,
-                                //   style: FlutterFlowTheme.of(context).subtitle1,
-                                // ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        widget.obj[index].description,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 7,
-                                      child: Text(
-                                        DateFormat('MM/dd/yyyy, hh:mm a')
-                                            .format(
-                                                widget.obj[index].createdTime),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                    // Spacer(),
-                                    if (widget.obj[index].contractValue != 0)
+                                      // Spacer(),
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          widget.obj[index].contractValue
-                                                  .toString() +
-                                              ' ETH',
+                                          widget.obj[index].jobState,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
@@ -705,82 +659,134 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-                                    if (widget.obj[index].contractValueToken !=
-                                        0)
+                                    ],
+                                  ),
+                                  // Text(
+                                  //   widget.obj[index].title,
+                                  //   style: FlutterFlowTheme.of(context).subtitle1,
+                                  // ),
+                                  Row(
+                                    children: [
                                       Expanded(
-                                        flex: 3,
                                         child: Text(
-                                          widget.obj[index].contractValueToken
-                                                  .toString() +
-                                              ' aUSDC',
+                                          widget.obj[index].description,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
                                           overflow: TextOverflow.fade,
                                           maxLines: 1,
-                                          textAlign: TextAlign.end,
                                         ),
-                                      ),
-                                    if (widget.obj[index].contractValue == 0 &&
-                                        widget.obj[index].contractValueToken ==
-                                            0)
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
                                       Expanded(
-                                        flex: 3,
+                                        flex: 7,
                                         child: Text(
-                                          'Has no money',
+                                          DateFormat('MM/dd/yyyy, hh:mm a')
+                                              .format(
+                                                  widget.obj[index].createdTime),
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
                                           overflow: TextOverflow.fade,
                                           maxLines: 1,
-                                          textAlign: TextAlign.end,
                                         ),
                                       ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (widget.obj[index].contributorsCount != 0 &&
-                            widget.obj[index].jobState == "new")
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                            child: Badge(
-                              // position: BadgePosition.topEnd(top: 10, end: 10),
-                              badgeContent: Container(
-                                width: 17,
-                                height: 17,
-                                alignment: Alignment.center,
-                                child: Text(
-                                    widget.obj[index].contributorsCount
-                                        .toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)),
+                                      // Spacer(),
+                                      if (widget.obj[index].contractValue != 0)
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            widget.obj[index].contractValue
+                                                    .toString() +
+                                                ' ETH',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ),
+                                      if (widget.obj[index].contractValueToken !=
+                                          0)
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            widget.obj[index].contractValueToken
+                                                    .toString() +
+                                                ' aUSDC',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ),
+                                      if (widget.obj[index].contractValue == 0 &&
+                                          widget.obj[index].contractValueToken ==
+                                              0)
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            'Has no money',
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              animationDuration: Duration(milliseconds: 300),
-                              animationType: BadgeAnimationType.scale,
-                              shape: BadgeShape.circle,
-                              borderRadius: BorderRadius.circular(5),
-                              // child: Icon(Icons.settings),
                             ),
                           ),
-                        if (widget.obj[index].justLoaded == false)
-                          Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                            child: CircularProgressIndicator(),
-                          ),
-                      ],
+                          if (widget.obj[index].contributorsCount != 0 &&
+                              widget.obj[index].jobState == "new")
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                              child: Badge(
+                                // position: BadgePosition.topEnd(top: 10, end: 10),
+                                badgeContent: Container(
+                                  width: 17,
+                                  height: 17,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      widget.obj[index].contributorsCount
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)),
+                                ),
+                                animationDuration: Duration(milliseconds: 300),
+                                animationType: BadgeAnimationType.scale,
+                                shape: BadgeShape.circle,
+                                borderRadius: BorderRadius.circular(5),
+                                // child: Icon(Icons.settings),
+                              ),
+                            ),
+                          if (widget.obj[index].justLoaded == false)
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                              child: CircularProgressIndicator(),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
+              );
+            },
+          ),
+        )
       ),
     );
   }

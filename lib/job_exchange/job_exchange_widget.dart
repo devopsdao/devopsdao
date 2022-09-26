@@ -262,7 +262,10 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       0, 6, 0, 0),
                                   child: RefreshIndicator(
-                                    onRefresh: () async {},
+                                    onRefresh: () async {
+                                      tasksServices.isLoadingBackground = true;
+                                      tasksServices.fetchTasks();
+                                    },
                                     child: ListView.builder(
                                       padding: EdgeInsets.zero,
                                       scrollDirection: Axis.vertical,

@@ -67,7 +67,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Performer page',
+                  'Performer',
                   style: FlutterFlowTheme.of(context).title2.override(
                         fontFamily: 'Poppins',
                         color: Colors.white,
@@ -202,7 +202,10 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
         child: RefreshIndicator(
-          onRefresh: () async {},
+          onRefresh: () async {
+            tasksServices.isLoadingBackground = true;
+            tasksServices.fetchTasks();
+          },
           child: ListView.builder(
             padding: EdgeInsets.zero,
             scrollDirection: Axis.vertical,
