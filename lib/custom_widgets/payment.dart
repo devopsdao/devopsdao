@@ -22,8 +22,12 @@ class _PaymentState extends State<Payment> {
   TextEditingController? valueController;
   String dropdownValue = selectToken.first;
   double _currentPriceValue = 0.0;
-  double minPrice = 0.0;
-  double maxPrice = 0.125;
+  double ausdcHighPrice = 25.0;
+  double ausdcLowPrice = 0.0;
+  double devHighPrice = 0.125;
+  double devLowPrice = 0.0;
+  late double minPrice;
+  late double maxPrice;
 
 
 
@@ -39,8 +43,12 @@ class _PaymentState extends State<Payment> {
     var Interface = context.watch<InterfaceServices>();
     if (tasksServices.taskTokenSymbol == 'ETH') {
       dropdownValue = 'DEV';
+      minPrice = devLowPrice;
+      maxPrice = devHighPrice;
     } else {
       dropdownValue = tasksServices.taskTokenSymbol;
+      minPrice = ausdcLowPrice;
+      maxPrice = ausdcHighPrice;
     }
 
     late Color setBlackAndWhite;
@@ -168,14 +176,14 @@ class _PaymentState extends State<Payment> {
                   Interface.tokensEntered = 0.0;
                   valueController!.text = '0.0';
                   _currentPriceValue = 0.0;
-                  minPrice = 0.0;
-                  maxPrice = 0.125;
+                  minPrice = devLowPrice;
+                  maxPrice = devHighPrice;
                 } else {
                   Interface.tokensEntered = 0.0;
                   valueController!.text = '0.0';
                   _currentPriceValue = 0.0;
-                  minPrice = 0.0;
-                  maxPrice = 25.0;
+                  minPrice = ausdcLowPrice;
+                  maxPrice = ausdcHighPrice;
                 }
                 setState(() {
                   dropdownValue = value!;
