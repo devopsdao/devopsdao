@@ -346,16 +346,16 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                     .style
                                                     .apply(fontSizeFactor: 1.0))
                                           ])),
-                                      // if (widget.obj[index].jobState ==
-                                      //         "completed" &&
-                                      //     (widget.obj[index].contractValue !=
-                                      //             0 ||
-                                      //         widget.obj[index]
-                                      //                 .contractValueToken !=
-                                      //             0))
-                                      SelectNetworkMenu(
-                                        object: widget.obj[index],
-                                      )
+                                      if (widget.obj[index].jobState ==
+                                              "completed" &&
+                                          (widget.obj[index].contractValue !=
+                                                  0 ||
+                                              widget.obj[index]
+                                                      .contractValueToken !=
+                                                  0))
+                                        SelectNetworkMenu(
+                                          object: widget.obj[index],
+                                        )
                                     ],
                                   ),
                                 ),

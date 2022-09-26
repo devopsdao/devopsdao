@@ -111,7 +111,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                 if (dropdownValue != 'Moonbase')
                   TextSpan(
                       text:
-                          'Transfer fee to ${dropdownValue} is: ${tasksServices.transferFee}',
+                          'Transfer fee from Moonbase via Axelar to ${dropdownValue} is: ${tasksServices.transferFee}',
                       style: const TextStyle(
                           height: 1.8, fontWeight: FontWeight.bold)),
                 if (widget.object.contractValueToken <

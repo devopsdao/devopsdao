@@ -1,3 +1,10 @@
+#keys
+truffle-config.js
+endpoints.md
+yarn-error.log
+yarn.lock
+pubspec.lock
+
 # Miscellaneous
 *.class
 *.log

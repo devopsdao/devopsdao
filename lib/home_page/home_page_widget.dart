@@ -86,7 +86,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
   @override
   void initState() {
-
     super.initState();
     startPageLoadAnimations(
       animationsMap.values
@@ -204,7 +203,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                         title: '',
                       ),
                     );
-
                   },
                 ),
               ],
@@ -230,7 +228,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     //   print(
                     //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
                     // }();
-
                   },
                 ),
               ],
@@ -290,7 +287,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
             tasksServices.isLoading
                 ? LoadIndicator()
                 : Image.asset(
-                    'assets/images/34.png',
+                    'assets/images/logo.png',
                     width: 163,
                     height: 140,
                     fit: BoxFit.fitHeight,
