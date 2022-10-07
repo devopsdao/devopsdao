@@ -2,9 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+<<<<<<< HEAD
+
+import 'package:js/js.dart';
+=======
 import 'package:js/js.dart'
     if (dart.library.io) './js-stub.dart'
     if (dart.library.js) 'package:js/js.dart';
+>>>>>>> b71bd179a2e73862a9030421304e488926e596e0
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
@@ -22,7 +27,6 @@ import './web3dart-browser-stub.dart'
     if (dart.library.io) './web3dart-browser-stub.dart';
 // if (dart.library.js) 'package:web3dart/browser.dart';
 import 'package:web3dart/web3dart.dart';
-import "package:universal_html/html.dart" hide Platform;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 // if (dart.library.html) 'package:web_socket_channel/web_socket_channel.dart';
