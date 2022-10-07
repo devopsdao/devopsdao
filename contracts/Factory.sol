@@ -508,7 +508,7 @@ contract Job {
             rating == 0 &&
             _score != 0 &&
             _score <= 5 &&
-            keccak256(bytes(_state)) == keccak256(bytes("completed")) &&
+            // keccak256(bytes(_state)) == keccak256(bytes("completed")) &&
             contractOwner == _applicant
         ) {
             rating = _score;
