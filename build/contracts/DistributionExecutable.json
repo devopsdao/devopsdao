@@ -148,8 +148,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -162,8 +161,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -182,8 +180,7 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -216,8 +213,7 @@
       "name": "sendToMany",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"gateway_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"gasReceiver_\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotApprovedByGateway\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"contractAdr\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"}],\"name\":\"Logs\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"contractAdr\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"LogsValue\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"address_\",\"type\":\"address\"}],\"name\":\"addressToString\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"commandId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"sourceChain\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"sourceAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"commandId\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"sourceChain\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"sourceAddress\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"payload\",\"type\":\"bytes\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"executeWithToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"gasReceiver\",\"outputs\":[{\"internalType\":\"contract IAxelarGasService\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"gateway\",\"outputs\":[{\"internalType\":\"contract IAxelarGateway\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"destinationChain\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"destinationAddress\",\"type\":\"string\"},{\"internalType\":\"address[]\",\"name\":\"destinationAddresses\",\"type\":\"address[]\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"sendToMany\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/DistributionExecutable.sol\":\"DistributionExecutable\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[],\"viaIR\":true},\"sources\":{\"@axelar-network/axelar-gmp-sdk-solidity/contracts/StringAddressUtils.sol\":{\"keccak256\":\"0x310b98940efa8a47bb0a8bfb31861e4424e624900f4d7fc0d1aa3a6256fc5f31\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://176bafeb1e799c809e195d0026eef5698d8b182ccacd69c5bac8921d699e83c1\",\"dweb:/ipfs/QmajgarbiGqxLQyp5kNgLro87RQMFw8L7xVVsQ9QjWgeSe\"]},\"@axelar-network/axelar-gmp-sdk-solidity/contracts/executables/AxelarExecutable.sol\":{\"keccak256\":\"0x37f5cbdc641ca8f0dc24991af6038d4db55b0740f4383fbd4c443bd2a98abb95\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://095cacc16611928d2b06dfb7306ebb947108b00dc944584bdee6276c13fc1bfc\",\"dweb:/ipfs/QmXabeKnhh6SPW8EGezKi6PQmP2YQiMujJPWSRvU3J6NoN\"]},\"@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarExecutable.sol\":{\"keccak256\":\"0x7175f7bfe798e46032ad40bd87666c6ef3f03c0397c875cf3465510a9fc75237\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6eccc1ca07707b20fc77ff3c46d10ba438fe074ed1a5f95f095a22ffc7a1d8da\",\"dweb:/ipfs/QmQjue7gUFzjtT1BQrLM3h9TycjMJGPJTZLcRNTcseNJaH\"]},\"@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol\":{\"keccak256\":\"0x0ab1f104fcf57de6a8fef1a6526bda7b362f9bfc6c05e0c5c768444d6cff6f5f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9b1f452f470a26a390d5bb0af5f53ee21a3eabff8effdd7039815c9bf2dbe2a1\",\"dweb:/ipfs/Qme9LTk9Z9sB1sbyucHXRnV6eBm8Adnvbuqc9WSHZHBqUX\"]},\"@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol\":{\"keccak256\":\"0xae3d4598622e927639e3cba383618476562631bc8afafe68b16dfbd1db21fd78\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://672c3b9284bbc02fd6692df94190f5fb76766a879cf826148e52cba921859b08\",\"dweb:/ipfs/Qmbatsf6gW6GJsyuoah7Yuw3iQNGmhpm39i21eKXQURHD9\"]},\"@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xb77ad755f4eade679279d5ca12b6926595e41e17387e143530f4fb57672d58d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b0d01d0810d12dba98839b084440ab9b52e04d94e9431a6ffadabb1651d0f100\",\"dweb:/ipfs/Qme9KLMtbmNvsAj2giGTzNFKAymkMJq88Ef445pLiawKWa\"]},\"project:/contracts/DistributionExecutable.sol\":{\"keccak256\":\"0xd7f26b4664dff4cfe3ca3114e35b022b527017e4c20fc268f325a0477372d917\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29208c5ff0c6da5576bf86fefa9eceb1e28acfe14a26a6e421e9d836d23656f7\",\"dweb:/ipfs/QmUyXGUV8tX17cZ7hbMXkLXidBrLZBeQT4kUEa6ojJAiTd\"]}},\"version\":1}",
@@ -5155,35 +5151,9 @@
     "name": "solc",
     "version": "0.8.17+commit.8df45f5f.Emscripten.clang"
   },
-  "networks": {
-    "3": {
-      "events": {},
-      "links": {},
-      "address": "0xA70AEaAa9D44c31A2207a938b967eD310101508f",
-      "transactionHash": "0x5559a88806bb658a1df833e765b02e2c269ca37288ced50f7a81b6c0ff28045f"
-    },
-    "5": {
-      "events": {},
-      "links": {},
-      "address": "0x8523201d1286549b7E4B94eEA487C407bDf7fc18",
-      "transactionHash": "0x2ccde3d4db07b8fbd1f5f7183ff86f0ec0dc29931d53bf3efdcd6d16f51e501b"
-    },
-    "1287": {
-      "events": {},
-      "links": {},
-      "address": "0x591ca8Fa10C529D57d74CC0621c0A730c4E2DbF2",
-      "transactionHash": "0xa5e0f1e80ba2135007e20ae68873a9a154feb798ba4cc98e7cf40ab16ca88585"
-    },
-    "80001": {
-      "events": {},
-      "links": {},
-      "address": "0xEAAA71f74b01617BA2235083334a1c952BAC0a6C",
-      "transactionHash": "0x4ac8cfb586b76da4d8384fc9923b8caf089ca6b5fbd88f9f3c43b53dff746805"
-    }
-  },
+  "networks": {},
   "schemaVersion": "3.4.10",
-  "updatedAt": "2022-09-25T16:49:48.502Z",
-  "networkType": "ethereum",
+  "updatedAt": "2022-10-06T13:48:51.526Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

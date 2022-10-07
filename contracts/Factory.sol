@@ -404,30 +404,29 @@ contract Job {
                 participantAddress.transfer(contractAddress.balance);
             }
         } else if (
-            keccak256(bytes(jobState)) == keccak256(bytes("completed")) || 1==1
+            keccak256(bytes(jobState)) == keccak256(bytes("completed")) //|| 1==1
         ) {
             bytes memory symbolBytes = bytes(symbol);
             bytes memory chainBytes = bytes(chain);
-            if (symbolBytes.length == 0) {
-                revert RevertReason({
-                    message: "empty token"
-                });
-                // do nothing
-            } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
+
+            //check USDC balance
+            address tokenAddress = gateway.tokenAddresses("aUSDC");
+            uint256 contractUSDCAmount = IERC20(tokenAddress).balanceOf(contractAddress)/10;
+            
+            //check ETH balance
+            if (contractAddress.balance != 0) {
                 emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to Ethereum address: ",this.addressToString(participantAddress)));
                 participantAddress.transfer(contractAddress.balance);
             } 
-            else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
+            else if (contractUSDCAmount !=0 && (
                 keccak256(chainBytes) == keccak256(bytes("PolygonAxelar"))
             )) {
                 emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany ", symbol, " to ", chain, "value: ", uint2str(msg.value), " address:",this.addressToString(participantAddress)));
                 emit LogsValue(address(this), string.concat("msg.sender: ", this.addressToString(msg.sender)," call value: "), msg.value);
                 // string memory _addressToSend2 = bytes(_addressToSend);
-                address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress)/10;
-                IERC20(tokenAddress).approve(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A, contractAmount);
+                IERC20(tokenAddress).approve(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A, contractUSDCAmount);
                 _destinationAddresses.push(participantAddress);
-                IDistributionExecutable(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A).sendToMany{value: msg.value}("polygon", this.addressToString(0xEAAA71f74b01617BA2235083334a1c952BAC0a6C), _destinationAddresses, 'aUSDC', contractAmount);
+                IDistributionExecutable(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A).sendToMany{value: msg.value}("polygon", this.addressToString(0xEAAA71f74b01617BA2235083334a1c952BAC0a6C), _destinationAddresses, 'aUSDC', contractUSDCAmount);
             }
             else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
                 keccak256(chainBytes) == keccak256(bytes("Ethereum")) || 
@@ -440,25 +439,22 @@ contract Job {
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
-                address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).approve(address(gateway), contractAmount);
+
+                IERC20(tokenAddress).approve(address(gateway), contractUSDCAmount);
                 // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
-                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", contractAmount);
+                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", contractUSDCAmount);
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
                 // revert InvalidToken({
                 //     token: string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress))
                 // });
                 emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to ", chain, "address:",this.addressToString(participantAddress)));
-                address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).approve(contractAddress, contractAmount);
-                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, contractAmount);
+                IERC20(tokenAddress).approve(contractAddress, contractUSDCAmount);
+                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, contractUSDCAmount);
                 // IERC20(tokenAddress).approve(address(gateway), amount);
             }
             else{
                 revert RevertReason({
-                    message: "invalid destination network or token"
+                    message: "invalid destination network"
                 });
             }
         }

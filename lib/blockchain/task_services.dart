@@ -15,15 +15,22 @@ import '../custom_widgets/wallet_action.dart';
 import 'Factory.g.dart';
 import 'IERC20.g.dart';
 import 'task.dart';
+import 'package:web3dart/browser.dart';
 import 'package:web3dart/web3dart.dart';
+import "package:universal_html/html.dart" hide Platform;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+// if (dart.library.html) 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+// import 'dart:io' if (dart.library.html) 'dart:html';
 
 import '../wallet/ethereum_transaction_tester.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+// import 'dart:html' hide Platform;
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
@@ -50,6 +57,7 @@ class TasksServices extends ChangeNotifier {
   String walletConnectUri = '';
   String walletConnectSessionUri = '';
   // bool walletConnectActionApproved = false;
+  var eth;
   String lastTxn = '';
 
   String platform = 'mobile';
@@ -99,22 +107,37 @@ class TasksServices extends ChangeNotifier {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
         }
       });
+    } else {
+      // print('Client is listening: ${await client.isListeningForNetwork()}');
+
+      // final message = Uint8List.fromList(utf8.encode('Hello from web3dart'));
+      // final signature = await credentials.signPersonalMessage(message);
+      // print('Signature: ${base64.encode(signature)}');
     }
 
-    if (transactionTester == null) {
-      transactionTester = EthereumTransactionTester();
+    if (platform != 'web') {
+      if (transactionTester == null) {
+        transactionTester = EthereumTransactionTester();
+      }
+      await transactionTester?.initSession();
+      await transactionTester?.removeSession();
     }
-    await transactionTester?.initSession();
-    await transactionTester?.removeSession();
     _web3client = Web3Client(
       _rpcUrl,
       http.Client(),
       socketConnector: () {
-        return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrl);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        }
       },
     );
     await getABI();
     await getDeployedContract();
+
+    if (platform == 'web') {}
 
     initComplete = true;
   }
@@ -138,7 +161,17 @@ class TasksServices extends ChangeNotifier {
 
   int chainID = 0;
   bool validChainID = false;
+
   Future<void> connectWallet() async {
+    if (platform != 'web') {
+      print('not web');
+      connectWalletWC();
+    } else {
+      connectWalletMM();
+    }
+  }
+
+  Future<void> connectWalletWC() async {
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
 
@@ -214,6 +247,110 @@ class TasksServices extends ChangeNotifier {
       }
     } else {
       print("not initialized");
+    }
+  }
+
+  Future<void> connectWalletMM() async {
+    if (window.ethereum != null) {
+      final eth = window.ethereum;
+
+      if (eth == null) {
+        print('MetaMask is not available');
+        return;
+      }
+      var ethRPC = eth.asRpcService();
+
+      final client = Web3Client.custom(ethRPC);
+      final credentials = await eth.requestAccount();
+      _creds = credentials;
+
+      publicAddress = credentials.address;
+
+      final chainID = eth.rawRequest('eth_chainId');
+      print(chainID);
+
+      //chainID = 1287;
+      walletConnectConnected = true;
+      validChainID = true;
+
+      print('Using ${credentials.address}');
+
+      ownAddress = publicAddress;
+      fetchTasks();
+
+      myBalance();
+      notifyListeners();
+      // final client = Web3Client.custom(eth.asRpcService());
+      // final credentials = await eth.requestAccount();
+      // _creds = credentials;
+
+      // Subscribe to events
+      // eth.on('connect', (session) {
+      //   print(session);
+      //   // walletConnectState = TransactionState.connected;
+      //   // walletConnectConnected = true;
+      //   // () async {
+      //   //   credentials = await transactionTester?.getCredentials();
+      //   //   publicAddress = await transactionTester?.getPublicAddress(session);
+      //   //   _creds = credentials;
+      //   //   ownAddress = publicAddress;
+      //   //   fetchTasks();
+
+      //   //   myBalance();
+      //   //   isLoading = true;
+
+      //   //   chainID = session.chainId;
+      //   //   if (chainID == 1287) {
+      //   //     validChainID = true;
+      //   //   } else {
+      //   //     validChainID = false;
+      //   //   }
+      //   // }();
+      //   notifyListeners();
+      // });
+      // connector.on('session_request', (payload) {
+      //   print(payload);
+      // });
+      // connector.on('session_update', (payload) {
+      //   print(payload);
+      //   if (payload.approved == true) {
+      //     // walletConnectActionApproved = true;
+      //     // notifyListeners();
+      //   }
+      // });
+      // connector.on('disconnect', (session) {
+      //   print(session);
+      //   walletConnectState = TransactionState.disconnected;
+      //   walletConnectConnected = false;
+      //   walletConnectUri = '';
+      //   walletConnectSessionUri = '';
+
+      //   ownAddress = null;
+      //   ethBalance = 0;
+      //   ethBalanceToken = 0;
+      //   pendingBalance = 0;
+      //   pendingBalanceToken = 0;
+      //   notifyListeners();
+      // });
+      // final SessionStatus? session = await transactionTester?.connect(
+      //   onDisplayUri: (uri) => {
+      //     walletConnectSessionUri = uri.split("?").first,
+      //     platform == 'mobile' ? launchURL(uri) : walletConnectUri = uri,
+      //     notifyListeners()
+      //   },
+      // );
+
+      // if (session == null) {
+      //   print('Unable to connect');
+      //   walletConnectState = TransactionState.failed;
+      // } else if (walletConnectConnected == true) {
+      //   credentials = await transactionTester?.getCredentials();
+      //   publicAddress = await transactionTester?.getPublicAddress(session);
+      // } else {
+      //   walletConnectState = TransactionState.failed;
+      // }
+    } else {
+      print("eth not initialized");
     }
   }
 
