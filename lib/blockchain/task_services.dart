@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-// import 'package:js/js.dart';
+import 'package:js/js.dart';
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
@@ -31,6 +31,15 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 // import 'dart:html' hide Platform;
+
+@JS()
+@anonymous
+class JSrawRequestParams {
+  external String get chainId;
+
+  // Must have an unnamed factory constructor with named arguments.
+  external factory JSrawRequestParams({String chainId});
+}
 
 class TasksServices extends ChangeNotifier {
   List<Task> tasks = [];
@@ -267,14 +276,30 @@ class TasksServices extends ChangeNotifier {
       publicAddress = _creds.address;
 
       final chainIDHex = await eth.rawRequest('eth_chainId');
-      final chainID = int.parse(chainIDHex);
-      print(chainID);
+      int chainID = int.parse(chainIDHex);
+
+      if (chainID == 1287) {
+        validChainID = true;
+      } else {
+        print('invalid chainID ${chainID}');
+
+        await eth.rawRequest('wallet_switchEthereumChain',
+            params: [JSrawRequestParams(chainId: '0x507')]);
+        final chainIDHex = await eth.rawRequest('eth_chainId');
+        chainID = int.parse(chainIDHex);
+        if (chainID == 1287) {
+          validChainID = true;
+        } else {
+          validChainID = false;
+        }
+      }
+      // print(chainID);
 
       //chainID = 1287;
       walletConnectConnected = true;
-      validChainID = true;
+      // validChainID = true;
 
-      print('Using ${_creds.address}');
+      // print('Using ${_creds.address}');
 
       ownAddress = publicAddress;
       fetchTasks();
