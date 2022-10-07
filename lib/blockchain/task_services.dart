@@ -431,6 +431,9 @@ class TasksServices extends ChangeNotifier {
   double? ethBalanceToken = 0;
   double? pendingBalance = 0;
   double? pendingBalanceToken = 0;
+  int score = 0;
+  int scoredTaskCount = 0;
+  double myScore = 0.0;
 
   late DeployedContract _deployedContract;
   late ContractFunction _createTask;
@@ -442,6 +445,7 @@ class TasksServices extends ChangeNotifier {
   late ContractFunction _withdraw;
   late ContractFunction _withdrawToChain;
   late ContractFunction _getBalance;
+  late ContractFunction _rateTask;
   late Throttling thr;
   late String searchKeyword = '';
 
@@ -469,6 +473,7 @@ class TasksServices extends ChangeNotifier {
     _withdraw = _deployedContract.function('transferToaddress');
     _getBalance = _deployedContract.function('getBalance');
     _withdrawToChain = _deployedContract.function('transferToaddressChain2');
+    // _rateTask = _deployedContract.function('jobRating');
 
     //aUSDC contract
     EthereumAddress tokenContractAddress =
@@ -589,6 +594,7 @@ class TasksServices extends ChangeNotifier {
   late bool stopLoopRunning = false;
 
   Future<void> fetchTasks() async {
+    isLoadingBackground = true;
     notifyListeners();
     List totalTaskList = await web3Call(
       contract: _deployedContract,
@@ -649,7 +655,10 @@ class TasksServices extends ChangeNotifier {
                   DateTime.fromMillisecondsSinceEpoch(task[5].toInt() * 1000),
               contractValue: ethBalancePrecise,
               contractValueToken: ethBalanceToken,
-              nanoId: task[11]);
+              nanoId: task[11],
+              score: 0,
+              // score: task[12]
+          );
 
           taskLoaded = task[6].toInt() +
               1; // this count we need to show the loading process. does not affect anything else
@@ -675,18 +684,29 @@ class TasksServices extends ChangeNotifier {
 
         pendingBalance = 0;
         pendingBalanceToken = 0;
+        score = 0;
+        scoredTaskCount = 0;
 
         for (var k = 0; k < tasks.length; k++) {
           final task = tasks[k];
-          if ((task.contractValue != 0 || task.contractValueToken != 0) &&
-              task.participiant == ownAddress) {
-            if (task.jobState == "agreed" ||
-                task.jobState == "progress" ||
-                task.jobState == "review" ||
-                task.jobState == "completed") {
-              pendingBalance = pendingBalance! + task.contractValue;
-              pendingBalanceToken =
-                  pendingBalanceToken! + task.contractValueToken;
+
+
+          if (task.participiant == ownAddress) {
+            // Calculate Pending among:
+            if ((task.contractValue != 0 || task.contractValueToken != 0)) {
+              if (task.jobState == "agreed" ||
+                  task.jobState == "progress" ||
+                  task.jobState == "review" ||
+                  task.jobState == "completed") {
+                pendingBalance = pendingBalance! + task.contractValue;
+                pendingBalanceToken =
+                    pendingBalanceToken! + task.contractValueToken;
+              }
+            }
+            // add all scored Task for calculation:
+            if (task.score != 0) {
+              score = score! + task.score;
+              scoredTaskCount++;
             }
           }
 
@@ -743,6 +763,11 @@ class TasksServices extends ChangeNotifier {
               tasksDonePerformer.add(task);
             }
           }
+        }
+
+        // Final Score Calculation
+        if (score != 0) {
+          myScore = score / scoredTaskCount;
         }
 
         isLoading = false;
@@ -829,7 +854,7 @@ class TasksServices extends ChangeNotifier {
         print(txn);
       }
       isLoading = false;
-      isLoadingBackground = true;
+      // isLoadingBackground = true;
       lastTxn = txn;
       transactionStatuses[nanoId]!['addTask']!['status'] = 'confirmed';
       transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'complete';
@@ -871,7 +896,7 @@ class TasksServices extends ChangeNotifier {
           credentials: _creds, transaction: transaction);
     }
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
     transactionStatuses[nanoId]!['addTokens']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['addTokens']!['tokenApproved'] = 'complete';
@@ -897,7 +922,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: _chainId);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     // lastTxn = txn;
     transactionStatuses[nanoId]!['taskParticipation']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskParticipation']!['txn'] = txn;
@@ -922,7 +947,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: _chainId);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
     transactionStatuses[nanoId]!['changeTaskStatus']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['changeTaskStatus']!['txn'] = txn;
@@ -945,7 +970,7 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: _chainId);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
     transactionStatuses[nanoId]!['withdraw']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdraw']!['txn'] = txn;
@@ -983,12 +1008,36 @@ class TasksServices extends ChangeNotifier {
         ),
         chainId: _chainId);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
     transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
+  }
+
+  Future<void> rateTask(EthereumAddress contractAddress, double rateScore, String nanoId) async {
+    transactionStatuses[nanoId] = {
+      'rateTask': {'status': 'pending', 'txn': 'initial'}
+    };
+    // lastTxn = 'pending';
+    late String txn;
+    txn = await web3Transaction(
+        _creds,
+        Transaction.callContract(
+          from: ownAddress,
+          contract: _deployedContract,
+          function: _rateTask,
+          parameters: [contractAddress, rateScore],
+        ),
+        chainId: _chainId);
+    isLoading = false;
+    // isLoadingBackground = true;
+    lastTxn = txn;
+    transactionStatuses[nanoId]!['rateTask']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['rateTask']!['txn'] = txn;
+    notifyListeners();
+    tellMeHasItMined(txn, 'rateTask', nanoId);
   }
 
   double gasPriceValue = 0;

@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:devopsdao/custom_widgets/payment.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
@@ -15,6 +16,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 class SubmitterPageWidget extends StatefulWidget {
   const SubmitterPageWidget({Key? key}) : super(key: key);
@@ -225,6 +227,9 @@ class mySubmitterTabWidget extends StatefulWidget {
 
 class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   late bool justLoaded = true;
+  bool enableRatingButton = false;
+
+  double ratingScore = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -254,359 +259,437 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       //   // Toggle light when tapped.
                       // });
                       showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Text(widget.obj[index].title),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      // Divider(
-                                      //   height: 20,
-                                      //   thickness: 1,
-                                      //   indent: 40,
-                                      //   endIndent: 40,
-                                      //   color: Colors.black,
-                                      // ),
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(widget.obj[index].title),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    // Divider(
+                                    //   height: 20,
+                                    //   thickness: 1,
+                                    //   indent: 40,
+                                    //   endIndent: 40,
+                                    //   color: Colors.black,
+                                    // ),
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text: 'Description: \n',
+                                              style: const TextStyle(
+                                                  height: 2,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text:
+                                                  widget.obj[index].description)
+                                        ])),
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text: 'Contract value: \n',
+                                              style: const TextStyle(
+                                                  height: 2,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: widget
+                                                      .obj[index].contractValue
+                                                      .toString() +
+                                                  ' DEV \n',
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0)),
+                                          TextSpan(
+                                              text: widget.obj[index]
+                                                      .contractValueToken
+                                                      .toString() +
+                                                  ' aUSDC',
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0))
+                                        ])),
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text: 'Contract owner: \n',
+                                              style: const TextStyle(
+                                                  height: 2,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: widget
+                                                  .obj[index].contractOwner
+                                                  .toString(),
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 0.7))
+                                        ])),
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text: 'Contract address: \n',
+                                              style: const TextStyle(
+                                                  height: 2,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: widget
+                                                  .obj[index].contractAddress
+                                                  .toString(),
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 0.7))
+                                        ])),
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          TextSpan(
+                                              text: 'Created: ',
+                                              style: const TextStyle(
+                                                  height: 2,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: DateFormat(
+                                                      'MM/dd/yyyy, hh:mm a')
+                                                  .format(widget
+                                                      .obj[index].createdTime),
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0))
+                                        ])),
+                                    if (widget.obj[index].jobState == 'completed')
                                       RichText(
                                           text: TextSpan(
                                               style: DefaultTextStyle.of(context)
                                                   .style
                                                   .apply(fontSizeFactor: 1.0),
                                               children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Description: \n',
-                                                style: const TextStyle(
-                                                    height: 2,
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text:
-                                                    widget.obj[index].description)
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Contract value: \n',
-                                                style: const TextStyle(
-                                                    height: 2,
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text: widget
-                                                        .obj[index].contractValue
-                                                        .toString() +
-                                                    ' DEV \n',
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor: 1.0)),
-                                            TextSpan(
-                                                text: widget.obj[index]
-                                                        .contractValueToken
-                                                        .toString() +
-                                                    ' aUSDC',
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor: 1.0))
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Contract owner: \n',
-                                                style: const TextStyle(
-                                                    height: 2,
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text: widget
-                                                    .obj[index].contractOwner
-                                                    .toString(),
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor: 0.7))
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Contract address: \n',
-                                                style: const TextStyle(
-                                                    height: 2,
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text: widget
-                                                    .obj[index].contractAddress
-                                                    .toString(),
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor: 0.7))
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Created: ',
-                                                style: const TextStyle(
-                                                    height: 2,
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text: DateFormat(
-                                                        'MM/dd/yyyy, hh:mm a')
-                                                    .format(widget
-                                                        .obj[index].createdTime),
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor: 1.0))
-                                          ])),
-                                      // Text("Description: ${tasksServices.tasksNew[index].description}",
-                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                      // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
-                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                      // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
-                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                      // Divider(
-                                      //   height: 20,
-                                      //   thickness: 1,
-                                      //   indent: 40,
-                                      //   endIndent: 40,
-                                      //   color: Colors.black,
-                                      // ),
-                                      if (widget.obj[index].jobState == "new")
-                                        // Text('Choose contractor: ',
-                                        //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                        RichText(
-                                            text: TextSpan(
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor: 1.0),
-                                                children: <TextSpan>[
-                                              TextSpan(
-                                                  text: 'Choose contractor: ',
-                                                  style: const TextStyle(
-                                                      height: 2,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ])),
+                                                TextSpan(
+                                                    text: 'Rate the task:',
+                                                    style: const TextStyle(
+                                                        height: 2,
+                                                        fontWeight: FontWeight.bold)),
+                                              ]
+                                          )
+                                      ),
+                                    if (widget.obj[index].jobState == 'completed')
+                                      Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            RatingBar.builder(
+                                              initialRating: 4,
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              itemPadding: EdgeInsets.symmetric(horizontal: 5.0),
+                                              itemBuilder: (context, _) => Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              ),
+                                              itemSize: 30.0,
+                                              onRatingUpdate: (rating) {
+                                                setState(() {
+                                                  enableRatingButton = true;
+                                                });
+                                                ratingScore = rating;
 
-                                      // if (widget.obj[index].jobState != "new" )
-                                      // Text('text',
-                                      // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                      if (widget.obj[index].jobState == "new")
-                                        Container(
-                                          height:
-                                              300.0, // Change as per your requirement
-                                          width:
-                                              300.0, // Change as per your requirement
-                                          child: ListView.builder(
-                                              // padding: EdgeInsets.zero,
-                                              // scrollDirection: Axis.vertical,
-                                              // shrinkWrap: true,
-                                              // physics: NeverScrollableScrollPhysics(),
-                                              itemCount: widget
-                                                  .obj[index].contributors.length,
-                                              itemBuilder: (context2, index2) {
-                                                return Column(children: [
-                                                  // Text(
-                                                  //   tasksServices.tasksOwner[index].contributors[index2].toString(),
-                                                  //   style: FlutterFlowTheme.of(
-                                                  //       context2)
-                                                  //       .bodyText2,
-                                                  // ),
-                                                  TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      textStyle: const TextStyle(
-                                                          fontSize: 13),
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        widget.obj[index]
-                                                            .justLoaded = false;
-                                                      });
-                                                      tasksServices.changeTaskStatus(
-                                                          widget.obj[index]
-                                                              .contractAddress,
-                                                          widget.obj[index]
-                                                                  .contributors[
-                                                              index2],
-                                                          'agreed',
-                                                          widget
-                                                              .obj[index].nanoId);
-                                                      Navigator.pop(context);
+                                                tasksServices.myNotifyListeners();
+                                              },
+                                            ),
+                                          ]
+                                      ),
+                                    // Text("Description: ${tasksServices.tasksNew[index].description}",
+                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                    // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
+                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                    // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
+                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                    // Divider(
+                                    //   height: 20,
+                                    //   thickness: 1,
+                                    //   indent: 40,
+                                    //   endIndent: 40,
+                                    //   color: Colors.black,
+                                    // ),
+                                    if (widget.obj[index].jobState == "new")
+                                      // Text('Choose contractor: ',
+                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Choose contractor: ',
+                                                style: const TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ])),
 
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (context) =>
-                                                              WalletAction(
-                                                                nanoId: widget
-                                                                    .obj[index]
-                                                                    .nanoId,
-                                                                taskName:
-                                                                    'changeTaskStatus',
-                                                              ));
-                                                    },
-                                                    child: Text(
-                                                      widget.obj[index]
-                                                          .contributors[index2]
-                                                          .toString(),
-                                                      style: DefaultTextStyle.of(
-                                                              context)
-                                                          .style
-                                                          .apply(
-                                                              fontSizeFactor:
-                                                                  0.7),
-                                                    ),
+                                    // if (widget.obj[index].jobState != "new" )
+                                    // Text('text',
+                                    // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                    if (widget.obj[index].jobState == "new")
+                                      Container(
+                                        height:
+                                            300.0, // Change as per your requirement
+                                        width:
+                                            300.0, // Change as per your requirement
+                                        child: ListView.builder(
+                                            // padding: EdgeInsets.zero,
+                                            // scrollDirection: Axis.vertical,
+                                            // shrinkWrap: true,
+                                            // physics: NeverScrollableScrollPhysics(),
+                                            itemCount: widget
+                                                .obj[index].contributors.length,
+                                            itemBuilder: (context2, index2) {
+                                              return Column(children: [
+                                                // Text(
+                                                //   tasksServices.tasksOwner[index].contributors[index2].toString(),
+                                                //   style: FlutterFlowTheme.of(
+                                                //       context2)
+                                                //       .bodyText2,
+                                                // ),
+                                                TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 13),
                                                   ),
-                                                ]);
-                                              }),
-                                        ),
-                                    ],
-                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      widget.obj[index]
+                                                          .justLoaded = false;
+                                                    });
+                                                    tasksServices.changeTaskStatus(
+                                                        widget.obj[index]
+                                                            .contractAddress,
+                                                        widget.obj[index]
+                                                                .contributors[
+                                                            index2],
+                                                        'agreed',
+                                                        widget
+                                                            .obj[index].nanoId);
+                                                    Navigator.pop(context);
+
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            WalletAction(
+                                                              nanoId: widget
+                                                                  .obj[index]
+                                                                  .nanoId,
+                                                              taskName:
+                                                                  'changeTaskStatus',
+                                                            ));
+                                                  },
+                                                  child: Text(
+                                                    widget.obj[index]
+                                                        .contributors[index2]
+                                                        .toString(),
+                                                    style: DefaultTextStyle.of(
+                                                            context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor:
+                                                                0.7),
+                                                  ),
+                                                ),
+                                              ]);
+                                            }),
+                                      ),
+                                  ],
                                 ),
-                                actions: [
+                              ),
+                              actions: [
 
-            /////////////topup
-                                  // TextButton(
-                                  //   child: Text('Topup contract'),
-                                  //   onPressed: () {
-                                  //     showDialog(
-                                  //         context: context,
-                                  //         builder: (context) => AlertDialog(
-                                  //               title: Text('Topup contract'),
-                                  //               // backgroundColor: Colors.black,
-                                  //               content: Payment(
-                                  //                 purpose: 'topup',
-                                  //               ),
-                                  //               actions: [
-                                  //                 TextButton(
-                                  //                   onPressed: () {
-                                  //                     tasksServices.addTokens(
-                                  //                         widget.obj[index]
-                                  //                             .contractAddress,
-                                  //                         Interface.tokensEntered,
-                                  //                         widget
-                                  //                             .obj[index].nanoId);
-                                  //                     Navigator.pop(context);
-                                  //
-                                  //                     showDialog(
-                                  //                         context: context,
-                                  //                         builder: (context) =>
-                                  //                             WalletAction(
-                                  //                               nanoId: widget
-                                  //                                   .obj[index]
-                                  //                                   .nanoId,
-                                  //                               taskName:
-                                  //                                   'addTokens',
-                                  //                             ));
-                                  //                   },
-                                  //                   child: Text('Topup!'),
-                                  //                   style: TextButton.styleFrom(
-                                  //                       primary: Colors.white,
-                                  //                       backgroundColor:
-                                  //                           Colors.green),
-                                  //                 ),
-                                  //                 TextButton(
-                                  //                     child: Text('Close'),
-                                  //                     onPressed: () =>
-                                  //                         Navigator.pop(context)),
-                                  //               ],
-                                  //             ));
-                                  //   },
-                                  //   style: TextButton.styleFrom(
-                                  //       primary: Colors.white,
-                                  //       backgroundColor: Colors.green),
-                                  // ),
+          /////////////topup
+                                TextButton(
+                                  child: Text('Topup contract'),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text('Topup contract'),
+                                              // backgroundColor: Colors.black,
+                                              content: Payment(
+                                                purpose: 'topup',
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    tasksServices.addTokens(
+                                                        widget.obj[index]
+                                                            .contractAddress,
+                                                        Interface.tokensEntered,
+                                                        widget
+                                                            .obj[index].nanoId);
+                                                    Navigator.pop(context);
 
-                                  // TextButton(
-                                  //     child: Text('Withdraw to Chain'),
-                                  //     style: TextButton.styleFrom(
-                                  //         primary: Colors.white,
-                                  //         backgroundColor: Colors.green),
-                                  //     onPressed: () {
-                                  //       setState(() {
-                                  //         widget.obj[index].justLoaded = false;
-                                  //       });
-                                  //       tasksServices.withdrawToChain(
-                                  //           widget.obj[index].contractAddress,
-                                  //           widget.obj[index].nanoId);
-                                  //       Navigator.pop(context);
-                                  //
-                                  //       showDialog(
-                                  //           context: context,
-                                  //           builder: (context) => WalletAction(
-                                  //                 nanoId:
-                                  //                     widget.obj[index].nanoId,
-                                  //                 taskName: 'withdrawToChain',
-                                  //               ));
-                                  //     }),
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            WalletAction(
+                                                              nanoId: widget
+                                                                  .obj[index]
+                                                                  .nanoId,
+                                                              taskName:
+                                                                  'addTokens',
+                                                            ));
+                                                  },
+                                                  child: Text('Topup!'),
+                                                  style: TextButton.styleFrom(
+                                                      primary: Colors.white,
+                                                      backgroundColor:
+                                                          Colors.green),
+                                                ),
+                                                TextButton(
+                                                    child: Text('Close'),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context)),
+                                              ],
+                                            ));
+                                  },
+                                  style: TextButton.styleFrom(
+                                      primary: Colors.white,
+                                      backgroundColor: Colors.green),
+                                ),
 
-                                  if (widget.obj[index].jobState == 'review')
-                                    TextButton(
-                                        child: Text('Sign Review'),
-                                        style: TextButton.styleFrom(
-                                            primary: Colors.white,
-                                            backgroundColor: Colors.green),
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.obj[index].justLoaded = false;
-                                          });
-                                          tasksServices.changeTaskStatus(
-                                              widget.obj[index].contractAddress,
-                                              widget.obj[index].participiant,
-                                              'completed',
-                                              widget.obj[index].nanoId);
-                                          Navigator.pop(context);
+                                // TextButton(
+                                //     child: Text('Withdraw to Chain'),
+                                //     style: TextButton.styleFrom(
+                                //         primary: Colors.white,
+                                //         backgroundColor: Colors.green),
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         widget.obj[index].justLoaded = false;
+                                //       });
+                                //       tasksServices.withdrawToChain(
+                                //           widget.obj[index].contractAddress,
+                                //           widget.obj[index].nanoId);
+                                //       Navigator.pop(context);
+                                //
+                                //       showDialog(
+                                //           context: context,
+                                //           builder: (context) => WalletAction(
+                                //                 nanoId:
+                                //                     widget.obj[index].nanoId,
+                                //                 taskName: 'withdrawToChain',
+                                //               ));
+                                //     }),
 
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => WalletAction(
-                                                    nanoId:
-                                                        widget.obj[index].nanoId,
-                                                    taskName: 'changeTaskStatus',
-                                                  ));
-                                        }),
+                                if (widget.obj[index].jobState == 'review')
                                   TextButton(
-                                      child: Text('Close'),
-                                      onPressed: () => Navigator.pop(context)),
-                                  // if (widget.obj[index].jobState == 'completed')
-                                  //   TextButton(
-                                  //     child: Text('Withdraw'),
-                                  //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                                  //     onPressed: () {
-                                  //       setState(() {
-                                  //         widget.obj[index].justLoaded = false;
-                                  //       });
-                                  //       tasksServices.withdraw(widget.obj[index].contractAddress);
-                                  //       Navigator.pop(context);
-                                  //
-                                  //       showDialog(
-                                  //           context: context,
-                                  //           builder: (context) => WalletAction()
-                                  //       );
-                                  //   }),
-                                ],
-                              ));
+                                      child: Text('Sign Review'),
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          backgroundColor: Colors.green),
+                                      onPressed: () {
+                                        setState(() {
+                                          widget.obj[index].justLoaded = false;
+                                        });
+                                        tasksServices.changeTaskStatus(
+                                            widget.obj[index].contractAddress,
+                                            widget.obj[index].participiant,
+                                            'completed',
+                                            widget.obj[index].nanoId);
+                                        Navigator.pop(context);
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => WalletAction(
+                                                  nanoId:
+                                                      widget.obj[index].nanoId,
+                                                  taskName: 'changeTaskStatus',
+                                                ));
+                                      }),
+                                if (widget.obj[index].jobState == 'completed')
+                                  TextButton(
+                                      child: Text('Rate this task'),
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          disabledBackgroundColor: Colors.white10,
+                                          backgroundColor: Colors.green),
+                                      onPressed: (widget.obj[index].score == 0 && enableRatingButton) ? () {
+                                        setState(() {
+                                          widget.obj[index].justLoaded = false;
+                                        });
+                                        tasksServices.rateTask(
+                                            widget.obj[index].contractAddress,
+                                            ratingScore,
+                                            widget.obj[index].nanoId);
+                                        Navigator.pop(context);
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => WalletAction(
+                                              nanoId: widget.obj[index].nanoId,
+                                              taskName: 'rateTask',
+                                            ));
+                                      } : null),
+                                TextButton(
+                                    child: Text('Close'),
+                                    onPressed: () => Navigator.pop(context)),
+                                // if (widget.obj[index].jobState == 'completed')
+
+                                //   TextButton(
+                                //     child: Text('Withdraw'),
+                                //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         widget.obj[index].justLoaded = false;
+                                //       });
+                                //       tasksServices.withdraw(widget.obj[index].contractAddress);
+                                //       Navigator.pop(context);
+                                //
+                                //       showDialog(
+                                //           context: context,
+                                //           builder: (context) => WalletAction()
+                                //       );
+                                //   }),
+                                // TextButton(
+                                //   child: Text('diss'),
+                                //   style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                                //   onPressed: () {
+                                //     setState(() {
+                                //       enableRatingButton = false;
+                                //     });
+                                //
+                                //
+                                // }),
+
+                              ],
+                            ));
                     },
                     child: Container(
                       width: double.infinity,

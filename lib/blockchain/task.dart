@@ -14,6 +14,7 @@ class Task {
   final double contractValue;
   final double contractValueToken;
   final String nanoId;
+  final int score;
   Task({
     required this.title,
     required this.description,
@@ -28,5 +29,6 @@ class Task {
     required this.contractValue,
     required this.contractValueToken,
     required this.nanoId,
+    required this.score,
   });
 }
