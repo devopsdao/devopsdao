@@ -100,6 +100,11 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
+    function jobRating(Job job, uint256 _score) external {
+        jobArray[job.index()].jobRate(_score, msg.sender);
+        emit OneEventForAll(address(job), job.index());
+    }
+
 
     function jobStateChange(
         Job job,
@@ -198,7 +203,8 @@ contract Factory {
         address[] memory,
         address,
         string memory,
-        string memory
+        string memory,
+        uint256
         
     )
     {
@@ -234,6 +240,7 @@ contract Job {
     address[] public _destinationAddresses;
     string public symbol;
     uint256 amount;
+    uint256 rating = 0;
 
     event Logs(address contractAdr, string message);
     event LogsValue(address contractAdr, string message, uint value);
@@ -245,6 +252,7 @@ contract Job {
         string memory _symbol,
         uint256 _index,
         address _contractOwner
+        // uint256 _rating
     ) payable {
         // data = _data;
         nanoId = _nanoId;
@@ -257,6 +265,7 @@ contract Job {
         index = _index;
         description = _description;
         symbol = _symbol;
+        // rating = _rating;
 
         address gateway_ = 0x5769D84DD62a6fD969856c75c7D321b84d455929;
         gateway = IAxelarGateway(gateway_);
@@ -291,10 +300,7 @@ contract Job {
     //     emit jobCreated(_content, _index);
     // }
 
-    function getJob()
-    public
-    view
-    returns (
+    function getJob() public view returns (
         string memory _content,
         string memory _jobState,
         address _contractAddress,
@@ -306,7 +312,8 @@ contract Job {
         address[] memory _participants,
         address _participantAddress,
         string memory _symbol,
-        string memory _nanoId
+        string memory _nanoId,
+        uint256 _rating
     )
     {
         return (
@@ -321,7 +328,8 @@ contract Job {
         Participants,
         participantAddress,
         symbol,
-        nanoId
+        nanoId,
+        rating
         );
     }
 
@@ -497,7 +505,19 @@ contract Job {
                 Participants.push(_participantAddress);
             }
         }
-        // emit OneEventForAll2(contractAddress);
+    }
+
+    function jobRate(uint _score, address _applicant) external {
+        if (
+            rating == 0 &&
+            _score != 0 &&
+            _score <= 5 &&
+            keccak256(bytes(_state)) == keccak256(bytes("completed")) &&
+            contractOwner == _applicant
+        ) {
+            rating = _score;
+        } else {
+        }
     }
 
     function jobStateChange(
@@ -516,8 +536,6 @@ contract Job {
         } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
             jobState = "canceled";
         }
-
-        // emit OneEventForAll2(contractAddress);
     }
 
     // function jobReview(address _participantAddress) external {
