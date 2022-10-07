@@ -264,16 +264,17 @@ class TasksServices extends ChangeNotifier {
       final credentials = await eth.requestAccount();
       _creds = credentials;
 
-      publicAddress = credentials.address;
+      publicAddress = _creds.address;
 
-      final chainID = eth.rawRequest('eth_chainId');
+      final chainIDHex = await eth.rawRequest('eth_chainId');
+      final chainID = int.parse(chainIDHex);
       print(chainID);
 
       //chainID = 1287;
       walletConnectConnected = true;
       validChainID = true;
 
-      print('Using ${credentials.address}');
+      print('Using ${_creds.address}');
 
       ownAddress = publicAddress;
       fetchTasks();
@@ -642,22 +643,22 @@ class TasksServices extends ChangeNotifier {
               (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
           var taskObject = Task(
-              title: task[0],
-              description: task[7],
-              contractOwner: task[4],
-              contractAddress: task[2],
-              jobState: task[1],
-              contributorsCount: task[8].length,
-              contributors: task[8],
-              participiant: task[9],
-              justLoaded: true,
-              createdTime:
-                  DateTime.fromMillisecondsSinceEpoch(task[5].toInt() * 1000),
-              contractValue: ethBalancePrecise,
-              contractValueToken: ethBalanceToken,
-              nanoId: task[11],
-              score: 0,
-              // score: task[12]
+            title: task[0],
+            description: task[7],
+            contractOwner: task[4],
+            contractAddress: task[2],
+            jobState: task[1],
+            contributorsCount: task[8].length,
+            contributors: task[8],
+            participiant: task[9],
+            justLoaded: true,
+            createdTime:
+                DateTime.fromMillisecondsSinceEpoch(task[5].toInt() * 1000),
+            contractValue: ethBalancePrecise,
+            contractValueToken: ethBalanceToken,
+            nanoId: task[11],
+            score: 0,
+            // score: task[12]
           );
 
           taskLoaded = task[6].toInt() +
@@ -689,7 +690,6 @@ class TasksServices extends ChangeNotifier {
 
         for (var k = 0; k < tasks.length; k++) {
           final task = tasks[k];
-
 
           if (task.participiant == ownAddress) {
             // Calculate Pending among:
@@ -1016,7 +1016,8 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
-  Future<void> rateTask(EthereumAddress contractAddress, double rateScore, String nanoId) async {
+  Future<void> rateTask(
+      EthereumAddress contractAddress, double rateScore, String nanoId) async {
     transactionStatuses[nanoId] = {
       'rateTask': {'status': 'pending', 'txn': 'initial'}
     };
