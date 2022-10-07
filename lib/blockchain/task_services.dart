@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:js/js.dart';
+import 'package:js/js.dart'
+    if (dart.library.io) './js-stub.dart'
+    if (dart.library.js) 'package:js/js.dart';
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
@@ -15,9 +17,11 @@ import '../custom_widgets/wallet_action.dart';
 import 'Factory.g.dart';
 import 'IERC20.g.dart';
 import 'task.dart';
-import 'package:web3dart/browser.dart';
-import 'package:web3dart/web3dart.dart';
 import "package:universal_html/html.dart" hide Platform;
+import './web3dart-browser-stub.dart'
+    if (dart.library.io) './web3dart-browser-stub.dart';
+// if (dart.library.js) 'package:web3dart/browser.dart';
+import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 // if (dart.library.html) 'package:web_socket_channel/web_socket_channel.dart';
@@ -260,7 +264,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> connectWalletMM() async {
-    if (window.ethereum != null) {
+    if (platform == 'web' && window.ethereum != null) {
       final eth = window.ethereum;
 
       if (eth == null) {
