@@ -418,7 +418,7 @@ contract Job {
                 emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to Ethereum address: ",this.addressToString(participantAddress)));
                 participantAddress.transfer(contractAddress.balance);
             } 
-            else if (contractUSDCAmount !=0 && (
+            if (contractUSDCAmount !=0 && (
                 keccak256(chainBytes) == keccak256(bytes("PolygonAxelar"))
             )) {
                 emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany ", symbol, " to ", chain, "value: ", uint2str(msg.value), " address:",this.addressToString(participantAddress)));
