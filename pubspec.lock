@@ -203,7 +203,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.0"
   collection:
     dependency: transitive
     description:
@@ -942,7 +942,7 @@ packages:
       name: stream_transform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   string_scanner:
     dependency: transitive
     description:
@@ -1104,13 +1104,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  web3dart:
-    dependency: "direct main"
-    description:
-      name: web3dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.5"
   web_socket_channel:
     dependency: "direct main"
     description:
@@ -1118,6 +1111,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
+  webthree:
+    dependency: "direct main"
+    description:
+      name: webthree
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.5.3"
   win32:
     dependency: transitive
     description:

@@ -18,10 +18,10 @@ import 'Factory.g.dart';
 import 'IERC20.g.dart';
 import 'task.dart';
 import "package:universal_html/html.dart" hide Platform;
-import 'package:web3dart/browser.dart'
-    if (dart.library.io) './web3dart-browser-stub.dart'
-    if (dart.library.js) 'package:web3dart/browser.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:webthree/browser.dart'
+    if (dart.library.io) 'package:webthree/src/browser/dart_wrappers_stub.dart'
+    if (dart.library.js) 'package:webthree/browser.dart';
+import 'package:webthree/webthree.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 // if (dart.library.html) 'package:web_socket_channel/web_socket_channel.dart';
@@ -123,7 +123,7 @@ class TasksServices extends ChangeNotifier {
     } else {
       // print('Client is listening: ${await client.isListeningForNetwork()}');
 
-      // final message = Uint8List.fromList(utf8.encode('Hello from web3dart'));
+      // final message = Uint8List.fromList(utf8.encode('Hello from webthree'));
       // final signature = await credentials.signPersonalMessage(message);
       // print('Signature: ${base64.encode(signature)}');
     }

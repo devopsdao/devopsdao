@@ -1,4 +1,4 @@
-import 'package:web3dart/web3dart.dart';
+import 'package:webthree/webthree.dart';
 
 class Task {
   final String title;

@@ -15,7 +15,7 @@ import '../custom_widgets/wallet_action.dart';
 import 'Factory.g.dart';
 import 'IERC20.g.dart';
 import 'task.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:webthree/webthree.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 
@@ -25,10 +25,7 @@ import '../wallet/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-
-
 class InterfaceServices extends ChangeNotifier {
-
   // Payments goes here (create_job_widget.dart -> payment.dart):
   late double tokensEntered;
 }
