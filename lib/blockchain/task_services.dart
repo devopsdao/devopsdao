@@ -59,6 +59,7 @@ class TasksServices extends ChangeNotifier {
   List<Task> tasksReviewSubmitter = [];
   List<Task> tasksDoneSubmitter = [];
   List<Task> tasksDonePerformer = [];
+  List<Task> tasksAudit = [];
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
@@ -162,6 +163,7 @@ class TasksServices extends ChangeNotifier {
   int taskLoaded = 0;
   late EthereumAddress _contractAddress;
   late EthereumAddress _contractAddressRopsten;
+  EthereumAddress zeroAddress = EthereumAddress.fromHex(0x0000000000000000000000000000000000000000 as String);
   Future<void> getABI() async {
     String abiFile =
         await rootBundle.loadString('build/contracts/Factory.json');
@@ -712,6 +714,7 @@ class TasksServices extends ChangeNotifier {
         tasksDonePerformer.clear();
         tasksDoneSubmitter.clear();
         tasksProgressSubmitter.clear();
+        tasksAudit.clear();
 
         pendingBalance = 0;
         pendingBalanceToken = 0;
@@ -792,6 +795,9 @@ class TasksServices extends ChangeNotifier {
             } else if (task.participiant == ownAddress) {
               tasksDonePerformer.add(task);
             }
+          }
+          if (task.jobState != "" && task.jobState == "audit") {
+            tasksAudit.add(task);
           }
         }
 

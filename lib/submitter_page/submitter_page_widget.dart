@@ -592,6 +592,34 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               taskName: 'rateTask',
                                             ));
                                       } : null),
+                                if (widget.obj[index].jobState == "progress")
+                                  TextButton(
+                                      child: Text('Request audit'),
+                                      style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                          backgroundColor: Colors.orangeAccent),
+                                      onPressed: () {
+                                        setState(() {
+                                          widget.obj[index].justLoaded =
+                                          false;
+                                        });
+                                        tasksServices.changeTaskStatus(
+                                            widget.obj[index].contractAddress,
+                                            widget.obj[index].participiant,
+                                            'audit',
+                                            widget.obj[index].nanoId);
+                                        Navigator.pop(context);
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                WalletAction(
+                                                  nanoId: widget
+                                                      .obj[index].nanoId,
+                                                  taskName:
+                                                  'changeTaskStatus',
+                                                ));
+                                      }),
                                 TextButton(
                                     child: Text('Close'),
                                     onPressed: () => Navigator.pop(context)),

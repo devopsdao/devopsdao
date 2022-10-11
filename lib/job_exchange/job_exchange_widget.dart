@@ -282,184 +282,216 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 // Toggle light when tapped.
                                               });
                                               showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (context) => AlertDialog(
-                                                            title: Text(
+                                                context: context,
+                                                builder:
+                                                  (context) => AlertDialog(
+                                                    title: Text(
+                                                      tasksServices
+                                                          .filterResults[
+                                                              index]
+                                                          .title),
+                                                    content:
+                                                        SingleChildScrollView(
+                                                      child: ListBody(
+                                                        children: <
+                                                            Widget>[
+                                                          // Divider(
+                                                          //   height: 20,
+                                                          //   thickness: 1,
+                                                          //   indent: 40,
+                                                          //   endIndent: 40,
+                                                          //   color: Colors.black,
+                                                          // ),
+                                                          RichText(
+                                                              text: TextSpan(
+                                                                  style: DefaultTextStyle.of(context)
+                                                                      .style
+                                                                      .apply(fontSizeFactor: 1.0),
+                                                                  children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        'Description: \n',
+                                                                    style:
+                                                                        const TextStyle(fontWeight: FontWeight.bold)),
+                                                                TextSpan(
+                                                                    text:
+                                                                        tasksServices.filterResults[index].description)
+                                                              ])),
+                                                          RichText(
+                                                              text: TextSpan(
+                                                                  style: DefaultTextStyle.of(context)
+                                                                      .style
+                                                                      .apply(fontSizeFactor: 1.0),
+                                                                  children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        'Contract value: \n',
+                                                                    style:
+                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                TextSpan(
+                                                                    text: tasksServices.filterResults[index].contractValue.toString() +
+                                                                        ' ETH\n',
+                                                                    style:
+                                                                        DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                                                TextSpan(
+                                                                    text: tasksServices.filterResults[index].contractValueToken.toString() +
+                                                                        ' aUSDC',
+                                                                    style:
+                                                                        DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                                              ])),
+                                                          RichText(
+                                                              text: TextSpan(
+                                                                  style: DefaultTextStyle.of(context)
+                                                                      .style
+                                                                      .apply(fontSizeFactor: 1.0),
+                                                                  children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        'Contract owner: \n',
+                                                                    style:
+                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                TextSpan(
+                                                                    text:
+                                                                        tasksServices.filterResults[index].contractOwner.toString(),
+                                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                                              ])),
+                                                          RichText(
+                                                              text: TextSpan(
+                                                                  style: DefaultTextStyle.of(context)
+                                                                      .style
+                                                                      .apply(fontSizeFactor: 1.0),
+                                                                  children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        'Contract address: \n',
+                                                                    style:
+                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                TextSpan(
+                                                                    text:
+                                                                        tasksServices.filterResults[index].contractAddress.toString(),
+                                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                                              ])),
+                                                          RichText(
+                                                              text: TextSpan(
+                                                                  style: DefaultTextStyle.of(context)
+                                                                      .style
+                                                                      .apply(fontSizeFactor: 1.0),
+                                                                  children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        'Created: ',
+                                                                    style:
+                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                TextSpan(
+                                                                  text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
+                                                                      .filterResults[index]
+                                                                      .createdTime),
+                                                                )
+                                                              ])),
+                                                          // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
+                                                          //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                                          // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
+                                                          //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                                          // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
+                                                          //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                                          // Divider(
+                                                          //   height: 20,
+                                                          //   thickness: 0,
+                                                          //   indent: 40,
+                                                          //   endIndent: 40,
+                                                          //   color: Colors.black,
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      if (tasksServices
+                                                          .filterResults[index].jobState == 'new')
+                                                        TextButton(
+                                                          child: Text(
+                                                              'Cancel'),
+                                                          style: TextButton.styleFrom(
+                                                              primary:
+                                                              Colors
+                                                                  .white,
+                                                              backgroundColor:
+                                                              Colors
+                                                                  .redAccent),
+                                                          onPressed:
+                                                              () {
+                                                            setState(
+                                                                () {
+                                                              tasksServices.filterResults[index].justLoaded = false;
+                                                            });
+                                                            tasksServices.changeTaskStatus(
+                                                              tasksServices.filterResults[index].contractAddress,
+                                                              tasksServices.zeroAddress,
+                                                              'cancel',
+                                                              tasksServices.filterResults[index].nanoId);
+                                                            Navigator.pop(context);
+
+                                                            showDialog(
+                                                                context:
+                                                                context,
+                                                                builder: (context) =>
+                                                                    WalletAction(
+                                                                      nanoId: tasksServices.filterResults[index].nanoId,
+                                                                      taskName: 'taskCancel',
+                                                                    ));
+                                                          }),
+                                                      if (tasksServices
+                                                              .filterResults[index]
+                                                              .contractOwner !=
+                                                          tasksServices
+                                                              .ownAddress &&
+                                                          tasksServices.ownAddress != null &&
+                                                          tasksServices.validChainID)
+                                                        TextButton(
+                                                          child: Text(
+                                                              'Participate'),
+                                                          style: TextButton.styleFrom(
+                                                              primary:
+                                                                  Colors
+                                                                      .white,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .green),
+                                                          onPressed:
+                                                              () {
+                                                            setState(
+                                                                () {
+                                                              tasksServices
+                                                                  .filterResults[index]
+                                                                  .justLoaded = false;
+                                                            });
+                                                            tasksServices.taskParticipation(
                                                                 tasksServices
                                                                     .filterResults[
                                                                         index]
-                                                                    .title),
-                                                            content:
-                                                                SingleChildScrollView(
-                                                              child: ListBody(
-                                                                children: <
-                                                                    Widget>[
-                                                                  // Divider(
-                                                                  //   height: 20,
-                                                                  //   thickness: 1,
-                                                                  //   indent: 40,
-                                                                  //   endIndent: 40,
-                                                                  //   color: Colors.black,
-                                                                  // ),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Description: \n',
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                tasksServices.filterResults[index].description)
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Contract value: \n',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text: tasksServices.filterResults[index].contractValue.toString() +
-                                                                                ' ETH\n',
-                                                                            style:
-                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                                                        TextSpan(
-                                                                            text: tasksServices.filterResults[index].contractValueToken.toString() +
-                                                                                ' aUSDC',
-                                                                            style:
-                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Contract owner: \n',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                tasksServices.filterResults[index].contractOwner.toString(),
-                                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Contract address: \n',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                tasksServices.filterResults[index].contractAddress.toString(),
-                                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Created: ',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                          text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                                                                              .filterResults[index]
-                                                                              .createdTime),
-                                                                        )
-                                                                      ])),
-                                                                  // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
-                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
-                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
-                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Divider(
-                                                                  //   height: 20,
-                                                                  //   thickness: 0,
-                                                                  //   indent: 40,
-                                                                  //   endIndent: 40,
-                                                                  //   color: Colors.black,
-                                                                  // ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            actions: [
+                                                                    .contractAddress,
+                                                                tasksServices
+                                                                    .filterResults[index]
+                                                                    .nanoId);
+                                                            Navigator.pop(
+                                                                context);
 
-                                                              if (tasksServices
-                                                                      .filterResults[
-                                                                          index]
-                                                                      .contractOwner !=
-                                                                  tasksServices
-                                                                      .ownAddress &&
-                                                                  tasksServices.ownAddress != null &&
-                                                                  tasksServices.validChainID)
-                                                                TextButton(
-                                                                    child: Text(
-                                                                        'Participate'),
-                                                                    style: TextButton.styleFrom(
-                                                                        primary:
-                                                                            Colors
-                                                                                .white,
-                                                                        backgroundColor:
-                                                                            Colors
-                                                                                .green),
-                                                                    onPressed:
-                                                                        () {
-                                                                      setState(
-                                                                          () {
-                                                                        tasksServices
-                                                                            .filterResults[index]
-                                                                            .justLoaded = false;
-                                                                      });
-                                                                      tasksServices.taskParticipation(
-                                                                          tasksServices
-                                                                              .filterResults[
-                                                                                  index]
-                                                                              .contractAddress,
-                                                                          tasksServices
-                                                                              .filterResults[index]
-                                                                              .nanoId);
-                                                                      Navigator.pop(
-                                                                          context);
-
-                                                                      showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder: (context) =>
-                                                                              WalletAction(
-                                                                                nanoId: tasksServices.filterResults[index].nanoId,
-                                                                                taskName: 'taskParticipation',
-                                                                              ));
-                                                                    }),
-                                                              TextButton(
-                                                                  child: Text(
-                                                                      'Close'),
-                                                                  onPressed: () =>
-                                                                      Navigator.pop(
-                                                                          context)),
-                                                            ],
-                                                          ));
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder: (context) =>
+                                                                    WalletAction(
+                                                                      nanoId: tasksServices.filterResults[index].nanoId,
+                                                                      taskName: 'taskParticipation',
+                                                                    ));
+                                                          }),
+                                                      TextButton(
+                                                          child: Text(
+                                                              'Close'),
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                  context)),
+                                                    ],
+                                                  ));
                                             },
                                             child: Container(
                                               width: double.infinity,
