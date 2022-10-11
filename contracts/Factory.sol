@@ -207,7 +207,8 @@ contract Factory {
         string memory,
         uint256,
         address[] memory,
-        string memory
+        string memory,
+        address
         
     )
     {
@@ -247,6 +248,7 @@ contract Job {
     uint256 rating = 0;
     address public auditInitiator;
     string public auditState;
+    address public auditorAddress;
 
 
     event Logs(address contractAdr, string message);
@@ -322,7 +324,8 @@ contract Job {
         string memory _nanoId,
         uint256 _rating,
         address[] memory _auditParticipants,
-        string memory _auditState
+        string memory _auditState,
+        address _auditorAddress
     )
     {
         return (
@@ -340,7 +343,8 @@ contract Job {
             nanoId,
             rating,
             AuditParticipants,
-            auditState
+            auditState,
+            auditorAddress
         );
     }
 
@@ -515,6 +519,7 @@ contract Job {
     }
 
     function jobAuditParticipate(address _auditParticipantAddress) external {
+        // TODO: add NFT based auditor priviledge check
         bool existed = false;
         if (AuditParticipants.length == 0) {
             AuditParticipants.push(_auditParticipantAddress);
@@ -522,6 +527,7 @@ contract Job {
             for (uint256 i = 0; i < Participants.length; i++) {
                 if (AuditParticipants[i] == _auditParticipantAddress) {
                     existed = true;
+                    break;
                 }
             }
             if (!existed) {
@@ -547,41 +553,70 @@ contract Job {
         address payable _participantAddress,
         string memory _state
     ) external {
-        if (keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
-            // LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
+        if (msg.sender == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
+            //TODO: LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
             jobState = "agreed";
             participantAddress = _participantAddress;
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
+        } else if (msg.sender == participantAddress &&
+            keccak256(bytes(jobState)) == keccak256(bytes("agreed")) && keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
             jobState = "progress";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("review"))) {
+        } else if (msg.sender == participantAddress && 
+            keccak256(bytes(jobState)) == keccak256(bytes("progress")) && keccak256(bytes(_state)) == keccak256(bytes("review"))) {
             jobState = "review";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
+        } else if (msg.sender == contractOwner && 
+            keccak256(bytes(jobState)) == keccak256(bytes("review")) && keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
             jobState = "completed";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
+        } else if (keccak256(bytes(jobState)) == keccak256(bytes("new")) && msg.sender == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
             jobState = "canceled";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("audit"))) {
-            jobState = "audit";
-            auditInitiator = msg.sender;
-            auditState = 'running';
-            // audit history need to add 
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("audit"))){
+            if(msg.sender == contractOwner &&
+                (keccak256(bytes(jobState)) == keccak256(bytes("agreed")) || keccak256(bytes(jobState)) == keccak256(bytes("progress")) || keccak256(bytes(jobState)) == keccak256(bytes("review")))){
+                jobState = "audit";
+                auditInitiator = msg.sender;
+                auditState = 'requested';
+            }
+            else if(msg.sender == participantAddress &&
+                (keccak256(bytes(jobState)) == keccak256(bytes("review"))))
+
+            {
+                jobState = "audit";
+                auditInitiator = msg.sender;
+                auditState = 'requested';
+                //TODO: audit history need to add 
+            }
+            if(msg.sender == contractOwner &&
+                keccak256(bytes(jobState)) == keccak256(bytes("audit")) && 
+                keccak256(bytes(auditState)) == keccak256(bytes("requested")) &&
+                AuditParticipants.length != 0){
+                for (uint256 i = 0; i < AuditParticipants.length; i++) {
+                    if (AuditParticipants[i] == _participantAddress) {
+                        jobState = "audit";
+                        auditorAddress = _participantAddress;
+                        auditState = 'performing';
+                        break;
+                    }
+                }
+
+            }
         }
     }
 
-    function jobAuditStateChange(
-        address payable _participantAddress,
-        string memory _state
+    function jobAuditDecision(
+        // address payable _participantAddress,
+        string memory _favour
     ) external {
-        if (keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
-            jobState = "agreed";
-            participantAddress = _participantAddress;
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
-            jobState = "progress";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("review"))) {
-            jobState = "review";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
+        // TODO: add NFT based auditor priviledge check
+        if (msg.sender == auditorAddress && keccak256(bytes(jobState)) == keccak256(bytes("audit"))
+        && keccak256(bytes(auditState)) == keccak256(bytes("performing"))
+        && keccak256(bytes(_favour)) == keccak256(bytes("customer"))) {
+            auditState = "complete";
+            jobState = "new";
+        }
+        if (msg.sender == auditorAddress && keccak256(bytes(jobState)) == keccak256(bytes("audit"))
+        && keccak256(bytes(auditState)) == keccak256(bytes("performing"))
+        && keccak256(bytes(_favour)) == keccak256(bytes("perfomer"))) {
+            auditState = "finished";
             jobState = "completed";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
-            jobState = "canceled";
         }
     }
 
