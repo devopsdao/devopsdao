@@ -1,19 +1,6 @@
-import 'dart:ffi';
-// import "package:universal_html/html.dart" hide Platform;
 import "package:universal_html/html.dart";
-
-// import 'package:js/js.dart';
-// import 'package:meta/meta.dart';
-
 import 'dart:async';
-
-// import 'package:js/js.dart';
-// import 'package:js/js_util.dart';
-
-// import 'package:web3dart/credentials.dart';
 import 'package:web3dart/json_rpc.dart';
-// import 'package:web3dart/src/browser/credentials.dart';
-// import 'package:web3dart/src/browser/javascript.dart';
 
 extension GetEthereum on Window {
   /// Loads the ethereum instance provided by the browser.
@@ -65,7 +52,7 @@ extension DartEthereum on Ethereum {
   /// See also:
   ///  - https://docs.metamask.io/guide/ethereum-provider.html#events
   Stream<dynamic> stream(String eventName) {
-    throw (Error);
+    return _EventStream(this, eventName);
   }
 
   /// A broadcast stream emitting values when the selected chain is changed by
@@ -97,7 +84,7 @@ class _EventStream extends Stream<dynamic> {
   Stream asBroadcastStream(
       {void Function(StreamSubscription subscription)? onListen,
       void Function(StreamSubscription subscription)? onCancel}) {
-    return this;
+    throw (Error);
   }
 
   @override
@@ -153,10 +140,6 @@ class _EventStreamSubscription extends StreamSubscription<dynamic> {
 
   @override
   void resume() {}
-
-  void _resumeIfNecessary() {}
-
-  void _stopListening() {}
 }
 
 class Ethereum {}
