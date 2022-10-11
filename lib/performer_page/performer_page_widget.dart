@@ -419,6 +419,34 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                         'changeTaskStatus',
                                                   ));
                                         }),
+                                  if (widget.obj[index].jobState == "review")
+                                    TextButton(
+                                        child: Text('Request audit'),
+                                        style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.orangeAccent),
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.obj[index].justLoaded =
+                                            false;
+                                          });
+                                          tasksServices.changeTaskStatus(
+                                              widget.obj[index].contractAddress,
+                                              widget.obj[index].participiant,
+                                              'audit',
+                                              widget.obj[index].nanoId);
+                                          Navigator.pop(context);
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  WalletAction(
+                                                    nanoId: widget
+                                                        .obj[index].nanoId,
+                                                    taskName:
+                                                    'changeTaskStatus',
+                                                  ));
+                                        }),
                                   if (widget.obj[index].jobState ==
                                           "completed" &&
                                       (widget.obj[index].contractValue != 0 ||

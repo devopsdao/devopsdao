@@ -16,7 +16,6 @@ error RevertReason (string message);
 contract Factory {
     IAxelarGateway public immutable gateway;
 
-
     Job[] public jobArray;
     // address contractOwner;
     uint256 public countNew = 0;
@@ -100,6 +99,11 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
+    function jobAuditParticipate(Job job) external {
+        jobArray[job.index()].jobAuditParticipate(msg.sender);
+        emit OneEventForAll(address(job), job.index());
+    }
+
     function jobRating(Job job, uint256 _score) external {
         jobArray[job.index()].jobRate(_score, msg.sender);
         emit OneEventForAll(address(job), job.index());
@@ -112,19 +116,16 @@ contract Factory {
         string memory _state
     ) external {
         jobArray[job.index()].jobStateChange(_participantAddress, _state);
+        emit OneEventForAll(address(job), job.index());
+    }
+    
 
-        // if (keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
-        //     countAgreed++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
-        //     countProgress++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("review"))) {
-        //     countReview++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
-        //     countCompleted++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
-        //     countCanceled++;
-        // }
-
+    function jobAuditStateChange(
+        Job job,
+        address payable _auditorAddress,
+        string memory _state
+    ) external {
+        jobArray[job.index()].jobAuditStateChange(_auditorAddress, _state);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -204,7 +205,9 @@ contract Factory {
         address,
         string memory,
         string memory,
-        uint256
+        uint256,
+        address[] memory,
+        string memory
         
     )
     {
@@ -223,6 +226,7 @@ contract Job {
     using StringToAddress for string;
 
     address[] public Participants;
+    address[] public AuditParticipants;
     // uint256 public data;
     string public nanoId;
     string public title;
@@ -241,6 +245,9 @@ contract Job {
     string public symbol;
     uint256 amount;
     uint256 rating = 0;
+    address public auditInitiator;
+    string public auditState;
+
 
     event Logs(address contractAdr, string message);
     event LogsValue(address contractAdr, string message, uint value);
@@ -313,23 +320,27 @@ contract Job {
         address _participantAddress,
         string memory _symbol,
         string memory _nanoId,
-        uint256 _rating
+        uint256 _rating,
+        address[] memory _auditParticipants,
+        string memory _auditState
     )
     {
         return (
-        title,
-        jobState,
-        contractAddress,
-        contractParent,
-        contractOwner,
-        createTime,
-        index,
-        description,
-        Participants,
-        participantAddress,
-        symbol,
-        nanoId,
-        rating
+            title,
+            jobState,
+            contractAddress,
+            contractParent,
+            contractOwner,
+            createTime,
+            index,
+            description,
+            Participants,
+            participantAddress,
+            symbol,
+            nanoId,
+            rating,
+            AuditParticipants,
+            auditState
         );
     }
 
@@ -503,6 +514,22 @@ contract Job {
         }
     }
 
+    function jobAuditParticipate(address _auditParticipantAddress) external {
+        bool existed = false;
+        if (AuditParticipants.length == 0) {
+            AuditParticipants.push(_auditParticipantAddress);
+        } else {
+            for (uint256 i = 0; i < Participants.length; i++) {
+                if (AuditParticipants[i] == _auditParticipantAddress) {
+                    existed = true;
+                }
+            }
+            if (!existed) {
+                AuditParticipants.push(_auditParticipantAddress);
+            }
+        }
+    }
+
     function jobRate(uint _score, address _applicant) external {
         if (
             rating == 0 &&
@@ -517,6 +544,30 @@ contract Job {
     }
 
     function jobStateChange(
+        address payable _participantAddress,
+        string memory _state
+    ) external {
+        if (keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
+            // LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
+            jobState = "agreed";
+            participantAddress = _participantAddress;
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
+            jobState = "progress";
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("review"))) {
+            jobState = "review";
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
+            jobState = "completed";
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
+            jobState = "canceled";
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("audit"))) {
+            jobState = "audit";
+            auditInitiator = msg.sender;
+            auditState = 'running';
+            // audit history need to add 
+        }
+    }
+
+    function jobAuditStateChange(
         address payable _participantAddress,
         string memory _state
     ) external {
