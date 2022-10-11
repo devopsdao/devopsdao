@@ -18,9 +18,9 @@ import 'Factory.g.dart';
 import 'IERC20.g.dart';
 import 'task.dart';
 import "package:universal_html/html.dart" hide Platform;
-import './web3dart-browser-stub.dart'
-    if (dart.library.io) './web3dart-browser-stub.dart';
-// if (dart.library.js) 'package:web3dart/browser.dart';
+import 'package:web3dart/browser.dart'
+    if (dart.library.io) './web3dart-browser-stub.dart'
+    if (dart.library.js) 'package:web3dart/browser.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
