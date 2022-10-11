@@ -122,10 +122,9 @@ contract Factory {
 
     function jobAuditStateChange(
         Job job,
-        address payable _auditorAddress,
-        string memory _state
+        string memory _favour
     ) external {
-        jobArray[job.index()].jobAuditStateChange(_auditorAddress, _state);
+        jobArray[job.index()].jobAuditDecision(_favour);
         emit OneEventForAll(address(job), job.index());
     }
 
