@@ -9,6 +9,7 @@ import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -461,73 +462,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     // Text('text',
                                     // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                     if (widget.obj[index].jobState == "new")
-                                      Container(
-                                        height:
-                                            300.0, // Change as per your requirement
-                                        width:
-                                            300.0, // Change as per your requirement
-                                        child: ListView.builder(
-                                            // padding: EdgeInsets.zero,
-                                            // scrollDirection: Axis.vertical,
-                                            // shrinkWrap: true,
-                                            // physics: NeverScrollableScrollPhysics(),
-                                            itemCount: widget
-                                                .obj[index].contributors.length,
-                                            itemBuilder: (context2, index2) {
-                                              return Column(children: [
-                                                // Text(
-                                                //   tasksServices.tasksOwner[index].contributors[index2].toString(),
-                                                //   style: FlutterFlowTheme.of(
-                                                //       context2)
-                                                //       .bodyText2,
-                                                // ),
-                                                TextButton(
-                                                  style: TextButton.styleFrom(
-                                                    textStyle: const TextStyle(
-                                                        fontSize: 13),
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      widget.obj[index]
-                                                          .justLoaded = false;
-                                                    });
-                                                    tasksServices.changeTaskStatus(
-                                                        widget.obj[index]
-                                                            .contractAddress,
-                                                        widget.obj[index]
-                                                                .contributors[
-                                                            index2],
-                                                        'agreed',
-                                                        widget
-                                                            .obj[index].nanoId);
-                                                    Navigator.pop(context);
-
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            WalletAction(
-                                                              nanoId: widget
-                                                                  .obj[index]
-                                                                  .nanoId,
-                                                              taskName:
-                                                                  'changeTaskStatus',
-                                                            ));
-                                                  },
-                                                  child: Text(
-                                                    widget.obj[index]
-                                                        .contributors[index2]
-                                                        .toString(),
-                                                    style: DefaultTextStyle.of(
-                                                            context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor:
-                                                                0.7),
-                                                  ),
-                                                ),
-                                              ]);
-                                            }),
-                                      ),
+                                      ParticipantList(object: widget.obj[index],)
                                   ],
                                 ),
                               ),

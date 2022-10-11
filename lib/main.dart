@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'auditor_page/auditor_page.dart';
 import 'blockchain/interface.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
@@ -129,7 +130,8 @@ class _NavBarPageState extends State<NavBarPage> {
       'jobExchange': JobExchangeWidget(),
       'submitterPage': SubmitterPageWidget(),
       'performerPage': PerformerPageWidget(),
-      'walletPage': MyWalletPage(title: 'WalletConnect'),
+      'auditorPage': AuditorPageWidget(),
+      // 'walletPage': MyWalletPage(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
@@ -175,6 +177,14 @@ class _NavBarPageState extends State<NavBarPage> {
               size: 24,
             ),
             label: 'Performer',
+            tooltip: '',
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.penRuler,
+              size: 24,
+            ),
+            label: 'Audit',
             tooltip: '',
           ),
           // BottomNavigationBarItem(
