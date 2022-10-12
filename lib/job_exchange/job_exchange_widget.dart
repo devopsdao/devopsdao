@@ -8,6 +8,7 @@ import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/wallet_action.dart';
+import '../custom_widgets/task.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -40,7 +41,8 @@ import 'package:flutter/material.dart';
 // }
 
 class JobExchangeWidget extends StatefulWidget {
-  const JobExchangeWidget({Key? key}) : super(key: key);
+  final int? index;
+  const JobExchangeWidget({Key? key, this.index}) : super(key: key);
 
   @override
   _JobExchangeWidgetState createState() => _JobExchangeWidgetState();
@@ -50,7 +52,6 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     with TickerProviderStateMixin {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
-
   // _changeField() {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
   // }
@@ -93,13 +94,19 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    bool _isFloatButtonVisible = false;
+    bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter();
     }
     if (tasksServices.ownAddress != null && tasksServices.validChainID) {
-      _isFloatButtonVisible = true;
+      isFloatButtonVisible = true;
     }
+
+    // if (widget.index != null) {
+    //   showDialog(
+    //       context: context,
+    //       builder: (context) => TaskDialog(index: widget.index!));
+    // }
 
     return Scaffold(
       key: scaffoldKey,
@@ -125,7 +132,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
             ),
           ],
         ),
-        actions: [
+        actions: const [
           LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
@@ -144,20 +151,20 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: _isFloatButtonVisible
+      backgroundColor: const Color(0xFF1E2429),
+      floatingActionButton: isFloatButtonVisible
           ? FloatingActionButton(
               onPressed: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateJobWidget(),
+                    builder: (context) => const CreateJobWidget(),
                   ),
                 );
               },
               backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
               elevation: 8,
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: Color(0xFFFCFCFC),
                 size: 28,
@@ -167,7 +174,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
             stops: [0, 0.5, 1],
@@ -186,17 +193,18 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      decoration: BoxDecoration(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      decoration: const BoxDecoration(
                           // color: Colors.white70,
                           // borderRadius: BorderRadius.circular(8),
                           ),
                       child: TextField(
                         controller: _searchKeywordController,
-                        onChanged: (_searchKeyword) {
-                          tasksServices.runFilter(_searchKeyword);
+                        onChanged: (searchKeyword) {
+                          tasksServices.runFilter(searchKeyword);
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '[Find task by Title...]',
                           hintStyle:
                               TextStyle(fontSize: 15.0, color: Colors.white),
@@ -212,7 +220,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -222,7 +230,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -254,12 +262,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                     // ),
 
                     tasksServices.isLoading
-                        ? LoadIndicator()
+                        ? const LoadIndicator()
                         : Expanded(
                             child: TabBarView(
                               children: [
                                 Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 6, 0, 0),
                                   child: RefreshIndicator(
                                     onRefresh: () async {
@@ -273,232 +281,24 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                           tasksServices.filterResults.length,
                                       itemBuilder: (context, index) {
                                         return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16, 8, 16, 0),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(16, 8, 16, 0),
                                           child: InkWell(
                                             onTap: () {
                                               setState(() {
                                                 // Toggle light when tapped.
                                               });
                                               showDialog(
-                                                context: context,
-                                                builder:
-                                                  (context) => AlertDialog(
-                                                    title: Text(
-                                                      tasksServices
-                                                          .filterResults[
-                                                              index]
-                                                          .title),
-                                                    content:
-                                                        SingleChildScrollView(
-                                                      child: ListBody(
-                                                        children: <
-                                                            Widget>[
-                                                          // Divider(
-                                                          //   height: 20,
-                                                          //   thickness: 1,
-                                                          //   indent: 40,
-                                                          //   endIndent: 40,
-                                                          //   color: Colors.black,
-                                                          // ),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  style: DefaultTextStyle.of(context)
-                                                                      .style
-                                                                      .apply(fontSizeFactor: 1.0),
-                                                                  children: <TextSpan>[
-                                                                TextSpan(
-                                                                    text:
-                                                                        'Description: \n',
-                                                                    style:
-                                                                        const TextStyle(fontWeight: FontWeight.bold)),
-                                                                TextSpan(
-                                                                    text:
-                                                                        tasksServices.filterResults[index].description)
-                                                              ])),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  style: DefaultTextStyle.of(context)
-                                                                      .style
-                                                                      .apply(fontSizeFactor: 1.0),
-                                                                  children: <TextSpan>[
-                                                                TextSpan(
-                                                                    text:
-                                                                        'Contract value: \n',
-                                                                    style:
-                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                TextSpan(
-                                                                    text: tasksServices.filterResults[index].contractValue.toString() +
-                                                                        ' ETH\n',
-                                                                    style:
-                                                                        DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                                                TextSpan(
-                                                                    text: tasksServices.filterResults[index].contractValueToken.toString() +
-                                                                        ' aUSDC',
-                                                                    style:
-                                                                        DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                                              ])),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  style: DefaultTextStyle.of(context)
-                                                                      .style
-                                                                      .apply(fontSizeFactor: 1.0),
-                                                                  children: <TextSpan>[
-                                                                TextSpan(
-                                                                    text:
-                                                                        'Contract owner: \n',
-                                                                    style:
-                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                TextSpan(
-                                                                    text:
-                                                                        tasksServices.filterResults[index].contractOwner.toString(),
-                                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                              ])),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  style: DefaultTextStyle.of(context)
-                                                                      .style
-                                                                      .apply(fontSizeFactor: 1.0),
-                                                                  children: <TextSpan>[
-                                                                TextSpan(
-                                                                    text:
-                                                                        'Contract address: \n',
-                                                                    style:
-                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                TextSpan(
-                                                                    text:
-                                                                        tasksServices.filterResults[index].contractAddress.toString(),
-                                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                              ])),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  style: DefaultTextStyle.of(context)
-                                                                      .style
-                                                                      .apply(fontSizeFactor: 1.0),
-                                                                  children: <TextSpan>[
-                                                                TextSpan(
-                                                                    text:
-                                                                        'Created: ',
-                                                                    style:
-                                                                        const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                TextSpan(
-                                                                  text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                                                                      .filterResults[index]
-                                                                      .createdTime),
-                                                                )
-                                                              ])),
-                                                          // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
-                                                          //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                          // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
-                                                          //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                          // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
-                                                          //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                          // Divider(
-                                                          //   height: 20,
-                                                          //   thickness: 0,
-                                                          //   indent: 40,
-                                                          //   endIndent: 40,
-                                                          //   color: Colors.black,
-                                                          // ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    actions: [
-                                                      if (tasksServices
-                                                          .filterResults[index].jobState == 'new')
-                                                        TextButton(
-                                                          child: Text(
-                                                              'Cancel'),
-                                                          style: TextButton.styleFrom(
-                                                              primary:
-                                                              Colors
-                                                                  .white,
-                                                              backgroundColor:
-                                                              Colors
-                                                                  .redAccent),
-                                                          onPressed:
-                                                              () {
-                                                            setState(
-                                                                () {
-                                                              tasksServices.filterResults[index].justLoaded = false;
-                                                            });
-                                                            tasksServices.changeTaskStatus(
-                                                              tasksServices.filterResults[index].contractAddress,
-                                                              tasksServices.zeroAddress,
-                                                              'cancel',
-                                                              tasksServices.filterResults[index].nanoId);
-                                                            Navigator.pop(context);
-
-                                                            showDialog(
-                                                                context:
-                                                                context,
-                                                                builder: (context) =>
-                                                                    WalletAction(
-                                                                      nanoId: tasksServices.filterResults[index].nanoId,
-                                                                      taskName: 'taskCancel',
-                                                                    ));
-                                                          }),
-                                                      if (tasksServices
-                                                              .filterResults[index]
-                                                              .contractOwner !=
-                                                          tasksServices
-                                                              .ownAddress &&
-                                                          tasksServices.ownAddress != null &&
-                                                          tasksServices.validChainID)
-                                                        TextButton(
-                                                          child: Text(
-                                                              'Participate'),
-                                                          style: TextButton.styleFrom(
-                                                              primary:
-                                                                  Colors
-                                                                      .white,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .green),
-                                                          onPressed:
-                                                              () {
-                                                            setState(
-                                                                () {
-                                                              tasksServices
-                                                                  .filterResults[index]
-                                                                  .justLoaded = false;
-                                                            });
-                                                            tasksServices.taskParticipation(
-                                                                tasksServices
-                                                                    .filterResults[
-                                                                        index]
-                                                                    .contractAddress,
-                                                                tasksServices
-                                                                    .filterResults[index]
-                                                                    .nanoId);
-                                                            Navigator.pop(
-                                                                context);
-
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder: (context) =>
-                                                                    WalletAction(
-                                                                      nanoId: tasksServices.filterResults[index].nanoId,
-                                                                      taskName: 'taskParticipation',
-                                                                    ));
-                                                          }),
-                                                      TextButton(
-                                                          child: Text(
-                                                              'Close'),
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  context)),
-                                                    ],
-                                                  ));
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      TaskDialog(index: index));
                                             },
                                             child: Container(
                                               width: double.infinity,
                                               height: 86,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                boxShadow: [
+                                                boxShadow: const [
                                                   BoxShadow(
                                                     blurRadius: 5,
                                                     color: Color(0x4D000000),
@@ -514,9 +314,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                   Expanded(
                                                     child: Padding(
                                                       padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  12, 8, 8, 8),
+                                                          const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                              12, 8, 8, 8),
                                                       child: Column(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
@@ -617,48 +417,78 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                               //             .end,
                                                               //   ),
                                                               // ),
-                                                              if(tasksServices.filterResults[index].contractValue != 0)
+                                                              if (tasksServices
+                                                                      .filterResults[
+                                                                          index]
+                                                                      .contractValue !=
+                                                                  0)
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    tasksServices.filterResults[index].contractValue
-                                                                        .toString() +
-                                                                        ' ETH',
-                                                                    style: FlutterFlowTheme.of(context)
+                                                                    '${tasksServices.filterResults[index].contractValue} ETH',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
                                                                         .bodyText2,
-                                                                    softWrap: false,
-                                                                    overflow: TextOverflow.fade,
+                                                                    softWrap:
+                                                                        false,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .fade,
                                                                     maxLines: 1,
-                                                                    textAlign: TextAlign.end,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
                                                                   ),
                                                                 ),
-                                                              if(tasksServices.filterResults[index].contractValueToken != 0)
+                                                              if (tasksServices
+                                                                      .filterResults[
+                                                                          index]
+                                                                      .contractValueToken !=
+                                                                  0)
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    tasksServices.filterResults[index].contractValueToken
-                                                                        .toString() +
-                                                                        ' aUSDC',
-                                                                    style: FlutterFlowTheme.of(context)
+                                                                    '${tasksServices.filterResults[index].contractValueToken} aUSDC',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
                                                                         .bodyText2,
-                                                                    softWrap: false,
-                                                                    overflow: TextOverflow.fade,
+                                                                    softWrap:
+                                                                        false,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .fade,
                                                                     maxLines: 1,
-                                                                    textAlign: TextAlign.end,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
                                                                   ),
                                                                 ),
-                                                              if(tasksServices.filterResults[index].contractValue == 0 &&
-                                                                  tasksServices.filterResults[index].contractValueToken == 0)
+                                                              if (tasksServices
+                                                                          .filterResults[
+                                                                              index]
+                                                                          .contractValue ==
+                                                                      0 &&
+                                                                  tasksServices
+                                                                          .filterResults[
+                                                                              index]
+                                                                          .contractValueToken ==
+                                                                      0)
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
                                                                     'Has no money',
-                                                                    style: FlutterFlowTheme.of(context)
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
                                                                         .bodyText2,
-                                                                    softWrap: false,
-                                                                    overflow: TextOverflow.fade,
+                                                                    softWrap:
+                                                                        false,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .fade,
                                                                     maxLines: 1,
-                                                                    textAlign: TextAlign.end,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
                                                                   ),
                                                                 ),
                                                             ],
@@ -673,9 +503,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                       0)
                                                     Padding(
                                                       padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 0, 18, 0),
+                                                          const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                              0, 0, 18, 0),
                                                       child: Badge(
                                                         // position: BadgePosition.topEnd(top: 10, end: 10),
                                                         badgeContent: Container(
@@ -689,7 +519,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                       index]
                                                                   .contributorsCount
                                                                   .toString(),
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
@@ -697,7 +527,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                       .white)),
                                                         ),
                                                         animationDuration:
-                                                            Duration(
+                                                            const Duration(
                                                                 milliseconds:
                                                                     300),
                                                         animationType:
@@ -715,7 +545,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                           .filterResults[index]
                                                           .justLoaded ==
                                                       false)
-                                                    Padding(
+                                                    const Padding(
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(

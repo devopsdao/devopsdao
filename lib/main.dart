@@ -28,6 +28,7 @@ void main() async {
   createAuthenticator();
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
+  beamerDelegate.beamToNamed('/tasks/1');
 
   // runApp(MyApp());
 
@@ -143,6 +144,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       '/home': const HomePageWidget(),
       '/tasks': const JobExchangeWidget(),
+      '/tasks/1': const JobExchangeWidget(),
       '/customer': const SubmitterPageWidget(),
       '/performer': const PerformerPageWidget(),
       '/auditor': const AuditorPageWidget(),
@@ -150,6 +152,7 @@ class _NavBarPageState extends State<NavBarPage> {
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
+
     // final currentPage = beamerDelegate.currentBeamLocation;
     final beamerRouter = MaterialApp.router(
         routerDelegate: beamerDelegate, routeInformationParser: BeamerParser());
