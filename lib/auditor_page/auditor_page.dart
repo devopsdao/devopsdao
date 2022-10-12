@@ -12,7 +12,6 @@ import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 
 // class ExchangeFilterWidget extends ChangeNotifier {
 //   List<Task> filterResults = [];
@@ -242,443 +241,495 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                     // ),
 
                     tasksServices.isLoading
-                      ? LoadIndicator()
-                      : Expanded(
-                        child: TabBarView(
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0, 6, 0, 0),
-                              child: RefreshIndicator(
-                                onRefresh: () async {
-                                  tasksServices.isLoadingBackground = true;
-                                  tasksServices.fetchTasks();
-                                },
-                                child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      tasksServices.filterResults.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              16, 8, 16, 0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            // Toggle light when tapped.
-                                          });
-                                          showDialog(
-                                            context: context,
-                                            builder:
-                                              (context) => AlertDialog(
-                                                title: Text(
-                                                    tasksServices
-                                                        .filterResults[
-                                                            index]
-                                                        .title),
-                                                content:
-                                                    SingleChildScrollView(
-                                                  child: ListBody(
-                                                    children: <
-                                                        Widget>[
-                                                      // Divider(
-                                                      //   height: 20,
-                                                      //   thickness: 1,
-                                                      //   indent: 40,
-                                                      //   endIndent: 40,
-                                                      //   color: Colors.black,
-                                                      // ),
-                                                      RichText(
-                                                        text: TextSpan(
-                                                            style: DefaultTextStyle.of(context)
-                                                                .style
-                                                                .apply(fontSizeFactor: 1.0),
-                                                            children: <TextSpan>[
-                                                          TextSpan(
-                                                              text:
-                                                                  'Description: \n',
-                                                              style:
-                                                                  const TextStyle(fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text:
-                                                                  tasksServices.filterResults[index].description)
-                                                        ])),
-                                                      RichText(
-                                                        text: TextSpan(
-                                                            style: DefaultTextStyle.of(context)
-                                                                .style
-                                                                .apply(fontSizeFactor: 1.0),
-                                                            children: <TextSpan>[
-                                                          TextSpan(
-                                                              text:
-                                                                  'Contract value: \n',
-                                                              style:
-                                                                  const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text: tasksServices.filterResults[index].contractValue.toString() +
-                                                                  ' ETH\n',
-                                                              style:
-                                                                  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                                          TextSpan(
-                                                              text: tasksServices.filterResults[index].contractValueToken.toString() +
-                                                                  ' aUSDC',
-                                                              style:
-                                                                  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                                        ])),
-                                                      RichText(
-                                                        text: TextSpan(
-                                                            style: DefaultTextStyle.of(context)
-                                                                .style
-                                                                .apply(fontSizeFactor: 1.0),
-                                                            children: <TextSpan>[
-                                                          TextSpan(
-                                                              text:
-                                                                  'Contract owner: \n',
-                                                              style:
-                                                                  const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text:
-                                                                  tasksServices.filterResults[index].contractOwner.toString(),
-                                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                        ])),
-                                                      RichText(
-                                                        text: TextSpan(
-                                                            style: DefaultTextStyle.of(context)
-                                                                .style
-                                                                .apply(fontSizeFactor: 1.0),
-                                                            children: <TextSpan>[
-                                                          TextSpan(
-                                                              text:
-                                                                  'Contract address: \n',
-                                                              style:
-                                                                  const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text:
-                                                                  tasksServices.filterResults[index].contractAddress.toString(),
-                                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                        ])),
-                                                      RichText(
-                                                        text: TextSpan(
-                                                            style: DefaultTextStyle.of(context)
-                                                                .style
-                                                                .apply(fontSizeFactor: 1.0),
-                                                            children: <TextSpan>[
-                                                          TextSpan(
-                                                              text:
-                                                                  'Created: ',
-                                                              style:
-                                                                  const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                            text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                                                                .filterResults[index]
-                                                                .createdTime),
-                                                          )
-                                                        ])),
-                                                      // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
-                                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                      // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
-                                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                      // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
-                                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                      // Divider(
-                                                      //   height: 20,
-                                                      //   thickness: 0,
-                                                      //   indent: 40,
-                                                      //   endIndent: 40,
-                                                      //   color: Colors.black,
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: [
+                        ? LoadIndicator()
+                        : Expanded(
+                            child: TabBarView(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 6, 0, 0),
+                                  child: RefreshIndicator(
+                                    onRefresh: () async {
+                                      tasksServices.isLoadingBackground = true;
+                                      tasksServices.fetchTasks();
+                                    },
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount:
+                                          tasksServices.filterResults.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  16, 8, 16, 0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                // Toggle light when tapped.
+                                              });
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (context) => AlertDialog(
+                                                            title: Text(
+                                                                tasksServices
+                                                                    .filterResults[
+                                                                        index]
+                                                                    .title),
+                                                            content:
+                                                                SingleChildScrollView(
+                                                              child: ListBody(
+                                                                children: <
+                                                                    Widget>[
+                                                                  // Divider(
+                                                                  //   height: 20,
+                                                                  //   thickness: 1,
+                                                                  //   indent: 40,
+                                                                  //   endIndent: 40,
+                                                                  //   color: Colors.black,
+                                                                  // ),
+                                                                  RichText(
+                                                                      text: TextSpan(
+                                                                          style: DefaultTextStyle.of(context)
+                                                                              .style
+                                                                              .apply(fontSizeFactor: 1.0),
+                                                                          children: <TextSpan>[
+                                                                        TextSpan(
+                                                                            text:
+                                                                                'Description: \n',
+                                                                            style:
+                                                                                const TextStyle(fontWeight: FontWeight.bold)),
+                                                                        TextSpan(
+                                                                            text:
+                                                                                tasksServices.filterResults[index].description)
+                                                                      ])),
+                                                                  RichText(
+                                                                      text: TextSpan(
+                                                                          style: DefaultTextStyle.of(context)
+                                                                              .style
+                                                                              .apply(fontSizeFactor: 1.0),
+                                                                          children: <TextSpan>[
+                                                                        TextSpan(
+                                                                            text:
+                                                                                'Contract value: \n',
+                                                                            style:
+                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                        TextSpan(
+                                                                            text: tasksServices.filterResults[index].contractValue.toString() +
+                                                                                ' ETH\n',
+                                                                            style:
+                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                                                        TextSpan(
+                                                                            text: tasksServices.filterResults[index].contractValueToken.toString() +
+                                                                                ' aUSDC',
+                                                                            style:
+                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                                                      ])),
+                                                                  RichText(
+                                                                      text: TextSpan(
+                                                                          style: DefaultTextStyle.of(context)
+                                                                              .style
+                                                                              .apply(fontSizeFactor: 1.0),
+                                                                          children: <TextSpan>[
+                                                                        TextSpan(
+                                                                            text:
+                                                                                'Contract owner: \n',
+                                                                            style:
+                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                        TextSpan(
+                                                                            text:
+                                                                                tasksServices.filterResults[index].contractOwner.toString(),
+                                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                                                      ])),
+                                                                  RichText(
+                                                                      text: TextSpan(
+                                                                          style: DefaultTextStyle.of(context)
+                                                                              .style
+                                                                              .apply(fontSizeFactor: 1.0),
+                                                                          children: <TextSpan>[
+                                                                        TextSpan(
+                                                                            text:
+                                                                                'Contract address: \n',
+                                                                            style:
+                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                        TextSpan(
+                                                                            text:
+                                                                                tasksServices.filterResults[index].contractAddress.toString(),
+                                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                                                      ])),
+                                                                  RichText(
+                                                                      text: TextSpan(
+                                                                          style: DefaultTextStyle.of(context)
+                                                                              .style
+                                                                              .apply(fontSizeFactor: 1.0),
+                                                                          children: <TextSpan>[
+                                                                        TextSpan(
+                                                                            text:
+                                                                                'Created: ',
+                                                                            style:
+                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                        TextSpan(
+                                                                          text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
+                                                                              .filterResults[index]
+                                                                              .createdTime),
+                                                                        )
+                                                                      ])),
+                                                                  // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
+                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                                                  // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
+                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                                                  // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
+                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                                                  // Divider(
+                                                                  //   height: 20,
+                                                                  //   thickness: 0,
+                                                                  //   indent: 40,
+                                                                  //   endIndent: 40,
+                                                                  //   color: Colors.black,
+                                                                  // ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            actions: [
+                                                              // if (tasksServices
+                                                              //         .filterResults[
+                                                              //             index]
+                                                              //         .contractOwner !=
+                                                              //     tasksServices
+                                                              //         .ownAddress &&
+                                                              //     tasksServices.ownAddress != null &&
+                                                              //     tasksServices.validChainID)
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      'Participate to audit'),
+                                                                  style: TextButton.styleFrom(
+                                                                      primary:
+                                                                          Colors
+                                                                              .white,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .green),
+                                                                  onPressed:
+                                                                      () {
+                                                                    setState(
+                                                                        () {
+                                                                      tasksServices
+                                                                          .filterResults[
+                                                                              index]
+                                                                          .justLoaded = false;
+                                                                    });
+                                                                    tasksServices.taskParticipation(
+                                                                        tasksServices
+                                                                            .filterResults[
+                                                                                index]
+                                                                            .contractAddress,
+                                                                        tasksServices
+                                                                            .filterResults[index]
+                                                                            .nanoId);
+                                                                    Navigator.pop(
+                                                                        context);
 
-                                                  // if (tasksServices
-                                                  //         .filterResults[
-                                                  //             index]
-                                                  //         .contractOwner !=
-                                                  //     tasksServices
-                                                  //         .ownAddress &&
-                                                  //     tasksServices.ownAddress != null &&
-                                                  //     tasksServices.validChainID)
-                                                  TextButton(
-                                                    child: Text(
-                                                        'Participate to audit'),
-                                                    style: TextButton.styleFrom(
-                                                        primary:
-                                                            Colors
-                                                                .white,
-                                                        backgroundColor:
-                                                            Colors
-                                                                .green),
-                                                    onPressed: () { setState(
-                                                          () {
-                                                        tasksServices
-                                                            .filterResults[index]
-                                                            .justLoaded = false;
-                                                      });
-                                                      tasksServices.taskParticipation(
-                                                          tasksServices
-                                                              .filterResults[
-                                                                  index]
-                                                              .contractAddress,
-                                                          tasksServices
-                                                              .filterResults[index]
-                                                              .nanoId);
-                                                      Navigator.pop(
-                                                          context);
-
-                                                      showDialog(
-                                                          context:
-                                                              context,
-                                                          builder: (context) =>
-                                                              WalletAction(
-                                                                nanoId: tasksServices.filterResults[index].nanoId,
-                                                                taskName: 'taskParticipation',
-                                                              ));
-                                                    }),
-                                                  TextButton(
-                                                    child: Text('Close'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(context)),
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder: (context) =>
+                                                                            WalletAction(
+                                                                              nanoId: tasksServices.filterResults[index].nanoId,
+                                                                              taskName: 'taskParticipation',
+                                                                            ));
+                                                                  }),
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      'Close'),
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context)),
+                                                            ],
+                                                          ));
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 86,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 5,
+                                                    color: Color(0x4D000000),
+                                                    offset: Offset(0, 2),
+                                                  )
                                                 ],
-                                              ));
-                                        },
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 86,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                blurRadius: 5,
-                                                color: Color(0x4D000000),
-                                                offset: Offset(0, 2),
-                                              )
-                                            ],
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                              12, 8, 8, 8),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  12, 8, 8, 8),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
+                                                                  tasksServices
+                                                                      .filterResults[
+                                                                          index]
+                                                                      .title,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .subtitle1,
+                                                                  softWrap:
+                                                                      false,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .fade,
+                                                                  maxLines: 1,
+                                                                ),
+                                                              ),
+
+                                                              // Spacer(),
+                                                              // Text(
+                                                              //   'Value: ' +
+                                                              //       tasksServices.filterResults[index].contractValue.toString()
+                                                              //   + ' Eth',
+                                                              //   style: FlutterFlowTheme.of(
+                                                              //       context)
+                                                              //       .bodyText2,
+                                                              // ),
+                                                            ],
+                                                          ),
                                                           Expanded(
                                                             child: Text(
-                                                              // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
                                                               tasksServices
                                                                   .filterResults[
                                                                       index]
-                                                                  .title,
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .subtitle1,
-                                                              softWrap:
-                                                                  false,
+                                                                  .description,
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyText2,
+                                                              softWrap: false,
                                                               overflow:
                                                                   TextOverflow
                                                                       .fade,
                                                               maxLines: 1,
                                                             ),
                                                           ),
-
-                                                          // Spacer(),
-                                                          // Text(
-                                                          //   'Value: ' +
-                                                          //       tasksServices.filterResults[index].contractValue.toString()
-                                                          //   + ' Eth',
-                                                          //   style: FlutterFlowTheme.of(
-                                                          //       context)
-                                                          //       .bodyText2,
-                                                          // ),
-                                                        ],
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          tasksServices
-                                                              .filterResults[
-                                                                  index]
-                                                              .description,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText2,
-                                                          softWrap: false,
-                                                          overflow:
-                                                              TextOverflow
-                                                                  .fade,
-                                                          maxLines: 1,
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Expanded(
-                                                            flex: 7,
-                                                            child: Text(
-                                                              DateFormat(
-                                                                      'MM/dd/yyyy, hh:mm a')
-                                                                  .format(tasksServices
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 7,
+                                                                child: Text(
+                                                                  DateFormat(
+                                                                          'MM/dd/yyyy, hh:mm a')
+                                                                      .format(tasksServices
+                                                                          .filterResults[
+                                                                              index]
+                                                                          .createdTime),
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText2,
+                                                                  softWrap:
+                                                                      false,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .fade,
+                                                                  maxLines: 1,
+                                                                ),
+                                                              ),
+                                                              // Spacer(),
+                                                              // Expanded(
+                                                              //   flex: 3,
+                                                              //   child: Text(
+                                                              //     tasksServices.filterResults[
+                                                              //                 index]
+                                                              //             .contractValue
+                                                              //             .toString() +
+                                                              //         ' Eth',
+                                                              //     style: FlutterFlowTheme.of(
+                                                              //             context)
+                                                              //         .bodyText2,
+                                                              //     softWrap:
+                                                              //         false,
+                                                              //     overflow:
+                                                              //         TextOverflow
+                                                              //             .fade,
+                                                              //     maxLines: 1,
+                                                              //     textAlign:
+                                                              //         TextAlign
+                                                              //             .end,
+                                                              //   ),
+                                                              // ),
+                                                              if (tasksServices
                                                                       .filterResults[
                                                                           index]
-                                                                      .createdTime),
-                                                              style: FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyText2,
-                                                              softWrap:
-                                                                  false,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .fade,
-                                                              maxLines: 1,
-                                                            ),
+                                                                      .contractValue !=
+                                                                  0)
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    tasksServices
+                                                                            .filterResults[index]
+                                                                            .contractValue
+                                                                            .toString() +
+                                                                        ' ETH',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText2,
+                                                                    softWrap:
+                                                                        false,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .fade,
+                                                                    maxLines: 1,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
+                                                                  ),
+                                                                ),
+                                                              if (tasksServices
+                                                                      .filterResults[
+                                                                          index]
+                                                                      .contractValueToken !=
+                                                                  0)
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    tasksServices
+                                                                            .filterResults[index]
+                                                                            .contractValueToken
+                                                                            .toString() +
+                                                                        ' aUSDC',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText2,
+                                                                    softWrap:
+                                                                        false,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .fade,
+                                                                    maxLines: 1,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
+                                                                  ),
+                                                                ),
+                                                              if (tasksServices
+                                                                          .filterResults[
+                                                                              index]
+                                                                          .contractValue ==
+                                                                      0 &&
+                                                                  tasksServices
+                                                                          .filterResults[
+                                                                              index]
+                                                                          .contractValueToken ==
+                                                                      0)
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child: Text(
+                                                                    'Has no money',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText2,
+                                                                    softWrap:
+                                                                        false,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .fade,
+                                                                    maxLines: 1,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
+                                                                  ),
+                                                                ),
+                                                            ],
                                                           ),
-                                                          // Spacer(),
-                                                          // Expanded(
-                                                          //   flex: 3,
-                                                          //   child: Text(
-                                                          //     tasksServices.filterResults[
-                                                          //                 index]
-                                                          //             .contractValue
-                                                          //             .toString() +
-                                                          //         ' Eth',
-                                                          //     style: FlutterFlowTheme.of(
-                                                          //             context)
-                                                          //         .bodyText2,
-                                                          //     softWrap:
-                                                          //         false,
-                                                          //     overflow:
-                                                          //         TextOverflow
-                                                          //             .fade,
-                                                          //     maxLines: 1,
-                                                          //     textAlign:
-                                                          //         TextAlign
-                                                          //             .end,
-                                                          //   ),
-                                                          // ),
-                                                          if(tasksServices.filterResults[index].contractValue != 0)
-                                                            Expanded(
-                                                              flex: 3,
-                                                              child: Text(
-                                                                tasksServices.filterResults[index].contractValue
-                                                                    .toString() +
-                                                                    ' ETH',
-                                                                style: FlutterFlowTheme.of(context)
-                                                                    .bodyText2,
-                                                                softWrap: false,
-                                                                overflow: TextOverflow.fade,
-                                                                maxLines: 1,
-                                                                textAlign: TextAlign.end,
-                                                              ),
-                                                            ),
-                                                          if(tasksServices.filterResults[index].contractValueToken != 0)
-                                                            Expanded(
-                                                              flex: 3,
-                                                              child: Text(
-                                                                tasksServices.filterResults[index].contractValueToken
-                                                                    .toString() +
-                                                                    ' aUSDC',
-                                                                style: FlutterFlowTheme.of(context)
-                                                                    .bodyText2,
-                                                                softWrap: false,
-                                                                overflow: TextOverflow.fade,
-                                                                maxLines: 1,
-                                                                textAlign: TextAlign.end,
-                                                              ),
-                                                            ),
-                                                          if(tasksServices.filterResults[index].contractValue == 0 &&
-                                                              tasksServices.filterResults[index].contractValueToken == 0)
-                                                            Expanded(
-                                                              flex: 3,
-                                                              child: Text(
-                                                                'Has no money',
-                                                                style: FlutterFlowTheme.of(context)
-                                                                    .bodyText2,
-                                                                softWrap: false,
-                                                                overflow: TextOverflow.fade,
-                                                                maxLines: 1,
-                                                                textAlign: TextAlign.end,
-                                                              ),
-                                                            ),
                                                         ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              if (tasksServices
-                                                  .filterResults[index]
-                                                  .contributorsCount !=
-                                                  0)
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                                      0, 0, 18, 0),
-                                                  child: Badge(
-                                                    // position: BadgePosition.topEnd(top: 10, end: 10),
-                                                    badgeContent: Container(
-                                                      width: 17,
-                                                      height: 17,
-                                                      alignment: Alignment.center,
-                                                      child: Text(
-                                                          tasksServices
-                                                              .filterResults[
-                                                          index]
-                                                              .contributorsCount
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .bold,
-                                                              color: Colors
-                                                                  .white)),
                                                     ),
-                                                    badgeColor: Colors.green,
-                                                    animationDuration:
-                                                    Duration(milliseconds: 300),
-                                                    animationType: BadgeAnimationType.scale,
-                                                    shape: BadgeShape.circle,
-                                                    borderRadius: BorderRadius
-                                                        .circular(5),
-                                                    // child: Icon(Icons.settings),
                                                   ),
-                                                ),
-                                              if (tasksServices
-                                                      .filterResults[index]
-                                                      .justLoaded ==
-                                                  false)
-                                                Padding(
-                                                  padding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(
-                                                              0, 0, 12, 0),
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                            ],
+                                                  if (tasksServices
+                                                          .filterResults[index]
+                                                          .contributorsCount !=
+                                                      0)
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0, 0, 18, 0),
+                                                      child: Badge(
+                                                        // position: BadgePosition.topEnd(top: 10, end: 10),
+                                                        badgeContent: Container(
+                                                          width: 17,
+                                                          height: 17,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                              tasksServices
+                                                                  .filterResults[
+                                                                      index]
+                                                                  .contributorsCount
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white)),
+                                                        ),
+                                                        badgeColor:
+                                                            Colors.green,
+                                                        animationDuration:
+                                                            Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                        animationType:
+                                                            BadgeAnimationType
+                                                                .scale,
+                                                        shape:
+                                                            BadgeShape.circle,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        // child: Icon(Icons.settings),
+                                                      ),
+                                                    ),
+                                                  if (tasksServices
+                                                          .filterResults[index]
+                                                          .justLoaded ==
+                                                      false)
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0, 0, 12, 0),
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  },
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
                   ],
                 ),
               ),

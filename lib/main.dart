@@ -16,10 +16,18 @@ import 'package:devopsdao/blockchain/task_services.dart';
 
 import 'job_exchange/job_exchange_widget.dart';
 
+import '../beamer/authenticator.dart';
+import '../beamer/beamer_delegate.dart';
+import 'package:beamer/beamer.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await FlutterFlowTheme.initialize();
+
+  createAuthenticator();
+  createBeamerDelegate();
+  beamerDelegate.setDeepLink('/home');
 
   // runApp(MyApp());
 
@@ -45,6 +53,13 @@ class MyApp extends StatefulWidget {
 
   static _MyAppState of(BuildContext context) =>
       context.findAncestorStateOfType<_MyAppState>()!;
+
+  // Widget build(BuildContext context) {
+  //   return MaterialApp.router(
+  //     routerDelegate: beamerDelegate,
+  //     routeInformationParser: BeamerParser(),
+  //   );
+  // }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -57,8 +72,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    Future.delayed(
-        Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+    Future.delayed(const Duration(seconds: 1),
+        () => setState(() => displaySplashImage = false));
   }
 
   void setLocale(Locale value) => setState(() => _locale = value);
@@ -72,7 +87,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'devopsdao',
-      localizationsDelegates: [
+      localizationsDelegates: const [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -115,7 +130,7 @@ class NavBarPage extends StatefulWidget {
 
 /// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
-  String _currentPage = 'homePage';
+  String _currentPage = '/home';
 
   @override
   void initState() {
@@ -126,27 +141,34 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   Widget build(BuildContext context) {
     final tabs = {
-      'homePage': HomePageWidget(),
-      'jobExchange': JobExchangeWidget(),
-      'submitterPage': SubmitterPageWidget(),
-      'performerPage': PerformerPageWidget(),
-      'auditorPage': AuditorPageWidget(),
+      '/home': const HomePageWidget(),
+      '/tasks': const JobExchangeWidget(),
+      '/customer': const SubmitterPageWidget(),
+      '/performer': const PerformerPageWidget(),
+      '/auditor': const AuditorPageWidget(),
       // 'walletPage': MyWalletPage(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
+    // final currentPage = beamerDelegate.currentBeamLocation;
+    final beamerRouter = MaterialApp.router(
+        routerDelegate: beamerDelegate, routeInformationParser: BeamerParser());
     return Scaffold(
-      body: tabs[_currentPage],
+      body: beamerRouter,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
+        onTap: (i) => {
+          setState(() => _currentPage = tabs.keys.toList()[i]),
+          beamerDelegate.beamToNamed(tabs.keys.toList()[i])
+        },
+        // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
         backgroundColor: FlutterFlowTheme.of(context).black600,
         selectedItemColor: Colors.white,
         unselectedItemColor: FlutterFlowTheme.of(context).grayIcon,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home_sharp,

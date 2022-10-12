@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:js/js.dart'
-    if (dart.library.io) './js-stub.dart'
+    if (dart.library.io) 'package:webthree/src/browser/js_stub.dart'
     if (dart.library.js) 'package:js/js.dart';
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
@@ -162,7 +162,8 @@ class TasksServices extends ChangeNotifier {
   int taskLoaded = 0;
   late EthereumAddress _contractAddress;
   late EthereumAddress _contractAddressRopsten;
-  EthereumAddress zeroAddress = EthereumAddress.fromHex(0x0000000000000000000000000000000000000000 as String);
+  EthereumAddress zeroAddress =
+      EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
   Future<void> getABI() async {
     String abiFile =
         await rootBundle.loadString('build/contracts/Factory.json');
@@ -178,6 +179,7 @@ class TasksServices extends ChangeNotifier {
   bool validChainID = false;
 
   Future<void> connectWallet() async {
+    // beamerDelegate.beamToNamed('/deeper');
     if (platform != 'web') {
       print('not web');
       connectWalletWC();
@@ -737,7 +739,7 @@ class TasksServices extends ChangeNotifier {
             }
             // add all scored Task for calculation:
             if (task.score != 0) {
-              score = score! + task.score;
+              score = score + task.score;
               scoredTaskCount++;
             }
           }
