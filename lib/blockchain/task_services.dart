@@ -169,7 +169,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> getABI() async {
     String abiFile =
         // await rootBundle.loadString('build/contracts/Factory.json');
-    await rootBundle.loadString('build/contracts/Factory.json_');
+    await rootBundle.loadString('build/contracts/Factory.json');
     var jsonABI = jsonDecode(abiFile);
     _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
     _contractAddress = EthereumAddress.fromHex(
