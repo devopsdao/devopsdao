@@ -50,7 +50,6 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
   Map<String, Task> tasksOwner = {};
-
   Map<String, Task> tasksWithMyParticipation = {};
   Map<String, Task> tasksPerformer = {};
   Map<String, Task> tasksAgreedSubmitter = {};
@@ -58,7 +57,10 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasksReviewSubmitter = {};
   Map<String, Task> tasksDoneSubmitter = {};
   Map<String, Task> tasksDonePerformer = {};
-  Map<String, Task> tasksAudit = {};
+  Map<String, Task> tasksAuditPending = {};
+  Map<String, Task> tasksAuditApplied = {};
+  Map<String, Task> tasksAuditWorkingOn = {};
+  Map<String, Task> tasksAuditDone = {};
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
@@ -481,6 +483,8 @@ class TasksServices extends ChangeNotifier {
   late ContractFunction _withdrawToChain;
   late ContractFunction _getBalance;
   late ContractFunction _rateTask;
+  late ContractFunction _changeAuditTaskStatus;
+  late ContractFunction _taskAuditParticipation;
   late Throttling thr;
   late String searchKeyword = '';
 
@@ -508,7 +512,9 @@ class TasksServices extends ChangeNotifier {
     _withdraw = _deployedContract.function('transferToaddress');
     _getBalance = _deployedContract.function('getBalance');
     _withdrawToChain = _deployedContract.function('transferToaddressChain2');
-    // _rateTask = _deployedContract.function('jobRating');
+    _rateTask = _deployedContract.function('jobRating');
+    _changeAuditTaskStatus = _deployedContract.function('jobAuditStateChange');
+    _taskAuditParticipation = _deployedContract.function('jobAuditParticipate');
 
     //aUSDC contract
     EthereumAddress tokenContractAddress =
@@ -574,7 +580,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future tellMeHasItMined(
-      String hash, String _taskAction, String _nanoId) async {
+      String hash, String taskAction, String nanoId) async {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt =
           await web3GetTransactionReceipt(hash);
@@ -584,8 +590,8 @@ class TasksServices extends ChangeNotifier {
       }
 
       if (transactionReceipt.status == true) {
-        transactionStatuses[_nanoId]![_taskAction]!['status'] = 'minted';
-        transactionStatuses[_nanoId]![_taskAction]!['txn'] = hash;
+        transactionStatuses[nanoId]![taskAction]!['status'] = 'minted';
+        transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
         notifyListeners();
         print('tell me has it mined');
         thr.throttle(() {
@@ -664,8 +670,8 @@ class TasksServices extends ChangeNotifier {
           fetchTasks();
           break;
         }
-        var task;
-        var value;
+        List task;
+        List value;
         double ethBalancePrecise = 0;
         double ethBalanceToken = 0;
         task = await web3Call(
@@ -673,6 +679,7 @@ class TasksServices extends ChangeNotifier {
             function: _tasks,
             params: [BigInt.from(i)]);
         if (task != null) {
+          print(task);
           value = await web3Call(
               contract: _deployedContract,
               function: _getBalance,
@@ -701,12 +708,13 @@ class TasksServices extends ChangeNotifier {
             contractValue: ethBalancePrecise,
             contractValueToken: ethBalanceToken,
             nanoId: task[11],
-            score: 0,
-            // score: task[12]
+            score: task[12].toInt(),
+            auditContributors: task[13],
+            auditState: task[14] ?? 'null',
+            auditParticipation: task[15]
           );
 
-          taskLoaded = task[6].toInt() +
-              1; // this count we need to show the loading process. does not affect anything else
+          taskLoaded = task[6].toInt(); // this count we need to show the loading process. does not affect anything else
 
           notifyListeners();
           if (task[1] != "") {
@@ -727,7 +735,10 @@ class TasksServices extends ChangeNotifier {
         tasksDonePerformer.clear();
         tasksDoneSubmitter.clear();
         tasksProgressSubmitter.clear();
-        tasksAudit.clear();
+        tasksAuditPending.clear();
+        tasksAuditApplied.clear();
+        tasksAuditWorkingOn.clear();
+        tasksAuditDone.clear();
 
         pendingBalance = 0;
         pendingBalanceToken = 0;
@@ -760,7 +771,7 @@ class TasksServices extends ChangeNotifier {
           if (task.jobState != "" && task.jobState == "new") {
             if (task.contractOwner == ownAddress) {
               tasksOwner[task.nanoId] = task;
-            } else if (task.contributors.length != 0) {
+            } else if (task.contributors.isNotEmpty) {
               var taskExist = false;
               for (var p = 0; p < task.contributors.length; p++) {
                 if (task.contributors[p] == ownAddress) {
@@ -814,9 +825,34 @@ class TasksServices extends ChangeNotifier {
               tasksDonePerformer[task.nanoId] = task;
             }
           }
-          if (task.jobState != "" && task.jobState == "audit") {
-            tasksAudit[task.nanoId] = task;
+          // **** AUDIT ****
+          if (task.jobState == "audit") {
+            if (task.auditState == "requested") {
+              tasksAuditPending[task.nanoId] = task;
+            } else if (task.auditContributors.isNotEmpty) {
+              var contrExist = false;
+              for (var p = 0; p < task.auditContributors.length; p++) {
+                if (task.auditContributors[p] == ownAddress) {
+                  contrExist = true;
+                }
+              }
+              if (contrExist) {
+                tasksAuditApplied[task.nanoId] = task;
+              } else {
+                tasksAuditPending[task.nanoId] = task;
+              }
+            }
+            if (task.auditParticipation == ownAddress) {
+
+              if (task.auditState == "performing") {
+                tasksAuditWorkingOn[task.nanoId] = task;
+              } else if (task.auditState == "complete" || task.auditState == "finished") {
+                tasksAuditDone[task.nanoId] = task;
+              }
+            }
+
           }
+
         }
 
         // Final Score Calculation
@@ -984,6 +1020,30 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'taskParticipation', nanoId);
   }
 
+  Future<void> taskAuditParticipation(
+      EthereumAddress contractAddress, String nanoId) async {
+    transactionStatuses[nanoId] = {
+      'taskAuditParticipation': {'status': 'pending', 'txn': 'initial'}
+    };
+    late String txn;
+    txn = await web3Transaction(
+        _creds,
+        Transaction.callContract(
+          from: ownAddress,
+          contract: _deployedContract,
+          function: _taskAuditParticipation,
+          parameters: [contractAddress],
+        ),
+        chainId: _chainId);
+    isLoading = false;
+    // isLoadingBackground = true;
+    // lastTxn = txn;
+    transactionStatuses[nanoId]!['taskAuditParticipation']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['taskAuditParticipation']!['txn'] = txn;
+    notifyListeners();
+    tellMeHasItMined(txn, 'taskAuditParticipation', nanoId);
+  }
+
   Future<void> changeTaskStatus(EthereumAddress contractAddress,
       EthereumAddress participiantAddress, String state, String nanoId) async {
     transactionStatuses[nanoId] = {
@@ -1007,6 +1067,30 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['changeTaskStatus']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'changeTaskStatus', nanoId);
+  }
+
+  Future<void> changeAuditTaskStatus(EthereumAddress contractAddress,
+      String favor, String nanoId) async {
+    transactionStatuses[nanoId] = {
+      'changeAuditTaskStatus': {'status': 'pending', 'txn': 'initial'}
+    };
+    late String txn;
+    txn = await web3Transaction(
+        _creds,
+        Transaction.callContract(
+          from: ownAddress,
+          contract: _deployedContract,
+          function: _changeAuditTaskStatus,
+          parameters: [contractAddress],
+        ),
+        chainId: _chainId);
+    isLoading = false;
+    // isLoadingBackground = true;
+    lastTxn = txn;
+    transactionStatuses[nanoId]!['changeAuditTaskStatus']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['changeAuditTaskStatus']!['txn'] = txn;
+    notifyListeners();
+    tellMeHasItMined(txn, 'changeAuditTaskStatus', nanoId);
   }
 
   Future<void> withdraw(EthereumAddress contractAddress, String nanoId) async {

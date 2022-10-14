@@ -15,6 +15,9 @@ class Task {
   final double contractValueToken;
   final String nanoId;
   final int score;
+  final List<dynamic> auditContributors;
+  final String auditState;
+  final EthereumAddress auditParticipation;
   Task({
     required this.title,
     required this.description,
@@ -30,5 +33,8 @@ class Task {
     required this.contractValueToken,
     required this.nanoId,
     required this.score,
+    required this.auditContributors,
+    required this.auditState,
+    required this.auditParticipation
   });
 }

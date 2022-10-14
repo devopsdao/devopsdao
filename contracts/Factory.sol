@@ -342,7 +342,7 @@ contract Job {
             nanoId,
             rating,
             AuditParticipants,
-            auditState,
+        auditState,
             auditorAddress
         );
     }
