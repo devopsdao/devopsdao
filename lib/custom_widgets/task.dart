@@ -196,6 +196,40 @@ class _TaskDialog extends State<TaskDialog> {
         TextButton(
             child: const Text('Close'),
             onPressed: () => Navigator.pop(context)),
+        if (tasksServices
+            .filterResults[index].jobState == 'new')
+          TextButton(
+              style: TextButton.styleFrom(
+                  primary:
+                  Colors
+                      .white,
+                  backgroundColor:
+                  Colors
+                      .redAccent),
+              onPressed:
+                  () {
+                setState(
+                        () {
+                      tasksServices.filterResults[index].justLoaded = false;
+                    });
+                tasksServices.changeTaskStatus(
+                    tasksServices.filterResults[index].contractAddress,
+                    tasksServices.zeroAddress,
+                    'cancel',
+                    tasksServices.filterResults[index].nanoId);
+                Navigator.pop(context);
+
+                showDialog(
+                    context:
+                    context,
+                    builder: (context) =>
+                        WalletAction(
+                          nanoId: tasksServices.filterResults[index].nanoId,
+                          taskName: 'taskCancel',
+                        ));
+              },
+              child: const Text(
+                  'Cancel')),
       ],
     );
   }

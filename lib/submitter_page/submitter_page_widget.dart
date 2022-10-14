@@ -694,7 +694,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       height: 86,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             blurRadius: 5,
                             color: Color(0x4D000000),
@@ -709,7 +709,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                           Expanded(
                             child: Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
+                                  const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
