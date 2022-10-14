@@ -1,15 +1,10 @@
-import 'package:badges/badges.dart';
-import 'package:devopsdao/custom_widgets/payment.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/interface.dart';
-import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
+import '../custom_widgets/buttons.dart';
 import '../custom_widgets/loading.dart';
-import '../custom_widgets/participants_list.dart';
+import '../custom_widgets/selectMenu.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -17,16 +12,17 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:badges/badges.dart';
+import '../blockchain/task.dart';
 
-
-class SubmitterPageWidget extends StatefulWidget {
-  const SubmitterPageWidget({Key? key}) : super(key: key);
+class PerformerPageWidget extends StatefulWidget {
+  const PerformerPageWidget({Key? key}) : super(key: key);
 
   @override
-  _SubmitterPageWidgetState createState() => _SubmitterPageWidgetState();
+  _PerformerPageWidgetState createState() => _PerformerPageWidgetState();
 }
 
-class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
+class _PerformerPageWidgetState extends State<PerformerPageWidget>
     with TickerProviderStateMixin {
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
@@ -59,8 +55,6 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-    bool _lightIsOn = false;
-
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -74,7 +68,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Customer',
+                  'Performer',
                   style: FlutterFlowTheme.of(context).title2.override(
                         fontFamily: 'Poppins',
                         color: Colors.white,
@@ -90,7 +84,6 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
-          //     LoadButtonIndicator(),
           //     Padding(
           //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
           //       child: Icon(
@@ -106,23 +99,6 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
         elevation: 2,
       ),
       backgroundColor: const Color(0xFF1E2429),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     await Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => CreateJobWidget(),
-      //       ),
-      //     );
-      //   },
-      //   backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-      //   elevation: 8,
-      //   child: Icon(
-      //     Icons.add,
-      //     color: Colors.white,
-      //     size: 28,
-      //   ),
-      // ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -139,7 +115,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
           children: [
             Expanded(
               child: DefaultTabController(
-                length: 5,
+                length: 3,
                 initialIndex: 0,
                 child: Column(
                   children: [
@@ -151,34 +127,32 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       // isScrollable: true,
                       tabs: [
                         Tab(
+                          icon: const FaIcon(
+                            FontAwesomeIcons.smileBeam,
+                          ),
                           child: BadgeTab(
-                            taskCount: tasksServices.tasksOwner.length,
-                            tabText: 'Selection',
+                            taskCount:
+                                tasksServices.tasksWithMyParticipation.length,
+                            tabText: 'Applied for',
                           ),
                         ),
                         Tab(
+                          icon: const Icon(
+                            Icons.card_travel_outlined,
+                          ),
                           child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksAgreedSubmitter.length,
-                              tabText: 'Agreed'),
+                            taskCount: tasksServices.tasksPerformer.length,
+                            tabText: 'Working on',
+                          ),
                         ),
                         Tab(
+                          icon: const Icon(
+                            Icons.done_outline,
+                          ),
                           child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksProgressSubmitter.length,
-                              tabText: 'Progress'),
-                        ),
-                        Tab(
-                          child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksReviewSubmitter.length,
-                              tabText: 'Review'),
-                        ),
-                        Tab(
-                          child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksDoneSubmitter.length,
-                              tabText: 'Done'),
+                            taskCount: tasksServices.tasksDonePerformer.length,
+                            tabText: 'Done',
+                          ),
                         ),
                       ],
                     ),
@@ -187,20 +161,13 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                         : Expanded(
                             child: TabBarView(
                               children: [
-                                mySubmitterTabWidget(
-                                    obj: tasksServices.tasksOwner), //new
-                                mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksAgreedSubmitter), //agreed
-                                mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksProgressSubmitter), //progress
-                                mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksReviewSubmitter), //review
-                                mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksDoneSubmitter), //completed & canceled
+                                MyPerformerTabWidget(
+                                    obj:
+                                        tasksServices.tasksWithMyParticipation),
+                                MyPerformerTabWidget(
+                                    obj: tasksServices.tasksPerformer),
+                                MyPerformerTabWidget(
+                                    obj: tasksServices.tasksDonePerformer),
                               ],
                             ),
                           ),
@@ -215,47 +182,49 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
   }
 }
 
-class mySubmitterTabWidget extends StatefulWidget {
+<<<<<<< HEAD
+class MyPerformerTabWidget extends StatefulWidget {
+  final obj;
+  const MyPerformerTabWidget({
+=======
+class myPerformerTabWidget extends StatefulWidget {
   final Map<String, Task>? obj;
-  const mySubmitterTabWidget({
+  myPerformerTabWidget({
+>>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
     Key? key,
     required this.obj,
   }) : super(key: key);
 
   @override
-  _mySubmitterTabWidgetState createState() => _mySubmitterTabWidgetState();
+  _MyPerformerTabWidget createState() => _MyPerformerTabWidget();
 }
 
-class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
+class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
   late bool justLoaded = true;
-  bool enableRatingButton = false;
-
-  double ratingScore = 0;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var Interface = context.watch<InterfaceServices>();
-    // TODO: implement build
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-        child: RefreshIndicator(
-          onRefresh: () async {
-            tasksServices.isLoadingBackground = true;
-            tasksServices.fetchTasks();
-          },
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.vertical,
-            itemCount: widget.obj?.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                child: InkWell(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          tasksServices.isLoadingBackground = true;
+          tasksServices.fetchTasks();
+        },
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          scrollDirection: Axis.vertical,
+          itemCount: widget.obj?.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+              child: InkWell(
                   onTap: () {
                     // setState(() {
                     //   // Toggle light when tapped.
                     // });
+                    // if (obj[index].jobState != "new")
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -264,13 +233,6 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
-                                    // Divider(
-                                    //   height: 20,
-                                    //   thickness: 1,
-                                    //   indent: 40,
-                                    //   endIndent: 40,
-                                    //   color: Colors.black,
-                                    // ),
                                     RichText(
                                         text: TextSpan(
                                             style: DefaultTextStyle.of(context)
@@ -313,6 +275,35 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   DefaultTextStyle.of(context)
                                                       .style
                                                       .apply(
+<<<<<<< HEAD
+                                                          fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            const TextSpan(
+                                                text: 'Contract value: \n',
+                                                style: TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: '${widget.obj[index]
+                                                        .contractValue} DEV \n',
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor:
+                                                                1.0)),
+                                            TextSpan(
+                                                text: '${widget.obj[index]
+                                                        .contractValueToken} aUSDC',
+                                                style: DefaultTextStyle.of(
+                                                        context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 1.0))
+                                          ])),
+                                      RichText(
+                                          text: TextSpan(
+=======
                                                           fontSizeFactor: 1.0))
                                         ])),
                                     RichText(
@@ -331,6 +322,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   .toList()[index]
                                                   .contractOwner
                                                   .toString(),
+>>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -382,255 +374,31 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0))
                                         ])),
-<<<<<<< HEAD
-                                    if (widget.obj[index].jobState == 'completed')
-                                      RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: 'Rate the task:',
-                                                    style: const TextStyle(
-                                                        height: 2,
-                                                        fontWeight: FontWeight.bold)),
-                                              ]
-                                          )
-                                      ),
-                                    if (widget.obj[index].jobState == 'completed')
-=======
                                     if (widget.obj!.values
-                                            .toList()[index]
-                                            .jobState ==
-                                        'completed')
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: const <TextSpan>[
-                                            TextSpan(
-                                                text: 'Rate the task:',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ])),
-                                    if (widget.obj!.values
-                                            .toList()[index]
-                                            .jobState ==
-                                        'completed')
->>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
-                                      Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            RatingBar.builder(
-                                              initialRating: 4,
-                                              minRating: 1,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: true,
-                                              itemCount: 5,
-                                              itemPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              itemBuilder: (context, _) =>
-                                                  const Icon(
-                                                Icons.star,
-                                                color: Colors.amber,
-                                              ),
-                                              itemSize: 30.0,
-                                              onRatingUpdate: (rating) {
-                                                setState(() {
-                                                  enableRatingButton = true;
-                                                });
-                                                ratingScore = rating;
-
-                                                tasksServices.myNotifyListeners();
-                                              },
-                                            ),
-                                          ]),
-                                    // Text("Description: ${tasksServices.tasksNew[index].description}",
-                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
-                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    // Text('Contract address: ${tasksServices.tasksNew[index].contractAddress.toString()}',
-                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    // Divider(
-                                    //   height: 20,
-                                    //   thickness: 1,
-                                    //   indent: 40,
-                                    //   endIndent: 40,
-                                    //   color: Colors.black,
-                                    // ),
-                                    if (widget.obj!.values
-                                            .toList()[index]
-                                            .jobState ==
-                                        "new")
-                                      // Text('Choose contractor: ',
-                                      //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: const <TextSpan>[
-                                            TextSpan(
-                                                text: 'Choose contractor: ',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ])),
-
-                                    // if (widget.obj!.values.toList()[index].jobState != "new" )
-                                    // Text('text',
-                                    // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-<<<<<<< HEAD
-                                    if (widget.obj[index].jobState == "new")
-                                      ParticipantList(object: widget.obj[index],)
-=======
-                                    if (widget.obj!.values
-                                            .toList()[index]
-                                            .jobState ==
-                                        "new")
-                                      ParticipantList(
+                                                .toList()[index]
+                                                .jobState ==
+                                            "completed" &&
+                                        (widget.obj!.values
+                                                    .toList()[index]
+                                                    .contractValue !=
+                                                0 ||
+                                            widget.obj!.values
+                                                    .toList()[index]
+                                                    .contractValueToken !=
+                                                0))
+                                      SelectNetworkMenu(
                                         object:
                                             widget.obj!.values.toList()[index],
                                       )
->>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
                                   ],
                                 ),
                               ),
                               actions: [
-                                /////////////topup
-                                TextButton(
-                                  child: const Text('Topup contract'),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                              title: Text('Topup contract'),
-                                              // backgroundColor: Colors.black,
-                                              content: const Payment(
-                                                purpose: 'topup',
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    tasksServices.addTokens(
-                                                        widget.obj!.values
-                                                            .toList()[index]
-                                                            .contractAddress,
-                                                        Interface.tokensEntered,
-                                                        widget.obj!.values
-                                                            .toList()[index]
-                                                            .nanoId);
-                                                    Navigator.pop(context);
-
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            WalletAction(
-                                                              nanoId: widget
-                                                                  .obj!.values
-                                                                  .toList()[
-                                                                      index]
-                                                                  .nanoId,
-                                                              taskName:
-                                                                  'addTokens',
-                                                            ));
-                                                  },
-                                                  child: const Text('Topup!'),
-                                                  style: TextButton.styleFrom(
-                                                      primary: Colors.white,
-                                                      backgroundColor:
-                                                          Colors.green),
-                                                ),
-                                                TextButton(
-                                                    child: const Text('Close'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(context)),
-                                              ],
-                                            ));
-                                  },
-                                  style: TextButton.styleFrom(
-                                      primary: Colors.white,
-                                      backgroundColor: Colors.green),
-                                ),
-
-                                // TextButton(
-                                //     child: Text('Withdraw to Chain'),
-                                //     style: TextButton.styleFrom(
-                                //         primary: Colors.white,
-                                //         backgroundColor: Colors.green),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         widget.obj!.values.toList()[index].justLoaded = false;
-                                //       });
-                                //       tasksServices.withdrawToChain(
-                                //           widget.obj!.values.toList()[index].contractAddress,
-                                //           widget.obj!.values.toList()[index].nanoId);
-                                //       Navigator.pop(context);
-                                //
-                                //       showDialog(
-                                //           context: context,
-                                //           builder: (context) => WalletAction(
-                                //                 nanoId:
-                                //                     widget.obj!.values.toList()[index].nanoId,
-                                //                 taskName: 'withdrawToChain',
-                                //               ));
-                                //     }),
-
-<<<<<<< HEAD
-                                if (widget.obj[index].jobState == 'new' &&
-                                    widget.obj[index].contractOwner == tasksServices.ownAddress)
-                                  TextButton(
-                                      style: TextButton.styleFrom(
-                                          primary:
-                                          Colors
-                                              .white,
-                                          backgroundColor:
-                                          Colors
-                                              .redAccent),
-                                      onPressed:
-                                          () {
-                                        setState(
-                                                () {
-                                            widget.obj[index].justLoaded = false;
-                                            });
-                                        tasksServices.changeTaskStatus(
-                                            widget.obj[index].contractAddress,
-                                            tasksServices.zeroAddress,
-                                            'cancel',
-                                            widget.obj[index].nanoId);
-                                        Navigator.pop(context);
-
-                                        showDialog(
-                                            context:
-                                            context,
-                                            builder: (context) =>
-                                                WalletAction(
-                                                  nanoId: widget.obj[index].nanoId,
-                                                  taskName: 'taskCancel',
-                                                ));
-                                      },
-                                      child: const Text(
-                                          'Cancel')),
-
-                                if (widget.obj[index].jobState == 'review')
-=======
                                 if (widget.obj!.values
                                         .toList()[index]
                                         .jobState ==
-                                    'review')
->>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
+                                    "agreed")
                                   TextButton(
-                                      child: const Text('Sign Review'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
                                           backgroundColor: Colors.green),
@@ -647,7 +415,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                             widget.obj!.values
                                                 .toList()[index]
                                                 .participiant,
-                                            'completed',
+                                            'progress',
                                             widget.obj!.values
                                                 .toList()[index]
                                                 .nanoId);
@@ -661,77 +429,50 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .nanoId,
                                                   taskName: 'changeTaskStatus',
                                                 ));
-                                      }),
+                                      },
+                                      child: const Text('Start the job')),
                                 if (widget.obj!.values
                                         .toList()[index]
                                         .jobState ==
-                                    'completed')
+                                    "progress")
                                   TextButton(
-                                      child: const Text('Rate this task'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
-                                          disabledBackgroundColor: Colors.white10,
                                           backgroundColor: Colors.green),
-<<<<<<< HEAD
-                                      onPressed: (widget.obj[index].score == 0 && enableRatingButton) ? () {
+                                      onPressed: () {
                                         setState(() {
-                                          widget.obj[index].justLoaded = false;
+                                          widget.obj!.values
+                                              .toList()[index]
+                                              .justLoaded = false;
                                         });
-                                        tasksServices.rateTask(
-                                            widget.obj[index].contractAddress,
-                                            ratingScore,
-                                            widget.obj[index].nanoId);
+                                        tasksServices.changeTaskStatus(
+                                            widget.obj!.values
+                                                .toList()[index]
+                                                .contractAddress,
+                                            widget.obj!.values
+                                                .toList()[index]
+                                                .participiant,
+                                            'review',
+                                            widget.obj!.values
+                                                .toList()[index]
+                                                .nanoId);
                                         Navigator.pop(context);
 
                                         showDialog(
                                             context: context,
                                             builder: (context) => WalletAction(
-                                              nanoId: widget.obj[index].nanoId,
-                                              taskName: 'rateTask',
-                                            ));
-                                      } : null),
-                                if (widget.obj[index].jobState == "progress")
-=======
-                                      onPressed: (widget.obj!.values
+                                                  nanoId: widget.obj!.values
                                                       .toList()[index]
-                                                      .score ==
-                                                  0 &&
-                                              enableRatingButton)
-                                          ? () {
-                                              setState(() {
-                                                widget.obj!.values
-                                                    .toList()[index]
-                                                    .justLoaded = false;
-                                              });
-                                              tasksServices.rateTask(
-                                                  widget.obj!.values
-                                                      .toList()[index]
-                                                      .contractAddress,
-                                                  ratingScore,
-                                                  widget.obj!.values
-                                                      .toList()[index]
-                                                      .nanoId);
-                                              Navigator.pop(context);
-
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      WalletAction(
-                                                        nanoId: widget
-                                                            .obj!.values
-                                                            .toList()[index]
-                                                            .nanoId,
-                                                        taskName: 'rateTask',
-                                                      ));
-                                            }
-                                          : null),
+                                                      .nanoId,
+                                                  taskName: 'changeTaskStatus',
+                                                ));
+                                      },
+                                      child: const Text('Review')),
                                 if (widget.obj!.values
                                         .toList()[index]
                                         .jobState ==
-                                    "progress")
->>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
+                                    "review")
                                   TextButton(
-                                      child: const Text('Request audit'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
                                           backgroundColor: Colors.orangeAccent),
@@ -762,38 +503,88 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .nanoId,
                                                   taskName: 'changeTaskStatus',
                                                 ));
-                                      }),
-                                TextButton(
-                                    child: const Text('Close'),
-                                    onPressed: () => Navigator.pop(context)),
-                                // if (widget.obj!.values.toList()[index].jobState == 'completed')
-
-                                //   TextButton(
+                                      },
+                                      child: const Text('Request audit')),
+                                if (widget.obj!.values
+                                            .toList()[index]
+                                            .jobState ==
+                                        "completed" &&
+                                    (widget.obj!.values
+                                                .toList()[index]
+                                                .contractValue !=
+                                            0 ||
+                                        widget.obj!.values
+                                                .toList()[index]
+                                                .contractValueToken !=
+                                            0))
+                                  WithdrawButton(
+                                      object:
+                                          widget.obj!.values.toList()[index]),
+                                // TextButton(
                                 //     child: Text('Withdraw'),
-                                //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+                                //     style: TextButton.styleFrom(
+                                //         primary: Colors.white,
+                                //         disabledBackgroundColor: Colors.white10,
+                                //         backgroundColor: Colors.green),
+                                //     onPressed: false ? () {
+                                //       if (widget.obj!.values.toList()[index].jobState ==
+                                //           "completed" &&
+                                //           (widget.obj!.values.toList()[index].contractValue != 0 ||
+                                //               widget.obj!.values.toList()[index].contractValueToken != 0)) {
+                                //         setState(() {
+                                //           widget.obj!.values.toList()[index].justLoaded = false;
+                                //         });
+                                //         tasksServices.withdrawToChain(
+                                //             widget.obj!.values.toList()[index].contractAddress,
+                                //             widget.obj!.values.toList()[index].nanoId);
+                                //         Navigator.pop(context);
+                                //
+                                //         showDialog(
+                                //             context: context,
+                                //             builder: (context) => WalletAction(
+                                //               nanoId:
+                                //               widget.obj!.values.toList()[index].nanoId,
+                                //               taskName: 'withdrawToChain',
+                                //             ));
+                                //       }
+                                //     } : null),
+                                // if (widget.obj!.values.toList()[index].jobState ==
+                                //         "completed" &&
+                                //     widget.obj!.values.toList()[index].contractValue != 0)
+                                // TextButton(
+                                //     child: Text('Withdraw'),
+                                //     style: TextButton.styleFrom(
+                                //         primary: Colors.white,
+                                //         backgroundColor: Colors.green),
                                 //     onPressed: () {
                                 //       setState(() {
-                                //         widget.obj!.values.toList()[index].justLoaded = false;
+                                //         widget.obj!.values.toList()[index].justLoaded =
+                                //             false;
                                 //       });
-                                //       tasksServices.withdraw(widget.obj!.values.toList()[index].contractAddress);
+                                //       tasksServices.withdraw(
+                                //           widget.obj!.values.toList()[index].contractAddress,
+                                //           widget.obj!.values.toList()[index].nanoId);
                                 //       Navigator.pop(context);
                                 //
                                 //       showDialog(
                                 //           context: context,
-                                //           builder: (context) => WalletAction()
-                                //       );
+                                //           builder: (context) =>
+                                //               WalletAction(
+                                //                 nanoId: widget
+                                //                     .obj!.values.toList()[index].nanoId,
+                                //                 taskName: 'withdraw',
+                                //               ));
+                                //     }),
+                                // if (obj[index].jobState == "Review")
+                                //   TextButton(child: Text('Review'), onPressed: () {
+                                //     tasksServices.changeTaskStatus(
+                                //         obj[index].contractAddress,
+                                //         obj[index].participiant,
+                                //         'review');
                                 //   }),
-                                // TextButton(
-                                //   child: Text('diss'),
-                                //   style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-                                //   onPressed: () {
-                                //     setState(() {
-                                //       enableRatingButton = false;
-                                //     });
-                                //
-                                //
-                                // }),
-
+                                TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () => Navigator.pop(context)),
                               ],
                             ));
                   },
@@ -801,7 +592,20 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                     width: double.infinity,
                     height: 86,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      // color: obj[index].jobState != "new" ? Colors.white : Colors.white,
+                      color: (() {
+                        if (widget.obj!.values.toList()[index].jobState ==
+                            "agreed") {
+                          return Colors.orange.shade200;
+                        } else if (widget.obj!.values
+                                .toList()[index]
+                                .jobState ==
+                            "review") {
+                          return Colors.lightGreen.shade200;
+                        } else {
+                          return Colors.white;
+                        }
+                      }()),
                       boxShadow: const [
                         BoxShadow(
                           blurRadius: 5,
@@ -854,10 +658,6 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     ),
                                   ],
                                 ),
-                                // Text(
-                                //   widget.obj!.values.toList()[index].title,
-                                //   style: FlutterFlowTheme.of(context).subtitle1,
-                                // ),
                                 Row(
                                   children: [
                                     Expanded(
@@ -949,15 +749,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             ),
                           ),
                         ),
-                        if (widget.obj!.values
-                                    .toList()[index]
-                                    .contributorsCount !=
-                                0 &&
-                            widget.obj!.values.toList()[index].jobState ==
-                                "new")
+                        if (widget.obj!.values.toList()[index].jobState ==
+                            "new")
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 12, 0),
+                                0, 0, 18, 0),
                             child: Badge(
                               // position: BadgePosition.topEnd(top: 10, end: 10),
                               badgeContent: Container(
@@ -990,11 +786,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                           ),
                       ],
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ));
+                  )),
+            );
+          },
+        ),
+      ),
+    );
   }
 }

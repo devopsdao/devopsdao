@@ -136,13 +136,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             ),
           ],
         ),
-<<<<<<< HEAD
         actions: const [
           LoadButtonIndicator(),
-=======
-        actions: [
-          const LoadButtonIndicator(),
->>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
         ],
         centerTitle: false,
         elevation: 2,
@@ -224,17 +219,10 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                       width: MediaQuery.of(context).size.width,
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-<<<<<<< HEAD
                       // decoration: const BoxDecoration(
                       //   // color: Colors.white70,
                       //   // borderRadius: BorderRadius.circular(8),
                       // ),
-=======
-                      decoration: const BoxDecoration(
-                          // color: Colors.white70,
-                          // borderRadius: BorderRadius.circular(8),
-                          ),
->>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
                       child: TextField(
                         controller: _searchKeywordController,
                         onChanged: (searchKeyword) {
@@ -290,18 +278,15 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                     ),
                     tasksServices.isLoading
                         ? const LoadIndicator()
-<<<<<<< HEAD
                         : const Expanded(
                             child: TabBarView(
                               children: [
+<<<<<<< HEAD
                                 PendingTabWidget(tabName: 'pending'),
                                 PendingTabWidget(tabName: 'applied'),
                                 PendingTabWidget(tabName: 'working'),
                                 PendingTabWidget(tabName: 'done'),
 =======
-                        : Expanded(
-                            child: TabBarView(
-                              children: [
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 6, 0, 0),
@@ -374,13 +359,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                             style:
                                                                                 TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
-                                                                            text: tasksServices.filterResults.values.toList()[index].contractValue.toString() +
-                                                                                ' ETH\n',
+                                                                            text:
+                                                                                '${tasksServices.filterResults.values.toList()[index].contractValue} ETH\n',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
                                                                         TextSpan(
-                                                                            text: tasksServices.filterResults.values.toList()[index].contractValueToken.toString() +
-                                                                                ' aUSDC',
+                                                                            text:
+                                                                                '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                                                       ])),
@@ -652,13 +637,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    tasksServices
-                                                                            .filterResults
-                                                                            .values
-                                                                            .toList()[index]
-                                                                            .contractValue
-                                                                            .toString() +
-                                                                        ' ETH',
+                                                                    '${tasksServices.filterResults.values.toList()[index].contractValue} ETH',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText2,
@@ -683,13 +662,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    tasksServices
-                                                                            .filterResults
-                                                                            .values
-                                                                            .toList()[index]
-                                                                            .contractValueToken
-                                                                            .toString() +
-                                                                        ' aUSDC',
+                                                                    '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText2,
@@ -813,7 +786,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                     ),
                                   ),
                                 ),
->>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
+>>>>>>> 50ee4b68a04ea6ba034d75560925c5efb13b3896
                               ],
                             ),
                           ),

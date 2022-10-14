@@ -61,11 +61,10 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 1,
-      delay: 1,
+      duration: 1000,
+      delay: 1000,
       hideBeforeAnimating: false,
-      fadeIn: false,
-      // changed to false(orig from FLOW true)
+      fadeIn: false, // changed to false(orig from FLOW true)
       initialState: AnimationState(
         opacity: 0,
       ),
@@ -97,7 +96,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-
     bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       if(tabIndex == 0) {
@@ -276,6 +274,24 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                             ),
                       ),
                     ),
+                    // TabBar(
+                    //   labelColor: Colors.white,с
+                    //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                    //   indicatorColor: Color(0xFF47CBE4),
+                    //   indicatorWeight: 3,
+                    //   tabs: [
+                    //     Tab(
+                    //       text: 'New offers',
+                    //     ),
+                    //     // Tab(
+                    //     //   text: 'Reserved tab',
+                    //     // ),
+                    //     // Tab(
+                    //     //   text: 'Reserved tab',
+                    //     // ),
+                    //   ],
+                    // ),
+
                     tasksServices.isLoading
                         ? const LoadIndicator()
                         : const Expanded(
@@ -313,7 +329,7 @@ class PendingTabWidget extends StatefulWidget {
 
 class _PendingTabWidgetState extends State<PendingTabWidget> {
   late bool justLoaded = true;
-  late List<Task> obj;
+  late Map<String, Task> obj;
 
   @override
   Widget build(BuildContext context) {
@@ -342,7 +358,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   context: context,
                   builder: (context) => AlertDialog(
                     title:
-                        Text(obj[index].title),
+                        Text(obj!.values.toList()[index].title),
                     content: SingleChildScrollView(
                       child: ListBody(
                         children: <Widget>[
@@ -364,7 +380,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold)),
                                 TextSpan(
-                                    text: obj[index].description)
+                                    text: obj!.values.toList()[index].description)
                               ])),
                           RichText(
                               text: TextSpan(
@@ -379,13 +395,13 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         fontWeight: FontWeight.bold)),
                                 TextSpan(
                                     text:
-                                        '${obj[index].contractValue} ETH\n',
+                                        '${obj!.values.toList()[index].contractValue} ETH\n',
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(fontSizeFactor: 1.0)),
                                 TextSpan(
                                     text:
-                                        '${obj[index].contractValueToken} aUSDC',
+                                        '${obj!.values.toList()[index].contractValueToken} aUSDC',
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(fontSizeFactor: 1.0))
@@ -402,7 +418,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         height: 2,
                                         fontWeight: FontWeight.bold)),
                                 TextSpan(
-                                    text: obj[index].contractOwner.toString(),
+                                    text: obj!.values.toList()[index].contractOwner.toString(),
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(fontSizeFactor: 0.7))
@@ -419,7 +435,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         height: 2,
                                         fontWeight: FontWeight.bold)),
                                 TextSpan(
-                                    text: obj[index].contractAddress.toString(),
+                                    text: obj!.values.toList()[index].contractAddress.toString(),
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(fontSizeFactor: 0.7))
@@ -436,7 +452,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                             height: 2,
                                             fontWeight: FontWeight.bold)),
                                     TextSpan(
-                                        text: obj[index].contractAddress.toString(),
+                                        text: obj!.values.toList()[index].contractAddress.toString(),
                                         style: DefaultTextStyle.of(context)
                                             .style
                                             .apply(fontSizeFactor: 0.7))
@@ -455,7 +471,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                 TextSpan(
                                   text:
                                       DateFormat('MM/dd/yyyy, hh:mm a')
-                                          .format(obj[index].createdTime),
+                                          .format(obj!.values.toList()[index].createdTime),
                                 )
                               ])),
                         ],
@@ -469,19 +485,18 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                               backgroundColor: Colors.green),
                           onPressed: () {
                             setState(() {
-                              obj[index]
-                                  .justLoaded = false;
+                              obj!.values.toList()[index].justLoaded = false;
                             });
                             tasksServices.taskParticipation(
-                                obj[index]
+                                obj!.values.toList()[index]
                                     .contractAddress,
-                                obj[index].nanoId);
+                                obj!.values.toList()[index].nanoId);
                             Navigator.pop(context);
 
                             showDialog(
                                 context: context,
                                 builder: (context) => WalletAction(
-                                      nanoId: obj[index].nanoId,
+                                      nanoId: obj!.values.toList()[index].nanoId,
                                       taskName: 'taskParticipation',
                                     ));
                           },
@@ -523,7 +538,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                   Expanded(
                                     child: Text(
                                       // obj[index].title.length > 20 ? obj[index].title.substring(0, 20)+'...' : obj[index].title,
-                                      obj[index].title,
+                                      obj!.values.toList()[index].title,
                                       style: FlutterFlowTheme.of(context)
                                           .subtitle1,
                                       softWrap: false,
@@ -545,7 +560,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                               ),
                               Expanded(
                                 child: Text(
-                                  obj[index].description,
+                                  obj!.values.toList()[index].description,
                                   style: FlutterFlowTheme.of(context).bodyText2,
                                   softWrap: false,
                                   overflow: TextOverflow.fade,
@@ -558,7 +573,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                     flex: 7,
                                     child: Text(
                                       DateFormat('MM/dd/yyyy, hh:mm a').format(
-                                          obj[index]
+                                          obj!.values.toList()[index]
                                               .createdTime),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText2,
@@ -567,11 +582,11 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                       maxLines: 1,
                                     ),
                                   ),
-                                  if (obj[index].contractValue != 0)
+                                  if (obj!.values.toList()[index].contractValue != 0)
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        '${obj[index].contractValue} ETH',
+                                        '${obj!.values.toList()[index].contractValue} ETH',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
                                         softWrap: false,
@@ -580,13 +595,13 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
-                                  if (obj[index]
+                                  if (obj!.values.toList()[index]
                                           .contractValueToken !=
                                       0)
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        '${obj[index].contractValueToken} aUSDC',
+                                        '${obj!.values.toList()[index].contractValueToken} aUSDC',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
                                         softWrap: false,
@@ -595,9 +610,9 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
-                                  if (obj[index]
+                                  if (obj!.values.toList()[index]
                                               .contractValue == 0 &&
-                                      obj[index]
+                                      obj!.values.toList()[index]
                                               .contractValueToken == 0)
                                     Expanded(
                                       flex: 3,
@@ -617,7 +632,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                           ),
                         ),
                       ),
-                      if (obj[index].contributorsCount != 0 &&
+                      if (obj!.values.toList()[index].contributorsCount != 0 &&
                       widget.tabName == 'pending')
                         Padding(
                           padding:
@@ -629,7 +644,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                               height: 17,
                               alignment: Alignment.center,
                               child: Text(
-                                  obj[index].contributorsCount.toString(),
+                                  obj!.values.toList()[index].contributorsCount.toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white)),
@@ -643,7 +658,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                             // child: Icon(Icons.settings),
                           ),
                         ),
-                      if (obj[index].justLoaded ==
+                      if (obj!.values.toList()[index].justLoaded ==
                           false)
                         const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),

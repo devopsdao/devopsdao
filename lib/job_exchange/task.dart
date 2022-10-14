@@ -10,15 +10,15 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../custom_widgets/wallet_action.dart';
 
 class TaskDialog extends StatefulWidget {
-  // final String nanoId;
+  final String nanoId;
   // final String taskName;
-  final int index;
-  const TaskDialog(
-      {Key? key,
-      // required this.nanoId,
-      // required this.taskName,
-      required this.index})
-      : super(key: key);
+  // final int index;
+  const TaskDialog({
+    Key? key,
+    required this.nanoId,
+    // required this.taskName,
+    // required this.index
+  }) : super(key: key);
 
   @override
   _TaskDialog createState() => _TaskDialog();
@@ -34,10 +34,12 @@ class _TaskDialog extends State<TaskDialog> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-    final index = widget.index;
+    // final index = widget.nanoId;
+    final task = tasksServices.filterResults[widget.nanoId];
+    print('nanoId: ${widget.nanoId}');
 
     return AlertDialog(
-      title: Text(tasksServices.filterResults.values.toList()[index].title),
+      title: Text(task!.title),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -57,10 +59,7 @@ class _TaskDialog extends State<TaskDialog> {
                   const TextSpan(
                       text: 'id: \n',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(
-                      text: tasksServices.filterResults.values
-                          .toList()[index]
-                          .nanoId)
+                  TextSpan(text: task.nanoId)
                 ])),
             RichText(
                 text: TextSpan(
@@ -71,10 +70,7 @@ class _TaskDialog extends State<TaskDialog> {
                   const TextSpan(
                       text: 'Description: \n',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(
-                      text: tasksServices.filterResults.values
-                          .toList()[index]
-                          .description)
+                  TextSpan(text: task.description)
                 ])),
             RichText(
                 text: TextSpan(
@@ -86,14 +82,12 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Contract value: \n',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                      text:
-                          '${tasksServices.filterResults.values.toList()[index].contractValue} ETH\n',
+                      text: '${task.contractValue} ETH\n',
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 1.0)),
                   TextSpan(
-                      text:
-                          '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
+                      text: '${task.contractValueToken} aUSDC',
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 1.0))
@@ -108,10 +102,7 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Contract owner: \n',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                      text: tasksServices.filterResults.values
-                          .toList()[index]
-                          .contractOwner
-                          .toString(),
+                      text: task.contractOwner.toString(),
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 0.7))
@@ -126,10 +117,7 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Contract address: \n',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                      text: tasksServices.filterResults.values
-                          .toList()[index]
-                          .contractAddress
-                          .toString(),
+                      text: task.contractAddress.toString(),
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 0.7))
@@ -144,10 +132,8 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Created: ',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                    text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                        .filterResults.values
-                        .toList()[index]
-                        .createdTime),
+                    text: DateFormat('MM/dd/yyyy, hh:mm a')
+                        .format(task.createdTime),
                   )
                 ])),
             // Text("Description: ${exchangeFilterWidget.filterResults.values.toList()[index].description}",
@@ -167,38 +153,27 @@ class _TaskDialog extends State<TaskDialog> {
         ),
       ),
       actions: [
-        if (tasksServices.filterResults.values.toList()[index].jobState ==
-            'new')
+        if (task.jobState == 'new')
           TextButton(
               style: TextButton.styleFrom(
                   primary: Colors.white, backgroundColor: Colors.redAccent),
               onPressed: () {
                 setState(() {
-                  tasksServices.filterResults.values
-                      .toList()[index]
-                      .justLoaded = false;
+                  task.justLoaded = false;
                 });
-                tasksServices.changeTaskStatus(
-                    tasksServices.filterResults.values
-                        .toList()[index]
-                        .contractAddress,
-                    tasksServices.zeroAddress,
-                    'cancel',
-                    tasksServices.filterResults.values.toList()[index].nanoId);
+                tasksServices.changeTaskStatus(task.contractAddress,
+                    tasksServices.zeroAddress, 'cancel', task.nanoId);
                 Navigator.pop(context);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                          nanoId: tasksServices.filterResults.values
-                              .toList()[index]
-                              .nanoId,
+                          nanoId: task.nanoId,
                           taskName: 'taskCancel',
                         ));
               },
               child: const Text('Cancel')),
-        if (tasksServices.filterResults.values.toList()[index].contractOwner !=
-                tasksServices.ownAddress &&
+        if (task.contractOwner != tasksServices.ownAddress &&
             tasksServices.ownAddress != null &&
             tasksServices.validChainID)
           TextButton(
@@ -206,23 +181,16 @@ class _TaskDialog extends State<TaskDialog> {
                   primary: Colors.white, backgroundColor: Colors.green),
               onPressed: () {
                 setState(() {
-                  tasksServices.filterResults.values
-                      .toList()[index]
-                      .justLoaded = false;
+                  task.justLoaded = false;
                 });
                 tasksServices.taskParticipation(
-                    tasksServices.filterResults.values
-                        .toList()[index]
-                        .contractAddress,
-                    tasksServices.filterResults.values.toList()[index].nanoId);
+                    task.contractAddress, task.nanoId);
                 Navigator.pop(context);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                          nanoId: tasksServices.filterResults.values
-                              .toList()[index]
-                              .nanoId,
+                          nanoId: task.nanoId,
                           taskName: 'taskParticipation',
                         ));
               },
@@ -230,8 +198,7 @@ class _TaskDialog extends State<TaskDialog> {
         TextButton(
             child: const Text('Close'),
             onPressed: () => Navigator.pop(context)),
-        if (tasksServices
-            .filterResults[index].jobState == 'new')
+        if (task.jobState == 'new')
           TextButton(
               style: TextButton.styleFrom(
                   primary:
@@ -244,13 +211,13 @@ class _TaskDialog extends State<TaskDialog> {
                   () {
                 setState(
                         () {
-                      tasksServices.filterResults[index].justLoaded = false;
+                          task.justLoaded = false;
                     });
                 tasksServices.changeTaskStatus(
-                    tasksServices.filterResults[index].contractAddress,
+                    task.contractAddress,
                     tasksServices.zeroAddress,
                     'cancel',
-                    tasksServices.filterResults[index].nanoId);
+                    task.nanoId);
                 Navigator.pop(context);
 
                 showDialog(
@@ -258,7 +225,7 @@ class _TaskDialog extends State<TaskDialog> {
                     context,
                     builder: (context) =>
                         WalletAction(
-                          nanoId: tasksServices.filterResults[index].nanoId,
+                          nanoId: task.nanoId,
                           taskName: 'taskCancel',
                         ));
               },

@@ -49,16 +49,16 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
-  List<Task> tasksOwner = [];
-  List<Task> tasksWithMyParticipation = [];
-  List<Task> tasksPerformer = [];
-  List<Task> tasksAgreedSubmitter = [];
+  Map<String, Task> tasksOwner = {};
 
-  List<Task> tasksProgressSubmitter = [];
-  List<Task> tasksReviewSubmitter = [];
-  List<Task> tasksDoneSubmitter = [];
-  List<Task> tasksDonePerformer = [];
-  List<Task> tasksAudit = [];
+  Map<String, Task> tasksWithMyParticipation = {};
+  Map<String, Task> tasksPerformer = {};
+  Map<String, Task> tasksAgreedSubmitter = {};
+  Map<String, Task> tasksProgressSubmitter = {};
+  Map<String, Task> tasksReviewSubmitter = {};
+  Map<String, Task> tasksDoneSubmitter = {};
+  Map<String, Task> tasksDonePerformer = {};
+  Map<String, Task> tasksAudit = {};
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
@@ -605,7 +605,7 @@ class TasksServices extends ChangeNotifier {
       // if the search field is empty or only contains white-space, we'll display all tasks
       // filterResults = tasksNew.toList();
       // filterResults = Map.from(tasksNew);
-      filterResults = taskList;
+      filterResults = Map.from(taskList);
     } else {
       for (String nanoId in taskList.keys) {
         if (taskList[nanoId]!
@@ -631,7 +631,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> resetFilter(Map<String, Task> taskList) async {
     filterResults.clear();
-    filterResults = taskList;
+    filterResults = Map.from(taskList);
   }
 
   late bool loopRunning = false;
@@ -758,7 +758,7 @@ class TasksServices extends ChangeNotifier {
 
           if (task.jobState != "" && task.jobState == "new") {
             if (task.contractOwner == ownAddress) {
-              tasksOwner.add(task);
+              tasksOwner[task.nanoId] = task;
             } else if (task.contributors.length != 0) {
               var taskExist = false;
               for (var p = 0; p < task.contributors.length; p++) {
@@ -767,7 +767,7 @@ class TasksServices extends ChangeNotifier {
                 }
               }
               if (taskExist) {
-                tasksWithMyParticipation.add(task);
+                tasksWithMyParticipation[task.nanoId] = task;
               } else {
                 tasksNew[task.nanoId] = task;
                 filterResults[task.nanoId] = task;
@@ -784,37 +784,37 @@ class TasksServices extends ChangeNotifier {
 
           if (task.jobState != "" && task.jobState == "agreed") {
             if (task.contractOwner == ownAddress) {
-              tasksAgreedSubmitter.add(task);
+              tasksAgreedSubmitter[task.nanoId] = task;
             } else if (task.participiant == ownAddress) {
-              tasksPerformer.add(task);
+              tasksPerformer[task.nanoId] = task;
             }
           }
 
           if (task.jobState != "" && task.jobState == "progress") {
             if (task.contractOwner == ownAddress) {
-              tasksProgressSubmitter.add(task);
+              tasksProgressSubmitter[task.nanoId] = task;
             } else if (task.participiant == ownAddress) {
-              tasksPerformer.add(task);
+              tasksPerformer[task.nanoId] = task;
             }
           }
 
           if (task.jobState != "" && task.jobState == "review") {
             if (task.contractOwner == ownAddress) {
-              tasksReviewSubmitter.add(task);
+              tasksReviewSubmitter[task.nanoId] = task;
             } else if (task.participiant == ownAddress) {
-              tasksPerformer.add(task);
+              tasksPerformer[task.nanoId] = task;
             }
           }
           if (task.jobState != "" &&
               (task.jobState == "completed" || task.jobState == "canceled")) {
             if (task.contractOwner == ownAddress) {
-              tasksDoneSubmitter.add(task);
+              tasksDoneSubmitter[task.nanoId] = task;
             } else if (task.participiant == ownAddress) {
-              tasksDonePerformer.add(task);
+              tasksDonePerformer[task.nanoId] = task;
             }
           }
           if (task.jobState != "" && task.jobState == "audit") {
-            tasksAudit.add(task);
+            tasksAudit[task.nanoId] = task;
           }
         }
 
@@ -1097,13 +1097,14 @@ class TasksServices extends ChangeNotifier {
   double gasPriceValue = 0;
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
-    final env = 'testnet';
+    const env = 'testnet';
     if (env == 'local') ;
-    final String AddressZero = "0x0000000000000000000000000000000000000000";
+    const String AddressZero = "0x0000000000000000000000000000000000000000";
     if (env != 'testnet') throw 'env needs to be "local" or "testnet".';
 
-    if (tokenAddress == AddressZero && tokenSymbol == '')
+    if (tokenAddress == AddressZero && tokenSymbol == '') {
       throw 'Either tokenAddress or tokenSymbol must be set.';
+    }
     String api_url = 'testnet.api.gmp.axelarscan.io';
     final params = {
       'method': 'getGasPrice',
