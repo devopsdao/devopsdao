@@ -46,9 +46,9 @@ class JSrawRequestParams {
 }
 
 class TasksServices extends ChangeNotifier {
-  List<Task> tasks = [];
-  List<Task> filterResults = [];
-  List<Task> tasksNew = [];
+  Map<String, Task> tasks = {};
+  Map<String, Task> filterResults = {};
+  Map<String, Task> tasksNew = {};
   List<Task> tasksOwner = [];
   List<Task> tasksWithMyParticipation = [];
   List<Task> tasksPerformer = [];
@@ -598,22 +598,32 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> runFilter(String enteredKeyword) async {
-    filterResults.clear();
+    //filterResults.clear();
     print(enteredKeyword);
     searchKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all tasks
-      filterResults = tasksNew.toList();
+      // filterResults = tasksNew.toList();
+      // filterResults = Map.from(tasksNew);
+      filterResults = tasksNew;
     } else {
-      for (int i = 0; i < tasksNew.length; i++) {
-        if (tasksNew
-            .elementAt(i)
+      for (String nanoId in tasksNew.keys) {
+        if (tasksNew[nanoId]!
             .title
             .toLowerCase()
             .contains(enteredKeyword.toLowerCase())) {
-          filterResults.add(tasksNew.elementAt(i));
+          filterResults[nanoId] = tasksNew[nanoId]!;
         }
       }
+      // for (int i = 0; i < tasksNew.length; i++) {
+      // if (tasksNew
+      //     .elementAt(i)
+      //     .title
+      //     .toLowerCase()
+      //     .contains(enteredKeyword.toLowerCase())) {
+      //   filterResults.add(tasksNew.elementAt(i));
+      // }
+      // }
     }
     // Refresh the UI
     notifyListeners();
@@ -621,7 +631,8 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> resetFilter() async {
     filterResults.clear();
-    filterResults = tasksNew.toList();
+    filterResults = tasksNew;
+    // filterResults = tasksNew.toList();
   }
 
   late bool loopRunning = false;
@@ -699,7 +710,8 @@ class TasksServices extends ChangeNotifier {
 
           notifyListeners();
           if (task[1] != "") {
-            tasks.add(taskObject);
+            tasks[taskObject.nanoId] = taskObject;
+            // tasks.add(taskObject);
           }
         }
       }
@@ -722,8 +734,9 @@ class TasksServices extends ChangeNotifier {
         score = 0;
         scoredTaskCount = 0;
 
-        for (var k = 0; k < tasks.length; k++) {
-          final task = tasks[k];
+        for (Task task in tasks.values) {
+          // for (var k = 0; k < tasks.length; k++) {
+          // final task = tasks[k];
 
           if (task.participiant == ownAddress) {
             // Calculate Pending among:
@@ -757,12 +770,16 @@ class TasksServices extends ChangeNotifier {
               if (taskExist) {
                 tasksWithMyParticipation.add(task);
               } else {
-                tasksNew.add(task);
-                filterResults.add(task);
+                tasksNew[task.nanoId] = task;
+                filterResults[task.nanoId] = task;
+                // tasksNew.add(task);
+                // filterResults.add(task);
               }
             } else {
-              tasksNew.add(task);
-              filterResults.add(task);
+              tasksNew[task.nanoId] = task;
+              filterResults[task.nanoId] = task;
+              // tasksNew.add(task);
+              // filterResults.add(task);
             }
           }
 

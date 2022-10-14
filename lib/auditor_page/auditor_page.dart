@@ -126,12 +126,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
           ],
         ),
         actions: [
-          LoadButtonIndicator(),
+          const LoadButtonIndicator(),
         ],
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
+      backgroundColor: const Color(0xFF1E2429),
       // floatingActionButton: _isFloatButtonVisible
       //     ? FloatingActionButton(
       //         onPressed: () async {
@@ -154,7 +154,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
             stops: [0, 0.5, 1],
@@ -173,8 +173,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      decoration: BoxDecoration(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      decoration: const BoxDecoration(
                           // color: Colors.white70,
                           // borderRadius: BorderRadius.circular(8),
                           ),
@@ -183,7 +184,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                         onChanged: (_searchKeyword) {
                           tasksServices.runFilter(_searchKeyword);
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '[Find task by Title...]',
                           hintStyle:
                               TextStyle(fontSize: 15.0, color: Colors.white),
@@ -199,7 +200,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -209,7 +210,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -241,12 +242,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                     // ),
 
                     tasksServices.isLoading
-                        ? LoadIndicator()
+                        ? const LoadIndicator()
                         : Expanded(
                             child: TabBarView(
                               children: [
                                 Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 6, 0, 0),
                                   child: RefreshIndicator(
                                     onRefresh: () async {
@@ -260,9 +261,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                           tasksServices.filterResults.length,
                                       itemBuilder: (context, index) {
                                         return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16, 8, 16, 0),
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(16, 8, 16, 0),
                                           child: InkWell(
                                             onTap: () {
                                               setState(() {
@@ -274,7 +274,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                       (context) => AlertDialog(
                                                             title: Text(
                                                                 tasksServices
-                                                                    .filterResults[
+                                                                    .filterResults
+                                                                    .values
+                                                                    .toList()[
                                                                         index]
                                                                     .title),
                                                             content:
@@ -295,14 +297,14 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                               .style
                                                                               .apply(fontSizeFactor: 1.0),
                                                                           children: <TextSpan>[
-                                                                        TextSpan(
+                                                                        const TextSpan(
                                                                             text:
                                                                                 'Description: \n',
                                                                             style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold)),
+                                                                                TextStyle(fontWeight: FontWeight.bold)),
                                                                         TextSpan(
                                                                             text:
-                                                                                tasksServices.filterResults[index].description)
+                                                                                tasksServices.filterResults.values.toList()[index].description)
                                                                       ])),
                                                                   RichText(
                                                                       text: TextSpan(
@@ -310,18 +312,18 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                               .style
                                                                               .apply(fontSizeFactor: 1.0),
                                                                           children: <TextSpan>[
-                                                                        TextSpan(
+                                                                        const TextSpan(
                                                                             text:
                                                                                 'Contract value: \n',
                                                                             style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                                TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
-                                                                            text: tasksServices.filterResults[index].contractValue.toString() +
+                                                                            text: tasksServices.filterResults.values.toList()[index].contractValue.toString() +
                                                                                 ' ETH\n',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
                                                                         TextSpan(
-                                                                            text: tasksServices.filterResults[index].contractValueToken.toString() +
+                                                                            text: tasksServices.filterResults.values.toList()[index].contractValueToken.toString() +
                                                                                 ' aUSDC',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
@@ -332,14 +334,14 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                               .style
                                                                               .apply(fontSizeFactor: 1.0),
                                                                           children: <TextSpan>[
-                                                                        TextSpan(
+                                                                        const TextSpan(
                                                                             text:
                                                                                 'Contract owner: \n',
                                                                             style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                                TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
                                                                             text:
-                                                                                tasksServices.filterResults[index].contractOwner.toString(),
+                                                                                tasksServices.filterResults.values.toList()[index].contractOwner.toString(),
                                                                             style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
                                                                       ])),
                                                                   RichText(
@@ -348,14 +350,14 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                               .style
                                                                               .apply(fontSizeFactor: 1.0),
                                                                           children: <TextSpan>[
-                                                                        TextSpan(
+                                                                        const TextSpan(
                                                                             text:
                                                                                 'Contract address: \n',
                                                                             style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                                TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
                                                                             text:
-                                                                                tasksServices.filterResults[index].contractAddress.toString(),
+                                                                                tasksServices.filterResults.values.toList()[index].contractAddress.toString(),
                                                                             style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
                                                                       ])),
                                                                   RichText(
@@ -364,22 +366,24 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                               .style
                                                                               .apply(fontSizeFactor: 1.0),
                                                                           children: <TextSpan>[
-                                                                        TextSpan(
+                                                                        const TextSpan(
                                                                             text:
                                                                                 'Created: ',
                                                                             style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                                                                TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
                                                                           text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                                                                              .filterResults[index]
+                                                                              .filterResults
+                                                                              .values
+                                                                              .toList()[index]
                                                                               .createdTime),
                                                                         )
                                                                       ])),
-                                                                  // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
+                                                                  // Text("Description: ${exchangeFilterWidget.filterResults.values.toList()[index].description}",
                                                                   //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
+                                                                  // Text('Contract owner: ${exchangeFilterWidget.filterResults.values.toList()[index].contractOwner.toString()}',
                                                                   //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
+                                                                  // Text('Contract address: ${exchangeFilterWidget.filterResults.values.toList()[index].contractAddress.toString()}',
                                                                   //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                                                   // Divider(
                                                                   //   height: 20,
@@ -401,7 +405,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                               //     tasksServices.ownAddress != null &&
                                                               //     tasksServices.validChainID)
                                                               TextButton(
-                                                                  child: Text(
+                                                                  child: const Text(
                                                                       'Participate to audit'),
                                                                   style: TextButton.styleFrom(
                                                                       primary:
@@ -415,17 +419,23 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                     setState(
                                                                         () {
                                                                       tasksServices
-                                                                          .filterResults[
+                                                                          .filterResults
+                                                                          .values
+                                                                          .toList()[
                                                                               index]
                                                                           .justLoaded = false;
                                                                     });
                                                                     tasksServices.taskParticipation(
                                                                         tasksServices
-                                                                            .filterResults[
+                                                                            .filterResults
+                                                                            .values
+                                                                            .toList()[
                                                                                 index]
                                                                             .contractAddress,
                                                                         tasksServices
-                                                                            .filterResults[index]
+                                                                            .filterResults
+                                                                            .values
+                                                                            .toList()[index]
                                                                             .nanoId);
                                                                     Navigator.pop(
                                                                         context);
@@ -435,12 +445,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                             context,
                                                                         builder: (context) =>
                                                                             WalletAction(
-                                                                              nanoId: tasksServices.filterResults[index].nanoId,
+                                                                              nanoId: tasksServices.filterResults.values.toList()[index].nanoId,
                                                                               taskName: 'taskParticipation',
                                                                             ));
                                                                   }),
                                                               TextButton(
-                                                                  child: Text(
+                                                                  child: const Text(
                                                                       'Close'),
                                                                   onPressed: () =>
                                                                       Navigator.pop(
@@ -454,7 +464,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 boxShadow: [
-                                                  BoxShadow(
+                                                  const BoxShadow(
                                                     blurRadius: 5,
                                                     color: Color(0x4D000000),
                                                     offset: Offset(0, 2),
@@ -469,9 +479,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                   Expanded(
                                                     child: Padding(
                                                       padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  12, 8, 8, 8),
+                                                          const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                              12, 8, 8, 8),
                                                       child: Column(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
@@ -483,9 +493,11 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                             children: [
                                                               Expanded(
                                                                 child: Text(
-                                                                  // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
+                                                                  // tasksServices.filterResults.values.toList()[index].title.length > 20 ? tasksServices.filterResults.values.toList()[index].title.substring(0, 20)+'...' : tasksServices.filterResults.values.toList()[index].title,
                                                                   tasksServices
-                                                                      .filterResults[
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
                                                                           index]
                                                                       .title,
                                                                   style: FlutterFlowTheme.of(
@@ -503,7 +515,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                               // Spacer(),
                                                               // Text(
                                                               //   'Value: ' +
-                                                              //       tasksServices.filterResults[index].contractValue.toString()
+                                                              //       tasksServices.filterResults.values.toList()[index].contractValue.toString()
                                                               //   + ' Eth',
                                                               //   style: FlutterFlowTheme.of(
                                                               //       context)
@@ -514,7 +526,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                           Expanded(
                                                             child: Text(
                                                               tasksServices
-                                                                  .filterResults[
+                                                                  .filterResults
+                                                                  .values
+                                                                  .toList()[
                                                                       index]
                                                                   .description,
                                                               style: FlutterFlowTheme
@@ -532,12 +546,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                               Expanded(
                                                                 flex: 7,
                                                                 child: Text(
-                                                                  DateFormat(
-                                                                          'MM/dd/yyyy, hh:mm a')
-                                                                      .format(tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .createdTime),
+                                                                  DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
+                                                                          index]
+                                                                      .createdTime),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyText2,
@@ -573,7 +587,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                               //   ),
                                                               // ),
                                                               if (tasksServices
-                                                                      .filterResults[
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
                                                                           index]
                                                                       .contractValue !=
                                                                   0)
@@ -581,7 +597,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                   flex: 3,
                                                                   child: Text(
                                                                     tasksServices
-                                                                            .filterResults[index]
+                                                                            .filterResults
+                                                                            .values
+                                                                            .toList()[index]
                                                                             .contractValue
                                                                             .toString() +
                                                                         ' ETH',
@@ -600,7 +618,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                   ),
                                                                 ),
                                                               if (tasksServices
-                                                                      .filterResults[
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
                                                                           index]
                                                                       .contractValueToken !=
                                                                   0)
@@ -608,7 +628,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                   flex: 3,
                                                                   child: Text(
                                                                     tasksServices
-                                                                            .filterResults[index]
+                                                                            .filterResults
+                                                                            .values
+                                                                            .toList()[index]
                                                                             .contractValueToken
                                                                             .toString() +
                                                                         ' aUSDC',
@@ -627,12 +649,16 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                   ),
                                                                 ),
                                                               if (tasksServices
-                                                                          .filterResults[
+                                                                          .filterResults
+                                                                          .values
+                                                                          .toList()[
                                                                               index]
                                                                           .contractValue ==
                                                                       0 &&
                                                                   tasksServices
-                                                                          .filterResults[
+                                                                          .filterResults
+                                                                          .values
+                                                                          .toList()[
                                                                               index]
                                                                           .contractValueToken ==
                                                                       0)
@@ -661,14 +687,15 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                     ),
                                                   ),
                                                   if (tasksServices
-                                                          .filterResults[index]
+                                                          .filterResults.values
+                                                          .toList()[index]
                                                           .contributorsCount !=
                                                       0)
                                                     Padding(
                                                       padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 0, 18, 0),
+                                                          const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                              0, 0, 18, 0),
                                                       child: Badge(
                                                         // position: BadgePosition.topEnd(top: 10, end: 10),
                                                         badgeContent: Container(
@@ -678,11 +705,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                               Alignment.center,
                                                           child: Text(
                                                               tasksServices
-                                                                  .filterResults[
+                                                                  .filterResults
+                                                                  .values
+                                                                  .toList()[
                                                                       index]
                                                                   .contributorsCount
                                                                   .toString(),
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
@@ -692,7 +721,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                         badgeColor:
                                                             Colors.green,
                                                         animationDuration:
-                                                            Duration(
+                                                            const Duration(
                                                                 milliseconds:
                                                                     300),
                                                         animationType:
@@ -707,10 +736,11 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                       ),
                                                     ),
                                                   if (tasksServices
-                                                          .filterResults[index]
+                                                          .filterResults.values
+                                                          .toList()[index]
                                                           .justLoaded ==
                                                       false)
-                                                    Padding(
+                                                    const Padding(
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(

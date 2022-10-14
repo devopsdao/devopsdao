@@ -8,11 +8,13 @@ import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/wallet_action.dart';
-import '../custom_widgets/task.dart';
+import 'task.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+
+import 'package:beamer/beamer.dart';
 
 // class ExchangeFilterWidget extends ChangeNotifier {
 //   List<Task> filterResults = [];
@@ -78,6 +80,14 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     super.initState();
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
+    if (widget.index != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+            context: context,
+            builder: (context) => TaskDialog(index: widget.index!));
+      });
+    }
+
     startPageLoadAnimations(
       animationsMap.values
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
@@ -277,8 +287,10 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                     child: ListView.builder(
                                       padding: EdgeInsets.zero,
                                       scrollDirection: Axis.vertical,
-                                      itemCount:
-                                          tasksServices.filterResults.length,
+                                      itemCount: tasksServices
+                                          .filterResults.values
+                                          .toList()
+                                          .length,
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsetsDirectional
@@ -288,10 +300,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                               setState(() {
                                                 // Toggle light when tapped.
                                               });
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      TaskDialog(index: index));
+                                              context
+                                                  .beamToNamed('/tasks/$index');
+                                              // showDialog(
+                                              //     context: context,
+                                              //     builder: (context) =>
+                                              //         TaskDialog(index: index));
                                             },
                                             child: Container(
                                               width: double.infinity,
@@ -330,7 +344,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                 child: Text(
                                                                   // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
                                                                   tasksServices
-                                                                      .filterResults[
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
                                                                           index]
                                                                       .title,
                                                                   style: FlutterFlowTheme.of(
@@ -359,7 +375,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                           Expanded(
                                                             child: Text(
                                                               tasksServices
-                                                                  .filterResults[
+                                                                  .filterResults
+                                                                  .values
+                                                                  .toList()[
                                                                       index]
                                                                   .description,
                                                               style: FlutterFlowTheme
@@ -377,12 +395,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                               Expanded(
                                                                 flex: 7,
                                                                 child: Text(
-                                                                  DateFormat(
-                                                                          'MM/dd/yyyy, hh:mm a')
-                                                                      .format(tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .createdTime),
+                                                                  DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
+                                                                          index]
+                                                                      .createdTime),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
                                                                       .bodyText2,
@@ -418,14 +436,16 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                               //   ),
                                                               // ),
                                                               if (tasksServices
-                                                                      .filterResults[
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
                                                                           index]
                                                                       .contractValue !=
                                                                   0)
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    '${tasksServices.filterResults[index].contractValue} ETH',
+                                                                    '${tasksServices.filterResults.values.toList()[index].contractValue} ETH',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText2,
@@ -441,14 +461,16 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                   ),
                                                                 ),
                                                               if (tasksServices
-                                                                      .filterResults[
+                                                                      .filterResults
+                                                                      .values
+                                                                      .toList()[
                                                                           index]
                                                                       .contractValueToken !=
                                                                   0)
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    '${tasksServices.filterResults[index].contractValueToken} aUSDC',
+                                                                    '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText2,
@@ -464,12 +486,16 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                                   ),
                                                                 ),
                                                               if (tasksServices
-                                                                          .filterResults[
+                                                                          .filterResults
+                                                                          .values
+                                                                          .toList()[
                                                                               index]
                                                                           .contractValue ==
                                                                       0 &&
                                                                   tasksServices
-                                                                          .filterResults[
+                                                                          .filterResults
+                                                                          .values
+                                                                          .toList()[
                                                                               index]
                                                                           .contractValueToken ==
                                                                       0)
@@ -498,7 +524,8 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                     ),
                                                   ),
                                                   if (tasksServices
-                                                          .filterResults[index]
+                                                          .filterResults.values
+                                                          .toList()[index]
                                                           .contributorsCount !=
                                                       0)
                                                     Padding(
@@ -515,7 +542,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                               Alignment.center,
                                                           child: Text(
                                                               tasksServices
-                                                                  .filterResults[
+                                                                  .filterResults
+                                                                  .values
+                                                                  .toList()[
                                                                       index]
                                                                   .contributorsCount
                                                                   .toString(),
@@ -542,7 +571,8 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                       ),
                                                     ),
                                                   if (tasksServices
-                                                          .filterResults[index]
+                                                          .filterResults.values
+                                                          .toList()[index]
                                                           .justLoaded ==
                                                       false)
                                                     const Padding(

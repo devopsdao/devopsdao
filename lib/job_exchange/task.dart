@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -39,7 +37,7 @@ class _TaskDialog extends State<TaskDialog> {
     final index = widget.index;
 
     return AlertDialog(
-      title: Text(tasksServices.filterResults[index].title),
+      title: Text(tasksServices.filterResults.values.toList()[index].title),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -57,9 +55,26 @@ class _TaskDialog extends State<TaskDialog> {
                         .apply(fontSizeFactor: 1.0),
                     children: <TextSpan>[
                   const TextSpan(
+                      text: 'id: \n',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: tasksServices.filterResults.values
+                          .toList()[index]
+                          .nanoId)
+                ])),
+            RichText(
+                text: TextSpan(
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .apply(fontSizeFactor: 1.0),
+                    children: <TextSpan>[
+                  const TextSpan(
                       text: 'Description: \n',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: tasksServices.filterResults[index].description)
+                  TextSpan(
+                      text: tasksServices.filterResults.values
+                          .toList()[index]
+                          .description)
                 ])),
             RichText(
                 text: TextSpan(
@@ -72,13 +87,13 @@ class _TaskDialog extends State<TaskDialog> {
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
                       text:
-                          '${tasksServices.filterResults[index].contractValue} ETH\n',
+                          '${tasksServices.filterResults.values.toList()[index].contractValue} ETH\n',
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 1.0)),
                   TextSpan(
                       text:
-                          '${tasksServices.filterResults[index].contractValueToken} aUSDC',
+                          '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 1.0))
@@ -93,7 +108,9 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Contract owner: \n',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                      text: tasksServices.filterResults[index].contractOwner
+                      text: tasksServices.filterResults.values
+                          .toList()[index]
+                          .contractOwner
                           .toString(),
                       style: DefaultTextStyle.of(context)
                           .style
@@ -109,7 +126,9 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Contract address: \n',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                      text: tasksServices.filterResults[index].contractAddress
+                      text: tasksServices.filterResults.values
+                          .toList()[index]
+                          .contractAddress
                           .toString(),
                       style: DefaultTextStyle.of(context)
                           .style
@@ -125,15 +144,17 @@ class _TaskDialog extends State<TaskDialog> {
                       text: 'Created: ',
                       style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                   TextSpan(
-                    text: DateFormat('MM/dd/yyyy, hh:mm a')
-                        .format(tasksServices.filterResults[index].createdTime),
+                    text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
+                        .filterResults.values
+                        .toList()[index]
+                        .createdTime),
                   )
                 ])),
-            // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
+            // Text("Description: ${exchangeFilterWidget.filterResults.values.toList()[index].description}",
             //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-            // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
+            // Text('Contract owner: ${exchangeFilterWidget.filterResults.values.toList()[index].contractOwner.toString()}',
             //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-            // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
+            // Text('Contract address: ${exchangeFilterWidget.filterResults.values.toList()[index].contractAddress.toString()}',
             //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
             // Divider(
             //   height: 20,
@@ -146,30 +167,37 @@ class _TaskDialog extends State<TaskDialog> {
         ),
       ),
       actions: [
-        if (tasksServices.filterResults[index].jobState == 'new')
+        if (tasksServices.filterResults.values.toList()[index].jobState ==
+            'new')
           TextButton(
               style: TextButton.styleFrom(
                   primary: Colors.white, backgroundColor: Colors.redAccent),
               onPressed: () {
                 setState(() {
-                  tasksServices.filterResults[index].justLoaded = false;
+                  tasksServices.filterResults.values
+                      .toList()[index]
+                      .justLoaded = false;
                 });
                 tasksServices.changeTaskStatus(
-                    tasksServices.filterResults[index].contractAddress,
+                    tasksServices.filterResults.values
+                        .toList()[index]
+                        .contractAddress,
                     tasksServices.zeroAddress,
                     'cancel',
-                    tasksServices.filterResults[index].nanoId);
+                    tasksServices.filterResults.values.toList()[index].nanoId);
                 Navigator.pop(context);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                          nanoId: tasksServices.filterResults[index].nanoId,
+                          nanoId: tasksServices.filterResults.values
+                              .toList()[index]
+                              .nanoId,
                           taskName: 'taskCancel',
                         ));
               },
               child: const Text('Cancel')),
-        if (tasksServices.filterResults[index].contractOwner !=
+        if (tasksServices.filterResults.values.toList()[index].contractOwner !=
                 tasksServices.ownAddress &&
             tasksServices.ownAddress != null &&
             tasksServices.validChainID)
@@ -178,17 +206,23 @@ class _TaskDialog extends State<TaskDialog> {
                   primary: Colors.white, backgroundColor: Colors.green),
               onPressed: () {
                 setState(() {
-                  tasksServices.filterResults[index].justLoaded = false;
+                  tasksServices.filterResults.values
+                      .toList()[index]
+                      .justLoaded = false;
                 });
                 tasksServices.taskParticipation(
-                    tasksServices.filterResults[index].contractAddress,
-                    tasksServices.filterResults[index].nanoId);
+                    tasksServices.filterResults.values
+                        .toList()[index]
+                        .contractAddress,
+                    tasksServices.filterResults.values.toList()[index].nanoId);
                 Navigator.pop(context);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                          nanoId: tasksServices.filterResults[index].nanoId,
+                          nanoId: tasksServices.filterResults.values
+                              .toList()[index]
+                              .nanoId,
                           taskName: 'taskParticipation',
                         ));
               },

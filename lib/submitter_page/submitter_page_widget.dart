@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class SubmitterPageWidget extends StatefulWidget {
   const SubmitterPageWidget({Key? key}) : super(key: key);
 
@@ -85,7 +84,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
             ),
           ],
         ),
-        actions: [
+        actions: const [
           LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
@@ -105,7 +104,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
+      backgroundColor: const Color(0xFF1E2429),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () async {
       //     await Navigator.push(
@@ -126,7 +125,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
             stops: [0, 0.5, 1],
@@ -146,7 +145,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                     TabBar(
                       labelColor: Colors.white,
                       labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                      indicatorColor: Color(0xFF47CBE4),
+                      indicatorColor: const Color(0xFF47CBE4),
                       indicatorWeight: 3,
                       // isScrollable: true,
                       tabs: [
@@ -183,7 +182,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       ],
                     ),
                     tasksServices.isLoading
-                        ? LoadIndicator()
+                        ? const LoadIndicator()
                         : Expanded(
                             child: TabBarView(
                               children: [
@@ -237,9 +236,8 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
     var tasksServices = context.watch<TasksServices>();
     var Interface = context.watch<InterfaceServices>();
     // TODO: implement build
-    return Container(
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
         child: RefreshIndicator(
           onRefresh: () async {
             tasksServices.isLoadingBackground = true;
@@ -251,15 +249,13 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
             itemCount: widget.obj.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                child: Container(
-                  // color: Colors.white,
-                  child: InkWell(
-                    onTap: () {
-                      // setState(() {
-                      //   // Toggle light when tapped.
-                      // });
-                      showDialog(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                child: InkWell(
+                  onTap: () {
+                    // setState(() {
+                    //   // Toggle light when tapped.
+                    // });
+                    showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                               title: Text(widget.obj[index].title),
@@ -279,9 +275,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 .style
                                                 .apply(fontSizeFactor: 1.0),
                                             children: <TextSpan>[
-                                          TextSpan(
+                                          const TextSpan(
                                               text: 'Description: \n',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
@@ -294,26 +290,22 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 .style
                                                 .apply(fontSizeFactor: 1.0),
                                             children: <TextSpan>[
-                                          TextSpan(
+                                          const TextSpan(
                                               text: 'Contract value: \n',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                              text: widget
-                                                      .obj[index].contractValue
-                                                      .toString() +
-                                                  ' DEV \n',
+                                              text:
+                                                  '${widget.obj[index].contractValue} DEV \n',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
                                                       .apply(
                                                           fontSizeFactor: 1.0)),
                                           TextSpan(
-                                              text: widget.obj[index]
-                                                      .contractValueToken
-                                                      .toString() +
-                                                  ' aUSDC',
+                                              text:
+                                                  '${widget.obj[index].contractValueToken} aUSDC',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -326,9 +318,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 .style
                                                 .apply(fontSizeFactor: 1.0),
                                             children: <TextSpan>[
-                                          TextSpan(
+                                          const TextSpan(
                                               text: 'Contract owner: \n',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
@@ -347,9 +339,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 .style
                                                 .apply(fontSizeFactor: 1.0),
                                             children: <TextSpan>[
-                                          TextSpan(
+                                          const TextSpan(
                                               text: 'Contract address: \n',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
@@ -368,9 +360,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 .style
                                                 .apply(fontSizeFactor: 1.0),
                                             children: <TextSpan>[
-                                          TextSpan(
+                                          const TextSpan(
                                               text: 'Created: ',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
@@ -384,24 +376,28 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0))
                                         ])),
-                                    if (widget.obj[index].jobState == 'completed')
+                                    if (widget.obj[index].jobState ==
+                                        'completed')
                                       RichText(
                                           text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: 'Rate the task:',
-                                                    style: const TextStyle(
-                                                        height: 2,
-                                                        fontWeight: FontWeight.bold)),
-                                              ]
-                                          )
-                                      ),
-                                    if (widget.obj[index].jobState == 'completed')
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: const <TextSpan>[
+                                            TextSpan(
+                                                text: 'Rate the task:',
+                                                style: TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ])),
+                                    if (widget.obj[index].jobState ==
+                                        'completed')
                                       Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             RatingBar.builder(
                                               initialRating: 4,
@@ -409,8 +405,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                               direction: Axis.horizontal,
                                               allowHalfRating: true,
                                               itemCount: 5,
-                                              itemPadding: EdgeInsets.symmetric(horizontal: 5.0),
-                                              itemBuilder: (context, _) => Icon(
+                                              itemPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5.0),
+                                              itemBuilder: (context, _) =>
+                                                  const Icon(
                                                 Icons.star,
                                                 color: Colors.amber,
                                               ),
@@ -421,11 +420,11 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 });
                                                 ratingScore = rating;
 
-                                                tasksServices.myNotifyListeners();
+                                                tasksServices
+                                                    .myNotifyListeners();
                                               },
                                             ),
-                                          ]
-                                      ),
+                                          ]),
                                     // Text("Description: ${tasksServices.tasksNew[index].description}",
                                     //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                     // Text('Contract owner: ${tasksServices.tasksNew[index].contractOwner.toString()}',
@@ -449,10 +448,10 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .style
                                                       .apply(
                                                           fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
+                                              children: const <TextSpan>[
                                             TextSpan(
                                                 text: 'Choose contractor: ',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     height: 2,
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -462,22 +461,24 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     // Text('text',
                                     // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                     if (widget.obj[index].jobState == "new")
-                                      ParticipantList(object: widget.obj[index],)
+                                      ParticipantList(
+                                        object: widget.obj[index],
+                                      )
                                   ],
                                 ),
                               ),
                               actions: [
-
-          /////////////topup
+                                /////////////topup
                                 TextButton(
-                                  child: Text('Topup contract'),
+                                  child: const Text('Topup contract'),
                                   onPressed: () {
                                     showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                              title: Text('Topup contract'),
+                                              title:
+                                                  const Text('Topup contract'),
                                               // backgroundColor: Colors.black,
-                                              content: Payment(
+                                              content: const Payment(
                                                 purpose: 'topup',
                                               ),
                                               actions: [
@@ -502,14 +503,14 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                                   'addTokens',
                                                             ));
                                                   },
-                                                  child: Text('Topup!'),
+                                                  child: const Text('Topup!'),
                                                   style: TextButton.styleFrom(
                                                       primary: Colors.white,
                                                       backgroundColor:
                                                           Colors.green),
                                                 ),
                                                 TextButton(
-                                                    child: Text('Close'),
+                                                    child: const Text('Close'),
                                                     onPressed: () =>
                                                         Navigator.pop(context)),
                                               ],
@@ -545,7 +546,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
 
                                 if (widget.obj[index].jobState == 'review')
                                   TextButton(
-                                      child: Text('Sign Review'),
+                                      child: const Text('Sign Review'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
                                           backgroundColor: Colors.green),
@@ -570,38 +571,46 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       }),
                                 if (widget.obj[index].jobState == 'completed')
                                   TextButton(
-                                      child: Text('Rate this task'),
+                                      child: const Text('Rate this task'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
-                                          disabledBackgroundColor: Colors.white10,
+                                          disabledBackgroundColor:
+                                              Colors.white10,
                                           backgroundColor: Colors.green),
-                                      onPressed: (widget.obj[index].score == 0 && enableRatingButton) ? () {
-                                        setState(() {
-                                          widget.obj[index].justLoaded = false;
-                                        });
-                                        tasksServices.rateTask(
-                                            widget.obj[index].contractAddress,
-                                            ratingScore,
-                                            widget.obj[index].nanoId);
-                                        Navigator.pop(context);
+                                      onPressed: (widget.obj[index].score ==
+                                                  0 &&
+                                              enableRatingButton)
+                                          ? () {
+                                              setState(() {
+                                                widget.obj[index].justLoaded =
+                                                    false;
+                                              });
+                                              tasksServices.rateTask(
+                                                  widget.obj[index]
+                                                      .contractAddress,
+                                                  ratingScore,
+                                                  widget.obj[index].nanoId);
+                                              Navigator.pop(context);
 
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WalletAction(
-                                              nanoId: widget.obj[index].nanoId,
-                                              taskName: 'rateTask',
-                                            ));
-                                      } : null),
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      WalletAction(
+                                                        nanoId: widget
+                                                            .obj[index].nanoId,
+                                                        taskName: 'rateTask',
+                                                      ));
+                                            }
+                                          : null),
                                 if (widget.obj[index].jobState == "progress")
                                   TextButton(
-                                      child: Text('Request audit'),
+                                      child: const Text('Request audit'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
                                           backgroundColor: Colors.orangeAccent),
                                       onPressed: () {
                                         setState(() {
-                                          widget.obj[index].justLoaded =
-                                          false;
+                                          widget.obj[index].justLoaded = false;
                                         });
                                         tasksServices.changeTaskStatus(
                                             widget.obj[index].contractAddress,
@@ -612,16 +621,14 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
 
                                         showDialog(
                                             context: context,
-                                            builder: (context) =>
-                                                WalletAction(
-                                                  nanoId: widget
-                                                      .obj[index].nanoId,
-                                                  taskName:
-                                                  'changeTaskStatus',
+                                            builder: (context) => WalletAction(
+                                                  nanoId:
+                                                      widget.obj[index].nanoId,
+                                                  taskName: 'changeTaskStatus',
                                                 ));
                                       }),
                                 TextButton(
-                                    child: Text('Close'),
+                                    child: const Text('Close'),
                                     onPressed: () => Navigator.pop(context)),
                                 // if (widget.obj[index].jobState == 'completed')
 
@@ -650,53 +657,101 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 //
                                 //
                                 // }),
-
                               ],
                             ));
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 86,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 5,
-                            color: Color(0x4D000000),
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 7,
-                                        child: Text(
-                                          widget.obj[index].title,
-                                          style: FlutterFlowTheme.of(context)
-                                              .subtitle1,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                        ),
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 86,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: Color(0x4D000000),
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                12, 8, 8, 8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 7,
+                                      child: Text(
+                                        widget.obj[index].title,
+                                        style: FlutterFlowTheme.of(context)
+                                            .subtitle1,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
                                       ),
-                                      // Spacer(),
+                                    ),
+                                    // Spacer(),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        widget.obj[index].jobState,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Text(
+                                //   widget.obj[index].title,
+                                //   style: FlutterFlowTheme.of(context).subtitle1,
+                                // ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        widget.obj[index].description,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 7,
+                                      child: Text(
+                                        DateFormat('MM/dd/yyyy, hh:mm a')
+                                            .format(
+                                                widget.obj[index].createdTime),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    // Spacer(),
+                                    if (widget.obj[index].contractValue != 0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          widget.obj[index].jobState,
+                                          '${widget.obj[index].contractValue} ETH',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
@@ -705,135 +760,80 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  // Text(
-                                  //   widget.obj[index].title,
-                                  //   style: FlutterFlowTheme.of(context).subtitle1,
-                                  // ),
-                                  Row(
-                                    children: [
+                                    if (widget.obj[index].contractValueToken !=
+                                        0)
                                       Expanded(
+                                        flex: 3,
                                         child: Text(
-                                          widget.obj[index].description,
+                                          '${widget.obj[index].contractValueToken} aUSDC',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
                                           overflow: TextOverflow.fade,
                                           maxLines: 1,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 7,
-                                        child: Text(
-                                          DateFormat('MM/dd/yyyy, hh:mm a')
-                                              .format(
-                                                  widget.obj[index].createdTime),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
                                         ),
                                       ),
-                                      // Spacer(),
-                                      if (widget.obj[index].contractValue != 0)
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            widget.obj[index].contractValue
-                                                    .toString() +
-                                                ' ETH',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText2,
-                                            softWrap: false,
-                                            overflow: TextOverflow.fade,
-                                            maxLines: 1,
-                                            textAlign: TextAlign.end,
-                                          ),
+                                    if (widget.obj[index].contractValue == 0 &&
+                                        widget.obj[index].contractValueToken ==
+                                            0)
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          'Has no money',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText2,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          textAlign: TextAlign.end,
                                         ),
-                                      if (widget.obj[index].contractValueToken !=
-                                          0)
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            widget.obj[index].contractValueToken
-                                                    .toString() +
-                                                ' aUSDC',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText2,
-                                            softWrap: false,
-                                            overflow: TextOverflow.fade,
-                                            maxLines: 1,
-                                            textAlign: TextAlign.end,
-                                          ),
-                                        ),
-                                      if (widget.obj[index].contractValue == 0 &&
-                                          widget.obj[index].contractValueToken ==
-                                              0)
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            'Has no money',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText2,
-                                            softWrap: false,
-                                            overflow: TextOverflow.fade,
-                                            maxLines: 1,
-                                            textAlign: TextAlign.end,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          if (widget.obj[index].contributorsCount != 0 &&
-                              widget.obj[index].jobState == "new")
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                              child: Badge(
-                                // position: BadgePosition.topEnd(top: 10, end: 10),
-                                badgeContent: Container(
-                                  width: 17,
-                                  height: 17,
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                      widget.obj[index].contributorsCount
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white)),
-                                ),
-                                animationDuration: Duration(milliseconds: 300),
-                                animationType: BadgeAnimationType.scale,
-                                shape: BadgeShape.circle,
-                                borderRadius: BorderRadius.circular(5),
-                                // child: Icon(Icons.settings),
+                        ),
+                        if (widget.obj[index].contributorsCount != 0 &&
+                            widget.obj[index].jobState == "new")
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 12, 0),
+                            child: Badge(
+                              // position: BadgePosition.topEnd(top: 10, end: 10),
+                              badgeContent: Container(
+                                width: 17,
+                                height: 17,
+                                alignment: Alignment.center,
+                                child: Text(
+                                    widget.obj[index].contributorsCount
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
                               ),
+                              animationDuration:
+                                  const Duration(milliseconds: 300),
+                              animationType: BadgeAnimationType.scale,
+                              shape: BadgeShape.circle,
+                              borderRadius: BorderRadius.circular(5),
+                              // child: Icon(Icons.settings),
                             ),
-                          if (widget.obj[index].justLoaded == false)
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                              child: CircularProgressIndicator(),
-                            ),
-                        ],
-                      ),
+                          ),
+                        if (widget.obj[index].justLoaded == false)
+                          const Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                            child: CircularProgressIndicator(),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               );
             },
           ),
-        )
-      ),
-    );
+        ));
   }
 }
