@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class SubmitterPageWidget extends StatefulWidget {
   const SubmitterPageWidget({Key? key}) : super(key: key);
 
@@ -377,24 +376,28 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0))
                                         ])),
-                                    if (widget.obj[index].jobState == 'completed')
+                                    if (widget.obj[index].jobState ==
+                                        'completed')
                                       RichText(
                                           text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: 'Rate the task:',
-                                                    style: const TextStyle(
-                                                        height: 2,
-                                                        fontWeight: FontWeight.bold)),
-                                              ]
-                                          )
-                                      ),
-                                    if (widget.obj[index].jobState == 'completed')
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
+                                              children: const <TextSpan>[
+                                            TextSpan(
+                                                text: 'Rate the task:',
+                                                style: TextStyle(
+                                                    height: 2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ])),
+                                    if (widget.obj[index].jobState ==
+                                        'completed')
                                       Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             RatingBar.builder(
                                               initialRating: 4,
@@ -417,7 +420,8 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 });
                                                 ratingScore = rating;
 
-                                                tasksServices.myNotifyListeners();
+                                                tasksServices
+                                                    .myNotifyListeners();
                                               },
                                             ),
                                           ]),
@@ -457,7 +461,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     // Text('text',
                                     // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                     if (widget.obj[index].jobState == "new")
-                                      ParticipantList(object: widget.obj[index],)
+                                      ParticipantList(
+                                        object: widget.obj[index],
+                                      )
                                   ],
                                 ),
                               ),
@@ -469,7 +475,8 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                              title: Text('Topup contract'),
+                                              title:
+                                                  const Text('Topup contract'),
                                               // backgroundColor: Colors.black,
                                               content: const Payment(
                                                 purpose: 'topup',
@@ -602,25 +609,34 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       child: const Text('Rate this task'),
                                       style: TextButton.styleFrom(
                                           primary: Colors.white,
-                                          disabledBackgroundColor: Colors.white10,
+                                          disabledBackgroundColor:
+                                              Colors.white10,
                                           backgroundColor: Colors.green),
-                                      onPressed: (widget.obj[index].score == 0 && enableRatingButton) ? () {
-                                        setState(() {
-                                          widget.obj[index].justLoaded = false;
-                                        });
-                                        tasksServices.rateTask(
-                                            widget.obj[index].contractAddress,
-                                            ratingScore,
-                                            widget.obj[index].nanoId);
-                                        Navigator.pop(context);
+                                      onPressed: (widget.obj[index].score ==
+                                                  0 &&
+                                              enableRatingButton)
+                                          ? () {
+                                              setState(() {
+                                                widget.obj[index].justLoaded =
+                                                    false;
+                                              });
+                                              tasksServices.rateTask(
+                                                  widget.obj[index]
+                                                      .contractAddress,
+                                                  ratingScore,
+                                                  widget.obj[index].nanoId);
+                                              Navigator.pop(context);
 
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WalletAction(
-                                              nanoId: widget.obj[index].nanoId,
-                                              taskName: 'rateTask',
-                                            ));
-                                      } : null),
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      WalletAction(
+                                                        nanoId: widget
+                                                            .obj[index].nanoId,
+                                                        taskName: 'rateTask',
+                                                      ));
+                                            }
+                                          : null),
                                 if (widget.obj[index].jobState == "progress")
                                   TextButton(
                                       child: const Text('Request audit'),
@@ -676,9 +692,48 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 //
                                 //
                                 // }),
-
                               ],
                             ));
+<<<<<<< HEAD
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 86,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 5,
+                            color: Color(0x4D000000),
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 7,
+                                        child: Text(
+                                          widget.obj[index].title,
+                                          style: FlutterFlowTheme.of(context)
+                                              .subtitle1,
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                        ),
+=======
                   },
                   child: Container(
                     width: double.infinity,
@@ -716,6 +771,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                         softWrap: false,
                                         overflow: TextOverflow.fade,
                                         maxLines: 1,
+>>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
                                       ),
                                     ),
                                     // Spacer(),

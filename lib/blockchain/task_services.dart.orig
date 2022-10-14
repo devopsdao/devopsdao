@@ -597,22 +597,39 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList) async {
+<<<<<<< HEAD
+  Future<void> runFilter(String enteredKeyword, List<Task> taskList) async {
     filterResults.clear();
+=======
+  Future<void> runFilter(String enteredKeyword) async {
+    //filterResults.clear();
+>>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
     print(enteredKeyword);
     searchKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all tasks
-      // filterResults = tasksNew.toList();
-      // filterResults = Map.from(tasksNew);
-      filterResults = taskList;
+<<<<<<< HEAD
+      filterResults = taskList.toList();
     } else {
-      for (String nanoId in taskList.keys) {
-        if (taskList[nanoId]!
+      for (int i = 0; i < taskList.length; i++) {
+        if (taskList
+            .elementAt(i)
             .title
             .toLowerCase()
             .contains(enteredKeyword.toLowerCase())) {
-          filterResults[nanoId] = taskList[nanoId]!;
+          filterResults.add(taskList.elementAt(i));
+=======
+      // filterResults = tasksNew.toList();
+      // filterResults = Map.from(tasksNew);
+      filterResults = tasksNew;
+    } else {
+      for (String nanoId in tasksNew.keys) {
+        if (tasksNew[nanoId]!
+            .title
+            .toLowerCase()
+            .contains(enteredKeyword.toLowerCase())) {
+          filterResults[nanoId] = tasksNew[nanoId]!;
+>>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
         }
       }
       // for (int i = 0; i < tasksNew.length; i++) {
@@ -629,9 +646,14 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter(Map<String, Task> taskList) async {
+  Future<void> resetFilter(List<Task> taskList) async {
     filterResults.clear();
-    filterResults = taskList;
+<<<<<<< HEAD
+    filterResults = taskList.toList();
+=======
+    filterResults = tasksNew;
+    // filterResults = tasksNew.toList();
+>>>>>>> a2cc22e064223c734dde1c0217c6bf5d11bd4b77
   }
 
   late bool loopRunning = false;

@@ -16,8 +16,8 @@ import 'package:devopsdao/blockchain/task_services.dart';
 
 import 'job_exchange/job_exchange_widget.dart';
 
-import '../beamer/authenticator.dart';
-import '../beamer/beamer_delegate.dart';
+import 'navigation/authenticator.dart';
+import 'navigation/beamer_delegate.dart';
 import 'package:beamer/beamer.dart';
 
 void main() async {
@@ -28,7 +28,7 @@ void main() async {
   createAuthenticator();
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
-  beamerDelegate.beamToNamed('/tasks/1');
+  // beamerDelegate.beamToNamed('/tasks/1');
 
   // runApp(MyApp());
 
@@ -83,9 +83,18 @@ class _MyAppState extends State<MyApp> {
         FlutterFlowTheme.saveThemeMode(mode);
       });
 
+  // final beamerRouter = MaterialApp.router(
+  //     routerDelegate: beamerDelegate, routeInformationParser: BeamerParser());
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // return MaterialApp.router(
+    //   routerDelegate: beamerDelegate,
+    //   routeInformationParser: BeamerParser(),
+    // );
+    return MaterialApp.router(
+      routerDelegate: beamerDelegate,
+      routeInformationParser: BeamerParser(),
       debugShowCheckedModeBanner: false,
       title: 'devopsdao',
       localizationsDelegates: const [
@@ -101,127 +110,21 @@ class _MyAppState extends State<MyApp> {
       // Theme mode settings:
       // themeMode: _themeMode,
       themeMode: ThemeMode.light,
-      home: displaySplashImage
-          ? Container(
-              color: Colors.black,
-              child: Center(
-                child: Builder(
-                  builder: (context) => Image.asset(
-                    'assets/images/logo.png',
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-              ),
-            )
-          : NavBarPage(),
-    );
-  }
-}
-
-class NavBarPage extends StatefulWidget {
-  NavBarPage({Key? key, this.initialPage}) : super(key: key);
-
-  final String? initialPage;
-
-  @override
-  _NavBarPageState createState() => _NavBarPageState();
-}
-
-/// This is the private State class that goes with NavBarPage.
-class _NavBarPageState extends State<NavBarPage> {
-  String _currentPage = '/home';
-
-  @override
-  void initState() {
-    super.initState();
-    _currentPage = widget.initialPage ?? _currentPage;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final tabs = {
-      '/home': const HomePageWidget(),
-      '/tasks': const JobExchangeWidget(),
-      '/tasks/1': const JobExchangeWidget(),
-      '/customer': const SubmitterPageWidget(),
-      '/performer': const PerformerPageWidget(),
-      '/auditor': const AuditorPageWidget(),
-      // 'walletPage': MyWalletPage(title: 'WalletConnect'),
-      // 'orangePage': MyOrangePage(title: 'WalletConnect'),
-    };
-    final currentIndex = tabs.keys.toList().indexOf(_currentPage);
-
-    // final currentPage = beamerDelegate.currentBeamLocation;
-    final beamerRouter = MaterialApp.router(
-        routerDelegate: beamerDelegate, routeInformationParser: BeamerParser());
-    return Scaffold(
-      body: beamerRouter,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (i) => {
-          setState(() => _currentPage = tabs.keys.toList()[i]),
-          beamerDelegate.beamToNamed(tabs.keys.toList()[i])
-        },
-        // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
-        backgroundColor: FlutterFlowTheme.of(context).black600,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: FlutterFlowTheme.of(context).grayIcon,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_sharp,
-              size: 24,
-            ),
-            label: 'Home',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.compare_arrows,
-              size: 24,
-            ),
-            label: 'Exchange',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.wpforms,
-              size: 24,
-            ),
-            label: 'Customer',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.pen,
-              size: 24,
-            ),
-            label: 'Performer',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(
-              FontAwesomeIcons.penRuler,
-              size: 24,
-            ),
-            label: 'Audit',
-            tooltip: '',
-          ),
-          // BottomNavigationBarItem(
-          //   icon: FaIcon(
-          //     FontAwesomeIcons.wallet,
-          //     size: 24,
-          //   ),
-          //   label: 'Wallet',
-          //   tooltip: '',
-          // ),
-        ],
-      ),
+      // home: displaySplashImage
+      //     ? Container(
+      //         color: Colors.black,
+      //         child: Center(
+      //           child: Builder(
+      //             builder: (context) => Image.asset(
+      //               'assets/images/logo.png',
+      //               width: MediaQuery.of(context).size.width * 0.6,
+      //               height: MediaQuery.of(context).size.height * 0.6,
+      //               fit: BoxFit.fitWidth,
+      //             ),
+      //           ),
+      //         ),
+      //       )
+      //     : NavBarPage(),
     );
   }
 }

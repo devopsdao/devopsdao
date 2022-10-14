@@ -551,6 +551,7 @@ contract Job {
     function jobStateChange(
         address payable _participantAddress,
         string memory _state
+        // string memory _message
     ) external {
         if (msg.sender == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
             //TODO: LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
