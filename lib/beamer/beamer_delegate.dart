@@ -15,6 +15,9 @@ void createBeamerDelegate() {
         '/performer': (_, __, ___) => const PerformerPageWidget(),
         '/customer': (_, __, ___) => const SubmitterPageWidget(),
         '/auditor': (_, __, ___) => const AuditorPageWidget(),
+        '/tasks/1': (_, __, ___) => const JobExchangeWidget(
+              index: 1,
+            ),
       },
     ),
     updateListenable: authenticator,
