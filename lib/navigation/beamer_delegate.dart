@@ -48,18 +48,18 @@ void createBeamerDelegate() {
               ),
             ),
         '/tasks/:taskId': (context, state, data) {
-          int index = 0;
-          if (state.pathParameters.containsKey('bookId')) {
-            // const index = ValueKey('book-${state.pathParameters['bookId']}');
+          String nanoId = state.pathParameters['taskId']!;
+          // if (state.pathParameters.containsKey('taskId')) {
+          //   // const index = ValueKey('book-${state.pathParameters['bookId']}');
 
-            index = int.parse(state.pathParameters['taskId']!);
-            print('index:');
+          //   nanoId = state.pathParameters['taskId']!;
+          //   // print('nanoId:');
 
-            print(index);
-          }
+          //   // print(nanoId);
+          // }
 
           return Scaffold(
-            body: JobExchangeWidget(index: index),
+            body: JobExchangeWidget(nanoId: nanoId),
             bottomNavigationBar: NavBarPage(),
           );
         },

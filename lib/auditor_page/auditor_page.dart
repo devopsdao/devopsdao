@@ -125,8 +125,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             ),
           ],
         ),
-        actions: [
-          const LoadButtonIndicator(),
+        actions: const [
+          LoadButtonIndicator(),
         ],
         centerTitle: false,
         elevation: 2,
@@ -318,13 +318,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                             style:
                                                                                 TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                                                         TextSpan(
-                                                                            text: tasksServices.filterResults.values.toList()[index].contractValue.toString() +
-                                                                                ' ETH\n',
+                                                                            text:
+                                                                                '${tasksServices.filterResults.values.toList()[index].contractValue} ETH\n',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
                                                                         TextSpan(
-                                                                            text: tasksServices.filterResults.values.toList()[index].contractValueToken.toString() +
-                                                                                ' aUSDC',
+                                                                            text:
+                                                                                '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
                                                                             style:
                                                                                 DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                                                       ])),
@@ -596,13 +596,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    tasksServices
-                                                                            .filterResults
-                                                                            .values
-                                                                            .toList()[index]
-                                                                            .contractValue
-                                                                            .toString() +
-                                                                        ' ETH',
+                                                                    '${tasksServices.filterResults.values.toList()[index].contractValue} ETH',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText2,
@@ -627,13 +621,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                                                                 Expanded(
                                                                   flex: 3,
                                                                   child: Text(
-                                                                    tasksServices
-                                                                            .filterResults
-                                                                            .values
-                                                                            .toList()[index]
-                                                                            .contractValueToken
-                                                                            .toString() +
-                                                                        ' aUSDC',
+                                                                    '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText2,

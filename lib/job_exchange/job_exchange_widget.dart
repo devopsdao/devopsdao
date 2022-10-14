@@ -44,7 +44,9 @@ import 'package:beamer/beamer.dart';
 
 class JobExchangeWidget extends StatefulWidget {
   final int? index;
-  const JobExchangeWidget({Key? key, this.index}) : super(key: key);
+  final String? nanoId;
+  const JobExchangeWidget({Key? key, this.nanoId, this.index})
+      : super(key: key);
 
   @override
   _JobExchangeWidgetState createState() => _JobExchangeWidgetState();
@@ -80,11 +82,11 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     super.initState();
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
-    if (widget.index != null) {
+    if (widget.nanoId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(index: widget.index!));
+            builder: (context) => TaskDialog(nanoId: widget.nanoId!));
       });
     }
 
@@ -300,8 +302,12 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                               setState(() {
                                                 // Toggle light when tapped.
                                               });
-                                              context
-                                                  .beamToNamed('/tasks/$index');
+                                              final nanoId = tasksServices
+                                                  .filterResults.values
+                                                  .toList()[index]
+                                                  .nanoId;
+                                              context.beamToNamed(
+                                                  '/tasks/$nanoId');
                                               // showDialog(
                                               //     context: context,
                                               //     builder: (context) =>
