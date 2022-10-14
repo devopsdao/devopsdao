@@ -4,9 +4,11 @@ import 'package:badges/badges.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -49,6 +51,7 @@ class AuditorPageWidget extends StatefulWidget {
 class _AuditorPageWidgetState extends State<AuditorPageWidget>
     with TickerProviderStateMixin {
   // String _searchKeyword = '';
+  int tabIndex = 0;
   final _searchKeywordController = TextEditingController();
 
   // _changeField() {
@@ -58,10 +61,11 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
+      duration: 1,
+      delay: 1,
       hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
+      fadeIn: false,
+      // changed to false(orig from FLOW true)
       initialState: AnimationState(
         opacity: 0,
       ),
@@ -93,9 +97,16 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
     bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
-      tasksServices.resetFilter();
+      if(tabIndex == 0) {
+        tasksServices.resetFilter(tasksServices.tasksNew);
+      } else if (tabIndex == 1) {
+        tasksServices.resetFilter(tasksServices.tasksWithMyParticipation);
+      } else if (tabIndex == 2) {
+        tasksServices.resetFilter(tasksServices.tasksDonePerformer);
+      }
     }
     if (tasksServices.ownAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
@@ -125,13 +136,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             ),
           ],
         ),
-        actions: [
+        actions: const [
           LoadButtonIndicator(),
         ],
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
+      backgroundColor: const Color(0xFF1E2429),
       // floatingActionButton: _isFloatButtonVisible
       //     ? FloatingActionButton(
       //         onPressed: () async {
@@ -154,7 +165,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
             stops: [0, 0.5, 1],
@@ -167,23 +178,66 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
           children: [
             Expanded(
               child: DefaultTabController(
-                length: 1,
+                length: 4,
                 initialIndex: 0,
                 child: Column(
                   children: [
+                    TabBar(
+                      labelColor: Colors.white,
+                      labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                      indicatorColor: const Color(0xFF47CBE4),
+                      indicatorWeight: 3,
+                      onTap: (index) {
+                        _searchKeywordController.clear();
+                        tabIndex = index;
+                        if(index == 0) {
+                          tasksServices.resetFilter(tasksServices.tasksNew);
+                        } else if (index == 1) {
+                          tasksServices.resetFilter(tasksServices.tasksWithMyParticipation);
+                        } else if (index == 2) {
+                          tasksServices.resetFilter(tasksServices.tasksDonePerformer);
+                        } else if (index == 3) {
+                          tasksServices.resetFilter(tasksServices.tasksDonePerformer);
+                        }
+                      },
+                      tabs: const [
+                        Tab(
+                          text: 'Pending',
+                        ),
+                        Tab(
+                          text: 'Applied for',
+                        ),
+                        Tab(
+                          text: 'Working on',
+                        ),
+                        Tab(
+                          text: 'Done',
+                        ),
+                      ],
+                    ),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      decoration: BoxDecoration(
-                          // color: Colors.white70,
-                          // borderRadius: BorderRadius.circular(8),
-                          ),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      // decoration: const BoxDecoration(
+                      //   // color: Colors.white70,
+                      //   // borderRadius: BorderRadius.circular(8),
+                      // ),
                       child: TextField(
                         controller: _searchKeywordController,
-                        onChanged: (_searchKeyword) {
-                          tasksServices.runFilter(_searchKeyword);
+                        onChanged: (searchKeyword) {
+                          print(tabIndex);
+                          if(tabIndex == 0) {
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                          } else if (tabIndex == 1) {
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksWithMyParticipation);
+                          } else if (tabIndex == 2) {
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksDonePerformer);
+                          } else if (tabIndex == 3) {
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksDonePerformer);
+                          }
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '[Find task by Title...]',
                           hintStyle:
                               TextStyle(fontSize: 15.0, color: Colors.white),
@@ -199,7 +253,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -209,7 +263,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -222,511 +276,15 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                             ),
                       ),
                     ),
-                    // TabBar(
-                    //   labelColor: Colors.white,с
-                    //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                    //   indicatorColor: Color(0xFF47CBE4),
-                    //   indicatorWeight: 3,
-                    //   tabs: [
-                    //     Tab(
-                    //       text: 'New offers',
-                    //     ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //   ],
-                    // ),
-
                     tasksServices.isLoading
-                        ? LoadIndicator()
-                        : Expanded(
+                        ? const LoadIndicator()
+                        : const Expanded(
                             child: TabBarView(
                               children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 6, 0, 0),
-                                  child: RefreshIndicator(
-                                    onRefresh: () async {
-                                      tasksServices.isLoadingBackground = true;
-                                      tasksServices.fetchTasks();
-                                    },
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount:
-                                          tasksServices.filterResults.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16, 8, 16, 0),
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                // Toggle light when tapped.
-                                              });
-                                              showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (context) => AlertDialog(
-                                                            title: Text(
-                                                                tasksServices
-                                                                    .filterResults[
-                                                                        index]
-                                                                    .title),
-                                                            content:
-                                                                SingleChildScrollView(
-                                                              child: ListBody(
-                                                                children: <
-                                                                    Widget>[
-                                                                  // Divider(
-                                                                  //   height: 20,
-                                                                  //   thickness: 1,
-                                                                  //   indent: 40,
-                                                                  //   endIndent: 40,
-                                                                  //   color: Colors.black,
-                                                                  // ),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Description: \n',
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                tasksServices.filterResults[index].description)
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Contract value: \n',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text: tasksServices.filterResults[index].contractValue.toString() +
-                                                                                ' ETH\n',
-                                                                            style:
-                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                                                        TextSpan(
-                                                                            text: tasksServices.filterResults[index].contractValueToken.toString() +
-                                                                                ' aUSDC',
-                                                                            style:
-                                                                                DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Contract owner: \n',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                tasksServices.filterResults[index].contractOwner.toString(),
-                                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Contract address: \n',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                            text:
-                                                                                tasksServices.filterResults[index].contractAddress.toString(),
-                                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                                                      ])),
-                                                                  RichText(
-                                                                      text: TextSpan(
-                                                                          style: DefaultTextStyle.of(context)
-                                                                              .style
-                                                                              .apply(fontSizeFactor: 1.0),
-                                                                          children: <TextSpan>[
-                                                                        TextSpan(
-                                                                            text:
-                                                                                'Created: ',
-                                                                            style:
-                                                                                const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                                        TextSpan(
-                                                                          text: DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                                                                              .filterResults[index]
-                                                                              .createdTime),
-                                                                        )
-                                                                      ])),
-                                                                  // Text("Description: ${exchangeFilterWidget.filterResults[index].description}",
-                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Text('Contract owner: ${exchangeFilterWidget.filterResults[index].contractOwner.toString()}',
-                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Text('Contract address: ${exchangeFilterWidget.filterResults[index].contractAddress.toString()}',
-                                                                  //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                                                  // Divider(
-                                                                  //   height: 20,
-                                                                  //   thickness: 0,
-                                                                  //   indent: 40,
-                                                                  //   endIndent: 40,
-                                                                  //   color: Colors.black,
-                                                                  // ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            actions: [
-                                                              // if (tasksServices
-                                                              //         .filterResults[
-                                                              //             index]
-                                                              //         .contractOwner !=
-                                                              //     tasksServices
-                                                              //         .ownAddress &&
-                                                              //     tasksServices.ownAddress != null &&
-                                                              //     tasksServices.validChainID)
-                                                              TextButton(
-                                                                  child: Text(
-                                                                      'Participate to audit'),
-                                                                  style: TextButton.styleFrom(
-                                                                      primary:
-                                                                          Colors
-                                                                              .white,
-                                                                      backgroundColor:
-                                                                          Colors
-                                                                              .green),
-                                                                  onPressed:
-                                                                      () {
-                                                                    setState(
-                                                                        () {
-                                                                      tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .justLoaded = false;
-                                                                    });
-                                                                    tasksServices.taskParticipation(
-                                                                        tasksServices
-                                                                            .filterResults[
-                                                                                index]
-                                                                            .contractAddress,
-                                                                        tasksServices
-                                                                            .filterResults[index]
-                                                                            .nanoId);
-                                                                    Navigator.pop(
-                                                                        context);
-
-                                                                    showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder: (context) =>
-                                                                            WalletAction(
-                                                                              nanoId: tasksServices.filterResults[index].nanoId,
-                                                                              taskName: 'taskParticipation',
-                                                                            ));
-                                                                  }),
-                                                              TextButton(
-                                                                  child: Text(
-                                                                      'Close'),
-                                                                  onPressed: () =>
-                                                                      Navigator.pop(
-                                                                          context)),
-                                                            ],
-                                                          ));
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 86,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    blurRadius: 5,
-                                                    color: Color(0x4D000000),
-                                                    offset: Offset(0, 2),
-                                                  )
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  12, 8, 8, 8),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: Text(
-                                                                  // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
-                                                                  tasksServices
-                                                                      .filterResults[
-                                                                          index]
-                                                                      .title,
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .subtitle1,
-                                                                  softWrap:
-                                                                      false,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .fade,
-                                                                  maxLines: 1,
-                                                                ),
-                                                              ),
-
-                                                              // Spacer(),
-                                                              // Text(
-                                                              //   'Value: ' +
-                                                              //       tasksServices.filterResults[index].contractValue.toString()
-                                                              //   + ' Eth',
-                                                              //   style: FlutterFlowTheme.of(
-                                                              //       context)
-                                                              //       .bodyText2,
-                                                              // ),
-                                                            ],
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                              tasksServices
-                                                                  .filterResults[
-                                                                      index]
-                                                                  .description,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyText2,
-                                                              softWrap: false,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .fade,
-                                                              maxLines: 1,
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 7,
-                                                                child: Text(
-                                                                  DateFormat(
-                                                                          'MM/dd/yyyy, hh:mm a')
-                                                                      .format(tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .createdTime),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText2,
-                                                                  softWrap:
-                                                                      false,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .fade,
-                                                                  maxLines: 1,
-                                                                ),
-                                                              ),
-                                                              // Spacer(),
-                                                              // Expanded(
-                                                              //   flex: 3,
-                                                              //   child: Text(
-                                                              //     tasksServices.filterResults[
-                                                              //                 index]
-                                                              //             .contractValue
-                                                              //             .toString() +
-                                                              //         ' Eth',
-                                                              //     style: FlutterFlowTheme.of(
-                                                              //             context)
-                                                              //         .bodyText2,
-                                                              //     softWrap:
-                                                              //         false,
-                                                              //     overflow:
-                                                              //         TextOverflow
-                                                              //             .fade,
-                                                              //     maxLines: 1,
-                                                              //     textAlign:
-                                                              //         TextAlign
-                                                              //             .end,
-                                                              //   ),
-                                                              // ),
-                                                              if (tasksServices
-                                                                      .filterResults[
-                                                                          index]
-                                                                      .contractValue !=
-                                                                  0)
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                  child: Text(
-                                                                    tasksServices
-                                                                            .filterResults[index]
-                                                                            .contractValue
-                                                                            .toString() +
-                                                                        ' ETH',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText2,
-                                                                    softWrap:
-                                                                        false,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .fade,
-                                                                    maxLines: 1,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .end,
-                                                                  ),
-                                                                ),
-                                                              if (tasksServices
-                                                                      .filterResults[
-                                                                          index]
-                                                                      .contractValueToken !=
-                                                                  0)
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                  child: Text(
-                                                                    tasksServices
-                                                                            .filterResults[index]
-                                                                            .contractValueToken
-                                                                            .toString() +
-                                                                        ' aUSDC',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText2,
-                                                                    softWrap:
-                                                                        false,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .fade,
-                                                                    maxLines: 1,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .end,
-                                                                  ),
-                                                                ),
-                                                              if (tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .contractValue ==
-                                                                      0 &&
-                                                                  tasksServices
-                                                                          .filterResults[
-                                                                              index]
-                                                                          .contractValueToken ==
-                                                                      0)
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                  child: Text(
-                                                                    'Has no money',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText2,
-                                                                    softWrap:
-                                                                        false,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .fade,
-                                                                    maxLines: 1,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .end,
-                                                                  ),
-                                                                ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (tasksServices
-                                                          .filterResults[index]
-                                                          .contributorsCount !=
-                                                      0)
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 0, 18, 0),
-                                                      child: Badge(
-                                                        // position: BadgePosition.topEnd(top: 10, end: 10),
-                                                        badgeContent: Container(
-                                                          width: 17,
-                                                          height: 17,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                              tasksServices
-                                                                  .filterResults[
-                                                                      index]
-                                                                  .contributorsCount
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white)),
-                                                        ),
-                                                        badgeColor:
-                                                            Colors.green,
-                                                        animationDuration:
-                                                            Duration(
-                                                                milliseconds:
-                                                                    300),
-                                                        animationType:
-                                                            BadgeAnimationType
-                                                                .scale,
-                                                        shape:
-                                                            BadgeShape.circle,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        // child: Icon(Icons.settings),
-                                                      ),
-                                                    ),
-                                                  if (tasksServices
-                                                          .filterResults[index]
-                                                          .justLoaded ==
-                                                      false)
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 0, 12, 0),
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
+                                PendingTabWidget(tabName: 'pending'),
+                                PendingTabWidget(tabName: 'applied'),
+                                PendingTabWidget(tabName: 'working'),
+                                PendingTabWidget(tabName: 'done'),
                               ],
                             ),
                           ),
@@ -737,6 +295,368 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
           ],
         ),
       ).animated([animationsMap['containerOnPageLoadAnimation']!]),
+    );
+  }
+}
+
+class PendingTabWidget extends StatefulWidget {
+  final String tabName;
+
+  const PendingTabWidget({
+    Key? key,
+    required this.tabName,
+  }) : super(key: key);
+
+  @override
+  _PendingTabWidgetState createState() => _PendingTabWidgetState();
+}
+
+class _PendingTabWidgetState extends State<PendingTabWidget> {
+  late bool justLoaded = true;
+  late List<Task> obj;
+
+  @override
+  Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+    obj = tasksServices.filterResults;
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          tasksServices.isLoadingBackground = true;
+          tasksServices.fetchTasks();
+        },
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          scrollDirection: Axis.vertical,
+          itemCount: obj.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+              child: InkWell(
+                onTap: () {
+                setState(() {
+                  // Toggle light when tapped.
+                });
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title:
+                        Text(obj[index].title),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          // Divider(
+                          //   height: 20,
+                          //   thickness: 1,
+                          //   indent: 40,
+                          //   endIndent: 40,
+                          //   color: Colors.black,
+                          // ),
+                          RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.0),
+                                  children: <TextSpan>[
+                                const TextSpan(
+                                    text: 'Description: \n',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text: obj[index].description)
+                              ])),
+                          RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.0),
+                                  children: <TextSpan>[
+                                const TextSpan(
+                                    text: 'Contract value: \n',
+                                    style: TextStyle(
+                                        height: 2,
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text:
+                                        '${obj[index].contractValue} ETH\n',
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0)),
+                                TextSpan(
+                                    text:
+                                        '${obj[index].contractValueToken} aUSDC',
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0))
+                              ])),
+                          RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.0),
+                                  children: <TextSpan>[
+                                const TextSpan(
+                                    text: 'Contract owner: \n',
+                                    style: TextStyle(
+                                        height: 2,
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text: obj[index].contractOwner.toString(),
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 0.7))
+                              ])),
+                          RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.0),
+                                  children: <TextSpan>[
+                                const TextSpan(
+                                    text: 'Contract address: \n',
+                                    style: TextStyle(
+                                        height: 2,
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                    text: obj[index].contractAddress.toString(),
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 0.7))
+                              ])),
+                          RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.0),
+                                  children: <TextSpan>[
+                                    const TextSpan(
+                                        text: 'Performer address: \n',
+                                        style: TextStyle(
+                                            height: 2,
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(
+                                        text: obj[index].contractAddress.toString(),
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 0.7))
+                                  ])),
+                          RichText(
+                              text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 1.0),
+                                  children: <TextSpan>[
+                                const TextSpan(
+                                    text: 'Created: ',
+                                    style: TextStyle(
+                                        height: 2,
+                                        fontWeight: FontWeight.bold)),
+                                TextSpan(
+                                  text:
+                                      DateFormat('MM/dd/yyyy, hh:mm a')
+                                          .format(obj[index].createdTime),
+                                )
+                              ])),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      if(widget.tabName == 'pending')
+                      TextButton(
+                          style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.green),
+                          onPressed: () {
+                            setState(() {
+                              obj[index]
+                                  .justLoaded = false;
+                            });
+                            tasksServices.taskParticipation(
+                                obj[index]
+                                    .contractAddress,
+                                obj[index].nanoId);
+                            Navigator.pop(context);
+
+                            showDialog(
+                                context: context,
+                                builder: (context) => WalletAction(
+                                      nanoId: obj[index].nanoId,
+                                      taskName: 'taskParticipation',
+                                    ));
+                          },
+
+                          child: const Text('Apply for audit')),
+                      TextButton(
+                          child: const Text('Close'),
+                          onPressed: () => Navigator.pop(context)),
+                    ],
+                    ));
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 86,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 5,
+                        color: Color(0x4D000000),
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      // obj[index].title.length > 20 ? obj[index].title.substring(0, 20)+'...' : obj[index].title,
+                                      obj[index].title,
+                                      style: FlutterFlowTheme.of(context)
+                                          .subtitle1,
+                                      softWrap: false,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+
+                                  // Spacer(),
+                                  // Text(
+                                  //   'Value: ' +
+                                  //       obj[index].contractValue.toString()
+                                  //   + ' Eth',
+                                  //   style: FlutterFlowTheme.of(
+                                  //       context)
+                                  //       .bodyText2,
+                                  // ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Text(
+                                  obj[index].description,
+                                  style: FlutterFlowTheme.of(context).bodyText2,
+                                  softWrap: false,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 7,
+                                    child: Text(
+                                      DateFormat('MM/dd/yyyy, hh:mm a').format(
+                                          obj[index]
+                                              .createdTime),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText2,
+                                      softWrap: false,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                  if (obj[index].contractValue != 0)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        '${obj[index].contractValue} ETH',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  if (obj[index]
+                                          .contractValueToken !=
+                                      0)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        '${obj[index].contractValueToken} aUSDC',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  if (obj[index]
+                                              .contractValue == 0 &&
+                                      obj[index]
+                                              .contractValueToken == 0)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        'Has no money',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText2,
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (obj[index].contributorsCount != 0 &&
+                      widget.tabName == 'pending')
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 0, 18, 0),
+                          child: Badge(
+                            // position: BadgePosition.topEnd(top: 10, end: 10),
+                            badgeContent: Container(
+                              width: 17,
+                              height: 17,
+                              alignment: Alignment.center,
+                              child: Text(
+                                  obj[index].contributorsCount.toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ),
+                            badgeColor: Colors.green,
+                            animationDuration:
+                                const Duration(milliseconds: 300),
+                            animationType: BadgeAnimationType.scale,
+                            shape: BadgeShape.circle,
+                            borderRadius: BorderRadius.circular(5),
+                            // child: Icon(Icons.settings),
+                          ),
+                        ),
+                      if (obj[index].justLoaded ==
+                          false)
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                          child: CircularProgressIndicator(),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -543,6 +543,41 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 //               ));
                                 //     }),
 
+                                if (widget.obj[index].jobState == 'new' &&
+                                    widget.obj[index].contractOwner == tasksServices.ownAddress)
+                                  TextButton(
+                                      style: TextButton.styleFrom(
+                                          primary:
+                                          Colors
+                                              .white,
+                                          backgroundColor:
+                                          Colors
+                                              .redAccent),
+                                      onPressed:
+                                          () {
+                                        setState(
+                                                () {
+                                            widget.obj[index].justLoaded = false;
+                                            });
+                                        tasksServices.changeTaskStatus(
+                                            widget.obj[index].contractAddress,
+                                            tasksServices.zeroAddress,
+                                            'cancel',
+                                            widget.obj[index].nanoId);
+                                        Navigator.pop(context);
+
+                                        showDialog(
+                                            context:
+                                            context,
+                                            builder: (context) =>
+                                                WalletAction(
+                                                  nanoId: widget.obj[index].nanoId,
+                                                  taskName: 'taskCancel',
+                                                ));
+                                      },
+                                      child: const Text(
+                                          'Cancel')),
+
                                 if (widget.obj[index].jobState == 'review')
                                   TextButton(
                                       child: Text('Sign Review'),

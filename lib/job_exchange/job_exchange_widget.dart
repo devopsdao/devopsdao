@@ -58,8 +58,8 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
+      duration: 1,
+      delay: 1,
       hideBeforeAnimating: false,
       fadeIn: false, // changed to false(orig from FLOW true)
       initialState: AnimationState(
@@ -95,7 +95,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     var tasksServices = context.watch<TasksServices>();
     bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
-      tasksServices.resetFilter();
+      tasksServices.resetFilter(tasksServices.tasksNew);
     }
     if (tasksServices.ownAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
@@ -193,8 +193,8 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                           ),
                       child: TextField(
                         controller: _searchKeywordController,
-                        onChanged: (_searchKeyword) {
-                          tasksServices.runFilter(_searchKeyword);
+                        onChanged: (searchKeyword) {
+                          tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
                         },
                         decoration: InputDecoration(
                           hintText: '[Find task by Title...]',
@@ -405,40 +405,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                       ),
                                                     ),
                                                     actions: [
-                                                      if (tasksServices
-                                                          .filterResults[index].jobState == 'new')
-                                                        TextButton(
-                                                          child: Text(
-                                                              'Cancel'),
-                                                          style: TextButton.styleFrom(
-                                                              primary:
-                                                              Colors
-                                                                  .white,
-                                                              backgroundColor:
-                                                              Colors
-                                                                  .redAccent),
-                                                          onPressed:
-                                                              () {
-                                                            setState(
-                                                                () {
-                                                              tasksServices.filterResults[index].justLoaded = false;
-                                                            });
-                                                            tasksServices.changeTaskStatus(
-                                                              tasksServices.filterResults[index].contractAddress,
-                                                              tasksServices.zeroAddress,
-                                                              'cancel',
-                                                              tasksServices.filterResults[index].nanoId);
-                                                            Navigator.pop(context);
 
-                                                            showDialog(
-                                                                context:
-                                                                context,
-                                                                builder: (context) =>
-                                                                    WalletAction(
-                                                                      nanoId: tasksServices.filterResults[index].nanoId,
-                                                                      taskName: 'taskCancel',
-                                                                    ));
-                                                          }),
                                                       if (tasksServices
                                                               .filterResults[index]
                                                               .contractOwner !=

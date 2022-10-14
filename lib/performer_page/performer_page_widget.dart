@@ -78,7 +78,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
             ),
           ],
         ),
-        actions: [
+        actions: const [
           LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
@@ -97,11 +97,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
+      backgroundColor: const Color(0xFF1E2429),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
             stops: [0, 0.5, 1],
@@ -121,51 +121,51 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                     TabBar(
                       labelColor: Colors.white,
                       labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                      indicatorColor: Color(0xFF47CBE4),
+                      indicatorColor: const Color(0xFF47CBE4),
                       indicatorWeight: 3,
                       // isScrollable: true,
                       tabs: [
                         Tab(
+                          icon: const FaIcon(
+                            FontAwesomeIcons.smileBeam,
+                          ),
                           child: BadgeTab(
                             taskCount:
                                 tasksServices.tasksWithMyParticipation.length,
                             tabText: 'Applied for',
                           ),
-                          icon: FaIcon(
-                            FontAwesomeIcons.smileBeam,
-                          ),
                         ),
                         Tab(
+                          icon: const Icon(
+                            Icons.card_travel_outlined,
+                          ),
                           child: BadgeTab(
                             taskCount: tasksServices.tasksPerformer.length,
                             tabText: 'Working on',
                           ),
-                          icon: Icon(
-                            Icons.card_travel_outlined,
-                          ),
                         ),
                         Tab(
+                          icon: const Icon(
+                            Icons.done_outline,
+                          ),
                           child: BadgeTab(
                             taskCount: tasksServices.tasksDonePerformer.length,
                             tabText: 'Done',
-                          ),
-                          icon: Icon(
-                            Icons.done_outline,
                           ),
                         ),
                       ],
                     ),
                     tasksServices.isLoading
-                        ? LoadIndicator()
+                        ? const LoadIndicator()
                         : Expanded(
                             child: TabBarView(
                               children: [
-                                myPerformerTabWidget(
+                                MyPerformerTabWidget(
                                     obj:
                                         tasksServices.tasksWithMyParticipation),
-                                myPerformerTabWidget(
+                                MyPerformerTabWidget(
                                     obj: tasksServices.tasksPerformer),
-                                myPerformerTabWidget(
+                                MyPerformerTabWidget(
                                     obj: tasksServices.tasksDonePerformer),
                               ],
                             ),
@@ -181,18 +181,18 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
   }
 }
 
-class myPerformerTabWidget extends StatefulWidget {
+class MyPerformerTabWidget extends StatefulWidget {
   final obj;
-  const myPerformerTabWidget({
+  const MyPerformerTabWidget({
     Key? key,
     this.obj,
   }) : super(key: key);
 
   @override
-  _myPerformerTabWidget createState() => _myPerformerTabWidget();
+  _MyPerformerTabWidget createState() => _MyPerformerTabWidget();
 }
 
-class _myPerformerTabWidget extends State<myPerformerTabWidget> {
+class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
   late bool justLoaded = true;
 
   @override
@@ -200,7 +200,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
     var tasksServices = context.watch<TasksServices>();
     return Container(
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
         child: RefreshIndicator(
           onRefresh: () async {
             tasksServices.isLoadingBackground = true;
@@ -212,7 +212,7 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
             itemCount: widget.obj.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: InkWell(
                     onTap: () {
                       // setState(() {
@@ -234,9 +234,9 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0),
                                               children: <TextSpan>[
-                                            TextSpan(
+                                            const TextSpan(
                                                 text: 'Description: \n',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     height: 2,
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -252,17 +252,15 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0),
                                               children: <TextSpan>[
-                                            TextSpan(
+                                            const TextSpan(
                                                 text: 'Contract value: \n',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     height: 2,
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             TextSpan(
-                                                text: widget.obj[index]
-                                                        .contractValue
-                                                        .toString() +
-                                                    ' DEV \n',
+                                                text: '${widget.obj[index]
+                                                        .contractValue} DEV \n',
                                                 style:
                                                     DefaultTextStyle.of(context)
                                                         .style
@@ -270,10 +268,8 @@ class _myPerformerTabWidget extends State<myPerformerTabWidget> {
                                                             fontSizeFactor:
                                                                 1.0)),
                                             TextSpan(
-                                                text: widget.obj[index]
-                                                        .contractValueToken
-                                                        .toString() +
-                                                    ' aUSDC',
+                                                text: '${widget.obj[index]
+                                                        .contractValueToken} aUSDC',
                                                 style: DefaultTextStyle.of(
                                                         context)
                                                     .style

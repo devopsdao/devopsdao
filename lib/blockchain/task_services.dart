@@ -597,21 +597,21 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> runFilter(String enteredKeyword) async {
+  Future<void> runFilter(String enteredKeyword, List<Task> taskList) async {
     filterResults.clear();
     print(enteredKeyword);
     searchKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all tasks
-      filterResults = tasksNew.toList();
+      filterResults = taskList.toList();
     } else {
-      for (int i = 0; i < tasksNew.length; i++) {
-        if (tasksNew
+      for (int i = 0; i < taskList.length; i++) {
+        if (taskList
             .elementAt(i)
             .title
             .toLowerCase()
             .contains(enteredKeyword.toLowerCase())) {
-          filterResults.add(tasksNew.elementAt(i));
+          filterResults.add(taskList.elementAt(i));
         }
       }
     }
@@ -619,9 +619,9 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter() async {
+  Future<void> resetFilter(List<Task> taskList) async {
     filterResults.clear();
-    filterResults = tasksNew.toList();
+    filterResults = taskList.toList();
   }
 
   late bool loopRunning = false;
@@ -811,7 +811,7 @@ class TasksServices extends ChangeNotifier {
         isLoadingBackground = false;
         await myBalance();
         notifyListeners();
-        runFilter(searchKeyword); // reset search bar
+        // runFilter(searchKeyword); // reset search bar
       }
       loopRunning = false;
     }
