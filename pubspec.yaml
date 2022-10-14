@@ -93,6 +93,7 @@ flutter:
     - assets/rive_animations/
     - assets/pdfs/
     - build/contracts/Factory.json
+    - build/contracts/Factory.json_
     # - build/contracts/IERC20.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
