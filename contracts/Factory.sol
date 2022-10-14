@@ -115,7 +115,7 @@ contract Factory {
         address payable _participantAddress,
         string memory _state
     ) external {
-        jobArray[job.index()].jobStateChange(_participantAddress, _state);
+        jobArray[job.index()].jobStateChange(_participantAddress, _state, msg.sender);
         emit OneEventForAll(address(job), job.index());
     }
     
@@ -548,43 +548,46 @@ contract Job {
         }
     }
 
+    //todo: only allow calling child contract functions from the parent contract!!!
     function jobStateChange(
         address payable _participantAddress,
-        string memory _state
+        string memory _state,
+        address _initiatorAddress
         // string memory _message
     ) external {
-        if (msg.sender == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
+        if (_initiatorAddress == contractOwner && keccak256(bytes(jobState)) == keccak256(bytes("new")) && 
+        keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
             //TODO: LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
             jobState = "agreed";
             participantAddress = _participantAddress;
-        } else if (msg.sender == participantAddress &&
+        } else if (_initiatorAddress == participantAddress &&
             keccak256(bytes(jobState)) == keccak256(bytes("agreed")) && keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
             jobState = "progress";
-        } else if (msg.sender == participantAddress && 
+        } else if (_initiatorAddress == participantAddress && 
             keccak256(bytes(jobState)) == keccak256(bytes("progress")) && keccak256(bytes(_state)) == keccak256(bytes("review"))) {
             jobState = "review";
-        } else if (msg.sender == contractOwner && 
+        } else if (_initiatorAddress == contractOwner && 
             keccak256(bytes(jobState)) == keccak256(bytes("review")) && keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
             jobState = "completed";
-        } else if (keccak256(bytes(jobState)) == keccak256(bytes("new")) && msg.sender == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
+        } else if (keccak256(bytes(jobState)) == keccak256(bytes("new")) && _initiatorAddress == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
             jobState = "canceled";
         } else if (keccak256(bytes(_state)) == keccak256(bytes("audit"))){
-            if(msg.sender == contractOwner &&
+            if(_initiatorAddress == contractOwner &&
                 (keccak256(bytes(jobState)) == keccak256(bytes("agreed")) || keccak256(bytes(jobState)) == keccak256(bytes("progress")) || keccak256(bytes(jobState)) == keccak256(bytes("review")))){
                 jobState = "audit";
-                auditInitiator = msg.sender;
+                auditInitiator = _initiatorAddress;
                 auditState = 'requested';
             }
-            else if(msg.sender == participantAddress &&
+            else if(_initiatorAddress == participantAddress &&
                 (keccak256(bytes(jobState)) == keccak256(bytes("review"))))
 
             {
                 jobState = "audit";
-                auditInitiator = msg.sender;
+                auditInitiator = _initiatorAddress;
                 auditState = 'requested';
                 //TODO: audit history need to add 
             }
-            if(msg.sender == contractOwner &&
+            if(_initiatorAddress == contractOwner &&
                 keccak256(bytes(jobState)) == keccak256(bytes("audit")) && 
                 keccak256(bytes(auditState)) == keccak256(bytes("requested")) &&
                 AuditParticipants.length != 0){
