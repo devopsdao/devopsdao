@@ -4,7 +4,7 @@
 import 'package:webthree/webthree.dart' as _i1;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"nanoId","type":"string"},{"indexed":false,"internalType":"address","name":"jobAddress","type":"address"},{"indexed":false,"internalType":"address","name":"jobOwner","type":"address"},{"indexed":false,"internalType":"string","name":"title","type":"string"},{"indexed":false,"internalType":"string","name":"description","type":"string"},{"indexed":false,"internalType":"string","name":"symbol","type":"string"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"JobContractCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"uint256","name":"index","type":"uint256"}],"name":"OneEventForAll","type":"event"},{"inputs":[],"name":"countNew","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"gateway","outputs":[{"internalType":"contract IAxelarGateway","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"jobArray","outputs":[{"internalType":"contract Job","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"string","name":"_nanoId","type":"string"},{"internalType":"string","name":"_title","type":"string"},{"internalType":"string","name":"_description","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"createJobContract","outputs":[],"stateMutability":"payable","type":"function","payable":true},{"inputs":[],"name":"allJobs","outputs":[{"internalType":"contract Job[]","name":"_jobs","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"}],"name":"jobParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"address payable","name":"_participantAddress","type":"address"},{"internalType":"string","name":"_state","type":"string"}],"name":"jobStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"address payable","name":"addressToSend","type":"address"}],"name":"transferToaddress","outputs":[],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"address payable","name":"addressToSend","type":"address"},{"internalType":"string","name":"chain","type":"string"}],"name":"transferToaddressChain2","outputs":[],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"uint256","name":"_classIndex","type":"uint256"}],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"uint256","name":"_classIndex","type":"uint256"}],"name":"getJobInfo","outputs":[{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"string","name":"","type":"string"},{"internalType":"address[]","name":"","type":"address[]"},{"internalType":"address","name":"","type":"address"},{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function","constant":true}]',
+  '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"nanoId","type":"string"},{"indexed":false,"internalType":"address","name":"jobAddress","type":"address"},{"indexed":false,"internalType":"address","name":"jobOwner","type":"address"},{"indexed":false,"internalType":"string","name":"title","type":"string"},{"indexed":false,"internalType":"string","name":"description","type":"string"},{"indexed":false,"internalType":"string","name":"symbol","type":"string"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"JobContractCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"uint256","name":"index","type":"uint256"}],"name":"OneEventForAll","type":"event"},{"inputs":[],"name":"countNew","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[],"name":"gateway","outputs":[{"internalType":"contract IAxelarGateway","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"jobArray","outputs":[{"internalType":"contract Job","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"string","name":"_nanoId","type":"string"},{"internalType":"string","name":"_title","type":"string"},{"internalType":"string","name":"_description","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"createJobContract","outputs":[],"stateMutability":"payable","type":"function","payable":true},{"inputs":[],"name":"allJobs","outputs":[{"internalType":"contract Job[]","name":"_jobs","type":"address[]"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"}],"name":"jobParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"}],"name":"jobAuditParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"uint256","name":"_score","type":"uint256"}],"name":"jobRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"address payable","name":"_participantAddress","type":"address"},{"internalType":"string","name":"_state","type":"string"}],"name":"jobStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"string","name":"_favour","type":"string"}],"name":"jobAuditStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"address payable","name":"addressToSend","type":"address"}],"name":"transferToaddress","outputs":[],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"contract Job","name":"job","type":"address"},{"internalType":"address payable","name":"addressToSend","type":"address"},{"internalType":"string","name":"chain","type":"string"}],"name":"transferToaddressChain2","outputs":[],"stateMutability":"payable","type":"function","payable":true},{"inputs":[{"internalType":"uint256","name":"_classIndex","type":"uint256"}],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","constant":true},{"inputs":[{"internalType":"uint256","name":"_classIndex","type":"uint256"}],"name":"getJobInfo","outputs":[{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"string","name":"","type":"string"},{"internalType":"address[]","name":"","type":"address[]"},{"internalType":"address","name":"","type":"address"},{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"address[]","name":"","type":"address[]"},{"internalType":"string","name":"","type":"string"},{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","constant":true}]',
   'Factory',
 );
 
@@ -150,6 +150,48 @@ class Factory extends _i1.GeneratedContract {
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
+  Future<String> jobAuditParticipate(
+    _i1.EthereumAddress job, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[7];
+    assert(checkSignature(function, '8398eff8'));
+    final params = [job];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> jobRating(
+    _i1.EthereumAddress job,
+    BigInt _score, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[8];
+    assert(checkSignature(function, '1f04dbc0'));
+    final params = [
+      job,
+      _score,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
   Future<String> jobStateChange(
     _i1.EthereumAddress job,
     _i1.EthereumAddress _participantAddress,
@@ -157,12 +199,35 @@ class Factory extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[7];
+    final function = self.abi.functions[9];
     assert(checkSignature(function, '527ded4d'));
     final params = [
       job,
       _participantAddress,
       _state,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> jobAuditStateChange(
+    _i1.EthereumAddress job,
+    String _favour, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[10];
+    assert(checkSignature(function, '606f7072'));
+    final params = [
+      job,
+      _favour,
     ];
     return write(
       credentials,
@@ -181,7 +246,7 @@ class Factory extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[8];
+    final function = self.abi.functions[11];
     assert(checkSignature(function, '437a4f14'));
     final params = [
       job,
@@ -205,7 +270,7 @@ class Factory extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[9];
+    final function = self.abi.functions[12];
     assert(checkSignature(function, 'a7e595b8'));
     final params = [
       job,
@@ -228,7 +293,7 @@ class Factory extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[10];
+    final function = self.abi.functions[13];
     assert(checkSignature(function, '1e010439'));
     final params = [_classIndex];
     final response = await read(
@@ -248,7 +313,7 @@ class Factory extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[11];
+    final function = self.abi.functions[14];
     assert(checkSignature(function, '7f4497d8'));
     final params = [_classIndex];
     final response = await read(
@@ -316,7 +381,11 @@ class GetJobInfo {
         var9 = (response[8] as List<dynamic>).cast<_i1.EthereumAddress>(),
         var10 = (response[9] as _i1.EthereumAddress),
         var11 = (response[10] as String),
-        var12 = (response[11] as String);
+        var12 = (response[11] as String),
+        var13 = (response[12] as BigInt),
+        var14 = (response[13] as List<dynamic>).cast<_i1.EthereumAddress>(),
+        var15 = (response[14] as String),
+        var16 = (response[15] as _i1.EthereumAddress);
 
   final String var1;
 
@@ -341,6 +410,14 @@ class GetJobInfo {
   final String var11;
 
   final String var12;
+
+  final BigInt var13;
+
+  final List<_i1.EthereumAddress> var14;
+
+  final String var15;
+
+  final _i1.EthereumAddress var16;
 }
 
 class JobContractCreated {
