@@ -49,18 +49,18 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
-  Map<String, Task> tasksOwner = {};
-  Map<String, Task> tasksWithMyParticipation = {};
-  Map<String, Task> tasksPerformer = {};
-  Map<String, Task> tasksAgreedSubmitter = {};
-  Map<String, Task> tasksProgressSubmitter = {};
-  Map<String, Task> tasksReviewSubmitter = {};
-  Map<String, Task> tasksDoneSubmitter = {};
-  Map<String, Task> tasksDonePerformer = {};
   Map<String, Task> tasksAuditPending = {};
   Map<String, Task> tasksAuditApplied = {};
   Map<String, Task> tasksAuditWorkingOn = {};
-  Map<String, Task> tasksAuditDone = {};
+  Map<String, Task> tasksAuditComplete = {};
+
+  Map<String, Task> tasksPerformerParticipate = {};
+  Map<String, Task> tasksPerformerProgress = {};
+  Map<String, Task> tasksPerformerComplete = {};
+
+  Map<String, Task> tasksCustomerApplied = {};
+  Map<String, Task> tasksCustomerWorking = {};
+  Map<String, Task> tasksCustomerComplete = {};
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
@@ -714,7 +714,7 @@ class TasksServices extends ChangeNotifier {
             auditParticipation: task[15]
           );
 
-          taskLoaded = task[6].toInt(); // this count we need to show the loading process. does not affect anything else
+          taskLoaded = task[6].toInt()+1; // this count we need to show the loading process. does not affect anything else
 
           notifyListeners();
           if (task[1] != "") {
@@ -724,21 +724,24 @@ class TasksServices extends ChangeNotifier {
         }
       }
 
+      taskLoaded = 0;
+
       if (loopRunning) {
         filterResults.clear();
         tasksNew.clear();
-        tasksOwner.clear();
-        tasksWithMyParticipation.clear();
-        tasksPerformer.clear();
-        tasksAgreedSubmitter.clear();
-        tasksReviewSubmitter.clear();
-        tasksDonePerformer.clear();
-        tasksDoneSubmitter.clear();
-        tasksProgressSubmitter.clear();
+
         tasksAuditPending.clear();
         tasksAuditApplied.clear();
         tasksAuditWorkingOn.clear();
-        tasksAuditDone.clear();
+        tasksAuditComplete.clear();
+
+        tasksCustomerApplied.clear();
+        tasksCustomerWorking.clear();
+        tasksCustomerComplete.clear();
+
+        tasksPerformerParticipate.clear();
+        tasksPerformerProgress.clear();
+        tasksPerformerComplete.clear();
 
         pendingBalance = 0;
         pendingBalanceToken = 0;
@@ -749,6 +752,7 @@ class TasksServices extends ChangeNotifier {
           // for (var k = 0; k < tasks.length; k++) {
           // final task = tasks[k];
 
+          // Who participate in the TASK:
           if (task.participiant == ownAddress) {
             // Calculate Pending among:
             if ((task.contractValue != 0 || task.contractValueToken != 0)) {
@@ -767,10 +771,22 @@ class TasksServices extends ChangeNotifier {
               scoredTaskCount++;
             }
           }
+          if (task.jobState != "" &&
+              (task.jobState == "agreed" ||
+                  task.jobState == "progress" ||
+                  task.jobState == "review" ||
+                  task.jobState == "audit")) {
+            if (task.contractOwner == ownAddress) {
+              tasksCustomerWorking[task.nanoId] = task;
+            } else if (task.participiant == ownAddress) {
+              tasksPerformerProgress[task.nanoId] = task;
+            }
+          }
 
+          // New TASKs for all users:
           if (task.jobState != "" && task.jobState == "new") {
             if (task.contractOwner == ownAddress) {
-              tasksOwner[task.nanoId] = task;
+              tasksCustomerApplied[task.nanoId] = task;
             } else if (task.contributors.isNotEmpty) {
               var taskExist = false;
               for (var p = 0; p < task.contributors.length; p++) {
@@ -779,7 +795,7 @@ class TasksServices extends ChangeNotifier {
                 }
               }
               if (taskExist) {
-                tasksWithMyParticipation[task.nanoId] = task;
+                tasksPerformerParticipate[task.nanoId] = task;
               } else {
                 tasksNew[task.nanoId] = task;
                 filterResults[task.nanoId] = task;
@@ -794,39 +810,21 @@ class TasksServices extends ChangeNotifier {
             }
           }
 
-          if (task.jobState != "" && task.jobState == "agreed") {
-            if (task.contractOwner == ownAddress) {
-              tasksAgreedSubmitter[task.nanoId] = task;
-            } else if (task.participiant == ownAddress) {
-              tasksPerformer[task.nanoId] = task;
-            }
-          }
 
-          if (task.jobState != "" && task.jobState == "progress") {
-            if (task.contractOwner == ownAddress) {
-              tasksProgressSubmitter[task.nanoId] = task;
-            } else if (task.participiant == ownAddress) {
-              tasksPerformer[task.nanoId] = task;
-            }
-          }
-
-          if (task.jobState != "" && task.jobState == "review") {
-            if (task.contractOwner == ownAddress) {
-              tasksReviewSubmitter[task.nanoId] = task;
-            } else if (task.participiant == ownAddress) {
-              tasksPerformer[task.nanoId] = task;
-            }
-          }
           if (task.jobState != "" &&
               (task.jobState == "completed" || task.jobState == "canceled")) {
             if (task.contractOwner == ownAddress) {
-              tasksDoneSubmitter[task.nanoId] = task;
+              tasksCustomerComplete[task.nanoId] = task;
             } else if (task.participiant == ownAddress) {
-              tasksDonePerformer[task.nanoId] = task;
+              tasksPerformerComplete[task.nanoId] = task;
             }
           }
+
           // **** AUDIT ****
+          // For auditors:
           if (task.jobState == "audit") {
+
+            // Auditor side:
             if (task.auditState == "requested") {
               tasksAuditPending[task.nanoId] = task;
             } else if (task.auditContributors.isNotEmpty) {
@@ -847,12 +845,10 @@ class TasksServices extends ChangeNotifier {
               if (task.auditState == "performing") {
                 tasksAuditWorkingOn[task.nanoId] = task;
               } else if (task.auditState == "complete" || task.auditState == "finished") {
-                tasksAuditDone[task.nanoId] = task;
+                tasksAuditComplete[task.nanoId] = task;
               }
             }
-
           }
-
         }
 
         // Final Score Calculation

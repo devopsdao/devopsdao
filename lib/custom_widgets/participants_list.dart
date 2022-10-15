@@ -8,9 +8,10 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 
 class ParticipantList extends StatefulWidget {
-  final Task object;
+  final String listType;
+  final Task obj;
 
-  const ParticipantList({Key? key, required this.object}) : super(key: key);
+  const ParticipantList({Key? key, required this.obj, required this.listType}) : super(key: key);
 
   @override
   _ParticipantListState createState() => _ParticipantListState();
@@ -19,9 +20,16 @@ class ParticipantList extends StatefulWidget {
 class _ParticipantListState extends State<ParticipantList> {
   bool _buttonState = false;
 
+  late List contributorsList;
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    if (widget.listType == 'submitter') {
+      contributorsList = widget.obj.contributors;
+    } else if(widget.listType == 'auditor') {
+      contributorsList = widget.obj.auditContributors;
+    }
 
     return Container(
       height: 300.0, // Change as per your requirement
@@ -31,7 +39,7 @@ class _ParticipantListState extends State<ParticipantList> {
           // scrollDirection: Axis.vertical,
           // shrinkWrap: true,
           // physics: NeverScrollableScrollPhysics(),
-          itemCount: widget.object.contributors.length,
+          itemCount: contributorsList.length,
           itemBuilder: (context2, index2) {
             return Column(children: [
               // Text(
@@ -46,24 +54,24 @@ class _ParticipantListState extends State<ParticipantList> {
                 ),
                 onPressed: () {
                   setState(() {
-                    widget.object.justLoaded = false;
+                    widget.obj.justLoaded = false;
                   });
                   tasksServices.changeTaskStatus(
-                      widget.object.contractAddress,
-                      widget.object.contributors[index2],
+                      widget.obj.contractAddress,
+                      contributorsList[index2],
                       'agreed',
-                      widget.object.nanoId);
+                      widget.obj.nanoId);
                   Navigator.pop(context);
 
                   showDialog(
                       context: context,
                       builder: (context) => WalletAction(
-                            nanoId: widget.object.nanoId,
+                            nanoId: widget.obj.nanoId,
                             taskName: 'changeTaskStatus',
                           ));
                 },
                 child: Text(
-                  widget.object.contributors[index2].toString(),
+                  contributorsList[index2].toString(),
                   style: DefaultTextStyle.of(context)
                       .style
                       .apply(fontSizeFactor: 0.7),

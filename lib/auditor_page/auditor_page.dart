@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
+import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/wallet_action.dart';
@@ -99,11 +100,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
     bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       if(tabIndex == 0) {
-        tasksServices.resetFilter(tasksServices.tasksNew);
+        tasksServices.resetFilter(tasksServices.tasksAuditPending);
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(tasksServices.tasksWithMyParticipation);
+        tasksServices.resetFilter(tasksServices.tasksAuditApplied);
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(tasksServices.tasksDonePerformer);
+        tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
+      } else if (tabIndex == 3) {
+        tasksServices.resetFilter(tasksServices.tasksAuditComplete);
       }
     }
     if (tasksServices.ownAddress != null && tasksServices.validChainID) {
@@ -189,27 +192,43 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                         _searchKeywordController.clear();
                         tabIndex = index;
                         if(index == 0) {
-                          tasksServices.resetFilter(tasksServices.tasksNew);
+                          tasksServices.resetFilter(tasksServices.tasksAuditPending);
                         } else if (index == 1) {
-                          tasksServices.resetFilter(tasksServices.tasksWithMyParticipation);
+                          tasksServices.resetFilter(tasksServices.tasksAuditApplied);
                         } else if (index == 2) {
-                          tasksServices.resetFilter(tasksServices.tasksDonePerformer);
+                          tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
                         } else if (index == 3) {
-                          tasksServices.resetFilter(tasksServices.tasksDonePerformer);
+                          tasksServices.resetFilter(tasksServices.tasksAuditComplete);
                         }
                       },
-                      tabs: const [
+                      tabs: [
                         Tab(
-                          text: 'Pending',
+                          child: BadgeTab(
+                            taskCount:
+                            tasksServices.tasksAuditPending.length,
+                            tabText: 'Pending',
+                          ),
                         ),
                         Tab(
-                          text: 'Applied for',
+                          child: BadgeTab(
+                            taskCount:
+                            tasksServices.tasksAuditApplied.length,
+                            tabText: 'Applied',
+                          ),
                         ),
                         Tab(
-                          text: 'Working on',
+                          child: BadgeTab(
+                            taskCount:
+                            tasksServices.tasksAuditWorkingOn.length,
+                            tabText: 'Working',
+                          ),
                         ),
                         Tab(
-                          text: 'Done',
+                          child: BadgeTab(
+                            taskCount:
+                            tasksServices.tasksAuditComplete.length,
+                            tabText: 'Complete',
+                          ),
                         ),
                       ],
                     ),
@@ -226,13 +245,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                         onChanged: (searchKeyword) {
                           print(tabIndex);
                           if(tabIndex == 0) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditPending);
                           } else if (tabIndex == 1) {
                             tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
                           } else if (tabIndex == 2) {
                             tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditWorkingOn);
                           } else if (tabIndex == 3) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditDone);
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditComplete);
                           }
                         },
                         decoration: const InputDecoration(
@@ -452,7 +471,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                             height: 2,
                                             fontWeight: FontWeight.bold)),
                                     TextSpan(
-                                        text: obj!.values.toList()[index].contractAddress.toString(),
+                                        text: obj!.values.toList()[index].participiant.toString(),
                                         style: DefaultTextStyle.of(context)
                                             .style
                                             .apply(fontSizeFactor: 0.7))
@@ -478,7 +497,11 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                       ),
                     ),
                     actions: [
-                      if(widget.tabName == 'pending')
+                      if(widget.tabName == 'pending' &&
+                          obj!.values.toList()[index].contractOwner
+                              != tasksServices.ownAddress &&
+                          obj!.values.toList()[index].participiant
+                              != tasksServices.ownAddress)
                       TextButton(
                           style: TextButton.styleFrom(
                               primary: Colors.white,

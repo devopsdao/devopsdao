@@ -34,29 +34,26 @@ class _BadgeTabState extends State<BadgeTab> {
           // Expanded(
           //   flex: 1,
           //   child:
-            Badge(
-            badgeContent: Container(
-              width: 9,
-              height: 11,
-              alignment: Alignment.center,
-              child: Text(
-                  widget.taskCount.toString(),
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 9, color: Colors.white)
-              ),
+        Badge(
+          badgeContent: Container(
+            width: 9,
+            height: 11,
+            alignment: Alignment.center,
+            child: Text(
+                widget.taskCount.toString(),
+                style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 9, color: Colors.white)
             ),
           ),
-    // ),
+        ),
         Expanded(
           flex: 1,
           child:
-          Text(' ${widget.taskCount > 0 ? ' ' + widget.tabText : widget.tabText}',
+          Text(' ${widget.taskCount > 0 ? ' ${widget.tabText}' : widget.tabText}',
             softWrap: false,
             overflow: TextOverflow.fade,
             maxLines: 1,
             textAlign: TextAlign.center,),
         )
-
-
       ],
     );
   }
