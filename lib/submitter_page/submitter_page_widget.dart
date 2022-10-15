@@ -138,7 +138,7 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
           children: [
             Expanded(
               child: DefaultTabController(
-                length: 5,
+                length: 3,
                 initialIndex: 0,
                 child: Column(
                   children: [
@@ -151,33 +151,21 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                       tabs: [
                         Tab(
                           child: BadgeTab(
-                            taskCount: tasksServices.tasksOwner.length,
+                            taskCount: tasksServices.tasksCustomerApplied.length,
                             tabText: 'Selection',
                           ),
                         ),
                         Tab(
                           child: BadgeTab(
                               taskCount:
-                                  tasksServices.tasksAgreedSubmitter.length,
-                              tabText: 'Agreed'),
-                        ),
-                        Tab(
-                          child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksProgressSubmitter.length,
+                                  tasksServices.tasksCustomerWorking.length,
                               tabText: 'Progress'),
                         ),
                         Tab(
                           child: BadgeTab(
                               taskCount:
-                                  tasksServices.tasksReviewSubmitter.length,
-                              tabText: 'Review'),
-                        ),
-                        Tab(
-                          child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksDoneSubmitter.length,
-                              tabText: 'Done'),
+                                  tasksServices.tasksCustomerComplete.length,
+                              tabText: 'Complete'),
                         ),
                       ],
                     ),
@@ -187,19 +175,11 @@ class _SubmitterPageWidgetState extends State<SubmitterPageWidget>
                             child: TabBarView(
                               children: [
                                 mySubmitterTabWidget(
-                                    obj: tasksServices.tasksOwner), //new
+                                    obj: tasksServices.tasksCustomerApplied), //new
                                 mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksAgreedSubmitter), //agreed
+                                    obj: tasksServices.tasksCustomerWorking), //agreed
                                 mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksProgressSubmitter), //progress
-                                mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksReviewSubmitter), //review
-                                mySubmitterTabWidget(
-                                    obj: tasksServices
-                                        .tasksDoneSubmitter), //completed & canceled
+                                    obj: tasksServices.tasksCustomerComplete), //completed & canceled
                               ],
                             ),
                           ),
@@ -228,13 +208,13 @@ class mySubmitterTabWidget extends StatefulWidget {
 class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   late bool justLoaded = true;
   bool enableRatingButton = false;
-
   double ratingScore = 0;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var Interface = context.watch<InterfaceServices>();
+    List objList = widget.obj!.values .toList();
     // TODO: implement build
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
@@ -259,7 +239,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                         context: context,
                         builder: (context) => AlertDialog(
                               title: Text(
-                                  widget.obj!.values.toList()[index].title),
+                                  objList[index].title),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -299,7 +279,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
                                               text:
-                                                  '${widget.obj!.values.toList()[index].contractValue} DEV \n',
+                                                  '${objList[index].contractValue} DEV \n',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -307,7 +287,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                           fontSizeFactor: 1.0)),
                                           TextSpan(
                                               text:
-                                                  '${widget.obj!.values.toList()[index].contractValueToken} aUSDC',
+                                                  '${objList[index].contractValueToken} aUSDC',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -326,8 +306,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                              text: widget.obj!.values
-                                                  .toList()[index]
+                                              text: objList[index]
                                                   .contractOwner
                                                   .toString(),
                                               style:
@@ -348,8 +327,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                   height: 2,
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                              text: widget.obj!.values
-                                                  .toList()[index]
+                                              text: objList[index]
                                                   .contractAddress
                                                   .toString(),
                                               style:
@@ -372,8 +350,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           TextSpan(
                                               text: DateFormat(
                                                       'MM/dd/yyyy, hh:mm a')
-                                                  .format(widget.obj!.values
-                                                      .toList()[index]
+                                                  .format(objList[index]
                                                       .createdTime),
                                               style:
                                                   DefaultTextStyle.of(context)
@@ -381,8 +358,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0))
                                         ])),
-                                    if (widget.obj!.values
-                                            .toList()[index]
+                                    if (objList[index]
                                             .jobState ==
                                         'completed')
                                       RichText(
@@ -400,8 +376,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                     fontWeight:
                                                         FontWeight.bold)),
                                           ])),
-                                    if (widget.obj!.values
-                                            .toList()[index]
+                                    if (objList[index]
                                             .jobState ==
                                         'completed')
                                       Column(
@@ -445,10 +420,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     //   endIndent: 40,
                                     //   color: Colors.black,
                                     // ),
-                                    if (widget.obj!.values
-                                            .toList()[index]
-                                            .jobState ==
-                                        "new")
+                                    if (objList[index].jobState == "new")
                                       // Text('Choose contractor: ',
                                       //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
                                       RichText(
@@ -466,17 +438,35 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                     fontWeight:
                                                         FontWeight.bold)),
                                           ])),
+                                    if (objList[index].jobState == "audit")
+                                    // Text('Choose contractor: ',
+                                    //   style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
+                                      RichText(
+                                          text: TextSpan(
+                                              style:
+                                              DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(
+                                                  fontSizeFactor: 1.0),
+                                              children: const <TextSpan>[
+                                                TextSpan(
+                                                    text: 'Warning, this contract on Audit state \n '
+                                                        'Please choose auditor: ',
+                                                    style: TextStyle(
+                                                        height: 2,
+                                                        fontWeight:
+                                                        FontWeight.bold)),
+                                              ])),
 
-                                    // if (widget.obj!.values.toList()[index].jobState != "new" )
-                                    // Text('text',
-                                    // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),),
-                                    if (widget.obj!.values
-                                            .toList()[index]
-                                            .jobState ==
-                                        "new")
+                                    if (objList[index].jobState == "new")
                                       ParticipantList(
-                                        object:
-                                            widget.obj!.values.toList()[index],
+                                        listType: 'submitter',
+                                        obj: objList[index],
+                                      ),
+                                    if (objList[index].jobState == "audit")
+                                      ParticipantList(
+                                        listType: 'audit',
+                                        obj: objList[index],
                                       )
                                   ],
                                 ),
@@ -498,8 +488,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                 TextButton(
                                                   onPressed: () {
                                                     tasksServices.addTokens(
-                                                        widget.obj!.values
-                                                            .toList()[index]
+                                                        objList[index]
                                                             .contractAddress,
                                                         Interface.tokensEntered,
                                                         widget.obj!.values
@@ -511,9 +500,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                         context: context,
                                                         builder: (context) =>
                                                             WalletAction(
-                                                              nanoId: widget
-                                                                  .obj!.values
-                                                                  .toList()[
+                                                              nanoId: objList[
                                                                       index]
                                                                   .nanoId,
                                                               taskName:
@@ -545,24 +532,23 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 //         backgroundColor: Colors.green),
                                 //     onPressed: () {
                                 //       setState(() {
-                                //         widget.obj!.values.toList()[index].justLoaded = false;
+                                //         objList[index].justLoaded = false;
                                 //       });
                                 //       tasksServices.withdrawToChain(
-                                //           widget.obj!.values.toList()[index].contractAddress,
-                                //           widget.obj!.values.toList()[index].nanoId);
+                                //           objList[index].contractAddress,
+                                //           objList[index].nanoId);
                                 //       Navigator.pop(context);
                                 //
                                 //       showDialog(
                                 //           context: context,
                                 //           builder: (context) => WalletAction(
                                 //                 nanoId:
-                                //                     widget.obj!.values.toList()[index].nanoId,
+                                //                     objList[index].nanoId,
                                 //                 taskName: 'withdrawToChain',
                                 //               ));
                                 //     }),
 
-                                if (widget.obj!.values
-                                        .toList()[index]
+                                if (objList[index]
                                         .jobState ==
                                     'review')
                                   TextButton(
@@ -572,36 +558,28 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           backgroundColor: Colors.green),
                                       onPressed: () {
                                         setState(() {
-                                          widget.obj!.values
-                                              .toList()[index]
+                                          objList[index]
                                               .justLoaded = false;
                                         });
                                         tasksServices.changeTaskStatus(
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .contractAddress,
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .participiant,
                                             'completed',
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .nanoId);
                                         Navigator.pop(context);
 
                                         showDialog(
                                             context: context,
                                             builder: (context) => WalletAction(
-                                                  nanoId: widget.obj!.values
-                                                      .toList()[index]
+                                                  nanoId: objList[index]
                                                       .nanoId,
                                                   taskName: 'changeTaskStatus',
                                                 ));
                                       }),
-                                if (widget.obj!.values
-                                        .toList()[index]
-                                        .jobState ==
-                                    'completed')
+                                if (objList[index].jobState == 'completed')
                                   TextButton(
                                       child: const Text('Rate this task'),
                                       style: TextButton.styleFrom(
@@ -609,41 +587,33 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           disabledBackgroundColor:
                                               Colors.white10,
                                           backgroundColor: Colors.green),
-                                      onPressed: (widget.obj!.values
-                                                      .toList()[index]
+                                      onPressed: (objList[index]
                                                       .score ==
                                                   0 &&
                                               enableRatingButton)
                                           ? () {
                                               setState(() {
-                                                widget.obj!.values
-                                                    .toList()[index]
+                                                objList[index]
                                                     .justLoaded = false;
                                               });
                                               tasksServices.rateTask(
-                                                  widget.obj!.values
-                                                      .toList()[index]
+                                                  objList[index]
                                                       .contractAddress,
                                                   ratingScore,
-                                                  widget.obj!.values
-                                                      .toList()[index]
-                                                      .nanoId);
+                                                  objList[index].nanoId);
                                               Navigator.pop(context);
 
                                               showDialog(
                                                   context: context,
                                                   builder: (context) =>
                                                       WalletAction(
-                                                        nanoId: widget
-                                                            .obj!.values
-                                                            .toList()[index]
+                                                        nanoId: objList[index]
                                                             .nanoId,
                                                         taskName: 'rateTask',
                                                       ));
                                             }
                                           : null),
-                                if (widget.obj!.values
-                                        .toList()[index]
+                                if (objList[index]
                                         .jobState ==
                                     "progress")
                                   TextButton(
@@ -653,45 +623,39 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           backgroundColor: Colors.orangeAccent),
                                       onPressed: () {
                                         setState(() {
-                                          widget.obj!.values
-                                              .toList()[index]
+                                          objList[index]
                                               .justLoaded = false;
                                         });
                                         tasksServices.changeTaskStatus(
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .contractAddress,
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .participiant,
                                             'audit',
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .nanoId);
                                         Navigator.pop(context);
 
                                         showDialog(
-                                            context: context,
-                                            builder: (context) => WalletAction(
-                                                  nanoId: widget.obj!.values
-                                                      .toList()[index]
-                                                      .nanoId,
-                                                  taskName: 'changeTaskStatus',
-                                                ));
+                                          context: context,
+                                          builder: (context) => WalletAction(
+                                              nanoId: objList[index].nanoId,
+                                              taskName: 'changeTaskStatus',
+                                            ));
                                       }),
                                 TextButton(
                                     child: const Text('Close'),
                                     onPressed: () => Navigator.pop(context)),
-                                // if (widget.obj!.values.toList()[index].jobState == 'completed')
+                                // if (objList[index].jobState == 'completed')
 
                                 //   TextButton(
                                 //     child: Text('Withdraw'),
                                 //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
                                 //     onPressed: () {
                                 //       setState(() {
-                                //         widget.obj!.values.toList()[index].justLoaded = false;
+                                //         objList[index].justLoaded = false;
                                 //       });
-                                //       tasksServices.withdraw(widget.obj!.values.toList()[index].contractAddress);
+                                //       tasksServices.withdraw(objList[index].contractAddress);
                                 //       Navigator.pop(context);
                                 //
                                 //       showDialog(
@@ -716,7 +680,21 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                     width: double.infinity,
                     height: 86,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: (() {
+                        if (objList[index].jobState == "agreed") {
+                          return Colors.white;
+                        } else if (objList[index].jobState == "review") {
+                          return Colors.lightGreen.shade200;
+                        } else if (objList[index].jobState == "progress") {
+                          return Colors.blueGrey;
+                        } else if (objList[index].jobState == "canceled") {
+                          return Colors.orange;
+                        } else if (objList[index].jobState == "audit") {
+                          return Colors.orangeAccent;
+                        } else {
+                          return Colors.white;
+                        }
+                      }()),
                       boxShadow: const [
                         BoxShadow(
                           blurRadius: 5,
@@ -742,8 +720,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     Expanded(
                                       flex: 7,
                                       child: Text(
-                                        widget.obj!.values
-                                            .toList()[index]
+                                        objList[index]
                                             .title,
                                         style: FlutterFlowTheme.of(context)
                                             .subtitle1,
@@ -756,8 +733,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        widget.obj!.values
-                                            .toList()[index]
+                                        objList[index]
                                             .jobState,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
@@ -770,15 +746,14 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                   ],
                                 ),
                                 // Text(
-                                //   widget.obj!.values.toList()[index].title,
+                                //   objList[index].title,
                                 //   style: FlutterFlowTheme.of(context).subtitle1,
                                 // ),
                                 Row(
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        widget.obj!.values
-                                            .toList()[index]
+                                        objList[index]
                                             .description,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
@@ -795,8 +770,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       flex: 7,
                                       child: Text(
                                         DateFormat('MM/dd/yyyy, hh:mm a')
-                                            .format(widget.obj!.values
-                                                .toList()[index]
+                                            .format(objList[index]
                                                 .createdTime),
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
@@ -806,14 +780,13 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                       ),
                                     ),
                                     // Spacer(),
-                                    if (widget.obj!.values
-                                            .toList()[index]
+                                    if (objList[index]
                                             .contractValue !=
                                         0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          '${widget.obj!.values.toList()[index].contractValue} ETH',
+                                          '${objList[index].contractValue} ETH',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
@@ -822,14 +795,13 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-                                    if (widget.obj!.values
-                                            .toList()[index]
+                                    if (objList[index]
                                             .contractValueToken !=
                                         0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          '${widget.obj!.values.toList()[index].contractValueToken} aUSDC',
+                                          '${objList[index].contractValueToken} aUSDC',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
@@ -838,12 +810,10 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-                                    if (widget.obj!.values
-                                                .toList()[index]
+                                    if (objList[index]
                                                 .contractValue ==
                                             0 &&
-                                        widget.obj!.values
-                                                .toList()[index]
+                                        objList[index]
                                                 .contractValueToken ==
                                             0)
                                       Expanded(
@@ -864,11 +834,10 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             ),
                           ),
                         ),
-                        if (widget.obj!.values
-                                    .toList()[index]
+                        if (objList[index]
                                     .contributorsCount !=
                                 0 &&
-                            widget.obj!.values.toList()[index].jobState ==
+                            objList[index].jobState ==
                                 "new")
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -880,8 +849,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                 height: 17,
                                 alignment: Alignment.center,
                                 child: Text(
-                                    widget.obj!.values
-                                        .toList()[index]
+                                    objList[index]
                                         .contributorsCount
                                         .toString(),
                                     style: const TextStyle(
@@ -896,7 +864,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               // child: Icon(Icons.settings),
                             ),
                           ),
-                        if (widget.obj!.values.toList()[index].justLoaded ==
+                        if (objList[index].justLoaded ==
                             false)
                           const Padding(
                             padding:

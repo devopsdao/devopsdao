@@ -229,7 +229,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                         context: context,
                         builder: (context) => AlertDialog(
                               title: Text(
-                                  widget.obj!.values.toList()[index].title),
+                                  objList[index].title),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -262,7 +262,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                   fontWeight: FontWeight.bold)),
                                           TextSpan(
                                               text:
-                                                  '${widget.obj!.values.toList()[index].contractValue} DEV \n',
+                                                  '${objList[index].contractValue} DEV \n',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -270,7 +270,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                           fontSizeFactor: 1.0)),
                                           TextSpan(
                                               text:
-                                                  '${widget.obj!.values.toList()[index].contractValueToken} aUSDC',
+                                                  '${objList[index].contractValueToken} aUSDC',
                                               style:
                                                   DefaultTextStyle.of(context)
                                                       .style
@@ -374,8 +374,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                       .apply(
                                                           fontSizeFactor: 1.0))
                                         ])),
-                                    if (widget.obj!.values
-                                                .toList()[index]
+                                    if (objList[index]
                                                 .jobState ==
                                             "completed" &&
                                         (widget.obj!.values
@@ -388,14 +387,13 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                 0))
                                       SelectNetworkMenu(
                                         object:
-                                            widget.obj!.values.toList()[index],
+                                            objList[index],
                                       )
                                   ],
                                 ),
                               ),
                               actions: [
-                                if (widget.obj!.values
-                                        .toList()[index]
+                                if (objList[index]
                                         .jobState ==
                                     "agreed")
                                   TextButton(
@@ -404,20 +402,16 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                           backgroundColor: Colors.green),
                                       onPressed: () {
                                         setState(() {
-                                          widget.obj!.values
-                                              .toList()[index]
+                                          objList[index]
                                               .justLoaded = false;
                                         });
                                         tasksServices.changeTaskStatus(
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .contractAddress,
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .participiant,
                                             'progress',
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .nanoId);
                                         Navigator.pop(context);
 
@@ -431,8 +425,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                 ));
                                       },
                                       child: const Text('Start the job')),
-                                if (widget.obj!.values
-                                        .toList()[index]
+                                if (objList[index]
                                         .jobState ==
                                     "progress")
                                   TextButton(
@@ -441,20 +434,16 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                           backgroundColor: Colors.green),
                                       onPressed: () {
                                         setState(() {
-                                          widget.obj!.values
-                                              .toList()[index]
+                                          objList[index]
                                               .justLoaded = false;
                                         });
                                         tasksServices.changeTaskStatus(
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .contractAddress,
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .participiant,
                                             'review',
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .nanoId);
                                         Navigator.pop(context);
 
@@ -468,8 +457,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                 ));
                                       },
                                       child: const Text('Review')),
-                                if (widget.obj!.values
-                                        .toList()[index]
+                                if (objList[index]
                                         .jobState ==
                                     "review")
                                   TextButton(
@@ -478,20 +466,16 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                           backgroundColor: Colors.orangeAccent),
                                       onPressed: () {
                                         setState(() {
-                                          widget.obj!.values
-                                              .toList()[index]
+                                          objList[index]
                                               .justLoaded = false;
                                         });
                                         tasksServices.changeTaskStatus(
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .contractAddress,
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .participiant,
                                             'audit',
-                                            widget.obj!.values
-                                                .toList()[index]
+                                            objList[index]
                                                 .nanoId);
                                         Navigator.pop(context);
 
@@ -505,21 +489,18 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                 ));
                                       },
                                       child: const Text('Request audit')),
-                                if (widget.obj!.values
-                                            .toList()[index]
+                                if (objList[index]
                                             .jobState ==
                                         "completed" &&
-                                    (widget.obj!.values
-                                                .toList()[index]
+                                    (objList[index]
                                                 .contractValue !=
                                             0 ||
-                                        widget.obj!.values
-                                                .toList()[index]
+                                        objList[index]
                                                 .contractValueToken !=
                                             0))
                                   WithdrawButton(
                                       object:
-                                          widget.obj!.values.toList()[index]),
+                                          objList[index]),
                                 // TextButton(
                                 //     child: Text('Withdraw'),
                                 //     style: TextButton.styleFrom(
@@ -527,30 +508,30 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                 //         disabledBackgroundColor: Colors.white10,
                                 //         backgroundColor: Colors.green),
                                 //     onPressed: false ? () {
-                                //       if (widget.obj!.values.toList()[index].jobState ==
+                                //       if (objList[index].jobState ==
                                 //           "completed" &&
-                                //           (widget.obj!.values.toList()[index].contractValue != 0 ||
-                                //               widget.obj!.values.toList()[index].contractValueToken != 0)) {
+                                //           (objList[index].contractValue != 0 ||
+                                //               objList[index].contractValueToken != 0)) {
                                 //         setState(() {
-                                //           widget.obj!.values.toList()[index].justLoaded = false;
+                                //           objList[index].justLoaded = false;
                                 //         });
                                 //         tasksServices.withdrawToChain(
-                                //             widget.obj!.values.toList()[index].contractAddress,
-                                //             widget.obj!.values.toList()[index].nanoId);
+                                //             objList[index].contractAddress,
+                                //             objList[index].nanoId);
                                 //         Navigator.pop(context);
                                 //
                                 //         showDialog(
                                 //             context: context,
                                 //             builder: (context) => WalletAction(
                                 //               nanoId:
-                                //               widget.obj!.values.toList()[index].nanoId,
+                                //               objList[index].nanoId,
                                 //               taskName: 'withdrawToChain',
                                 //             ));
                                 //       }
                                 //     } : null),
-                                // if (widget.obj!.values.toList()[index].jobState ==
+                                // if (objList[index].jobState ==
                                 //         "completed" &&
-                                //     widget.obj!.values.toList()[index].contractValue != 0)
+                                //     objList[index].contractValue != 0)
                                 // TextButton(
                                 //     child: Text('Withdraw'),
                                 //     style: TextButton.styleFrom(
@@ -558,12 +539,12 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                 //         backgroundColor: Colors.green),
                                 //     onPressed: () {
                                 //       setState(() {
-                                //         widget.obj!.values.toList()[index].justLoaded =
+                                //         objList[index].justLoaded =
                                 //             false;
                                 //       });
                                 //       tasksServices.withdraw(
-                                //           widget.obj!.values.toList()[index].contractAddress,
-                                //           widget.obj!.values.toList()[index].nanoId);
+                                //           objList[index].contractAddress,
+                                //           objList[index].nanoId);
                                 //       Navigator.pop(context);
                                 //
                                 //       showDialog(
@@ -594,7 +575,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                     decoration: BoxDecoration(
                       // color: obj[index].jobState != "new" ? Colors.white : Colors.white,
                       color: (() {
-                        if (widget.obj!.values.toList()[index].jobState ==
+                        if (objList[index].jobState ==
                             "agreed") {
                           return Colors.orange.shade200;
                         } else if (widget.obj!.values
@@ -631,8 +612,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                     Expanded(
                                       flex: 7,
                                       child: Text(
-                                        widget.obj!.values
-                                            .toList()[index]
+                                        objList[index]
                                             .title,
                                         style: FlutterFlowTheme.of(context)
                                             .subtitle1,
@@ -645,8 +625,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        widget.obj!.values
-                                            .toList()[index]
+                                        objList[index]
                                             .jobState,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
@@ -662,8 +641,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        widget.obj!.values
-                                            .toList()[index]
+                                        objList[index]
                                             .description,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
@@ -680,8 +658,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                       flex: 7,
                                       child: Text(
                                         DateFormat('MM/dd/yyyy, hh:mm a')
-                                            .format(widget.obj!.values
-                                                .toList()[index]
+                                            .format(objList[index]
                                                 .createdTime),
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
@@ -691,14 +668,13 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                       ),
                                     ),
                                     // Spacer(),
-                                    if (widget.obj!.values
-                                            .toList()[index]
+                                    if (objList[index]
                                             .contractValue !=
                                         0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          '${widget.obj!.values.toList()[index].contractValue} ETH',
+                                          '${objList[index].contractValue} ETH',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
@@ -707,14 +683,13 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-                                    if (widget.obj!.values
-                                            .toList()[index]
+                                    if (objList[index]
                                             .contractValueToken !=
                                         0)
                                       Expanded(
                                         flex: 3,
                                         child: Text(
-                                          '${widget.obj!.values.toList()[index].contractValueToken} aUSDC',
+                                          '${objList[index].contractValueToken} aUSDC',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyText2,
                                           softWrap: false,
@@ -723,12 +698,10 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
-                                    if (widget.obj!.values
-                                                .toList()[index]
+                                    if (objList[index]
                                                 .contractValue ==
                                             0 &&
-                                        widget.obj!.values
-                                                .toList()[index]
+                                        objList[index]
                                                 .contractValueToken ==
                                             0)
                                       Expanded(
@@ -749,7 +722,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                             ),
                           ),
                         ),
-                        if (widget.obj!.values.toList()[index].jobState ==
+                        if (objList[index].jobState ==
                             "new")
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -761,8 +734,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                 height: 17,
                                 alignment: Alignment.center,
                                 child: Text(
-                                    widget.obj!.values
-                                        .toList()[index]
+                                    objList[index]
                                         .contributorsCount
                                         .toString(),
                                     style: const TextStyle(
@@ -777,7 +749,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                               // child: Icon(Icons.settings),
                             ),
                           ),
-                        if (widget.obj!.values.toList()[index].justLoaded ==
+                        if (objList[index].justLoaded ==
                             false)
                           const Padding(
                             padding:
