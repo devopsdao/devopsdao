@@ -555,7 +555,7 @@ contract Job {
         address _initiatorAddress
         // string memory _message
     ) external {
-        if (_initiatorAddress == contractOwner && keccak256(bytes(jobState)) == keccak256(bytes("new")) && 
+        if (_initiatorAddress == contractOwner && _initiatorAddress != _participantAddress && keccak256(bytes(jobState)) == keccak256(bytes("new")) && 
         keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
             //TODO: LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
             jobState = "agreed";
@@ -566,13 +566,13 @@ contract Job {
         } else if (_initiatorAddress == participantAddress && 
             keccak256(bytes(jobState)) == keccak256(bytes("progress")) && keccak256(bytes(_state)) == keccak256(bytes("review"))) {
             jobState = "review";
-        } else if (_initiatorAddress == contractOwner && 
+        } else if (_initiatorAddress == contractOwner &&  _initiatorAddress != participantAddress &&
             keccak256(bytes(jobState)) == keccak256(bytes("review")) && keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
             jobState = "completed";
         } else if (keccak256(bytes(jobState)) == keccak256(bytes("new")) && _initiatorAddress == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
             jobState = "canceled";
         } else if (keccak256(bytes(_state)) == keccak256(bytes("audit"))){
-            if(_initiatorAddress == contractOwner &&
+            if(_initiatorAddress == contractOwner &&  _initiatorAddress != participantAddress &&
                 (keccak256(bytes(jobState)) == keccak256(bytes("agreed")) || keccak256(bytes(jobState)) == keccak256(bytes("progress")) || keccak256(bytes(jobState)) == keccak256(bytes("review")))){
                 jobState = "audit";
                 auditInitiator = _initiatorAddress;
