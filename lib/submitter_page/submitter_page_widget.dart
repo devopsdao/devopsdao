@@ -474,7 +474,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                               actions: [
                                 /////////////topup
                                 TextButton(
-                                  child: const Text('Topup contract'),
+                                  child: const Text('Topup'),
                                   onPressed: () {
                                     showDialog(
                                         context: context,
@@ -507,7 +507,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                                   'addTokens',
                                                             ));
                                                   },
-                                                  child: const Text('Topup!'),
+                                                  child: const Text('Topup contract'),
                                                   style: TextButton.styleFrom(
                                                       primary: Colors.white,
                                                       backgroundColor:
@@ -613,9 +613,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                                       ));
                                             }
                                           : null),
-                                if (objList[index]
-                                        .jobState ==
-                                    "progress")
+                                if (objList[index].jobState == "progress" || objList[index].jobState == "review")
                                   TextButton(
                                       child: const Text('Request audit'),
                                       style: TextButton.styleFrom(

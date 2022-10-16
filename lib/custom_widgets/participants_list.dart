@@ -21,14 +21,17 @@ class _ParticipantListState extends State<ParticipantList> {
   bool _buttonState = false;
 
   late List contributorsList;
+  late String status;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     if (widget.listType == 'submitter') {
       contributorsList = widget.obj.contributors;
+      status = 'agreed';
     } else if(widget.listType == 'auditor') {
       contributorsList = widget.obj.auditContributors;
+      status = 'audit';
     }
 
     return Container(
@@ -59,7 +62,7 @@ class _ParticipantListState extends State<ParticipantList> {
                   tasksServices.changeTaskStatus(
                       widget.obj.contractAddress,
                       contributorsList[index2],
-                      'agreed',
+                      status,
                       widget.obj.nanoId);
                   Navigator.pop(context);
 
