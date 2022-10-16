@@ -617,7 +617,7 @@ contract Job {
         }
         if (msg.sender == auditorAddress && keccak256(bytes(jobState)) == keccak256(bytes("audit"))
         && keccak256(bytes(auditState)) == keccak256(bytes("performing"))
-        && keccak256(bytes(_favour)) == keccak256(bytes("perfomer"))) {
+        && keccak256(bytes(_favour)) == keccak256(bytes("performer"))) {
             auditState = "finished";
             jobState = "completed";
         }
