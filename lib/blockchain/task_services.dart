@@ -826,20 +826,23 @@ class TasksServices extends ChangeNotifier {
 
             // Auditor side:
             if (task.auditState == "requested") {
-              tasksAuditPending[task.nanoId] = task;
-            } else if (task.auditContributors.isNotEmpty) {
-              var contrExist = false;
-              for (var p = 0; p < task.auditContributors.length; p++) {
-                if (task.auditContributors[p] == ownAddress) {
-                  contrExist = true;
+              if (task.auditContributors.isNotEmpty) {
+                var contrExist = false;
+                for (var p = 0; p < task.auditContributors.length; p++) {
+                  if (task.auditContributors[p] == ownAddress) {
+                    contrExist = true;
+                  }
                 }
-              }
-              if (contrExist) {
-                tasksAuditApplied[task.nanoId] = task;
+                if (contrExist) {
+                  tasksAuditApplied[task.nanoId] = task;
+                } else {
+                  tasksAuditPending[task.nanoId] = task;
+                }
               } else {
                 tasksAuditPending[task.nanoId] = task;
               }
             }
+
             if (task.auditParticipation == ownAddress) {
 
               if (task.auditState == "performing") {

@@ -364,7 +364,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                     fontSizeFactor: 1.0),
                                                 children: const <TextSpan>[
                                                   TextSpan(
-                                                      text: 'Warning, this contract on Audit state! \n '
+                                                      text: 'Warning, this contract on Audit state!  \n '
                                                           'Please choose auditor: ',
                                                       style: TextStyle(
                                                           height: 2,

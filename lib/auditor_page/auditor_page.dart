@@ -510,7 +510,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                             setState(() {
                               obj!.values.toList()[index].justLoaded = false;
                             });
-                            tasksServices.taskParticipation(
+                            tasksServices.taskAuditParticipation(
                                 obj!.values.toList()[index]
                                     .contractAddress,
                                 obj!.values.toList()[index].nanoId);
@@ -667,7 +667,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                               height: 17,
                               alignment: Alignment.center,
                               child: Text(
-                                  obj!.values.toList()[index].contributorsCount.toString(),
+                                  obj!.values.toList()[index].auditContributors.length.toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white)),
