@@ -8,6 +8,7 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
+import '../custom_widgets/info_in_task_dialog.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/wallet_action.dart';
@@ -15,32 +16,6 @@ import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-
-// class ExchangeFilterWidget extends ChangeNotifier {
-//   List<Task> filterResults = [];
-//
-//   void _runFilter(String enteredKeyword, _allTasks) {
-//
-//     filterResults.clear();
-//     // filterResults = _allTasks.toList();
-//     if (enteredKeyword.isEmpty) {
-//       // if the search field is empty or only contains white-space, we'll display all tasks
-//       filterResults = _allTasks.toList();
-//       // print(filterResults);
-//
-//     } else {
-//       for (int i = 0; i<_allTasks.length ; i++) {
-//         if(_allTasks.elementAt(i).title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-//           print('${_allTasks.elementAt(i).title}');
-//           filterResults.add(_allTasks.elementAt(i));
-//           // notifyListeners();
-//         }
-//       }
-//     }
-//     // Refresh the UI
-//     notifyListeners();
-//   }
-// }
 
 class AuditorPageWidget extends StatefulWidget {
   const AuditorPageWidget({Key? key}) : super(key: key);
@@ -97,6 +72,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
     bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       if(tabIndex == 0) {
@@ -348,12 +324,13 @@ class PendingTabWidget extends StatefulWidget {
 
 class _PendingTabWidgetState extends State<PendingTabWidget> {
   late bool justLoaded = true;
-  late Map<String, Task> obj;
+  // late Map<String, Task> obj;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    obj = tasksServices.filterResults;
+    List objList = tasksServices.filterResults!.values.toList();
+
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
       child: RefreshIndicator(
@@ -364,7 +341,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
         child: ListView.builder(
           padding: EdgeInsets.zero,
           scrollDirection: Axis.vertical,
-          itemCount: obj.length,
+          itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
@@ -377,154 +354,62 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   context: context,
                   builder: (context) => AlertDialog(
                     title:
-                        Text(obj!.values.toList()[index].title),
+                        Text(objList[index].title),
                     content: SingleChildScrollView(
-                      child: ListBody(
-                        children: <Widget>[
-                          // Divider(
-                          //   height: 20,
-                          //   thickness: 1,
-                          //   indent: 40,
-                          //   endIndent: 40,
-                          //   color: Colors.black,
-                          // ),
-                          RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: <TextSpan>[
-                                const TextSpan(
-                                    text: 'Description: \n',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                    text: obj!.values.toList()[index].description)
-                              ])),
-                          RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: <TextSpan>[
-                                const TextSpan(
-                                    text: 'Contract value: \n',
-                                    style: TextStyle(
-                                        height: 2,
-                                        fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                    text:
-                                        '${obj!.values.toList()[index].contractValue} ETH\n',
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 1.0)),
-                                TextSpan(
-                                    text:
-                                        '${obj!.values.toList()[index].contractValueToken} aUSDC',
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 1.0))
-                              ])),
-                          RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: <TextSpan>[
-                                const TextSpan(
-                                    text: 'Contract owner: \n',
-                                    style: TextStyle(
-                                        height: 2,
-                                        fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                    text: obj!.values.toList()[index].contractOwner.toString(),
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 0.7))
-                              ])),
-                          RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: <TextSpan>[
-                                const TextSpan(
-                                    text: 'Contract address: \n',
-                                    style: TextStyle(
-                                        height: 2,
-                                        fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                    text: obj!.values.toList()[index].contractAddress.toString(),
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 0.7))
-                              ])),
-                          RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: <TextSpan>[
-                                    const TextSpan(
-                                        text: 'Performer address: \n',
-                                        style: TextStyle(
-                                            height: 2,
-                                            fontWeight: FontWeight.bold)),
-                                    TextSpan(
-                                        text: obj!.values.toList()[index].participiant.toString(),
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 0.7))
-                                  ])),
-                          RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: <TextSpan>[
-                                const TextSpan(
-                                    text: 'Created: ',
-                                    style: TextStyle(
-                                        height: 2,
-                                        fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                  text:
-                                      DateFormat('MM/dd/yyyy, hh:mm a')
-                                          .format(obj!.values.toList()[index].createdTime),
-                                )
-                              ])),
-                        ],
-                      ),
+                      child: TaskInformationDialog(role: 'auditor', object: objList[index]),
                     ),
                     actions: [
-                      if(widget.tabName == 'pending' &&
-                          obj!.values.toList()[index].contractOwner
-                              != tasksServices.ownAddress &&
-                          obj!.values.toList()[index].participiant
-                              != tasksServices.ownAddress)
+                      if(widget.tabName == 'working')
                       TextButton(
                           style: TextButton.styleFrom(
                               primary: Colors.white,
                               backgroundColor: Colors.green),
                           onPressed: () {
                             setState(() {
-                              obj!.values.toList()[index].justLoaded = false;
+                              objList[index].justLoaded = false;
                             });
-                            tasksServices.taskAuditParticipation(
-                                obj!.values.toList()[index]
+                            tasksServices.changeAuditTaskStatus(
+                                objList[index]
                                     .contractAddress,
-                                obj!.values.toList()[index].nanoId);
+                                'Customer',
+                                objList[index].nanoId);
                             Navigator.pop(context);
 
                             showDialog(
                                 context: context,
                                 builder: (context) => WalletAction(
-                                      nanoId: obj!.values.toList()[index].nanoId,
-                                      taskName: 'taskParticipation',
+                                      nanoId: objList[index].nanoId,
+                                      taskName: 'changeAuditTaskStatus',
                                     ));
                           },
 
-                          child: const Text('Apply for audit')),
+                          child: const Text('In favor of Customer')),
+                      if(widget.tabName == 'working')
+                        TextButton(
+                            style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.green),
+                            onPressed: () {
+                              setState(() {
+                                objList[index].justLoaded = false;
+                              });
+                              tasksServices.changeAuditTaskStatus(
+                                  objList[index]
+                                      .contractAddress,
+                                  'Performer',
+                                  objList[index].nanoId);
+                              Navigator.pop(context);
+
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => WalletAction(
+                                    nanoId: objList[index].nanoId,
+                                    taskName: 'changeAuditTaskStatus',
+                                  ));
+                            },
+
+                            child: const Text('In favor of Performer')),
+
                       TextButton(
                           child: const Text('Close'),
                           onPressed: () => Navigator.pop(context)),
@@ -561,7 +446,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                   Expanded(
                                     child: Text(
                                       // obj[index].title.length > 20 ? obj[index].title.substring(0, 20)+'...' : obj[index].title,
-                                      obj!.values.toList()[index].title,
+                                      objList[index].title,
                                       style: FlutterFlowTheme.of(context)
                                           .subtitle1,
                                       softWrap: false,
@@ -583,7 +468,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                               ),
                               Expanded(
                                 child: Text(
-                                  obj!.values.toList()[index].description,
+                                  objList[index].description,
                                   style: FlutterFlowTheme.of(context).bodyText2,
                                   softWrap: false,
                                   overflow: TextOverflow.fade,
@@ -596,7 +481,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                     flex: 7,
                                     child: Text(
                                       DateFormat('MM/dd/yyyy, hh:mm a').format(
-                                          obj!.values.toList()[index]
+                                          objList[index]
                                               .createdTime),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText2,
@@ -605,11 +490,11 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                       maxLines: 1,
                                     ),
                                   ),
-                                  if (obj!.values.toList()[index].contractValue != 0)
+                                  if (objList[index].contractValue != 0)
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        '${obj!.values.toList()[index].contractValue} ETH',
+                                        '${objList[index].contractValue} ETH',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
                                         softWrap: false,
@@ -618,13 +503,13 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
-                                  if (obj!.values.toList()[index]
+                                  if (objList[index]
                                           .contractValueToken !=
                                       0)
                                     Expanded(
                                       flex: 3,
                                       child: Text(
-                                        '${obj!.values.toList()[index].contractValueToken} aUSDC',
+                                        '${objList[index].contractValueToken} aUSDC',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText2,
                                         softWrap: false,
@@ -633,9 +518,9 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
-                                  if (obj!.values.toList()[index]
+                                  if (objList[index]
                                               .contractValue == 0 &&
-                                      obj!.values.toList()[index]
+                                      objList[index]
                                               .contractValueToken == 0)
                                     Expanded(
                                       flex: 3,
@@ -655,7 +540,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                           ),
                         ),
                       ),
-                      if (obj!.values.toList()[index].contributorsCount != 0 &&
+                      if (objList[index].contributorsCount != 0 &&
                       widget.tabName == 'pending')
                         Padding(
                           padding:
@@ -667,7 +552,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                               height: 17,
                               alignment: Alignment.center,
                               child: Text(
-                                  obj!.values.toList()[index].auditContributors.length.toString(),
+                                  objList[index].auditContributors.length.toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white)),
@@ -681,7 +566,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                             // child: Icon(Icons.settings),
                           ),
                         ),
-                      if (obj!.values.toList()[index].justLoaded ==
+                      if (objList[index].justLoaded ==
                           false)
                         const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),

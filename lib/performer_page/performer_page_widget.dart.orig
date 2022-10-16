@@ -552,7 +552,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                 //           builder: (context) =>
                                 //               WalletAction(
                                 //                 nanoId: widget
-                                //                     .obj!.values.toList()[index].nanoId,
+                                //                     .objList.nanoId,
                                 //                 taskName: 'withdraw',
                                 //               ));
                                 //     }),

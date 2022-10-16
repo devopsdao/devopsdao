@@ -29,7 +29,7 @@ class _ParticipantListState extends State<ParticipantList> {
     if (widget.listType == 'submitter') {
       contributorsList = widget.obj.contributors;
       status = 'agreed';
-    } else if(widget.listType == 'auditor') {
+    } else if(widget.listType == 'audit') {
       contributorsList = widget.obj.auditContributors;
       status = 'audit';
     }

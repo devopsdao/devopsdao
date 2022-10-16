@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/buttons.dart';
+import '../custom_widgets/info_in_task_dialog.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/selectMenu.dart';
@@ -232,152 +233,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                           builder: (context) => AlertDialog(
                                 title: Text(objList[index].title),
                                 content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Description: \n',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: objList[index].description)
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Contract value: \n',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: '${objList[index].contractValue} DEV \n',
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor:
-                                                                1.0)),
-                                            TextSpan(
-                                                text: '${objList[index]
-                                                        .contractValueToken} aUSDC',
-                                                style: DefaultTextStyle.of(
-                                                        context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 1.0))
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Contract owner: \n',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: objList[index].contractOwner
-                                                    .toString(),
-                                                style: DefaultTextStyle.of(
-                                                        context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 0.7))
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Contract address: \n',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: objList[index].contractAddress
-                                                    .toString(),
-                                                style: DefaultTextStyle.of(
-                                                        context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 0.7))
-                                          ])),
-                                      RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            const TextSpan(
-                                                text: 'Created: ',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: DateFormat(
-                                                        'MM/dd/yyyy, hh:mm a')
-                                                    .format(objList[index].createdTime),
-                                                style: DefaultTextStyle.of(
-                                                        context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 1.0))
-                                          ])),
-                                      if (objList[index].jobState == "completed" &&
-                                          (objList[index].contractValue != 0 ||
-                                              objList[index].contractValueToken != 0))
-                                        SelectNetworkMenu(
-                                          object: objList[index],
-                                        ),
-                                      if (objList[index].jobState == 'audit')
-                                        RichText(
-                                            text: TextSpan(
-                                                style:
-                                                DefaultTextStyle.of(context)
-                                                    .style
-                                                    .apply(
-                                                    fontSizeFactor: 1.0),
-                                                children: const <TextSpan>[
-                                                  TextSpan(
-                                                      text: 'Warning, this contract on Audit state!  \n '
-                                                          'Please choose auditor: ',
-                                                      style: TextStyle(
-                                                          height: 2,
-                                                          fontWeight:
-                                                          FontWeight.bold)),
-                                                ])),
-                                      if (objList[index].jobState == 'audit')
-                                        ParticipantList(
-                                          listType: 'auditor',
-                                          obj: objList[index],
-                                        )
-                                    ],
-                                  ),
+                                  child: TaskInformationDialog(role: 'performer', object: objList[index],)
                                 ),
                                 actions: [
                                   if (objList[index].jobState == "agreed")
@@ -469,68 +325,6 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                                   .contractValueToken !=
                                               0))
                                     WithdrawButton(object: objList[index]),
-                                  // TextButton(
-                                  //     child: Text('Withdraw'),
-                                  //     style: TextButton.styleFrom(
-                                  //         primary: Colors.white,
-                                  //         disabledBackgroundColor: Colors.white10,
-                                  //         backgroundColor: Colors.green),
-                                  //     onPressed: false ? () {
-                                  //       if (widget.obj[index].jobState ==
-                                  //           "completed" &&
-                                  //           (widget.obj[index].contractValue != 0 ||
-                                  //               widget.obj[index].contractValueToken != 0)) {
-                                  //         setState(() {
-                                  //           widget.obj[index].justLoaded = false;
-                                  //         });
-                                  //         tasksServices.withdrawToChain(
-                                  //             widget.obj[index].contractAddress,
-                                  //             widget.obj[index].nanoId);
-                                  //         Navigator.pop(context);
-                                  //
-                                  //         showDialog(
-                                  //             context: context,
-                                  //             builder: (context) => WalletAction(
-                                  //               nanoId:
-                                  //               widget.obj[index].nanoId,
-                                  //               taskName: 'withdrawToChain',
-                                  //             ));
-                                  //       }
-                                  //     } : null),
-                                  // if (widget.obj[index].jobState ==
-                                  //         "completed" &&
-                                  //     widget.obj[index].contractValue != 0)
-                                  // TextButton(
-                                  //     child: Text('Withdraw'),
-                                  //     style: TextButton.styleFrom(
-                                  //         primary: Colors.white,
-                                  //         backgroundColor: Colors.green),
-                                  //     onPressed: () {
-                                  //       setState(() {
-                                  //         widget.obj[index].justLoaded =
-                                  //             false;
-                                  //       });
-                                  //       tasksServices.withdraw(
-                                  //           widget.obj[index].contractAddress,
-                                  //           widget.obj[index].nanoId);
-                                  //       Navigator.pop(context);
-                                  //
-                                  //       showDialog(
-                                  //           context: context,
-                                  //           builder: (context) =>
-                                  //               WalletAction(
-                                  //                 nanoId: widget
-                                  //                     .obj[index].nanoId,
-                                  //                 taskName: 'withdraw',
-                                  //               ));
-                                  //     }),
-                                  // if (obj[index].jobState == "Review")
-                                  //   TextButton(child: Text('Review'), onPressed: () {
-                                  //     tasksServices.changeTaskStatus(
-                                  //         obj[index].contractAddress,
-                                  //         obj[index].participiant,
-                                  //         'review');
-                                  //   }),
                                   TextButton(
                                       child: const Text('Close'),
                                       onPressed: () => Navigator.pop(context)),
@@ -684,7 +478,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                               ),
                             ),
                           ),
-                          if (objList[index].jobState == "new" || objList[index].jobState == "audit")
+                          if (objList[index].jobState == "new")
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   0, 0, 18, 0),
@@ -706,12 +500,6 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                     return Colors.redAccent;
                                   } else if (objList[index].jobState == "audit") {
                                     return Colors.blueGrey;
-                                  } else if (objList[index].jobState == "progress") {
-                                    return Colors.blueGrey;
-                                  } else if (objList[index].jobState == "canceled") {
-                                    return Colors.orange;
-                                  } else if (objList[index].jobState == "audit") {
-                                    return Colors.orangeAccent;
                                   } else {
                                     return Colors.white;
                                   }
@@ -724,6 +512,40 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                                 // child: Icon(Icons.settings),
                               ),
                             ),
+                          if (objList[index].jobState == "audit")
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 18, 0),
+                            child: Badge(
+                              // position: BadgePosition.topEnd(top: 10, end: 10),
+                              badgeContent: Container(
+                                width: 17,
+                                height: 17,
+                                alignment: Alignment.center,
+                                child: Text(
+                                    objList[index].auditContributors.length
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white)),
+                              ),
+                              badgeColor: (() {
+                                if (objList[index].jobState == "new") {
+                                  return Colors.redAccent;
+                                } else if (objList[index].jobState == "audit") {
+                                  return Colors.blueGrey;
+                                } else {
+                                  return Colors.white;
+                                }
+                              }()),
+                              animationDuration:
+                              const Duration(milliseconds: 300),
+                              animationType: BadgeAnimationType.scale,
+                              shape: BadgeShape.circle,
+                              borderRadius: BorderRadius.circular(5),
+                              // child: Icon(Icons.settings),
+                            ),
+                          ),
                           if (objList[index].justLoaded == false)
                             const Padding(
                               padding:

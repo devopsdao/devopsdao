@@ -153,26 +153,26 @@ class _TaskDialog extends State<TaskDialog> {
         ),
       ),
       actions: [
-        if (task.jobState == 'new')
-          TextButton(
-              style: TextButton.styleFrom(
-                  primary: Colors.white, backgroundColor: Colors.redAccent),
-              onPressed: () {
-                setState(() {
-                  task.justLoaded = false;
-                });
-                tasksServices.changeTaskStatus(task.contractAddress,
-                    tasksServices.zeroAddress, 'cancel', task.nanoId);
-                Navigator.pop(context);
-
-                showDialog(
-                    context: context,
-                    builder: (context) => WalletAction(
-                          nanoId: task.nanoId,
-                          taskName: 'taskCancel',
-                        ));
-              },
-              child: const Text('Cancel')),
+        // if (task.jobState == 'new')
+        //   TextButton(
+        //       style: TextButton.styleFrom(
+        //           primary: Colors.white, backgroundColor: Colors.redAccent),
+        //       onPressed: () {
+        //         setState(() {
+        //           task.justLoaded = false;
+        //         });
+        //         tasksServices.changeTaskStatus(task.contractAddress,
+        //             tasksServices.zeroAddress, 'cancel', task.nanoId);
+        //         Navigator.pop(context);
+        //
+        //         showDialog(
+        //             context: context,
+        //             builder: (context) => WalletAction(
+        //                   nanoId: task.nanoId,
+        //                   taskName: 'taskCancel',
+        //                 ));
+        //       },
+        //       child: const Text('Cancel')),
         if (task.contractOwner != tasksServices.ownAddress &&
             tasksServices.ownAddress != null &&
             tasksServices.validChainID)
@@ -198,39 +198,39 @@ class _TaskDialog extends State<TaskDialog> {
         TextButton(
             child: const Text('Close'),
             onPressed: () => Navigator.pop(context)),
-        if (task.jobState == 'new')
-          TextButton(
-              style: TextButton.styleFrom(
-                  primary:
-                  Colors
-                      .white,
-                  backgroundColor:
-                  Colors
-                      .redAccent),
-              onPressed:
-                  () {
-                setState(
-                        () {
-                          task.justLoaded = false;
-                    });
-                tasksServices.changeTaskStatus(
-                    task.contractAddress,
-                    tasksServices.zeroAddress,
-                    'cancel',
-                    task.nanoId);
-                Navigator.pop(context);
-
-                showDialog(
-                    context:
-                    context,
-                    builder: (context) =>
-                        WalletAction(
-                          nanoId: task.nanoId,
-                          taskName: 'taskCancel',
-                        ));
-              },
-              child: const Text(
-                  'Cancel')),
+        // if (task.jobState == 'new')
+        //   TextButton(
+        //       style: TextButton.styleFrom(
+        //           primary:
+        //           Colors
+        //               .white,
+        //           backgroundColor:
+        //           Colors
+        //               .redAccent),
+        //       onPressed:
+        //           () {
+        //         setState(
+        //                 () {
+        //                   task.justLoaded = false;
+        //             });
+        //         tasksServices.changeTaskStatus(
+        //             task.contractAddress,
+        //             tasksServices.zeroAddress,
+        //             'cancel',
+        //             task.nanoId);
+        //         Navigator.pop(context);
+        //
+        //         showDialog(
+        //             context:
+        //             context,
+        //             builder: (context) =>
+        //                 WalletAction(
+        //                   nanoId: task.nanoId,
+        //                   taskName: 'taskCancel',
+        //                 ));
+        //       },
+        //       child: const Text(
+        //           'Cancel')),
       ],
     );
   }
