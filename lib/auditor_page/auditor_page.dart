@@ -8,9 +8,10 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
-import '../custom_widgets/info_in_task_dialog.dart';
+import '../custom_widgets/task_dialog.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/participants_list.dart';
+import '../custom_widgets/task_item.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -352,229 +353,19 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                 });
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title:
-                        Text(objList[index].title),
-                    content: SingleChildScrollView(
-                      child: TaskInformationDialog(role: 'auditor', object: objList[index]),
-                    ),
-                    actions: [
-                      if(widget.tabName == 'working')
-                      TextButton(
-                          style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.green),
-                          onPressed: () {
-                            setState(() {
-                              objList[index].justLoaded = false;
-                            });
-                            tasksServices.changeAuditTaskStatus(
-                                objList[index]
-                                    .contractAddress,
-                                'Customer',
-                                objList[index].nanoId);
-                            Navigator.pop(context);
+                  builder: (context) {
+                    return StatefulBuilder(
+                        builder: (context, setState) {
+                          return TaskInformationDialog(role: 'auditor', object: objList[index]);
+                        }
+                    );
+                  }
 
-                            showDialog(
-                                context: context,
-                                builder: (context) => WalletAction(
-                                      nanoId: objList[index].nanoId,
-                                      taskName: 'changeAuditTaskStatus',
-                                    ));
-                          },
 
-                          child: const Text('In favor of Customer')),
-                      if(widget.tabName == 'working')
-                        TextButton(
-                            style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.green),
-                            onPressed: () {
-                              setState(() {
-                                objList[index].justLoaded = false;
-                              });
-                              tasksServices.changeAuditTaskStatus(
-                                  objList[index]
-                                      .contractAddress,
-                                  'Performer',
-                                  objList[index].nanoId);
-                              Navigator.pop(context);
-
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => WalletAction(
-                                    nanoId: objList[index].nanoId,
-                                    taskName: 'changeAuditTaskStatus',
-                                  ));
-                            },
-
-                            child: const Text('In favor of Performer')),
-
-                      TextButton(
-                          child: const Text('Close'),
-                          onPressed: () => Navigator.pop(context)),
-                    ],
-                    ));
+                );
+                  // => TaskInformationDialog(role: 'auditor', object: objList[index]),);
                 },
-                child: Container(
-                  width: double.infinity,
-                  height: 86,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 5,
-                        color: Color(0x4D000000),
-                        offset: Offset(0, 2),
-                      )
-                    ],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      // obj[index].title.length > 20 ? obj[index].title.substring(0, 20)+'...' : obj[index].title,
-                                      objList[index].title,
-                                      style: FlutterFlowTheme.of(context)
-                                          .subtitle1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-
-                                  // Spacer(),
-                                  // Text(
-                                  //   'Value: ' +
-                                  //       obj[index].contractValue.toString()
-                                  //   + ' Eth',
-                                  //   style: FlutterFlowTheme.of(
-                                  //       context)
-                                  //       .bodyText2,
-                                  // ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Text(
-                                  objList[index].description,
-                                  style: FlutterFlowTheme.of(context).bodyText2,
-                                  softWrap: false,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 7,
-                                    child: Text(
-                                      DateFormat('MM/dd/yyyy, hh:mm a').format(
-                                          objList[index]
-                                              .createdTime),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText2,
-                                      softWrap: false,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  if (objList[index].contractValue != 0)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        '${objList[index].contractValue} ETH',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                  if (objList[index]
-                                          .contractValueToken !=
-                                      0)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        '${objList[index].contractValueToken} aUSDC',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                  if (objList[index]
-                                              .contractValue == 0 &&
-                                      objList[index]
-                                              .contractValueToken == 0)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        'Has no money',
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (objList[index].contributorsCount != 0 &&
-                      widget.tabName == 'pending')
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 0, 18, 0),
-                          child: Badge(
-                            // position: BadgePosition.topEnd(top: 10, end: 10),
-                            badgeContent: Container(
-                              width: 17,
-                              height: 17,
-                              alignment: Alignment.center,
-                              child: Text(
-                                  objList[index].auditContributors.length.toString(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
-                            ),
-                            badgeColor: Colors.green,
-                            animationDuration:
-                                const Duration(milliseconds: 300),
-                            animationType: BadgeAnimationType.scale,
-                            shape: BadgeShape.circle,
-                            borderRadius: BorderRadius.circular(5),
-                            // child: Icon(Icons.settings),
-                          ),
-                        ),
-                      if (objList[index].justLoaded ==
-                          false)
-                        const Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                          child: CircularProgressIndicator(),
-                        ),
-                    ],
-                  ),
-                ),
+                child: TaskItem(role: 'auditor', object: objList[index]),
               ),
             );
           },

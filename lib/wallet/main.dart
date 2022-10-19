@@ -157,7 +157,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
     // }
 
     return AlertDialog(
-      title: Text('Connect your wallet'),
+      title: const Text('Connect your wallet'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -177,8 +177,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   (_displayUri.isEmpty)
-                      ? Padding(
-                          padding: const EdgeInsets.only(
+                      ? const Padding(
+                          padding: EdgeInsets.only(
                             left: 16,
                             right: 16,
                             bottom: 16,
@@ -228,8 +228,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
                   ),
                   if (!tasksServices.validChainID &&
                       tasksServices.walletConnectConnected)
-                    Padding(
-                      padding: const EdgeInsets.only(
+                    const Padding(
+                      padding: EdgeInsets.only(
                         left: 16,
                         right: 16,
                         bottom: 16,
@@ -263,7 +263,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
       actions: [
         if (tasksServices.walletConnectConnected)
           TextButton(
-              child: Text('Disconnect'),
+              child: const Text('Disconnect'),
               style: TextButton.styleFrom(
                   primary: Colors.white, backgroundColor: Colors.red),
               onPressed: () async {
@@ -275,19 +275,34 @@ class _MyWalletPageState extends State<MyWalletPage> {
               }),
         if (!tasksServices.walletConnectConnected)
           TextButton(
-            child: Text('Connect'),
+            child: const Text('Connect wallet'),
             style: TextButton.styleFrom(
               primary: Colors.white,
               backgroundColor: Colors.green,
               disabledBackgroundColor: Colors.white10,
             ),
-            onPressed: tasksServices.initComplete
-                ? _transactionStateToAction(context, state2: _state2)
-                : null,
+            onPressed: tasksServices.initComplete ? () => tasksServices.connectWalletWC() : null,
+                // ? _transactionStateToAction(context, state2: _state2)
+                // : null,
             // _transactionStateToAction(context, state: _state);
             // setState(() {});
             // Navigator.pop(context)
           ),
+        TextButton(
+          child: Text('Connect metamask'),
+          style: TextButton.styleFrom(
+            primary: Colors.white,
+            backgroundColor: Colors.green,
+            disabledBackgroundColor: Colors.white10,
+          ),
+          onPressed: tasksServices.initComplete ? () => tasksServices.connectWalletMM() : null,
+          // tasksServices.initComplete
+          //     ? _transactionStateToAction(context, state2: _state2)
+          //     : null,
+          // _transactionStateToAction(context, state: _state);
+          // setState(() {});
+          // Navigator.pop(context)
+        ),
         TextButton(
             child: Text('Close'), onPressed: () => Navigator.pop(context)),
       ],
