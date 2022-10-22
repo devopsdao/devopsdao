@@ -27,8 +27,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class InterfaceServices extends ChangeNotifier {
   // Payments goes here (create_job_widget.dart -> payment.dart):
-  late double tokensEntered;
-
+  late double tokensEntered = 0.0;
 
   // PageView Controller for wallet/main.dart
   late PageController controller = PageController(initialPage: 0);

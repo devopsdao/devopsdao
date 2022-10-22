@@ -1,40 +1,49 @@
 import 'package:webthree/webthree.dart';
 
 class Task {
+  final String nanoId;
+  final DateTime createTime;
+  final String taskType;
   final String title;
   final String description;
+  final String symbol;
+  final String taskState;
+  final String auditState;
+  final int rating;
   final EthereumAddress contractOwner;
-  final String jobState;
+  final EthereumAddress participant;
+  final EthereumAddress auditInitiator;
+  final EthereumAddress auditor;
+  final List<dynamic> participants;
+  final List<dynamic> funders;
+  final List<dynamic> auditors;
+  final List<dynamic> messages;
   final EthereumAddress contractAddress;
-  final int contributorsCount;
-  final List<dynamic> contributors;
-  final EthereumAddress participiant;
-  late bool justLoaded;
-  final DateTime createdTime;
   final double contractValue;
   final double contractValueToken;
-  final String nanoId;
-  final int score;
-  final List<dynamic> auditContributors;
-  final String auditState;
-  final EthereumAddress auditParticipation;
+  late bool justLoaded;
+
   Task({
+    required this.nanoId,
+    required this.createTime,
+    required this.taskType,
     required this.title,
     required this.description,
+    required this.symbol,
+    required this.taskState,
+    required this.auditState,
+    required this.rating,
     required this.contractOwner,
-    required this.jobState,
+    required this.participant,
+    required this.auditInitiator,
+    required this.auditor,
+    required this.participants,
+    required this.funders,
+    required this.auditors,
+    required this.messages,
     required this.contractAddress,
-    required this.contributorsCount,
-    required this.contributors,
-    required this.participiant,
-    required this.justLoaded,
-    required this.createdTime,
     required this.contractValue,
     required this.contractValueToken,
-    required this.nanoId,
-    required this.score,
-    required this.auditContributors,
-    required this.auditState,
-    required this.auditParticipation
+    required this.justLoaded,
   });
 }

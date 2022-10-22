@@ -76,7 +76,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
 
     bool _isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
-      if(tabIndex == 0) {
+      if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksAuditPending);
       } else if (tabIndex == 1) {
         tasksServices.resetFilter(tasksServices.tasksAuditApplied);
@@ -86,7 +86,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
         tasksServices.resetFilter(tasksServices.tasksAuditComplete);
       }
     }
-    if (tasksServices.ownAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
     }
 
@@ -168,42 +168,42 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                       onTap: (index) {
                         _searchKeywordController.clear();
                         tabIndex = index;
-                        if(index == 0) {
-                          tasksServices.resetFilter(tasksServices.tasksAuditPending);
+                        if (index == 0) {
+                          tasksServices
+                              .resetFilter(tasksServices.tasksAuditPending);
                         } else if (index == 1) {
-                          tasksServices.resetFilter(tasksServices.tasksAuditApplied);
+                          tasksServices
+                              .resetFilter(tasksServices.tasksAuditApplied);
                         } else if (index == 2) {
-                          tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
+                          tasksServices
+                              .resetFilter(tasksServices.tasksAuditWorkingOn);
                         } else if (index == 3) {
-                          tasksServices.resetFilter(tasksServices.tasksAuditComplete);
+                          tasksServices
+                              .resetFilter(tasksServices.tasksAuditComplete);
                         }
                       },
                       tabs: [
                         Tab(
                           child: BadgeTab(
-                            taskCount:
-                            tasksServices.tasksAuditPending.length,
+                            taskCount: tasksServices.tasksAuditPending.length,
                             tabText: 'Pending',
                           ),
                         ),
                         Tab(
                           child: BadgeTab(
-                            taskCount:
-                            tasksServices.tasksAuditApplied.length,
+                            taskCount: tasksServices.tasksAuditApplied.length,
                             tabText: 'Applied',
                           ),
                         ),
                         Tab(
                           child: BadgeTab(
-                            taskCount:
-                            tasksServices.tasksAuditWorkingOn.length,
+                            taskCount: tasksServices.tasksAuditWorkingOn.length,
                             tabText: 'Working',
                           ),
                         ),
                         Tab(
                           child: BadgeTab(
-                            taskCount:
-                            tasksServices.tasksAuditComplete.length,
+                            taskCount: tasksServices.tasksAuditComplete.length,
                             tabText: 'Complete',
                           ),
                         ),
@@ -221,14 +221,18 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                         controller: _searchKeywordController,
                         onChanged: (searchKeyword) {
                           print(tabIndex);
-                          if(tabIndex == 0) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditPending);
+                          if (tabIndex == 0) {
+                            tasksServices.runFilter(
+                                searchKeyword, tasksServices.tasksAuditPending);
                           } else if (tabIndex == 1) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
+                            tasksServices.runFilter(
+                                searchKeyword, tasksServices.tasksAuditApplied);
                           } else if (tabIndex == 2) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditWorkingOn);
+                            tasksServices.runFilter(searchKeyword,
+                                tasksServices.tasksAuditWorkingOn);
                           } else if (tabIndex == 3) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditComplete);
+                            tasksServices.runFilter(searchKeyword,
+                                tasksServices.tasksAuditComplete);
                           }
                         },
                         decoration: const InputDecoration(
@@ -348,21 +352,17 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
               child: InkWell(
                 onTap: () {
-                setState(() {
-                  // Toggle light when tapped.
-                });
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return StatefulBuilder(
-                        builder: (context, setState) {
-                          return TaskInformationDialog(role: 'auditor', object: objList[index]);
-                        }
-                    );
-                  }
-
-
-                );
+                  setState(() {
+                    // Toggle light when tapped.
+                  });
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return StatefulBuilder(builder: (context, setState) {
+                          return TaskInformationDialog(
+                              role: 'auditor', object: objList[index]);
+                        });
+                      });
                   // => TaskInformationDialog(role: 'auditor', object: objList[index]),);
                 },
                 child: TaskItem(role: 'auditor', object: objList[index]),

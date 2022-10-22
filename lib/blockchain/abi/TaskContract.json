@@ -174,7 +174,7 @@
           },
           {
             "internalType": "address payable",
-            "name": "participantAddress",
+            "name": "participant",
             "type": "address"
           },
           {
@@ -184,7 +184,7 @@
           },
           {
             "internalType": "address",
-            "name": "auditorAddress",
+            "name": "auditor",
             "type": "address"
           },
           {
@@ -194,12 +194,12 @@
           },
           {
             "internalType": "address[]",
-            "name": "fundingParticipants",
+            "name": "funders",
             "type": "address[]"
           },
           {
             "internalType": "address[]",
-            "name": "auditParticipants",
+            "name": "auditors",
             "type": "address[]"
           },
           {
@@ -238,11 +238,6 @@
             "internalType": "struct Message[]",
             "name": "messages",
             "type": "tuple[]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "countMessages",
-            "type": "uint256"
           },
           {
             "internalType": "address",
@@ -326,7 +321,7 @@
     "inputs": [
       {
         "internalType": "address payable",
-        "name": "_participantAddress",
+        "name": "_participant",
         "type": "address"
       },
       {

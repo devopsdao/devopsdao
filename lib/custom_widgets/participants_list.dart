@@ -11,7 +11,8 @@ class ParticipantList extends StatefulWidget {
   final String listType;
   final Task obj;
 
-  const ParticipantList({Key? key, required this.obj, required this.listType}) : super(key: key);
+  const ParticipantList({Key? key, required this.obj, required this.listType})
+      : super(key: key);
 
   @override
   _ParticipantListState createState() => _ParticipantListState();
@@ -20,17 +21,17 @@ class ParticipantList extends StatefulWidget {
 class _ParticipantListState extends State<ParticipantList> {
   bool _buttonState = false;
 
-  late List contributorsList;
+  late List participants;
   late String status;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     if (widget.listType == 'submitter') {
-      contributorsList = widget.obj.contributors;
+      participants = widget.obj.participants;
       status = 'agreed';
-    } else if(widget.listType == 'audit') {
-      contributorsList = widget.obj.auditContributors;
+    } else if (widget.listType == 'audit') {
+      participants = widget.obj.auditors;
       status = 'audit';
     }
 
@@ -42,11 +43,11 @@ class _ParticipantListState extends State<ParticipantList> {
           // scrollDirection: Axis.vertical,
           // shrinkWrap: true,
           // physics: NeverScrollableScrollPhysics(),
-          itemCount: contributorsList.length,
+          itemCount: participants.length,
           itemBuilder: (context2, index2) {
             return Column(children: [
               // Text(
-              //   tasksServices.tasksOwner[index].contributors[index2].toString(),
+              //   tasksServices.tasksOwner[index].participants[index2].toString(),
               //   style: FlutterFlowTheme.of(
               //       context2)
               //       .bodyText2,
@@ -59,22 +60,19 @@ class _ParticipantListState extends State<ParticipantList> {
                   setState(() {
                     widget.obj.justLoaded = false;
                   });
-                  tasksServices.changeTaskStatus(
-                      widget.obj.contractAddress,
-                      contributorsList[index2],
-                      status,
-                      widget.obj.nanoId);
+                  tasksServices.taskStateChange(widget.obj.contractAddress,
+                      participants[index2], status, widget.obj.nanoId);
                   Navigator.pop(context);
 
                   showDialog(
                       context: context,
                       builder: (context) => WalletAction(
                             nanoId: widget.obj.nanoId,
-                            taskName: 'changeTaskStatus',
+                            taskName: 'taskStateChange',
                           ));
                 },
                 child: Text(
-                  contributorsList[index2].toString(),
+                  participants[index2].toString(),
                   style: DefaultTextStyle.of(context)
                       .style
                       .apply(fontSizeFactor: 0.7),

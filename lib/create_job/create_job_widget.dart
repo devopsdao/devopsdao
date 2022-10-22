@@ -302,7 +302,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                         final nanoId = customAlphabet(
                             '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
                             12);
-                        tasksServices.addTask(
+                        tasksServices.createTaskContract(
                             titleFieldController!.text,
                             descriptionController!.text,
                             // valueController!.text,
@@ -313,7 +313,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                             context: context,
                             builder: (context) => WalletAction(
                                   nanoId: nanoId,
-                                  taskName: 'addTask',
+                                  taskName: 'createTaskContract',
                                 ));
                       },
                       text: 'Submit',
