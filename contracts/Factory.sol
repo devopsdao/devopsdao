@@ -590,7 +590,7 @@ contract Job {
             if(_initiatorAddress == contractOwner &&
                 keccak256(bytes(jobState)) == keccak256(bytes("audit")) && 
                 keccak256(bytes(auditState)) == keccak256(bytes("requested")) &&
-                AuditParticipants.length != 0){
+                AuditParticipants.length != 0) {
                 for (uint256 i = 0; i < AuditParticipants.length; i++) {
                     if (AuditParticipants[i] == _participantAddress) {
                         jobState = "audit";
@@ -599,7 +599,6 @@ contract Job {
                         break;
                     }
                 }
-
             }
         }
     }

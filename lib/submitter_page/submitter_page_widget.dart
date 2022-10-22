@@ -8,9 +8,10 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
-import '../custom_widgets/info_in_task_dialog.dart';
+import '../custom_widgets/task_dialog.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/participants_list.dart';
+import '../custom_widgets/task_item.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -214,7 +215,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var Interface = context.watch<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
     List objList = widget.obj!.values .toList();
     // TODO: implement build
     return Padding(
@@ -238,386 +239,210 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                     // });
                     showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text(
-                                  objList[index].title),
-                              content: SingleChildScrollView(
-                                child: TaskInformationDialog(role: 'customer', object: objList[index],)
-                              ),
-                              actions: [
-                                /////////////topup
-                                TextButton(
-                                  child: const Text('Topup'),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                              title: Text('Topup contract'),
-                                              // backgroundColor: Colors.black,
-                                              content: const Payment(
-                                                purpose: 'topup',
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    tasksServices.addTokens(
-                                                        objList[index]
-                                                            .contractAddress,
-                                                        Interface.tokensEntered,
-                                                        widget.obj!.values
-                                                            .toList()[index]
-                                                            .nanoId);
-                                                    Navigator.pop(context);
-
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            WalletAction(
-                                                              nanoId: objList[
-                                                                      index]
-                                                                  .nanoId,
-                                                              taskName:
-                                                                  'addTokens',
-                                                            ));
-                                                  },
-                                                  child: const Text('Topup contract'),
-                                                  style: TextButton.styleFrom(
-                                                      primary: Colors.white,
-                                                      backgroundColor:
-                                                          Colors.green),
-                                                ),
-                                                TextButton(
-                                                    child: const Text('Close'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(context)),
-                                              ],
-                                            ));
-                                  },
-                                  style: TextButton.styleFrom(
-                                      primary: Colors.white,
-                                      backgroundColor: Colors.green),
-                                ),
-
-                                // TextButton(
-                                //     child: Text('Withdraw to Chain'),
-                                //     style: TextButton.styleFrom(
-                                //         primary: Colors.white,
-                                //         backgroundColor: Colors.green),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         objList[index].justLoaded = false;
-                                //       });
-                                //       tasksServices.withdrawToChain(
-                                //           objList[index].contractAddress,
-                                //           objList[index].nanoId);
-                                //       Navigator.pop(context);
-                                //
-                                //       showDialog(
-                                //           context: context,
-                                //           builder: (context) => WalletAction(
-                                //                 nanoId:
-                                //                     objList[index].nanoId,
-                                //                 taskName: 'withdrawToChain',
-                                //               ));
-                                //     }),
-
-                                if (objList[index]
-                                        .jobState ==
-                                    'review')
-                                  TextButton(
-                                      child: const Text('Sign Review'),
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                          backgroundColor: Colors.green),
-                                      onPressed: () {
-                                        setState(() {
-                                          objList[index]
-                                              .justLoaded = false;
-                                        });
-                                        tasksServices.changeTaskStatus(
-                                            objList[index]
-                                                .contractAddress,
-                                            objList[index]
-                                                .participiant,
-                                            'completed',
-                                            objList[index]
-                                                .nanoId);
-                                        Navigator.pop(context);
-
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WalletAction(
-                                                  nanoId: objList[index]
-                                                      .nanoId,
-                                                  taskName: 'changeTaskStatus',
-                                                ));
-                                      }),
-                                if (objList[index].jobState == 'completed')
-                                  TextButton(
-                                      child: const Text('Rate this task'),
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                          disabledBackgroundColor:
-                                              Colors.white10,
-                                          backgroundColor: Colors.green),
-                                      onPressed: (objList[index]
-                                                      .score ==
-                                                  0 &&
-                                              enableRatingButton)
-                                          ? () {
-                                              setState(() {
-                                                objList[index]
-                                                    .justLoaded = false;
-                                              });
-                                              tasksServices.rateTask(
-                                                  objList[index]
-                                                      .contractAddress,
-                                                  ratingScore,
-                                                  objList[index].nanoId);
-                                              Navigator.pop(context);
-
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      WalletAction(
-                                                        nanoId: objList[index]
-                                                            .nanoId,
-                                                        taskName: 'rateTask',
-                                                      ));
-                                            }
-                                          : null),
-                                if (objList[index].jobState == "progress" || objList[index].jobState == "review")
-                                  TextButton(
-                                      child: const Text('Request audit'),
-                                      style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                          backgroundColor: Colors.orangeAccent),
-                                      onPressed: () {
-                                        setState(() {
-                                          objList[index]
-                                              .justLoaded = false;
-                                        });
-                                        tasksServices.changeTaskStatus(
-                                            objList[index]
-                                                .contractAddress,
-                                            objList[index]
-                                                .participiant,
-                                            'audit',
-                                            objList[index]
-                                                .nanoId);
-                                        Navigator.pop(context);
-
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => WalletAction(
-                                              nanoId: objList[index].nanoId,
-                                              taskName: 'changeTaskStatus',
-                                            ));
-                                      }),
-                                TextButton(
-                                    child: const Text('Close'),
-                                    onPressed: () => Navigator.pop(context)),
-                              ],
-                            ));
+                        builder: (context) => TaskInformationDialog(role: 'customer', object: objList[index],)
+                    );
                   },
-                  child: Container(
-                    width: double.infinity,
-                    height: 86,
-                    decoration: BoxDecoration(
-                      color: (() {
-                        if (objList[index].jobState == "agreed") {
-                          return Colors.white;
-                        } else if (objList[index].jobState == "review") {
-                          return Colors.lightGreen.shade200;
-                        } else if (objList[index].jobState == "progress") {
-                          return Colors.blueGrey;
-                        } else if (objList[index].jobState == "canceled") {
-                          return Colors.orange;
-                        } else if (objList[index].jobState == "audit") {
-                          return Colors.orangeAccent;
-                        } else {
-                          return Colors.white;
-                        }
-                      }()),
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x4D000000),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                12, 8, 8, 8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 7,
-                                      child: Text(
-                                        objList[index]
-                                            .title,
-                                        style: FlutterFlowTheme.of(context)
-                                            .subtitle1,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                    // Spacer(),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        objList[index]
-                                            .jobState,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // Text(
-                                //   objList[index].title,
-                                //   style: FlutterFlowTheme.of(context).subtitle1,
-                                // ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        objList[index]
-                                            .description,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 7,
-                                      child: Text(
-                                        DateFormat('MM/dd/yyyy, hh:mm a')
-                                            .format(objList[index]
-                                                .createdTime),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText2,
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                    // Spacer(),
-                                    if (objList[index]
-                                            .contractValue !=
-                                        0)
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          '${objList[index].contractValue} ETH',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      ),
-                                    if (objList[index]
-                                            .contractValueToken !=
-                                        0)
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          '${objList[index].contractValueToken} aUSDC',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      ),
-                                    if (objList[index]
-                                                .contractValue ==
-                                            0 &&
-                                        objList[index]
-                                                .contractValueToken ==
-                                            0)
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          'Has no money',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (objList[index]
-                                    .contributorsCount !=
-                                0 &&
-                            objList[index].jobState ==
-                                "new")
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 12, 0),
-                            child: Badge(
-                              // position: BadgePosition.topEnd(top: 10, end: 10),
-                              badgeContent: Container(
-                                width: 17,
-                                height: 17,
-                                alignment: Alignment.center,
-                                child: Text(
-                                    objList[index]
-                                        .contributorsCount
-                                        .toString(),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)),
-                              ),
-                              animationDuration:
-                                  const Duration(milliseconds: 300),
-                              animationType: BadgeAnimationType.scale,
-                              shape: BadgeShape.circle,
-                              borderRadius: BorderRadius.circular(5),
-                              // child: Icon(Icons.settings),
-                            ),
-                          ),
-                        if (objList[index].justLoaded ==
-                            false)
-                          const Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                            child: CircularProgressIndicator(),
-                          ),
-                      ],
-                    ),
-                  ),
+                  child: TaskItem(role: 'customer', object: objList[index],)
+
+
+                  // Container(
+                  //   width: double.infinity,
+                  //   height: 86,
+                  //   decoration: BoxDecoration(
+                  //     color: (() {
+                  //       if (objList[index].jobState == "agreed") {
+                  //         return Colors.white;
+                  //       } else if (objList[index].jobState == "review") {
+                  //         return Colors.lightGreen.shade200;
+                  //       } else if (objList[index].jobState == "progress") {
+                  //         return Colors.blueGrey;
+                  //       } else if (objList[index].jobState == "canceled") {
+                  //         return Colors.orange;
+                  //       } else if (objList[index].jobState == "audit") {
+                  //         return Colors.orangeAccent;
+                  //       } else {
+                  //         return Colors.white;
+                  //       }
+                  //     }()),
+                  //     boxShadow: const [
+                  //       BoxShadow(
+                  //         blurRadius: 5,
+                  //         color: Color(0x4D000000),
+                  //         offset: Offset(0, 2),
+                  //       )
+                  //     ],
+                  //     borderRadius: BorderRadius.circular(8),
+                  //   ),
+                  //   child: Row(
+                  //     mainAxisSize: MainAxisSize.max,
+                  //     children: [
+                  //       Expanded(
+                  //         child: Padding(
+                  //           padding: const EdgeInsetsDirectional.fromSTEB(
+                  //               12, 8, 8, 8),
+                  //           child: Column(
+                  //             mainAxisSize: MainAxisSize.max,
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               Row(
+                  //                 children: [
+                  //                   Expanded(
+                  //                     flex: 7,
+                  //                     child: Text(
+                  //                       objList[index]
+                  //                           .title,
+                  //                       style: FlutterFlowTheme.of(context)
+                  //                           .subtitle1,
+                  //                       softWrap: false,
+                  //                       overflow: TextOverflow.fade,
+                  //                       maxLines: 1,
+                  //                     ),
+                  //                   ),
+                  //                   // Spacer(),
+                  //                   Expanded(
+                  //                     flex: 3,
+                  //                     child: Text(
+                  //                       objList[index]
+                  //                           .jobState,
+                  //                       style: FlutterFlowTheme.of(context)
+                  //                           .bodyText2,
+                  //                       softWrap: false,
+                  //                       overflow: TextOverflow.fade,
+                  //                       maxLines: 1,
+                  //                       textAlign: TextAlign.end,
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //               // Text(
+                  //               //   objList[index].title,
+                  //               //   style: FlutterFlowTheme.of(context).subtitle1,
+                  //               // ),
+                  //               Row(
+                  //                 children: [
+                  //                   Expanded(
+                  //                     child: Text(
+                  //                       objList[index]
+                  //                           .description,
+                  //                       style: FlutterFlowTheme.of(context)
+                  //                           .bodyText2,
+                  //                       softWrap: false,
+                  //                       overflow: TextOverflow.fade,
+                  //                       maxLines: 1,
+                  //                     ),
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //               Row(
+                  //                 children: [
+                  //                   Expanded(
+                  //                     flex: 7,
+                  //                     child: Text(
+                  //                       DateFormat('MM/dd/yyyy, hh:mm a')
+                  //                           .format(objList[index]
+                  //                               .createdTime),
+                  //                       style: FlutterFlowTheme.of(context)
+                  //                           .bodyText2,
+                  //                       softWrap: false,
+                  //                       overflow: TextOverflow.fade,
+                  //                       maxLines: 1,
+                  //                     ),
+                  //                   ),
+                  //                   // Spacer(),
+                  //                   if (objList[index]
+                  //                           .contractValue !=
+                  //                       0)
+                  //                     Expanded(
+                  //                       flex: 3,
+                  //                       child: Text(
+                  //                         '${objList[index].contractValue} ETH',
+                  //                         style: FlutterFlowTheme.of(context)
+                  //                             .bodyText2,
+                  //                         softWrap: false,
+                  //                         overflow: TextOverflow.fade,
+                  //                         maxLines: 1,
+                  //                         textAlign: TextAlign.end,
+                  //                       ),
+                  //                     ),
+                  //                   if (objList[index]
+                  //                           .contractValueToken !=
+                  //                       0)
+                  //                     Expanded(
+                  //                       flex: 3,
+                  //                       child: Text(
+                  //                         '${objList[index].contractValueToken} aUSDC',
+                  //                         style: FlutterFlowTheme.of(context)
+                  //                             .bodyText2,
+                  //                         softWrap: false,
+                  //                         overflow: TextOverflow.fade,
+                  //                         maxLines: 1,
+                  //                         textAlign: TextAlign.end,
+                  //                       ),
+                  //                     ),
+                  //                   if (objList[index]
+                  //                               .contractValue ==
+                  //                           0 &&
+                  //                       objList[index]
+                  //                               .contractValueToken ==
+                  //                           0)
+                  //                     Expanded(
+                  //                       flex: 3,
+                  //                       child: Text(
+                  //                         'Has no money',
+                  //                         style: FlutterFlowTheme.of(context)
+                  //                             .bodyText2,
+                  //                         softWrap: false,
+                  //                         overflow: TextOverflow.fade,
+                  //                         maxLines: 1,
+                  //                         textAlign: TextAlign.end,
+                  //                       ),
+                  //                     ),
+                  //                 ],
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       if (objList[index]
+                  //                   .contributorsCount !=
+                  //               0 &&
+                  //           objList[index].jobState ==
+                  //               "new")
+                  //         Padding(
+                  //           padding: const EdgeInsetsDirectional.fromSTEB(
+                  //               0, 0, 12, 0),
+                  //           child: Badge(
+                  //             // position: BadgePosition.topEnd(top: 10, end: 10),
+                  //             badgeContent: Container(
+                  //               width: 17,
+                  //               height: 17,
+                  //               alignment: Alignment.center,
+                  //               child: Text(
+                  //                   objList[index]
+                  //                       .contributorsCount
+                  //                       .toString(),
+                  //                   style: const TextStyle(
+                  //                       fontWeight: FontWeight.bold,
+                  //                       color: Colors.white)),
+                  //             ),
+                  //             animationDuration:
+                  //                 const Duration(milliseconds: 300),
+                  //             animationType: BadgeAnimationType.scale,
+                  //             shape: BadgeShape.circle,
+                  //             borderRadius: BorderRadius.circular(5),
+                  //             // child: Icon(Icons.settings),
+                  //           ),
+                  //         ),
+                  //       if (objList[index].justLoaded ==
+                  //           false)
+                  //         const Padding(
+                  //           padding:
+                  //               EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                  //           child: CircularProgressIndicator(),
+                  //         ),
+                  //     ],
+                  //   ),
+                  // ),
                 ),
               );
             },

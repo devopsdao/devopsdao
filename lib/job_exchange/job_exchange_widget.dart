@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 import '../create_job/create_job_widget.dart';
 import '../custom_widgets/loading.dart';
+import '../custom_widgets/task_item.dart';
 import '../custom_widgets/wallet_action.dart';
 import 'task.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
@@ -232,7 +233,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -242,7 +243,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                               color: Colors.white,
                               width: 1,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(4.0),
                               topRight: Radius.circular(4.0),
                             ),
@@ -313,269 +314,9 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                               //     builder: (context) =>
                                               //         TaskDialog(index: index));
                                             },
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 86,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    blurRadius: 5,
-                                                    color: Color(0x4D000000),
-                                                    offset: Offset(0, 2),
-                                                  )
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                              12, 8, 8, 8),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: Text(
-                                                                  // tasksServices.filterResults[index].title.length > 20 ? tasksServices.filterResults[index].title.substring(0, 20)+'...' : tasksServices.filterResults[index].title,
-                                                                  tasksServices
-                                                                      .filterResults
-                                                                      .values
-                                                                      .toList()[
-                                                                          index]
-                                                                      .title,
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .subtitle1,
-                                                                  softWrap:
-                                                                      false,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .fade,
-                                                                  maxLines: 1,
-                                                                ),
-                                                              ),
-
-                                                              // Spacer(),
-                                                              // Text(
-                                                              //   'Value: ' +
-                                                              //       tasksServices.filterResults[index].contractValue.toString()
-                                                              //   + ' Eth',
-                                                              //   style: FlutterFlowTheme.of(
-                                                              //       context)
-                                                              //       .bodyText2,
-                                                              // ),
-                                                            ],
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                              tasksServices
-                                                                  .filterResults
-                                                                  .values
-                                                                  .toList()[
-                                                                      index]
-                                                                  .description,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyText2,
-                                                              softWrap: false,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .fade,
-                                                              maxLines: 1,
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 7,
-                                                                child: Text(
-                                                                  DateFormat('MM/dd/yyyy, hh:mm a').format(tasksServices
-                                                                      .filterResults
-                                                                      .values
-                                                                      .toList()[
-                                                                          index]
-                                                                      .createdTime),
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText2,
-                                                                  softWrap:
-                                                                      false,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .fade,
-                                                                  maxLines: 1,
-                                                                ),
-                                                              ),
-                                                              // Spacer(),
-                                                              // Expanded(
-                                                              //   flex: 3,
-                                                              //   child: Text(
-                                                              //     tasksServices.filterResults[
-                                                              //                 index]
-                                                              //             .contractValue
-                                                              //             .toString() +
-                                                              //         ' Eth',
-                                                              //     style: FlutterFlowTheme.of(
-                                                              //             context)
-                                                              //         .bodyText2,
-                                                              //     softWrap:
-                                                              //         false,
-                                                              //     overflow:
-                                                              //         TextOverflow
-                                                              //             .fade,
-                                                              //     maxLines: 1,
-                                                              //     textAlign:
-                                                              //         TextAlign
-                                                              //             .end,
-                                                              //   ),
-                                                              // ),
-                                                              if (tasksServices
-                                                                      .filterResults
-                                                                      .values
-                                                                      .toList()[
-                                                                          index]
-                                                                      .contractValue !=
-                                                                  0)
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                  child: Text(
-                                                                    '${tasksServices.filterResults.values.toList()[index].contractValue} ETH',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText2,
-                                                                    softWrap: false,
-                                                                    overflow: TextOverflow.fade,
-                                                                    maxLines: 1,
-                                                                    textAlign: TextAlign.end,
-                                                                  ),
-                                                                ),
-                                                              if (tasksServices
-                                                                      .filterResults
-                                                                      .values
-                                                                      .toList()[
-                                                                          index]
-                                                                      .contractValueToken !=
-                                                                  0)
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                  child: Text(
-                                                                    '${tasksServices.filterResults.values.toList()[index].contractValueToken} aUSDC',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText2,
-                                                                    softWrap: false,
-                                                                    overflow: TextOverflow.fade,
-                                                                    maxLines: 1,
-                                                                    textAlign: TextAlign.end,
-                                                                  ),
-                                                                ),
-                                                              if (tasksServices
-                                                                          .filterResults
-                                                                          .values
-                                                                          .toList()[
-                                                                              index]
-                                                                          .contractValue ==
-                                                                      0 &&
-                                                                  tasksServices
-                                                                          .filterResults
-                                                                          .values
-                                                                          .toList()[
-                                                                              index]
-                                                                          .contractValueToken ==
-                                                                      0)
-                                                                Expanded(
-                                                                  flex: 3,
-                                                                  child: Text(
-                                                                    'Has no money',
-                                                                    style: FlutterFlowTheme.of(context)
-                                                                        .bodyText2,
-                                                                    softWrap: false,
-                                                                    overflow: TextOverflow.fade,
-                                                                    maxLines: 1,
-                                                                    textAlign: TextAlign.end,
-                                                                  ),
-                                                                ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (tasksServices
-                                                          .filterResults.values
-                                                          .toList()[index]
-                                                          .contributorsCount !=
-                                                      0)
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                              0, 0, 18, 0),
-                                                      child: Badge(
-                                                        // position: BadgePosition.topEnd(top: 10, end: 10),
-                                                        badgeContent: Container(
-                                                          width: 17,
-                                                          height: 17,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                              tasksServices
-                                                                  .filterResults
-                                                                  .values
-                                                                  .toList()[
-                                                                      index]
-                                                                  .contributorsCount
-                                                                  .toString(),
-                                                              style: const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white)),
-                                                        ),
-                                                        animationDuration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    300),
-                                                        animationType:
-                                                            BadgeAnimationType
-                                                                .scale,
-                                                        shape:
-                                                            BadgeShape.circle,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        // child: Icon(Icons.settings),
-                                                      ),
-                                                    ),
-                                                  if (tasksServices
-                                                          .filterResults.values
-                                                          .toList()[index]
-                                                          .justLoaded ==
-                                                      false)
-                                                    const Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 0, 12, 0),
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
+                                            child: TaskItem(role: 'exchange', object: tasksServices
+                                                .filterResults.values
+                                                .toList()[index],)
                                           ),
                                         );
                                       },
