@@ -205,6 +205,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> connectWalletWC() async {
+    print('async');
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
 
@@ -280,6 +281,7 @@ class TasksServices extends ChangeNotifier {
       }
     } else {
       print("not initialized");
+      print(walletConnectState);
     }
   }
 
