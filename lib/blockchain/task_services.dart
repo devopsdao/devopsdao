@@ -48,7 +48,7 @@ class JSrawRequestParams {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = true;
+  bool hardhatDebug = false;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -83,8 +83,8 @@ class TasksServices extends ChangeNotifier {
   //final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
   //final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
-  final String _rpcUrl = 'http://localhost:8545';
-  final String _wsUrl = 'wss://localhost:8545';
+  late String _rpcUrl;
+  late String _wsUrl;
 
   late int chainId;
   bool isLoading = true;
@@ -113,6 +113,15 @@ class TasksServices extends ChangeNotifier {
 
   bool initComplete = false;
   Future<void> init() async {
+    if (hardhatDebug == true) {
+      chainId = 31337;
+      _rpcUrl = 'http://localhost:8545';
+      _wsUrl = 'wss://localhost:8545';
+    } else {
+      chainId = 1287;
+      _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
+      _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
+    }
     isDeviceConnected = false;
 
     if (platform != 'web') {
@@ -219,7 +228,6 @@ class TasksServices extends ChangeNotifier {
             chainId = 31337;
             validChainID = true;
           }
-          credentials = credentials;
           fetchTasks();
 
           myBalance();
@@ -425,11 +433,6 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> startup() async {
-    if (hardhatDebug == true) {
-      chainId = 31337;
-    } else {
-      chainId = 1287;
-    }
     String addressesFile =
         await rootBundle.loadString('lib/blockchain/abi/addresses.json');
     var addresses = jsonDecode(addressesFile);
