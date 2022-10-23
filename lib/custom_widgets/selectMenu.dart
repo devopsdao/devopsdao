@@ -56,7 +56,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
         //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
         //     ]
         // )),
-        if (valueName == 'ausdc')
+        if (valueName == 'eth')
           DropdownButton<String>(
             isExpanded: true,
             value: dropdownValue,

@@ -27,7 +27,7 @@ class _ParticipantListState extends State<ParticipantList> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if (widget.listType == 'submitter') {
+    if (widget.listType == 'customer') {
       participants = widget.obj.participants;
       status = 'agreed';
     } else if (widget.listType == 'audit') {

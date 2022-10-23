@@ -306,7 +306,7 @@ class _WalletPagesState extends State<WalletPages> {
               ),
               const SizedBox(height: 60),
               WalletConnectButton(
-                buttonName: 'wallet_connect',
+                buttonName: 'metamask',
               ),
             ]),
         ]),
@@ -526,9 +526,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeIn);
           if (widget.buttonName == 'metamask') {
-            tasksServices.initComplete
-                ? () => tasksServices.connectWalletMM()
-                : null;
+            tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
           } else if (widget.buttonName == 'wallet_connect') {
             tasksServices.initComplete ? tasksServices.connectWalletWC() : null;
           }
@@ -632,9 +630,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           //     duration: const Duration(milliseconds: 300),
           //     curve: Curves.easeIn);
           if (widget.buttonName == 'metamask') {
-            tasksServices.initComplete
-                ? () => tasksServices.connectWalletMM()
-                : null;
+            tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
           } else if (widget.buttonName == 'wallet_connect') {
             tasksServices.initComplete ? tasksServices.connectWalletWC() : null;
           }

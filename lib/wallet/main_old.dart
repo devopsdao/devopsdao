@@ -531,7 +531,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.connectionFailed:
         return () async {
           // connectWallet3(tasksServices);
-          tasksServices.connectWallet();
+          tasksServices.connectWalletWC();
         };
 
       // Finished

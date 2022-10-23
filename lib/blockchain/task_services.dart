@@ -189,16 +189,6 @@ class TasksServices extends ChangeNotifier {
 
   bool validChainID = false;
 
-  Future<void> connectWallet() async {
-    // beamerDelegate.beamToNamed('/deeper');
-    if (platform != 'web') {
-      print('not web');
-      connectWalletWC();
-    } else {
-      connectWalletMM();
-    }
-  }
-
   Future<void> connectWalletWC() async {
     print('async');
     if (transactionTester != null) {
@@ -295,10 +285,9 @@ class TasksServices extends ChangeNotifier {
       var ethRPC = eth.asRpcService();
 
       final client = Web3Client.custom(ethRPC);
+
       credentials = await eth.requestAccount();
-
       publicAddress = credentials.address;
-
       final chainIdHex = await eth.rawRequest('eth_chainId');
       int chainId = int.parse(chainIdHex);
 
@@ -318,7 +307,58 @@ class TasksServices extends ChangeNotifier {
         }
       }
 
-      walletConnected = true;
+      // walletConnected = true;
+
+// Subscribe to events
+      var connectStream = eth.connect;
+      connectStream.listen((event) {
+        print(event);
+      });
+      var disconnectStream = eth.disconnect;
+      disconnectStream.listen((event) {
+        print(event);
+      });
+      var connect = eth.stream('connect').listen((event) {
+        print(event);
+      });
+      var disconnect = eth.stream('disconnect').listen((event) {
+        print(event);
+      });
+      // eth.on('connect', (session) {
+      //   print(session);
+      //   walletConnected = true;
+      //   () async {
+      //     if (hardhatDebug == false) {
+      //       credentials = await eth.requestAccount();
+      //       publicAddress = credentials.address;
+      //       final chainIdHex = await eth.rawRequest('eth_chainId');
+      //       int chainId = int.parse(chainIdHex);
+      //       if (chainId == 1287) {
+      //         validChainID = true;
+      //       } else {
+      //         validChainID = false;
+      //       }
+      //     } else {
+      //       chainId = 31337;
+      //       validChainID = true;
+      //     }
+      //     fetchTasks();
+      //     myBalance();
+      //     isLoading = true;
+      //   }();
+      //   notifyListeners();
+      // });
+
+      // eth.on('disconnect', (session) {
+      //   print(session);
+      //   walletConnected = false;
+      //   publicAddress = null;
+      //   ethBalance = 0;
+      //   ethBalanceToken = 0;
+      //   pendingBalance = 0;
+      //   pendingBalanceToken = 0;
+      //   notifyListeners();
+      // });
 
       fetchTasks();
 
@@ -328,6 +368,11 @@ class TasksServices extends ChangeNotifier {
       print("eth not initialized");
     }
   }
+
+  // Future<void> disconnectWalletMM() {
+  //   final eth = window.ethereum;
+  //   // eth?.cancel();
+  // }
 
   Future<List<dynamic>> web3Call({
     EthereumAddress? sender,
@@ -432,6 +477,7 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
+  late Map fees;
   Future<void> startup() async {
     String addressesFile =
         await rootBundle.loadString('lib/blockchain/abi/addresses.json');
@@ -456,6 +502,25 @@ class TasksServices extends ChangeNotifier {
     });
     await myBalance();
     await monitorEvents();
+
+    fees = await _web3client.getGasInEIP1559();
+    print(fees);
+    print("maxFeePerGas: ${fees['medium'].maxFeePerGas}");
+    print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
+    print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
+    print("maxGas: ${fees['medium'].estimatedGas}");
+
+    BigInt estimatedGas = await _web3client.estimateGas(
+        sender: publicAddress,
+        to: EthereumAddress.fromHex(
+            '0x3089c7c8f5aa2be20531634df9c12b72eaa79b0a'),
+        amountOfGas: fees['medium'].estimatedGas,
+        maxFeePerGas: fees['medium'].maxFeePerGas,
+        maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+    print("maxGas: ${estimatedGas}");
+
+    // print("maxGas: ${fees['medium'].estimatedGas * 10}");
+    // print("maxGas: ${fees['medium'].estimatedGas * 1000000}");
   }
 
   Future<void> connectContracts() async {
@@ -594,7 +659,7 @@ class TasksServices extends ChangeNotifier {
         double ethBalancePrecise = 0;
         double ethBalanceToken = 0;
         TaskContract taskContract = TaskContract(
-            address: totalTaskList[i], client: _web3client, chainId: 31337);
+            address: totalTaskList[i], client: _web3client, chainId: chainId);
         task = await taskContract.getTaskInfo();
         if (task != null) {
           print(task);
@@ -835,6 +900,7 @@ class TasksServices extends ChangeNotifier {
       String taskType = 'public';
       if (taskTokenSymbol == 'ETH') {
         final transaction = Transaction(
+          from: publicAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
         txn = await tasksFacet.createTaskContract(nanoId, taskType, title,
@@ -915,15 +981,18 @@ class TasksServices extends ChangeNotifier {
     String message = 'taking this task';
     BigInt replyTo = BigInt.from(0);
     TaskContract taskContract = TaskContract(
-        address: contractAddress, client: _web3client, chainId: 31337);
-    EthPrivateKey creds;
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[1]["key"]);
     } else {
       creds = credentials;
     }
+    final transaction = Transaction(
+      from: publicAddress,
+    );
     txn = await taskContract.taskParticipate(message, replyTo,
-        credentials: creds);
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -942,15 +1011,18 @@ class TasksServices extends ChangeNotifier {
     String message = 'auditing this task';
     BigInt replyTo = BigInt.from(0);
     TaskContract taskContract = TaskContract(
-        address: contractAddress, client: _web3client, chainId: 31337);
-    EthPrivateKey creds;
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[1]["key"]);
     } else {
       creds = credentials;
     }
+    final transaction = Transaction(
+      from: publicAddress,
+    );
     txn = await taskContract.taskAuditParticipate(message, replyTo,
-        credentials: creds);
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -972,8 +1044,8 @@ class TasksServices extends ChangeNotifier {
     BigInt replyTo = BigInt.from(0);
     BigInt score = BigInt.from(5);
     TaskContract taskContract = TaskContract(
-        address: contractAddress, client: _web3client, chainId: 31337);
-    EthPrivateKey creds;
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
     if (hardhatDebug == true) {
       if (state == 'agreed' ||
           state == 'audit' ||
@@ -989,9 +1061,12 @@ class TasksServices extends ChangeNotifier {
     } else {
       creds = credentials;
     }
+    final transaction = Transaction(
+      from: publicAddress,
+    );
     txn = await taskContract.taskStateChange(
         participantAddress, state, message, replyTo, score,
-        credentials: creds);
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -1011,15 +1086,18 @@ class TasksServices extends ChangeNotifier {
     BigInt replyTo = BigInt.from(0);
     BigInt score = BigInt.from(5);
     TaskContract taskContract = TaskContract(
-        address: contractAddress, client: _web3client, chainId: 31337);
-    EthPrivateKey creds;
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[2]["key"]);
     } else {
       creds = credentials;
     }
+    final transaction = Transaction(
+      from: publicAddress,
+    );
     txn = await taskContract.taskAuditDecision(favour, message, replyTo, score,
-        credentials: creds);
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -1036,27 +1114,37 @@ class TasksServices extends ChangeNotifier {
       'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    late int priceInGwei = (80000000 * gasPriceValue).toInt();
-    print("gasPriceValue");
-    print(gasPriceValue);
-    EtherAmount value =
-        EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei);
-    print("value");
-    print(value);
-    print("destinationChain: " + destinationChain);
-
     String chain = 'moonbase';
     TaskContract taskContract = TaskContract(
-        address: contractAddress, client: _web3client, chainId: 31337);
+        address: contractAddress, client: _web3client, chainId: chainId);
     //should send value now?!
-    EthPrivateKey creds;
+    var creds;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[1]["key"]);
     } else {
       creds = credentials;
     }
+
+    BigInt estimatedGas = await _web3client.estimateGas(
+        sender: publicAddress,
+        to: contractAddress,
+        amountOfGas: fees['medium'].estimatedGas,
+        maxFeePerGas: fees['medium'].maxFeePerGas,
+        maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+
+    int price = 15;
+    int priceInGwei = (price).toInt();
+    EtherAmount gasPrice =
+        EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
+
+    final transaction = Transaction(
+        from: publicAddress,
+        // maxFeePerGas: fees['medium'].maxFeePerGas,
+        // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
+        maxGas: estimatedGas.toInt(),
+        gasPrice: gasPrice);
     txn = await taskContract.transferToaddress(publicAddress!, chain,
-        credentials: creds);
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;

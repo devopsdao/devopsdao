@@ -202,7 +202,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     ])),
               if (task.taskState == "new" && widget.role == 'customer')
                 ParticipantList(
-                  listType: 'performer',
+                  listType: 'customer',
                   obj: task,
                 ),
 
@@ -356,6 +356,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                   child: const Text('Request audit')),
             if (task.taskState == "completed" &&
                 (widget.role == 'customer' ||
+                    widget.role == 'performer' ||
                     tasksServices.hardhatDebug == true) &&
                 (task.contractValue != 0 || task.contractValueToken != 0))
               WithdrawButton(object: task),
