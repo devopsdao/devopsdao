@@ -48,7 +48,7 @@ class JSrawRequestParams {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = false;
+  bool hardhatDebug = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -503,21 +503,21 @@ class TasksServices extends ChangeNotifier {
     await myBalance();
     await monitorEvents();
 
-    fees = await _web3client.getGasInEIP1559();
-    print(fees);
-    print("maxFeePerGas: ${fees['medium'].maxFeePerGas}");
-    print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
-    print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
-    print("maxGas: ${fees['medium'].estimatedGas}");
+    // fees = await _web3client.getGasInEIP1559();
+    // print(fees);
+    // print("maxFeePerGas: ${fees['medium'].maxFeePerGas}");
+    // print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
+    // print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
+    // print("maxGas: ${fees['medium'].estimatedGas}");
 
-    BigInt estimatedGas = await _web3client.estimateGas(
-        sender: publicAddress,
-        to: EthereumAddress.fromHex(
-            '0x3089c7c8f5aa2be20531634df9c12b72eaa79b0a'),
-        amountOfGas: fees['medium'].estimatedGas,
-        maxFeePerGas: fees['medium'].maxFeePerGas,
-        maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
-    print("maxGas: ${estimatedGas}");
+    // BigInt estimatedGas = await _web3client.estimateGas(
+    //     sender: publicAddress,
+    //     to: EthereumAddress.fromHex(
+    //         '0x3089c7c8f5aa2be20531634df9c12b72eaa79b0a'),
+    //     amountOfGas: fees['medium'].estimatedGas,
+    //     maxFeePerGas: fees['medium'].maxFeePerGas,
+    //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+    // print("maxGas: ${estimatedGas}");
 
     // print("maxGas: ${fees['medium'].estimatedGas * 10}");
     // print("maxGas: ${fees['medium'].estimatedGas * 1000000}");
@@ -846,6 +846,9 @@ class TasksServices extends ChangeNotifier {
                 tasksAuditComplete[task.nanoId] = task;
               }
             }
+            if (hardhatDebug == true) {
+              tasksAuditApplied[task.nanoId] = task;
+            }
           }
         }
 
@@ -870,11 +873,20 @@ class TasksServices extends ChangeNotifier {
       String symbol,
       BigInt amount,
       String nanoId) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
     final transaction = Transaction(
-      from: publicAddress,
+      from: senderAddress,
     );
     final result = await ierc20.approve(_contractAddress, amount,
-        credentials: credentials, transaction: transaction);
+        credentials: creds, transaction: transaction);
     print('result of approveSpend: ' + result);
     transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] =
         'approved';
@@ -989,13 +1001,16 @@ class TasksServices extends ChangeNotifier {
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
+    var senderAddress;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
     } else {
       creds = credentials;
+      senderAddress = publicAddress;
     }
     final transaction = Transaction(
-      from: publicAddress,
+      from: senderAddress,
     );
     txn = await taskContract.taskParticipate(message, replyTo,
         credentials: creds, transaction: transaction);
@@ -1025,13 +1040,17 @@ class TasksServices extends ChangeNotifier {
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
+    var senderAddress;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
     } else {
       creds = credentials;
+      senderAddress = publicAddress;
     }
+
     final transaction = Transaction(
-      from: publicAddress,
+      from: senderAddress,
     );
     txn = await taskContract.taskAuditParticipate(message, replyTo,
         credentials: creds, transaction: transaction);
@@ -1064,6 +1083,7 @@ class TasksServices extends ChangeNotifier {
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
+    var senderAddress;
     if (hardhatDebug == true) {
       if (state == 'agreed' ||
           state == 'audit' ||
@@ -1072,15 +1092,17 @@ class TasksServices extends ChangeNotifier {
         creds = credentials;
       } else if (state == 'progress' || state == 'review') {
         creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+        senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
       } else {
-        //a default for any new state
         creds = credentials;
+        senderAddress = publicAddress;
       }
     } else {
       creds = credentials;
+      senderAddress = publicAddress;
     }
     final transaction = Transaction(
-      from: publicAddress,
+      from: senderAddress,
     );
     txn = await taskContract.taskStateChange(
         participantAddress, state, message, replyTo, score,
@@ -1111,13 +1133,16 @@ class TasksServices extends ChangeNotifier {
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
+    var senderAddress;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[2]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
     } else {
       creds = credentials;
+      senderAddress = publicAddress;
     }
     final transaction = Transaction(
-      from: publicAddress,
+      from: senderAddress,
     );
     txn = await taskContract.taskAuditDecision(favour, message, replyTo, score,
         credentials: creds, transaction: transaction);
@@ -1142,18 +1167,21 @@ class TasksServices extends ChangeNotifier {
         address: contractAddress, client: _web3client, chainId: chainId);
     //should send value now?!
     var creds;
+    var senderAddress;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
     } else {
       creds = credentials;
+      senderAddress = publicAddress;
     }
 
-    BigInt estimatedGas = await _web3client.estimateGas(
-        sender: publicAddress,
-        to: contractAddress,
-        amountOfGas: fees['medium'].estimatedGas,
-        maxFeePerGas: fees['medium'].maxFeePerGas,
-        maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+    // BigInt estimatedGas = await _web3client.estimateGas(
+    //     sender: publicAddress,
+    //     to: contractAddress,
+    //     amountOfGas: fees['medium'].estimatedGas,
+    //     maxFeePerGas: fees['medium'].maxFeePerGas,
+    //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
 
     int price = 15;
     int priceInGwei = (price).toInt();
@@ -1161,11 +1189,12 @@ class TasksServices extends ChangeNotifier {
         EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
 
     final transaction = Transaction(
-        from: publicAddress,
-        // maxFeePerGas: fees['medium'].maxFeePerGas,
-        // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
-        maxGas: estimatedGas.toInt(),
-        gasPrice: gasPrice);
+      from: senderAddress,
+      // maxFeePerGas: fees['medium'].maxFeePerGas,
+      // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
+      // maxGas: estimatedGas.toInt(),
+      // gasPrice: gasPrice
+    );
     txn = await taskContract.transferToaddress(publicAddress!, chain,
         credentials: creds, transaction: transaction);
     isLoading = false;
