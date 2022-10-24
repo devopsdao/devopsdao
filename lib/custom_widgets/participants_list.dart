@@ -36,8 +36,8 @@ class _ParticipantListState extends State<ParticipantList> {
     }
 
     return Container(
-      height: 300.0, // Change as per your requirement
-      width: 300.0, // Change as per your requirement
+      height: 100.0, // Change as per your requirement
+      width: 240.0, // Change as per your requirement
       child: ListView.builder(
           // padding: EdgeInsets.zero,
           // scrollDirection: Axis.vertical,

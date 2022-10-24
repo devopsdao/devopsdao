@@ -77,7 +77,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return Dialog(
-              insetPadding: const EdgeInsets.all(62),
+              insetPadding: const EdgeInsets.all(30),
               shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
 
@@ -88,7 +88,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(20),
-                      width: 400,
+                      width: 40,
                       child: Row(
                         children: [
                           Container(
@@ -656,31 +656,22 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-    // late String name;
+    late String buttonName;
 
 
 
-    if (widget.buttonName == 'metamask') {
-      // name = 'Metamask';
-      // assetName = 'assets/images/metamask-icon2.svg';
-      // buttonColor = Colors.teal.shade900;
-      // page = 1;
-    } else if (widget.buttonName == 'wallet_connect') {
-      // name = 'Wallet Connect';
-      // assetName = 'assets/images/wc_logo.svg';
-      // buttonColor = Colors.purple.shade900;
-      // page = 2;
+    if (tasksServices.walletConnected) {
+      buttonName = 'Disconnect';
+    } else {
+      buttonName = 'Connect';
     }
-    // final Widget customIcon = SvgPicture.asset(
-    //     assetName,
-    // );
 
     return Material(
       elevation: 9,
       borderRadius: BorderRadius.circular(6),
       color: Colors.blueAccent,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           // controller.jumpToPage(page);
           // interface.controller.animateToPage(page,
           //     duration: const Duration(milliseconds: 300),
@@ -688,9 +679,14 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           if (widget.buttonName == 'metamask') {
             tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
           } else if (widget.buttonName == 'wallet_connect') {
-            tasksServices.initComplete ? tasksServices.connectWalletWC() : null;
+            if (tasksServices.walletConnected) {
+              await tasksServices.transactionTester?.disconnect();
+            } else {
+              tasksServices.initComplete ? tasksServices.connectWalletWC() : null;
+            }
           }
-
+          
+          
         },
         child: Container(
           padding: const EdgeInsets.all(0.0),
@@ -700,10 +696,10 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             borderRadius: BorderRadius.circular(6),
           ),
           child: Row(
-            children: const <Widget>[
+            children: <Widget>[
               Expanded(
                 child: Text(
-                  'Connect',
+                  buttonName,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
