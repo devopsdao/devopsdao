@@ -33,6 +33,7 @@ dependencies:
   eth_sig_util: ^0.0.9
   flutter:
     sdk: flutter
+  flutter_chat_ui: ^1.6.5
   flutter_localizations:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
@@ -93,6 +94,7 @@ flutter:
     - assets/lottie_animations/
     - assets/rive_animations/
     - assets/pdfs/
+    - assets/
     - build/contracts/Factory.json
     - build/contracts/Factory.json
     # - build/contracts/IERC20.json
