@@ -984,13 +984,8 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> taskParticipate(
-      EthereumAddress contractAddress, String nanoId,
-      {
-        String? message,
-        BigInt? score,
-        BigInt? replyTo
-      }) async {
+  Future<void> taskParticipate(EthereumAddress contractAddress, String nanoId,
+      {String? message, BigInt? score, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskParticipate': {'status': 'pending', 'txn': 'initial'}
     };
@@ -1025,11 +1020,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> taskAuditParticipate(
       EthereumAddress contractAddress, String nanoId,
-      {
-        String? message,
-        BigInt? score,
-        BigInt? replyTo
-      }) async {
+      {String? message, BigInt? score, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskAuditParticipate': {'status': 'pending', 'txn': 'initial'}
     };
@@ -1065,12 +1056,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> taskStateChange(EthereumAddress contractAddress,
-    EthereumAddress participantAddress, String state, String nanoId,
-      {
-        String? message,
-        BigInt? score,
-        BigInt? replyTo
-      }) async {
+      EthereumAddress participantAddress, String state, String nanoId,
+      {String? message, BigInt? score, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskStateChange': {'status': 'pending', 'txn': 'initial'}
     };
@@ -1118,11 +1105,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> taskAuditDecision(
       EthereumAddress contractAddress, String favour, String nanoId,
-      {
-        String? message,
-        BigInt? score,
-        BigInt? replyTo
-      }) async {
+      {String? message, BigInt? score, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskAuditDecision': {'status': 'pending', 'txn': 'initial'}
     };

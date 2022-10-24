@@ -28,7 +28,8 @@ import 'package:uuid/uuid.dart';
 // }
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final List messages;
+  const ChatPage({super.key, required this.messages});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -36,7 +37,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
-  final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
+  // final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
 
   @override
   void initState() {
@@ -46,23 +47,23 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: Chat(
-      messages: _messages,
-      // onAttachmentPressed: _handleAttachmentPressed,
-      // onMessageTap: _handleMessageTap,
-      // onPreviewDataFetched: _handlePreviewDataFetched,
-      onSendPressed: _handleSendPressed,
-      showUserAvatars: false,
-      showUserNames: true,
-      user: _user,
-      theme: const DefaultChatTheme(
-        inputBackgroundColor: Colors.black87,
-        inputBorderRadius: BorderRadius.all(
-          Radius.circular(10),
+        body: Chat(
+          messages: _messages,
+          // onAttachmentPressed: _handleAttachmentPressed,
+          // onMessageTap: _handleMessageTap,
+          // onPreviewDataFetched: _handlePreviewDataFetched,
+          onSendPressed: _handleSendPressed,
+          showUserAvatars: false,
+          showUserNames: true,
+          user: types.User(id: widget.messages[0][3].toString()),
+          theme: const DefaultChatTheme(
+            inputBackgroundColor: Colors.black87,
+            inputBorderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   void _addMessage(types.Message message) {
     setState(() {
@@ -166,9 +167,9 @@ class _ChatPageState extends State<ChatPage> {
       if (message.uri.startsWith('http')) {
         try {
           final index =
-          _messages.indexWhere((element) => element.id == message.id);
+              _messages.indexWhere((element) => element.id == message.id);
           final updatedMessage =
-          (_messages[index] as types.FileMessage).copyWith(
+              (_messages[index] as types.FileMessage).copyWith(
             isLoading: true,
           );
 
@@ -188,9 +189,9 @@ class _ChatPageState extends State<ChatPage> {
           }
         } finally {
           final index =
-          _messages.indexWhere((element) => element.id == message.id);
+              _messages.indexWhere((element) => element.id == message.id);
           final updatedMessage =
-          (_messages[index] as types.FileMessage).copyWith(
+              (_messages[index] as types.FileMessage).copyWith(
             isLoading: null,
           );
 
@@ -205,9 +206,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handlePreviewDataFetched(
-      types.TextMessage message,
-      types.PreviewData previewData,
-      ) {
+    types.TextMessage message,
+    types.PreviewData previewData,
+  ) {
     final index = _messages.indexWhere((element) => element.id == message.id);
     final updatedMessage = (_messages[index] as types.TextMessage).copyWith(
       previewData: previewData,
@@ -220,7 +221,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void _handleSendPressed(types.PartialText message) {
     final textMessage = types.TextMessage(
-      author: _user,
+      author: types.User(id: widget.messages[0][3].toString()),
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
@@ -230,11 +231,54 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _loadMessages() async {
-    final response = await rootBundle.loadString('assets/messages.json');
-    final messages = (jsonDecode(response) as List)
+    List taskMessages = [];
+    for (var msg in widget.messages) {
+      Map<String, dynamic> message = {};
+      Map<String, dynamic> author = {};
+      author['firstName'] = msg[3].toString();
+      // author['firstName'] = 'vaso';
+      author['lastName'] = '';
+      author['id'] = msg[3].toString();
+      // author['id'] = const Uuid().v4();
+      message['author'] = author;
+      message['createdAt'] = msg[2].toInt();
+      message['id'] = msg[0].toString();
+      message['status'] = 'delivered';
+      message['text'] = msg[1];
+      message['type'] = 'text';
+      // final String firstName = msg[3].toString();
+      // taskMessages.add(message);
+      // final textMessage = types.TextMessage(
+      //   author: _user,
+      //   createdAt: msg[2].toInt(),
+      //   id: msg[0].toString(),
+      //   text: msg[1],
+      // );
+      // _addMessage(textMessage);
+      taskMessages.add(message);
+    }
+    // final String messagesJson = jsonEncode(taskMessages);
+
+    // {
+    //   "author": {
+    //     "firstName": "Rod",
+    //     "id": "e52552f4-835d-4dbe-ba77-b076e659774d",
+    //     "lastName": ""
+    //   },
+    //   "createdAt": 1666556296000,
+    //   "id": "4e048753-2d60-4144-bc28-9967050aaf12",
+    //   "status": "seen",
+    //   "text": "Wow you made it!",
+    //   "type": "text"
+    // },
+
+    // final response = await rootBundle.loadString('assets/messages.json');
+    // final origMessages = jsonDecode(response);
+    // final messages = (jsonDecode(messagesJson) as List)
+    final messages = (taskMessages as List)
+        // final messages = (taskMessages)
         .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
         .toList();
-
 
     setState(() {
       _messages = messages;
