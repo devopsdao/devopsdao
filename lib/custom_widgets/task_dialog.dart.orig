@@ -816,7 +816,7 @@ class _DialogPagesState extends State<DialogPages> {
   bool enableRatingButton = false;
   double ratingScore = 0;
 
-  TextEditingController? titleFieldController;
+  TextEditingController? messageForStateController;
 =======
             if (task.taskState == 'review' && (widget.role == 'customer'))
               // ******* Sign Review Button ******** //
@@ -934,7 +934,7 @@ class _DialogPagesState extends State<DialogPages> {
   @override
   void initState() {
     super.initState();
-    titleFieldController = TextEditingController();
+    messageForStateController = TextEditingController();
   }
 
   @override
@@ -1208,9 +1208,9 @@ class _DialogPagesState extends State<DialogPages> {
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                   ),
                   child: TextFormField(
-                    controller: titleFieldController,
+                    controller: messageForStateController,
                     // onChanged: (_) => EasyDebounce.debounce(
-                    //   'titleFieldController',
+                    //   'messageForStateController',
                     //   Duration(milliseconds: 2000),
                     //   () => setState(() {}),
                     // ),

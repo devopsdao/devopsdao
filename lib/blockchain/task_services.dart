@@ -973,13 +973,19 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> taskParticipate(
-      EthereumAddress contractAddress, String nanoId) async {
+      EthereumAddress contractAddress, String nanoId,
+      {
+        String? message,
+        BigInt? score,
+        BigInt? replyTo
+      }) async {
     transactionStatuses[nanoId] = {
       'taskParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    String message = 'taking this task';
-    BigInt replyTo = BigInt.from(0);
+    message ??= 'Participate this task';
+    replyTo ??= BigInt.from(0);
+    score ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
@@ -1003,13 +1009,19 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> taskAuditParticipate(
-      EthereumAddress contractAddress, String nanoId) async {
+      EthereumAddress contractAddress, String nanoId,
+      {
+        String? message,
+        BigInt? score,
+        BigInt? replyTo
+      }) async {
     transactionStatuses[nanoId] = {
       'taskAuditParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    String message = 'auditing this task';
-    BigInt replyTo = BigInt.from(0);
+    message ??= 'Participate this task';
+    replyTo ??= BigInt.from(0);
+    score ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
@@ -1034,15 +1046,21 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> taskStateChange(EthereumAddress contractAddress,
-    EthereumAddress participantAddress, String state, String nanoId) async {
+    EthereumAddress participantAddress, String state, String nanoId,
+      {
+        String? message,
+        BigInt? score,
+        BigInt? replyTo
+      }) async {
     transactionStatuses[nanoId] = {
       'taskStateChange': {'status': 'pending', 'txn': 'initial'}
     };
     // lastTxn = 'pending';
     late String txn;
-    String message = 'moving this task';
-    BigInt replyTo = BigInt.from(0);
-    // BigInt score = BigInt.from(5);
+    // String message = 'moving this task';
+    message ??= 'moving this $state task';
+    replyTo ??= BigInt.from(0);
+    score ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
@@ -1077,14 +1095,19 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> taskAuditDecision(
-      EthereumAddress contractAddress, String favour, String nanoId) async {
+      EthereumAddress contractAddress, String favour, String nanoId,
+      {
+        String? message,
+        BigInt? score,
+        BigInt? replyTo
+      }) async {
     transactionStatuses[nanoId] = {
       'taskAuditDecision': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    String message = 'auditing this task';
-    BigInt replyTo = BigInt.from(0);
-    BigInt score = BigInt.from(5);
+    message ??= 'Auditor task decision';
+    replyTo ??= BigInt.from(0);
+    score ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;

@@ -313,7 +313,6 @@ class _WalletPagesState extends State<WalletPages> {
                     'assets/images/metamask-icon2.svg',
                   ),
                 ),
-              ),
               const SizedBox(height: 60),
               WalletConnectButton(
                 buttonName: 'metamask',

@@ -456,12 +456,12 @@ class _DialogPagesState extends State<DialogPages> {
   bool enableRatingButton = false;
   double ratingScore = 0;
 
-  TextEditingController? titleFieldController;
+  TextEditingController? messageForStateController;
 
   @override
   void initState() {
     super.initState();
-    titleFieldController = TextEditingController();
+    messageForStateController = TextEditingController();
   }
 
   @override
@@ -735,9 +735,9 @@ class _DialogPagesState extends State<DialogPages> {
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                   ),
                   child: TextFormField(
-                    controller: titleFieldController,
+                    controller: messageForStateController,
                     // onChanged: (_) => EasyDebounce.debounce(
-                    //   'titleFieldController',
+                    //   'messageForStateController',
                     //   Duration(milliseconds: 2000),
                     //   () => setState(() {}),
                     // ),
@@ -792,7 +792,8 @@ class _DialogPagesState extends State<DialogPages> {
                 children: [
                   // ##################### ACTION BUTTONS PART ######################## //
                   // ************************ NEW (EXCHANGE) ************************** //
-                  if (task.contractOwner != tasksServices.publicAddress &&
+                  if ((task.contractOwner != tasksServices.publicAddress ||
+                      tasksServices.hardhatDebug == true) &&
                       tasksServices.publicAddress != null &&
                       tasksServices.validChainID && role == 'exchange')
 
@@ -813,8 +814,8 @@ class _DialogPagesState extends State<DialogPages> {
                             taskName: 'taskParticipate',
                           ));
                     },),
-                  // ********************** CUSTOMER BUTTONS ************************* //
-                  if (task.taskState == "agreed" && role == 'customer')
+                  // ********************** PERFORMER BUTTONS ************************* //
+                  if (task.taskState == "agreed" && role == 'performer')
 
                   TaskDialogButton(buttonName: 'Start the task',
                     buttonColorRequired: Colors.lightBlue.shade600,
@@ -823,7 +824,8 @@ class _DialogPagesState extends State<DialogPages> {
                         task.justLoaded = false;
                       });
                       tasksServices.taskStateChange(task.contractAddress,
-                          task.participant, 'progress', task.nanoId);
+                          task.participant, 'progress', task.nanoId,
+                          message: messageForStateController!.text);
                       Navigator.pop(context);
 
                       showDialog(
@@ -833,7 +835,7 @@ class _DialogPagesState extends State<DialogPages> {
                             taskName: 'taskStateChange',
                           ));
                     },),
-                  if (task.taskState == "progress" && role == 'customer')
+                  if (task.taskState == "progress" && role == 'performer')
 
                   TaskDialogButton(buttonName: 'Review',
                     buttonColorRequired: Colors.lightBlue.shade600,
@@ -852,7 +854,9 @@ class _DialogPagesState extends State<DialogPages> {
                     },
                   ),
 
-                  if (task.taskState == "completed" && role == 'customer' &&
+                  if (task.taskState == "completed" && (role == 'customer' ||
+                      role == 'performer' ||
+                      tasksServices.hardhatDebug == true) &&
                       (task.contractValue != 0 || task.contractValueToken != 0))
                   // WithdrawButton(object: task),
                   TaskDialogButton(buttonName: 'Withdraw',
@@ -874,8 +878,8 @@ class _DialogPagesState extends State<DialogPages> {
                     taskObject: task,
                   ),
 
-                  // *********************** SUBMITTER BUTTONS *********************** //
-                  if (role == 'submitter')
+                  // *********************** CUSTOMER BUTTONS *********************** //
+                  if (role == 'customer')
                   TaskDialogButton(buttonName: 'Topup',
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
@@ -916,7 +920,7 @@ class _DialogPagesState extends State<DialogPages> {
 
 
 
-                  if (task.taskState == 'review' && role == 'submitter')
+                  if (task.taskState == 'review' && role == 'customer')
 
                   TaskDialogButton(buttonName: 'Sign Review',
                     buttonColorRequired: Colors.lightBlue.shade600,
@@ -933,7 +937,7 @@ class _DialogPagesState extends State<DialogPages> {
                           ));
                     },
                   ),
-                  if (task.taskState == 'completed' && role == 'submitter')
+                  if (task.taskState == 'completed' && role == 'customer')
                   TaskDialogButton(buttonName: 'Rate task',
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
@@ -954,7 +958,8 @@ class _DialogPagesState extends State<DialogPages> {
 
                   // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
                   // ************************* AUDIT REQUEST ************************* //
-                  if ((role == 'submitter' || role == 'customer') &&
+                  if ((role == 'performer' ||
+                      (role == 'customer' || tasksServices.hardhatDebug == true)) &&
                       (task.taskState == "progress" || task.taskState == "review"))
                   TaskDialogButton(buttonName: 'Request audit',
                     buttonColorRequired: Colors.orangeAccent.shade700,
