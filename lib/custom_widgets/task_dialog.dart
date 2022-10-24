@@ -623,7 +623,7 @@ class _DialogPagesState extends State<DialogPages> {
                                   ])),
                             if (task.taskState == "new" && role == 'customer')
                               ParticipantList(
-                                listType: 'submitter',
+                                listType: 'customer',
                                 obj: task,
                               ),
 
