@@ -1187,7 +1187,8 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.3"
+<<<<<<< HEAD
+    version: "2.1.4"
   visibility_detector:
     dependency: transitive
     description:
@@ -1195,6 +1196,9 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3"
+=======
+    version: "2.1.3"
+>>>>>>> 7f2a2ca72c669f8eb36e3dcfa3e0f315cfed8d79
   walletconnect_dart:
     dependency: "direct main"
     description:
