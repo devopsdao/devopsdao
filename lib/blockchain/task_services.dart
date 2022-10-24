@@ -1077,6 +1077,7 @@ class TasksServices extends ChangeNotifier {
           state == 'completed' ||
           state == 'canceled') {
         creds = credentials;
+        senderAddress = publicAddress;
       } else if (state == 'progress' || state == 'review') {
         creds = EthPrivateKey.fromHex(accounts[1]["key"]);
         senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
