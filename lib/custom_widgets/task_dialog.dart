@@ -479,7 +479,7 @@ class _DialogPagesState extends State<DialogPages> {
       scrollDirection: Axis.horizontal,
       // pageSnapping: false,
       // physics: BouncingScrollPhysics(),
-      physics: const NeverScrollableScrollPhysics(),
+      // physics: const NeverScrollableScrollPhysics(),
       controller: interface.controller,
       onPageChanged: (number) {
         interface.pageWalletViewNumber = number;
@@ -815,15 +815,15 @@ class _DialogPagesState extends State<DialogPages> {
                           color: Colors.black87,
                           lineHeight: 2,
                         ),
-                    maxLines: 6,
+                    maxLines: 3,
                   ),
                 ),
               ),
             ),
             // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
-            // const Spacer(),
+            const Spacer(),
             Container(
-              padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 14.0),
+              padding: const EdgeInsets.fromLTRB(26.0, 14.0, 26.0, 16.0),
               width: 362,
               child: Wrap(
                 direction: Axis.horizontal,
@@ -1142,7 +1142,7 @@ class _DialogPagesState extends State<DialogPages> {
                             padding: const EdgeInsets.all(8.0),
                             // height: MediaQuery.of(context).size.width * .08,
                             // width: MediaQuery.of(context).size.width * .57
-                            width: 350,
+                            width: 300,
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(widget.borderRadius),
@@ -1169,7 +1169,7 @@ class _DialogPagesState extends State<DialogPages> {
                             padding: const EdgeInsets.all(8.0),
                             // height: MediaQuery.of(context).size.width * .08,
                             // width: MediaQuery.of(context).size.width * .57
-                            width: 350,
+                            width: 300,
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(widget.borderRadius),
@@ -1240,7 +1240,7 @@ class _DialogPagesState extends State<DialogPages> {
                         ? 280
                         : widget.topConstraints.maxHeight * .6,
                     // width: MediaQuery.of(context).size.width * .57
-                    width: 350,
+                    width: 300,
                     // height: 540,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),

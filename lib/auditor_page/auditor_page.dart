@@ -150,6 +150,11 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            // fit: BoxFit.cover,
+            repeat: ImageRepeat.repeat,
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,

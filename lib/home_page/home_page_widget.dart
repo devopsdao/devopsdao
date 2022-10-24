@@ -270,14 +270,23 @@ class _HomePageWidgetState extends State<HomePageWidget>
             )
           : null,
       body: Container(
+
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            colors: [
+              Color(0xFF0E2517),
+              Color(0xFF0D0D50),
+              Color(0xFF531E59)],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
+          ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            // fit: BoxFit.cover,
+            repeat: ImageRepeat.repeat,
           ),
         ),
         child: Column(
