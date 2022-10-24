@@ -275,7 +275,7 @@ class _ChatPageState extends State<ChatPage> {
     // final response = await rootBundle.loadString('assets/messages.json');
     // final origMessages = jsonDecode(response);
     // final messages = (jsonDecode(messagesJson) as List)
-    final messages = (taskMessages as List)
+    final messages = (taskMessages.reversed)
         // final messages = (taskMessages)
         .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
         .toList();

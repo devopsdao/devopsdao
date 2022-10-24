@@ -567,7 +567,8 @@ class _DialogPagesState extends State<DialogPages> {
                             // ********************** CUSTOMER ROLE ************************* //
 
                             if (task.taskState == 'completed' &&
-                                role == 'customer')
+                                (role == 'customer' ||
+                                    tasksServices.hardhatDebug == true))
                               RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
@@ -582,7 +583,8 @@ class _DialogPagesState extends State<DialogPages> {
                                   ])),
 
                             if (task.taskState == 'completed' &&
-                                role == 'customer')
+                                (role == 'customer' ||
+                                    tasksServices.hardhatDebug == true))
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -608,7 +610,9 @@ class _DialogPagesState extends State<DialogPages> {
                                       },
                                     ),
                                   ]),
-                            if (task.taskState == "new" && role == 'customer')
+                            if (task.taskState == "new" &&
+                                (role == 'customer' ||
+                                    tasksServices.hardhatDebug == true))
                               RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
@@ -621,7 +625,9 @@ class _DialogPagesState extends State<DialogPages> {
                                             height: 2,
                                             fontWeight: FontWeight.bold)),
                                   ])),
-                            if (task.taskState == "new" && role == 'customer')
+                            if (task.taskState == "new" &&
+                                (role == 'customer' ||
+                                    tasksServices.hardhatDebug == true))
                               ParticipantList(
                                 listType: 'customer',
                                 obj: task,
@@ -630,7 +636,8 @@ class _DialogPagesState extends State<DialogPages> {
                             // ************************ PERFORMER ROLE ************************** //
 
                             if (task.taskState == 'completed' &&
-                                role == 'performer' &&
+                                (role == 'performer' ||
+                                    tasksServices.hardhatDebug == true) &&
                                 (task.contractValue != 0 ||
                                     task.contractValueToken != 0))
                               SelectNetworkMenu(object: task),
@@ -640,7 +647,9 @@ class _DialogPagesState extends State<DialogPages> {
 
                             if (task.taskState == "audit" &&
                                 task.auditState == "requested" &&
-                                (role == 'customer' || role == 'performer'))
+                                (role == 'customer' ||
+                                    role == 'performer' ||
+                                    tasksServices.hardhatDebug == true))
                               RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
@@ -657,7 +666,9 @@ class _DialogPagesState extends State<DialogPages> {
                                   ])),
                             if (task.taskState == "audit" &&
                                 task.auditState == "performing" &&
-                                (role == 'customer' || role == 'performer'))
+                                (role == 'customer' ||
+                                    role == 'performer' ||
+                                    tasksServices.hardhatDebug == true))
                               RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
@@ -679,7 +690,9 @@ class _DialogPagesState extends State<DialogPages> {
                                   ])),
                             if (task.taskState == "audit" &&
                                 task.auditState == "requested" &&
-                                (role == 'customer' || role == 'performer'))
+                                (role == 'customer' ||
+                                    role == 'performer' ||
+                                    tasksServices.hardhatDebug == true))
                               ParticipantList(
                                 listType: 'audit',
                                 obj: task,
@@ -835,7 +848,9 @@ class _DialogPagesState extends State<DialogPages> {
                       },
                     ),
                   // ********************** PERFORMER BUTTONS ************************* //
-                  if (task.taskState == "agreed" && role == 'performer')
+                  if (task.taskState == "agreed" &&
+                      (role == 'performer' ||
+                          tasksServices.hardhatDebug == true))
                     TaskDialogButton(
                       buttonName: 'Start the task',
                       buttonColorRequired: Colors.lightBlue.shade600,
@@ -856,7 +871,9 @@ class _DialogPagesState extends State<DialogPages> {
                                 ));
                       },
                     ),
-                  if (task.taskState == "progress" && role == 'performer')
+                  if (task.taskState == "progress" &&
+                      (role == 'performer' ||
+                          tasksServices.hardhatDebug == true))
                     TaskDialogButton(
                       buttonName: 'Review',
                       buttonColorRequired: Colors.lightBlue.shade600,
@@ -903,7 +920,7 @@ class _DialogPagesState extends State<DialogPages> {
                     ),
 
                   // *********************** CUSTOMER BUTTONS *********************** //
-                  if (role == 'customer')
+                  if (role == 'customer' || tasksServices.hardhatDebug == true)
                     TaskDialogButton(
                       buttonName: 'Topup',
                       buttonColorRequired: Colors.lightBlue.shade600,
@@ -946,7 +963,9 @@ class _DialogPagesState extends State<DialogPages> {
                       },
                     ),
 
-                  if (task.taskState == 'review' && role == 'customer')
+                  if (task.taskState == 'review' &&
+                      (role == 'customer' ||
+                          tasksServices.hardhatDebug == true))
                     TaskDialogButton(
                       buttonName: 'Sign Review',
                       buttonColorRequired: Colors.lightBlue.shade600,
@@ -965,7 +984,9 @@ class _DialogPagesState extends State<DialogPages> {
                                 ));
                       },
                     ),
-                  if (task.taskState == 'completed' && role == 'customer')
+                  if (task.taskState == 'completed' &&
+                      (role == 'customer' ||
+                          tasksServices.hardhatDebug == true))
                     TaskDialogButton(
                       buttonName: 'Rate task',
                       buttonColorRequired: Colors.lightBlue.shade600,
@@ -992,8 +1013,8 @@ class _DialogPagesState extends State<DialogPages> {
                   // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
                   // ************************* AUDIT REQUEST ************************* //
                   if ((role == 'performer' ||
-                          (role == 'customer' ||
-                              tasksServices.hardhatDebug == true)) &&
+                          role == 'customer' ||
+                          tasksServices.hardhatDebug == true) &&
                       (task.taskState == "progress" ||
                           task.taskState == "review"))
                     TaskDialogButton(
@@ -1017,7 +1038,9 @@ class _DialogPagesState extends State<DialogPages> {
                     ),
 
                   // ************************* AUDITOR BUTTONS ************************ //
-                  if (role == 'auditor' && task.auditState == 'requested')
+                  if ((role == 'auditor' ||
+                          tasksServices.hardhatDebug == true) &&
+                      task.auditState == 'requested')
                     TaskDialogButton(
                       buttonName: 'Take audit',
                       buttonColorRequired: Colors.lightBlue.shade600,
@@ -1037,27 +1060,30 @@ class _DialogPagesState extends State<DialogPages> {
                       },
                     ),
 
-                  if (role == 'auditor' && task.auditState == 'performing')
-                    if (role == 'auditor' && task.auditState == 'performing')
-                      TaskDialogButton(
-                        buttonName: 'In favor of Customer',
-                        buttonColorRequired: Colors.lightBlue.shade600,
-                        callback: () {
-                          setState(() {
-                            task.justLoaded = false;
-                          });
-                          tasksServices.taskAuditDecision(
-                              task.contractAddress, 'Customer', task.nanoId);
-                          Navigator.pop(context);
-                          showDialog(
-                              context: context,
-                              builder: (context) => WalletAction(
-                                    nanoId: task.nanoId,
-                                    taskName: 'taskAuditDecision',
-                                  ));
-                        },
-                      ),
-                  if (role == 'auditor' && task.auditState == 'performing')
+                  if ((role == 'auditor' ||
+                          tasksServices.hardhatDebug == true) &&
+                      task.auditState == 'performing')
+                    TaskDialogButton(
+                      buttonName: 'In favor of Customer',
+                      buttonColorRequired: Colors.lightBlue.shade600,
+                      callback: () {
+                        setState(() {
+                          task.justLoaded = false;
+                        });
+                        tasksServices.taskAuditDecision(
+                            task.contractAddress, 'Customer', task.nanoId);
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction(
+                                  nanoId: task.nanoId,
+                                  taskName: 'taskAuditDecision',
+                                ));
+                      },
+                    ),
+                  if ((role == 'auditor' ||
+                          tasksServices.hardhatDebug == true) &&
+                      task.auditState == 'performing')
                     TaskDialogButton(
                       buttonName: 'In favor of Performer',
                       buttonColorRequired: Colors.lightBlue.shade600,
