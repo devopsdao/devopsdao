@@ -846,6 +846,9 @@ class TasksServices extends ChangeNotifier {
                 tasksAuditComplete[task.nanoId] = task;
               }
             }
+            if (hardhatDebug == true) {
+              tasksAuditApplied[task.nanoId] = task;
+            }
           }
         }
 

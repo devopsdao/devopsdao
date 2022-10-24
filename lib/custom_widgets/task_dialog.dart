@@ -258,6 +258,25 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                   listType: 'audit',
                   obj: task,
                 ),
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskAuditParticipate(
+                        task.contractAddress, task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskParticipate',
+                            ));
+                  },
+                  child: const Text('Participate')),
 
               // ************************ AUDITOR ROLE ************************** //
               // ************************ EMPTY ************************** //
