@@ -499,7 +499,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                   child: const Text('Request audit')),
 
             // ************************* AUDITOR BUTTONS ************************ //
-            if (widget.role == 'auditor' && task.auditState == 'performing')
+            if ((widget.role == 'auditor') && task.auditState == 'performing')
               TextButton(
                   style: TextButton.styleFrom(
                       primary: Colors.white, backgroundColor: Colors.green),
