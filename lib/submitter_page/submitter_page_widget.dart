@@ -250,15 +250,15 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                   //   height: 86,
                   //   decoration: BoxDecoration(
                   //     color: (() {
-                  //       if (objList[index].jobState == "agreed") {
+                  //       if (objList[index].taskState == "agreed") {
                   //         return Colors.white;
-                  //       } else if (objList[index].jobState == "review") {
+                  //       } else if (objList[index].taskState == "review") {
                   //         return Colors.lightGreen.shade200;
-                  //       } else if (objList[index].jobState == "progress") {
+                  //       } else if (objList[index].taskState == "progress") {
                   //         return Colors.blueGrey;
-                  //       } else if (objList[index].jobState == "canceled") {
+                  //       } else if (objList[index].taskState == "canceled") {
                   //         return Colors.orange;
-                  //       } else if (objList[index].jobState == "audit") {
+                  //       } else if (objList[index].taskState == "audit") {
                   //         return Colors.orangeAccent;
                   //       } else {
                   //         return Colors.white;
@@ -303,7 +303,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                   //                     flex: 3,
                   //                     child: Text(
                   //                       objList[index]
-                  //                           .jobState,
+                  //                           .taskState,
                   //                       style: FlutterFlowTheme.of(context)
                   //                           .bodyText2,
                   //                       softWrap: false,
@@ -406,7 +406,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                   //       if (objList[index]
                   //                   .contributorsCount !=
                   //               0 &&
-                  //           objList[index].jobState ==
+                  //           objList[index].taskState ==
                   //               "new")
                   //         Padding(
                   //           padding: const EdgeInsetsDirectional.fromSTEB(

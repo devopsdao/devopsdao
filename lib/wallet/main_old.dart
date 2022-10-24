@@ -145,7 +145,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
     // }
-    if (tasksServices.walletConnectConnected) {
+    if (tasksServices.walletConnected) {
       tasksServices.walletConnectUri = '';
     }
 
@@ -219,7 +219,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       bottom: 16,
                     ),
                     child: Text(
-                      tasksServices.walletConnectConnected
+                      tasksServices.walletConnected
                           ? 'Wallet connected'
                           : 'Wallet disconnected',
                       style: Theme.of(context).textTheme.headline6,
@@ -227,7 +227,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                     ),
                   ),
                   if (!tasksServices.validChainID &&
-                      tasksServices.walletConnectConnected)
+                      tasksServices.walletConnected)
                     const Padding(
                       padding: EdgeInsets.only(
                         left: 16,
@@ -261,19 +261,19 @@ class _MyWalletPageState extends State<MyWalletPage> {
         ),
       ),
       actions: [
-        if (tasksServices.walletConnectConnected)
+        if (tasksServices.walletConnected)
           TextButton(
               child: const Text('Disconnect'),
               style: TextButton.styleFrom(
                   primary: Colors.white, backgroundColor: Colors.red),
               onPressed: () async {
                 await tasksServices.transactionTester?.disconnect();
-                tasksServices.walletConnectConnected = false;
+                tasksServices.walletConnected = false;
                 // _transactionStateToAction(context, state: _state);
                 setState(() {});
                 // Navigator.pop(context);
               }),
-        if (!tasksServices.walletConnectConnected)
+        if (!tasksServices.walletConnected)
           TextButton(
             child: const Text('Connect wallet'),
             style: TextButton.styleFrom(
@@ -282,7 +282,9 @@ class _MyWalletPageState extends State<MyWalletPage> {
               disabledBackgroundColor: Colors.white10,
             ),
             // onPressed: tasksServices.initComplete ? () => tasksServices.connectWalletWC() : null,
-            onPressed: tasksServices.initComplete ? () => _transactionStateToAction(context, state2: _state2) : null,
+            onPressed: tasksServices.initComplete
+                ? () => _transactionStateToAction(context, state2: _state2)
+                : null,
             // _transactionStateToAction(context, state: _state);
             // setState(() {});
             // Navigator.pop(context)
@@ -295,7 +297,9 @@ class _MyWalletPageState extends State<MyWalletPage> {
             disabledBackgroundColor: Colors.white10,
           ),
           // onPressed: tasksServices.initComplete ? () => tasksServices.connectWalletMM() : null,
-          onPressed: tasksServices.initComplete ? () => _transactionStateToAction(context, state2: _state2) : null,
+          onPressed: tasksServices.initComplete
+              ? () => _transactionStateToAction(context, state2: _state2)
+              : null,
           // _transactionStateToAction(context, state: _state);
           // setState(() {});
           // Navigator.pop(context)
@@ -455,7 +459,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
   //   //if (tasksServices.walletConnectState == null ||
   //   // tasksServices.walletConnectState == TransactionState.disconnected) {
-  //   if (tasksServices.walletConnectConnected == false) {
+  //   if (tasksServices.walletConnected == false) {
   //     print("disconnected");
   //     tasksServices.walletConnectUri = '';
   //     setState(() => _displayUri = '');
@@ -469,7 +473,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
   //     print(session);
   //     tasksServices.walletConnectState = TransactionState.connected;
   //     setState(() => _state2 = tasksServices.walletConnectState);
-  //     tasksServices.walletConnectConnected = true;
+  //     tasksServices.walletConnected = true;
   //   });
   //   connector.on('session_request', (payload) {
   //     print(payload);
@@ -487,7 +491,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
   //     print(session);
   //     tasksServices.walletConnectState = TransactionState.disconnected;
   //     setState(() => _state2 = tasksServices.walletConnectState);
-  //     tasksServices.walletConnectConnected = false;
+  //     tasksServices.walletConnected = false;
   //     tasksServices.walletConnectUri = '';
   //     setState(() => _displayUri = '');
   //   });
@@ -527,7 +531,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
       case TransactionState.connectionFailed:
         return () async {
           // connectWallet3(tasksServices);
-          tasksServices.connectWallet();
+          tasksServices.connectWalletWC();
         };
 
       // Finished

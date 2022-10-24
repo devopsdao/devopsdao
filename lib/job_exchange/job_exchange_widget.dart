@@ -111,7 +111,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(tasksServices.tasksNew);
     }
-    if (tasksServices.ownAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
     }
 
@@ -215,7 +215,8 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                       child: TextField(
                         controller: _searchKeywordController,
                         onChanged: (searchKeyword) {
-                          tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                          tasksServices.runFilter(
+                              searchKeyword, tasksServices.tasksNew);
                         },
                         decoration: const InputDecoration(
                           hintText: '[Find task by Title...]',
@@ -299,25 +300,27 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                           padding: const EdgeInsetsDirectional
                                               .fromSTEB(16, 8, 16, 0),
                                           child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                // Toggle light when tapped.
-                                              });
-                                              final nanoId = tasksServices
-                                                  .filterResults.values
-                                                  .toList()[index]
-                                                  .nanoId;
-                                              context.beamToNamed(
-                                                  '/tasks/$nanoId');
-                                              // showDialog(
-                                              //     context: context,
-                                              //     builder: (context) =>
-                                              //         TaskDialog(index: index));
-                                            },
-                                            child: TaskItem(role: 'exchange', object: tasksServices
-                                                .filterResults.values
-                                                .toList()[index],)
-                                          ),
+                                              onTap: () {
+                                                setState(() {
+                                                  // Toggle light when tapped.
+                                                });
+                                                final nanoId = tasksServices
+                                                    .filterResults.values
+                                                    .toList()[index]
+                                                    .nanoId;
+                                                context.beamToNamed(
+                                                    '/tasks/$nanoId');
+                                                // showDialog(
+                                                //     context: context,
+                                                //     builder: (context) =>
+                                                //         TaskDialog(index: index));
+                                              },
+                                              child: TaskItem(
+                                                role: 'exchange',
+                                                object: tasksServices
+                                                    .filterResults.values
+                                                    .toList()[index],
+                                              )),
                                         );
                                       },
                                     ),

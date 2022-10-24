@@ -220,7 +220,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                       // setState(() {
                       //   // Toggle light when tapped.
                       // });
-                      // if (obj[index].jobState != "new")
+                      // if (obj[index].taskState != "new")
                       showDialog(
                           context: context,
                           builder: (context) => TaskInformationDialog(role: 'performer', object: objList[index],));

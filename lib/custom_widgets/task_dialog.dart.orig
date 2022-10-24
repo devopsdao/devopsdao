@@ -47,6 +47,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
     task = widget.object;
     final double borderRadius = interface.borderRadius;
 
+<<<<<<< HEAD
     return LayoutBuilder(builder: (context, constraints) {
       print('max:  ${constraints.maxHeight}');
       print('max * : ${constraints.maxHeight * .65}');
@@ -146,6 +147,364 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                       ),
                     ),
                     child: DialogPages(borderRadius: borderRadius, requiredTask: task, requiredRole: widget.role, topConstraints: constraints ),
+=======
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return AlertDialog(
+          title: Text(task.title),
+          content: SingleChildScrollView(
+              child: ListBody(
+            children: <Widget>[
+              // RichText(
+              //     text: TextSpan(
+              //         style: DefaultTextStyle.of(context)
+              //             .style
+              //             .apply(fontSizeFactor: 1.0),
+              //         children: <TextSpan>[
+              //           const TextSpan(
+              //               text: 'id: \n',
+              //               style: TextStyle(fontWeight: FontWeight.bold)),
+              //           TextSpan(text: task.nanoId)
+              //         ])),
+              RichText(
+                  text: TextSpan(
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.0),
+                      children: <TextSpan>[
+                    const TextSpan(
+                        text: 'Description: \n',
+                        style:
+                            TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                    TextSpan(text: task.description)
+                  ])),
+              RichText(
+                  text: TextSpan(
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.0),
+                      children: <TextSpan>[
+                    const TextSpan(
+                        text: 'Contract value: \n',
+                        style:
+                            TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: '${task.contractValue} DEV \n',
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0)),
+                    TextSpan(
+                        text: '${task.contractValueToken} aUSDC',
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0))
+                  ])),
+              RichText(
+                  text: TextSpan(
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.0),
+                      children: <TextSpan>[
+                    const TextSpan(
+                        text: 'Contract owner: \n',
+                        style:
+                            TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: task.contractOwner.toString(),
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 0.7))
+                  ])),
+              RichText(
+                  text: TextSpan(
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.0),
+                      children: <TextSpan>[
+                    const TextSpan(
+                        text: 'Contract address: \n',
+                        style:
+                            TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: task.contractAddress.toString(),
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 0.7))
+                  ])),
+              RichText(
+                  text: TextSpan(
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.0),
+                      children: <TextSpan>[
+                    const TextSpan(
+                        text: 'Created: ',
+                        style:
+                            TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: DateFormat('MM/dd/yyyy, hh:mm a')
+                            .format(task.createTime),
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0))
+                  ])),
+
+              // ********************** CUSTOMER ROLE ************************* //
+
+              if (task.taskState == 'completed' && widget.role == 'customer')
+                RichText(
+                    text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0),
+                        children: const <TextSpan>[
+                      TextSpan(
+                          text: 'Rate the task:',
+                          style: TextStyle(
+                              height: 2, fontWeight: FontWeight.bold)),
+                    ])),
+
+              if (task.taskState == 'completed' && widget.role == 'customer')
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RatingBar.builder(
+                        initialRating: 4,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding:
+                            const EdgeInsets.symmetric(horizontal: 5.0),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemSize: 30.0,
+                        onRatingUpdate: (rating) {
+                          setState(() {
+                            enableRatingButton = true;
+                          });
+                          ratingScore = rating;
+                          tasksServices.myNotifyListeners();
+                        },
+                      ),
+                    ]),
+              if (task.taskState == "new" && widget.role == 'customer')
+                RichText(
+                    text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0),
+                        children: const <TextSpan>[
+                      TextSpan(
+                          text: 'Choose contractor: ',
+                          style: TextStyle(
+                              height: 2, fontWeight: FontWeight.bold)),
+                    ])),
+              if (task.taskState == "new" && widget.role == 'customer')
+                ParticipantList(
+                  listType: 'customer',
+                  obj: task,
+                ),
+
+              // ************************ PERFORMER ROLE ************************** //
+
+              if (task.taskState == 'completed' &&
+                  widget.role == 'performer' &&
+                  (task.contractValue != 0 || task.contractValueToken != 0))
+                SelectNetworkMenu(object: task),
+
+              // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
+              // *************************** AUDIT ******************************** //
+
+              if (task.taskState == "audit" &&
+                  task.auditState == "requested" &&
+                  (widget.role == 'customer' || widget.role == 'performer'))
+                RichText(
+                    text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0),
+                        children: const <TextSpan>[
+                      TextSpan(
+                          text: 'Warning, this contract on Audit state \n'
+                              'Please choose auditor: ',
+                          style: TextStyle(
+                              height: 2, fontWeight: FontWeight.bold)),
+                    ])),
+              if (task.taskState == "audit" &&
+                  task.auditState == "performing" &&
+                  (widget.role == 'customer' || widget.role == 'performer'))
+                RichText(
+                    text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 1.0),
+                        children: <TextSpan>[
+                      const TextSpan(
+                          text: 'Your request is being resolved \n'
+                              'Your auditor: \n',
+                          style: TextStyle(
+                              height: 2, fontWeight: FontWeight.bold)),
+                      TextSpan(
+                          text: task.auditor.toString(),
+                          style: DefaultTextStyle.of(context)
+                              .style
+                              .apply(fontSizeFactor: 0.7))
+                    ])),
+              if (task.taskState == "audit" &&
+                  task.auditState == "requested" &&
+                  (widget.role == 'customer' || widget.role == 'performer'))
+                ParticipantList(
+                  listType: 'audit',
+                  obj: task,
+                ),
+
+              // ************************ AUDITOR ROLE ************************** //
+              // ************************ EMPTY ************************** //
+            ],
+          )),
+          actions: [
+            // ##################### ACTION BUTTONS PART ######################## //
+            // ************************ NEW (EXCHANGE) ************************** //
+            if ((task.contractOwner != tasksServices.publicAddress ||
+                    tasksServices.hardhatDebug == true) &&
+                tasksServices.publicAddress != null &&
+                tasksServices.validChainID &&
+                widget.role == 'exchange')
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskParticipate(
+                        task.contractAddress, task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskParticipate',
+                            ));
+                  },
+                  child: const Text('Participate')),
+            // ********************** CUSTOMER BUTTONS ************************* //
+            if (task.taskState == "agreed" && (widget.role == 'performer'))
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskStateChange(task.contractAddress,
+                        task.participant, 'progress', task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            ));
+                  },
+                  child: const Text('Start the job')),
+            if (task.taskState == "progress" && (widget.role == 'performer'))
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskStateChange(task.contractAddress,
+                        task.participant, 'review', task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            ));
+                  },
+                  child: const Text('Review')),
+            if (task.taskState == "review" &&
+                (widget.role == 'customer' ||
+                    tasksServices.hardhatDebug == true))
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.orangeAccent),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskStateChange(task.contractAddress,
+                        task.participant, 'audit', task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            ));
+                  },
+                  child: const Text('Request audit')),
+            if (task.taskState == "completed" &&
+                (widget.role == 'customer' ||
+                    widget.role == 'performer' ||
+                    tasksServices.hardhatDebug == true) &&
+                (task.contractValue != 0 || task.contractValueToken != 0))
+              WithdrawButton(object: task),
+
+            // *********************** SUBMITTER BUTTONS *********************** //
+            if (widget.role == 'customer')
+              TextButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('Topup contract'),
+                            // backgroundColor: Colors.black,
+                            content: const Payment(
+                              purpose: 'topup',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  tasksServices.addTokens(task.contractAddress,
+                                      interface.tokensEntered, task.nanoId);
+                                  Navigator.pop(context);
+
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => WalletAction(
+                                            nanoId: task.nanoId,
+                                            taskName: 'addTokens',
+                                          ));
+                                },
+                                style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.green),
+                                child: const Text('Topup contract'),
+                              ),
+                              TextButton(
+                                  child: const Text('Close'),
+                                  onPressed: () => Navigator.pop(context)),
+                            ],
+                          ));
+                },
+                style: TextButton.styleFrom(
+                    primary: Colors.white, backgroundColor: Colors.green),
+                child: const Text('Topup'),
+              ),
+>>>>>>> 7f2a2ca72c669f8eb36e3dcfa3e0f315cfed8d79
 
                   ),
 
@@ -176,7 +535,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //         },
             //         child: const Text('Participate')),
             //   // ********************** CUSTOMER BUTTONS ************************* //
-            //   if (task.taskState == "agreed" && widget.role == 'customer')
+            //   if (task.jobState == "agreed" && widget.role == 'customer')
             //     TextButton(
             //         style: TextButton.styleFrom(
             //             primary: Colors.white, backgroundColor: Colors.green),
@@ -196,7 +555,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //               ));
             //         },
             //         child: const Text('Start the job')),
-            //   if (task.taskState == "progress" && widget.role == 'customer')
+            //   if (task.jobState == "progress" && widget.role == 'customer')
             //     TextButton(
             //         style: TextButton.styleFrom(
             //             primary: Colors.white, backgroundColor: Colors.green),
@@ -216,7 +575,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //               ));
             //         },
             //         child: const Text('Review')),
-            //   if (task.taskState == "review" && widget.role == 'customer')
+            //   if (task.jobState == "review" && widget.role == 'customer')
             //     TextButton(
             //         style: TextButton.styleFrom(
             //             primary: Colors.white, backgroundColor: Colors.orangeAccent),
@@ -236,7 +595,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //               ));
             //         },
             //         child: const Text('Request audit')),
-            //   if (task.taskState == "completed" && widget.role == 'customer' &&
+            //   if (task.jobState == "completed" && widget.role == 'customer' &&
             //       (task.contractValue != 0 || task.contractValueToken != 0))
             //     WithdrawButton(object: task),
             //
@@ -305,7 +664,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //   //               ));
             //   //     }),
             //
-            //   if (task.taskState == 'review' && widget.role == 'submitter')
+            //   if (task.jobState == 'review' && widget.role == 'submitter')
             //   // ******* Sign Review Button ******** //
             //     TextButton(
             //         style: TextButton.styleFrom(
@@ -326,7 +685,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //               ));
             //         },
             //         child: const Text('Sign Review')),
-            //   if (task.taskState == 'completed' && widget.role == 'submitter')
+            //   if (task.jobState == 'completed' && widget.role == 'submitter')
             //     TextButton(
             //       // ******* Rate task Button ******** //
             //         style: TextButton.styleFrom(
@@ -355,7 +714,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //   // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
             //   // ************************* AUDIT REQUEST ************************* //
             //   if ((widget.role == 'submitter' || widget.role == 'customer') &&
-            //       (task.taskState == "progress" || task.taskState == "review"))
+            //       (task.jobState == "progress" || task.jobState == "review"))
             //     TextButton(
             //         style: TextButton.styleFrom(
             //             primary: Colors.white, backgroundColor: Colors.orangeAccent),
@@ -428,6 +787,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       );
     });
 
+<<<<<<< HEAD
   }
 }
 
@@ -457,6 +817,119 @@ class _DialogPagesState extends State<DialogPages> {
   double ratingScore = 0;
 
   TextEditingController? titleFieldController;
+=======
+            if (task.taskState == 'review' && (widget.role == 'customer'))
+              // ******* Sign Review Button ******** //
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskStateChange(task.contractAddress,
+                        task.participant, 'completed', task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            ));
+                  },
+                  child: const Text('Sign Review')),
+            if (task.taskState == 'completed' && (widget.role == 'performer'))
+              TextButton(
+                  // ******* Rate task Button ******** //
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      disabledBackgroundColor: Colors.white10,
+                      backgroundColor: Colors.green),
+                  onPressed: (task.rating == 0 && enableRatingButton)
+                      ? () {
+                          setState(() {
+                            task.justLoaded = false;
+                          });
+                          // tasksServices.rateTask(
+                          //     task.contractAddress, ratingScore, task.nanoId);
+                          Navigator.pop(context);
+
+                          showDialog(
+                              context: context,
+                              builder: (context) => WalletAction(
+                                    nanoId: task.nanoId,
+                                    taskName: 'rateTask',
+                                  ));
+                        }
+                      : null,
+                  child: const Text('Rate task')),
+
+            // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
+            // ************************* AUDIT REQUEST ************************* //
+            if ((widget.role == 'performer' || widget.role == 'customer') &&
+                (task.taskState == "progress" || task.taskState == "review"))
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.orangeAccent),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskStateChange(task.contractAddress,
+                        task.participant, 'audit', task.nanoId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            ));
+                  },
+                  child: const Text('Request audit')),
+
+            // ************************* AUDITOR BUTTONS ************************ //
+            if (widget.role == 'auditor' && task.auditState == 'performing')
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskAuditDecision(
+                        task.contractAddress, 'Customer', task.nanoId);
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskAuditDecision',
+                            ));
+                  },
+                  child: const Text('In favor of Customer')),
+            if (widget.role == 'auditor' && task.auditState == 'performing')
+              TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white, backgroundColor: Colors.green),
+                  onPressed: () {
+                    setState(() {
+                      task.justLoaded = false;
+                    });
+                    tasksServices.taskAuditDecision(
+                        task.contractAddress, 'Performer', task.nanoId);
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskAuditDecision',
+                            ));
+                  },
+                  child: const Text('In favor of Performer')),
+>>>>>>> 7f2a2ca72c669f8eb36e3dcfa3e0f315cfed8d79
 
   @override
   void initState() {
@@ -558,7 +1031,7 @@ class _DialogPagesState extends State<DialogPages> {
                                             style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                         TextSpan(
                                             text: DateFormat('MM/dd/yyyy, hh:mm a')
-                                                .format(task.createTime),
+                                                .format(task.createdTime),
                                             style: DefaultTextStyle.of(context)
                                                 .style
                                                 .apply(fontSizeFactor: 1.0))
@@ -566,7 +1039,7 @@ class _DialogPagesState extends State<DialogPages> {
 
                               // ********************** CUSTOMER ROLE ************************* //
 
-                              if (task.taskState == 'completed' && role == 'customer')
+                              if (task.jobState == 'completed' && role == 'customer')
                                 RichText(
                                     text: TextSpan(
                                         style: DefaultTextStyle.of(context)
@@ -578,7 +1051,7 @@ class _DialogPagesState extends State<DialogPages> {
                                               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                         ])),
 
-                              if (task.taskState == 'completed' && role == 'customer')
+                              if (task.jobState == 'completed' && role == 'customer')
                                 Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                                   RatingBar.builder(
                                     initialRating: 4,
@@ -601,7 +1074,7 @@ class _DialogPagesState extends State<DialogPages> {
                                     },
                                   ),
                                 ]),
-                              if (task.taskState == "new" && role == 'customer')
+                              if (task.jobState == "new" && role == 'customer')
                                 RichText(
                                     text: TextSpan(
                                         style: DefaultTextStyle.of(context)
@@ -612,7 +1085,7 @@ class _DialogPagesState extends State<DialogPages> {
                                               text: 'Choose contractor: ',
                                               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                         ])),
-                              if (task.taskState == "new" && role == 'customer')
+                              if (task.jobState == "new" && role == 'customer')
                                 ParticipantList(
                                   listType: 'submitter',
                                   obj: task,
@@ -620,14 +1093,14 @@ class _DialogPagesState extends State<DialogPages> {
 
                               // ************************ PERFORMER ROLE ************************** //
 
-                              if (task.taskState == 'completed' && role == 'performer' &&
+                              if (task.jobState == 'completed' && role == 'performer' &&
                                   (task.contractValue != 0 || task.contractValueToken != 0))
                                 SelectNetworkMenu(object: task),
 
                               // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
                               // *************************** AUDIT ******************************** //
 
-                              if (task.taskState == "audit" && task.auditState == "requested" &&
+                              if (task.jobState == "audit" && task.auditState == "requested" &&
                                   (role == 'customer' || role == 'performer'))
                                 RichText(
                                     text: TextSpan(
@@ -640,7 +1113,7 @@ class _DialogPagesState extends State<DialogPages> {
                                                   'Please choose auditor: ',
                                               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                         ])),
-                              if (task.taskState == "audit" && task.auditState == "performing" &&
+                              if (task.jobState == "audit" && task.auditState == "performing" &&
                                   (role == 'customer' || role == 'performer'))
                                 RichText(
                                     text: TextSpan(
@@ -653,12 +1126,12 @@ class _DialogPagesState extends State<DialogPages> {
                                                   'Your auditor: \n',
                                               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                              text: task.auditor.toString(),
+                                              text: task.auditParticipation.toString(),
                                               style: DefaultTextStyle.of(context)
                                                   .style
                                                   .apply(fontSizeFactor: 0.7))
                                         ])),
-                              if (task.taskState == "audit" && task.auditState == "requested" &&
+                              if (task.jobState == "audit" && task.auditState == "requested" &&
                                   (role == 'customer' || role == 'performer'))
                                 ParticipantList(
                                   listType: 'audit',
@@ -792,8 +1265,8 @@ class _DialogPagesState extends State<DialogPages> {
                 children: [
                   // ##################### ACTION BUTTONS PART ######################## //
                   // ************************ NEW (EXCHANGE) ************************** //
-                  if (task.contractOwner != tasksServices.publicAddress &&
-                      tasksServices.publicAddress != null &&
+                  if (task.contractOwner != tasksServices.ownAddress &&
+                      tasksServices.ownAddress != null &&
                       tasksServices.validChainID && role == 'exchange')
 
                   TaskDialogButton(buttonName: 'Participate',
@@ -802,7 +1275,7 @@ class _DialogPagesState extends State<DialogPages> {
                       setState(() {
                         task.justLoaded = false;
                       });
-                      tasksServices.taskParticipate(
+                      tasksServices.taskParticipation(
                           task.contractAddress, task.nanoId);
                       Navigator.pop(context);
 
@@ -810,11 +1283,11 @@ class _DialogPagesState extends State<DialogPages> {
                           context: context,
                           builder: (context) => WalletAction(
                             nanoId: task.nanoId,
-                            taskName: 'taskParticipate',
+                            taskName: 'taskParticipation',
                           ));
                     },),
                   // ********************** CUSTOMER BUTTONS ************************* //
-                  if (task.taskState == "agreed" && role == 'customer')
+                  if (task.jobState == "agreed" && role == 'customer')
 
                   TaskDialogButton(buttonName: 'Start the task',
                     buttonColorRequired: Colors.lightBlue.shade600,
@@ -822,37 +1295,37 @@ class _DialogPagesState extends State<DialogPages> {
                       setState(() {
                         task.justLoaded = false;
                       });
-                      tasksServices.taskStateChange(task.contractAddress,
-                          task.participant, 'progress', task.nanoId);
+                      tasksServices.changeTaskStatus(task.contractAddress,
+                          task.participiant, 'progress', task.nanoId);
                       Navigator.pop(context);
 
                       showDialog(
                           context: context,
                           builder: (context) => WalletAction(
                             nanoId: task.nanoId,
-                            taskName: 'taskStateChange',
+                            taskName: 'changeTaskStatus',
                           ));
                     },),
-                  if (task.taskState == "progress" && role == 'customer')
+                  if (task.jobState == "progress" && role == 'customer')
 
                   TaskDialogButton(buttonName: 'Review',
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
                       setState(() { task.justLoaded = false; });
-                      tasksServices.taskStateChange(task.contractAddress,
-                        task.participant, 'review', task.nanoId);
+                      tasksServices.changeTaskStatus(task.contractAddress,
+                        task.participiant, 'review', task.nanoId);
                       Navigator.pop(context);
                       showDialog(
                         context: context,
                         builder: (context) => WalletAction(
                           nanoId: task.nanoId,
-                          taskName: 'taskStateChange',
+                          taskName: 'changeTaskStatus',
                         )
                       );
                     },
                   ),
 
-                  if (task.taskState == "completed" && role == 'customer' &&
+                  if (task.jobState == "completed" && role == 'customer' &&
                       (task.contractValue != 0 || task.contractValueToken != 0))
                   // WithdrawButton(object: task),
                   TaskDialogButton(buttonName: 'Withdraw',
@@ -916,31 +1389,31 @@ class _DialogPagesState extends State<DialogPages> {
 
 
 
-                  if (task.taskState == 'review' && role == 'submitter')
+                  if (task.jobState == 'review' && role == 'submitter')
 
                   TaskDialogButton(buttonName: 'Sign Review',
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
                       setState(() { task.justLoaded = false; });
-                      tasksServices.taskStateChange(task.contractAddress,
-                          task.participant, 'completed', task.nanoId);
+                      tasksServices.changeTaskStatus(task.contractAddress,
+                          task.participiant, 'completed', task.nanoId);
                       Navigator.pop(context);
                       showDialog(
                           context: context,
                           builder: (context) => WalletAction(
                             nanoId: task.nanoId,
-                            taskName: 'taskStateChange',
+                            taskName: 'changeTaskStatus',
                           ));
                     },
                   ),
-                  if (task.taskState == 'completed' && role == 'submitter')
+                  if (task.jobState == 'completed' && role == 'submitter')
                   TaskDialogButton(buttonName: 'Rate task',
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
-                      (task.rating == 0 && enableRatingButton) ? () {
+                      (task.score == 0 && enableRatingButton) ? () {
                         setState(() {task.justLoaded = false;});
-                        // tasksServices.rateTask(
-                        //     task.contractAddress, ratingScore, task.nanoId);
+                        tasksServices.rateTask(
+                            task.contractAddress, ratingScore, task.nanoId);
                         Navigator.pop(context);
                         showDialog(
                             context: context,
@@ -955,21 +1428,20 @@ class _DialogPagesState extends State<DialogPages> {
                   // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
                   // ************************* AUDIT REQUEST ************************* //
                   if ((role == 'submitter' || role == 'customer') &&
-                      (task.taskState == "progress" || task.taskState == "review"))
+                      (task.jobState == "progress" || task.jobState == "review"))
                   TaskDialogButton(buttonName: 'Request audit',
                     buttonColorRequired: Colors.orangeAccent.shade700,
                     callback: () {
                       setState(() {task.justLoaded = false;});
-                      tasksServices.taskStateChange(
-                          task.contractAddress,
-                          task.participant, 'audit', task.nanoId);
+                      tasksServices.changeTaskStatus(task.contractAddress,
+                          task.participiant, 'audit', task.nanoId);
                       Navigator.pop(context);
 
                       showDialog(
                           context: context,
                           builder: (context) => WalletAction(
                             nanoId: task.nanoId,
-                            taskName: 'taskStateChange',
+                            taskName: 'changeTaskStatus',
                           ));
                     },
                   ),
@@ -981,7 +1453,7 @@ class _DialogPagesState extends State<DialogPages> {
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
                       setState(() {task.justLoaded = false;});
-                      tasksServices.taskAuditDecision(
+                      tasksServices.changeAuditTaskStatus(
                           task.contractAddress,
                           'Customer',
                           task.nanoId);
@@ -989,7 +1461,7 @@ class _DialogPagesState extends State<DialogPages> {
                       showDialog(
                           context: context,
                           builder: (context) => WalletAction( nanoId: task.nanoId,
-                            taskName: 'taskAuditDecision',));
+                            taskName: 'changeAuditTaskStatus',));
                     },
                   ),
                   if(role == 'auditor' && task.auditState == 'performing')
@@ -998,7 +1470,7 @@ class _DialogPagesState extends State<DialogPages> {
                     buttonColorRequired: Colors.lightBlue.shade600,
                     callback: () {
                       setState(() {task.justLoaded = false;});
-                      tasksServices.taskAuditDecision(
+                      tasksServices.changeAuditTaskStatus(
                           task.contractAddress,
                           'Performer',
                           task.nanoId);
@@ -1007,7 +1479,7 @@ class _DialogPagesState extends State<DialogPages> {
                           context: context,
                           builder: (context) => WalletAction(
                             nanoId: task.nanoId,
-                            taskName: 'taskAuditDecision',
+                            taskName: 'changeAuditTaskStatus',
                           ));
                     },
                   ),

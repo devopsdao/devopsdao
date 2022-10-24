@@ -131,7 +131,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
     bool _isFloatButtonVisible = false;
 
-    if (tasksServices.ownAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
     }
 
@@ -421,9 +421,9 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   FlutterFlowTheme.of(context).primaryBtnText,
                             ),
                       ),
-                      if (tasksServices.ownAddress != null)
+                      if (tasksServices.publicAddress != null)
                         SelectableText(
-                          '${tasksServices.ownAddress}',
+                          '${tasksServices.publicAddress}',
                           style: FlutterFlowTheme.of(context)
                               .bodyText2
                               .override(
@@ -468,21 +468,21 @@ class _HomePageWidgetState extends State<HomePageWidget>
                       Text(
                         'Your score:',
                         style: FlutterFlowTheme.of(context).bodyText2.override(
-                          fontFamily: 'Poppins',
-                          color:
-                          FlutterFlowTheme.of(context).primaryBtnText,
-                        ),
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
                       ),
-                      if (tasksServices.ownAddress == null)
+                      if (tasksServices.publicAddress == null)
                         Text(
                           'Not Connected',
                           style: FlutterFlowTheme.of(context)
                               .bodyText2
                               .override(
-                            fontFamily: 'Poppins',
-                            color:
-                            FlutterFlowTheme.of(context).primaryBtnText,
-                          ),
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
                         )
                       else if (tasksServices.scoredTaskCount == 0)
                         Text(
@@ -490,10 +490,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           style: FlutterFlowTheme.of(context)
                               .bodyText2
                               .override(
-                            fontFamily: 'Poppins',
-                            color:
-                            FlutterFlowTheme.of(context).primaryBtnText,
-                          ),
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
                         )
                       else
                         SelectableText(
@@ -501,11 +501,11 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           style: FlutterFlowTheme.of(context)
                               .bodyText2
                               .override(
-                            fontFamily: 'Poppins',
-                            fontSize: 11,
-                            color:
-                            FlutterFlowTheme.of(context).primaryBtnText,
-                          ),
+                                fontFamily: 'Poppins',
+                                fontSize: 11,
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
                         )
                     ],
                   ),

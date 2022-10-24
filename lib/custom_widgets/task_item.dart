@@ -44,10 +44,10 @@ class _TaskItemState extends State<TaskItem> {
     // var interface = context.watch<InterfaceServices>();
     task = widget.object;
 
-    if (task.jobState == "new") {
-      taskCount = task.contributors.length;
-    } else if (task.jobState == "audit") {
-      taskCount = task.auditContributors.length;
+    if (task.taskState == "new") {
+      taskCount = task.participants.length;
+    } else if (task.taskState == "audit") {
+      taskCount = task.auditors.length;
     }
 
     return Container(
@@ -55,17 +55,17 @@ class _TaskItemState extends State<TaskItem> {
       height: 86,
       decoration: BoxDecoration(
         color: (() {
-          if (task.jobState == "agreed" || task.jobState == "new") {
+          if (task.taskState == "agreed" || task.taskState == "new") {
             return Colors.white;
-          } else if (task.jobState == "review") {
+          } else if (task.taskState == "review") {
             return Colors.lightGreen.shade300;
-          } else if (task.jobState == "progress") {
+          } else if (task.taskState == "progress") {
             return Colors.lightBlueAccent;
-          } else if (task.jobState == "canceled") {
+          } else if (task.taskState == "canceled") {
             return Colors.orange;
-          } else if (task.jobState == "audit" && widget.role != 'auditor') {
+          } else if (task.taskState == "audit" && widget.role != 'auditor') {
             return Colors.orangeAccent;
-          } else if (task.jobState == "audit" && widget.role == 'auditor') {
+          } else if (task.taskState == "audit" && widget.role == 'auditor') {
             return Colors.white;
           } else {
             return Colors.white;
@@ -103,18 +103,18 @@ class _TaskItemState extends State<TaskItem> {
                         ),
                       ),
                       // Spacer(),
-                      if (task.jobState != "new")
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          task.jobState,
-                          style: FlutterFlowTheme.of(context).bodyText2,
-                          softWrap: false,
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          textAlign: TextAlign.end,
+                      if (task.taskState != "new")
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            task.taskState,
+                            style: FlutterFlowTheme.of(context).bodyText2,
+                            softWrap: false,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            textAlign: TextAlign.end,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   Row(
@@ -136,7 +136,7 @@ class _TaskItemState extends State<TaskItem> {
                         flex: 7,
                         child: Text(
                           DateFormat('MM/dd/yyyy, hh:mm a')
-                              .format(task.createdTime),
+                              .format(task.createTime),
                           style: FlutterFlowTheme.of(context).bodyText2,
                           softWrap: false,
                           overflow: TextOverflow.fade,
@@ -188,11 +188,11 @@ class _TaskItemState extends State<TaskItem> {
             ),
           ),
 
-
           // *********** BADGE ************ //
 
-          if ((task.jobState == "new" || task.jobState == "audit" ) &&
-              (widget.role == 'performer' || widget.role == 'customer' ||
+          if ((task.taskState == "new" || task.taskState == "audit") &&
+              (widget.role == 'performer' ||
+                  widget.role == 'customer' ||
                   widget.role == 'auditor' ||
                   (widget.role == 'exchange' && taskCount != 0)))
             Padding(
@@ -204,13 +204,14 @@ class _TaskItemState extends State<TaskItem> {
                   height: 17,
                   alignment: Alignment.center,
                   child: Text(taskCount.toString(),
-                    style: const TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 badgeColor: (() {
-                  if (task.jobState == "new") {
+                  if (task.taskState == "new") {
                     return Colors.redAccent;
-                  } else if (task.jobState == "audit" && widget.role != "auditor") {
+                  } else if (task.taskState == "audit" &&
+                      widget.role != "auditor") {
                     return Colors.blueGrey;
                   } else if (widget.role == "auditor") {
                     return Colors.green;

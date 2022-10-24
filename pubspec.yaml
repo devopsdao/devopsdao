@@ -96,7 +96,10 @@ flutter:
     - assets/pdfs/
     - assets/
     - build/contracts/Factory.json
-    - build/contracts/Factory.json
+    - lib/blockchain/abi/addresses.json
+    - lib/blockchain/accounts/hardhat.json
+    - lib/blockchain/abi/Diamond.json
+    - lib/blockchain/abi/TasksFacet.json
     # - build/contracts/IERC20.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
