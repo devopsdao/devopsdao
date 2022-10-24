@@ -47,17 +47,19 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
     final double borderRadius = interface.borderRadius;
 
     return LayoutBuilder(builder: (context, constraints) {
-      print('max:  ${constraints.maxHeight}');
-      print('max * : ${constraints.maxHeight * .65}');
+      // print('max:  ${constraints.maxHeight}');
+      // print('max * : ${constraints.maxHeight * .65}');
       return StatefulBuilder(
         builder: (context, setState) {
           return Dialog(
-            insetPadding: const EdgeInsets.all(40),
+            insetPadding: const EdgeInsets.all(30),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Container(
-                child: Container(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                Container(
                   padding: const EdgeInsets.all(20),
                   width: 400,
                   child: Row(
@@ -131,28 +133,28 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     ],
                   ),
                 ),
-              ),
-              Container(
-                height: constraints.maxHeight * .665 < 400
-                    ? 320
-                    : constraints.maxHeight * .665,
-                // width: constraints.maxWidth * .8,
-                // height: 550,
-                width: 400,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  image: const DecorationImage(
-                    image: AssetImage("assets/images/cross.png"),
-                    fit: BoxFit.cover,
+                Container(
+                  height: constraints.maxHeight * .665 < 400
+                      ? 320
+                      : constraints.maxHeight * .665,
+                  // width: constraints.maxWidth * .8,
+                  // height: 550,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    image: const DecorationImage(
+                      image: AssetImage("assets/images/cross.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  child: DialogPages(
+                      borderRadius: borderRadius,
+                      requiredTask: task,
+                      requiredRole: widget.role,
+                      topConstraints: constraints),
                 ),
-                child: DialogPages(
-                    borderRadius: borderRadius,
-                    requiredTask: task,
-                    requiredRole: widget.role,
-                    topConstraints: constraints),
-              ),
-            ]),
+              ]),
+            ),
             // actions: [
             //   // ##################### ACTION BUTTONS PART ######################## //
             //   // ************************ NEW (EXCHANGE) ************************** //
@@ -502,7 +504,7 @@ class _DialogPagesState extends State<DialogPages> {
                     padding: const EdgeInsets.all(8.0),
                     // height: MediaQuery.of(context).size.width * .08,
                     // width: MediaQuery.of(context).size.width * .57
-                    width: 350,
+                    width: 300,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                     ),
@@ -719,7 +721,7 @@ class _DialogPagesState extends State<DialogPages> {
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  width: 350,
+                  width: 300,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                   ),
@@ -759,16 +761,17 @@ class _DialogPagesState extends State<DialogPages> {
             // ),
             const SizedBox(height: 14),
 
-            Expanded(
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                  ),
+            Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              child: Container(
+                constraints: const BoxConstraints(maxHeight: 500),
+                padding: const EdgeInsets.all(8.0),
+                width: 300,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                ),
+                child: SingleChildScrollView(
                   child: TextFormField(
                     controller: messageForStateController,
                     // onChanged: (_) => EasyDebounce.debounce(
@@ -776,7 +779,7 @@ class _DialogPagesState extends State<DialogPages> {
                     //   Duration(milliseconds: 2000),
                     //   () => setState(() {}),
                     // ),
-                    autofocus: true,
+                    autofocus: false,
                     obscureText: false,
 
                     decoration: const InputDecoration(
@@ -812,7 +815,7 @@ class _DialogPagesState extends State<DialogPages> {
                           color: Colors.black87,
                           lineHeight: 2,
                         ),
-                    maxLines: 2,
+                    maxLines: 6,
                   ),
                 ),
               ),
