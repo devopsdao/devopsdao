@@ -310,20 +310,20 @@ class TasksServices extends ChangeNotifier {
       // walletConnected = true;
 
 // Subscribe to events
-      var connectStream = eth.connect;
-      connectStream.listen((event) {
-        print(event);
-      });
-      var disconnectStream = eth.disconnect;
-      disconnectStream.listen((event) {
-        print(event);
-      });
-      var connect = eth.stream('connect').listen((event) {
-        print(event);
-      });
-      var disconnect = eth.stream('disconnect').listen((event) {
-        print(event);
-      });
+      // var connectStream = eth.connect;
+      // connectStream.listen((event) {
+      //   print(event);
+      // });
+      // var disconnectStream = eth.disconnect;
+      // disconnectStream.listen((event) {
+      //   print(event);
+      // });
+      // var connect = eth.stream('connect').listen((event) {
+      //   print(event);
+      // });
+      // var disconnect = eth.stream('disconnect').listen((event) {
+      //   print(event);
+      // });
       // eth.on('connect', (session) {
       //   print(session);
       //   walletConnected = true;
