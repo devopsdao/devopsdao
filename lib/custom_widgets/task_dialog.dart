@@ -1017,6 +1017,7 @@ class _DialogPagesState extends State<DialogPages> {
                     ),
 
                   // ************************* AUDITOR BUTTONS ************************ //
+<<<<<<< HEAD
                   if (role == 'auditor' && task.auditState == 'requested')
                     TaskDialogButton(
                       buttonName: 'Take audit',
@@ -1036,6 +1037,26 @@ class _DialogPagesState extends State<DialogPages> {
                                 ));
                       },
                     ),
+=======
+                  if(role == 'auditor' && task.auditState == 'requested')
+
+                    TaskDialogButton(buttonName: 'Take audit',
+                      buttonColorRequired: Colors.lightBlue.shade600,
+                      callback: () {
+                        setState(() {task.justLoaded = false;});
+                        tasksServices.taskAuditParticipate(
+                            task.contractAddress,
+                            task.nanoId);
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction( nanoId: task.nanoId,
+                              taskName: 'taskAuditParticipate',));
+                      },
+                    ),
+
+                  if(role == 'auditor' && task.auditState == 'performing')
+>>>>>>> 76146c6ba3d150b0288bace3b0d2d7a7e05be47d
 
                   if (role == 'auditor' && task.auditState == 'performing')
                     TaskDialogButton(
