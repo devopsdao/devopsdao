@@ -270,21 +270,18 @@ class _HomePageWidgetState extends State<HomePageWidget>
             )
           : null,
       body: Container(
-
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF0E2517),
-              Color(0xFF0D0D50),
-              Color(0xFF531E59)],
+            // colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
           image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
+            image: AssetImage("assets/images/background_shape_tiles_small.png"),
             // fit: BoxFit.cover,
             repeat: ImageRepeat.repeat,
           ),
