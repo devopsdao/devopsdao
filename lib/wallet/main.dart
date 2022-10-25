@@ -73,39 +73,38 @@ class _MyWalletPageState extends State<MyWalletPage> {
     // int page = interface.pageWalletViewNumber;
 
     return LayoutBuilder(builder: (context, constraints) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Dialog(
-              insetPadding: const EdgeInsets.all(30),
-              shape: const RoundedRectangleBorder(
+      return StatefulBuilder(builder: (context, setState) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(30),
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      width: 400,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 30,
-                            child: interface.pageWalletViewNumber != 0 ? InkWell(
-                              onTap: () {
-                                interface.controller.animateToPage(0,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.ease
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(16),
-                              child: Container(
-                                padding: const EdgeInsets.all(0.0),
-                                height: 30,
-                                width: 30,
-                                child: Row(
-                                  children: const <Widget>[
+          child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  width: 400,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30,
+                        child: interface.pageWalletViewNumber != 0
+                            ? InkWell(
+                                onTap: () {
+                                  interface.controller.animateToPage(0,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.ease);
+                                },
+                                borderRadius: BorderRadius.circular(16),
+                                child: Container(
+                                  padding: const EdgeInsets.all(0.0),
+                                  height: 30,
+                                  width: 30,
+                                  child: Row(
+                                    children: const <Widget>[
                                       Expanded(
                                         child: Icon(
                                           Icons.arrow_back,
@@ -601,7 +600,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
                 curve: Curves.easeIn);
             if (widget.buttonName == 'metamask') {
               tasksServices.initComplete
-                  ? () => tasksServices.connectWalletMM()
+                  ? tasksServices.connectWalletMM()
                   : null;
             } else if (widget.buttonName == 'wallet_connect') {
               tasksServices.initComplete
@@ -678,8 +677,6 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
     var tasksServices = context.watch<TasksServices>();
     late String buttonName;
 
-
-
     if (tasksServices.walletConnected) {
       buttonName = 'Disconnect';
     } else {
@@ -702,11 +699,11 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             if (tasksServices.walletConnected) {
               await tasksServices.transactionTester?.disconnect();
             } else {
-              tasksServices.initComplete ? tasksServices.connectWalletWC() : null;
+              tasksServices.initComplete
+                  ? tasksServices.connectWalletWC()
+                  : null;
             }
           }
-          
-          
         },
         child: Container(
           padding: const EdgeInsets.all(0.0),
