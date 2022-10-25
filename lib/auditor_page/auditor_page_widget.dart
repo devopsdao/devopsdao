@@ -17,6 +17,7 @@ import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:beamer/beamer.dart';
 
 class AuditorPageWidget extends StatefulWidget {
   const AuditorPageWidget({Key? key}) : super(key: key);
@@ -360,14 +361,18 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   setState(() {
                     // Toggle light when tapped.
                   });
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return TaskInformationDialog(
-                              role: 'auditor', object: objList[index]);
-                        });
-                      });
+                  final taskAddress = tasksServices.filterResults.values
+                      .toList()[index]
+                      .taskAddress;
+                  context.beamToNamed('/tasks/$taskAddress');
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return StatefulBuilder(builder: (context, setState) {
+                  //         return TaskInformationDialog(
+                  //             role: 'auditor', object: objList[index]);
+                  //       });
+                  //     });
                   // => TaskInformationDialog(role: 'auditor', object: objList[index]),);
                 },
                 child: TaskItem(role: 'auditor', object: objList[index]),

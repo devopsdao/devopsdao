@@ -18,13 +18,13 @@ class BooksLocation extends BeamLocation<BeamState> {
           key: ValueKey('books'),
           title: 'Books',
           type: BeamPageType.noTransition,
-          child: JobExchangeWidget(),
+          child: TasksPageWidget(),
         ),
         // if (state.pathParameters.containsKey('bookId'))
         //   const BeamPage(
         //     key: ValueKey('book-1'),
         //     title: 'test',
-        //     child: JobExchangeWidget(
+        //     child: TasksPageWidget(
         //       index: 1,
         //     ),
         //   ),

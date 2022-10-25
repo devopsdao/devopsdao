@@ -108,7 +108,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
-                          context.beamToNamed('/tasks');
+                          // print(widget.role);
+                          context.beamToNamed('/${widget.role}');
                           // Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -161,7 +162,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             //   // ************************ NEW (EXCHANGE) ************************** //
             //   if (task.contractOwner != tasksServices.ownAddress &&
             //       tasksServices.ownAddress != null &&
-            //       tasksServices.validChainID && widget.role == 'exchange')
+            //       tasksServices.validChainID && widget.role == 'tasks')
             //     TextButton(
             //         style: TextButton.styleFrom(
             //             primary: Colors.white, backgroundColor: Colors.green),
@@ -842,7 +843,7 @@ class _DialogPagesState extends State<DialogPages> {
                           tasksServices.hardhatDebug == true) &&
                       tasksServices.publicAddress != null &&
                       tasksServices.validChainID &&
-                      role == 'exchange')
+                      role == 'tasks')
                     TaskDialogButton(
                       buttonName: 'Participate',
                       buttonColorRequired: Colors.lightBlue.shade600,

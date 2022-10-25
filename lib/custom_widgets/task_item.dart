@@ -194,7 +194,7 @@ class _TaskItemState extends State<TaskItem> {
               (widget.role == 'performer' ||
                   widget.role == 'customer' ||
                   widget.role == 'auditor' ||
-                  (widget.role == 'exchange' && taskCount != 0)))
+                  (widget.role == 'tasks' && taskCount != 0)))
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
               child: Badge(

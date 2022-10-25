@@ -9,16 +9,21 @@ import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import '../blockchain/task.dart';
+import '../custom_widgets/task_dialog.dart';
+
+import 'package:beamer/beamer.dart';
 
 class PerformerPageWidget extends StatefulWidget {
-  const PerformerPageWidget({Key? key}) : super(key: key);
+  final int? index;
+  final String? taskAddress;
+  const PerformerPageWidget({Key? key, this.taskAddress, this.index})
+      : super(key: key);
 
   @override
   _PerformerPageWidgetState createState() => _PerformerPageWidgetState();
 }
 
-class _PerformerPageWidgetState extends State<PerformerPageWidget>
-     {
+class _PerformerPageWidgetState extends State<PerformerPageWidget> {
   // final animationsMap = {
   //   'containerOnPageLoadAnimation': AnimationInfo(
   //     trigger: AnimationTrigger.onPageLoad,
@@ -39,6 +44,13 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
   @override
   void initState() {
     super.initState();
+    if (widget.taskAddress != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+            context: context,
+            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!));
+      });
+    }
     // startPageLoadAnimations(
     //   animationsMap.values
     //       .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
@@ -141,7 +153,8 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                           //   Icons.card_travel_outlined,
                           // ),
                           child: BadgeTab(
-                            taskCount: tasksServices.tasksPerformerProgress.length,
+                            taskCount:
+                                tasksServices.tasksPerformerProgress.length,
                             tabText: 'Working',
                           ),
                         ),
@@ -150,29 +163,31 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
                           //   Icons.done_outline,
                           // ),
                           child: BadgeTab(
-                            taskCount: tasksServices.tasksPerformerComplete.length,
+                            taskCount:
+                                tasksServices.tasksPerformerComplete.length,
                             tabText: 'Complete',
                           ),
                         ),
                       ],
                     ),
                     tasksServices.isLoading
-                      ? const LoadIndicator()
-                      : Expanded(
-                        child: TabBarView(
-                          children: [
-                            MyPerformerTabWidget(
-                              tabName: 'applied',
-                              obj: tasksServices.tasksPerformerParticipate),
-                            MyPerformerTabWidget(
-                              tabName: 'working',
-                              obj: tasksServices.tasksPerformerProgress),
-                            MyPerformerTabWidget(
-                              tabName: 'complete',
-                              obj: tasksServices.tasksPerformerComplete),
-                          ],
-                        ),
-                      ),
+                        ? const LoadIndicator()
+                        : Expanded(
+                            child: TabBarView(
+                              children: [
+                                MyPerformerTabWidget(
+                                    tabName: 'applied',
+                                    obj: tasksServices
+                                        .tasksPerformerParticipate),
+                                MyPerformerTabWidget(
+                                    tabName: 'working',
+                                    obj: tasksServices.tasksPerformerProgress),
+                                MyPerformerTabWidget(
+                                    tabName: 'complete',
+                                    obj: tasksServices.tasksPerformerComplete),
+                              ],
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -187,11 +202,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget>
 class MyPerformerTabWidget extends StatefulWidget {
   final Map<String, Task>? obj;
   final String tabName;
-  const MyPerformerTabWidget({
-    Key? key,
-    required this.obj,
-    required this.tabName
-  }) : super(key: key);
+  const MyPerformerTabWidget(
+      {Key? key, required this.obj, required this.tabName})
+      : super(key: key);
 
   @override
   _MyPerformerTabWidget createState() => _MyPerformerTabWidget();
@@ -202,7 +215,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List objList = widget.obj!.values .toList();
+    List objList = widget.obj!.values.toList();
 
     var tasksServices = context.watch<TasksServices>();
     return Container(
@@ -226,12 +239,20 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                       //   // Toggle light when tapped.
                       // });
                       // if (obj[index].taskState != "new")
-                      showDialog(
-                          context: context,
-                          builder: (context) => TaskInformationDialog(role: 'performer', object: objList[index],));
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (context) => TaskInformationDialog(role: 'performer', object: objList[index],));
+                      final taskAddress = tasksServices
+                          .tasksPerformerParticipate.values
+                          .toList()[index]
+                          .taskAddress
+                          .toString();
+                      context.beamToNamed('/performer/$taskAddress');
                     },
-                    child: TaskItem(role: 'performer', object: objList[index],)
-                ),
+                    child: TaskItem(
+                      role: 'performer',
+                      object: objList[index],
+                    )),
               );
             },
           ),

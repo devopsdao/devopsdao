@@ -31,7 +31,7 @@ class _TaskDialog extends State<TaskDialog> {
     print('taskAddress: ${widget.taskAddress}');
 
     return TaskInformationDialog(
-      role: 'exchange',
+      role: 'tasks',
       object: task,
     );
   }

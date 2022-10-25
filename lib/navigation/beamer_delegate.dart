@@ -1,7 +1,7 @@
 // import 'dart:ffi';
 
 import 'package:beamer/beamer.dart';
-import 'package:devopsdao/auditor_page/auditor_page.dart';
+import 'package:devopsdao/auditor_page/auditor_page_widget.dart';
 import 'authenticator.dart';
 // import '../../screens.dart';
 import '../index.dart';
@@ -25,7 +25,7 @@ void createBeamerDelegate() {
               initialPage: '/home',
             )),
         '/tasks': (context, state, data) => Scaffold(
-              body: const JobExchangeWidget(),
+              body: const TasksPageWidget(),
               bottomNavigationBar: NavBarPage(
                 initialPage: '/tasks',
               ),
@@ -37,7 +37,7 @@ void createBeamerDelegate() {
               ),
             ),
         '/customer': (context, state, data) => Scaffold(
-              body: const SubmitterPageWidget(),
+              body: const CustomerPageWidget(),
               bottomNavigationBar: NavBarPage(
                 initialPage: '/customer',
               ),
@@ -50,9 +50,35 @@ void createBeamerDelegate() {
             ),
         '/tasks/:taskAddress': (context, state, data) {
           String taskAddress = state.pathParameters['taskAddress']!;
-
           return Scaffold(
-            body: JobExchangeWidget(taskAddress: taskAddress),
+            body: TasksPageWidget(taskAddress: taskAddress),
+            bottomNavigationBar: NavBarPage(
+              initialPage: '/tasks',
+            ),
+          );
+        },
+        '/customer/:taskAddress': (context, state, data) {
+          String taskAddress = state.pathParameters['taskAddress']!;
+          return Scaffold(
+            body: TasksPageWidget(taskAddress: taskAddress),
+            bottomNavigationBar: NavBarPage(
+              initialPage: '/tasks',
+            ),
+          );
+        },
+        '/performer/:taskAddress': (context, state, data) {
+          String taskAddress = state.pathParameters['taskAddress']!;
+          return Scaffold(
+            body: TasksPageWidget(taskAddress: taskAddress),
+            bottomNavigationBar: NavBarPage(
+              initialPage: '/tasks',
+            ),
+          );
+        },
+        '/auditor/:taskAddress': (context, state, data) {
+          String taskAddress = state.pathParameters['taskAddress']!;
+          return Scaffold(
+            body: TasksPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: NavBarPage(
               initialPage: '/tasks',
             ),

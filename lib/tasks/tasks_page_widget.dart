@@ -43,17 +43,17 @@ import 'package:beamer/beamer.dart';
 //   }
 // }
 
-class JobExchangeWidget extends StatefulWidget {
+class TasksPageWidget extends StatefulWidget {
   final int? index;
   final String? taskAddress;
-  const JobExchangeWidget({Key? key, this.taskAddress, this.index})
+  const TasksPageWidget({Key? key, this.taskAddress, this.index})
       : super(key: key);
 
   @override
-  _JobExchangeWidgetState createState() => _JobExchangeWidgetState();
+  _TasksPageWidgetState createState() => _TasksPageWidgetState();
 }
 
-class _JobExchangeWidgetState extends State<JobExchangeWidget>
+class _TasksPageWidgetState extends State<TasksPageWidget>
     with TickerProviderStateMixin {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
@@ -322,7 +322,7 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 //         TaskDialog(index: index));
                                               },
                                               child: TaskItem(
-                                                role: 'exchange',
+                                                role: 'tasks',
                                                 object: tasksServices
                                                     .filterResults.values
                                                     .toList()[index],

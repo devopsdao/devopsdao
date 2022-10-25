@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import '../auditor_page/auditor_page.dart';
+import '../auditor_page/auditor_page_widget.dart';
 import '../blockchain/interface.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -14,7 +14,7 @@ import '../index.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
-import '../job_exchange/job_exchange_widget.dart';
+import '../tasks/tasks_page_widget.dart';
 
 import 'authenticator.dart';
 import 'beamer_delegate.dart';
@@ -44,7 +44,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       '/home': const HomePageWidget(),
       '/tasks': const HomePageWidget(),
-      // '/tasks/1': const JobExchangeWidget(),
+      // '/tasks/1': const TasksPageWidget(),
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
       '/auditor': const HomePageWidget(),
