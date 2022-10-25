@@ -14,10 +14,8 @@ import '../custom_widgets/task_dialog.dart';
 import 'package:beamer/beamer.dart';
 
 class PerformerPageWidget extends StatefulWidget {
-  final int? index;
   final String? taskAddress;
-  const PerformerPageWidget({Key? key, this.taskAddress, this.index})
-      : super(key: key);
+  const PerformerPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
   _PerformerPageWidgetState createState() => _PerformerPageWidgetState();

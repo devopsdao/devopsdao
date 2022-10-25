@@ -44,10 +44,8 @@ import 'package:beamer/beamer.dart';
 // }
 
 class TasksPageWidget extends StatefulWidget {
-  final int? index;
   final String? taskAddress;
-  const TasksPageWidget({Key? key, this.taskAddress, this.index})
-      : super(key: key);
+  const TasksPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
   _TasksPageWidgetState createState() => _TasksPageWidgetState();
