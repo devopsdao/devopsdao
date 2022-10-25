@@ -64,7 +64,7 @@ class _ParticipantListState extends State<ParticipantList> {
                   setState(() {
                     widget.obj.justLoaded = false;
                   });
-                  tasksServices.taskStateChange(widget.obj.contractAddress,
+                  tasksServices.taskStateChange(widget.obj.taskAddress,
                       participants[index2], status, widget.obj.nanoId);
                   Navigator.pop(context);
 

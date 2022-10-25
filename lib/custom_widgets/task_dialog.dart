@@ -56,9 +56,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Container(
                   padding: const EdgeInsets.all(20),
                   width: 400,
@@ -615,8 +613,8 @@ class _DialogPagesState extends State<DialogPages> {
                             if (task.taskState == "new" &&
                                 (role == 'customer' ||
                                     tasksServices.hardhatDebug == true)
-                                    // && task.participants.isNotEmpty
-                                    )
+                            // && task.participants.isNotEmpty
+                            )
                               RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
@@ -632,8 +630,8 @@ class _DialogPagesState extends State<DialogPages> {
                             if (task.taskState == "new" &&
                                 (role == 'customer' ||
                                     tasksServices.hardhatDebug == true)
-                                    // && task.participants.isNotEmpty
-                                    )
+                            // && task.participants.isNotEmpty
+                            )
                               ParticipantList(
                                 listType: 'customer',
                                 obj: task,
@@ -843,7 +841,7 @@ class _DialogPagesState extends State<DialogPages> {
                           task.justLoaded = false;
                         });
                         tasksServices.taskParticipate(
-                            task.contractAddress, task.nanoId,
+                            task.taskAddress, task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
 
@@ -866,7 +864,7 @@ class _DialogPagesState extends State<DialogPages> {
                         setState(() {
                           task.justLoaded = false;
                         });
-                        tasksServices.taskStateChange(task.contractAddress,
+                        tasksServices.taskStateChange(task.taskAddress,
                             task.participant, 'progress', task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
@@ -889,7 +887,7 @@ class _DialogPagesState extends State<DialogPages> {
                         setState(() {
                           task.justLoaded = false;
                         });
-                        tasksServices.taskStateChange(task.contractAddress,
+                        tasksServices.taskStateChange(task.taskAddress,
                             task.participant, 'review', task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
@@ -916,7 +914,7 @@ class _DialogPagesState extends State<DialogPages> {
                           task.justLoaded = false;
                         });
                         tasksServices.withdrawToChain(
-                            task.contractAddress, task.nanoId);
+                            task.taskAddress, task.nanoId);
                         Navigator.pop(context);
                         showDialog(
                             context: context,
@@ -946,7 +944,7 @@ class _DialogPagesState extends State<DialogPages> {
                                     TextButton(
                                       onPressed: () {
                                         tasksServices.addTokens(
-                                            task.contractAddress,
+                                            task.taskAddress,
                                             interface.tokensEntered,
                                             task.nanoId);
                                         Navigator.pop(context);
@@ -982,7 +980,7 @@ class _DialogPagesState extends State<DialogPages> {
                         setState(() {
                           task.justLoaded = false;
                         });
-                        tasksServices.taskStateChange(task.contractAddress,
+                        tasksServices.taskStateChange(task.taskAddress,
                             task.participant, 'completed', task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
@@ -1007,7 +1005,7 @@ class _DialogPagesState extends State<DialogPages> {
                                   task.justLoaded = false;
                                 });
                                 // tasksServices.rateTask(
-                                //     task.contractAddress, ratingScore, task.nanoId);
+                                //     task.taskAddress, ratingScore, task.nanoId);
                                 Navigator.pop(context);
                                 showDialog(
                                     context: context,
@@ -1034,7 +1032,7 @@ class _DialogPagesState extends State<DialogPages> {
                         setState(() {
                           task.justLoaded = false;
                         });
-                        tasksServices.taskStateChange(task.contractAddress,
+                        tasksServices.taskStateChange(task.taskAddress,
                             task.participant, 'audit', task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
@@ -1060,7 +1058,7 @@ class _DialogPagesState extends State<DialogPages> {
                           task.justLoaded = false;
                         });
                         tasksServices.taskAuditParticipate(
-                            task.contractAddress, task.nanoId,
+                            task.taskAddress, task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
                         showDialog(
@@ -1083,7 +1081,7 @@ class _DialogPagesState extends State<DialogPages> {
                           task.justLoaded = false;
                         });
                         tasksServices.taskAuditDecision(
-                            task.contractAddress, 'Customer', task.nanoId,
+                            task.taskAddress, 'Customer', task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
                         showDialog(
@@ -1105,7 +1103,7 @@ class _DialogPagesState extends State<DialogPages> {
                           task.justLoaded = false;
                         });
                         tasksServices.taskAuditDecision(
-                            task.contractAddress, 'Performer', task.nanoId,
+                            task.taskAddress, 'Performer', task.nanoId,
                             message: messageForStateController!.text);
                         Navigator.pop(context);
                         showDialog(
@@ -1204,7 +1202,7 @@ class _DialogPagesState extends State<DialogPages> {
                                             height: 2,
                                             fontWeight: FontWeight.bold)),
                                     TextSpan(
-                                        text: task.contractAddress.toString(),
+                                        text: task.taskAddress.toString(),
                                         style: DefaultTextStyle.of(context)
                                             .style
                                             .apply(fontSizeFactor: 0.7))

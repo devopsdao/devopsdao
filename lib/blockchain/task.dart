@@ -18,7 +18,7 @@ class Task {
   final List<dynamic> funders;
   final List<dynamic> auditors;
   final List<dynamic> messages;
-  final EthereumAddress contractAddress;
+  final EthereumAddress taskAddress;
   final double contractValue;
   final double contractValueToken;
   late bool justLoaded;
@@ -41,7 +41,7 @@ class Task {
     required this.funders,
     required this.auditors,
     required this.messages,
-    required this.contractAddress,
+    required this.taskAddress,
     required this.contractValue,
     required this.contractValueToken,
     required this.justLoaded,

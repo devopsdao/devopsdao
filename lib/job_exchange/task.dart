@@ -6,10 +6,10 @@ import '../blockchain/task_services.dart';
 import '../custom_widgets/task_dialog.dart';
 
 class TaskDialog extends StatefulWidget {
-  final String nanoId;
+  final String taskAddress;
   const TaskDialog({
     Key? key,
-    required this.nanoId,
+    required this.taskAddress,
   }) : super(key: key);
 
   @override
@@ -27,11 +27,12 @@ class _TaskDialog extends State<TaskDialog> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-    // final index = widget.nanoId;
-    task = tasksServices.filterResults[widget.nanoId]!;
-    print('nanoId: ${widget.nanoId}');
+    task = tasksServices.filterResults[widget.taskAddress]!;
+    print('taskAddress: ${widget.taskAddress}');
 
-    return TaskInformationDialog(role: 'exchange', object: task!,);
-
+    return TaskInformationDialog(
+      role: 'exchange',
+      object: task,
+    );
   }
 }

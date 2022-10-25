@@ -16,6 +16,7 @@ late final BeamerDelegate beamerDelegate;
 
 void createBeamerDelegate() {
   beamerDelegate = BeamerDelegate(
+    transitionDelegate: const NoAnimationTransitionDelegate(),
     locationBuilder: RoutesLocationBuilder(
       routes: {
         '/home': (context, state, data) => Scaffold(
@@ -47,20 +48,14 @@ void createBeamerDelegate() {
                 initialPage: '/auditor',
               ),
             ),
-        '/tasks/:taskId': (context, state, data) {
-          String nanoId = state.pathParameters['taskId']!;
-          // if (state.pathParameters.containsKey('taskId')) {
-          //   // const index = ValueKey('book-${state.pathParameters['bookId']}');
-
-          //   nanoId = state.pathParameters['taskId']!;
-          //   // print('nanoId:');
-
-          //   // print(nanoId);
-          // }
+        '/tasks/:taskAddress': (context, state, data) {
+          String taskAddress = state.pathParameters['taskAddress']!;
 
           return Scaffold(
-            body: JobExchangeWidget(nanoId: nanoId),
-            bottomNavigationBar: NavBarPage(),
+            body: JobExchangeWidget(taskAddress: taskAddress),
+            bottomNavigationBar: NavBarPage(
+              initialPage: '/tasks',
+            ),
           );
         },
       },

@@ -541,9 +541,12 @@ class TasksServices extends ChangeNotifier {
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
-      // final BigInt weiBalanceToken =
-      //     await web3GetBalanceToken(publicAddress!, 'aUSDC');
-      final BigInt weiBalanceToken = BigInt.from(0);
+      late BigInt weiBalanceToken = BigInt.from(0);
+      if (hardhatDebug == false) {
+        BigInt weiBalanceToken =
+            await web3GetBalanceToken(publicAddress!, 'aUSDC');
+      }
+
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken =
           (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
@@ -613,12 +616,12 @@ class TasksServices extends ChangeNotifier {
     if (enteredKeyword.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
-      for (String nanoId in taskList.keys) {
-        if (taskList[nanoId]!
+      for (String taskAddress in taskList.keys) {
+        if (taskList[taskAddress]!
             .title
             .toLowerCase()
             .contains(enteredKeyword.toLowerCase())) {
-          filterResults[nanoId] = taskList[nanoId]!;
+          filterResults[taskAddress] = taskList[taskAddress]!;
         }
       }
     }
@@ -694,7 +697,7 @@ class TasksServices extends ChangeNotifier {
             funders: task[14],
             auditors: task[15],
             messages: task[16],
-            contractAddress: totalTaskList[i],
+            taskAddress: totalTaskList[i],
             justLoaded: true,
             contractValue: ethBalancePrecise,
             contractValueToken: ethBalanceToken,
@@ -705,7 +708,7 @@ class TasksServices extends ChangeNotifier {
 
           notifyListeners();
           if (task[1] != "") {
-            tasks[taskObject.nanoId] = taskObject;
+            tasks[taskObject.taskAddress.toString()] = taskObject;
             // tasks.add(taskObject);
           }
         }
@@ -764,23 +767,23 @@ class TasksServices extends ChangeNotifier {
                   task.taskState == "review" ||
                   task.taskState == "audit")) {
             if (task.contractOwner == publicAddress) {
-              tasksCustomerWorking[task.nanoId] = task;
+              tasksCustomerWorking[task.taskAddress.toString()] = task;
             } else if (task.participant == publicAddress) {
-              tasksPerformerProgress[task.nanoId] = task;
+              tasksPerformerProgress[task.taskAddress.toString()] = task;
             }
             if (hardhatDebug == true) {
-              tasksPerformerProgress[task.nanoId] = task;
+              tasksPerformerProgress[task.taskAddress.toString()] = task;
             }
           }
 
           // New TASKs for all users:
           if (task.taskState != "" && task.taskState == "new") {
             if (hardhatDebug == true) {
-              tasksNew[task.nanoId] = task;
-              filterResults[task.nanoId] = task;
+              tasksNew[task.taskAddress.toString()] = task;
+              filterResults[task.taskAddress.toString()] = task;
             }
             if (task.contractOwner == publicAddress) {
-              tasksCustomerApplied[task.nanoId] = task;
+              tasksCustomerApplied[task.taskAddress.toString()] = task;
             } else if (task.participants.isNotEmpty) {
               var taskExist = false;
               for (var p = 0; p < task.participants.length; p++) {
@@ -789,16 +792,16 @@ class TasksServices extends ChangeNotifier {
                 }
               }
               if (taskExist) {
-                tasksPerformerParticipate[task.nanoId] = task;
+                tasksPerformerParticipate[task.taskAddress.toString()] = task;
               } else {
-                tasksNew[task.nanoId] = task;
-                filterResults[task.nanoId] = task;
+                tasksNew[task.taskAddress.toString()] = task;
+                filterResults[task.taskAddress.toString()] = task;
                 // tasksNew.add(task);
                 // filterResults.add(task);
               }
             } else {
-              tasksNew[task.nanoId] = task;
-              filterResults[task.nanoId] = task;
+              tasksNew[task.taskAddress.toString()] = task;
+              filterResults[task.taskAddress.toString()] = task;
               // tasksNew.add(task);
               // filterResults.add(task);
             }
@@ -807,12 +810,12 @@ class TasksServices extends ChangeNotifier {
           if (task.taskState != "" &&
               (task.taskState == "completed" || task.taskState == "canceled")) {
             if (task.contractOwner == publicAddress) {
-              tasksCustomerComplete[task.nanoId] = task;
+              tasksCustomerComplete[task.taskAddress.toString()] = task;
             } else if (task.participant == publicAddress) {
-              tasksPerformerComplete[task.nanoId] = task;
+              tasksPerformerComplete[task.taskAddress.toString()] = task;
             }
             if (hardhatDebug == true) {
-              tasksPerformerComplete[task.nanoId] = task;
+              tasksPerformerComplete[task.taskAddress.toString()] = task;
             }
           }
 
@@ -829,25 +832,25 @@ class TasksServices extends ChangeNotifier {
                   }
                 }
                 if (contrExist) {
-                  tasksAuditApplied[task.nanoId] = task;
+                  tasksAuditApplied[task.taskAddress.toString()] = task;
                 } else {
-                  tasksAuditPending[task.nanoId] = task;
+                  tasksAuditPending[task.taskAddress.toString()] = task;
                 }
               } else {
-                tasksAuditPending[task.nanoId] = task;
+                tasksAuditPending[task.taskAddress.toString()] = task;
               }
             }
 
             if (task.auditor == publicAddress) {
               if (task.auditState == "performing") {
-                tasksAuditWorkingOn[task.nanoId] = task;
+                tasksAuditWorkingOn[task.taskAddress.toString()] = task;
               } else if (task.auditState == "complete" ||
                   task.auditState == "finished") {
-                tasksAuditComplete[task.nanoId] = task;
+                tasksAuditComplete[task.taskAddress.toString()] = task;
               }
             }
             if (hardhatDebug == true) {
-              tasksAuditApplied[task.nanoId] = task;
+              tasksAuditApplied[task.taskAddress.toString()] = task;
             }
           }
         }
@@ -1064,9 +1067,9 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = 'pending';
     late String txn;
     // String message = 'moving this task';
-    message ??= 'moving this $state task';
+    message ??= 'changing task status to $state';
     replyTo ??= BigInt.from(0);
-    score ??= BigInt.from(0);
+    score ??= BigInt.from(5);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;

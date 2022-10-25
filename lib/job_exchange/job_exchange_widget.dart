@@ -45,8 +45,8 @@ import 'package:beamer/beamer.dart';
 
 class JobExchangeWidget extends StatefulWidget {
   final int? index;
-  final String? nanoId;
-  const JobExchangeWidget({Key? key, this.nanoId, this.index})
+  final String? taskAddress;
+  const JobExchangeWidget({Key? key, this.taskAddress, this.index})
       : super(key: key);
 
   @override
@@ -83,11 +83,11 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
     super.initState();
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
-    if (widget.nanoId != null) {
+    if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(nanoId: widget.nanoId!));
+            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!));
       });
     }
 
@@ -193,7 +193,6 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
-
           ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
@@ -310,12 +309,13 @@ class _JobExchangeWidgetState extends State<JobExchangeWidget>
                                                 setState(() {
                                                   // Toggle light when tapped.
                                                 });
-                                                final nanoId = tasksServices
-                                                    .filterResults.values
-                                                    .toList()[index]
-                                                    .nanoId;
+                                                final taskAddress =
+                                                    tasksServices
+                                                        .filterResults.values
+                                                        .toList()[index]
+                                                        .taskAddress;
                                                 context.beamToNamed(
-                                                    '/tasks/$nanoId');
+                                                    '/tasks/$taskAddress');
                                                 // showDialog(
                                                 //     context: context,
                                                 //     builder: (context) =>
