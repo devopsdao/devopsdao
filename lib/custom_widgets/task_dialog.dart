@@ -21,6 +21,8 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'buttons.dart';
 
+import 'package:beamer/beamer.dart';
+
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
   final String role;
@@ -106,7 +108,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
-                          Navigator.pop(context);
+                          context.beamToNamed('/tasks');
+                          // Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
@@ -463,6 +466,13 @@ class _DialogPagesState extends State<DialogPages> {
   void initState() {
     super.initState();
     messageForStateController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // Don't forget to dispose all of your controllers!
+    // _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -964,6 +974,7 @@ class _DialogPagesState extends State<DialogPages> {
                                     TextButton(
                                         child: const Text('Close'),
                                         onPressed: () =>
+                                            // context.beamToNamed('/tasks')
                                             Navigator.pop(context)),
                                   ],
                                 ));

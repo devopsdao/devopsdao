@@ -82,7 +82,7 @@ class _NavBarPageState extends State<NavBarPage> {
             Icons.compare_arrows,
             size: 24,
           ),
-          label: 'Exchange',
+          label: 'Tasks',
           tooltip: '',
         ),
         BottomNavigationBarItem(
