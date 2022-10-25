@@ -86,7 +86,7 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrl;
   late String _wsUrl;
 
-  late int chainId;
+  int chainId = 0;
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
@@ -139,13 +139,11 @@ class TasksServices extends ChangeNotifier {
       });
     }
 
-    if (platform != 'web') {
-      if (transactionTester == null) {
-        transactionTester = EthereumTransactionTester();
-      }
-      await transactionTester?.initSession();
-      await transactionTester?.removeSession();
+    if (transactionTester == null) {
+      transactionTester = EthereumTransactionTester();
     }
+    await transactionTester?.initSession();
+    await transactionTester?.removeSession();
     _web3client = Web3Client(
       _rpcUrl,
       http.Client(),
@@ -241,8 +239,8 @@ class TasksServices extends ChangeNotifier {
         walletConnected = false;
         walletConnectUri = '';
         walletConnectSessionUri = '';
-
         publicAddress = null;
+        validChainID = false;
         ethBalance = 0;
         ethBalanceToken = 0;
         pendingBalance = 0;
@@ -286,25 +284,36 @@ class TasksServices extends ChangeNotifier {
 
       final client = Web3Client.custom(ethRPC);
 
-      credentials = await eth.requestAccount();
-      publicAddress = credentials.address;
-      final chainIdHex = await eth.rawRequest('eth_chainId');
-      int chainId = int.parse(chainIdHex);
-
-      if (chainId == 1287) {
-        validChainID = true;
-      } else {
-        print('invalid chainId ${chainId}');
-
-        await eth.rawRequest('wallet_switchEthereumChain',
-            params: [JSrawRequestParams(chainId: '0x507')]);
-        final chainIdHex = await eth.rawRequest('eth_chainId');
-        chainId = int.parse(chainIdHex);
+      try {
+        credentials = await eth.requestAccount();
+      } catch (e) {
+        print(e);
+      }
+      if (credentials != null) {
+        publicAddress = credentials.address;
+        walletConnected = true;
+        late final chainIdHex;
+        try {
+          chainIdHex = await eth.rawRequest('eth_chainId');
+        } catch (e) {
+          print(e);
+        }
+        if (chainIdHex != null) {
+          chainId = int.parse(chainIdHex);
+        }
         if (chainId == 1287) {
           validChainID = true;
-        } else {
-          validChainID = false;
+        } else if (chainId != 0) {
+          print('invalid chainId ${chainId}');
+          await switchNetworkMM();
         }
+      }
+
+      if (walletConnected && validChainID) {
+        fetchTasks();
+
+        myBalance();
+        notifyListeners();
       }
 
       // walletConnected = true;
@@ -359,14 +368,55 @@ class TasksServices extends ChangeNotifier {
       //   pendingBalanceToken = 0;
       //   notifyListeners();
       // });
-
-      fetchTasks();
-
-      myBalance();
-      notifyListeners();
     } else {
       print("eth not initialized");
     }
+  }
+
+  Future<void> switchNetworkMM() async {
+    final eth = window.ethereum;
+    if (eth == null) {
+      print('MetaMask is not available');
+      return;
+    }
+    late final chainIdHex;
+    bool chainChangeRequest = false;
+    try {
+      await eth.rawRequest('wallet_switchEthereumChain',
+          params: [JSrawRequestParams(chainId: '0x507')]);
+      chainChangeRequest = true;
+    } catch (e) {
+      print(e);
+    }
+    if (chainChangeRequest == true) {
+      try {
+        chainIdHex = await eth.rawRequest('eth_chainId');
+      } catch (e) {
+        print(e);
+      }
+      if (chainIdHex != null) {
+        chainId = int.parse(chainIdHex);
+      }
+      if (chainId == 1287) {
+        validChainID = true;
+        fetchTasks();
+        myBalance();
+      } else {
+        validChainID = false;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> disconnectMM() async {
+    publicAddress = null;
+    walletConnected = false;
+    validChainID = false;
+    ethBalance = 0;
+    ethBalanceToken = 0;
+    pendingBalance = 0;
+    pendingBalanceToken = 0;
+    notifyListeners();
   }
 
   // Future<void> disconnectWalletMM() {
