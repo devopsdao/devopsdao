@@ -20,7 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
 class AuditorPageWidget extends StatefulWidget {
-  const AuditorPageWidget({Key? key}) : super(key: key);
+  final String? taskAddress;
+  const AuditorPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
   _AuditorPageWidgetState createState() => _AuditorPageWidgetState();
@@ -56,6 +57,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   @override
   void initState() {
     super.initState();
+    if (widget.taskAddress != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+            context: context,
+            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'auditor',));
+      });
+    }
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
     startPageLoadAnimations(
@@ -364,7 +372,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   final taskAddress = tasksServices.filterResults.values
                       .toList()[index]
                       .taskAddress;
-                  context.beamToNamed('/tasks/$taskAddress');
+                  context.beamToNamed('/auditor/$taskAddress');
                   // showDialog(
                   //     context: context,
                   //     builder: (context) {

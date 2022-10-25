@@ -14,7 +14,7 @@ import 'index.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
-import 'tasks/tasks_page_widget.dart';
+import 'tasks_page/tasks_page_widget.dart';
 
 import 'navigation/authenticator.dart';
 import 'navigation/beamer_delegate.dart';

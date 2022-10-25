@@ -46,7 +46,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!));
+            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'performer',));
       });
     }
     // startPageLoadAnimations(

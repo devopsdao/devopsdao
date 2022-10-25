@@ -60,27 +60,27 @@ void createBeamerDelegate() {
         '/customer/:taskAddress': (context, state, data) {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
-            body: TasksPageWidget(taskAddress: taskAddress),
+            body: CustomerPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: NavBarPage(
-              initialPage: '/tasks',
+              initialPage: '/customer',
             ),
           );
         },
         '/performer/:taskAddress': (context, state, data) {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
-            body: TasksPageWidget(taskAddress: taskAddress),
+            body: PerformerPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: NavBarPage(
-              initialPage: '/tasks',
+              initialPage: '/performer',
             ),
           );
         },
         '/auditor/:taskAddress': (context, state, data) {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
-            body: TasksPageWidget(taskAddress: taskAddress),
+            body: AuditorPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: NavBarPage(
-              initialPage: '/tasks',
+              initialPage: '/auditor',
             ),
           );
         },

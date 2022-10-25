@@ -4,15 +4,16 @@ import 'package:badges/badges.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/task_services.dart';
-import '../create_job/create_job_widget.dart';
-import '../custom_widgets/loading.dart';
-import '../custom_widgets/task_item.dart';
-import '../custom_widgets/wallet_action.dart';
+import '/blockchain/task_services.dart';
+import '/create_job/create_job_widget.dart';
+import '/custom_widgets/loading.dart';
+import '/custom_widgets/task_dialog.dart';
+import '/custom_widgets/task_item.dart';
+import '/custom_widgets/wallet_action.dart';
 import 'task.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_animations.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
@@ -85,7 +86,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!));
+            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'tasks'));
       });
     }
 

@@ -23,7 +23,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:beamer/beamer.dart';
 
 class CustomerPageWidget extends StatefulWidget {
-  const CustomerPageWidget({Key? key}) : super(key: key);
+  final String? taskAddress;
+  const CustomerPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
   _CustomerPageWidgetState createState() => _CustomerPageWidgetState();
@@ -51,6 +52,14 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   @override
   void initState() {
     super.initState();
+    if (widget.taskAddress != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+            context: context,
+            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'customer',));
+      });
+    }
+
     startPageLoadAnimations(
       animationsMap.values
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
@@ -257,7 +266,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       final taskAddress = tasksServices.filterResults.values
                           .toList()[index]
                           .taskAddress;
-                      context.beamToNamed('/tasks/$taskAddress');
+                      context.beamToNamed('/customer/$taskAddress');
                     },
                     child: TaskItem(
                       role: 'customer',
