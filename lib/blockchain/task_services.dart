@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:js';
 import 'dart:math';
 import 'package:js/js.dart'
     if (dart.library.io) 'package:webthree/src/browser/js_stub.dart'
@@ -47,6 +48,24 @@ class JSrawRequestParams {
   external factory JSrawRequestParams({String chainId});
 }
 
+// Object jsToDart(jsObject) {
+//   if (jsObject is JsArray || jsObject is Iterable) {
+//     return jsObject.map(jsToDart).toList();
+//   }
+//   if (jsObject is JsObject) {
+//     return Map.fromIterable(
+//       getObjectKeys(jsObject),
+//       value: (key) => jsToDart(jsObject[key]),
+//     );
+//   }
+//   return jsObject;
+// }
+
+// List<String> getObjectKeys(JsObject object) => context['Object']
+//     .callMethod('getOwnPropertyNames', [object])
+//     .toList()
+//     .cast<String>();
+
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
   Map<String, Task> tasks = {};
@@ -69,12 +88,17 @@ class TasksServices extends ChangeNotifier {
 
   var credentials;
   EthereumAddress? publicAddress;
+  EthereumAddress? publicAddressWC;
+  EthereumAddress? publicAddressMM;
   var transactionTester;
 
   var walletConnectState;
   bool walletConnected = false;
+  bool walletConnectedWC = false;
+  bool walletConnectedMM = false;
   String walletConnectUri = '';
   String walletConnectSessionUri = '';
+  var walletConnectSession;
   // bool walletConnectActionApproved = false;
   var eth;
   String lastTxn = '';
@@ -186,6 +210,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   bool validChainID = false;
+  bool validChainIDWC = false;
+  bool validChainIDMM = false;
 
   Future<void> connectWalletWC() async {
     print('async');
@@ -199,19 +225,25 @@ class TasksServices extends ChangeNotifier {
       }
       // Subscribe to events
       connector.on('connect', (session) {
-        print(session);
+        walletConnectSession = session;
         walletConnectState = TransactionState.connected;
         walletConnected = true;
+        walletConnectedWC = true;
         () async {
           if (hardhatDebug == false) {
             credentials = await transactionTester?.getCredentials();
             chainId = session.chainId;
             if (chainId == 1287) {
               validChainID = true;
+              validChainIDWC = true;
             } else {
               validChainID = false;
+              validChainIDWC = false;
+              // await switchNetworkWC();
             }
-            publicAddress = await transactionTester?.getPublicAddress(session);
+            publicAddressWC =
+                await transactionTester?.getPublicAddress(session);
+            publicAddress = publicAddressWC;
           } else {
             chainId = 31337;
             validChainID = true;
@@ -237,14 +269,18 @@ class TasksServices extends ChangeNotifier {
         print(session);
         walletConnectState = TransactionState.disconnected;
         walletConnected = false;
-        walletConnectUri = '';
-        walletConnectSessionUri = '';
+        walletConnectedWC = false;
         publicAddress = null;
+        publicAddressWC = null;
         validChainID = false;
+        validChainIDWC = false;
         ethBalance = 0;
         ethBalanceToken = 0;
         pendingBalance = 0;
         pendingBalanceToken = 0;
+        walletConnectUri = '';
+        walletConnectSessionUri = '';
+        connectWalletWC();
         notifyListeners();
       });
       final SessionStatus? session = await transactionTester?.connect(
@@ -262,7 +298,8 @@ class TasksServices extends ChangeNotifier {
         if (hardhatDebug == false) {
           credentials = await transactionTester?.getCredentials();
         }
-        publicAddress = await transactionTester?.getPublicAddress(session);
+        publicAddressWC = await transactionTester?.getPublicAddress(session);
+        publicAddress = publicAddressWC;
       } else {
         walletConnectState = TransactionState.failed;
       }
@@ -283,15 +320,18 @@ class TasksServices extends ChangeNotifier {
       var ethRPC = eth.asRpcService();
 
       final client = Web3Client.custom(ethRPC);
-
+      bool userRejected = false;
       try {
         credentials = await eth.requestAccount();
       } catch (e) {
+        userRejected = true;
         print(e);
       }
-      if (credentials != null) {
-        publicAddress = credentials.address;
+      if (!userRejected && credentials != null) {
+        publicAddressMM = credentials.address;
+        publicAddress = publicAddressMM;
         walletConnected = true;
+        walletConnectedMM = true;
         late final chainIdHex;
         try {
           chainIdHex = await eth.rawRequest('eth_chainId');
@@ -303,17 +343,19 @@ class TasksServices extends ChangeNotifier {
         }
         if (chainId == 1287) {
           validChainID = true;
-        } else if (chainId != 0) {
+          validChainIDMM = true;
+        } else {
+          validChainID = false;
+          validChainIDMM = false;
           print('invalid chainId ${chainId}');
           await switchNetworkMM();
         }
-      }
+        if (walletConnected && walletConnectedMM && validChainID) {
+          fetchTasks();
 
-      if (walletConnected && validChainID) {
-        fetchTasks();
-
-        myBalance();
-        notifyListeners();
+          myBalance();
+          notifyListeners();
+        }
       }
 
       // walletConnected = true;
@@ -381,16 +423,18 @@ class TasksServices extends ChangeNotifier {
     }
     late final chainIdHex;
     bool chainChangeRequest = false;
+    bool userRejected = false;
     try {
       await eth.rawRequest('wallet_switchEthereumChain',
           params: [JSrawRequestParams(chainId: '0x507')]);
       chainChangeRequest = true;
     } catch (e) {
-      print(e);
+      userRejected = true;
     }
-    if (chainChangeRequest == true) {
+    if (!userRejected && chainChangeRequest) {
       try {
-        chainIdHex = await eth.rawRequest('eth_chainId');
+        // chainIdHex = await eth.rawRequest('eth_chainId');
+        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
       } catch (e) {
         print(e);
       }
@@ -399,23 +443,91 @@ class TasksServices extends ChangeNotifier {
       }
       if (chainId == 1287) {
         validChainID = true;
+        validChainIDMM = true;
+        publicAddress = publicAddressMM;
         fetchTasks();
         myBalance();
       } else {
         validChainID = false;
+        validChainIDMM = false;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> switchNetworkWC() async {
+    // final eth = window.ethereum;
+    // if (eth == null) {
+    //   print('MetaMask is not available');
+    //   return;
+    // }
+    late final chainIdHex;
+    bool chainChangeRequest = false;
+    var chainIdWC;
+    try {
+      final params = <String, dynamic>{
+        'chainId': 0x507,
+      };
+      var result = await transactionTester?.switchNetwork(0x507);
+      // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
+      chainChangeRequest = true;
+    } catch (e) {
+      print(e);
+    }
+    if (chainChangeRequest == true) {
+      try {
+        // chainId = walletConnectSession.chainId;
+        chainId = transactionTester?.getChainId();
+        // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+      } catch (e) {
+        print(e);
+      }
+      // if (chainIdHex != null) {
+      //   chainId = int.parse(chainIdHex);
+      // }
+      if (chainId == 1287) {
+        validChainID = true;
+        validChainIDWC = true;
+        publicAddress = publicAddressWC;
+        fetchTasks();
+        myBalance();
+      } else {
+        validChainID = false;
+        validChainIDWC = false;
       }
     }
     notifyListeners();
   }
 
   Future<void> disconnectMM() async {
-    publicAddress = null;
     walletConnected = false;
+    walletConnectedMM = false;
+    publicAddress = null;
+    publicAddressMM = null;
     validChainID = false;
+    validChainIDMM = false;
     ethBalance = 0;
     ethBalanceToken = 0;
     pendingBalance = 0;
     pendingBalanceToken = 0;
+    notifyListeners();
+  }
+
+  Future<void> disconnectWC() async {
+    await transactionTester?.disconnect();
+    walletConnected = false;
+    walletConnectedWC = false;
+    publicAddress = null;
+    publicAddressWC = null;
+    validChainID = false;
+    validChainIDWC = false;
+    ethBalance = 0;
+    ethBalanceToken = 0;
+    pendingBalance = 0;
+    pendingBalanceToken = 0;
+    walletConnectUri = '';
+    walletConnectSessionUri = '';
+    connectWalletWC();
     notifyListeners();
   }
 
