@@ -239,7 +239,7 @@ class TasksServices extends ChangeNotifier {
             } else {
               validChainID = false;
               validChainIDWC = false;
-              // await switchNetworkWC();
+              await switchNetworkWC();
             }
             publicAddressWC =
                 await transactionTester?.getPublicAddress(session);
@@ -472,19 +472,20 @@ class TasksServices extends ChangeNotifier {
       // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
       chainChangeRequest = true;
     } catch (e) {
+      chainChangeRequest = false;
       print(e);
     }
     if (chainChangeRequest == true) {
       try {
         // chainId = walletConnectSession.chainId;
-        chainId = transactionTester?.getChainId();
-        // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+        // chainId = await transactionTester?.getChainId();
+        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
       } catch (e) {
         print(e);
       }
-      // if (chainIdHex != null) {
-      //   chainId = int.parse(chainIdHex);
-      // }
+      if (chainIdHex != null) {
+        chainId = int.parse(chainIdHex);
+      }
       if (chainId == 1287) {
         validChainID = true;
         validChainIDWC = true;

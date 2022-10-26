@@ -179,21 +179,21 @@ class EthereumTransactionTester extends TransactionTester {
     final params = <String, dynamic>{
       'chainId': '0x507',
     };
-    final response = connector.sendCustomRequest(
+    final response = await connector.sendCustomRequest(
         method: 'wallet_switchEthereumChain', params: [params]);
     print(response);
 
     // return session;
   }
 
-  Future<String> getChainId() async {
+  Future<int> getChainId() async {
     // final params = <String, dynamic>{
     //   'chainId': '0x507',
     // };
     final response =
         await connector.sendCustomRequest(method: 'eth_chainId', params: []);
     print(response);
-    return response;
+    return int.parse(response);
 
     // return session;
   }
