@@ -1330,7 +1330,10 @@ class _DialogPagesState extends State<DialogPages> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                     ),
-                    child: ChatPage(messages: task.messages))))
+                    child: ChatPage(
+                        taskAddress: task.taskAddress,
+                        messages: task.messages,
+                        tasksServices: tasksServices))))
       ],
     );
   }

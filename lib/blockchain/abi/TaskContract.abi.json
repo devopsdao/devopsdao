@@ -174,7 +174,7 @@
           },
           {
             "internalType": "address payable",
-            "name": "participantAddress",
+            "name": "participant",
             "type": "address"
           },
           {
@@ -184,7 +184,7 @@
           },
           {
             "internalType": "address",
-            "name": "auditorAddress",
+            "name": "auditor",
             "type": "address"
           },
           {
@@ -194,12 +194,12 @@
           },
           {
             "internalType": "address[]",
-            "name": "fundingParticipants",
+            "name": "funders",
             "type": "address[]"
           },
           {
             "internalType": "address[]",
-            "name": "auditParticipants",
+            "name": "auditors",
             "type": "address[]"
           },
           {
@@ -240,11 +240,6 @@
             "type": "tuple[]"
           },
           {
-            "internalType": "uint256",
-            "name": "countMessages",
-            "type": "uint256"
-          },
-          {
             "internalType": "address",
             "name": "contractParent",
             "type": "address"
@@ -256,6 +251,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_replyTo",
+        "type": "uint256"
+      }
+    ],
+    "name": "sendMessage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -326,7 +339,7 @@
     "inputs": [
       {
         "internalType": "address payable",
-        "name": "_participantAddress",
+        "name": "_participant",
         "type": "address"
       },
       {

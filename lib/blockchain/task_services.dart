@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:js';
+// import 'dart:js';
 import 'dart:math';
 import 'package:js/js.dart'
     if (dart.library.io) 'package:webthree/src/browser/js_stub.dart'
@@ -15,10 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../custom_widgets/wallet_action.dart';
-import 'Factory.g.dart';
+// import 'Factory.g.dart';
 import 'TasksFacet.g.dart';
-import 'TaskContract.g.dart';
-import 'IERC20.g.dart';
+import 'abi/TaskContract.g.dart';
+import 'abi/IERC20.g.dart';
 import 'task.dart';
 import "package:universal_html/html.dart" hide Platform;
 import 'package:webthree/browser.dart'
@@ -347,7 +347,7 @@ class TasksServices extends ChangeNotifier {
         } else {
           validChainID = false;
           validChainIDMM = false;
-          print('invalid chainId ${chainId}');
+          print('invalid chainId $chainId');
           await switchNetworkMM();
         }
         if (walletConnected && walletConnectedMM && validChainID) {
@@ -747,13 +747,17 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
-  Future tellMeHasItMined(String hash, String taskAction, String nanoId) async {
+  Future tellMeHasItMined(String hash, String taskAction, String nanoId,
+      [String messageNanoId = '']) async {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt =
           await web3GetTransactionReceipt(hash);
       while (transactionReceipt == null) {
         Future.delayed(const Duration(milliseconds: 1000));
         transactionReceipt = await web3GetTransactionReceipt(hash);
+      }
+      if (messageNanoId != '') {
+        taskAction = '${taskAction}_$messageNanoId';
       }
 
       if (transactionReceipt.status == true) {
@@ -1151,14 +1155,13 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> taskParticipate(EthereumAddress contractAddress, String nanoId,
-      {String? message, BigInt? score, BigInt? replyTo}) async {
+      {String? message, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
     message ??= 'Participate this task';
     replyTo ??= BigInt.from(0);
-    score ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
@@ -1186,14 +1189,13 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> taskAuditParticipate(
       EthereumAddress contractAddress, String nanoId,
-      {String? message, BigInt? score, BigInt? replyTo}) async {
+      {String? message, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskAuditParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
     message ??= 'Participate this task';
     replyTo ??= BigInt.from(0);
-    score ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
@@ -1303,6 +1305,45 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['taskAuditDecision']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
+  }
+
+  Future<void> sendChatMessage(
+      EthereumAddress contractAddress, String nanoId, String message,
+      {BigInt? replyTo}) async {
+    final messageNanoID = customAlphabet(
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
+    transactionStatuses[nanoId] = {
+      'sendChatMessage_$messageNanoID': {'status': 'pending', 'txn': 'initial'}
+    };
+    late String txn;
+    replyTo ??= BigInt.from(0);
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    txn = await taskContract.sendMessage(message, replyTo,
+        credentials: creds, transaction: transaction);
+    isLoading = false;
+    // isLoadingBackground = true;
+    // lastTxn = txn;
+
+    transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] =
+        'confirmed';
+    transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['txn'] =
+        txn;
+    notifyListeners();
+
+    tellMeHasItMined(txn, 'sendChatMessage', nanoId, messageNanoID);
   }
 
   String destinationChain = 'Moonbase';
@@ -1419,7 +1460,7 @@ class TasksServices extends ChangeNotifier {
     final params = {
       'source_chain': sourceChainName,
       'destination_chain': destinationChainName,
-      'amount': '${amountInDenom.toString()}${assetDenom}',
+      'amount': '${amountInDenom.toString()}$assetDenom',
     };
 
     final uri =
