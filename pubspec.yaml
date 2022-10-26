@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   algorand_dart: ^1.0.3
+  anim_search_bar: ^2.0.2
   auto_size_text: 3.0.0
   badges: ^2.0.3
   beamer:

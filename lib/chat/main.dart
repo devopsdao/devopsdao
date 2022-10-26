@@ -220,6 +220,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleSendPressed(types.PartialText message) {
+
     final textMessage = types.TextMessage(
       author: types.User(id: widget.messages[0][3].toString()),
       createdAt: DateTime.now().millisecondsSinceEpoch,

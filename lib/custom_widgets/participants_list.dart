@@ -38,10 +38,11 @@ class _ParticipantListState extends State<ParticipantList> {
       participants = widget.obj.auditors;
       status = 'audit';
     }
+    print(MediaQuery.of(context).size.height);
 
     return Container(
       height: 100.0, // Change as per your requirement
-      width: 240.0, // Change as per your requirement
+      width: 270.0, // Change as per your requirement
       child: ListView.builder(
           // padding: EdgeInsets.zero,
           // scrollDirection: Axis.vertical,
@@ -49,40 +50,32 @@ class _ParticipantListState extends State<ParticipantList> {
           // physics: NeverScrollableScrollPhysics(),
           itemCount: participants.length,
           itemBuilder: (context2, index2) {
-            return Column(children: [
-              // Text(
-              //   tasksServices.tasksOwner[index].participants[index2].toString(),
-              //   style: FlutterFlowTheme.of(
-              //       context2)
-              //       .bodyText2,
-              // ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 13),
-                ),
-                onPressed: () {
-                  setState(() {
-                    widget.obj.justLoaded = false;
-                  });
-                  tasksServices.taskStateChange(widget.obj.taskAddress,
-                      participants[index2], status, widget.obj.nanoId);
-                  Navigator.pop(context);
-
-                  showDialog(
-                      context: context,
-                      builder: (context) => WalletAction(
-                            nanoId: widget.obj.nanoId,
-                            taskName: 'taskStateChange',
-                          ));
-                },
-                child: Text(
-                  participants[index2].toString(),
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 0.7),
-                ),
+            return TextButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 13),
               ),
-            ]);
+              onPressed: () {
+                setState(() {
+                  widget.obj.justLoaded = false;
+                });
+                tasksServices.taskStateChange(widget.obj.taskAddress,
+                    participants[index2], status, widget.obj.nanoId);
+                Navigator.pop(context);
+
+                showDialog(
+                    context: context,
+                    builder: (context) => WalletAction(
+                          nanoId: widget.obj.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
+              },
+              child: Text(
+                participants[index2].toString(),
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 0.7),
+              ),
+            );
           }),
     );
   }
