@@ -23,7 +23,7 @@ class CustomerPageWidget extends StatefulWidget {
 }
 
 class _CustomerPageWidgetState extends State<CustomerPageWidget>
-    // with TickerProviderStateMixin
+// with TickerProviderStateMixin
 {
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
@@ -49,7 +49,10 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'customer',));
+            builder: (context) => TaskDialog(
+                  taskAddress: widget.taskAddress!,
+                  role: 'customer',
+                ));
       });
     }
 
@@ -76,9 +79,9 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
 
     if (_searchKeywordController.text.isEmpty) {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(tasksServices.tasksCustomerApplied);
+        tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(tasksServices.tasksCustomerWorking);
+        tasksServices.resetFilter(tasksServices.tasksCustomerProgress);
       } else if (tabIndex == 2) {
         tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
       }
@@ -87,204 +90,211 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     bool _lightIsOn = false;
 
     return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        title: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Customer',
-                  style: FlutterFlowTheme.of(context).title2.override(
-                        fontFamily: 'Poppins',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                ),
-              ],
-            ),
+        key: scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
+          title: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Customer',
+                    style: FlutterFlowTheme.of(context).title2.override(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                          fontSize: 22,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            SearchButton(),
+            LoadButtonIndicator(),
           ],
+          centerTitle: false,
+          elevation: 2,
         ),
-        actions: [
-          SearchButton(),
-          LoadButtonIndicator(),
-        ],
-        centerTitle: false,
-        elevation: 2,
-      ),
-      backgroundColor: const Color(0xFF1E2429),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     await Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => CreateJobWidget(),
-      //       ),
-      //     );
-      //   },
-      //   backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-      //   elevation: 8,
-      //   child: Icon(
-      //     Icons.add,
-      //     color: Colors.white,
-      //     size: 28,
-      //   ),
-      // ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
+        backgroundColor: const Color(0xFF1E2429),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () async {
+        //     await Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => CreateJobWidget(),
+        //       ),
+        //     );
+        //   },
+        //   backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+        //   elevation: 8,
+        //   child: Icon(
+        //     Icons.add,
+        //     color: Colors.white,
+        //     size: 28,
+        //   ),
+        // ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+              stops: [0, 0.5, 1],
+              begin: AlignmentDirectional(1, -1),
+              end: AlignmentDirectional(-1, 1),
+            ),
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.png"),
+              // fit: BoxFit.cover,
+              repeat: ImageRepeat.repeat,
+            ),
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: DefaultTabController(
-                length: 3,
-                initialIndex: 0,
-                child: Column(
-                  children: [
-                    TabBar(
-                      labelColor: Colors.white,
-                      labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                      indicatorColor: const Color(0xFF47CBE4),
-                      indicatorWeight: 3,
-                      // isScrollable: true,
-                      onTap: (index) {
-                        _searchKeywordController.clear();
-                        tabIndex = index;
-                        print(index);
-                        if (index == 0) {
-                          tasksServices
-                              .resetFilter(tasksServices.tasksCustomerApplied);
-                        } else if (index == 1) {
-                          tasksServices
-                              .resetFilter(tasksServices.tasksCustomerWorking);
-                        } else if (index == 2) {
-                          tasksServices
-                              .resetFilter(tasksServices.tasksCustomerComplete);
-                        }
-                      },
-                      tabs: [
-                        Tab(
-                          child: BadgeTab(
-                            taskCount:
-                                tasksServices.tasksCustomerApplied.length,
-                            tabText: 'Selection',
-                          ),
-                        ),
-                        Tab(
-                          child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksCustomerWorking.length,
-                              tabText: 'Progress'),
-                        ),
-                        Tab(
-                          child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksCustomerComplete.length,
-                              tabText: 'Complete'),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding:
-                      const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      // decoration: const BoxDecoration(
-                      //   // color: Colors.white70,
-                      //   // borderRadius: BorderRadius.circular(8),
-                      // ),
-                      child: TextField(
-                        controller: _searchKeywordController,
-                        onChanged: (searchKeyword) {
-                          print(tabIndex);
-                          if (tabIndex == 0) {
-                            tasksServices.runFilter(
-                                searchKeyword, tasksServices.tasksCustomerApplied);
-                          } else if (tabIndex == 1) {
-                            tasksServices.runFilter(
-                                searchKeyword, tasksServices.tasksCustomerWorking);
-                          } else if (tabIndex == 2) {
-                            tasksServices.runFilter(searchKeyword,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: DefaultTabController(
+                  length: 3,
+                  initialIndex: 0,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        labelColor: Colors.white,
+                        labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                        indicatorColor: const Color(0xFF47CBE4),
+                        indicatorWeight: 3,
+                        // isScrollable: true,
+                        onTap: (index) {
+                          _searchKeywordController.clear();
+                          tabIndex = index;
+                          print(index);
+                          if (index == 0) {
+                            tasksServices.resetFilter(
+                                tasksServices.tasksCustomerSelection);
+                          } else if (index == 1) {
+                            tasksServices.resetFilter(
+                                tasksServices.tasksCustomerProgress);
+                          } else if (index == 2) {
+                            tasksServices.resetFilter(
                                 tasksServices.tasksCustomerComplete);
                           }
                         },
-                        decoration: const InputDecoration(
-                          hintText: '[Find task by Title...]',
-                          hintStyle:
-                          TextStyle(fontSize: 15.0, color: Colors.white),
-                          labelStyle:
-                          TextStyle(fontSize: 17.0, color: Colors.white),
-                          labelText: 'Search',
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white,
+                        tabs: [
+                          Tab(
+                            child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksCustomerSelection.length,
+                              tabText: 'Selection',
+                            ),
                           ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
+                          Tab(
+                            child: BadgeTab(
+                                taskCount:
+                                    tasksServices.tasksCustomerProgress.length,
+                                tabText: 'Progress'),
+                          ),
+                          Tab(
+                            child: BadgeTab(
+                                taskCount:
+                                    tasksServices.tasksCustomerComplete.length,
+                                tabText: 'Complete'),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            12, 12, 12, 12),
+                        // decoration: const BoxDecoration(
+                        //   // color: Colors.white70,
+                        //   // borderRadius: BorderRadius.circular(8),
+                        // ),
+                        child: TextField(
+                          controller: _searchKeywordController,
+                          onChanged: (searchKeyword) {
+                            print(tabIndex);
+                            if (tabIndex == 0) {
+                              tasksServices.runFilter(searchKeyword,
+                                  tasksServices.tasksCustomerSelection);
+                            } else if (tabIndex == 1) {
+                              tasksServices.runFilter(searchKeyword,
+                                  tasksServices.tasksCustomerProgress);
+                            } else if (tabIndex == 2) {
+                              tasksServices.runFilter(searchKeyword,
+                                  tasksServices.tasksCustomerComplete);
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '[Find task by Title...]',
+                            hintStyle:
+                                TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle:
+                                TextStyle(fontSize: 17.0, color: Colors.white),
+                            labelText: 'Search',
+                            suffixIcon: Icon(
+                              Icons.search,
                               color: Colors.white,
-                              width: 1,
                             ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
                             ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                        ),
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                          lineHeight: 2,
+                          style:
+                              FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    lineHeight: 2,
+                                  ),
                         ),
                       ),
-                    ),
-                    tasksServices.isLoading
-                        ? const LoadIndicator()
-                        : const Expanded(
-                            child: TabBarView(
-                              children: [
-                                mySubmitterTabWidget(tabName: 'selection',), //new
-                                mySubmitterTabWidget(tabName: 'progress',), //agreed
-                                mySubmitterTabWidget(tabName: 'complete',), //completed & canceled
-                              ],
+                      tasksServices.isLoading
+                          ? const LoadIndicator()
+                          : const Expanded(
+                              child: TabBarView(
+                                children: [
+                                  mySubmitterTabWidget(
+                                    tabName: 'selection',
+                                  ), //new
+                                  mySubmitterTabWidget(
+                                    tabName: 'progress',
+                                  ), //agreed
+                                  mySubmitterTabWidget(
+                                    tabName: 'complete',
+                                  ), //completed & canceled
+                                ],
+                              ),
                             ),
-                          ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      )
-          // .animated([animationsMap['containerOnPageLoadAnimation']!]),
-    );
+            ],
+          ),
+        )
+        // .animated([animationsMap['containerOnPageLoadAnimation']!]),
+        );
   }
 }
 
@@ -324,27 +334,25 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
               return Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: InkWell(
-                  onTap: () {
-                    // setState(() {
-                    //   // Toggle light when tapped.
-                    // });
-                    // showDialog(
-                    //     context: context,
-                    //     builder: (context) => TaskInformationDialog(
-                    //           role: 'customer',
-                    //           object: objList[index],
-                    //         ));
-                    final taskAddress = tasksServices.filterResults.values
-                        .toList()[index]
-                        .taskAddress;
-                    context.beamToNamed('/customer/$taskAddress');
-                  },
-                  child: TaskItem(
-                    role: 'customer',
-                    object: objList[index],
-                  )
-
-                ),
+                    onTap: () {
+                      // setState(() {
+                      //   // Toggle light when tapped.
+                      // });
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (context) => TaskInformationDialog(
+                      //           role: 'customer',
+                      //           object: objList[index],
+                      //         ));
+                      final taskAddress = tasksServices.filterResults.values
+                          .toList()[index]
+                          .taskAddress;
+                      context.beamToNamed('/customer/$taskAddress');
+                    },
+                    child: TaskItem(
+                      role: 'customer',
+                      object: objList[index],
+                    )),
               );
             },
           ),

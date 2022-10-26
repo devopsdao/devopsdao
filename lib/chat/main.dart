@@ -235,14 +235,10 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-<<<<<<< HEAD
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
     await widget.tasksServices
         .sendChatMessage(widget.taskAddress, widget.nanoId, message.text);
-=======
-  void _handleSendPressed(types.PartialText message) {
->>>>>>> ca92750cb599c8ba08543e0db3708c5421ef1066
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.messages[0][3].toString()),
@@ -264,7 +260,7 @@ class _ChatPageState extends State<ChatPage> {
       author['id'] = msg[3].toString();
       // author['id'] = const Uuid().v4();
       message['author'] = author;
-      message['createdAt'] = msg[2].toInt();
+      message['createdAt'] = msg[2].toInt() * 1000;
       message['id'] = msg[0].toString();
       message['status'] = 'delivered';
       message['text'] = msg[1];
