@@ -1,25 +1,14 @@
-import 'package:badges/badges.dart';
-import 'package:devopsdao/custom_widgets/payment.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/interface.dart';
-import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/buttons.dart';
 import '../custom_widgets/task_dialog.dart';
 import '../custom_widgets/loading.dart';
-import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/task_item.dart';
-import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:beamer/beamer.dart';
 
