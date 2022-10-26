@@ -70,6 +70,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
     if (tasksServices.walletConnectedWC) {
       tasksServices.walletConnectUri = '';
     }
+
     // int page = interface.pageWalletViewNumber;
 
     return LayoutBuilder(builder: (context, constraints) {

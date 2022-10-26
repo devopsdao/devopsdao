@@ -23,7 +23,6 @@ import 'buttons.dart';
 
 import 'package:beamer/beamer.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,11 +33,8 @@ import '../custom_widgets/task_dialog.dart';
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
-  const TaskDialog({
-    Key? key,
-    required this.taskAddress,
-    required this.role
-  }) : super(key: key);
+  const TaskDialog({Key? key, required this.taskAddress, required this.role})
+      : super(key: key);
 
   @override
   _TaskDialog createState() => _TaskDialog();
@@ -64,8 +60,6 @@ class _TaskDialog extends State<TaskDialog> {
     );
   }
 }
-
-
 
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
@@ -535,11 +529,11 @@ class _DialogPagesState extends State<DialogPages> {
       // physics: BouncingScrollPhysics(),
       // physics: const NeverScrollableScrollPhysics(),
       controller: interface.controller,
-      onPageChanged: (number) {
-        interface.pageWalletViewNumber = number;
-        tasksServices.myNotifyListeners();
-        // print(number);
-      },
+      // onPageChanged: (number) {
+      //   // interface.pageWalletViewNumber = number;
+      //   // tasksServices.myNotifyListeners();
+      //   // print(number);
+      // },
       children: <Widget>[
         Column(
           children: [
@@ -1021,8 +1015,8 @@ class _DialogPagesState extends State<DialogPages> {
                                         child: const Text('Close'),
                                         onPressed: () =>
                                             context.beamToNamed('/tasks')
-                                            // Navigator.pop(context),
-                                    ),
+                                        // Navigator.pop(context),
+                                        ),
                                   ],
                                 ));
                       },
