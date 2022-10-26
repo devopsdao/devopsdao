@@ -5,11 +5,9 @@ import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/task_dialog.dart';
 import '../custom_widgets/loading.dart';
 import '../custom_widgets/task_item.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import '../blockchain/task.dart';
-import '../custom_widgets/task_dialog.dart';
 
 import 'package:beamer/beamer.dart';
 
@@ -56,9 +54,28 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     // );
   }
 
+  final _searchKeywordController = TextEditingController();
+  @override
+  void dispose() {
+    _searchKeywordController.dispose();
+    super.dispose();
+  }
+
+  int tabIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
+    if (_searchKeywordController.text.isEmpty) {
+      if (tabIndex == 0) {
+        tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
+      } else if (tabIndex == 1) {
+        tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
+      } else if (tabIndex == 2) {
+        tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
+      }
+    }
 
     return Scaffold(
       key: scaffoldKey,
@@ -135,6 +152,21 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                       indicatorColor: const Color(0xFF47CBE4),
                       indicatorWeight: 3,
                       // isScrollable: true,
+                      onTap: (index) {
+                        _searchKeywordController.clear();
+                        tabIndex = index;
+                        print(index);
+                        if (index == 0) {
+                          tasksServices
+                              .resetFilter(tasksServices.tasksPerformerParticipate);
+                        } else if (index == 1) {
+                          tasksServices
+                              .resetFilter(tasksServices.tasksPerformerProgress);
+                        } else if (index == 2) {
+                          tasksServices
+                              .resetFilter(tasksServices.tasksPerformerComplete);
+                        }
+                      },
                       tabs: [
                         Tab(
                           // icon: const FaIcon(
@@ -168,21 +200,76 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         ),
                       ],
                     ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding:
+                      const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      // decoration: const BoxDecoration(
+                      //   // color: Colors.white70,
+                      //   // borderRadius: BorderRadius.circular(8),
+                      // ),
+                      child: TextField(
+                        controller: _searchKeywordController,
+                        onChanged: (searchKeyword) {
+                          print(tabIndex);
+                          if (tabIndex == 0) {
+                            tasksServices.runFilter(
+                                searchKeyword, tasksServices.tasksPerformerParticipate);
+                          } else if (tabIndex == 1) {
+                            tasksServices.runFilter(
+                                searchKeyword, tasksServices.tasksPerformerProgress);
+                          } else if (tabIndex == 2) {
+                            tasksServices.runFilter(searchKeyword,
+                                tasksServices.tasksPerformerComplete);
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          hintText: '[Find task by Title...]',
+                          hintStyle:
+                          TextStyle(fontSize: 15.0, color: Colors.white),
+                          labelStyle:
+                          TextStyle(fontSize: 17.0, color: Colors.white),
+                          labelText: 'Search',
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                        ),
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                          lineHeight: 2,
+                        ),
+                      ),
+                    ),
                     tasksServices.isLoading
                         ? const LoadIndicator()
-                        : Expanded(
+                        : const Expanded(
                             child: TabBarView(
                               children: [
-                                MyPerformerTabWidget(
-                                    tabName: 'applied',
-                                    obj: tasksServices
-                                        .tasksPerformerParticipate),
-                                MyPerformerTabWidget(
-                                    tabName: 'working',
-                                    obj: tasksServices.tasksPerformerProgress),
-                                MyPerformerTabWidget(
-                                    tabName: 'complete',
-                                    obj: tasksServices.tasksPerformerComplete),
+                                MyPerformerTabWidget(tabName: 'applied',),
+                                MyPerformerTabWidget(tabName: 'working',),
+                                MyPerformerTabWidget(tabName: 'complete',),
                               ],
                             ),
                           ),
@@ -198,10 +285,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
 }
 
 class MyPerformerTabWidget extends StatefulWidget {
-  final Map<String, Task>? obj;
   final String tabName;
   const MyPerformerTabWidget(
-      {Key? key, required this.obj, required this.tabName})
+      {Key? key, required this.tabName})
       : super(key: key);
 
   @override
@@ -213,9 +299,9 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List objList = widget.obj!.values.toList();
-
     var tasksServices = context.watch<TasksServices>();
+    List objList = tasksServices.filterResults!.values.toList();
+
     return Container(
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),

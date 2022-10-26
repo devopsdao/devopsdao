@@ -1,3 +1,4 @@
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:badges/badges.dart';
 import 'package:devopsdao/blockchain/task.dart';
 import 'package:devopsdao/custom_widgets/wallet_action.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
+import '../flutter_flow/flutter_flow_icon_button.dart';
 
 class WithdrawButton extends StatefulWidget {
   final Task object;
@@ -56,5 +58,43 @@ class _WithdrawButtonState extends State<WithdrawButton> {
                         ));
               }
             : null);
+  }
+}
+
+class SearchButton extends StatefulWidget {
+  const SearchButton({Key? key}) : super(key: key);
+
+  @override
+  _SearchButtonState createState() => _SearchButtonState();
+}
+
+class _SearchButtonState extends State<SearchButton> {
+  TextEditingController textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
+    setState(() {
+    });
+
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 0.0, right: 10, left: 10),
+          child: AnimSearchBar(
+            width: 400,
+color: Colors.black,
+            textController: textController,
+            onSuffixTap: () {
+
+              setState(() {
+                textController.clear();
+              });
+            },
+          )
+        ),
+      ],
+    );
   }
 }
