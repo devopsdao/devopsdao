@@ -67,9 +67,10 @@ class _MyWalletPageState extends State<MyWalletPage> {
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
     // }
-    if (tasksServices.walletConnected) {
+    if (tasksServices.walletConnectedWC) {
       tasksServices.walletConnectUri = '';
     }
+
     // int page = interface.pageWalletViewNumber;
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -231,7 +232,7 @@ class _WalletPagesState extends State<WalletPages> {
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
     // }
-    if (tasksServices.walletConnected) {
+    if (tasksServices.walletConnectedWC) {
       tasksServices.walletConnectUri = '';
     }
 
@@ -312,34 +313,36 @@ class _WalletPagesState extends State<WalletPages> {
                 ),
               ),
               const SizedBox(height: 60),
-              Center(
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    // height: MediaQuery.of(context).size.width * .08,
-                    // width: MediaQuery.of(context).size.width * .57
-                    width: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: Row(
-                      children: const <Widget>[
-                        Expanded(
-                          child: Text(
-                            'You are now connected to Metamask, to disconnect please use Metamask menu --> connected sites.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
+              if (tasksServices.walletConnectedMM)
+                Center(
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      // height: MediaQuery.of(context).size.width * .08,
+                      // width: MediaQuery.of(context).size.width * .57
+                      width: 300,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child: Row(
+                        children: const <Widget>[
+                          Expanded(
+                            child: Text(
+                              'You are now connected to Metamask, to completely disconnect please use Metamask menu --> connected sites.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
               const WalletConnectButton(
                 buttonName: 'metamask',
               ),
@@ -506,7 +509,7 @@ class _WalletPagesState extends State<WalletPages> {
                                                       gapless: false,
                                                     ),
                                               Text(
-                                                tasksServices.walletConnected
+                                                tasksServices.walletConnectedWC
                                                     ? 'Wallet connected'
                                                     : 'Wallet disconnected',
                                                 style: Theme.of(context)
@@ -514,8 +517,10 @@ class _WalletPagesState extends State<WalletPages> {
                                                     .headline6,
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (!tasksServices.validChainID &&
-                                                  tasksServices.walletConnected)
+                                              if (!tasksServices
+                                                      .validChainIDWC &&
+                                                  tasksServices
+                                                      .walletConnectedWC)
                                                 const Padding(
                                                   padding: EdgeInsets.only(
                                                     left: 16,
@@ -703,14 +708,30 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-    late String buttonName;
+    late String buttonText;
 
-    if (tasksServices.walletConnected && tasksServices.validChainID) {
-      buttonName = 'Disconnect';
-    } else if (tasksServices.walletConnected && !tasksServices.validChainID) {
-      buttonName = 'Switch network';
-    } else {
-      buttonName = 'Connect';
+    if (tasksServices.walletConnectedWC &&
+        tasksServices.validChainIDWC &&
+        widget.buttonName == 'wallet_connect') {
+      buttonText = 'Disconnect';
+    } else if (tasksServices.walletConnectedWC &&
+        !tasksServices.validChainIDWC &&
+        widget.buttonName == 'wallet_connect') {
+      buttonText = 'Switch network';
+    } else if (!tasksServices.walletConnectedWC &&
+        widget.buttonName == 'wallet_connect') {
+      buttonText = 'Refresh QR';
+    } else if (tasksServices.walletConnectedMM &&
+        tasksServices.validChainIDMM &&
+        widget.buttonName == 'metamask') {
+      buttonText = 'Disconnect';
+    } else if (tasksServices.walletConnectedMM &&
+        !tasksServices.validChainIDMM &&
+        widget.buttonName == 'metamask') {
+      buttonText = 'Switch network';
+    } else if (!tasksServices.walletConnectedMM &&
+        widget.buttonName == 'metamask') {
+      buttonText = 'Connect';
     }
 
     return Material(
@@ -724,28 +745,47 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           //     duration: const Duration(milliseconds: 300),
           //     curve: Curves.easeIn);
           if (widget.buttonName == 'metamask') {
-            if (!tasksServices.walletConnected) {
+            if (!tasksServices.walletConnectedMM) {
               tasksServices.initComplete
-                  ? tasksServices.connectWalletMM()
+                  ? await tasksServices.connectWalletMM()
                   : null;
-            } else if (tasksServices.walletConnected &&
-                !tasksServices.validChainID) {
+            } else if (tasksServices.walletConnectedMM &&
+                !tasksServices.validChainIDMM) {
               tasksServices.initComplete
-                  ? tasksServices.switchNetworkMM()
+                  ? await tasksServices.switchNetworkMM()
                   : null;
-            } else if (tasksServices.walletConnected &&
-                tasksServices.validChainID) {
-              tasksServices.initComplete ? tasksServices.disconnectMM() : null;
-              buttonName = 'Connect';
+            } else if (tasksServices.walletConnectedMM &&
+                tasksServices.validChainIDMM) {
+              tasksServices.initComplete
+                  ? await tasksServices.disconnectMM()
+                  : null;
+              buttonText = 'Connect';
             }
           } else if (widget.buttonName == 'wallet_connect') {
-            if (tasksServices.walletConnected) {
-              await tasksServices.transactionTester?.disconnect();
-            } else {
+            if (!tasksServices.walletConnectedWC) {
               tasksServices.initComplete
-                  ? tasksServices.connectWalletWC()
+                  ? await tasksServices.connectWalletWC()
                   : null;
+            } else if (tasksServices.walletConnectedWC &&
+                !tasksServices.validChainIDWC) {
+              tasksServices.initComplete
+                  ? await tasksServices.switchNetworkWC()
+                  // ? null
+                  : null;
+            } else if (tasksServices.walletConnectedWC &&
+                tasksServices.validChainIDWC) {
+              tasksServices.initComplete
+                  ? {await tasksServices.disconnectWC()}
+                  : null;
+              // buttonName = 'Refresh QR';
             }
+            // if (tasksServices.walletConnected) {
+            //   await tasksServices.transactionTester?.disconnect();
+            // } else {
+            //   tasksServices.initComplete
+            //       ? tasksServices.connectWalletWC()
+            //       : null;
+            // }
           }
         },
         child: Container(
@@ -759,7 +799,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  buttonName,
+                  buttonText,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),

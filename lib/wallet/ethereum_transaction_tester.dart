@@ -175,6 +175,29 @@ class EthereumTransactionTester extends TransactionTester {
     await sessionStorage.removeSession();
   }
 
+  Future<void> switchNetwork(int chainId) async {
+    final params = <String, dynamic>{
+      'chainId': '0x507',
+    };
+    final response = await connector.sendCustomRequest(
+        method: 'wallet_switchEthereumChain', params: [params]);
+    print(response);
+
+    // return session;
+  }
+
+  Future<int> getChainId() async {
+    // final params = <String, dynamic>{
+    //   'chainId': '0x507',
+    // };
+    final response =
+        await connector.sendCustomRequest(method: 'eth_chainId', params: []);
+    print(response);
+    return int.parse(response);
+
+    // return session;
+  }
+
   @override
   Future<String> signTransaction(SessionStatus session) async {
     final sender = EthereumAddress.fromHex(session.accounts[0]);
