@@ -233,7 +233,11 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  void _handleSendPressed(types.PartialText message) async {
+    // var tasksServices = context.watch<TasksServices>();
+    await widget.tasksServices
+        .sendChatMessage(widget.taskAddress, message.text,
+    '');
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.messages[0][3].toString()),
