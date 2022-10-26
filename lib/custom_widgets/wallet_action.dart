@@ -161,7 +161,7 @@ class _WalletAction extends State<WalletAction> {
                                     width: 45,
                                     height: 35,
                                     child: Row(
-                                      children: [
+                                      children: const [
                                         Icon(
                                           Icons.dangerous_outlined,
                                           size: 30.0,
@@ -195,7 +195,7 @@ class _WalletAction extends State<WalletAction> {
                                     width: 45,
                                     height: 35,
                                     child: Row(
-                                      children: [
+                                      children: const [
                                         Icon(
                                           Icons.dangerous_outlined,
                                           size: 30.0,
@@ -239,7 +239,7 @@ class _WalletAction extends State<WalletAction> {
                                             children: [
                                               if (transactionStagesApprove ==
                                                   'initial')
-                                                Icon(
+                                                const Icon(
                                                   Icons.task_alt,
                                                   size: 30.0,
                                                   color: Colors.black26,
@@ -255,7 +255,7 @@ class _WalletAction extends State<WalletAction> {
                                                 )
                                               else if (transactionStagesApprove ==
                                                   'done')
-                                                Icon(
+                                                const Icon(
                                                   Icons.task_alt,
                                                   size: 30.0,
                                                   color: Colors.green,

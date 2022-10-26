@@ -154,6 +154,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                         onTap: () {
                           // print(widget.role);
                           context.beamToNamed('/${widget.role}');
+                          // context.beamBack();
                           // Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -1019,8 +1020,9 @@ class _DialogPagesState extends State<DialogPages> {
                                     TextButton(
                                         child: const Text('Close'),
                                         onPressed: () =>
-                                            // context.beamToNamed('/tasks')
-                                            Navigator.pop(context)),
+                                            context.beamToNamed('/tasks')
+                                            // Navigator.pop(context),
+                                    ),
                                   ],
                                 ));
                       },

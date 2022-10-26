@@ -53,7 +53,7 @@ class TasksPageWidget extends StatefulWidget {
 }
 
 class _TasksPageWidgetState extends State<TasksPageWidget>
-    with TickerProviderStateMixin {
+     {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
   // _changeField() {
@@ -90,11 +90,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
       });
     }
 
-    startPageLoadAnimations(
-      animationsMap.values
-          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-      this,
-    );
   }
 
   @override
@@ -340,7 +335,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
             ),
           ],
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
+      ),
     );
   }
 }

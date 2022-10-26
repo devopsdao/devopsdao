@@ -23,6 +23,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:beamer/beamer.dart';
 
 class CustomerPageWidget extends StatefulWidget {
+  // static final beamLocation = BeamPage(key: ValueKey('Home'), child: CustomerPageWidget());
+  // static final path = '/';
   final String? taskAddress;
   const CustomerPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
@@ -31,7 +33,8 @@ class CustomerPageWidget extends StatefulWidget {
 }
 
 class _CustomerPageWidgetState extends State<CustomerPageWidget>
-    with TickerProviderStateMixin {
+    // with TickerProviderStateMixin
+{
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -60,11 +63,11 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       });
     }
 
-    startPageLoadAnimations(
-      animationsMap.values
-          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-      this,
-    );
+    // startPageLoadAnimations(
+    //   animationsMap.values
+    //       .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
+    //   this,
+    // );
   }
 
   @override
@@ -211,7 +214,8 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
             ),
           ],
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
+      )
+          // .animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }
@@ -253,225 +257,27 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
               return Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: InkWell(
-                    onTap: () {
-                      // setState(() {
-                      //   // Toggle light when tapped.
-                      // });
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) => TaskInformationDialog(
-                      //           role: 'customer',
-                      //           object: objList[index],
-                      //         ));
-                      final taskAddress = tasksServices.filterResults.values
-                          .toList()[index]
-                          .taskAddress;
-                      context.beamToNamed('/customer/$taskAddress');
-                    },
-                    child: TaskItem(
-                      role: 'customer',
-                      object: objList[index],
-                    )
+                  onTap: () {
+                    // setState(() {
+                    //   // Toggle light when tapped.
+                    // });
+                    // showDialog(
+                    //     context: context,
+                    //     builder: (context) => TaskInformationDialog(
+                    //           role: 'customer',
+                    //           object: objList[index],
+                    //         ));
+                    final taskAddress = tasksServices.filterResults.values
+                        .toList()[index]
+                        .taskAddress;
+                    context.beamToNamed('/customer/$taskAddress');
+                  },
+                  child: TaskItem(
+                    role: 'customer',
+                    object: objList[index],
+                  )
 
-                    // Container(
-                    //   width: double.infinity,
-                    //   height: 86,
-                    //   decoration: BoxDecoration(
-                    //     color: (() {
-                    //       if (objList[index].taskState == "agreed") {
-                    //         return Colors.white;
-                    //       } else if (objList[index].taskState == "review") {
-                    //         return Colors.lightGreen.shade200;
-                    //       } else if (objList[index].taskState == "progress") {
-                    //         return Colors.blueGrey;
-                    //       } else if (objList[index].taskState == "canceled") {
-                    //         return Colors.orange;
-                    //       } else if (objList[index].taskState == "audit") {
-                    //         return Colors.orangeAccent;
-                    //       } else {
-                    //         return Colors.white;
-                    //       }
-                    //     }()),
-                    //     boxShadow: const [
-                    //       BoxShadow(
-                    //         blurRadius: 5,
-                    //         color: Color(0x4D000000),
-                    //         offset: Offset(0, 2),
-                    //       )
-                    //     ],
-                    //     borderRadius: BorderRadius.circular(8),
-                    //   ),
-                    //   child: Row(
-                    //     mainAxisSize: MainAxisSize.max,
-                    //     children: [
-                    //       Expanded(
-                    //         child: Padding(
-                    //           padding: const EdgeInsetsDirectional.fromSTEB(
-                    //               12, 8, 8, 8),
-                    //           child: Column(
-                    //             mainAxisSize: MainAxisSize.max,
-                    //             crossAxisAlignment: CrossAxisAlignment.start,
-                    //             children: [
-                    //               Row(
-                    //                 children: [
-                    //                   Expanded(
-                    //                     flex: 7,
-                    //                     child: Text(
-                    //                       objList[index]
-                    //                           .title,
-                    //                       style: FlutterFlowTheme.of(context)
-                    //                           .subtitle1,
-                    //                       softWrap: false,
-                    //                       overflow: TextOverflow.fade,
-                    //                       maxLines: 1,
-                    //                     ),
-                    //                   ),
-                    //                   // Spacer(),
-                    //                   Expanded(
-                    //                     flex: 3,
-                    //                     child: Text(
-                    //                       objList[index]
-                    //                           .taskState,
-                    //                       style: FlutterFlowTheme.of(context)
-                    //                           .bodyText2,
-                    //                       softWrap: false,
-                    //                       overflow: TextOverflow.fade,
-                    //                       maxLines: 1,
-                    //                       textAlign: TextAlign.end,
-                    //                     ),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               // Text(
-                    //               //   objList[index].title,
-                    //               //   style: FlutterFlowTheme.of(context).subtitle1,
-                    //               // ),
-                    //               Row(
-                    //                 children: [
-                    //                   Expanded(
-                    //                     child: Text(
-                    //                       objList[index]
-                    //                           .description,
-                    //                       style: FlutterFlowTheme.of(context)
-                    //                           .bodyText2,
-                    //                       softWrap: false,
-                    //                       overflow: TextOverflow.fade,
-                    //                       maxLines: 1,
-                    //                     ),
-                    //                   )
-                    //                 ],
-                    //               ),
-                    //               Row(
-                    //                 children: [
-                    //                   Expanded(
-                    //                     flex: 7,
-                    //                     child: Text(
-                    //                       DateFormat('MM/dd/yyyy, hh:mm a')
-                    //                           .format(objList[index]
-                    //                               .createdTime),
-                    //                       style: FlutterFlowTheme.of(context)
-                    //                           .bodyText2,
-                    //                       softWrap: false,
-                    //                       overflow: TextOverflow.fade,
-                    //                       maxLines: 1,
-                    //                     ),
-                    //                   ),
-                    //                   // Spacer(),
-                    //                   if (objList[index]
-                    //                           .contractValue !=
-                    //                       0)
-                    //                     Expanded(
-                    //                       flex: 3,
-                    //                       child: Text(
-                    //                         '${objList[index].contractValue} ETH',
-                    //                         style: FlutterFlowTheme.of(context)
-                    //                             .bodyText2,
-                    //                         softWrap: false,
-                    //                         overflow: TextOverflow.fade,
-                    //                         maxLines: 1,
-                    //                         textAlign: TextAlign.end,
-                    //                       ),
-                    //                     ),
-                    //                   if (objList[index]
-                    //                           .contractValueToken !=
-                    //                       0)
-                    //                     Expanded(
-                    //                       flex: 3,
-                    //                       child: Text(
-                    //                         '${objList[index].contractValueToken} aUSDC',
-                    //                         style: FlutterFlowTheme.of(context)
-                    //                             .bodyText2,
-                    //                         softWrap: false,
-                    //                         overflow: TextOverflow.fade,
-                    //                         maxLines: 1,
-                    //                         textAlign: TextAlign.end,
-                    //                       ),
-                    //                     ),
-                    //                   if (objList[index]
-                    //                               .contractValue ==
-                    //                           0 &&
-                    //                       objList[index]
-                    //                               .contractValueToken ==
-                    //                           0)
-                    //                     Expanded(
-                    //                       flex: 3,
-                    //                       child: Text(
-                    //                         'Has no money',
-                    //                         style: FlutterFlowTheme.of(context)
-                    //                             .bodyText2,
-                    //                         softWrap: false,
-                    //                         overflow: TextOverflow.fade,
-                    //                         maxLines: 1,
-                    //                         textAlign: TextAlign.end,
-                    //                       ),
-                    //                     ),
-                    //                 ],
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       if (objList[index]
-                    //                   .contributorsCount !=
-                    //               0 &&
-                    //           objList[index].taskState ==
-                    //               "new")
-                    //         Padding(
-                    //           padding: const EdgeInsetsDirectional.fromSTEB(
-                    //               0, 0, 12, 0),
-                    //           child: Badge(
-                    //             // position: BadgePosition.topEnd(top: 10, end: 10),
-                    //             badgeContent: Container(
-                    //               width: 17,
-                    //               height: 17,
-                    //               alignment: Alignment.center,
-                    //               child: Text(
-                    //                   objList[index]
-                    //                       .contributorsCount
-                    //                       .toString(),
-                    //                   style: const TextStyle(
-                    //                       fontWeight: FontWeight.bold,
-                    //                       color: Colors.white)),
-                    //             ),
-                    //             animationDuration:
-                    //                 const Duration(milliseconds: 300),
-                    //             animationType: BadgeAnimationType.scale,
-                    //             shape: BadgeShape.circle,
-                    //             borderRadius: BorderRadius.circular(5),
-                    //             // child: Icon(Icons.settings),
-                    //           ),
-                    //         ),
-                    //       if (objList[index].justLoaded ==
-                    //           false)
-                    //         const Padding(
-                    //           padding:
-                    //               EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                    //           child: CircularProgressIndicator(),
-                    //         ),
-                    //     ],
-                    //   ),
-                    // ),
-                    ),
+                ),
               );
             },
           ),
