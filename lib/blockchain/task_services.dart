@@ -1307,15 +1307,15 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
   }
 
-  Future<void> sendChatMessage(EthereumAddress contractAddress, String nanoId,
-      {String? message, BigInt? replyTo}) async {
+  Future<void> sendChatMessage(
+      EthereumAddress contractAddress, String nanoId, String message,
+      {BigInt? replyTo}) async {
     final messageNanoID = customAlphabet(
         '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
     transactionStatuses[nanoId] = {
       'sendChatMessage_$messageNanoID': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    message ??= 'Participate this task';
     replyTo ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
