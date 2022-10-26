@@ -77,6 +77,22 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
+    Map tabs = {
+      "new": 0,
+      "agreed": 1,
+      "progress": 1,
+      "review": 1,
+      "audit": 1,
+      "completed": 2,
+      "canceled": 2
+    };
+
+    if (widget.taskAddress != null) {
+      final task = tasksServices.tasks[widget.taskAddress];
+
+      tabIndex = tabs[task!.taskState];
+    }
+
     if (_searchKeywordController.text.isEmpty) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
@@ -160,7 +176,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
               Expanded(
                 child: DefaultTabController(
                   length: 3,
-                  initialIndex: 0,
+                  initialIndex: tabIndex,
                   child: Column(
                     children: [
                       TabBar(

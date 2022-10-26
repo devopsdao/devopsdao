@@ -44,7 +44,10 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'performer',));
+            builder: (context) => TaskDialog(
+                  taskAddress: widget.taskAddress!,
+                  role: 'performer',
+                ));
       });
     }
     // startPageLoadAnimations(
@@ -66,6 +69,22 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
+    Map tabs = {
+      "new": 0,
+      "agreed": 1,
+      "progress": 1,
+      "review": 1,
+      "audit": 1,
+      "completed": 2,
+      "canceled": 2
+    };
+
+    if (widget.taskAddress != null) {
+      final task = tasksServices.tasks[widget.taskAddress];
+
+      tabIndex = tabs[task!.taskState];
+    }
 
     if (_searchKeywordController.text.isEmpty) {
       if (tabIndex == 0) {
@@ -143,7 +162,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
             Expanded(
               child: DefaultTabController(
                 length: 3,
-                initialIndex: 0,
+                initialIndex: tabIndex,
                 child: Column(
                   children: [
                     TabBar(
@@ -157,14 +176,14 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         tabIndex = index;
                         print(index);
                         if (index == 0) {
-                          tasksServices
-                              .resetFilter(tasksServices.tasksPerformerParticipate);
+                          tasksServices.resetFilter(
+                              tasksServices.tasksPerformerParticipate);
                         } else if (index == 1) {
-                          tasksServices
-                              .resetFilter(tasksServices.tasksPerformerProgress);
+                          tasksServices.resetFilter(
+                              tasksServices.tasksPerformerProgress);
                         } else if (index == 2) {
-                          tasksServices
-                              .resetFilter(tasksServices.tasksPerformerComplete);
+                          tasksServices.resetFilter(
+                              tasksServices.tasksPerformerComplete);
                         }
                       },
                       tabs: [
@@ -203,7 +222,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       padding:
-                      const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                       // decoration: const BoxDecoration(
                       //   // color: Colors.white70,
                       //   // borderRadius: BorderRadius.circular(8),
@@ -213,11 +232,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         onChanged: (searchKeyword) {
                           print(tabIndex);
                           if (tabIndex == 0) {
-                            tasksServices.runFilter(
-                                searchKeyword, tasksServices.tasksPerformerParticipate);
+                            tasksServices.runFilter(searchKeyword,
+                                tasksServices.tasksPerformerParticipate);
                           } else if (tabIndex == 1) {
-                            tasksServices.runFilter(
-                                searchKeyword, tasksServices.tasksPerformerProgress);
+                            tasksServices.runFilter(searchKeyword,
+                                tasksServices.tasksPerformerProgress);
                           } else if (tabIndex == 2) {
                             tasksServices.runFilter(searchKeyword,
                                 tasksServices.tasksPerformerComplete);
@@ -226,9 +245,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         decoration: const InputDecoration(
                           hintText: '[Find task by Title...]',
                           hintStyle:
-                          TextStyle(fontSize: 15.0, color: Colors.white),
+                              TextStyle(fontSize: 15.0, color: Colors.white),
                           labelStyle:
-                          TextStyle(fontSize: 17.0, color: Colors.white),
+                              TextStyle(fontSize: 17.0, color: Colors.white),
                           labelText: 'Search',
                           suffixIcon: Icon(
                             Icons.search,
@@ -256,10 +275,10 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           ),
                         ),
                         style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                          lineHeight: 2,
-                        ),
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                              lineHeight: 2,
+                            ),
                       ),
                     ),
                     tasksServices.isLoading
@@ -267,9 +286,15 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         : const Expanded(
                             child: TabBarView(
                               children: [
-                                MyPerformerTabWidget(tabName: 'applied',),
-                                MyPerformerTabWidget(tabName: 'working',),
-                                MyPerformerTabWidget(tabName: 'complete',),
+                                MyPerformerTabWidget(
+                                  tabName: 'applied',
+                                ),
+                                MyPerformerTabWidget(
+                                  tabName: 'working',
+                                ),
+                                MyPerformerTabWidget(
+                                  tabName: 'complete',
+                                ),
                               ],
                             ),
                           ),
@@ -286,8 +311,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
 
 class MyPerformerTabWidget extends StatefulWidget {
   final String tabName;
-  const MyPerformerTabWidget(
-      {Key? key, required this.tabName})
+  const MyPerformerTabWidget({Key? key, required this.tabName})
       : super(key: key);
 
   @override
@@ -326,11 +350,9 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                       // showDialog(
                       //     context: context,
                       //     builder: (context) => TaskInformationDialog(role: 'performer', object: objList[index],));
-                      final taskAddress = tasksServices
-                          .tasksPerformerParticipate.values
+                      final taskAddress = tasksServices.filterResults.values
                           .toList()[index]
-                          .taskAddress
-                          .toString();
+                          .taskAddress;
                       context.beamToNamed('/performer/$taskAddress');
                     },
                     child: TaskItem(
