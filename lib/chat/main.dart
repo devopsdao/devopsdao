@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 // import 'package:file_picker/file_picker.dart';
+import 'package:devopsdao/blockchain/task_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -12,7 +13,11 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:mime/mime.dart';
 // import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:webthree/webthree.dart';
+
+import '../blockchain/task_services.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -28,8 +33,14 @@ import 'package:uuid/uuid.dart';
 // }
 
 class ChatPage extends StatefulWidget {
+  final EthereumAddress taskAddress;
   final List messages;
-  const ChatPage({super.key, required this.messages});
+  final TasksServices tasksServices;
+  const ChatPage(
+      {super.key,
+      required this.taskAddress,
+      required this.messages,
+      required this.tasksServices});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -46,24 +57,27 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Chat(
-          messages: _messages,
-          // onAttachmentPressed: _handleAttachmentPressed,
-          // onMessageTap: _handleMessageTap,
-          // onPreviewDataFetched: _handlePreviewDataFetched,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: false,
-          showUserNames: true,
-          user: types.User(id: widget.messages[0][3].toString()),
-          theme: const DefaultChatTheme(
-            inputBackgroundColor: Colors.black87,
-            inputBorderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
+  Widget build(BuildContext context) {
+    // var tasksServices = context.watch<TasksServices>();
+    return Scaffold(
+      body: Chat(
+        messages: _messages,
+        // onAttachmentPressed: _handleAttachmentPressed,
+        // onMessageTap: _handleMessageTap,
+        // onPreviewDataFetched: _handlePreviewDataFetched,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: false,
+        showUserNames: true,
+        user: types.User(id: widget.messages[0][3].toString()),
+        theme: const DefaultChatTheme(
+          inputBackgroundColor: Colors.black87,
+          inputBorderRadius: BorderRadius.all(
+            Radius.circular(10),
           ),
         ),
-      );
+      ),
+    );
+  }
 
   void _addMessage(types.Message message) {
     setState(() {
@@ -219,14 +233,17 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  void _handleSendPressed(types.PartialText message) async {
+    // var tasksServices = context.watch<TasksServices>();
+    await widget.tasksServices
+        .sendChatMessage(widget.taskAddress, message.text);
+
     final textMessage = types.TextMessage(
       author: types.User(id: widget.messages[0][3].toString()),
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
     );
-
     _addMessage(textMessage);
   }
 

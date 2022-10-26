@@ -4,7 +4,7 @@
 import 'package:webthree/webthree.dart' as _i1;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"inputs":[{"internalType":"string","name":"_nanoId","type":"string"},{"internalType":"string","name":"_taskType","type":"string"},{"internalType":"string","name":"_title","type":"string"},{"internalType":"string","name":"_description","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"address payable","name":"_contractOwner","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[{"internalType":"string","name":"message","type":"string"}],"name":"RevertReason","type":"error"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"Logs","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"LogsValue","type":"event"},{"inputs":[],"name":"gateway","outputs":[{"internalType":"contract IAxelarGateway","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getTaskInfo","outputs":[{"components":[{"internalType":"string","name":"nanoId","type":"string"},{"internalType":"uint256","name":"createTime","type":"uint256"},{"internalType":"string","name":"taskType","type":"string"},{"internalType":"string","name":"title","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"string","name":"auditState","type":"string"},{"internalType":"uint256","name":"rating","type":"uint256"},{"internalType":"address payable","name":"contractOwner","type":"address"},{"internalType":"address payable","name":"participantAddress","type":"address"},{"internalType":"address","name":"auditInitiator","type":"address"},{"internalType":"address","name":"auditorAddress","type":"address"},{"internalType":"address[]","name":"participants","type":"address[]"},{"internalType":"address[]","name":"fundingParticipants","type":"address[]"},{"internalType":"address[]","name":"auditParticipants","type":"address[]"},{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"address","name":"sender","type":"address"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"uint256","name":"replyTo","type":"uint256"}],"internalType":"struct Message[]","name":"messages","type":"tuple[]"},{"internalType":"uint256","name":"countMessages","type":"uint256"},{"internalType":"address","name":"contractParent","type":"address"}],"internalType":"struct Task","name":"task","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_favour","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"taskAuditDecision","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskAuditParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_participantAddress","type":"address"},{"internalType":"string","name":"_state","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"_score","type":"uint256"}],"name":"taskStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_addressToSend","type":"address"},{"internalType":"string","name":"_chain","type":"string"}],"name":"transferToaddress","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}]',
+  '[{"inputs":[{"internalType":"string","name":"_nanoId","type":"string"},{"internalType":"string","name":"_taskType","type":"string"},{"internalType":"string","name":"_title","type":"string"},{"internalType":"string","name":"_description","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"address payable","name":"_contractOwner","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[{"internalType":"string","name":"message","type":"string"}],"name":"RevertReason","type":"error"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"Logs","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"LogsValue","type":"event"},{"inputs":[],"name":"gateway","outputs":[{"internalType":"contract IAxelarGateway","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getTaskInfo","outputs":[{"components":[{"internalType":"string","name":"nanoId","type":"string"},{"internalType":"uint256","name":"createTime","type":"uint256"},{"internalType":"string","name":"taskType","type":"string"},{"internalType":"string","name":"title","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"string","name":"auditState","type":"string"},{"internalType":"uint256","name":"rating","type":"uint256"},{"internalType":"address payable","name":"contractOwner","type":"address"},{"internalType":"address payable","name":"participant","type":"address"},{"internalType":"address","name":"auditInitiator","type":"address"},{"internalType":"address","name":"auditor","type":"address"},{"internalType":"address[]","name":"participants","type":"address[]"},{"internalType":"address[]","name":"funders","type":"address[]"},{"internalType":"address[]","name":"auditors","type":"address[]"},{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"address","name":"sender","type":"address"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"uint256","name":"replyTo","type":"uint256"}],"internalType":"struct Message[]","name":"messages","type":"tuple[]"},{"internalType":"address","name":"contractParent","type":"address"}],"internalType":"struct Task","name":"task","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_favour","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"taskAuditDecision","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskAuditParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_participant","type":"address"},{"internalType":"string","name":"_state","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"_score","type":"uint256"}],"name":"taskStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_addressToSend","type":"address"},{"internalType":"string","name":"_chain","type":"string"}],"name":"transferToaddress","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}]',
   'TaskContract',
 );
 
@@ -82,6 +82,29 @@ class TaskContract extends _i1.GeneratedContract {
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
+  Future<String> sendMessage(
+    String _message,
+    BigInt _replyTo, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[4];
+    assert(checkSignature(function, 'd013bef0'));
+    final params = [
+      _message,
+      _replyTo,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
   Future<String> taskAuditDecision(
     String _favour,
     String _message,
@@ -90,7 +113,7 @@ class TaskContract extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[4];
+    final function = self.abi.functions[5];
     assert(checkSignature(function, '05923940'));
     final params = [
       _favour,
@@ -115,7 +138,7 @@ class TaskContract extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[5];
+    final function = self.abi.functions[6];
     assert(checkSignature(function, '16da43f6'));
     final params = [
       _message,
@@ -138,7 +161,7 @@ class TaskContract extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[6];
+    final function = self.abi.functions[7];
     assert(checkSignature(function, '14f99556'));
     final params = [
       _message,
@@ -156,7 +179,7 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> taskStateChange(
-    _i1.EthereumAddress _participantAddress,
+    _i1.EthereumAddress _participant,
     String _state,
     String _message,
     BigInt _replyTo,
@@ -164,10 +187,10 @@ class TaskContract extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[7];
+    final function = self.abi.functions[8];
     assert(checkSignature(function, '45345850'));
     final params = [
-      _participantAddress,
+      _participant,
       _state,
       _message,
       _replyTo,
@@ -190,7 +213,7 @@ class TaskContract extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[8];
+    final function = self.abi.functions[9];
     assert(checkSignature(function, 'f74657bb'));
     final params = [
       _addressToSend,
