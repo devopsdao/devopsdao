@@ -54,9 +54,17 @@ class _TaskDialog extends State<TaskDialog> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-
-    task = tasksServices.filterResults[widget.taskAddress]!;
-    // print('taskAddress: ${widget.taskAddress}');
+    // if (tasksServices.tasksCustomerSelection[widget.taskAddress] != null) {
+    //   task = tasksServices.tasksCustomerSelection[widget.taskAddress]!;
+    // } else if (tasksServices.tasksCustomerProgress[widget.taskAddress] !=
+    //     null) {
+    //   task = tasksServices.tasksCustomerProgress[widget.taskAddress]!;
+    // } else if (tasksServices.tasksCustomerComplete[widget.taskAddress] !=
+    //     null) {
+    //   task = tasksServices.tasksCustomerComplete[widget.taskAddress]!;
+    // }
+    task = tasksServices.tasks[widget.taskAddress]!;
+    print('taskAddress: ${widget.taskAddress}');
 
     return TaskInformationDialog(
       role: widget.role,
@@ -1340,9 +1348,10 @@ class _DialogPagesState extends State<DialogPages> {
                         borderRadius: BorderRadius.circular(widget.borderRadius),
                       ),
                       child: ChatPage(
-                          taskAddress: task.taskAddress,
-                          messages: task.messages,
-                          tasksServices: tasksServices))))
+                        taskAddress: task.taskAddress,
+                        nanoId: task.nanoId,
+                        messages: task.messages,
+                        tasksServices: tasksServices))))
         ],
       );
     }

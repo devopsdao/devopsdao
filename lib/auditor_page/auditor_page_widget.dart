@@ -61,7 +61,10 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'auditor',));
+            builder: (context) => TaskDialog(
+                  taskAddress: widget.taskAddress!,
+                  role: 'auditor',
+                ));
       });
     }
     // _searchKeywordController.text = '';
@@ -84,6 +87,19 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
     var tasksServices = context.watch<TasksServices>();
 
     bool _isFloatButtonVisible = false;
+
+    Map tabs = {
+      "requested": 0,
+      "performing": 1,
+      "finished": 2,
+    };
+
+    if (widget.taskAddress != null) {
+      final task = tasksServices.tasks[widget.taskAddress];
+
+      tabIndex = tabs[task!.auditState];
+    }
+
     if (_searchKeywordController.text.isEmpty) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksAuditPending);
@@ -171,7 +187,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             Expanded(
               child: DefaultTabController(
                 length: 4,
-                initialIndex: 0,
+                initialIndex: tabIndex,
                 child: Column(
                   children: [
                     TabBar(

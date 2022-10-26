@@ -80,8 +80,8 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasksPerformerProgress = {};
   Map<String, Task> tasksPerformerComplete = {};
 
-  Map<String, Task> tasksCustomerApplied = {};
-  Map<String, Task> tasksCustomerWorking = {};
+  Map<String, Task> tasksCustomerSelection = {};
+  Map<String, Task> tasksCustomerProgress = {};
   Map<String, Task> tasksCustomerComplete = {};
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
@@ -892,8 +892,8 @@ class TasksServices extends ChangeNotifier {
         tasksAuditWorkingOn.clear();
         tasksAuditComplete.clear();
 
-        tasksCustomerApplied.clear();
-        tasksCustomerWorking.clear();
+        tasksCustomerSelection.clear();
+        tasksCustomerProgress.clear();
         tasksCustomerComplete.clear();
 
         tasksPerformerParticipate.clear();
@@ -934,7 +934,7 @@ class TasksServices extends ChangeNotifier {
                   task.taskState == "review" ||
                   task.taskState == "audit")) {
             if (task.contractOwner == publicAddress) {
-              tasksCustomerWorking[task.taskAddress.toString()] = task;
+              tasksCustomerProgress[task.taskAddress.toString()] = task;
             } else if (task.participant == publicAddress) {
               tasksPerformerProgress[task.taskAddress.toString()] = task;
             }
@@ -950,7 +950,7 @@ class TasksServices extends ChangeNotifier {
               filterResults[task.taskAddress.toString()] = task;
             }
             if (task.contractOwner == publicAddress) {
-              tasksCustomerApplied[task.taskAddress.toString()] = task;
+              tasksCustomerSelection[task.taskAddress.toString()] = task;
             } else if (task.participants.isNotEmpty) {
               var taskExist = false;
               for (var p = 0; p < task.participants.length; p++) {
