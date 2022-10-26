@@ -1297,6 +1297,7 @@ class _DialogPagesState extends State<DialogPages> {
                     ),
                     child: ChatPage(
                         taskAddress: task.taskAddress,
+                        nanoId: task.nanoId,
                         messages: task.messages,
                         tasksServices: tasksServices))))
       ],

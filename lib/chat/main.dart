@@ -34,11 +34,13 @@ import '../blockchain/task_services.dart';
 
 class ChatPage extends StatefulWidget {
   final EthereumAddress taskAddress;
+  final String nanoId;
   final List messages;
   final TasksServices tasksServices;
   const ChatPage(
       {super.key,
       required this.taskAddress,
+      required this.nanoId,
       required this.messages,
       required this.tasksServices});
 
@@ -236,7 +238,7 @@ class _ChatPageState extends State<ChatPage> {
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
     await widget.tasksServices
-        .sendChatMessage(widget.taskAddress, message.text);
+        .sendChatMessage(widget.taskAddress, widget.nanoId, message.text);
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.messages[0][3].toString()),
