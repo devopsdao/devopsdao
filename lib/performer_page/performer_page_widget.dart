@@ -364,14 +364,10 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                             .toList()[index]
                             .taskAddress
                             .toString();
-                        // const route = ;
-                        // RouteInformation routeInfo = const RouteInformation(
-                        //     location: '/performer/$taskAddress');
-                        // Beamer.of(context).updateRouteInformation(routeInfo);
-                        // final taskAddress = tasksServices.filterResults.values
-                        //     .toList()[index]
-                        //     .taskAddress;
-                        context.popToNamed('/performer/$taskAddress');
+                        RouteInformation routeInfo = RouteInformation(
+                            location: '/performer/$taskAddress');
+                        Beamer.of(context).updateRouteInformation(routeInfo);
+                        // context.popToNamed('/performer/$taskAddress');
                       }
                     },
                     child: TaskItem(

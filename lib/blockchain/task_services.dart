@@ -71,7 +71,7 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = false;
+  bool hardhatDebug = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
