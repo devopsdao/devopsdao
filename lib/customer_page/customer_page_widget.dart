@@ -373,7 +373,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             .taskAddress
                             .toString();
                         RouteInformation routeInfo = RouteInformation(
-                            location: '/performer/$taskAddress');
+                            location: '/customer/$taskAddress');
                         Beamer.of(context).updateRouteInformation(routeInfo);
                         // context.popToNamed('/customer/$taskAddress');
                         // context.beamToNamed('/customer/$taskAddress');

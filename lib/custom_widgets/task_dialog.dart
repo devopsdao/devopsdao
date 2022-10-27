@@ -65,14 +65,14 @@ class _TaskDialog extends State<TaskDialog> {
       task = tasksServices.tasks[widget.taskAddress]!;
       if (task != null) {
         print('taskAddress: ${widget.taskAddress}');
-
+        print('role: ${widget.role}');
         return TaskInformationDialog(
           role: widget.role,
           object: task,
         );
       }
     }
-    return AppDataLoadingDialog();
+    return AppDataLoadingDialogWidget();
   }
 }
 
