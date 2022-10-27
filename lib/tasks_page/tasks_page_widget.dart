@@ -316,7 +316,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                     context: context,
                                                     builder: (context) =>
                                                         TaskInformationDialog(
-                                                          role: '',
+                                                          role: 'tasks',
                                                           object:
                                                               objList[index],
                                                         ));
