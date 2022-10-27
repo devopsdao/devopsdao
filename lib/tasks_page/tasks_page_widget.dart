@@ -300,6 +300,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                               .fromSTEB(16, 8, 16, 0),
                                           child: InkWell(
                                               onTap: () {
+                                                // print('tap');
+
                                                 setState(() {
                                                   // Toggle light when tapped.
                                                 });

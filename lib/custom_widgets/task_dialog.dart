@@ -100,39 +100,85 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       // print(constraints.minWidth);
       return StatefulBuilder(
         builder: (context, setState) {
-          // return WillPopScope(
-
-          //   onWillPop: () async => false,
-          //   child:
-          return Dialog(
-            insetPadding: const EdgeInsets.all(30),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: SingleChildScrollView(
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  width: 400,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 30,
-                        child: InkWell(
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              insetPadding: const EdgeInsets.all(30),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: SingleChildScrollView(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    width: 400,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 30,
+                          child: InkWell(
+                            onTap: () {
+                              interface.controller.animateToPage(0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.ease);
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.all(0.0),
+                              height: 30,
+                              width: 30,
+                              child: Row(
+                                children: const <Widget>[
+                                  Expanded(
+                                    child: Icon(
+                                      Icons.arrow_back,
+                                      size: 30,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Expanded(
+                          flex: 10,
+                          child: Text(
+                            task.title,
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Spacer(),
+                        InkWell(
                           onTap: () {
-                            interface.controller.animateToPage(0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.ease);
+                            // print(widget.role);
+                            // context.beamToNamed('/${widget.role}');
+                            // context.beamBack();
+                            Navigator.pop(context);
+                            RouteInformation routeInfo =
+                                RouteInformation(location: '/${widget.role}');
+                            Beamer.of(context)
+                                .updateRouteInformation(routeInfo);
                           },
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
                             padding: const EdgeInsets.all(0.0),
                             height: 30,
                             width: 30,
+                            // decoration: BoxDecoration(
+                            //   borderRadius: BorderRadius.circular(6),
+                            // ),
                             child: Row(
                               children: const <Widget>[
                                 Expanded(
                                   child: Icon(
-                                    Icons.arrow_back,
+                                    Icons.close,
                                     size: 30,
                                   ),
                                 ),
@@ -140,352 +186,305 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                             ),
                           ),
                         ),
-                      ),
-                      const Spacer(),
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          task.title,
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold),
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: () {
-                          // print(widget.role);
-                          // context.beamToNamed('/${widget.role}');
-                          // context.beamBack();
-                          Navigator.pop(context);
-                          RouteInformation routeInfo =
-                              RouteInformation(location: '/${widget.role}');
-                          Beamer.of(context).updateRouteInformation(routeInfo);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(0.0),
-                          height: 30,
-                          width: 30,
-                          // decoration: BoxDecoration(
-                          //   borderRadius: BorderRadius.circular(6),
-                          // ),
-                          child: Row(
-                            children: const <Widget>[
-                              Expanded(
-                                child: Icon(
-                                  Icons.close,
-                                  size: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: constraints.maxHeight * .665 < 400
-                      ? 320
-                      : constraints.maxHeight * .665,
-                  // width: constraints.maxWidth * .8,
-                  // height: 550,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(9),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/images/cross.png"),
-                      fit: BoxFit.cover,
+                      ],
                     ),
                   ),
-                  child: DialogPages(
-                      borderRadius: borderRadius,
-                      requiredTask: task,
-                      requiredRole: widget.role,
-                      topConstraints: constraints),
-                ),
-              ]),
+                  Container(
+                    height: constraints.maxHeight * .665 < 400
+                        ? 320
+                        : constraints.maxHeight * .665,
+                    // width: constraints.maxWidth * .8,
+                    // height: 550,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(9),
+                      image: const DecorationImage(
+                        image: AssetImage("assets/images/cross.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: DialogPages(
+                        borderRadius: borderRadius,
+                        requiredTask: task,
+                        requiredRole: widget.role,
+                        topConstraints: constraints),
+                  ),
+                ]),
+              ),
+              // actions: [
+              //   // ##################### ACTION BUTTONS PART ######################## //
+              //   // ************************ NEW (EXCHANGE) ************************** //
+              //   if (task.contractOwner != tasksServices.ownAddress &&
+              //       tasksServices.ownAddress != null &&
+              //       tasksServices.validChainID && widget.role == 'tasks')
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white, backgroundColor: Colors.green),
+              //         onPressed: () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.taskParticipation(
+              //               task.contractAddress, task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'taskParticipation',
+              //               ));
+              //         },
+              //         child: const Text('Participate')),
+              //   // ********************** CUSTOMER BUTTONS ************************* //
+              //   if (task.taskState == "agreed" && widget.role == 'customer')
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white, backgroundColor: Colors.green),
+              //         onPressed: () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.changeTaskStatus(task.contractAddress,
+              //               task.participiant, 'progress', task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'changeTaskStatus',
+              //               ));
+              //         },
+              //         child: const Text('Start the job')),
+              //   if (task.taskState == "progress" && widget.role == 'customer')
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white, backgroundColor: Colors.green),
+              //         onPressed: () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.changeTaskStatus(task.contractAddress,
+              //               task.participiant, 'review', task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'changeTaskStatus',
+              //               ));
+              //         },
+              //         child: const Text('Review')),
+              //   if (task.taskState == "review" && widget.role == 'customer')
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white, backgroundColor: Colors.orangeAccent),
+              //         onPressed: () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.changeTaskStatus(task.contractAddress,
+              //               task.participiant, 'audit', task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'changeTaskStatus',
+              //               ));
+              //         },
+              //         child: const Text('Request audit')),
+              //   if (task.taskState == "completed" && widget.role == 'customer' &&
+              //       (task.contractValue != 0 || task.contractValueToken != 0))
+              //     WithdrawButton(object: task),
+              //
+              //   // *********************** SUBMITTER BUTTONS *********************** //
+              //   if (widget.role == 'submitter')
+              //     TextButton(
+              //       onPressed: () {
+              //         showDialog(
+              //             context: context,
+              //             builder: (context) => AlertDialog(
+              //               title: Text('Topup contract'),
+              //               // backgroundColor: Colors.black,
+              //               content: const Payment(
+              //                 purpose: 'topup',
+              //               ),
+              //               actions: [
+              //                 TextButton(
+              //                   onPressed: () {
+              //                     tasksServices.addTokens(task.contractAddress,
+              //                         interface.tokensEntered, task.nanoId);
+              //                     Navigator.pop(context);
+              //
+              //                     showDialog(
+              //                         context: context,
+              //                         builder: (context) => WalletAction(
+              //                           nanoId: task.nanoId,
+              //                           taskName: 'addTokens',
+              //                         ));
+              //                   },
+              //                   style: TextButton.styleFrom(
+              //                       primary: Colors.white,
+              //                       backgroundColor: Colors.green),
+              //                   child: const Text('Topup contract'),
+              //                 ),
+              //                 TextButton(
+              //                     child: const Text('Close'),
+              //                     onPressed: () => Navigator.pop(context)),
+              //               ],
+              //             ));
+              //       },
+              //       style: TextButton.styleFrom(
+              //           primary: Colors.white, backgroundColor: Colors.green),
+              //       child: const Text('Topup'),
+              //     ),
+              //
+              //   // TextButton(
+              //   //     child: Text('Withdraw to Chain'),
+              //   //     style: TextButton.styleFrom(
+              //   //         primary: Colors.white,
+              //   //         backgroundColor: Colors.green),
+              //   //     onPressed: () {
+              //   //       setState(() {
+              //   //         task.justLoaded = false;
+              //   //       });
+              //   //       tasksServices.withdrawToChain(
+              //   //           task.contractAddress,
+              //   //           task.nanoId);
+              //   //       Navigator.pop(context);
+              //   //
+              //   //       showDialog(
+              //   //           context: context,
+              //   //           builder: (context) => WalletAction(
+              //   //                 nanoId:
+              //   //                     task.nanoId,
+              //   //                 taskName: 'withdrawToChain',
+              //   //               ));
+              //   //     }),
+              //
+              //   if (task.taskState == 'review' && widget.role == 'submitter')
+              //   // ******* Sign Review Button ******** //
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white, backgroundColor: Colors.green),
+              //         onPressed: () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.changeTaskStatus(task.contractAddress,
+              //               task.participiant, 'completed', task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'changeTaskStatus',
+              //               ));
+              //         },
+              //         child: const Text('Sign Review')),
+              //   if (task.taskState == 'completed' && widget.role == 'submitter')
+              //     TextButton(
+              //       // ******* Rate task Button ******** //
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white,
+              //             disabledBackgroundColor: Colors.white10,
+              //             backgroundColor: Colors.green),
+              //         onPressed: (task.score == 0 && enableRatingButton)
+              //             ? () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.rateTask(
+              //               task.contractAddress, ratingScore, task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'rateTask',
+              //               ));
+              //         }
+              //             : null,
+              //         child: const Text('Rate task')),
+              //
+              //   // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
+              //   // ************************* AUDIT REQUEST ************************* //
+              //   if ((widget.role == 'submitter' || widget.role == 'customer') &&
+              //       (task.taskState == "progress" || task.taskState == "review"))
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white, backgroundColor: Colors.orangeAccent),
+              //         onPressed: () {
+              //           setState(() {
+              //             task.justLoaded = false;
+              //           });
+              //           tasksServices.changeTaskStatus(task.contractAddress,
+              //               task.participiant, 'audit', task.nanoId);
+              //           Navigator.pop(context);
+              //
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'changeTaskStatus',
+              //               ));
+              //         },
+              //         child: const Text('Request audit')),
+              //
+              //   // ************************* AUDITOR BUTTONS ************************ //
+              //   if(widget.role == 'auditor' && task.auditState == 'performing')
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white,
+              //             backgroundColor: Colors.green),
+              //         onPressed: () {
+              //           setState(() {task.justLoaded = false;});
+              //           tasksServices.changeAuditTaskStatus(
+              //               task.contractAddress,
+              //               'Customer',
+              //               task.nanoId);
+              //           Navigator.pop(context);
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction( nanoId: task.nanoId,
+              //                 taskName: 'changeAuditTaskStatus',));
+              //         },
+              //
+              //         child: const Text('In favor of Customer')),
+              //   if(widget.role == 'auditor' && task.auditState == 'performing')
+              //     TextButton(
+              //         style: TextButton.styleFrom(
+              //             primary: Colors.white,
+              //             backgroundColor: Colors.green),
+              //         onPressed: () {
+              //           setState(() {task.justLoaded = false;});
+              //           tasksServices.changeAuditTaskStatus(
+              //               task.contractAddress,
+              //               'Performer',
+              //               task.nanoId);
+              //           Navigator.pop(context);
+              //           showDialog(
+              //               context: context,
+              //               builder: (context) => WalletAction(
+              //                 nanoId: task.nanoId,
+              //                 taskName: 'changeAuditTaskStatus',
+              //               ));
+              //         },
+              //
+              //         child: const Text('In favor of Performer')),
+              //
+              //   // ************************ ALL ROLES BUTTONS ********************** //
+              //   TextButton(
+              //       child: const Text('Close'),
+              //       onPressed: () => Navigator.pop(context)),
+              // ],
             ),
-            // actions: [
-            //   // ##################### ACTION BUTTONS PART ######################## //
-            //   // ************************ NEW (EXCHANGE) ************************** //
-            //   if (task.contractOwner != tasksServices.ownAddress &&
-            //       tasksServices.ownAddress != null &&
-            //       tasksServices.validChainID && widget.role == 'tasks')
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white, backgroundColor: Colors.green),
-            //         onPressed: () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.taskParticipation(
-            //               task.contractAddress, task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'taskParticipation',
-            //               ));
-            //         },
-            //         child: const Text('Participate')),
-            //   // ********************** CUSTOMER BUTTONS ************************* //
-            //   if (task.taskState == "agreed" && widget.role == 'customer')
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white, backgroundColor: Colors.green),
-            //         onPressed: () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.changeTaskStatus(task.contractAddress,
-            //               task.participiant, 'progress', task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'changeTaskStatus',
-            //               ));
-            //         },
-            //         child: const Text('Start the job')),
-            //   if (task.taskState == "progress" && widget.role == 'customer')
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white, backgroundColor: Colors.green),
-            //         onPressed: () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.changeTaskStatus(task.contractAddress,
-            //               task.participiant, 'review', task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'changeTaskStatus',
-            //               ));
-            //         },
-            //         child: const Text('Review')),
-            //   if (task.taskState == "review" && widget.role == 'customer')
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white, backgroundColor: Colors.orangeAccent),
-            //         onPressed: () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.changeTaskStatus(task.contractAddress,
-            //               task.participiant, 'audit', task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'changeTaskStatus',
-            //               ));
-            //         },
-            //         child: const Text('Request audit')),
-            //   if (task.taskState == "completed" && widget.role == 'customer' &&
-            //       (task.contractValue != 0 || task.contractValueToken != 0))
-            //     WithdrawButton(object: task),
-            //
-            //   // *********************** SUBMITTER BUTTONS *********************** //
-            //   if (widget.role == 'submitter')
-            //     TextButton(
-            //       onPressed: () {
-            //         showDialog(
-            //             context: context,
-            //             builder: (context) => AlertDialog(
-            //               title: Text('Topup contract'),
-            //               // backgroundColor: Colors.black,
-            //               content: const Payment(
-            //                 purpose: 'topup',
-            //               ),
-            //               actions: [
-            //                 TextButton(
-            //                   onPressed: () {
-            //                     tasksServices.addTokens(task.contractAddress,
-            //                         interface.tokensEntered, task.nanoId);
-            //                     Navigator.pop(context);
-            //
-            //                     showDialog(
-            //                         context: context,
-            //                         builder: (context) => WalletAction(
-            //                           nanoId: task.nanoId,
-            //                           taskName: 'addTokens',
-            //                         ));
-            //                   },
-            //                   style: TextButton.styleFrom(
-            //                       primary: Colors.white,
-            //                       backgroundColor: Colors.green),
-            //                   child: const Text('Topup contract'),
-            //                 ),
-            //                 TextButton(
-            //                     child: const Text('Close'),
-            //                     onPressed: () => Navigator.pop(context)),
-            //               ],
-            //             ));
-            //       },
-            //       style: TextButton.styleFrom(
-            //           primary: Colors.white, backgroundColor: Colors.green),
-            //       child: const Text('Topup'),
-            //     ),
-            //
-            //   // TextButton(
-            //   //     child: Text('Withdraw to Chain'),
-            //   //     style: TextButton.styleFrom(
-            //   //         primary: Colors.white,
-            //   //         backgroundColor: Colors.green),
-            //   //     onPressed: () {
-            //   //       setState(() {
-            //   //         task.justLoaded = false;
-            //   //       });
-            //   //       tasksServices.withdrawToChain(
-            //   //           task.contractAddress,
-            //   //           task.nanoId);
-            //   //       Navigator.pop(context);
-            //   //
-            //   //       showDialog(
-            //   //           context: context,
-            //   //           builder: (context) => WalletAction(
-            //   //                 nanoId:
-            //   //                     task.nanoId,
-            //   //                 taskName: 'withdrawToChain',
-            //   //               ));
-            //   //     }),
-            //
-            //   if (task.taskState == 'review' && widget.role == 'submitter')
-            //   // ******* Sign Review Button ******** //
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white, backgroundColor: Colors.green),
-            //         onPressed: () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.changeTaskStatus(task.contractAddress,
-            //               task.participiant, 'completed', task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'changeTaskStatus',
-            //               ));
-            //         },
-            //         child: const Text('Sign Review')),
-            //   if (task.taskState == 'completed' && widget.role == 'submitter')
-            //     TextButton(
-            //       // ******* Rate task Button ******** //
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white,
-            //             disabledBackgroundColor: Colors.white10,
-            //             backgroundColor: Colors.green),
-            //         onPressed: (task.score == 0 && enableRatingButton)
-            //             ? () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.rateTask(
-            //               task.contractAddress, ratingScore, task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'rateTask',
-            //               ));
-            //         }
-            //             : null,
-            //         child: const Text('Rate task')),
-            //
-            //   // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
-            //   // ************************* AUDIT REQUEST ************************* //
-            //   if ((widget.role == 'submitter' || widget.role == 'customer') &&
-            //       (task.taskState == "progress" || task.taskState == "review"))
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white, backgroundColor: Colors.orangeAccent),
-            //         onPressed: () {
-            //           setState(() {
-            //             task.justLoaded = false;
-            //           });
-            //           tasksServices.changeTaskStatus(task.contractAddress,
-            //               task.participiant, 'audit', task.nanoId);
-            //           Navigator.pop(context);
-            //
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'changeTaskStatus',
-            //               ));
-            //         },
-            //         child: const Text('Request audit')),
-            //
-            //   // ************************* AUDITOR BUTTONS ************************ //
-            //   if(widget.role == 'auditor' && task.auditState == 'performing')
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white,
-            //             backgroundColor: Colors.green),
-            //         onPressed: () {
-            //           setState(() {task.justLoaded = false;});
-            //           tasksServices.changeAuditTaskStatus(
-            //               task.contractAddress,
-            //               'Customer',
-            //               task.nanoId);
-            //           Navigator.pop(context);
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction( nanoId: task.nanoId,
-            //                 taskName: 'changeAuditTaskStatus',));
-            //         },
-            //
-            //         child: const Text('In favor of Customer')),
-            //   if(widget.role == 'auditor' && task.auditState == 'performing')
-            //     TextButton(
-            //         style: TextButton.styleFrom(
-            //             primary: Colors.white,
-            //             backgroundColor: Colors.green),
-            //         onPressed: () {
-            //           setState(() {task.justLoaded = false;});
-            //           tasksServices.changeAuditTaskStatus(
-            //               task.contractAddress,
-            //               'Performer',
-            //               task.nanoId);
-            //           Navigator.pop(context);
-            //           showDialog(
-            //               context: context,
-            //               builder: (context) => WalletAction(
-            //                 nanoId: task.nanoId,
-            //                 taskName: 'changeAuditTaskStatus',
-            //               ));
-            //         },
-            //
-            //         child: const Text('In favor of Performer')),
-            //
-            //   // ************************ ALL ROLES BUTTONS ********************** //
-            //   TextButton(
-            //       child: const Text('Close'),
-            //       onPressed: () => Navigator.pop(context)),
-            // ],
-            // ),
           );
         },
       );
