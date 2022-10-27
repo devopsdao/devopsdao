@@ -90,7 +90,9 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
 
-      tabIndex = tabs[task!.taskState];
+      if (task != null) {
+        tabIndex = tabs[task!.taskState];
+      }
     }
 
     if (_searchKeywordController.text.isEmpty) {

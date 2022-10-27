@@ -83,7 +83,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
 
-      tabIndex = tabs[task!.taskState];
+      if (task != null) {
+        tabIndex = tabs[task!.taskState];
+      }
     }
 
     if (_searchKeywordController.text.isEmpty) {
