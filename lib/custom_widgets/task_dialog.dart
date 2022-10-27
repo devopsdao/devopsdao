@@ -72,7 +72,7 @@ class _TaskDialog extends State<TaskDialog> {
         );
       }
     }
-    return AppDataLoadingDialogWidget();
+    return const AppDataLoadingDialogWidget();
   }
 }
 
