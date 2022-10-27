@@ -104,7 +104,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       Container(
                         width: 30,
                         child: (
-                              (interface.pageWalletViewNumber != 0 && (tasksServices.walletConnectedMM || tasksServices.walletConnectedWC))
+                              (interface.pageWalletViewNumber != 0 && (!tasksServices.walletConnectedMM || !tasksServices.walletConnectedWC))
                             //
                             )
                             ? InkWell(
