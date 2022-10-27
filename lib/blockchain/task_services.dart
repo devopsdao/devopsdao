@@ -1519,6 +1519,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> myNotifyListeners() async {
     notifyListeners();
+    print('fired once');
   }
 
   Future<void> testTaskCreation() async {

@@ -51,6 +51,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
   // TransactionTester? _transactionTester = EthereumTransactionTester();
   late TransactionTester? _transactionTester;
 
+
+
   @override
   void dispose() {
     super.dispose();
@@ -60,6 +62,16 @@ class _MyWalletPageState extends State<MyWalletPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+
+    if (tasksServices.walletConnectedWC || tasksServices.walletConnectedMM) {
+      if(tasksServices.walletConnectedMM ) {
+        interface.pageWalletViewNumber = 1;
+        interface.controller = PageController(initialPage: 1);
+      } else if (tasksServices.walletConnectedWC) {
+        interface.pageWalletViewNumber = 2;
+        interface.controller = PageController(initialPage: 2);
+      }
+    }
 
     final double borderRadius = interface.borderRadius;
 
@@ -91,7 +103,10 @@ class _MyWalletPageState extends State<MyWalletPage> {
                     children: [
                       Container(
                         width: 30,
-                        child: interface.pageWalletViewNumber != 0
+                        child: (
+                              (interface.pageWalletViewNumber != 0 && (tasksServices.walletConnectedMM || tasksServices.walletConnectedWC))
+                            //
+                            )
                             ? InkWell(
                                 onTap: () {
                                   interface.controller.animateToPage(0,
@@ -135,6 +150,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
+                          interface.pageWalletViewNumber = 0;
                           Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -223,10 +239,16 @@ class _WalletPagesState extends State<WalletPages> {
   String _displayUri = '';
   int defaultTab = 0;
 
+
+
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
+
+
+    print(interface.pageWalletViewNumber);
+    // interface.pageWalletViewNumber = 0;
 
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
@@ -243,6 +265,7 @@ class _WalletPagesState extends State<WalletPages> {
     } else if (tasksServices.platform == 'mobile') {
       defaultTab = 0;
     }
+
 
     return PageView(
       scrollDirection: Axis.horizontal,
@@ -626,7 +649,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
         onTap: () {
           if (widget.active) {
             interface.whichWalletButtonPressed = widget.buttonName;
-            tasksServices.myNotifyListeners();
+            // tasksServices.myNotifyListeners();
             // controller.jumpToPage(page);
             interface.controller.animateToPage(page,
                 duration: const Duration(milliseconds: 300),

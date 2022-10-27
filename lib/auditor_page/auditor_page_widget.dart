@@ -304,23 +304,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                             ),
                       ),
                     ),
-                    // TabBar(
-                    //   labelColor: Colors.white,с
-                    //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                    //   indicatorColor: Color(0xFF47CBE4),
-                    //   indicatorWeight: 3,
-                    //   tabs: [
-                    //     Tab(
-                    //       text: 'New offers',
-                    //     ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //   ],
-                    // ),
 
                     tasksServices.isLoading
                         ? const LoadIndicator()
