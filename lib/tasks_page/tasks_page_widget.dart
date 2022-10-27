@@ -312,6 +312,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                 //         .taskAddress;
                                                 // context.popToNamed(
                                                 //     '/tasks/$taskAddress');
+                                                print(objList);
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) =>
