@@ -761,8 +761,9 @@ class TasksServices extends ChangeNotifier {
           'received event ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
         tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
-        refreshTask(tasks[event.contractAdr.toString()]!);
-        print('refreshed task');
+        await refreshTask(tasks[event.contractAdr.toString()]!);
+        print(
+            'refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
         await myBalance();
         notifyListeners();
       } on GetTaskException {
@@ -892,6 +893,24 @@ class TasksServices extends ChangeNotifier {
         scoredTaskCount++;
       }
     }
+
+    // if (tasksAuditPending[task.taskAddress.toString()] != null) {
+    tasksNew.remove(task.taskAddress.toString());
+    filterResults.remove(task.taskAddress.toString());
+    tasksAuditPending.remove(task.taskAddress.toString());
+    tasksAuditApplied.remove(task.taskAddress.toString());
+    tasksAuditWorkingOn.remove(task.taskAddress.toString());
+    tasksAuditComplete.remove(task.taskAddress.toString());
+
+    tasksCustomerSelection.remove(task.taskAddress.toString());
+    tasksCustomerProgress.remove(task.taskAddress.toString());
+    tasksCustomerComplete.remove(task.taskAddress.toString());
+
+    tasksPerformerParticipate.remove(task.taskAddress.toString());
+    tasksPerformerProgress.remove(task.taskAddress.toString());
+    tasksPerformerComplete.remove(task.taskAddress.toString());
+    // }
+
     if (task.taskState != "" &&
         (task.taskState == "agreed" ||
             task.taskState == "progress" ||
@@ -1041,7 +1060,7 @@ class TasksServices extends ChangeNotifier {
         for (Task task in tasks.values) {
           // for (var k = 0; k < tasks.length; k++) {
           // final task = tasks[k];
-          refreshTask(task);
+          await refreshTask(task);
         }
 
         // Final Score Calculation
