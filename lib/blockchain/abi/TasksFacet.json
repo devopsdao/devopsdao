@@ -67,9 +67,15 @@
         "internalType": "string",
         "name": "message",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
       }
     ],
-    "name": "OneEventForAll",
+    "name": "TaskUpdated",
     "type": "event"
   },
   {

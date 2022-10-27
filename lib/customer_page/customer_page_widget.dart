@@ -91,7 +91,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       final task = tasksServices.tasks[widget.taskAddress];
 
       if (task != null) {
-        tabIndex = tabs[task!.taskState];
+        tabIndex = tabs[task.taskState];
       }
     }
 
@@ -356,16 +356,23 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       // setState(() {
                       //   // Toggle light when tapped.
                       // });
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) => TaskInformationDialog(
-                      //           role: 'customer',
-                      //           object: objList[index],
-                      //         ));
-                      final taskAddress = tasksServices.filterResults.values
-                          .toList()[index]
-                          .taskAddress;
-                      context.beamToNamed('/customer/$taskAddress');
+
+                      if (tasksServices.filterResults.values
+                              .toList()
+                              .elementAt(index) !=
+                          null) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => TaskInformationDialog(
+                                  role: 'customer',
+                                  object: objList[index],
+                                ));
+                        final taskAddress = tasksServices.filterResults.values
+                            .toList()[index]
+                            .taskAddress;
+                        context.popToNamed('/customer/$taskAddress');
+                        // context.beamToNamed('/customer/$taskAddress');
+                      }
                     },
                     child: TaskItem(
                       role: 'customer',

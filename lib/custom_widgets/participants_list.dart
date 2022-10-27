@@ -4,6 +4,7 @@ import 'package:devopsdao/custom_widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:beamer/beamer.dart';
 
 import '../blockchain/task_services.dart';
 
@@ -61,6 +62,9 @@ class _ParticipantListState extends State<ParticipantList> {
                 tasksServices.taskStateChange(widget.obj.taskAddress,
                     participants[index2], status, widget.obj.nanoId);
                 Navigator.pop(context);
+                RouteInformation routeInfo =
+                    new RouteInformation(location: '/customer');
+                Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
                     context: context,

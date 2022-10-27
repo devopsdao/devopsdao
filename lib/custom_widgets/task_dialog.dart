@@ -23,7 +23,6 @@ import 'buttons.dart';
 
 import 'package:beamer/beamer.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,11 +33,8 @@ import '../custom_widgets/task_dialog.dart';
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
-  const TaskDialog({
-    Key? key,
-    required this.taskAddress,
-    required this.role
-  }) : super(key: key);
+  const TaskDialog({Key? key, required this.taskAddress, required this.role})
+      : super(key: key);
 
   @override
   _TaskDialog createState() => _TaskDialog();
@@ -72,8 +68,6 @@ class _TaskDialog extends State<TaskDialog> {
     );
   }
 }
-
-
 
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
@@ -575,165 +569,164 @@ class _DialogPagesState extends State<DialogPages> {
                       // width: MediaQuery.of(context).size.width * .57
                       width: innerWidth,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
                       ),
                       child: Container(
                           child: ListBody(
-                          children: <Widget>[
-                            // RichText(
-                            //     text: TextSpan(
-                            //         style: DefaultTextStyle.of(context)
-                            //             .style
-                            //             .apply(fontSizeFactor: 1.0),
-                            //         children: <TextSpan>[
-                            //           const TextSpan(
-                            //               text: 'id: \n',
-                            //               style: TextStyle(fontWeight: FontWeight.bold)),
-                            //           TextSpan(text: task.nanoId)
-                            //         ])),
+                        children: <Widget>[
+                          // RichText(
+                          //     text: TextSpan(
+                          //         style: DefaultTextStyle.of(context)
+                          //             .style
+                          //             .apply(fontSizeFactor: 1.0),
+                          //         children: <TextSpan>[
+                          //           const TextSpan(
+                          //               text: 'id: \n',
+                          //               style: TextStyle(fontWeight: FontWeight.bold)),
+                          //           TextSpan(text: task.nanoId)
+                          //         ])),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(
+                              task.title,
+                              textAlign: TextAlign.center,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+
+                          Container(
+                              padding: const EdgeInsets.all(6),
+                              child: RichText(
+                                  text: TextSpan(
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.0),
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                      text: task.description,
+                                    )
+                                  ]))),
+
+                          // ********************** CUSTOMER ROLE ************************* //
+
+                          if (task.taskState == 'completed' &&
+                              (role == 'customer' ||
+                                  tasksServices.hardhatDebug == true))
                             Container(
                               padding: const EdgeInsets.all(6),
-                              child: Text(
-                                task.title,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-
-                            Container(
-                                padding: const EdgeInsets.all(6),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      TextSpan(
-                                        text: task.description,
-                                      )
-                                    ]))),
-
-                            // ********************** CUSTOMER ROLE ************************* //
-
-                            if (task.taskState == 'completed' &&
-                                (role == 'customer' ||
-                                    tasksServices.hardhatDebug == true))
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: const <TextSpan>[
-                                      TextSpan(
-                                          text: 'Rate the task:',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                    ])),
-                              ),
-
-                            if (task.taskState == 'completed' &&
-                                (role == 'customer' ||
-                                    tasksServices.hardhatDebug == true))
-                              Container(
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      RatingBar.builder(
-                                        initialRating: 4,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemPadding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        itemBuilder: (context, _) => const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemSize: 30.0,
-                                        onRatingUpdate: (rating) {
-                                          setState(() {
-                                            enableRatingButton = true;
-                                          });
-                                          ratingScore = rating;
-                                          tasksServices.myNotifyListeners();
-                                        },
-                                      ),
-                                    ]),
-                              ),
-
-
-                            // ************************ PERFORMER ROLE ************************** //
-
-                            if (task.taskState == 'completed' &&
-                                (role == 'performer' ||
-                                    tasksServices.hardhatDebug == true) &&
-                                (task.contractValue != 0 ||
-                                    task.contractValueToken != 0))
-                              SelectNetworkMenu(object: task),
-
-                            // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
-                            // *************************** AUDIT ******************************** //
-
-                            if (task.taskState == "audit" &&
-                                task.auditState == "requested" &&
-                                (role == 'customer' ||
-                                    role == 'performer' ||
-                                    tasksServices.hardhatDebug == true))
-                              RichText(
+                              child: RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
                                           .style
                                           .apply(fontSizeFactor: 1.0),
                                       children: const <TextSpan>[
                                     TextSpan(
-                                        text:
-                                            'Warning, this contract on Audit state \n'
-                                            'Please choose auditor: ',
+                                        text: 'Rate the task:',
                                         style: TextStyle(
                                             height: 2,
                                             fontWeight: FontWeight.bold)),
                                   ])),
-                            if (task.taskState == "audit" &&
-                                task.auditState == "performing" &&
-                                (role == 'customer' ||
-                                    role == 'performer' ||
-                                    tasksServices.hardhatDebug == true))
-                              RichText(
-                                  text: TextSpan(
+                            ),
+
+                          if (task.taskState == 'completed' &&
+                              (role == 'customer' ||
+                                  tasksServices.hardhatDebug == true))
+                            Container(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    RatingBar.builder(
+                                      initialRating: 4,
+                                      minRating: 1,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemPadding: const EdgeInsets.symmetric(
+                                          horizontal: 5.0),
+                                      itemBuilder: (context, _) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      itemSize: 30.0,
+                                      onRatingUpdate: (rating) {
+                                        setState(() {
+                                          enableRatingButton = true;
+                                        });
+                                        ratingScore = rating;
+                                        tasksServices.myNotifyListeners();
+                                      },
+                                    ),
+                                  ]),
+                            ),
+
+                          // ************************ PERFORMER ROLE ************************** //
+
+                          if (task.taskState == 'completed' &&
+                              (role == 'performer' ||
+                                  tasksServices.hardhatDebug == true) &&
+                              (task.contractValue != 0 ||
+                                  task.contractValueToken != 0))
+                            SelectNetworkMenu(object: task),
+
+                          // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
+                          // *************************** AUDIT ******************************** //
+
+                          if (task.taskState == "audit" &&
+                              task.auditState == "requested" &&
+                              (role == 'customer' ||
+                                  role == 'performer' ||
+                                  tasksServices.hardhatDebug == true))
+                            RichText(
+                                text: TextSpan(
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                    children: const <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                          'Warning, this contract on Audit state \n'
+                                          'Please choose auditor: ',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                ])),
+                          if (task.taskState == "audit" &&
+                              task.auditState == "performing" &&
+                              (role == 'customer' ||
+                                  role == 'performer' ||
+                                  tasksServices.hardhatDebug == true))
+                            RichText(
+                                text: TextSpan(
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                    children: <TextSpan>[
+                                  const TextSpan(
+                                      text: 'Your request is being resolved \n'
+                                          'Your auditor: \n',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: task.auditor.toString(),
                                       style: DefaultTextStyle.of(context)
                                           .style
-                                          .apply(fontSizeFactor: 1.0),
-                                      children: <TextSpan>[
-                                    const TextSpan(
-                                        text:
-                                            'Your request is being resolved \n'
-                                            'Your auditor: \n',
-                                        style: TextStyle(
-                                            height: 2,
-                                            fontWeight: FontWeight.bold)),
-                                    TextSpan(
-                                        text: task.auditor.toString(),
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 0.7))
-                                  ])),
-                            if (task.taskState == "audit" &&
-                                task.auditState == "requested" &&
-                                (role == 'customer' ||
-                                    role == 'performer' ||
-                                    tasksServices.hardhatDebug == true))
-                              ParticipantList(
-                                listType: 'audit',
-                                obj: task,
-                              ),
+                                          .apply(fontSizeFactor: 0.7))
+                                ])),
+                          if (task.taskState == "audit" &&
+                              task.auditState == "requested" &&
+                              (role == 'customer' ||
+                                  role == 'performer' ||
+                                  tasksServices.hardhatDebug == true))
+                            ParticipantList(
+                              listType: 'audit',
+                              obj: task,
+                            ),
 
-                            // ************************ AUDITOR ROLE ************************** //
-                            // ************************ EMPTY ************************** //
+                          // ************************ AUDITOR ROLE ************************** //
+                          // ************************ EMPTY ************************** //
                         ],
                       )),
                     ),
@@ -742,47 +735,48 @@ class _DialogPagesState extends State<DialogPages> {
               ),
               // const SizedBox(height: 14),
 
-              if (task.taskState == "new" && (role == 'customer' ||
-                      tasksServices.hardhatDebug == true)
+              if (task.taskState == "new" &&
+                  (role == 'customer' || tasksServices.hardhatDebug == true)
               // && task.participants.isNotEmpty
               )
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: ListBody(
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                  children: const <TextSpan>[
-                                    TextSpan(
-                                        text: 'Choose contractor: ',
-                                        style: TextStyle(
-                                            height: 1,
-                                            fontWeight: FontWeight.bold)),
-                                  ])),
-                        ),
-                        ParticipantList(
-                          listType: 'customer',
-                          obj: task,
-                        ),
-                      ],
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: innerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child: ListBody(
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            child: RichText(
+                                text: TextSpan(
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                    children: const <TextSpan>[
+                                  TextSpan(
+                                      text: 'Choose contractor: ',
+                                      style: TextStyle(
+                                          height: 1,
+                                          fontWeight: FontWeight.bold)),
+                                ])),
+                          ),
+                          ParticipantList(
+                            listType: 'customer',
+                            obj: task,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
               // const SizedBox(height: 14),
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
@@ -920,6 +914,9 @@ class _DialogPagesState extends State<DialogPages> {
                               task.taskAddress, task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
+                          RouteInformation routeInfo =
+                              const RouteInformation(location: '/tasks');
+                          Beamer.of(context).updateRouteInformation(routeInfo);
 
                           showDialog(
                               context: context,
@@ -944,6 +941,9 @@ class _DialogPagesState extends State<DialogPages> {
                               task.participant, 'progress', task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
+                          RouteInformation routeInfo =
+                              new RouteInformation(location: '/performer');
+                          Beamer.of(context).updateRouteInformation(routeInfo);
 
                           showDialog(
                               context: context,
@@ -967,6 +967,9 @@ class _DialogPagesState extends State<DialogPages> {
                               task.participant, 'review', task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
+                          RouteInformation routeInfo =
+                              new RouteInformation(location: '/performer');
+                          Beamer.of(context).updateRouteInformation(routeInfo);
                           showDialog(
                               context: context,
                               builder: (context) => WalletAction(
@@ -980,7 +983,8 @@ class _DialogPagesState extends State<DialogPages> {
                         (role == 'customer' ||
                             role == 'performer' ||
                             tasksServices.hardhatDebug == true) &&
-                        (task.contractValue != 0 || task.contractValueToken != 0))
+                        (task.contractValue != 0 ||
+                            task.contractValueToken != 0))
                       // WithdrawButton(object: task),
                       TaskDialogButton(
                         buttonName: 'Withdraw',
@@ -1003,7 +1007,8 @@ class _DialogPagesState extends State<DialogPages> {
                       ),
 
                     // *********************** CUSTOMER BUTTONS *********************** //
-                    if (role == 'customer' || tasksServices.hardhatDebug == true)
+                    if (role == 'customer' ||
+                        tasksServices.hardhatDebug == true)
                       TaskDialogButton(
                         buttonName: 'Topup',
                         buttonColorRequired: Colors.lightBlue.shade600,
@@ -1027,7 +1032,8 @@ class _DialogPagesState extends State<DialogPages> {
 
                                           showDialog(
                                               context: context,
-                                              builder: (context) => WalletAction(
+                                              builder: (context) =>
+                                                  WalletAction(
                                                     nanoId: task.nanoId,
                                                     taskName: 'addTokens',
                                                   ));
@@ -1041,8 +1047,8 @@ class _DialogPagesState extends State<DialogPages> {
                                           child: const Text('Close'),
                                           onPressed: () =>
                                               context.beamToNamed('/tasks')
-                                              // Navigator.pop(context),
-                                      ),
+                                          // Navigator.pop(context),
+                                          ),
                                     ],
                                   ));
                         },
@@ -1061,7 +1067,11 @@ class _DialogPagesState extends State<DialogPages> {
                           tasksServices.taskStateChange(task.taskAddress,
                               task.participant, 'completed', task.nanoId,
                               message: messageForStateController!.text);
+                          // context.beamToNamed('/customer');
                           Navigator.pop(context);
+                          RouteInformation routeInfo =
+                              new RouteInformation(location: '/customer');
+                          Beamer.of(context).updateRouteInformation(routeInfo);
                           showDialog(
                               context: context,
                               builder: (context) => WalletAction(
@@ -1209,7 +1219,6 @@ class _DialogPagesState extends State<DialogPages> {
                       elevation: 10,
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: GestureDetector(
-
                           onTap: () {
                             interface.controller.animateToPage(2,
                                 duration: const Duration(milliseconds: 300),
@@ -1223,16 +1232,18 @@ class _DialogPagesState extends State<DialogPages> {
                                   // width: MediaQuery.of(context).size.width * .57
                                   width: innerWidth,
                                   decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(widget.borderRadius),
+                                    borderRadius: BorderRadius.circular(
+                                        widget.borderRadius),
                                   ),
                                   child: Container(
                                       padding: const EdgeInsets.all(6),
                                       child: RichText(
                                           text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
                                               children: <TextSpan>[
                                             TextSpan(
                                               text: task.description,
@@ -1247,22 +1258,22 @@ class _DialogPagesState extends State<DialogPages> {
                                             .style
                                             .apply(fontSizeFactor: 1.0),
                                         children: <TextSpan>[
-                                          const TextSpan(
-                                              text: 'Created: ',
-                                              style: TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: DateFormat('MM/dd/yyyy, hh:mm a')
+                                      const TextSpan(
+                                          text: 'Created: ',
+                                          style: TextStyle(
+                                              height: 2,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text:
+                                              DateFormat('MM/dd/yyyy, hh:mm a')
                                                   .format(task.createTime),
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0))
-                                        ])),
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 1.0))
+                                    ])),
                               ),
                             ],
-                          )
-                      ))),
+                          )))),
 
               // const SizedBox(height: 14),
               Container(
@@ -1349,17 +1360,17 @@ class _DialogPagesState extends State<DialogPages> {
                       width: innerWidth,
                       // height: 540,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
                       ),
                       child: ChatPage(
-                        taskAddress: task.taskAddress,
-                        nanoId: task.nanoId,
-                        messages: task.messages,
-                        tasksServices: tasksServices))))
+                          taskAddress: task.taskAddress,
+                          nanoId: task.nanoId,
+                          messages: task.messages,
+                          tasksServices: tasksServices))))
         ],
       );
-    }
-    );
+    });
   }
 }
 

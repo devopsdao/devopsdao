@@ -118,6 +118,7 @@ class _WalletAction extends State<WalletAction> {
       } else if (tasksServices.transactionStatuses[widget.nanoId]
               ?[widget.taskName]?['status'] ==
           'minted') {
+        transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
     }

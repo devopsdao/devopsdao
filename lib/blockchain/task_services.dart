@@ -66,6 +66,10 @@ class JSrawRequestParams {
 //     .toList()
 //     .cast<String>();
 
+class GetTaskException implements Exception {
+  String getTaskExceptionMsg() => 'Oops! something went wrong';
+}
+
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
   Map<String, Task> tasks = {};
@@ -140,7 +144,7 @@ class TasksServices extends ChangeNotifier {
     if (hardhatDebug == true) {
       chainId = 31337;
       _rpcUrl = 'http://localhost:8545';
-      _wsUrl = 'wss://localhost:8545';
+      _wsUrl = 'ws://localhost:8545';
     } else {
       chainId = 1287;
       _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
@@ -624,7 +628,7 @@ class TasksServices extends ChangeNotifier {
   late DeployedContract _deployedContract;
   late ContractFunction _withdraw;
 
-  late Throttling thr;
+  late Debouncing thr;
   late String searchKeyword = '';
 
   Future<void> listenToEvents() async {
@@ -658,9 +662,9 @@ class TasksServices extends ChangeNotifier {
       validChainID = true;
     }
 
-    thr = Throttling(duration: const Duration(seconds: 20));
+    thr = Debouncing(duration: const Duration(seconds: 10));
     await connectContracts();
-    thr.throttle(() {
+    thr.debounce(() {
       fetchTasks();
     });
     await myBalance();
@@ -723,7 +727,7 @@ class TasksServices extends ChangeNotifier {
     final subscription =
         tasksFacet.oneEventForAllEvents().listen((event) async {
       print('received event ${event.contractAdr} index ${event.message}');
-      thr.throttle(() {
+      thr.debounce(() {
         fetchTasks();
       });
     });
@@ -747,6 +751,30 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
+  // EthereumAddress lastJobContract;
+  Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
+    // listen for the Transfer event when it's emitted by the contract
+    TaskContract taskContract = TaskContract(
+        address: taskAddress, client: _web3client, chainId: chainId);
+    final subscription = taskContract.taskUpdatedEvents().listen((event) async {
+      print(
+          'received event ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
+      try {
+        tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
+        await refreshTask(tasks[event.contractAdr.toString()]!);
+        print(
+            'refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
+        await myBalance();
+        notifyListeners();
+      } on GetTaskException {
+        print(
+            'could not get task ${event.contractAdr.toString()} from blockchain');
+      } catch (e) {
+        print(e);
+      }
+    });
+  }
+
   Future tellMeHasItMined(String hash, String taskAction, String nanoId,
       [String messageNanoId = '']) async {
     if (hash.length == 66) {
@@ -765,11 +793,11 @@ class TasksServices extends ChangeNotifier {
         transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
         notifyListeners();
         print('tell me has it mined');
-        thr.throttle(() {
-          fetchTasks();
-        });
+        // thr.debounce(() {
+        //   fetchTasks();
+        // });
       }
-      await myBalance();
+      // await myBalance();
     } else {
       isLoadingBackground = false;
     }
@@ -804,6 +832,179 @@ class TasksServices extends ChangeNotifier {
   late bool loopRunning = false;
   late bool stopLoopRunning = false;
 
+  Future<Task> getTask(taskAddress) async {
+    TaskContract taskContract = TaskContract(
+        address: taskAddress, client: _web3client, chainId: chainId);
+    var task = await taskContract.getTaskInfo();
+    if (task != null) {
+      final BigInt weiBalance = await taskContract.getBalance();
+      final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+      final BigInt weiBalanceToken = BigInt.from(0);
+      final double ethBalancePreciseToken =
+          weiBalanceToken.toDouble() / pow(10, 6);
+      final double ethBalanceToken =
+          (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+
+      var taskObject = Task(
+        // nanoId: task[0],
+        nanoId: task[1].toString(),
+        createTime: DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
+        taskType: task[2],
+        title: task[3],
+        description: task[4],
+        symbol: task[5],
+        taskState: task[6],
+        auditState: task[7],
+        rating: task[8].toInt(),
+        contractOwner: task[9],
+        participant: task[10],
+        auditInitiator: task[11],
+        auditor: task[12],
+        participants: task[13],
+        funders: task[14],
+        auditors: task[15],
+        messages: task[16],
+        taskAddress: taskAddress,
+        justLoaded: true,
+        contractValue: ethBalancePrecise,
+        contractValueToken: ethBalanceToken,
+      );
+      return taskObject;
+    }
+    throw (GetTaskException);
+  }
+
+  Future<void> refreshTask(Task task) async {
+    // Who participate in the TASK:
+    if (task.participant == publicAddress) {
+      // Calculate Pending among:
+      if ((task.contractValue != 0 || task.contractValueToken != 0)) {
+        if (task.taskState == "agreed" ||
+            task.taskState == "progress" ||
+            task.taskState == "review" ||
+            task.taskState == "completed") {
+          pendingBalance = pendingBalance! + task.contractValue;
+          pendingBalanceToken = pendingBalanceToken! + task.contractValueToken;
+        }
+      }
+      // add all scored Task for calculation:
+      if (task.rating != 0) {
+        score = score + task.rating;
+        scoredTaskCount++;
+      }
+    }
+
+    // if (tasksAuditPending[task.taskAddress.toString()] != null) {
+    tasksNew.remove(task.taskAddress.toString());
+    filterResults.remove(task.taskAddress.toString());
+    tasksAuditPending.remove(task.taskAddress.toString());
+    tasksAuditApplied.remove(task.taskAddress.toString());
+    tasksAuditWorkingOn.remove(task.taskAddress.toString());
+    tasksAuditComplete.remove(task.taskAddress.toString());
+
+    tasksCustomerSelection.remove(task.taskAddress.toString());
+    tasksCustomerProgress.remove(task.taskAddress.toString());
+    tasksCustomerComplete.remove(task.taskAddress.toString());
+
+    tasksPerformerParticipate.remove(task.taskAddress.toString());
+    tasksPerformerProgress.remove(task.taskAddress.toString());
+    tasksPerformerComplete.remove(task.taskAddress.toString());
+    // }
+
+    if (task.taskState != "" &&
+        (task.taskState == "agreed" ||
+            task.taskState == "progress" ||
+            task.taskState == "review" ||
+            task.taskState == "audit")) {
+      if (task.contractOwner == publicAddress) {
+        tasksCustomerProgress[task.taskAddress.toString()] = task;
+      } else if (task.participant == publicAddress) {
+        tasksPerformerProgress[task.taskAddress.toString()] = task;
+      }
+      if (hardhatDebug == true) {
+        tasksPerformerProgress[task.taskAddress.toString()] = task;
+      }
+    }
+
+    // New TASKs for all users:
+    if (task.taskState != "" && task.taskState == "new") {
+      if (hardhatDebug == true) {
+        tasksNew[task.taskAddress.toString()] = task;
+        filterResults[task.taskAddress.toString()] = task;
+      }
+      if (task.contractOwner == publicAddress) {
+        tasksCustomerSelection[task.taskAddress.toString()] = task;
+      } else if (task.participants.isNotEmpty) {
+        var taskExist = false;
+        for (var p = 0; p < task.participants.length; p++) {
+          if (task.participants[p] == publicAddress) {
+            taskExist = true;
+          }
+        }
+        if (taskExist) {
+          tasksPerformerParticipate[task.taskAddress.toString()] = task;
+        } else {
+          tasksNew[task.taskAddress.toString()] = task;
+          filterResults[task.taskAddress.toString()] = task;
+          // tasksNew.add(task);
+          // filterResults.add(task);
+        }
+      } else {
+        tasksNew[task.taskAddress.toString()] = task;
+        filterResults[task.taskAddress.toString()] = task;
+        // tasksNew.add(task);
+        // filterResults.add(task);
+      }
+    }
+
+    if (task.taskState != "" &&
+        (task.taskState == "completed" || task.taskState == "canceled")) {
+      if (task.contractOwner == publicAddress) {
+        tasksCustomerComplete[task.taskAddress.toString()] = task;
+      } else if (task.participant == publicAddress) {
+        tasksPerformerComplete[task.taskAddress.toString()] = task;
+      }
+      if (hardhatDebug == true) {
+        tasksPerformerComplete[task.taskAddress.toString()] = task;
+      }
+    }
+
+    // **** AUDIT ****
+    // For auditors:
+    if (task.taskState == "audit") {
+      // Auditor side:
+      if (task.auditState == "requested") {
+        if (task.auditors.isNotEmpty) {
+          var contrExist = false;
+          for (var p = 0; p < task.auditors.length; p++) {
+            if (task.auditors[p] == publicAddress) {
+              contrExist = true;
+            }
+          }
+          if (contrExist) {
+            tasksAuditApplied[task.taskAddress.toString()] = task;
+          } else {
+            tasksAuditPending[task.taskAddress.toString()] = task;
+          }
+        } else {
+          tasksAuditPending[task.taskAddress.toString()] = task;
+        }
+      }
+
+      if (task.auditor == publicAddress) {
+        if (task.auditState == "performing") {
+          tasksAuditWorkingOn[task.taskAddress.toString()] = task;
+        } else if (task.auditState == "complete" ||
+            task.auditState == "finished") {
+          tasksAuditComplete[task.taskAddress.toString()] = task;
+        }
+      }
+      if (hardhatDebug == true) {
+        tasksAuditApplied[task.taskAddress.toString()] = task;
+      }
+    }
+  }
+
   Future<void> fetchTasks() async {
     isLoadingBackground = true;
     notifyListeners();
@@ -824,60 +1025,11 @@ class TasksServices extends ChangeNotifier {
           fetchTasks();
           break;
         }
-        List task;
-        List value;
-        double ethBalancePrecise = 0;
-        double ethBalanceToken = 0;
-        TaskContract taskContract = TaskContract(
-            address: totalTaskList[i], client: _web3client, chainId: chainId);
-        task = await taskContract.getTaskInfo();
-        if (task != null) {
-          print(task);
-          final BigInt weiBalance = await taskContract.getBalance();
-          // final BigInt weiBalance = BigInt.from(0);
-          ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-          // final BigInt weiBalanceToken =
-          //     await web3GetBalanceToken(totalTaskList[i], task[6]);
-          final BigInt weiBalanceToken = BigInt.from(0);
-          final ethBalancePreciseToken =
-              weiBalanceToken.toDouble() / pow(10, 6);
-          ethBalanceToken =
-              (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-
-          var taskObject = Task(
-            // nanoId: task[0],
-            nanoId: task[1].toString(),
-            createTime:
-                DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
-            taskType: task[2],
-            title: task[3],
-            description: task[4],
-            symbol: task[5],
-            taskState: task[6],
-            auditState: task[7],
-            rating: task[8].toInt(),
-            contractOwner: task[9],
-            participant: task[10],
-            auditInitiator: task[11],
-            auditor: task[12],
-            participants: task[13],
-            funders: task[14],
-            auditors: task[15],
-            messages: task[16],
-            taskAddress: totalTaskList[i],
-            justLoaded: true,
-            contractValue: ethBalancePrecise,
-            contractValueToken: ethBalanceToken,
-          );
-
-          taskLoaded = i +
-              1; // this count we need to show the loading process. does not affect anything else
-
-          notifyListeners();
-          if (task[1] != "") {
-            tasks[taskObject.taskAddress.toString()] = taskObject;
-            // tasks.add(taskObject);
-          }
+        try {
+          tasks[totalTaskList[i].toString()] = await getTask(totalTaskList[i]);
+          await monitorTaskEvents(totalTaskList[i]);
+        } on GetTaskException {
+          print('could not get task ${totalTaskList[i]} from blockchain');
         }
       }
 
@@ -908,118 +1060,7 @@ class TasksServices extends ChangeNotifier {
         for (Task task in tasks.values) {
           // for (var k = 0; k < tasks.length; k++) {
           // final task = tasks[k];
-
-          // Who participate in the TASK:
-          if (task.participant == publicAddress) {
-            // Calculate Pending among:
-            if ((task.contractValue != 0 || task.contractValueToken != 0)) {
-              if (task.taskState == "agreed" ||
-                  task.taskState == "progress" ||
-                  task.taskState == "review" ||
-                  task.taskState == "completed") {
-                pendingBalance = pendingBalance! + task.contractValue;
-                pendingBalanceToken =
-                    pendingBalanceToken! + task.contractValueToken;
-              }
-            }
-            // add all scored Task for calculation:
-            if (task.rating != 0) {
-              score = score + task.rating;
-              scoredTaskCount++;
-            }
-          }
-          if (task.taskState != "" &&
-              (task.taskState == "agreed" ||
-                  task.taskState == "progress" ||
-                  task.taskState == "review" ||
-                  task.taskState == "audit")) {
-            if (task.contractOwner == publicAddress) {
-              tasksCustomerProgress[task.taskAddress.toString()] = task;
-            } else if (task.participant == publicAddress) {
-              tasksPerformerProgress[task.taskAddress.toString()] = task;
-            }
-            if (hardhatDebug == true) {
-              tasksPerformerProgress[task.taskAddress.toString()] = task;
-            }
-          }
-
-          // New TASKs for all users:
-          if (task.taskState != "" && task.taskState == "new") {
-            if (hardhatDebug == true) {
-              tasksNew[task.taskAddress.toString()] = task;
-              filterResults[task.taskAddress.toString()] = task;
-            }
-            if (task.contractOwner == publicAddress) {
-              tasksCustomerSelection[task.taskAddress.toString()] = task;
-            } else if (task.participants.isNotEmpty) {
-              var taskExist = false;
-              for (var p = 0; p < task.participants.length; p++) {
-                if (task.participants[p] == publicAddress) {
-                  taskExist = true;
-                }
-              }
-              if (taskExist) {
-                tasksPerformerParticipate[task.taskAddress.toString()] = task;
-              } else {
-                tasksNew[task.taskAddress.toString()] = task;
-                filterResults[task.taskAddress.toString()] = task;
-                // tasksNew.add(task);
-                // filterResults.add(task);
-              }
-            } else {
-              tasksNew[task.taskAddress.toString()] = task;
-              filterResults[task.taskAddress.toString()] = task;
-              // tasksNew.add(task);
-              // filterResults.add(task);
-            }
-          }
-
-          if (task.taskState != "" &&
-              (task.taskState == "completed" || task.taskState == "canceled")) {
-            if (task.contractOwner == publicAddress) {
-              tasksCustomerComplete[task.taskAddress.toString()] = task;
-            } else if (task.participant == publicAddress) {
-              tasksPerformerComplete[task.taskAddress.toString()] = task;
-            }
-            if (hardhatDebug == true) {
-              tasksPerformerComplete[task.taskAddress.toString()] = task;
-            }
-          }
-
-          // **** AUDIT ****
-          // For auditors:
-          if (task.taskState == "audit") {
-            // Auditor side:
-            if (task.auditState == "requested") {
-              if (task.auditors.isNotEmpty) {
-                var contrExist = false;
-                for (var p = 0; p < task.auditors.length; p++) {
-                  if (task.auditors[p] == publicAddress) {
-                    contrExist = true;
-                  }
-                }
-                if (contrExist) {
-                  tasksAuditApplied[task.taskAddress.toString()] = task;
-                } else {
-                  tasksAuditPending[task.taskAddress.toString()] = task;
-                }
-              } else {
-                tasksAuditPending[task.taskAddress.toString()] = task;
-              }
-            }
-
-            if (task.auditor == publicAddress) {
-              if (task.auditState == "performing") {
-                tasksAuditWorkingOn[task.taskAddress.toString()] = task;
-              } else if (task.auditState == "complete" ||
-                  task.auditState == "finished") {
-                tasksAuditComplete[task.taskAddress.toString()] = task;
-              }
-            }
-            if (hardhatDebug == true) {
-              tasksAuditApplied[task.taskAddress.toString()] = task;
-            }
-          }
+          await refreshTask(task);
         }
 
         // Final Score Calculation

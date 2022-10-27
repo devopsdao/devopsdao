@@ -349,13 +349,30 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                       //   // Toggle light when tapped.
                       // });
                       // if (obj[index].taskState != "new")
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (context) => TaskInformationDialog(role: 'performer', object: objList[index],));
-                      final taskAddress = tasksServices.filterResults.values
-                          .toList()[index]
-                          .taskAddress;
-                      context.beamToNamed('/performer/$taskAddress');
+                      if (tasksServices.filterResults.values
+                              .toList()
+                              .elementAt(index) !=
+                          null) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => TaskInformationDialog(
+                                  role: 'performer',
+                                  object: objList[index],
+                                ));
+                        final String taskAddress = tasksServices
+                            .filterResults.values
+                            .toList()[index]
+                            .taskAddress
+                            .toString();
+                        // const route = ;
+                        // RouteInformation routeInfo = const RouteInformation(
+                        //     location: '/performer/$taskAddress');
+                        // Beamer.of(context).updateRouteInformation(routeInfo);
+                        // final taskAddress = tasksServices.filterResults.values
+                        //     .toList()[index]
+                        //     .taskAddress;
+                        context.popToNamed('/performer/$taskAddress');
+                      }
                     },
                     child: TaskItem(
                       role: 'performer',
