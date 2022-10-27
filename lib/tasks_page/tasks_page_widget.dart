@@ -100,7 +100,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    List objList = tasksServices.filterResults.values.toList();
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(tasksServices.tasksNew);
@@ -108,6 +107,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
     }
+
+    List objList = tasksServices.filterResults.values.toList();
 
     // if (widget.index != null) {
     //   showDialog(
@@ -312,7 +313,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                 //         .taskAddress;
                                                 // context.popToNamed(
                                                 //     '/tasks/$taskAddress');
-                                                print(objList);
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) =>
