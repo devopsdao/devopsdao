@@ -124,7 +124,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                           width: 30,
                           child: InkWell(
                             onTap: () {
-                              interface.controller.animateToPage(0,
+                              interface.TasksController.animateToPage(0,
                                   duration: const Duration(milliseconds: 300),
                                   curve: Curves.ease);
                             },
@@ -554,7 +554,7 @@ class _DialogPagesState extends State<DialogPages> {
         // pageSnapping: false,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
-        controller: interface.controller,
+        controller: interface.TasksController,
         // onPageChanged: (number) {
         //   interface.pageWalletViewNumber = number;
         //   tasksServices.myNotifyListeners();
@@ -570,7 +570,7 @@ class _DialogPagesState extends State<DialogPages> {
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   child: GestureDetector(
                     onTap: () {
-                      interface.controller.animateToPage(1,
+                      interface.TasksController.animateToPage(1,
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.ease);
                     },
@@ -1231,7 +1231,7 @@ class _DialogPagesState extends State<DialogPages> {
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: GestureDetector(
                           onTap: () {
-                            interface.controller.animateToPage(2,
+                            interface.TasksController.animateToPage(2,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.ease);
                           },
