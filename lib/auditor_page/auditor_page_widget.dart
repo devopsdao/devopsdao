@@ -368,10 +368,10 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   setState(() {
                     // Toggle light when tapped.
                   });
-                  final taskAddress = tasksServices.filterResults.values
-                      .toList()[index]
-                      .taskAddress;
-                  context.beamToNamed('/auditor/$taskAddress');
+                  // final taskAddress = tasksServices.filterResults.values
+                  //     .toList()[index]
+                  //     .taskAddress;
+                  // context.beamToNamed('/auditor/$taskAddress');
                   // showDialog(
                   //     context: context,
                   //     builder: (context) {
@@ -381,6 +381,20 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   //       });
                   //     });
                   // => TaskInformationDialog(role: 'auditor', object: objList[index]),);
+
+                  showDialog(
+                      context: context,
+                      builder: (context) => TaskInformationDialog(
+                            role: 'auditor',
+                            object: objList[index],
+                          ));
+                  final String taskAddress = tasksServices.filterResults.values
+                      .toList()[index]
+                      .taskAddress
+                      .toString();
+                  RouteInformation routeInfo =
+                      RouteInformation(location: '/auditor/$taskAddress');
+                  Beamer.of(context).updateRouteInformation(routeInfo);
                 },
                 child: TaskItem(role: 'auditor', object: objList[index]),
               ),
