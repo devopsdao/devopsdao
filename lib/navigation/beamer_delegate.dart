@@ -100,13 +100,13 @@ void createBeamerDelegate() {
       //     beamToNamed: (_, __, deepLink) =>
       //         authenticator.isAuthenticated ? (deepLink ?? '/home') : '/splash',
       //   ),
-      //   BeamGuard(
-      //     pathPatterns: ['/splash', '/login'],
-      //     guardNonMatching: true,
-      //     check: (_, __) => authenticator.isAuthenticated,
-      //     beamToNamed: (context, state, data) =>
-      //         authenticator.isNotAuthenticated ? '/login' : '/splash',
-      //   ),
+      // BeamGuard(
+      //   pathPatterns: ['/tasks/:taskAddress', '/performer/:taskAddress'],
+      //   guardNonMatching: true,
+      //   check: (_, __) => authenticator.isAuthenticated,
+      //   beamToNamed: (context, state, data) =>
+      //       authenticator.isNotAuthenticated ? '/home' : '/splash',
+      // ),
     ],
   );
 }

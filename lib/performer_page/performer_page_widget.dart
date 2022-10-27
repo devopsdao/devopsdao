@@ -42,12 +42,14 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     super.initState();
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-            context: context,
-            builder: (context) => TaskDialog(
-                  taskAddress: widget.taskAddress!,
-                  role: 'performer',
-                ));
+        if (widget.taskAddress != null) {
+          showDialog(
+              context: context,
+              builder: (context) => TaskDialog(
+                    taskAddress: widget.taskAddress!,
+                    role: 'performer',
+                  ));
+        }
       });
     }
     // startPageLoadAnimations(
