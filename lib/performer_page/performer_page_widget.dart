@@ -42,12 +42,14 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     super.initState();
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-            context: context,
-            builder: (context) => TaskDialog(
-                  taskAddress: widget.taskAddress!,
-                  role: 'performer',
-                ));
+        if (widget.taskAddress != null) {
+          showDialog(
+              context: context,
+              builder: (context) => TaskDialog(
+                    taskAddress: widget.taskAddress!,
+                    role: 'performer',
+                  ));
+        }
       });
     }
     // startPageLoadAnimations(
@@ -364,14 +366,10 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                             .toList()[index]
                             .taskAddress
                             .toString();
-                        // const route = ;
-                        // RouteInformation routeInfo = const RouteInformation(
-                        //     location: '/performer/$taskAddress');
-                        // Beamer.of(context).updateRouteInformation(routeInfo);
-                        // final taskAddress = tasksServices.filterResults.values
-                        //     .toList()[index]
-                        //     .taskAddress;
-                        context.popToNamed('/performer/$taskAddress');
+                        RouteInformation routeInfo = RouteInformation(
+                            location: '/performer/$taskAddress');
+                        Beamer.of(context).updateRouteInformation(routeInfo);
+                        // context.popToNamed('/performer/$taskAddress');
                       }
                     },
                     child: TaskItem(

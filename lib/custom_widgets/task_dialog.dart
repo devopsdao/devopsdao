@@ -30,6 +30,8 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../custom_widgets/task_dialog.dart';
 
+import '../custom_widgets/data_loading_dialog.dart';
+
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
@@ -59,13 +61,18 @@ class _TaskDialog extends State<TaskDialog> {
     //     null) {
     //   task = tasksServices.tasksCustomerComplete[widget.taskAddress]!;
     // }
-    task = tasksServices.tasks[widget.taskAddress]!;
-    print('taskAddress: ${widget.taskAddress}');
-
-    return TaskInformationDialog(
-      role: widget.role,
-      object: task,
-    );
+    if (tasksServices.tasks[widget.taskAddress] != null) {
+      task = tasksServices.tasks[widget.taskAddress]!;
+      if (task != null) {
+        print('taskAddress: ${widget.taskAddress}');
+        print('role: ${widget.role}');
+        return TaskInformationDialog(
+          role: widget.role,
+          object: task,
+        );
+      }
+    }
+    return AppDataLoadingDialogWidget();
   }
 }
 
@@ -101,7 +108,6 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       return StatefulBuilder(
         builder: (context, setState) {
           return WillPopScope(
-
             onWillPop: () async => false,
             child: Dialog(
               insetPadding: const EdgeInsets.all(30),
@@ -159,9 +165,13 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                         InkWell(
                           onTap: () {
                             // print(widget.role);
-                            context.beamToNamed('/${widget.role}');
+                            // context.beamToNamed('/${widget.role}');
                             // context.beamBack();
-                            // Navigator.pop(context);
+                            Navigator.pop(context);
+                            RouteInformation routeInfo =
+                                RouteInformation(location: '/${widget.role}');
+                            Beamer.of(context)
+                                .updateRouteInformation(routeInfo);
                           },
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
@@ -187,7 +197,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     ),
                   ),
                   Container(
-                    height: constraints.maxHeight * .665 < 400 ? 320
+                    height: constraints.maxHeight * .665 < 400
+                        ? 320
                         : constraints.maxHeight * .665,
                     // width: constraints.maxWidth * .8,
                     // height: 550,

@@ -52,8 +52,7 @@ class TasksPageWidget extends StatefulWidget {
   _TasksPageWidgetState createState() => _TasksPageWidgetState();
 }
 
-class _TasksPageWidgetState extends State<TasksPageWidget>
-     {
+class _TasksPageWidgetState extends State<TasksPageWidget> {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
   // _changeField() {
@@ -86,10 +85,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             context: context,
-            builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, role: 'tasks'));
+            builder: (context) =>
+                TaskDialog(taskAddress: widget.taskAddress!, role: 'tasks'));
       });
     }
-
   }
 
   @override
@@ -101,6 +100,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    List objList = tasksServices.filterResults.values.toList();
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(tasksServices.tasksNew);
@@ -300,16 +300,39 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                               .fromSTEB(16, 8, 16, 0),
                                           child: InkWell(
                                               onTap: () {
+                                                // print('tap');
+
                                                 setState(() {
                                                   // Toggle light when tapped.
                                                 });
-                                                final taskAddress =
+                                                // final taskAddress =
+                                                //     tasksServices
+                                                //         .filterResults.values
+                                                //         .toList()[index]
+                                                //         .taskAddress;
+                                                // context.popToNamed(
+                                                //     '/tasks/$taskAddress');
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        TaskInformationDialog(
+                                                          role: '',
+                                                          object:
+                                                              objList[index],
+                                                        ));
+                                                final String taskAddress =
                                                     tasksServices
                                                         .filterResults.values
                                                         .toList()[index]
-                                                        .taskAddress;
-                                                context.beamToNamed(
-                                                    '/tasks/$taskAddress');
+                                                        .taskAddress
+                                                        .toString();
+                                                RouteInformation routeInfo =
+                                                    RouteInformation(
+                                                        location:
+                                                            '/tasks/$taskAddress');
+                                                Beamer.of(context)
+                                                    .updateRouteInformation(
+                                                        routeInfo);
                                                 // showDialog(
                                                 //     context: context,
                                                 //     builder: (context) =>

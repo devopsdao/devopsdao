@@ -95,6 +95,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       routerDelegate: beamerDelegate,
       routeInformationParser: BeamerParser(),
+      backButtonDispatcher:
+          BeamerBackButtonDispatcher(delegate: beamerDelegate),
       debugShowCheckedModeBanner: false,
       title: 'devopsdao',
       localizationsDelegates: const [

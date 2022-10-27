@@ -367,10 +367,15 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                                   role: 'customer',
                                   object: objList[index],
                                 ));
-                        final taskAddress = tasksServices.filterResults.values
+                        final String taskAddress = tasksServices
+                            .filterResults.values
                             .toList()[index]
-                            .taskAddress;
-                        context.popToNamed('/customer/$taskAddress');
+                            .taskAddress
+                            .toString();
+                        RouteInformation routeInfo = RouteInformation(
+                            location: '/customer/$taskAddress');
+                        Beamer.of(context).updateRouteInformation(routeInfo);
+                        // context.popToNamed('/customer/$taskAddress');
                         // context.beamToNamed('/customer/$taskAddress');
                       }
                     },
