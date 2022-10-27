@@ -91,7 +91,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       final task = tasksServices.tasks[widget.taskAddress];
 
       if (task != null) {
-        tabIndex = tabs[task!.taskState];
+        tabIndex = tabs[task.taskState];
       }
     }
 
@@ -362,10 +362,15 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       //           role: 'customer',
                       //           object: objList[index],
                       //         ));
-                      final taskAddress = tasksServices.filterResults.values
-                          .toList()[index]
-                          .taskAddress;
-                      context.beamToNamed('/customer/$taskAddress');
+                      if (tasksServices.filterResults.values
+                              .toList()
+                              .elementAt(index) !=
+                          null) {
+                        final taskAddress = tasksServices.filterResults.values
+                            .toList()[index]
+                            .taskAddress;
+                        context.beamToNamed('/customer/$taskAddress');
+                      }
                     },
                     child: TaskItem(
                       role: 'customer',
