@@ -30,6 +30,8 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../custom_widgets/task_dialog.dart';
 
+import '../custom_widgets/data_loading_dialog.dart';
+
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
@@ -59,16 +61,18 @@ class _TaskDialog extends State<TaskDialog> {
     //     null) {
     //   task = tasksServices.tasksCustomerComplete[widget.taskAddress]!;
     // }
-    task = tasksServices.tasks[widget.taskAddress]!;
-    if (task != null) {
-      print('taskAddress: ${widget.taskAddress}');
+    if (tasksServices.tasks[widget.taskAddress] != null) {
+      task = tasksServices.tasks[widget.taskAddress]!;
+      if (task != null) {
+        print('taskAddress: ${widget.taskAddress}');
 
-      return TaskInformationDialog(
-        role: widget.role,
-        object: task,
-      );
+        return TaskInformationDialog(
+          role: widget.role,
+          object: task,
+        );
+      }
     }
-    return;
+    return AppDataLoadingDialog();
   }
 }
 
