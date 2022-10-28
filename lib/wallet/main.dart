@@ -161,7 +161,14 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
-                          interface.pageWalletViewNumber = 0;
+                          if (tasksServices.walletConnectedMM ) {
+                            interface.pageWalletViewNumber = 1;
+                          } else if (tasksServices.walletConnectedWC) {
+                            interface.pageWalletViewNumber = 2;
+                          } else {
+                            interface.pageWalletViewNumber = 0;
+                          }
+                          //
                           Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
