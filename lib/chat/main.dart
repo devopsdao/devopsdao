@@ -19,6 +19,7 @@ import 'package:webthree/webthree.dart';
 
 import '../blockchain/task_services.dart';
 import '../blockchain/task.dart';
+import '../tasks_page/tasks_page_widget.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -55,9 +56,11 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    bool test = true;
     return Scaffold(
       body: Chat(
         messages: _messages,
+        // customBottomWidget: test ? const SearchButton2() : null,
         // onAttachmentPressed: _handleAttachmentPressed,
         // onMessageTap: _handleMessageTap,
         // onPreviewDataFetched: _handlePreviewDataFetched,
@@ -65,7 +68,13 @@ class _ChatPageState extends State<ChatPage> {
         showUserAvatars: false,
         showUserNames: true,
         user: types.User(id: tasksServices.publicAddress.toString()),
+        inputOptions: const InputOptions(
+          sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
+            // inputClearMode: InputClearMode
+
+        ),
         theme: const DefaultChatTheme(
+
           inputBackgroundColor: Colors.black87,
           inputBorderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -170,64 +179,64 @@ class _ChatPageState extends State<ChatPage> {
   //   }
   // }
 
-  void _handleMessageTap(BuildContext _, types.Message message) async {
-    if (message is types.FileMessage) {
-      var localPath = message.uri;
+  // void _handleMessageTap(BuildContext _, types.Message message) async {
+  //   if (message is types.FileMessage) {
+  //     var localPath = message.uri;
+  //
+  //     if (message.uri.startsWith('http')) {
+  //       try {
+  //         final index =
+  //             _messages.indexWhere((element) => element.id == message.id);
+  //         final updatedMessage =
+  //             (_messages[index] as types.FileMessage).copyWith(
+  //           isLoading: true,
+  //         );
+  //
+  //         setState(() {
+  //           _messages[index] = updatedMessage;
+  //         });
+  //
+  //         final client = http.Client();
+  //         final request = await client.get(Uri.parse(message.uri));
+  //         final bytes = request.bodyBytes;
+  //         final documentsDir = (await getApplicationDocumentsDirectory()).path;
+  //         localPath = '$documentsDir/${message.name}';
+  //
+  //         if (!File(localPath).existsSync()) {
+  //           final file = File(localPath);
+  //           await file.writeAsBytes(bytes);
+  //         }
+  //       } finally {
+  //         final index =
+  //             _messages.indexWhere((element) => element.id == message.id);
+  //         final updatedMessage =
+  //             (_messages[index] as types.FileMessage).copyWith(
+  //           isLoading: null,
+  //         );
+  //
+  //         setState(() {
+  //           _messages[index] = updatedMessage;
+  //         });
+  //       }
+  //     }
+  //
+  //     // await OpenFilex.open(localPath);
+  //   }
+  // }
 
-      if (message.uri.startsWith('http')) {
-        try {
-          final index =
-              _messages.indexWhere((element) => element.id == message.id);
-          final updatedMessage =
-              (_messages[index] as types.FileMessage).copyWith(
-            isLoading: true,
-          );
-
-          setState(() {
-            _messages[index] = updatedMessage;
-          });
-
-          final client = http.Client();
-          final request = await client.get(Uri.parse(message.uri));
-          final bytes = request.bodyBytes;
-          final documentsDir = (await getApplicationDocumentsDirectory()).path;
-          localPath = '$documentsDir/${message.name}';
-
-          if (!File(localPath).existsSync()) {
-            final file = File(localPath);
-            await file.writeAsBytes(bytes);
-          }
-        } finally {
-          final index =
-              _messages.indexWhere((element) => element.id == message.id);
-          final updatedMessage =
-              (_messages[index] as types.FileMessage).copyWith(
-            isLoading: null,
-          );
-
-          setState(() {
-            _messages[index] = updatedMessage;
-          });
-        }
-      }
-
-      // await OpenFilex.open(localPath);
-    }
-  }
-
-  void _handlePreviewDataFetched(
-    types.TextMessage message,
-    types.PreviewData previewData,
-  ) {
-    final index = _messages.indexWhere((element) => element.id == message.id);
-    final updatedMessage = (_messages[index] as types.TextMessage).copyWith(
-      previewData: previewData,
-    );
-
-    setState(() {
-      _messages[index] = updatedMessage;
-    });
-  }
+  // void _handlePreviewDataFetched(
+  //   types.TextMessage message,
+  //   types.PreviewData previewData,
+  // ) {
+  //   final index = _messages.indexWhere((element) => element.id == message.id);
+  //   final updatedMessage = (_messages[index] as types.TextMessage).copyWith(
+  //     previewData: previewData,
+  //   );
+  //
+  //   setState(() {
+  //     _messages[index] = updatedMessage;
+  //   });
+  // }
 
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
@@ -321,5 +330,30 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _messages = messages;
     });
+  }
+}
+
+class SearchButton2 extends StatefulWidget {
+  const SearchButton2({Key? key}) : super(key: key);
+
+  @override
+  _SearchButtonState createState() => _SearchButtonState();
+}
+
+class _SearchButtonState extends State<SearchButton2> {
+  TextEditingController textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
+    setState(() {
+    });
+
+    return Container(
+      // height: 100.0, // Change as per your requirement
+      // width: 270.0, // Change as per your requirement
+      child: Text('Please connect your wallet')
+    );
   }
 }
