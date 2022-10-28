@@ -12,10 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../custom_widgets/wallet_action.dart';
-import 'Factory.g.dart';
-import 'IERC20.g.dart';
+// import 'Factory.g.dart';
+// import 'abi/IERC20.g.dart';
 import 'task.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:webthree/webthree.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 
@@ -25,10 +25,19 @@ import '../wallet/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-
-
 class InterfaceServices extends ChangeNotifier {
-
   // Payments goes here (create_job_widget.dart -> payment.dart):
-  late double tokensEntered;
+  late double tokensEntered = 0.0;
+
+  // PageView Controller for wallet/main.dart
+  late PageController controller = PageController(initialPage: 0);
+  // PageView Controller for task_dialog.dart
+  late PageController TasksController = PageController(initialPage: 0);
+
+  late int pageWalletViewNumber = 0;
+  late String whichWalletButtonPressed = '';
+
+  // ****** SETTINGS ******** //
+// border radius:
+  final double borderRadius = 8.0;
 }

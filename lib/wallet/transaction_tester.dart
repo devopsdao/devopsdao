@@ -1,6 +1,6 @@
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import './ethereum_transaction_tester.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:webthree/webthree.dart';
 
 abstract class TransactionTester {
   // TransactionTester({required this.connector});

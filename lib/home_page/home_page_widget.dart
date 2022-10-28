@@ -131,7 +131,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
     bool _isFloatButtonVisible = false;
 
-    if (tasksServices.ownAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       _isFloatButtonVisible = true;
     }
 
@@ -272,12 +272,18 @@ class _HomePageWidgetState extends State<HomePageWidget>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            // colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
+          ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/background_shape_tiles_small.png"),
+            // fit: BoxFit.cover,
+            repeat: ImageRepeat.repeat,
           ),
         ),
         child: Column(
@@ -334,7 +340,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           ),
                           Text(
                             '${tasksServices.ethBalance} DEV',
-                            style: FlutterFlowTheme.of(context).title1.override(
+                            style: FlutterFlowTheme.of(context).title2.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBtnText,
@@ -342,7 +348,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           ),
                           Text(
                             '${tasksServices.ethBalanceToken} aUSDC',
-                            style: FlutterFlowTheme.of(context).title1.override(
+                            style: FlutterFlowTheme.of(context).title2.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBtnText,
@@ -376,7 +382,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           ),
                           Text(
                             '${tasksServices.pendingBalance} DEV',
-                            style: FlutterFlowTheme.of(context).title1.override(
+                            style: FlutterFlowTheme.of(context).title2.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBtnText,
@@ -384,7 +390,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           ),
                           Text(
                             '${tasksServices.pendingBalanceToken} aUSDC',
-                            style: FlutterFlowTheme.of(context).title1.override(
+                            style: FlutterFlowTheme.of(context).title2.override(
                                   fontFamily: 'Poppins',
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBtnText,
@@ -421,13 +427,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   FlutterFlowTheme.of(context).primaryBtnText,
                             ),
                       ),
-                      if (tasksServices.ownAddress != null)
+                      if (tasksServices.publicAddress != null)
                         SelectableText(
-                          '${tasksServices.ownAddress}',
+                          '${tasksServices.publicAddress}',
                           style: FlutterFlowTheme.of(context)
                               .bodyText2
                               .override(
                                 fontFamily: 'Poppins',
+                                fontSize: 11,
                                 color:
                                     FlutterFlowTheme.of(context).primaryBtnText,
                               ),
@@ -443,6 +450,69 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     FlutterFlowTheme.of(context).primaryBtnText,
                               ),
                         ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.92,
+                decoration: BoxDecoration(
+                  color: Colors.teal,
+                  borderRadius: BorderRadius.circular(8),
+                  shape: BoxShape.rectangle,
+                ),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your score:',
+                        style: FlutterFlowTheme.of(context).bodyText2.override(
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
+                      ),
+                      if (tasksServices.publicAddress == null)
+                        Text(
+                          'Not Connected',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyText2
+                              .override(
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                        )
+                      else if (tasksServices.scoredTaskCount == 0)
+                        Text(
+                          'No completed evaluated tasks',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyText2
+                              .override(
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                        )
+                      else
+                        SelectableText(
+                          '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyText2
+                              .override(
+                                fontFamily: 'Poppins',
+                                fontSize: 11,
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                        )
                     ],
                   ),
                 ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
+import '../blockchain/interface.dart';
 import 'algorand_transaction_tester.dart';
 import 'ethereum_transaction_tester.dart';
 import 'transaction_tester.dart';
@@ -28,89 +30,6 @@ enum TransactionState {
   failed,
 }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Mobile dApp',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: const MyWalletPage(title: 'WalletConnect'),
-//     );
-//   }
-// }
-
-// class ConnectButton {
-//
-// }
-// class ConnectButton extends StatefulWidget {
-//   const ConnectButton({Key? key, required this.title}) : super(key: key);
-//
-//   final String title;
-//
-//   @override
-//   State<ConnectButton> createState() => _ConnectButton();
-// }
-//
-// class _ConnectButton extends State<ConnectButton> {
-//   TransactionState _state = TransactionState.disconnected;
-//   @override
-//   Widget build(BuildContext context) {
-//     // var tasksServices = context.watch<TasksServices>();
-//     // if (tasksServices.walletConnectState == null) {
-//     //   tasksServices.walletConnectState = _state;
-//     // } else {
-//     //   setState(() => _state = tasksServices.walletConnectState);
-//     // }
-//     return TextButton(
-//         child: Text('Connect'),
-//         style: TextButton.styleFrom(
-//             primary: Colors.white, backgroundColor: Colors.green),
-//         onPressed: () {
-//           // _transactionStateToAction(context, state: _state);
-//           setState(() {});
-//           Navigator.pop(context);
-//         });
-//
-//   }
-//
-// }
-
-// class DisconnectButton extends StatefulWidget {
-//   const DisconnectButton({Key? key, required this.title}) : super(key: key);
-//
-//   final String title;
-//
-//   @override
-//   State<DisconnectButton> createState() => _DisconnectButton();
-// }
-//
-// class _DisconnectButton extends State<DisconnectButton> {
-//   TransactionState _state = TransactionState.disconnected;
-//   @override
-//   Widget build(BuildContext context) {
-//     var tasksServices = context.watch<TasksServices>();
-//     // if (tasksServices.walletConnectState == null) {
-//     //   tasksServices.walletConnectState = _state;
-//     // } else {
-//     //   setState(() => _state = tasksServices.walletConnectState);
-//     // }
-//     return TextButton(
-//         child: Text('Disconnect'),
-//         style: TextButton.styleFrom(
-//             primary: Colors.white, backgroundColor: Colors.red),
-//         onPressed: () async {
-//           await tasksServices.transactionTester?.disconnect();
-//           // _transactionStateToAction(context, state: _state);
-//           setState(() {});
-//           // Navigator.pop(context);
-//         });
-//   }
-// }
-
 class MyWalletPage extends StatefulWidget {
   const MyWalletPage({Key? key, required this.title}) : super(key: key);
 
@@ -127,10 +46,12 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
-  TransactionState _state = TransactionState.disconnected;
-  TransactionState _state2 = TransactionState.disconnected;
+  // TransactionState _state = TransactionState.disconnected;
+  // TransactionState _state2 = TransactionState.disconnected;
   // TransactionTester? _transactionTester = EthereumTransactionTester();
   late TransactionTester? _transactionTester;
+
+  bool disableBackButton = true;
 
   @override
   void dispose() {
@@ -140,226 +61,162 @@ class _MyWalletPageState extends State<MyWalletPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
+
+
+    if (tasksServices.walletConnectedWC || tasksServices.walletConnectedMM) {
+      if(tasksServices.walletConnectedMM ) {
+        // interface.pageWalletViewNumber = 1;
+        interface.controller = PageController(initialPage: 1);
+      } else if (tasksServices.walletConnectedWC) {
+        // interface.pageWalletViewNumber = 2;
+        interface.controller = PageController(initialPage: 2);
+      }
+    } else {
+      // interface.pageWalletViewNumber = 0;
+      interface.controller = PageController(initialPage: 0);
+    }
+
+    final double borderRadius = interface.borderRadius;
+
+    if(interface.pageWalletViewNumber == 0 ) {
+      disableBackButton = true;
+    } else {
+      if (tasksServices.walletConnectedMM || tasksServices.walletConnectedWC) {
+        disableBackButton = true;
+      } else {
+        disableBackButton = false;
+      }
+    }
+    print(disableBackButton);
 
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
     // }
-    if (tasksServices.walletConnectConnected) {
+    if (tasksServices.walletConnectedWC) {
       tasksServices.walletConnectUri = '';
     }
 
-    // setState(() => _state2 = tasksServices.walletConnectState);
-    // if (tasksServices.walletConnectState == null) {
-    //   tasksServices.walletConnectState = _state;
-    // } else {
-    //   setState(() => _state = tasksServices.walletConnectState);
-    // }
+    // int page = interface.pageWalletViewNumber;
 
-    return AlertDialog(
-      title: Text('Connect your wallet'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            // RichText(text: TextSpan(
-            //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-            //     children: <TextSpan>[
-            //       TextSpan(
-            //           text: 'Description: \n',
-            //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-            //       TextSpan(text: widget.obj[index].description)
-            //     ]
-            // )),
-            Container(
-              height: 400,
-              width: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  (_displayUri.isEmpty)
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          // child: Text(
-                          //   'Click to connect ${_network == NetworkType.ethereum ? 'to Ethereum' : 'to Algorand'}',
-                          //   style: Theme.of(context).textTheme.headline6,
-                          //   textAlign: TextAlign.center,
-                          // ),
-                        )
-                      : QrImage(
-                          data: _displayUri,
-                          size: 300,
-                          gapless: false,
+    return LayoutBuilder(builder: (context, constraints) {
+      return StatefulBuilder(builder: (context, setState) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(30),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  width: 400,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 30,
+                        child: !disableBackButton ? InkWell(
+                                onTap: () {
+                                  interface.controller.animateToPage(0,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.ease);
+                                },
+                                borderRadius: BorderRadius.circular(16),
+                                child: Container(
+                                  padding: const EdgeInsets.all(0.0),
+                                  height: 30,
+                                  width: 30,
+                                  child: Row(
+                                    children: const <Widget>[
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.arrow_back,
+                                          size: 30,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : null,
+                      ),
+                      const Spacer(),
+                      RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Connect Wallet',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                  // ElevatedButton(
-                  //   onPressed: _transactionStateToAction(context, state2: _state2),
-                  //   // onPressed: (() {}),
-                  //   child: Text(
-                  //     _transactionStateToString(state: _state),
-                  //   ),
-                  // ),
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     await tasksServices.transactionTester?.disconnect();
-                  //     //await tasksServices.connectWallet();
-                  //     // tasksServices.walletConnectState = TransactionState.disconnected;
-                  //     // setState(() => _state = TransactionState.disconnected);
-                  //   },
-                  //   child: Text(
-                  //     'Disconnect',
-                  //   ),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: 16,
-                    ),
-                    child: Text(
-                      tasksServices.walletConnectConnected
-                          ? 'Wallet connected'
-                          : 'Wallet disconnected',
-                      style: Theme.of(context).textTheme.headline6,
-                      textAlign: TextAlign.center,
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          if (tasksServices.walletConnectedMM ) {
+                            interface.pageWalletViewNumber = 1;
+                          } else if (tasksServices.walletConnectedWC) {
+                            interface.pageWalletViewNumber = 2;
+                          } else {
+                            interface.pageWalletViewNumber = 0;
+                          }
+                          //
+                          Navigator.pop(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          height: 30,
+                          width: 30,
+                          // decoration: BoxDecoration(
+                          //   borderRadius: BorderRadius.circular(6),
+                          // ),
+                          child: Row(
+                            children: const <Widget>[
+                              Expanded(
+                                child: Icon(
+                                  Icons.close,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: constraints.maxHeight * .7 > 580
+                      ? 580
+                      : constraints.maxHeight * .7,
+                  // width: constraints.maxWidth * .8,
+                  // height: 550,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    image: const DecorationImage(
+                      image: AssetImage("assets/images/logo_half.png"),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  if (!tasksServices.validChainID &&
-                      tasksServices.walletConnectConnected)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        bottom: 16,
-                      ),
-                      child: Text(
-                        'Wrong network, please connect to Moonbase Alpha',
-                        style: TextStyle(color: Colors.redAccent, fontSize: 20),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                ],
-              ),
-            ),
-
-            // RichText(text: TextSpan(
-            //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-            //     children: <TextSpan>[
-            //
-            //       TextSpan(
-            //           text: 'Wallet link: \n',
-            //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-            //       // TextSpan(
-            //       //     text: widget.displayUri,
-            //       //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.5)
-            //       // )
-            //     ]
-            // )),
-          ],
-        ),
-      ),
-      actions: [
-        if (tasksServices.walletConnectConnected)
-          TextButton(
-              child: Text('Disconnect'),
-              style: TextButton.styleFrom(
-                  primary: Colors.white, backgroundColor: Colors.red),
-              onPressed: () async {
-                await tasksServices.transactionTester?.disconnect();
-                tasksServices.walletConnectConnected = false;
-                // _transactionStateToAction(context, state: _state);
-                setState(() {});
-                // Navigator.pop(context);
-              }),
-        if (!tasksServices.walletConnectConnected)
-          TextButton(
-            child: Text('Connect'),
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-              backgroundColor: Colors.green,
-              disabledBackgroundColor: Colors.white10,
-            ),
-            onPressed: tasksServices.initComplete
-                ? _transactionStateToAction(context, state2: _state2)
-                : null,
-            // _transactionStateToAction(context, state: _state);
-            // setState(() {});
-            // Navigator.pop(context)
-          ),
-        TextButton(
-            child: Text('Close'), onPressed: () => Navigator.pop(context)),
-      ],
-    );
-
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text(widget.title),
-    //   ),
-    //   body: Column(
-    //     children: [
-    //       Row(
-    //         children: [
-    //           Expanded(
-    //             child: Padding(
-    //               padding: const EdgeInsets.only(left: 8),
-    //               child: Text('Select network: ',
-    //                   style: Theme.of(context).textTheme.headline6),
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.only(right: 8),
-    //             child: DropdownButton(
-    //                 value: _networks[_network!.index],
-    //                 items: _networks
-    //                     .map(
-    //                       (value) => DropdownMenuItem(
-    //                           value: value, child: Text(value)),
-    //                     )
-    //                     .toList(),
-    //                 onChanged: _changeNetworks),
-    //           ),
-    //         ],
-    //       ),
-    //       Expanded(
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           children: [
-    //             (_displayUri.isEmpty)
-    //                 ? Padding(
-    //                     padding: const EdgeInsets.only(
-    //                       left: 16,
-    //                       right: 16,
-    //                       bottom: 16,
-    //                     ),
-    //                     child: Text(
-    //                       'Click on the button below to transfer ${_network == NetworkType.ethereum ? '0.0001 Eth from Ethereum' : '0.0001 Algo from the Algorand'} account connected through WalletConnect to the same account.',
-    //                       style: Theme.of(context).textTheme.headline6,
-    //                       textAlign: TextAlign.center,
-    //                     ),
-    //                   )
-    //                 : QrImage(data: _displayUri),
-    //             ElevatedButton(
-    //               onPressed: _transactionStateToAction(context, state: _state),
-    //               child: Text(
-    //                 _transactionStateToString(state: _state),
-    //               ),
-    //             ),
-    //             ElevatedButton(
-    //               onPressed: () async {
-    //                 await _transactionTester?.disconnect();
-    //               },
-    //               child: Text(
-    //                 'Close',
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
+                  child: WalletPages(
+                    borderRadius: borderRadius,
+                  ),
+                ),
+                // Container(height: 10),
+              ]),
+        );
+      });
+    });
   }
 
   void _changeNetworks(String? network) {
@@ -380,148 +237,629 @@ class _MyWalletPageState extends State<MyWalletPage> {
       () => _network = newNetwork,
     );
   }
+}
 
-  String _transactionStateToString({required TransactionState state}) {
-    switch (state) {
-      case TransactionState.disconnected:
-        return 'Connect!';
-      case TransactionState.connecting:
-        return 'Connecting';
-      case TransactionState.connected:
-        return 'Session connected..';
-      case TransactionState.connectionFailed:
-        return 'Connection failed';
-      case TransactionState.transferring:
-        return 'Transaction in progress...';
-      case TransactionState.success:
-        return 'Transaction successful';
-      case TransactionState.failed:
-        return 'Transaction failed';
-    }
-  }
+class WalletPages extends StatefulWidget {
+  // final String buttonName;
+  final double borderRadius;
 
-  String _transactionStateToString2({required TransactionState state}) {
-    switch (state) {
-      case TransactionState.disconnected:
-        return 'Disconnected';
-      case TransactionState.connecting:
-        return 'Connecting';
-      case TransactionState.connected:
-        return 'Connected';
-      case TransactionState.connectionFailed:
-        return 'Connection failed';
-      case TransactionState.transferring:
-        return 'Transaction in progress...';
-      case TransactionState.success:
-        return 'Transaction successful';
-      case TransactionState.failed:
-        return 'Transaction failed';
-    }
-  }
+  const WalletPages(
+      {Key? key,
+      // required this.buttonName,
+      required this.borderRadius})
+      : super(key: key);
 
-  // Future<void> connectWallet(BuildContext context) async {
-  //   var tasksServices = context.watch<TasksServices>();
-  //   session = await _transactionTester?.connect(
-  //     onDisplayUri: (uri) => setState(() => _displayUri = uri),
-  //   );
-  //   if (session == null) {
-  //     print('Unable to connect');
-  //     // setState(() => _state = TransactionState.failed);
-  //     tasksServices.walletConnectState = TransactionState.failed;
-  //   } else {
-  //     tasksServices.walletConnectState = TransactionState.connected;
-  //   }
-  // }
+  @override
+  _WalletPagesState createState() => _WalletPagesState();
+}
 
-  // Future<void> connectWallet3(tasksServices) async {
-  //   if (tasksServices.transactionTester == null) {
-  //     tasksServices.transactionTester = EthereumTransactionTester();
-  //   }
-  //   _transactionTester = tasksServices.transactionTester;
+class _WalletPagesState extends State<WalletPages> {
+  String _displayUri = '';
+  int defaultTab = 0;
 
-  //   var connector = await _transactionTester?.initWalletConnect();
 
-  //   //if (tasksServices.walletConnectState == null ||
-  //   // tasksServices.walletConnectState == TransactionState.disconnected) {
-  //   if (tasksServices.walletConnectConnected == false) {
-  //     print("disconnected");
-  //     tasksServices.walletConnectUri = '';
-  //     setState(() => _displayUri = '');
-  //     setState(() => _state = TransactionState.connecting);
-  //     // await _transactionTester?.disconnect();
-  //     // connector = await _transactionTester?.initWalletConnect();
-  //   }
-  //   tasksServices.walletConnectState = TransactionState.connecting;
-  //   // Subscribe to events
-  //   connector.on('connect', (session) {
-  //     print(session);
-  //     tasksServices.walletConnectState = TransactionState.connected;
-  //     setState(() => _state2 = tasksServices.walletConnectState);
-  //     tasksServices.walletConnectConnected = true;
-  //   });
-  //   connector.on('session_request', (payload) {
-  //     print(payload);
-  //     // tasksServices.walletConnectState = TransactionState.session_request;
-  //   });
-  //   connector.on('session_update', (payload) {
-  //     print(payload);
-  //     // tasksServices.walletConnectState = TransactionState.session_update;
-  //   });
-  //   connector.on('display_uri', (uri) {
-  //     print(uri);
-  //     // tasksServices.walletConnectState = TransactionState.session_update;
-  //   });
-  //   connector.on('disconnect', (session) {
-  //     print(session);
-  //     tasksServices.walletConnectState = TransactionState.disconnected;
-  //     setState(() => _state2 = tasksServices.walletConnectState);
-  //     tasksServices.walletConnectConnected = false;
-  //     tasksServices.walletConnectUri = '';
-  //     setState(() => _displayUri = '');
-  //   });
-  //   final SessionStatus? session = await _transactionTester?.connect(
-  //     onDisplayUri: (uri) => tasksServices.walletConnectUri = uri,
-  //   );
-  //   setState(() => _displayUri = tasksServices.walletConnectUri);
 
-  //   if (session == null) {
-  //     print('Unable to connect');
-  //     tasksServices.walletConnectState = TransactionState.failed;
-  //   } else if (tasksServices.walletConnectState == TransactionState.connected) {
-  //     tasksServices.credentials = await _transactionTester?.getCredentials();
-  //     tasksServices.publicAddress =
-  //         await _transactionTester?.getPublicAddress(session);
-  //   } else {
-  //     tasksServices.walletConnectState = TransactionState.failed;
-  //   }
-  //   setState(() => _state2 = tasksServices.walletConnectState);
-  // }
-
-  VoidCallback? _transactionStateToAction(BuildContext context,
-      {required TransactionState state2}) {
+  @override
+  Widget build(BuildContext context) {
+    var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.walletConnectState != null) {
-      setState(() => _state2 = tasksServices.walletConnectState);
-    }
-    switch (state2) {
-      // Progress, action disabled
-      case TransactionState.connecting:
-      case TransactionState.transferring:
-      case TransactionState.connected:
-        return null;
 
-      // Initiate the connection
-      case TransactionState.disconnected:
-      case TransactionState.connectionFailed:
-        return () async {
-          // connectWallet3(tasksServices);
-          tasksServices.connectWallet();
-        };
 
-      // Finished
-      case TransactionState.success:
-      case TransactionState.failed:
-        return null;
+    print(interface.pageWalletViewNumber);
+    // interface.pageWalletViewNumber = 0;
+
+    _displayUri = tasksServices.walletConnectUri;
+    // if (tasksServices.walletConnectUri != '') {
+    //   _displayUri = tasksServices.walletConnectUri;
+    // }
+    if (tasksServices.walletConnectedWC) {
+      tasksServices.walletConnectUri = '';
     }
+
+    if (tasksServices.platform == 'linux') {
+      defaultTab = 1;
+    } else if (tasksServices.platform == 'web') {
+      defaultTab = 1;
+    } else if (tasksServices.platform == 'mobile') {
+      defaultTab = 0;
+    }
+
+
+    return LayoutBuilder(builder: (ctx, dialogConstraints) {
+      double innerWidth = dialogConstraints.maxWidth - 50;
+      return PageView(
+        scrollDirection: Axis.horizontal,
+        // pageSnapping: false,
+        // physics: BouncingScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
+        controller: interface.controller,
+        onPageChanged: (number) {
+          interface.pageWalletViewNumber = number;
+          tasksServices.myNotifyListeners();
+        },
+        children: <Widget>[
+          Column(
+            children: [
+              const SizedBox(height: 50),
+              Center(
+                child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    // height: MediaQuery.of(context).size.width * .08,
+                    // width: MediaQuery.of(context).size.width * .57
+                    width: innerWidth,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                    ),
+                    child: Row(
+                      children: const <Widget>[
+                        Expanded(
+                          child: Text(
+                            'By connecting a wallet, you agree to Terms of Service and Privacy Policy.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              ChooseWalletButton(
+                active: tasksServices.platform == 'web' ? true : false,
+                buttonName: 'metamask',
+                borderRadius: widget.borderRadius,
+                buttonWidth: innerWidth,
+              ),
+              const SizedBox(height: 12),
+              ChooseWalletButton(
+                active: true,
+                buttonName: 'wallet_connect',
+                borderRadius: widget.borderRadius,
+                buttonWidth: innerWidth,
+              ),
+              const Spacer(),
+            ],
+          ),
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            if (interface.whichWalletButtonPressed == 'metamask')
+              Column(children: [
+                Container(
+                  height: 130,
+                  width: 130,
+                  padding: const EdgeInsets.all(18.0),
+                  child: SvgPicture.asset(
+                    'assets/images/metamask-icon2.svg',
+                  ),
+                ),
+                const SizedBox(height: 60),
+                if (tasksServices.walletConnectedMM)
+                  Center(
+                    child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        // height: MediaQuery.of(context).size.width * .08,
+                        // width: MediaQuery.of(context).size.width * .57
+                        width: 300,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(widget.borderRadius),
+                        ),
+                        child: Row(
+                          children: const <Widget>[
+                            Expanded(
+                              child: Text(
+                                'You are now connected to Metamask, to completely disconnect please use Metamask menu --> connected sites.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                const WalletConnectButton(
+                  buttonName: 'metamask',
+                ),
+              ]),
+          ]),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    height: 480,
+                    // width: MediaQuery.of(context).size.width * .57
+                    width: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: DefaultTabController(
+                            length: 2,
+                            initialIndex: defaultTab,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 30,
+                                  child: TabBar(
+                                    labelColor: Colors.black,
+                                    // indicatorColor: Colors.black26,
+                                    // indicatorWeight: 10,
+                                    // indicatorSize: TabBarIndicatorSize.label,
+                                    // labelPadding: const EdgeInsets.only(left: 16, right: 16),
+                                    indicator: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            4), // Creates border
+                                        color: Colors.black26),
+                                    // isScrollable: true,
+                                    tabs: [
+                                      Container(
+                                        color: Colors.transparent,
+                                        width: 120,
+                                        child: Tab(
+                                            child: Text(
+                                                tasksServices.platform == 'mobile'
+                                                    ? 'Mobile'
+                                                    : 'Desktop')),
+                                      ),
+                                      const SizedBox(
+                                        width: 120,
+                                        child: Tab(child: Text('QR Code')),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TabBarView(
+                                    children: [
+                                      if (tasksServices.platform == 'mobile')
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            RichText(
+                                                text: TextSpan(
+                                                    style: DefaultTextStyle.of(
+                                                            context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 1.0),
+                                                    children: const <TextSpan>[
+                                                  TextSpan(
+                                                      text:
+                                                          'Connect to Mobile Wallet',
+                                                      style: TextStyle(
+                                                          height: 3,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 17,
+                                                          color: Colors.black54)),
+                                                ])),
+                                            WalletConnectButton(
+                                              buttonName: 'wallet_connect',
+                                            ),
+                                            const SizedBox(height: 12),
+                                          ],
+                                        ),
+                                      if (tasksServices.platform == 'linux' ||
+                                          tasksServices.platform == 'web')
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            RichText(
+                                                text: TextSpan(
+                                                    style: DefaultTextStyle.of(
+                                                            context)
+                                                        .style
+                                                        .apply(
+                                                            fontSizeFactor: 1.0),
+                                                    children: const <TextSpan>[
+                                                  TextSpan(
+                                                      text:
+                                                          'Connect to Desktop Wallet',
+                                                      style: TextStyle(
+                                                          height: 3,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 17,
+                                                          color: Colors.black54)),
+                                                ])),
+                                            WalletConnectButton(
+                                              buttonName: 'wallet_connect',
+                                            ),
+                                            const SizedBox(height: 12),
+                                          ],
+                                        ),
+                                      Column(
+                                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          RichText(
+                                              text: TextSpan(
+                                                  style: DefaultTextStyle.of(
+                                                          context)
+                                                      .style
+                                                      .apply(fontSizeFactor: 1.0),
+                                                  children: const <TextSpan>[
+                                                TextSpan(
+                                                    text: 'Scan QR code',
+                                                    style: TextStyle(
+                                                        height: 3,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 17,
+                                                        color: Colors.black54)),
+                                              ])),
+                                          SizedBox(
+                                            height: 320,
+                                            width: 300,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                (_displayUri.isEmpty)
+                                                    ? const Padding(
+                                                        padding: EdgeInsets.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                          bottom: 10,
+                                                        ),
+                                                      )
+                                                    : QrImage(
+                                                        data: _displayUri,
+                                                        size: 280,
+                                                        gapless: false,
+                                                      ),
+                                                Text(
+                                                  tasksServices.walletConnectedWC
+                                                      ? 'Wallet connected'
+                                                      : 'Wallet disconnected',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                if (!tasksServices
+                                                        .validChainIDWC &&
+                                                    tasksServices
+                                                        .walletConnectedWC)
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                      left: 16,
+                                                      right: 16,
+                                                      bottom: 16,
+                                                    ),
+                                                    child: Text(
+                                                      'Wrong network, please connect to Moonbase Alpha',
+                                                      style: TextStyle(
+                                                          color: Colors.redAccent,
+                                                          fontSize: 20),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  )
+                                              ],
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          WalletConnectButton(
+                                            buttonName: 'wallet_connect',
+                                          ),
+                                          const Spacer(),
+                                          const SizedBox(height: 12),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+      }
+    );
+  }
+}
+
+class ChooseWalletButton extends StatefulWidget {
+  final double buttonWidth;
+  final bool active;
+  final String buttonName;
+  final double borderRadius;
+  const ChooseWalletButton(
+      {Key? key,
+      required this.active,
+      required this.buttonName,
+      required this.borderRadius,
+      required this.buttonWidth})
+      : super(key: key);
+
+  @override
+  _ChooseWalletButtonState createState() => _ChooseWalletButtonState();
+}
+
+class _ChooseWalletButtonState extends State<ChooseWalletButton> {
+  // TransactionState _state2 = TransactionState.disconnected;
+
+  late String assetName;
+  late Color buttonColor = Colors.black26;
+  late int page = 0;
+  late Widget customIcon;
+  late Color textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    var interface = context.watch<InterfaceServices>();
+    var tasksServices = context.watch<TasksServices>();
+    late String name;
+    if (widget.buttonName == 'metamask') {
+      name = 'Metamask';
+      assetName = 'assets/images/metamask-icon2.svg';
+      buttonColor = Colors.teal.shade900;
+      page = 1;
+    } else if (widget.buttonName == 'wallet_connect') {
+      name = 'Wallet Connect';
+      assetName = 'assets/images/wc_logo.svg';
+      buttonColor = Colors.purple.shade900;
+      page = 2;
+    }
+    if (widget.active) {
+      textColor = Colors.black87;
+      customIcon = SvgPicture.asset(
+        assetName,
+      );
+    } else {
+      textColor = Colors.black26;
+      buttonColor = Colors.black54;
+      customIcon = SvgPicture.asset(
+        assetName,
+        color: Colors.black54,
+      );
+    }
+
+    return Material(
+      elevation: 9,
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      child: InkWell(
+        onTap: () {
+          if (widget.active) {
+            interface.whichWalletButtonPressed = widget.buttonName;
+            // tasksServices.myNotifyListeners();
+            // controller.jumpToPage(page);
+            interface.controller.animateToPage(page,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeIn);
+            if (widget.buttonName == 'metamask') {
+              tasksServices.initComplete
+                  ? tasksServices.connectWalletMM()
+                  : null;
+            } else if (widget.buttonName == 'wallet_connect') {
+              tasksServices.initComplete
+                  ? tasksServices.connectWalletWC()
+                  : null;
+            }
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(0.0),
+          height: 50.0, //MediaQuery.of(context).size.width * .08,
+          width: widget.buttonWidth,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+          ),
+          child: Row(
+            children: <Widget>[
+              LayoutBuilder(builder: (context, constraints) {
+                // print(constraints);
+                return Container(
+                    height: constraints.maxHeight,
+                    width: constraints.maxHeight,
+                    decoration: BoxDecoration(
+                      color: buttonColor,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                      ),
+                    ),
+                    child: Container(
+                        padding: const EdgeInsets.all(9.0), child: customIcon));
+              }),
+              Expanded(
+                child: Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class WalletConnectButton extends StatefulWidget {
+  final String buttonName;
+  // final double borderRadius;
+  const WalletConnectButton({
+    Key? key,
+    required this.buttonName,
+    // required this.borderRadius
+  }) : super(key: key);
+
+  @override
+  _WalletConnectButtonState createState() => _WalletConnectButtonState();
+}
+
+class _WalletConnectButtonState extends State<WalletConnectButton> {
+  TransactionState _state2 = TransactionState.disconnected;
+
+  // late String assetName;
+  // late Color buttonColor = Colors.black26;
+  // late int page = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    var interface = context.watch<InterfaceServices>();
+    var tasksServices = context.watch<TasksServices>();
+    late String buttonText;
+
+    if (tasksServices.walletConnectedWC &&
+        tasksServices.validChainIDWC &&
+        widget.buttonName == 'wallet_connect') {
+      buttonText = 'Disconnect';
+    } else if (tasksServices.walletConnectedWC &&
+        !tasksServices.validChainIDWC &&
+        widget.buttonName == 'wallet_connect') {
+      buttonText = 'Switch network';
+    } else if (!tasksServices.walletConnectedWC &&
+        widget.buttonName == 'wallet_connect') {
+      buttonText = 'Refresh QR';
+    } else if (tasksServices.walletConnectedMM &&
+        tasksServices.validChainIDMM &&
+        widget.buttonName == 'metamask') {
+      buttonText = 'Disconnect';
+    } else if (tasksServices.walletConnectedMM &&
+        !tasksServices.validChainIDMM &&
+        widget.buttonName == 'metamask') {
+      buttonText = 'Switch network';
+    } else if (!tasksServices.walletConnectedMM &&
+        widget.buttonName == 'metamask') {
+      buttonText = 'Connect';
+    }
+
+    return Material(
+      elevation: 9,
+      borderRadius: BorderRadius.circular(6),
+      color: Colors.blueAccent,
+      child: InkWell(
+        onTap: () async {
+          // controller.jumpToPage(page);
+          // interface.controller.animateToPage(page,
+          //     duration: const Duration(milliseconds: 300),
+          //     curve: Curves.easeIn);
+          if (widget.buttonName == 'metamask') {
+            if (!tasksServices.walletConnectedMM) {
+              tasksServices.initComplete
+                  ? await tasksServices.connectWalletMM()
+                  : null;
+            } else if (tasksServices.walletConnectedMM &&
+                !tasksServices.validChainIDMM) {
+              tasksServices.initComplete
+                  ? await tasksServices.switchNetworkMM()
+                  : null;
+            } else if (tasksServices.walletConnectedMM &&
+                tasksServices.validChainIDMM) {
+              tasksServices.initComplete
+                  ? await tasksServices.disconnectMM()
+                  : null;
+              buttonText = 'Connect';
+            }
+          } else if (widget.buttonName == 'wallet_connect') {
+            if (!tasksServices.walletConnectedWC) {
+              tasksServices.initComplete
+                  ? await tasksServices.connectWalletWC()
+                  : null;
+            } else if (tasksServices.walletConnectedWC &&
+                !tasksServices.validChainIDWC) {
+              tasksServices.initComplete
+                  ? await tasksServices.switchNetworkWC()
+                  // ? null
+                  : null;
+            } else if (tasksServices.walletConnectedWC &&
+                tasksServices.validChainIDWC) {
+              tasksServices.initComplete
+                  ? {await tasksServices.disconnectWC()}
+                  : null;
+              // buttonName = 'Refresh QR';
+            }
+            // if(buttonText == 'Disconnect') {
+            //   tasksServices.myNotifyListeners();
+            // }
+            // if (tasksServices.walletConnected) {
+            //   await tasksServices.transactionTester?.disconnect();
+            // } else {
+            //   tasksServices.initComplete
+            //       ? tasksServices.connectWalletWC()
+            //       : null;
+            // }
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(0.0),
+          height: 38.0,
+          width: 160,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  buttonText,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

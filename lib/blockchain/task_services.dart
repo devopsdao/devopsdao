@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+// import 'dart:js';
 import 'dart:math';
-// import 'package:js/js.dart';
+import 'package:js/js.dart'
+    if (dart.library.io) 'package:webthree/src/browser/js_stub.dart'
+    if (dart.library.js) 'package:js/js.dart';
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
@@ -12,12 +15,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../custom_widgets/wallet_action.dart';
-import 'Factory.g.dart';
-import 'IERC20.g.dart';
+// import 'Factory.g.dart';
+// import 'TasksFacet.g.dart';
+import 'abi/TasksFacet.g.dart';
+import 'abi/TaskContract.g.dart';
+import 'abi/IERC20.g.dart';
 import 'task.dart';
-import 'package:web3dart/web3dart.dart';
+import "package:universal_html/html.dart" hide Platform;
+import 'package:webthree/browser.dart'
+    if (dart.library.io) 'package:webthree/src/browser/dart_wrappers_stub.dart'
+    if (dart.library.js) 'package:webthree/browser.dart';
+import 'package:webthree/webthree.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+// if (dart.library.html) 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+// import 'dart:io' if (dart.library.html) 'dart:html';
 
 import '../wallet/ethereum_transaction_tester.dart';
 import '../wallet/main.dart';
@@ -25,39 +38,84 @@ import '../wallet/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-class TasksServices extends ChangeNotifier {
-  List<Task> tasks = [];
-  List<Task> filterResults = [];
-  List<Task> tasksNew = [];
-  List<Task> tasksOwner = [];
-  List<Task> tasksWithMyParticipation = [];
-  List<Task> tasksPerformer = [];
-  List<Task> tasksAgreedSubmitter = [];
+// import 'dart:html' hide Platform;
 
-  List<Task> tasksProgressSubmitter = [];
-  List<Task> tasksReviewSubmitter = [];
-  List<Task> tasksDoneSubmitter = [];
-  List<Task> tasksDonePerformer = [];
+@JS()
+@anonymous
+class JSrawRequestParams {
+  external String get chainId;
+
+  // Must have an unnamed factory constructor with named arguments.
+  external factory JSrawRequestParams({String chainId});
+}
+
+// Object jsToDart(jsObject) {
+//   if (jsObject is JsArray || jsObject is Iterable) {
+//     return jsObject.map(jsToDart).toList();
+//   }
+//   if (jsObject is JsObject) {
+//     return Map.fromIterable(
+//       getObjectKeys(jsObject),
+//       value: (key) => jsToDart(jsObject[key]),
+//     );
+//   }
+//   return jsObject;
+// }
+
+// List<String> getObjectKeys(JsObject object) => context['Object']
+//     .callMethod('getOwnPropertyNames', [object])
+//     .toList()
+//     .cast<String>();
+
+class GetTaskException implements Exception {
+  String getTaskExceptionMsg() => 'Oops! something went wrong';
+}
+
+class TasksServices extends ChangeNotifier {
+  bool hardhatDebug = false;
+  Map<String, Task> tasks = {};
+  Map<String, Task> filterResults = {};
+  Map<String, Task> tasksNew = {};
+  Map<String, Task> tasksAuditPending = {};
+  Map<String, Task> tasksAuditApplied = {};
+  Map<String, Task> tasksAuditWorkingOn = {};
+  Map<String, Task> tasksAuditComplete = {};
+
+  Map<String, Task> tasksPerformerParticipate = {};
+  Map<String, Task> tasksPerformerProgress = {};
+  Map<String, Task> tasksPerformerComplete = {};
+
+  Map<String, Task> tasksCustomerSelection = {};
+  Map<String, Task> tasksCustomerProgress = {};
+  Map<String, Task> tasksCustomerComplete = {};
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
   var credentials;
   EthereumAddress? publicAddress;
+  EthereumAddress? publicAddressWC;
+  EthereumAddress? publicAddressMM;
   var transactionTester;
 
   var walletConnectState;
-  bool walletConnectConnected = false;
+  bool walletConnected = false;
+  bool walletConnectedWC = false;
+  bool walletConnectedMM = false;
   String walletConnectUri = '';
   String walletConnectSessionUri = '';
+  var walletConnectSession;
   // bool walletConnectActionApproved = false;
+  var eth;
   String lastTxn = '';
 
   String platform = 'mobile';
-  final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
-  final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
+  //final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
+  //final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
-  final int _chainId = 1287;
-  final int _chainIdRopsten = 3;
+  late String _rpcUrl;
+  late String _wsUrl;
+
+  int chainId = 0;
   bool isLoading = true;
   bool isLoadingBackground = false;
   final bool _walletconnect = true;
@@ -84,11 +142,15 @@ class TasksServices extends ChangeNotifier {
 
   bool initComplete = false;
   Future<void> init() async {
-    await getTransferFee(
-        sourceChainName: 'moonbeam',
-        destinationChainName: 'ethereum',
-        assetDenom: 'uausdc',
-        amountInDenom: 100000);
+    if (hardhatDebug == true) {
+      chainId = 31337;
+      _rpcUrl = 'http://localhost:8545';
+      _wsUrl = 'ws://localhost:8545';
+    } else {
+      chainId = 1287;
+      _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
+      _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
+    }
     isDeviceConnected = false;
 
     if (platform != 'web') {
@@ -97,6 +159,11 @@ class TasksServices extends ChangeNotifier {
           .listen((ConnectivityResult result) async {
         if (result != ConnectivityResult.none) {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          await getTransferFee(
+              sourceChainName: 'moonbeam',
+              destinationChainName: 'ethereum',
+              assetDenom: 'uausdc',
+              amountInDenom: 100000);
         }
       });
     }
@@ -110,11 +177,19 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl,
       http.Client(),
       socketConnector: () {
-        return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrl);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        }
       },
     );
-    await getABI();
-    await getDeployedContract();
+    await startup();
+    // await getABI();
+    // await getDeployedContract();
+
+    if (platform == 'web') {}
 
     initComplete = true;
   }
@@ -124,50 +199,64 @@ class TasksServices extends ChangeNotifier {
   late num totalTaskLen = 0;
   int taskLoaded = 0;
   late EthereumAddress _contractAddress;
-  late EthereumAddress _contractAddressRopsten;
+  EthereumAddress zeroAddress =
+      EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
   Future<void> getABI() async {
-    String abiFile =
-        await rootBundle.loadString('build/contracts/Factory.json');
-    var jsonABI = jsonDecode(abiFile);
-    _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI['abi']), 'Factory');
-    _contractAddress = EthereumAddress.fromHex(
-        jsonABI["networks"][_chainId.toString()]["address"]);
-    _contractAddressRopsten = EthereumAddress.fromHex(
-        jsonABI["networks"][_chainIdRopsten.toString()]["address"]);
+    // String abiFile =
+    //     await rootBundle.loadString('lib/blockchain/abi/TasksFacet.json');
+
+    // var jsonABI = jsonDecode(abiFile);
+    // _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI), 'TasksFacet');
+
+    String addressesFile =
+        await rootBundle.loadString('lib/blockchain/abi/addresses.json');
+    var addresses = jsonDecode(addressesFile);
+    _contractAddress = EthereumAddress.fromHex(addresses["Diamond"]);
   }
 
-  int chainID = 0;
   bool validChainID = false;
-  Future<void> connectWallet() async {
+  bool validChainIDWC = false;
+  bool validChainIDMM = false;
+
+  Future<void> connectWalletWC() async {
+    print('async');
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
 
-      if (walletConnectConnected == false) {
+      if (walletConnected == false) {
         print("disconnected");
         walletConnectUri = '';
         walletConnectSessionUri = '';
       }
       // Subscribe to events
       connector.on('connect', (session) {
-        print(session);
+        walletConnectSession = session;
         walletConnectState = TransactionState.connected;
-        walletConnectConnected = true;
+        walletConnected = true;
+        walletConnectedWC = true;
         () async {
-          credentials = await transactionTester?.getCredentials();
-          publicAddress = await transactionTester?.getPublicAddress(session);
-          _creds = credentials;
-          ownAddress = publicAddress;
+          if (hardhatDebug == false) {
+            credentials = await transactionTester?.getCredentials();
+            chainId = session.chainId;
+            if (chainId == 1287) {
+              validChainID = true;
+              validChainIDWC = true;
+            } else {
+              validChainID = false;
+              validChainIDWC = false;
+              await switchNetworkWC();
+            }
+            publicAddressWC =
+                await transactionTester?.getPublicAddress(session);
+            publicAddress = publicAddressWC;
+          } else {
+            chainId = 31337;
+            validChainID = true;
+          }
           fetchTasks();
 
           myBalance();
           isLoading = true;
-
-          chainID = session.chainId;
-          if (chainID == 1287) {
-            validChainID = true;
-          } else {
-            validChainID = false;
-          }
         }();
         notifyListeners();
       });
@@ -184,15 +273,19 @@ class TasksServices extends ChangeNotifier {
       connector.on('disconnect', (session) {
         print(session);
         walletConnectState = TransactionState.disconnected;
-        walletConnectConnected = false;
-        walletConnectUri = '';
-        walletConnectSessionUri = '';
-
-        ownAddress = null;
+        walletConnected = false;
+        walletConnectedWC = false;
+        publicAddress = null;
+        publicAddressWC = null;
+        validChainID = false;
+        validChainIDWC = false;
         ethBalance = 0;
         ethBalanceToken = 0;
         pendingBalance = 0;
         pendingBalanceToken = 0;
+        walletConnectUri = '';
+        walletConnectSessionUri = '';
+        connectWalletWC();
         notifyListeners();
       });
       final SessionStatus? session = await transactionTester?.connect(
@@ -206,16 +299,248 @@ class TasksServices extends ChangeNotifier {
       if (session == null) {
         print('Unable to connect');
         walletConnectState = TransactionState.failed;
-      } else if (walletConnectConnected == true) {
-        credentials = await transactionTester?.getCredentials();
-        publicAddress = await transactionTester?.getPublicAddress(session);
+      } else if (walletConnected == true) {
+        if (hardhatDebug == false) {
+          credentials = await transactionTester?.getCredentials();
+        }
+        publicAddressWC = await transactionTester?.getPublicAddress(session);
+        publicAddress = publicAddressWC;
       } else {
         walletConnectState = TransactionState.failed;
       }
     } else {
       print("not initialized");
+      print(walletConnectState);
     }
   }
+
+  Future<void> connectWalletMM() async {
+    if (platform == 'web' && window.ethereum != null) {
+      final eth = window.ethereum;
+
+      if (eth == null) {
+        print('MetaMask is not available');
+        return;
+      }
+      var ethRPC = eth.asRpcService();
+
+      final client = Web3Client.custom(ethRPC);
+      bool userRejected = false;
+      try {
+        credentials = await eth.requestAccount();
+      } catch (e) {
+        userRejected = true;
+        print(e);
+      }
+      if (!userRejected && credentials != null) {
+        publicAddressMM = credentials.address;
+        publicAddress = publicAddressMM;
+        walletConnected = true;
+        walletConnectedMM = true;
+        late final chainIdHex;
+        try {
+          chainIdHex = await eth.rawRequest('eth_chainId');
+        } catch (e) {
+          print(e);
+        }
+        if (chainIdHex != null) {
+          chainId = int.parse(chainIdHex);
+        }
+        if (chainId == 1287) {
+          validChainID = true;
+          validChainIDMM = true;
+        } else {
+          validChainID = false;
+          validChainIDMM = false;
+          print('invalid chainId $chainId');
+          await switchNetworkMM();
+        }
+        if (walletConnected && walletConnectedMM && validChainID) {
+          fetchTasks();
+
+          myBalance();
+          notifyListeners();
+        }
+      }
+
+      // walletConnected = true;
+
+// Subscribe to events
+      // var connectStream = eth.connect;
+      // connectStream.listen((event) {
+      //   print(event);
+      // });
+      // var disconnectStream = eth.disconnect;
+      // disconnectStream.listen((event) {
+      //   print(event);
+      // });
+      // var connect = eth.stream('connect').listen((event) {
+      //   print(event);
+      // });
+      // var disconnect = eth.stream('disconnect').listen((event) {
+      //   print(event);
+      // });
+      // eth.on('connect', (session) {
+      //   print(session);
+      //   walletConnected = true;
+      //   () async {
+      //     if (hardhatDebug == false) {
+      //       credentials = await eth.requestAccount();
+      //       publicAddress = credentials.address;
+      //       final chainIdHex = await eth.rawRequest('eth_chainId');
+      //       int chainId = int.parse(chainIdHex);
+      //       if (chainId == 1287) {
+      //         validChainID = true;
+      //       } else {
+      //         validChainID = false;
+      //       }
+      //     } else {
+      //       chainId = 31337;
+      //       validChainID = true;
+      //     }
+      //     fetchTasks();
+      //     myBalance();
+      //     isLoading = true;
+      //   }();
+      //   notifyListeners();
+      // });
+
+      // eth.on('disconnect', (session) {
+      //   print(session);
+      //   walletConnected = false;
+      //   publicAddress = null;
+      //   ethBalance = 0;
+      //   ethBalanceToken = 0;
+      //   pendingBalance = 0;
+      //   pendingBalanceToken = 0;
+      //   notifyListeners();
+      // });
+    } else {
+      print("eth not initialized");
+    }
+  }
+
+  Future<void> switchNetworkMM() async {
+    final eth = window.ethereum;
+    if (eth == null) {
+      print('MetaMask is not available');
+      return;
+    }
+    late final chainIdHex;
+    bool chainChangeRequest = false;
+    bool userRejected = false;
+    try {
+      await eth.rawRequest('wallet_switchEthereumChain',
+          params: [JSrawRequestParams(chainId: '0x507')]);
+      chainChangeRequest = true;
+    } catch (e) {
+      userRejected = true;
+    }
+    if (!userRejected && chainChangeRequest) {
+      try {
+        // chainIdHex = await eth.rawRequest('eth_chainId');
+        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+      } catch (e) {
+        print(e);
+      }
+      if (chainIdHex != null) {
+        chainId = int.parse(chainIdHex);
+      }
+      if (chainId == 1287) {
+        validChainID = true;
+        validChainIDMM = true;
+        publicAddress = publicAddressMM;
+        fetchTasks();
+        myBalance();
+      } else {
+        validChainID = false;
+        validChainIDMM = false;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> switchNetworkWC() async {
+    // final eth = window.ethereum;
+    // if (eth == null) {
+    //   print('MetaMask is not available');
+    //   return;
+    // }
+    late final chainIdHex;
+    bool chainChangeRequest = false;
+    var chainIdWC;
+    try {
+      final params = <String, dynamic>{
+        'chainId': 0x507,
+      };
+      var result = await transactionTester?.switchNetwork(0x507);
+      // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
+      chainChangeRequest = true;
+    } catch (e) {
+      chainChangeRequest = false;
+      print(e);
+    }
+    if (chainChangeRequest == true) {
+      try {
+        // chainId = walletConnectSession.chainId;
+        // chainId = await transactionTester?.getChainId();
+        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+      } catch (e) {
+        print(e);
+      }
+      if (chainIdHex != null) {
+        chainId = int.parse(chainIdHex);
+      }
+      if (chainId == 1287) {
+        validChainID = true;
+        validChainIDWC = true;
+        publicAddress = publicAddressWC;
+        fetchTasks();
+        myBalance();
+      } else {
+        validChainID = false;
+        validChainIDWC = false;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> disconnectMM() async {
+    walletConnected = false;
+    walletConnectedMM = false;
+    publicAddress = null;
+    publicAddressMM = null;
+    validChainID = false;
+    validChainIDMM = false;
+    ethBalance = 0;
+    ethBalanceToken = 0;
+    pendingBalance = 0;
+    pendingBalanceToken = 0;
+    notifyListeners();
+  }
+
+  Future<void> disconnectWC() async {
+    await transactionTester?.disconnect();
+    walletConnected = false;
+    walletConnectedWC = false;
+    publicAddress = null;
+    publicAddressWC = null;
+    validChainID = false;
+    validChainIDWC = false;
+    ethBalance = 0;
+    ethBalanceToken = 0;
+    pendingBalance = 0;
+    pendingBalanceToken = 0;
+    walletConnectUri = '';
+    walletConnectSessionUri = '';
+    connectWalletWC();
+    notifyListeners();
+  }
+
+  // Future<void> disconnectWalletMM() {
+  //   final eth = window.ethereum;
+  //   // eth?.cancel();
+  // }
 
   Future<List<dynamic>> web3Call({
     EthereumAddress? sender,
@@ -288,24 +613,23 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  late dynamic _creds;
-  EthereumAddress? ownAddress;
+  // late dynamic credentials;
+  late dynamic accounts;
   double? ethBalance = 0;
   double? ethBalanceToken = 0;
   double? pendingBalance = 0;
   double? pendingBalanceToken = 0;
+  int score = 0;
+  int scoredTaskCount = 0;
+  double myScore = 0.0;
+
+  late TasksFacet tasksFacet;
+  // late TaskContract taskContract;
 
   late DeployedContract _deployedContract;
-  late ContractFunction _createTask;
-  late ContractFunction _deleteTask;
-  late ContractFunction _tasks;
-  late ContractFunction _taskCount;
-  late ContractFunction _changeTaskStatus;
-  late ContractFunction _taskParticipation;
   late ContractFunction _withdraw;
-  late ContractFunction _withdrawToChain;
-  late ContractFunction _getBalance;
-  late Throttling thr;
+
+  late Debouncing thr;
   late String searchKeyword = '';
 
   Future<void> listenToEvents() async {
@@ -321,43 +645,76 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
-  Future<void> getDeployedContract() async {
-    _deployedContract = DeployedContract(_abiCode, _contractAddress);
-    _createTask = _deployedContract.function('createJobContract');
-    // _deleteTask = _deployedContract.function('deleteTask');
-    _tasks = _deployedContract.function('getJobInfo');
-    _taskCount = _deployedContract.function('countNew');
-    _changeTaskStatus = _deployedContract.function('jobStateChange');
-    _taskParticipation = _deployedContract.function('jobParticipate');
-    _withdraw = _deployedContract.function('transferToaddress');
-    _getBalance = _deployedContract.function('getBalance');
-    _withdrawToChain = _deployedContract.function('transferToaddressChain2');
+  late Map fees;
+  Future<void> startup() async {
+    String addressesFile =
+        await rootBundle.loadString('lib/blockchain/abi/addresses.json');
+    var addresses = jsonDecode(addressesFile);
+    _contractAddress = EthereumAddress.fromHex(
+        addresses['contracts'][chainId.toString()]["Diamond"]);
 
-    //aUSDC contract
-    EthereumAddress tokenContractAddress =
-        EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+    if (hardhatDebug == true) {
+      String accountsFile =
+          await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
+      accounts = jsonDecode(accountsFile);
+      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+      walletConnected = true;
+      validChainID = true;
+    }
 
-    ierc20 = IERC20(
-        address: tokenContractAddress, client: _web3client, chainId: _chainId);
-
-    thr = Throttling(duration: const Duration(seconds: 20));
-    thr.throttle(() {
+    thr = Debouncing(duration: const Duration(seconds: 10));
+    await connectContracts();
+    thr.debounce(() {
       fetchTasks();
     });
     await myBalance();
     await monitorEvents();
-    await listenToEvents();
+
+    // fees = await _web3client.getGasInEIP1559();
+    // print(fees);
+    // print("maxFeePerGas: ${fees['medium'].maxFeePerGas}");
+    // print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
+    // print("maxPriorityFeePerGas: ${fees['medium'].maxPriorityFeePerGas}");
+    // print("maxGas: ${fees['medium'].estimatedGas}");
+
+    // BigInt estimatedGas = await _web3client.estimateGas(
+    //     sender: publicAddress,
+    //     to: EthereumAddress.fromHex(
+    //         '0x3089c7c8f5aa2be20531634df9c12b72eaa79b0a'),
+    //     amountOfGas: fees['medium'].estimatedGas,
+    //     maxFeePerGas: fees['medium'].maxFeePerGas,
+    //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+    // print("maxGas: ${estimatedGas}");
+
+    // print("maxGas: ${fees['medium'].estimatedGas * 10}");
+    // print("maxGas: ${fees['medium'].estimatedGas * 1000000}");
+  }
+
+  Future<void> connectContracts() async {
+    EthereumAddress tokenContractAddress =
+        EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+
+    ierc20 = IERC20(
+        address: tokenContractAddress, client: _web3client, chainId: chainId);
+    tasksFacet = TasksFacet(
+        address: _contractAddress, client: _web3client, chainId: chainId);
   }
 
   Future<void> myBalance() async {
-    if (ownAddress != null) {
-      final EtherAmount balance = await web3GetBalance(ownAddress!);
+    if (publicAddress != null) {
+      final EtherAmount balance = await web3GetBalance(publicAddress!);
+      // final BigInt weiBalance = BigInt.from(0);
       final BigInt weiBalance = balance.getInWei;
       final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
-      final BigInt weiBalanceToken =
-          await web3GetBalanceToken(ownAddress!, 'aUSDC');
+      late BigInt weiBalanceToken = BigInt.from(0);
+      if (hardhatDebug == false) {
+        BigInt weiBalanceToken =
+            await web3GetBalanceToken(publicAddress!, 'aUSDC');
+      }
+
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken =
           (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
@@ -367,37 +724,78 @@ class TasksServices extends ChangeNotifier {
 
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
-    final factory = Factory(
-        address: _contractAddress, client: _web3client, chainId: _chainId);
-    // listen for the Transfer event when it's emitted by the contract above
-    final subscription = factory.oneEventForAllEvents().listen((event) async {
-      print('received event ${event.contractAdr} index ${event.index}');
-      thr.throttle(() {
-        fetchTasks();
-      });
-    });
-    final subscription2 =
-        factory.jobContractCreatedEvents().listen((event) async {
+    // listen for the Transfer event when it's emitted by the contract
+    // final subscription =
+    //     tasksFacet.oneEventForAllEvents().listen((event) async {
+    //   print('received event ${event.contractAdr} index ${event.message}');
+    //   thr.debounce(() {
+    //     fetchTasks();
+    //   });
+    // });
+    // final subscription2 =
+    //     tasksFacet.jobContractCreatedEvents().listen((event) async {
+    //   print(
+    //       'received event ${event.title} jobAddress ${event.taskAddress} description ${event.description}');
+    //   if (event.taskOwner == publicAddress) {
+    //     transactionStatuses[event.nanoId]!['task'] = {
+    //       'jobAddress': event.taskAddress.toString()
+    //     };
+    //   }
+    // });
+
+    final subscription = tasksFacet.taskCreatedEvents().listen((event) async {
       print(
-          'received event ${event.title} jobAddress ${event.jobAddress} description ${event.description}');
-      if (event.jobOwner == ownAddress) {
-        transactionStatuses[event.nanoId]!['task'] = {
-          'jobAddress': event.jobAddress.toString()
-        };
+          'received event ${event.contractAdr} index ${event.message} index ${event.timestamp}');
+      try {
+        tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
+        await refreshTask(tasks[event.contractAdr.toString()]!);
+        print(
+            'refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
+        await myBalance();
+        notifyListeners();
+      } on GetTaskException {
+        print(
+            'could not get task ${event.contractAdr.toString()} from blockchain');
+      } catch (e) {
+        print(e);
       }
     });
 
     final subscription3 = ierc20.approvalEvents().listen((event) async {
       print(
           'received event approvalEvents ${event.owner} spender ${event.spender} value ${event.value}');
-      if (event.owner == ownAddress) {
+      if (event.owner == publicAddress) {
         print(event.owner);
       }
     });
   }
 
-  Future tellMeHasItMined(
-      String hash, String _taskAction, String _nanoId) async {
+  // EthereumAddress lastJobContract;
+  Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
+    // listen for the Transfer event when it's emitted by the contract
+    TaskContract taskContract = TaskContract(
+        address: taskAddress, client: _web3client, chainId: chainId);
+    final subscription = taskContract.taskUpdatedEvents().listen((event) async {
+      print(
+          'received event ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
+      try {
+        tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
+        await refreshTask(tasks[event.contractAdr.toString()]!);
+        print(
+            'refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
+        await myBalance();
+        notifyListeners();
+      } on GetTaskException {
+        print(
+            'could not get task ${event.contractAdr.toString()} from blockchain');
+      } catch (e) {
+        print(e);
+      }
+    });
+  }
+
+  Future tellMeHasItMined(String hash, String taskAction, String nanoId,
+      [String messageNanoId = '']) async {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt =
           await web3GetTransactionReceipt(hash);
@@ -405,37 +803,39 @@ class TasksServices extends ChangeNotifier {
         Future.delayed(const Duration(milliseconds: 1000));
         transactionReceipt = await web3GetTransactionReceipt(hash);
       }
+      if (messageNanoId != '') {
+        taskAction = '${taskAction}_$messageNanoId';
+      }
 
       if (transactionReceipt.status == true) {
-        transactionStatuses[_nanoId]![_taskAction]!['status'] = 'minted';
-        transactionStatuses[_nanoId]![_taskAction]!['txn'] = hash;
+        transactionStatuses[nanoId]![taskAction]!['status'] = 'minted';
+        transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
         notifyListeners();
         print('tell me has it mined');
-        thr.throttle(() {
-          fetchTasks();
-        });
+        // thr.debounce(() {
+        //   fetchTasks();
+        // });
       }
-      await myBalance();
+      // await myBalance();
     } else {
       isLoadingBackground = false;
     }
   }
 
-  Future<void> runFilter(String enteredKeyword) async {
+  Future<void> runFilter(
+      String enteredKeyword, Map<String, Task> taskList) async {
     filterResults.clear();
     print(enteredKeyword);
     searchKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all tasks
-      filterResults = tasksNew.toList();
+      filterResults = Map.from(taskList);
     } else {
-      for (int i = 0; i < tasksNew.length; i++) {
-        if (tasksNew
-            .elementAt(i)
+      for (String taskAddress in taskList.keys) {
+        if (taskList[taskAddress]!
             .title
             .toLowerCase()
             .contains(enteredKeyword.toLowerCase())) {
-          filterResults.add(tasksNew.elementAt(i));
+          filterResults[taskAddress] = taskList[taskAddress]!;
         }
       }
     }
@@ -443,23 +843,192 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter() async {
+  Future<void> resetFilter(Map<String, Task> taskList) async {
     filterResults.clear();
-    filterResults = tasksNew.toList();
+    filterResults = Map.from(taskList);
   }
 
   late bool loopRunning = false;
   late bool stopLoopRunning = false;
 
-  Future<void> fetchTasks() async {
-    notifyListeners();
-    List totalTaskList = await web3Call(
-      contract: _deployedContract,
-      function: _taskCount,
-      params: [],
-    );
+  Future<Task> getTask(taskAddress) async {
+    TaskContract taskContract = TaskContract(
+        address: taskAddress, client: _web3client, chainId: chainId);
+    var task = await taskContract.getTaskInfo();
+    if (task != null) {
+      final BigInt weiBalance = await taskContract.getBalance();
+      final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+      final BigInt weiBalanceToken = BigInt.from(0);
+      final double ethBalancePreciseToken =
+          weiBalanceToken.toDouble() / pow(10, 6);
+      final double ethBalanceToken =
+          (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
-    totalTaskLen = totalTaskList[0].toInt();
+      print(task);
+      var taskObject = Task(
+        // nanoId: task[0],
+        nanoId: task[1].toString(),
+        createTime: DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
+        taskType: task[2],
+        title: task[3],
+        description: task[4],
+        symbol: task[5],
+        taskState: task[6],
+        auditState: task[7],
+        rating: task[8].toInt(),
+        contractOwner: task[9],
+        participant: task[10],
+        auditInitiator: task[11],
+        auditor: task[12],
+        participants: task[13],
+        funders: task[14],
+        auditors: task[15],
+        messages: task[16],
+        taskAddress: taskAddress,
+        justLoaded: true,
+        contractValue: ethBalancePrecise,
+        contractValueToken: ethBalanceToken,
+      );
+      return taskObject;
+    }
+    throw (GetTaskException);
+  }
+
+  Future<void> refreshTask(Task task) async {
+    // Who participate in the TASK:
+    if (task.participant == publicAddress) {
+      // Calculate Pending among:
+      if ((task.contractValue != 0 || task.contractValueToken != 0)) {
+        if (task.taskState == "agreed" ||
+            task.taskState == "progress" ||
+            task.taskState == "review" ||
+            task.taskState == "completed") {
+          pendingBalance = pendingBalance! + task.contractValue;
+          pendingBalanceToken = pendingBalanceToken! + task.contractValueToken;
+        }
+      }
+      // add all scored Task for calculation:
+      if (task.rating != 0) {
+        score = score + task.rating;
+        scoredTaskCount++;
+      }
+    }
+
+    // if (tasksAuditPending[task.taskAddress.toString()] != null) {
+    tasksNew.remove(task.taskAddress.toString());
+    filterResults.remove(task.taskAddress.toString());
+    tasksAuditPending.remove(task.taskAddress.toString());
+    tasksAuditApplied.remove(task.taskAddress.toString());
+    tasksAuditWorkingOn.remove(task.taskAddress.toString());
+    tasksAuditComplete.remove(task.taskAddress.toString());
+
+    tasksCustomerSelection.remove(task.taskAddress.toString());
+    tasksCustomerProgress.remove(task.taskAddress.toString());
+    tasksCustomerComplete.remove(task.taskAddress.toString());
+
+    tasksPerformerParticipate.remove(task.taskAddress.toString());
+    tasksPerformerProgress.remove(task.taskAddress.toString());
+    tasksPerformerComplete.remove(task.taskAddress.toString());
+    // }
+
+    if (task.taskState != "" &&
+        (task.taskState == "agreed" ||
+            task.taskState == "progress" ||
+            task.taskState == "review" ||
+            task.taskState == "audit")) {
+      if (task.contractOwner == publicAddress) {
+        tasksCustomerProgress[task.taskAddress.toString()] = task;
+      } else if (task.participant == publicAddress) {
+        tasksPerformerProgress[task.taskAddress.toString()] = task;
+      }
+      if (hardhatDebug == true) {
+        tasksPerformerProgress[task.taskAddress.toString()] = task;
+      }
+    }
+
+    // New TASKs for all users:
+    if (task.taskState != "" && task.taskState == "new") {
+      if (hardhatDebug == true) {
+        tasksNew[task.taskAddress.toString()] = task;
+        filterResults[task.taskAddress.toString()] = task;
+      }
+      if (task.contractOwner == publicAddress) {
+        tasksCustomerSelection[task.taskAddress.toString()] = task;
+      } else if (task.participants.isNotEmpty) {
+        var taskExist = false;
+        for (var p = 0; p < task.participants.length; p++) {
+          if (task.participants[p] == publicAddress) {
+            taskExist = true;
+          }
+        }
+        if (taskExist) {
+          tasksPerformerParticipate[task.taskAddress.toString()] = task;
+        } else {
+          tasksNew[task.taskAddress.toString()] = task;
+          filterResults[task.taskAddress.toString()] = task;
+          // tasksNew.add(task);
+          // filterResults.add(task);
+        }
+      } else {
+        tasksNew[task.taskAddress.toString()] = task;
+        filterResults[task.taskAddress.toString()] = task;
+        // tasksNew.add(task);
+        // filterResults.add(task);
+      }
+    }
+
+    if (task.taskState != "" &&
+        (task.taskState == "completed" || task.taskState == "canceled")) {
+      if (task.contractOwner == publicAddress) {
+        tasksCustomerComplete[task.taskAddress.toString()] = task;
+      } else if (task.participant == publicAddress) {
+        tasksPerformerComplete[task.taskAddress.toString()] = task;
+      }
+      if (hardhatDebug == true) {
+        tasksPerformerComplete[task.taskAddress.toString()] = task;
+      }
+    }
+
+    // **** AUDIT ****
+    // For auditors:
+    if (task.taskState == "audit") {
+      // Auditor side:
+      if (task.auditState == "requested") {
+        if (task.auditors.isNotEmpty) {
+          var contrExist = false;
+          for (var p = 0; p < task.auditors.length; p++) {
+            if (task.auditors[p] == publicAddress) {
+              contrExist = true;
+            }
+          }
+          if (contrExist) {
+            tasksAuditApplied[task.taskAddress.toString()] = task;
+          } else {
+            tasksAuditPending[task.taskAddress.toString()] = task;
+          }
+        } else {
+          tasksAuditPending[task.taskAddress.toString()] = task;
+        }
+      }
+
+      if (task.auditor == publicAddress) {
+        if (task.auditState == "performing") {
+          tasksAuditWorkingOn[task.taskAddress.toString()] = task;
+        } else if (task.auditState == "complete" ||
+            task.auditState == "finished") {
+          tasksAuditComplete[task.taskAddress.toString()] = task;
+        }
+      }
+      if (hardhatDebug == true) {
+        tasksAuditApplied[task.taskAddress.toString()] = task;
+      }
+    }
+  }
+
+  Future<void> fetchTasks() async {
+    isLoadingBackground = true;
+    notifyListeners();
+    List totalTaskList = await tasksFacet.getTaskContracts();
     tasks.clear();
 
     if (loopRunning) {
@@ -468,7 +1037,7 @@ class TasksServices extends ChangeNotifier {
 
     if (loopRunning == false) {
       loopRunning = true;
-      for (var i = 0; i < totalTaskLen; i++) {
+      for (var i = 0; i < totalTaskList.length; i++) {
         if (stopLoopRunning) {
           tasks.clear();
           stopLoopRunning = false;
@@ -476,143 +1045,55 @@ class TasksServices extends ChangeNotifier {
           fetchTasks();
           break;
         }
-        var task;
-        var value;
-        double ethBalancePrecise = 0;
-        double ethBalanceToken = 0;
-        task = await web3Call(
-            contract: _deployedContract,
-            function: _tasks,
-            params: [BigInt.from(i)]);
-        if (task != null) {
-          value = await web3Call(
-              contract: _deployedContract,
-              function: _getBalance,
-              params: [BigInt.from(task[6].toInt())]);
-          final BigInt weiBalance = value[0];
-          ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-          final BigInt weiBalanceToken =
-              await web3GetBalanceToken(task[2], task[10]);
-          final ethBalancePreciseToken =
-              weiBalanceToken.toDouble() / pow(10, 6);
-          ethBalanceToken =
-              (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-
-          var taskObject = Task(
-              title: task[0],
-              description: task[7],
-              contractOwner: task[4],
-              contractAddress: task[2],
-              jobState: task[1],
-              contributorsCount: task[8].length,
-              contributors: task[8],
-              participiant: task[9],
-              justLoaded: true,
-              createdTime:
-                  DateTime.fromMillisecondsSinceEpoch(task[5].toInt() * 1000),
-              contractValue: ethBalancePrecise,
-              contractValueToken: ethBalanceToken,
-              nanoId: task[11]);
-
-          taskLoaded = task[6].toInt() +
-              1; // this count we need to show the loading process. does not affect anything else
-
-          notifyListeners();
-          if (task[1] != "") {
-            tasks.add(taskObject);
-          }
+        try {
+          tasks[totalTaskList[i].toString()] = await getTask(totalTaskList[i]);
+          await monitorTaskEvents(totalTaskList[i]);
+        } on GetTaskException {
+          print('could not get task ${totalTaskList[i]} from blockchain');
         }
       }
+
+      taskLoaded = 0;
 
       if (loopRunning) {
         filterResults.clear();
         tasksNew.clear();
-        tasksOwner.clear();
-        tasksWithMyParticipation.clear();
-        tasksPerformer.clear();
-        tasksAgreedSubmitter.clear();
-        tasksReviewSubmitter.clear();
-        tasksDonePerformer.clear();
-        tasksDoneSubmitter.clear();
-        tasksProgressSubmitter.clear();
+
+        tasksAuditPending.clear();
+        tasksAuditApplied.clear();
+        tasksAuditWorkingOn.clear();
+        tasksAuditComplete.clear();
+
+        tasksCustomerSelection.clear();
+        tasksCustomerProgress.clear();
+        tasksCustomerComplete.clear();
+
+        tasksPerformerParticipate.clear();
+        tasksPerformerProgress.clear();
+        tasksPerformerComplete.clear();
 
         pendingBalance = 0;
         pendingBalanceToken = 0;
+        score = 0;
+        scoredTaskCount = 0;
 
-        for (var k = 0; k < tasks.length; k++) {
-          final task = tasks[k];
-          if ((task.contractValue != 0 || task.contractValueToken != 0) &&
-              task.participiant == ownAddress) {
-            if (task.jobState == "agreed" ||
-                task.jobState == "progress" ||
-                task.jobState == "review" ||
-                task.jobState == "completed") {
-              pendingBalance = pendingBalance! + task.contractValue;
-              pendingBalanceToken =
-                  pendingBalanceToken! + task.contractValueToken;
-            }
-          }
+        for (Task task in tasks.values) {
+          // print(task);
+          // for (var k = 0; k < tasks.length; k++) {
+          // final task = tasks[k];
+          await refreshTask(task);
+        }
 
-          if (task.jobState != "" && task.jobState == "new") {
-            if (task.contractOwner == ownAddress) {
-              tasksOwner.add(task);
-            } else if (task.contributors.length != 0) {
-              var taskExist = false;
-              for (var p = 0; p < task.contributors.length; p++) {
-                if (task.contributors[p] == ownAddress) {
-                  taskExist = true;
-                }
-              }
-              if (taskExist) {
-                tasksWithMyParticipation.add(task);
-              } else {
-                tasksNew.add(task);
-                filterResults.add(task);
-              }
-            } else {
-              tasksNew.add(task);
-              filterResults.add(task);
-            }
-          }
-
-          if (task.jobState != "" && task.jobState == "agreed") {
-            if (task.contractOwner == ownAddress) {
-              tasksAgreedSubmitter.add(task);
-            } else if (task.participiant == ownAddress) {
-              tasksPerformer.add(task);
-            }
-          }
-
-          if (task.jobState != "" && task.jobState == "progress") {
-            if (task.contractOwner == ownAddress) {
-              tasksProgressSubmitter.add(task);
-            } else if (task.participiant == ownAddress) {
-              tasksPerformer.add(task);
-            }
-          }
-
-          if (task.jobState != "" && task.jobState == "review") {
-            if (task.contractOwner == ownAddress) {
-              tasksReviewSubmitter.add(task);
-            } else if (task.participiant == ownAddress) {
-              tasksPerformer.add(task);
-            }
-          }
-          if (task.jobState != "" &&
-              (task.jobState == "completed" || task.jobState == "canceled")) {
-            if (task.contractOwner == ownAddress) {
-              tasksDoneSubmitter.add(task);
-            } else if (task.participiant == ownAddress) {
-              tasksDonePerformer.add(task);
-            }
-          }
+        // Final Score Calculation
+        if (score != 0) {
+          myScore = score / scoredTaskCount;
         }
 
         isLoading = false;
         isLoadingBackground = false;
         await myBalance();
         notifyListeners();
-        runFilter(searchKeyword); // reset search bar
+        // runFilter(searchKeyword); // reset search bar
       }
       loopRunning = false;
     }
@@ -620,30 +1101,38 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> approveSpend(
       EthereumAddress _contractAddress,
-      EthereumAddress ownAddress,
+      EthereumAddress publicAddress,
       String symbol,
       BigInt amount,
       String nanoId) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
     final transaction = Transaction(
-      from: ownAddress,
+      from: senderAddress,
     );
     final result = await ierc20.approve(_contractAddress, amount,
-        credentials: _creds, transaction: transaction);
+        credentials: creds, transaction: transaction);
     print('result of approveSpend: ' + result);
-    transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'approved';
+    transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] =
+        'approved';
     notifyListeners();
-    await tellMeHasItMined(result, 'addTask', nanoId);
+    await tellMeHasItMined(result, 'createTaskContract', nanoId);
     print('mined');
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> addTask(
+  Future<void> createTaskContract(
       String title, String description, double price, String nanoId) async {
-    print(price);
-    // taskTokenSymbol = "aUSDC";
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
-        'addTask': {
+        'createTaskContract': {
           'status': 'pending',
           'tokenApproved': 'initial',
           'txn': 'initial'
@@ -652,53 +1141,36 @@ class TasksServices extends ChangeNotifier {
       late int priceInGwei = (price * 1000000000).toInt();
       final BigInt priceInBigInt = BigInt.from(price * 1e6);
       late String txn;
-
+      String taskType = 'public';
       if (taskTokenSymbol == 'ETH') {
-        txn = await web3Transaction(
-            _creds,
-            Transaction.callContract(
-              from: ownAddress,
-              contract: _deployedContract,
-              function: _createTask,
-              parameters: [
-                nanoId,
-                title,
-                description,
-                taskTokenSymbol,
-                priceInBigInt,
-              ],
-              value: EtherAmount.fromUnitAndValue(
-                  EtherUnit.gwei, priceInGwei.toInt()),
-            ),
-            chainId: _chainId);
+        final transaction = Transaction(
+          from: publicAddress,
+          value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
+        );
+        txn = await tasksFacet.createTaskContract(nanoId, taskType, title,
+            description, taskTokenSymbol, priceInBigInt,
+            credentials: credentials, transaction: transaction);
       } else if (taskTokenSymbol == 'aUSDC') {
-        await approveSpend(_contractAddress, ownAddress!, taskTokenSymbol,
+        await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol,
             priceInBigInt, nanoId);
-        txn = await web3Transaction(
-            _creds,
-            Transaction.callContract(
-              from: ownAddress,
-              contract: _deployedContract,
-              function: _createTask,
-              parameters: [
-                nanoId,
-                title,
-                description,
-                taskTokenSymbol,
-                priceInBigInt
-              ],
-            ),
-            chainId: _chainId);
+        final transaction = Transaction(
+          value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
+        );
+        txn = await tasksFacet.createTaskContract(nanoId, title, taskType,
+            description, taskTokenSymbol, priceInBigInt,
+            credentials: credentials, transaction: transaction);
         print(txn);
       }
       isLoading = false;
-      isLoadingBackground = true;
+      // isLoadingBackground = true;
       lastTxn = txn;
-      transactionStatuses[nanoId]!['addTask']!['status'] = 'confirmed';
-      transactionStatuses[nanoId]!['addTask']!['tokenApproved'] = 'complete';
-      transactionStatuses[nanoId]!['addTask']!['txn'] = txn;
+      transactionStatuses[nanoId]!['createTaskContract']!['status'] =
+          'confirmed';
+      transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] =
+          'complete';
+      transactionStatuses[nanoId]!['createTaskContract']!['txn'] = txn;
 
-      tellMeHasItMined(txn, 'addTask', nanoId);
+      tellMeHasItMined(txn, 'createTaskContract', nanoId);
       notifyListeners();
     }
   }
@@ -719,22 +1191,22 @@ class TasksServices extends ChangeNotifier {
 
     if (taskTokenSymbol == 'ETH') {
       final transaction = Transaction(
-        from: ownAddress,
+        from: publicAddress,
         to: addressToSend,
         value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
       );
 
-      txn = await web3Transaction(_creds, transaction, chainId: _chainId);
+      txn = await web3Transaction(credentials, transaction, chainId: chainId);
       print(txn);
     } else if (taskTokenSymbol == 'aUSDC') {
       final transaction = Transaction(
-        from: ownAddress,
+        from: publicAddress,
       );
       txn = await ierc20.transfer(addressToSend, priceInBigInt,
-          credentials: _creds, transaction: transaction);
+          credentials: credentials, transaction: transaction);
     }
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
     transactionStatuses[nanoId]!['addTokens']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['addTokens']!['tokenApproved'] = 'complete';
@@ -744,76 +1216,196 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> taskParticipation(
-      EthereumAddress contractAddress, String nanoId) async {
+  Future<void> taskParticipate(EthereumAddress contractAddress, String nanoId,
+      {String? message, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
-      'taskParticipation': {'status': 'pending', 'txn': 'initial'}
+      'taskParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    txn = await web3Transaction(
-        _creds,
-        Transaction.callContract(
-          from: ownAddress,
-          contract: _deployedContract,
-          function: _taskParticipation,
-          parameters: [contractAddress],
-        ),
-        chainId: _chainId);
+    message ??= 'Participate this task';
+    replyTo ??= BigInt.from(0);
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    txn = await taskContract.taskParticipate(message, replyTo,
+        credentials: creds, transaction: transaction);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     // lastTxn = txn;
-    transactionStatuses[nanoId]!['taskParticipation']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['taskParticipation']!['txn'] = txn;
+    transactionStatuses[nanoId]!['taskParticipate']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['taskParticipate']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'taskParticipation', nanoId);
+    tellMeHasItMined(txn, 'taskParticipate', nanoId);
   }
 
-  Future<void> changeTaskStatus(EthereumAddress contractAddress,
-      EthereumAddress participiantAddress, String state, String nanoId) async {
+  Future<void> taskAuditParticipate(
+      EthereumAddress contractAddress, String nanoId,
+      {String? message, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
-      'changeTaskStatus': {'status': 'pending', 'txn': 'initial'}
+      'taskAuditParticipate': {'status': 'pending', 'txn': 'initial'}
+    };
+    late String txn;
+    message ??= 'Participate this task';
+    replyTo ??= BigInt.from(0);
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[2]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    txn = await taskContract.taskAuditParticipate(message, replyTo,
+        credentials: creds, transaction: transaction);
+    isLoading = false;
+    // isLoadingBackground = true;
+    // lastTxn = txn;
+    transactionStatuses[nanoId]!['taskAuditParticipate']!['status'] =
+        'confirmed';
+    transactionStatuses[nanoId]!['taskAuditParticipate']!['txn'] = txn;
+    notifyListeners();
+    tellMeHasItMined(txn, 'taskAuditParticipate', nanoId);
+  }
+
+  Future<void> taskStateChange(EthereumAddress contractAddress,
+      EthereumAddress participantAddress, String state, String nanoId,
+      {String? message, BigInt? score, BigInt? replyTo}) async {
+    transactionStatuses[nanoId] = {
+      'taskStateChange': {'status': 'pending', 'txn': 'initial'}
     };
     // lastTxn = 'pending';
     late String txn;
-    txn = await web3Transaction(
-        _creds,
-        Transaction.callContract(
-          from: ownAddress,
-          contract: _deployedContract,
-          function: _changeTaskStatus,
-          parameters: [contractAddress, participiantAddress, state],
-        ),
-        chainId: _chainId);
+    // String message = 'moving this task';
+    message ??= 'changing task status to $state';
+    replyTo ??= BigInt.from(0);
+    score ??= BigInt.from(5);
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      if (state == 'agreed' ||
+          state == 'audit' ||
+          state == 'completed' ||
+          state == 'canceled') {
+        creds = credentials;
+        senderAddress = publicAddress;
+      } else if (state == 'progress' || state == 'review') {
+        creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+        senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      } else {
+        creds = credentials;
+        senderAddress = publicAddress;
+      }
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    txn = await taskContract.taskStateChange(
+        participantAddress, state, message, replyTo, score,
+        credentials: creds, transaction: transaction);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
-    transactionStatuses[nanoId]!['changeTaskStatus']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['changeTaskStatus']!['txn'] = txn;
+    transactionStatuses[nanoId]!['taskStateChange']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['taskStateChange']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'changeTaskStatus', nanoId);
+    tellMeHasItMined(txn, 'taskStateChange', nanoId);
   }
 
-  Future<void> withdraw(EthereumAddress contractAddress, String nanoId) async {
-    late String txn;
+  Future<void> taskAuditDecision(
+      EthereumAddress contractAddress, String favour, String nanoId,
+      {String? message, BigInt? score, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
-      'withdraw': {'status': 'pending', 'txn': 'initial'}
+      'taskAuditDecision': {'status': 'pending', 'txn': 'initial'}
     };
-    txn = await web3Transaction(
-        _creds,
-        Transaction.callContract(
-          from: ownAddress,
-          contract: _deployedContract,
-          function: _withdraw,
-          parameters: [contractAddress, ownAddress],
-        ),
-        chainId: _chainId);
+    late String txn;
+    message ??= 'Auditor task decision';
+    replyTo ??= BigInt.from(0);
+    score ??= BigInt.from(5);
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    txn = await taskContract.taskAuditDecision(favour, message, replyTo, score,
+        credentials: creds, transaction: transaction);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
-    transactionStatuses[nanoId]!['withdraw']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['withdraw']!['txn'] = txn;
+    transactionStatuses[nanoId]!['taskAuditDecision']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['taskAuditDecision']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'withdraw', nanoId);
+    tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
+  }
+
+  Future<void> sendChatMessage(
+      EthereumAddress contractAddress, String nanoId, String message,
+      {BigInt? replyTo}) async {
+    final messageNanoID = customAlphabet(
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
+    transactionStatuses[nanoId] = {
+      'sendChatMessage_$messageNanoID': {'status': 'pending', 'txn': 'initial'}
+    };
+    late String txn;
+    replyTo ??= BigInt.from(0);
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    txn = await taskContract.sendMessage(message, replyTo,
+        credentials: creds, transaction: transaction);
+    isLoading = false;
+    // isLoadingBackground = true;
+    // lastTxn = txn;
+
+    transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] =
+        'confirmed';
+    transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['txn'] =
+        txn;
+    notifyListeners();
+
+    tellMeHasItMined(txn, 'sendChatMessage', nanoId, messageNanoID);
   }
 
   String destinationChain = 'Moonbase';
@@ -823,30 +1415,43 @@ class TasksServices extends ChangeNotifier {
       'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    late int priceInGwei = (80000000 * gasPriceValue).toInt();
-    print("gasPriceValue");
-    print(gasPriceValue);
-    EtherAmount value =
-        EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei);
-    print("value");
-    print(value);
-    print("destinationChain: " + destinationChain);
-    txn = await _web3client.sendTransaction(
-        _creds,
-        Transaction.callContract(
-          from: ownAddress,
-          contract: _deployedContract,
-          function: _withdrawToChain,
-          parameters: [
-            contractAddress,
-            _contractAddressRopsten,
-            destinationChain
-          ],
-          value: EtherAmount.fromUnitAndValue(EtherUnit.wei, priceInGwei),
-        ),
-        chainId: _chainId);
+    String chain = 'moonbase';
+    TaskContract taskContract = TaskContract(
+        address: contractAddress, client: _web3client, chainId: chainId);
+    //should send value now?!
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+
+    // BigInt estimatedGas = await _web3client.estimateGas(
+    //     sender: publicAddress,
+    //     to: contractAddress,
+    //     amountOfGas: fees['medium'].estimatedGas,
+    //     maxFeePerGas: fees['medium'].maxFeePerGas,
+    //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+
+    int price = 15;
+    int priceInGwei = (price).toInt();
+    EtherAmount gasPrice =
+        EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
+
+    final transaction = Transaction(
+      from: senderAddress,
+      // maxFeePerGas: fees['medium'].maxFeePerGas,
+      // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
+      // maxGas: estimatedGas.toInt(),
+      // gasPrice: gasPrice
+    );
+    txn = await taskContract.transferToaddress(publicAddress!, chain,
+        credentials: creds, transaction: transaction);
     isLoading = false;
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
     lastTxn = txn;
     transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
@@ -857,13 +1462,14 @@ class TasksServices extends ChangeNotifier {
   double gasPriceValue = 0;
   Future<void> getGasPrice(sourceChain, destinationChain,
       {tokenAddress, tokenSymbol}) async {
-    final env = 'testnet';
+    const env = 'testnet';
     if (env == 'local') ;
-    final String AddressZero = "0x0000000000000000000000000000000000000000";
+    const String AddressZero = "0x0000000000000000000000000000000000000000";
     if (env != 'testnet') throw 'env needs to be "local" or "testnet".';
 
-    if (tokenAddress == AddressZero && tokenSymbol == '')
+    if (tokenAddress == AddressZero && tokenSymbol == '') {
       throw 'Either tokenAddress or tokenSymbol must be set.';
+    }
     String api_url = 'testnet.api.gmp.axelarscan.io';
     final params = {
       'method': 'getGasPrice',
@@ -916,7 +1522,7 @@ class TasksServices extends ChangeNotifier {
     final params = {
       'source_chain': sourceChainName,
       'destination_chain': destinationChainName,
-      'amount': '${amountInDenom.toString()}${assetDenom}',
+      'amount': '${amountInDenom.toString()}$assetDenom',
     };
 
     final uri =
@@ -934,5 +1540,22 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> myNotifyListeners() async {
     notifyListeners();
+    print('fired once');
+  }
+
+  Future<void> testTaskCreation() async {
+    int price = 5;
+    late int priceInGwei = (price * 1000000000).toInt();
+    final transaction = Transaction(
+      value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
+    );
+    var createContract = await tasksFacet.createTaskContract('testID', 'public',
+        'task title', 'task decription', 'ETH', BigInt.from(1),
+        credentials: credentials, transaction: transaction);
+    var taskContracts = await tasksFacet.getTaskContracts();
+
+    TaskContract taskContract = TaskContract(
+        address: taskContracts[0], client: _web3client, chainId: chainId);
+    var taskInfo = await taskContract.getTaskInfo();
   }
 }

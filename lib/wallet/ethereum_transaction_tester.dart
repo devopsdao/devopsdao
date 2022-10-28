@@ -4,8 +4,8 @@ import 'package:http/http.dart';
 import 'transaction_tester.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';
-import 'package:web3dart/src/crypto/secp256k1.dart';
-import 'package:web3dart/web3dart.dart';
+import 'package:webthree/src/crypto/secp256k1.dart';
+import 'package:webthree/webthree.dart';
 
 class WalletConnectEthereumCredentials extends CustomTransactionSender {
   WalletConnectEthereumCredentials({required this.provider});
@@ -30,6 +30,9 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
         from: transaction.from!.hex,
         to: transaction.to?.hex,
         data: transaction.data,
+        // maxFeePerGas: transaction.maxFeePerGas?.getInWei,
+        // maxPriorityFeePerGas: transaction.maxFeePerGas?.getInWei,
+        // maxGas: transaction.maxFeePerGas,
         gas: transaction.maxGas,
         gasPrice: transaction.gasPrice?.getInWei,
         value: transaction.value?.getInWei,
@@ -170,6 +173,29 @@ class EthereumTransactionTester extends TransactionTester {
   @override
   Future<void> removeSession() async {
     await sessionStorage.removeSession();
+  }
+
+  Future<void> switchNetwork(int chainId) async {
+    final params = <String, dynamic>{
+      'chainId': '0x507',
+    };
+    final response = await connector.sendCustomRequest(
+        method: 'wallet_switchEthereumChain', params: [params]);
+    print(response);
+
+    // return session;
+  }
+
+  Future<int> getChainId() async {
+    // final params = <String, dynamic>{
+    //   'chainId': '0x507',
+    // };
+    final response =
+        await connector.sendCustomRequest(method: 'eth_chainId', params: []);
+    print(response);
+    return int.parse(response);
+
+    // return session;
   }
 
   @override

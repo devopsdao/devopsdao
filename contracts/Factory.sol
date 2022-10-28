@@ -16,7 +16,6 @@ error RevertReason (string message);
 contract Factory {
     IAxelarGateway public immutable gateway;
 
-
     Job[] public jobArray;
     // address contractOwner;
     uint256 public countNew = 0;
@@ -100,26 +99,32 @@ contract Factory {
         emit OneEventForAll(address(job), job.index());
     }
 
+    function jobAuditParticipate(Job job) external {
+        jobArray[job.index()].jobAuditParticipate(msg.sender);
+        emit OneEventForAll(address(job), job.index());
+    }
+
+    function jobRating(Job job, uint256 _score) external {
+        jobArray[job.index()].jobRate(_score, msg.sender);
+        emit OneEventForAll(address(job), job.index());
+    }
+
 
     function jobStateChange(
         Job job,
         address payable _participantAddress,
         string memory _state
     ) external {
-        jobArray[job.index()].jobStateChange(_participantAddress, _state);
+        jobArray[job.index()].jobStateChange(_participantAddress, _state, msg.sender);
+        emit OneEventForAll(address(job), job.index());
+    }
+    
 
-        // if (keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
-        //     countAgreed++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
-        //     countProgress++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("review"))) {
-        //     countReview++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
-        //     countCompleted++;
-        // } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
-        //     countCanceled++;
-        // }
-
+    function jobAuditStateChange(
+        Job job,
+        string memory _favour
+    ) external {
+        jobArray[job.index()].jobAuditDecision(_favour);
         emit OneEventForAll(address(job), job.index());
     }
 
@@ -198,7 +203,11 @@ contract Factory {
         address[] memory,
         address,
         string memory,
-        string memory
+        string memory,
+        uint256,
+        address[] memory,
+        string memory,
+        address
         
     )
     {
@@ -217,6 +226,7 @@ contract Job {
     using StringToAddress for string;
 
     address[] public Participants;
+    address[] public AuditParticipants;
     // uint256 public data;
     string public nanoId;
     string public title;
@@ -234,6 +244,11 @@ contract Job {
     address[] public _destinationAddresses;
     string public symbol;
     uint256 amount;
+    uint256 rating = 0;
+    address public auditInitiator;
+    string public auditState;
+    address public auditorAddress;
+
 
     event Logs(address contractAdr, string message);
     event LogsValue(address contractAdr, string message, uint value);
@@ -245,6 +260,7 @@ contract Job {
         string memory _symbol,
         uint256 _index,
         address _contractOwner
+        // uint256 _rating
     ) payable {
         // data = _data;
         nanoId = _nanoId;
@@ -257,6 +273,7 @@ contract Job {
         index = _index;
         description = _description;
         symbol = _symbol;
+        // rating = _rating;
 
         address gateway_ = 0x5769D84DD62a6fD969856c75c7D321b84d455929;
         gateway = IAxelarGateway(gateway_);
@@ -291,10 +308,7 @@ contract Job {
     //     emit jobCreated(_content, _index);
     // }
 
-    function getJob()
-    public
-    view
-    returns (
+    function getJob() public view returns (
         string memory _content,
         string memory _jobState,
         address _contractAddress,
@@ -306,22 +320,30 @@ contract Job {
         address[] memory _participants,
         address _participantAddress,
         string memory _symbol,
-        string memory _nanoId
+        string memory _nanoId,
+        uint256 _rating,
+        address[] memory _auditParticipants,
+        string memory _auditState,
+        address _auditorAddress
     )
     {
         return (
-        title,
-        jobState,
-        contractAddress,
-        contractParent,
-        contractOwner,
-        createTime,
-        index,
-        description,
-        Participants,
-        participantAddress,
-        symbol,
-        nanoId
+            title,
+            jobState,
+            contractAddress,
+            contractParent,
+            contractOwner,
+            createTime,
+            index,
+            description,
+            Participants,
+            participantAddress,
+            symbol,
+            nanoId,
+            rating,
+            AuditParticipants,
+        auditState,
+            auditorAddress
         );
     }
 
@@ -404,30 +426,29 @@ contract Job {
                 participantAddress.transfer(contractAddress.balance);
             }
         } else if (
-            keccak256(bytes(jobState)) == keccak256(bytes("completed")) || 1==1
+            keccak256(bytes(jobState)) == keccak256(bytes("completed")) //|| 1==1
         ) {
             bytes memory symbolBytes = bytes(symbol);
             bytes memory chainBytes = bytes(chain);
-            if (symbolBytes.length == 0) {
-                revert RevertReason({
-                    message: "empty token"
-                });
-                // do nothing
-            } else if (keccak256(symbolBytes) == keccak256(bytes("ETH"))) {
+
+            //check USDC balance
+            address tokenAddress = gateway.tokenAddresses("aUSDC");
+            uint256 contractUSDCAmount = IERC20(tokenAddress).balanceOf(contractAddress)/10;
+            
+            //check ETH balance
+            if (contractAddress.balance != 0) {
                 emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to Ethereum address: ",this.addressToString(participantAddress)));
                 participantAddress.transfer(contractAddress.balance);
             } 
-            else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
+            if (contractUSDCAmount !=0 && (
                 keccak256(chainBytes) == keccak256(bytes("PolygonAxelar"))
             )) {
                 emit Logs(address(contractAddress), string.concat("withdrawing via sendToMany ", symbol, " to ", chain, "value: ", uint2str(msg.value), " address:",this.addressToString(participantAddress)));
                 emit LogsValue(address(this), string.concat("msg.sender: ", this.addressToString(msg.sender)," call value: "), msg.value);
                 // string memory _addressToSend2 = bytes(_addressToSend);
-                address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress)/10;
-                IERC20(tokenAddress).approve(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A, contractAmount);
+                IERC20(tokenAddress).approve(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A, contractUSDCAmount);
                 _destinationAddresses.push(participantAddress);
-                IDistributionExecutable(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A).sendToMany{value: msg.value}("polygon", this.addressToString(0xEAAA71f74b01617BA2235083334a1c952BAC0a6C), _destinationAddresses, 'aUSDC', contractAmount);
+                IDistributionExecutable(0xE9F4b6dB26f964E5B62Fa3bEC5115a56B4DBd79A).sendToMany{value: msg.value}("polygon", this.addressToString(0xEAAA71f74b01617BA2235083334a1c952BAC0a6C), _destinationAddresses, 'aUSDC', contractUSDCAmount);
             }
             else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && (
                 keccak256(chainBytes) == keccak256(bytes("Ethereum")) || 
@@ -440,25 +461,22 @@ contract Job {
                 // _destinationAddresses.push(_addressToSend);
                 // distributor.sendToMany(chain, _addressToSend, _destinationAddresses, 'aUSDC', contractAddress.balance);
                 // string memory _addressToSend2 = bytes(_addressToSend);
-                address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).approve(address(gateway), contractAmount);
+
+                IERC20(tokenAddress).approve(address(gateway), contractUSDCAmount);
                 // gateway.sendToken(chain, toAsciiString(participantAddress), "aUSDC", amount);
-                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", contractAmount);
+                gateway.sendToken(chain, this.addressToString(participantAddress), "aUSDC", contractUSDCAmount);
             } else if (keccak256(symbolBytes) == keccak256(bytes("aUSDC")) && keccak256(chainBytes) == keccak256(bytes("Moonbase"))) {
                 // revert InvalidToken({
                 //     token: string.concat("we are in moonbase, participantAddress",this.addressToString(participantAddress))
                 // });
                 emit Logs(address(contractAddress), string.concat("withdrawing ", symbol, " to ", chain, "address:",this.addressToString(participantAddress)));
-                address tokenAddress = gateway.tokenAddresses("aUSDC");
-                uint256 contractAmount = IERC20(tokenAddress).balanceOf(contractAddress);
-                IERC20(tokenAddress).approve(contractAddress, contractAmount);
-                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, contractAmount);
+                IERC20(tokenAddress).approve(contractAddress, contractUSDCAmount);
+                IERC20(tokenAddress).transferFrom(contractAddress, participantAddress, contractUSDCAmount);
                 // IERC20(tokenAddress).approve(address(gateway), amount);
             }
             else{
                 revert RevertReason({
-                    message: "invalid destination network or token"
+                    message: "invalid destination network"
                 });
             }
         }
@@ -497,27 +515,111 @@ contract Job {
                 Participants.push(_participantAddress);
             }
         }
-        // emit OneEventForAll2(contractAddress);
     }
 
+    function jobAuditParticipate(address _auditParticipantAddress) external {
+        // TODO: add NFT based auditor priviledge check
+        bool existed = false;
+        if (AuditParticipants.length == 0) {
+            AuditParticipants.push(_auditParticipantAddress);
+        } else {
+            for (uint256 i = 0; i < Participants.length; i++) {
+                if (AuditParticipants[i] == _auditParticipantAddress) {
+                    existed = true;
+                    break;
+                }
+            }
+            if (!existed) {
+                AuditParticipants.push(_auditParticipantAddress);
+            }
+        }
+    }
+
+    function jobRate(uint _score, address _applicant) external {
+        if (
+            rating == 0 &&
+            _score != 0 &&
+            _score <= 5 &&
+            keccak256(bytes(jobState)) == keccak256(bytes("completed")) &&
+            contractOwner == _applicant
+        ) {
+            rating = _score;
+        } else {
+        }
+    }
+
+    //todo: only allow calling child contract functions from the parent contract!!!
     function jobStateChange(
         address payable _participantAddress,
-        string memory _state
+        string memory _state,
+        address _initiatorAddress
+        // string memory _message
     ) external {
-        if (keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
+        if (_initiatorAddress == contractOwner && _initiatorAddress != _participantAddress && keccak256(bytes(jobState)) == keccak256(bytes("new")) && 
+        keccak256(bytes(_state)) == keccak256(bytes("agreed"))) {
+            //TODO: LETS FIX IT!!!!! _participantAddress must be compared with participant list in its contract ************************
             jobState = "agreed";
             participantAddress = _participantAddress;
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
+        } else if (_initiatorAddress == participantAddress &&
+            keccak256(bytes(jobState)) == keccak256(bytes("agreed")) && keccak256(bytes(_state)) == keccak256(bytes("progress"))) {
             jobState = "progress";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("review"))) {
+        } else if (_initiatorAddress == participantAddress && 
+            keccak256(bytes(jobState)) == keccak256(bytes("progress")) && keccak256(bytes(_state)) == keccak256(bytes("review"))) {
             jobState = "review";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
+        } else if (_initiatorAddress == contractOwner &&  _initiatorAddress != participantAddress &&
+            keccak256(bytes(jobState)) == keccak256(bytes("review")) && keccak256(bytes(_state)) == keccak256(bytes("completed"))) {
             jobState = "completed";
-        } else if (keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
+        } else if (keccak256(bytes(jobState)) == keccak256(bytes("new")) && _initiatorAddress == contractOwner && keccak256(bytes(_state)) == keccak256(bytes("canceled"))) {
             jobState = "canceled";
-        }
+        } else if (keccak256(bytes(_state)) == keccak256(bytes("audit"))){
+            if(_initiatorAddress == contractOwner &&  _initiatorAddress != participantAddress &&
+                (keccak256(bytes(jobState)) == keccak256(bytes("agreed")) || keccak256(bytes(jobState)) == keccak256(bytes("progress")) || keccak256(bytes(jobState)) == keccak256(bytes("review")))){
+                jobState = "audit";
+                auditInitiator = _initiatorAddress;
+                auditState = 'requested';
+            }
+            else if(_initiatorAddress == participantAddress &&
+                (keccak256(bytes(jobState)) == keccak256(bytes("review"))))
 
-        // emit OneEventForAll2(contractAddress);
+            {
+                jobState = "audit";
+                auditInitiator = _initiatorAddress;
+                auditState = 'requested';
+                //TODO: audit history need to add 
+            }
+            if(_initiatorAddress == contractOwner &&
+                keccak256(bytes(jobState)) == keccak256(bytes("audit")) && 
+                keccak256(bytes(auditState)) == keccak256(bytes("requested")) &&
+                AuditParticipants.length != 0) {
+                for (uint256 i = 0; i < AuditParticipants.length; i++) {
+                    if (AuditParticipants[i] == _participantAddress) {
+                        jobState = "audit";
+                        auditorAddress = _participantAddress;
+                        auditState = 'performing';
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    function jobAuditDecision(
+        // address payable _participantAddress,
+        string memory _favour
+    ) external {
+        // TODO: add NFT based auditor priviledge check
+        if (msg.sender == auditorAddress && keccak256(bytes(jobState)) == keccak256(bytes("audit"))
+        && keccak256(bytes(auditState)) == keccak256(bytes("performing"))
+        && keccak256(bytes(_favour)) == keccak256(bytes("customer"))) {
+            auditState = "complete";
+            jobState = "new";
+        }
+        if (msg.sender == auditorAddress && keccak256(bytes(jobState)) == keccak256(bytes("audit"))
+        && keccak256(bytes(auditState)) == keccak256(bytes("performing"))
+        && keccak256(bytes(_favour)) == keccak256(bytes("performer"))) {
+            auditState = "finished";
+            jobState = "completed";
+        }
     }
 
     // function jobReview(address _participantAddress) external {
