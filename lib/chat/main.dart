@@ -53,14 +53,19 @@ class _ChatPageState extends State<ChatPage> {
     _loadMessages();
   }
 
+  bool logged = false;
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    bool test = true;
+    if(widget.task.contractOwner == tasksServices.publicAddress) {
+      logged = true;
+    }
+
     return Scaffold(
       body: Chat(
         messages: _messages,
-        // customBottomWidget: test ? const SearchButton2() : null,
+        customBottomWidget: !logged ? const NotLoggedInput() : null,
         // onAttachmentPressed: _handleAttachmentPressed,
         // onMessageTap: _handleMessageTap,
         // onPreviewDataFetched: _handlePreviewDataFetched,
@@ -333,14 +338,14 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
-class SearchButton2 extends StatefulWidget {
-  const SearchButton2({Key? key}) : super(key: key);
+class NotLoggedInput extends StatefulWidget {
+  const NotLoggedInput({Key? key}) : super(key: key);
 
   @override
-  _SearchButtonState createState() => _SearchButtonState();
+  _NotLoggedInputState createState() => _NotLoggedInputState();
 }
 
-class _SearchButtonState extends State<SearchButton2> {
+class _NotLoggedInputState extends State<NotLoggedInput> {
   TextEditingController textController = TextEditingController();
 
   @override
@@ -350,10 +355,37 @@ class _SearchButtonState extends State<SearchButton2> {
     setState(() {
     });
 
-    return Container(
-      // height: 100.0, // Change as per your requirement
-      // width: 270.0, // Change as per your requirement
-      child: Text('Please connect your wallet')
+    return Material(
+      elevation: 0,
+      color: Colors.black87,
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        // height: MediaQuery.of(context).size.width * .08,
+        // width: MediaQuery.of(context).size.width * .57
+        // width: innerWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Row(
+          children: const <Widget>[
+            Expanded(
+              child: Text(
+                'Please connect your wallet',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+
+
+
+
   }
 }
