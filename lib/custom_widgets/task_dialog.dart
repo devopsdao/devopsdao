@@ -154,7 +154,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                   ),
                                   onTap: () async {
                                     Clipboard.setData(new ClipboardData(
-                                            text: "Your Copy text"))
+                                            text:
+                                                'https://dodao.dev/index.html#/${widget.role}/${task.taskAddress.toString()}'))
                                         .then((_) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
