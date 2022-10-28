@@ -248,16 +248,16 @@ class _ChatPageState extends State<ChatPage> {
 
     Map<String, dynamic> message = {};
     Map<String, dynamic> author = {};
-    author['firstName'] = 'task creator';
+    author['firstName'] = widget.task.contractOwner.toString();
     // author['firstName'] = 'vaso';
     author['lastName'] = '';
     author['id'] = '1';
     // author['id'] = const Uuid().v4();
     message['author'] = author;
-    message['createdAt'] = 2022156165;
+    message['createdAt'] = widget.task.createTime.millisecondsSinceEpoch;
     message['id'] = "0";
     message['status'] = 'delivered';
-    message['text'] = 'Task has been created';
+    message['text'] = widget.task.title;
     message['type'] = 'text';
     // final String firstName = msg[3].toString();
     // taskMessages.add(message);
