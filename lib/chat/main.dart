@@ -18,6 +18,7 @@ import 'package:uuid/uuid.dart';
 import 'package:webthree/webthree.dart';
 
 import '../blockchain/task_services.dart';
+import '../blockchain/task.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -33,16 +34,9 @@ import '../blockchain/task_services.dart';
 // }
 
 class ChatPage extends StatefulWidget {
-  final EthereumAddress taskAddress;
-  final String nanoId;
-  final List messages;
+  final Task task;
   final TasksServices tasksServices;
-  const ChatPage(
-      {super.key,
-      required this.taskAddress,
-      required this.nanoId,
-      required this.messages,
-      required this.tasksServices});
+  const ChatPage({super.key, required this.task, required this.tasksServices});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -60,7 +54,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    // var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     return Scaffold(
       body: Chat(
         messages: _messages,
@@ -70,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
         onSendPressed: _handleSendPressed,
         showUserAvatars: false,
         showUserNames: true,
-        user: types.User(id: widget.messages[0][3].toString()),
+        user: types.User(id: tasksServices.publicAddress.toString()),
         theme: const DefaultChatTheme(
           inputBackgroundColor: Colors.black87,
           inputBorderRadius: BorderRadius.all(
@@ -237,11 +231,11 @@ class _ChatPageState extends State<ChatPage> {
 
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
-    await widget.tasksServices
-        .sendChatMessage(widget.taskAddress, widget.nanoId, message.text);
+    await widget.tasksServices.sendChatMessage(
+        widget.task.taskAddress, widget.task.nanoId, message.text);
 
     final textMessage = types.TextMessage(
-      author: types.User(id: widget.messages[0][3].toString()),
+      author: types.User(id: widget.task.messages[0][3].toString()),
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
@@ -276,7 +270,7 @@ class _ChatPageState extends State<ChatPage> {
     // _addMessage(textMessage);
     taskMessages.add(message);
 
-    for (var msg in widget.messages) {
+    for (var msg in widget.task.messages) {
       Map<String, dynamic> message = {};
       Map<String, dynamic> author = {};
       author['firstName'] = msg[3].toString();

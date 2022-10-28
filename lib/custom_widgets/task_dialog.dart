@@ -1374,11 +1374,8 @@ class _DialogPagesState extends State<DialogPages> {
                         borderRadius:
                             BorderRadius.circular(widget.borderRadius),
                       ),
-                      child: ChatPage(
-                          taskAddress: task.taskAddress,
-                          nanoId: task.nanoId,
-                          messages: task.messages,
-                          tasksServices: tasksServices))))
+                      child:
+                          ChatPage(task: task, tasksServices: tasksServices))))
         ],
       );
     });
