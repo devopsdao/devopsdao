@@ -84,6 +84,7 @@ class TaskInformationDialog extends StatefulWidget {
 
 class _TaskInformationDialogState extends State<TaskInformationDialog> {
   late Task task;
+  String backgroundPicture = "assets/images/niceshape.png";
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +93,15 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
     task = widget.object;
     final double borderRadius = interface.borderRadius;
 
-    return LayoutBuilder(builder: (context, constraints) {
+    if(widget.role == 'customer') {
+      backgroundPicture = "assets/images/cross.png";
+    } else if (widget.role == 'performer') {
+      backgroundPicture = "assets/images/cyrcle.png";
+    } else if (widget.role == 'audit') {
+      backgroundPicture = "assets/images/cross.png";
+    }
+
+      return LayoutBuilder(builder: (context, constraints) {
       // print('max:  ${constraints.maxHeight}');
       // print('max * : ${constraints.maxHeight * .65}');
       // print(constraints.minWidth);
@@ -183,7 +192,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                   //             'Copied to your clipboard !')));
                                   Flushbar(
                                     icon: Icon(Icons.copy, size: 20, color: Colors.white,),
-                                      message: 'Copied to your clipboard !',
+                                      message: 'Task URL copied to your clipboard!',
                                       duration: Duration(seconds: 2),
                                     backgroundColor: Colors.blueAccent,
                                       shouldIconPulse: false
@@ -235,8 +244,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     width: 400,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(9),
-                      image: const DecorationImage(
-                        image: AssetImage("assets/images/cross.png"),
+                      image: DecorationImage(
+                        image: AssetImage(backgroundPicture),
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -43,6 +43,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
   String txId = '';
   String _displayUri = '';
   var session;
+  String backgroundPicture = "assets/images/logo_half.png";
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
@@ -97,6 +98,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
     if (tasksServices.walletConnectedWC) {
       tasksServices.walletConnectUri = '';
     }
+
+
 
     // int page = interface.pageWalletViewNumber;
 
@@ -203,8 +206,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
                   width: 400,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(9),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/images/logo_half.png"),
+                    image: DecorationImage(
+                      image: AssetImage(backgroundPicture),
                       fit: BoxFit.cover,
                     ),
                   ),

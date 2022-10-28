@@ -58,7 +58,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if(widget.task.contractOwner == tasksServices.publicAddress) {
+    if(tasksServices.publicAddress != null) {
       logged = true;
     }
 
