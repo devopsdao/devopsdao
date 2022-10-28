@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:badges/badges.dart';
 import 'package:devopsdao/custom_widgets/participants_list.dart';
 import 'package:devopsdao/custom_widgets/payment.dart';
@@ -137,33 +138,59 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                           ),
                         ),
                         const Spacer(),
-                        Container(
-                            child: Expanded(
-                                flex: 10,
-                                child: InkWell(
-                                  child: Text(
-                                    task.title,
-                                    style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onTap: () async {
-                                    Clipboard.setData(new ClipboardData(
-                                            text:
-                                                'https://dodao.dev/index.html#/${widget.role}/${task.taskAddress.toString()}'))
-                                        .then((_) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  'Copied to your clipboard !')));
-                                    });
-                                  },
-                                ))),
+                        Expanded(
+                            flex: 10,
+                            child: InkWell(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(child:
+                                    RichText(
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        children: [
+                                          WidgetSpan(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(right: 5.0),
+
+                                            child: Icon(Icons.copy, size: 20, color: Colors.black26,),)
+                                          ),
+                                          TextSpan(
+                                            text: task.title,
+                                            style: const TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+
+                              onTap: () async {
+                                Clipboard.setData(new ClipboardData(
+                                        text:
+                                            'https://dodao.dev/index.html#/${widget.role}/${task.taskAddress.toString()}'))
+                                    .then((_) {
+                                  // ScaffoldMessenger.of(context)
+                                  //     .showSnackBar(const SnackBar(
+                                  //         content: Text(
+                                  //             'Copied to your clipboard !')));
+                                  Flushbar(
+                                    icon: Icon(Icons.copy, size: 20, color: Colors.white,),
+                                      message: 'Copied to your clipboard !',
+                                      duration: Duration(seconds: 2),
+                                    backgroundColor: Colors.blueAccent,
+                                      shouldIconPulse: false
+                                  ).show(context);
+                                });
+                              },
+                            )),
                         const Spacer(),
                         InkWell(
                           onTap: () {
@@ -838,7 +865,11 @@ class _DialogPagesState extends State<DialogPages> {
               //   borderRadius: widget.borderRadius,
               // ),
               // const SizedBox(height: 14),
-
+              if ((task.contractOwner != tasksServices.publicAddress ||
+                  tasksServices.hardhatDebug == true) &&
+                  tasksServices.publicAddress != null &&
+                  tasksServices.validChainID &&
+                  role == 'tasks')
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
