@@ -1180,7 +1180,7 @@ class _DialogPagesState extends State<DialogPages> {
                             task.justLoaded = false;
                           });
                           tasksServices.taskAuditDecision(
-                              task.taskAddress, 'Customer', task.nanoId,
+                              task.taskAddress, 'customer', task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
                           showDialog(
@@ -1202,7 +1202,7 @@ class _DialogPagesState extends State<DialogPages> {
                             task.justLoaded = false;
                           });
                           tasksServices.taskAuditDecision(
-                              task.taskAddress, 'Performer', task.nanoId,
+                              task.taskAddress, 'performer', task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
                           showDialog(

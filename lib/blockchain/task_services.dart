@@ -16,7 +16,8 @@ import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../custom_widgets/wallet_action.dart';
 // import 'Factory.g.dart';
-import 'TasksFacet.g.dart';
+// import 'TasksFacet.g.dart';
+import 'abi/TasksFacet.g.dart';
 import 'abi/TaskContract.g.dart';
 import 'abi/IERC20.g.dart';
 import 'task.dart';
@@ -71,7 +72,7 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = true;
+  bool hardhatDebug = false;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -724,21 +725,39 @@ class TasksServices extends ChangeNotifier {
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
     // listen for the Transfer event when it's emitted by the contract
-    final subscription =
-        tasksFacet.oneEventForAllEvents().listen((event) async {
-      print('received event ${event.contractAdr} index ${event.message}');
-      thr.debounce(() {
-        fetchTasks();
-      });
-    });
-    final subscription2 =
-        tasksFacet.jobContractCreatedEvents().listen((event) async {
+    // final subscription =
+    //     tasksFacet.oneEventForAllEvents().listen((event) async {
+    //   print('received event ${event.contractAdr} index ${event.message}');
+    //   thr.debounce(() {
+    //     fetchTasks();
+    //   });
+    // });
+    // final subscription2 =
+    //     tasksFacet.jobContractCreatedEvents().listen((event) async {
+    //   print(
+    //       'received event ${event.title} jobAddress ${event.taskAddress} description ${event.description}');
+    //   if (event.taskOwner == publicAddress) {
+    //     transactionStatuses[event.nanoId]!['task'] = {
+    //       'jobAddress': event.taskAddress.toString()
+    //     };
+    //   }
+    // });
+
+    final subscription = tasksFacet.taskCreatedEvents().listen((event) async {
       print(
-          'received event ${event.title} jobAddress ${event.taskAddress} description ${event.description}');
-      if (event.taskOwner == publicAddress) {
-        transactionStatuses[event.nanoId]!['task'] = {
-          'jobAddress': event.taskAddress.toString()
-        };
+          'received event ${event.contractAdr} index ${event.message} index ${event.timestamp}');
+      try {
+        tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
+        await refreshTask(tasks[event.contractAdr.toString()]!);
+        print(
+            'refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
+        await myBalance();
+        notifyListeners();
+      } on GetTaskException {
+        print(
+            'could not get task ${event.contractAdr.toString()} from blockchain');
+      } catch (e) {
+        print(e);
       }
     });
 
@@ -845,6 +864,7 @@ class TasksServices extends ChangeNotifier {
       final double ethBalanceToken =
           (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
+      print(task);
       var taskObject = Task(
         // nanoId: task[0],
         nanoId: task[1].toString(),
@@ -1058,6 +1078,7 @@ class TasksServices extends ChangeNotifier {
         scoredTaskCount = 0;
 
         for (Task task in tasks.values) {
+          // print(task);
           // for (var k = 0; k < tasks.length; k++) {
           // final task = tasks[k];
           await refreshTask(task);
@@ -1242,7 +1263,7 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      creds = EthPrivateKey.fromHex(accounts[2]["key"]);
       senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
     } else {
       creds = credentials;
@@ -1322,13 +1343,13 @@ class TasksServices extends ChangeNotifier {
     late String txn;
     message ??= 'Auditor task decision';
     replyTo ??= BigInt.from(0);
-    score ??= BigInt.from(0);
+    score ??= BigInt.from(5);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[2]["key"]);
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
       senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
     } else {
       creds = credentials;

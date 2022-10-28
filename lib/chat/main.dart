@@ -251,6 +251,31 @@ class _ChatPageState extends State<ChatPage> {
 
   void _loadMessages() async {
     List taskMessages = [];
+
+    Map<String, dynamic> message = {};
+    Map<String, dynamic> author = {};
+    author['firstName'] = 'task creator';
+    // author['firstName'] = 'vaso';
+    author['lastName'] = '';
+    author['id'] = '1';
+    // author['id'] = const Uuid().v4();
+    message['author'] = author;
+    message['createdAt'] = 2022156165;
+    message['id'] = "0";
+    message['status'] = 'delivered';
+    message['text'] = 'Task has been created';
+    message['type'] = 'text';
+    // final String firstName = msg[3].toString();
+    // taskMessages.add(message);
+    // final textMessage = types.TextMessage(
+    //   author: _user,
+    //   createdAt: msg[2].toInt(),
+    //   id: msg[0].toString(),
+    //   text: msg[1],
+    // );
+    // _addMessage(textMessage);
+    taskMessages.add(message);
+
     for (var msg in widget.messages) {
       Map<String, dynamic> message = {};
       Map<String, dynamic> author = {};
