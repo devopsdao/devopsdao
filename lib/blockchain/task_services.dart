@@ -197,7 +197,7 @@ class TasksServices extends ChangeNotifier {
   late ContractAbi _abiCode;
 
   late num totalTaskLen = 0;
-  int taskLoaded = 0;
+  int tasksLoaded = 0;
   late EthereumAddress _contractAddress;
   EthereumAddress zeroAddress =
       EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
@@ -711,8 +711,7 @@ class TasksServices extends ChangeNotifier {
 
       late BigInt weiBalanceToken = BigInt.from(0);
       if (hardhatDebug == false) {
-        BigInt weiBalanceToken =
-            await web3GetBalanceToken(publicAddress!, 'aUSDC');
+        weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
@@ -858,7 +857,10 @@ class TasksServices extends ChangeNotifier {
     if (task != null) {
       final BigInt weiBalance = await taskContract.getBalance();
       final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-      final BigInt weiBalanceToken = BigInt.from(0);
+      BigInt weiBalanceToken = BigInt.from(0);
+      if (hardhatDebug == false) {
+        weiBalanceToken = await web3GetBalanceToken(taskAddress, 'aUSDC');
+      }
       final double ethBalancePreciseToken =
           weiBalanceToken.toDouble() / pow(10, 6);
       final double ethBalanceToken =
@@ -1027,8 +1029,10 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> fetchTasks() async {
     isLoadingBackground = true;
-    notifyListeners();
     List totalTaskList = await tasksFacet.getTaskContracts();
+    totalTaskLen = totalTaskList.length;
+    notifyListeners();
+
     tasks.clear();
 
     if (loopRunning) {
@@ -1047,13 +1051,15 @@ class TasksServices extends ChangeNotifier {
         }
         try {
           tasks[totalTaskList[i].toString()] = await getTask(totalTaskList[i]);
+          tasksLoaded++;
+          notifyListeners();
           await monitorTaskEvents(totalTaskList[i]);
         } on GetTaskException {
           print('could not get task ${totalTaskList[i]} from blockchain');
         }
       }
 
-      taskLoaded = 0;
+      tasksLoaded = 0;
 
       if (loopRunning) {
         filterResults.clear();
@@ -1154,9 +1160,10 @@ class TasksServices extends ChangeNotifier {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol,
             priceInBigInt, nanoId);
         final transaction = Transaction(
-          value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
+          from: publicAddress,
+          // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        txn = await tasksFacet.createTaskContract(nanoId, title, taskType,
+        txn = await tasksFacet.createTaskContract(nanoId, taskType, title,
             description, taskTokenSymbol, priceInBigInt,
             credentials: credentials, transaction: transaction);
         print(txn);
