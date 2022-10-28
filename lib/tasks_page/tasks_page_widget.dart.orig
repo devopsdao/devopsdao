@@ -100,7 +100,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+<<<<<<< HEAD
 
+=======
+>>>>>>> a8e43896c12981f6f7b2088a2adbf4e446af874b
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(tasksServices.tasksNew);
@@ -314,7 +317,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                 //         .taskAddress;
                                                 // context.popToNamed(
                                                 //     '/tasks/$taskAddress');
-                                                // print(objList);
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) =>

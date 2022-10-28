@@ -29,9 +29,9 @@ class _ParticipantListState extends State<ParticipantList> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     if (widget.listType == 'customer') {
-      if (widget.obj.participants != null)
+      if (widget.obj.participants != null) {
         participants = widget.obj.participants;
-      else {
+      } else {
         participants = [];
       }
       status = 'agreed';

@@ -30,8 +30,6 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../custom_widgets/task_dialog.dart';
 
-import '../custom_widgets/data_loading_dialog.dart';
-
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
@@ -61,18 +59,13 @@ class _TaskDialog extends State<TaskDialog> {
     //     null) {
     //   task = tasksServices.tasksCustomerComplete[widget.taskAddress]!;
     // }
-    if (tasksServices.tasks[widget.taskAddress] != null) {
-      task = tasksServices.tasks[widget.taskAddress]!;
-      if (task != null) {
-        print('taskAddress: ${widget.taskAddress}');
-        print('role: ${widget.role}');
-        return TaskInformationDialog(
-          role: widget.role,
-          object: task,
-        );
-      }
-    }
-    return const AppDataLoadingDialogWidget();
+    task = tasksServices.tasks[widget.taskAddress]!;
+    print('taskAddress: ${widget.taskAddress}');
+
+    return TaskInformationDialog(
+      role: widget.role,
+      object: task,
+    );
   }
 }
 
@@ -108,6 +101,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       return StatefulBuilder(
         builder: (context, setState) {
           return WillPopScope(
+
             onWillPop: () async => false,
             child: Dialog(
               insetPadding: const EdgeInsets.all(30),
@@ -124,7 +118,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                           width: 30,
                           child: InkWell(
                             onTap: () {
-                              interface.TasksController.animateToPage(0,
+                              interface.controller.animateToPage(0,
                                   duration: const Duration(milliseconds: 300),
                                   curve: Curves.ease);
                             },
@@ -165,13 +159,9 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                         InkWell(
                           onTap: () {
                             // print(widget.role);
-                            // context.beamToNamed('/${widget.role}');
+                            context.beamToNamed('/${widget.role}');
                             // context.beamBack();
-                            Navigator.pop(context);
-                            RouteInformation routeInfo =
-                                RouteInformation(location: '/${widget.role}');
-                            Beamer.of(context)
-                                .updateRouteInformation(routeInfo);
+                            // Navigator.pop(context);
                           },
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
@@ -193,12 +183,73 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                             ),
                           ),
                         ),
+<<<<<<< HEAD
                       ],
+=======
+                      ),
+                      const Spacer(),
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          task.title,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          // print(widget.role);
+                          context.beamToNamed('/${widget.role}');
+                          // context.beamBack();
+                          // Navigator.pop(context);
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          height: 30,
+                          width: 30,
+                          // decoration: BoxDecoration(
+                          //   borderRadius: BorderRadius.circular(6),
+                          // ),
+                          child: Row(
+                            children: const <Widget>[
+                              Expanded(
+                                child: Icon(
+                                  Icons.close,
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: constraints.maxHeight * .665 < 400
+                      ? 320
+                      : constraints.maxHeight * .665,
+                  // width: constraints.maxWidth * .8,
+                  // height: 550,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    image: const DecorationImage(
+                      image: AssetImage("assets/images/cross.png"),
+                      fit: BoxFit.cover,
+>>>>>>> 0aa800b55a751432b6451deee7daf7dd982e6ec4
                     ),
                   ),
                   Container(
-                    height: constraints.maxHeight * .665 < 400
-                        ? 320
+                    height: constraints.maxHeight * .665 < 400 ? 320
                         : constraints.maxHeight * .665,
                     // width: constraints.maxWidth * .8,
                     // height: 550,
@@ -554,7 +605,7 @@ class _DialogPagesState extends State<DialogPages> {
         // pageSnapping: false,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
-        controller: interface.TasksController,
+        controller: interface.controller,
         // onPageChanged: (number) {
         //   interface.pageWalletViewNumber = number;
         //   tasksServices.myNotifyListeners();
@@ -570,7 +621,7 @@ class _DialogPagesState extends State<DialogPages> {
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   child: GestureDetector(
                     onTap: () {
-                      interface.TasksController.animateToPage(1,
+                      interface.controller.animateToPage(1,
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.ease);
                     },
@@ -1180,7 +1231,7 @@ class _DialogPagesState extends State<DialogPages> {
                             task.justLoaded = false;
                           });
                           tasksServices.taskAuditDecision(
-                              task.taskAddress, 'customer', task.nanoId,
+                              task.taskAddress, 'Customer', task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
                           showDialog(
@@ -1202,7 +1253,7 @@ class _DialogPagesState extends State<DialogPages> {
                             task.justLoaded = false;
                           });
                           tasksServices.taskAuditDecision(
-                              task.taskAddress, 'performer', task.nanoId,
+                              task.taskAddress, 'Performer', task.nanoId,
                               message: messageForStateController!.text);
                           Navigator.pop(context);
                           showDialog(
@@ -1231,7 +1282,7 @@ class _DialogPagesState extends State<DialogPages> {
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: GestureDetector(
                           onTap: () {
-                            interface.TasksController.animateToPage(2,
+                            interface.controller.animateToPage(2,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.ease);
                           },
