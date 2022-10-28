@@ -1,0 +1,26 @@
+[
+  {
+    "author": {
+      "firstName": "Rod",
+      "id": "e52552f4-835d-4dbe-ba77-b076e659774d",
+      "lastName": ""
+    },
+    "createdAt": 1666556296000,
+    "id": "4e048753-2d60-4144-bc28-9967050aaf12",
+    "status": "seen",
+    "text": "Wow you made it!",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Matt",
+      "id": "82091008-a484-4a89-ae75-a22bf8d6f3ac",
+      "lastName": ""
+    },
+    "createdAt": 1666556294000,
+    "id": "64747b28-df19-4a0c-8c47-316dc3546e3c",
+    "status": "seen",
+    "text": "Check this out =)",
+    "type": "text"
+  }
+]

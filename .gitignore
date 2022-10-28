@@ -1,3 +1,10 @@
+#keys
+truffle-config.js
+endpoints.md
+yarn-error.log
+yarn.lock
+pubspec.lock
+
 # Miscellaneous
 *.class
 *.log
@@ -8,6 +15,7 @@
 .buildlog/
 .history
 .svn/
+
 
 # IntelliJ related
 *.iml
@@ -29,14 +37,17 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+
+!build
+build/*
+!build/contracts
+
 
 # Firebase – this is necessary if you use Firebase since it could otherwise 
 # lead to leaking of private certificates to your repository, which is no bueno.
 .firebase/
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
@@ -48,3 +59,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+node_modules/
