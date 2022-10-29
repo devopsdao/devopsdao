@@ -37,6 +37,8 @@ import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
+import 'package:browser_detector/browser_detector.dart' hide Platform;
 
 // import 'dart:html' hide Platform;
 
@@ -109,6 +111,7 @@ class TasksServices extends ChangeNotifier {
   String lastTxn = '';
 
   String platform = 'mobile';
+  String? browserPlatform;
   //final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
   //final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
@@ -142,6 +145,13 @@ class TasksServices extends ChangeNotifier {
 
   bool initComplete = false;
   Future<void> init() async {
+    // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    // WebBrowserInfo webBrowserInfo = await deviceInfoPlugin.webBrowserInfo;
+    final BrowserDetector browserInfo = BrowserDetector();
+    if (browserInfo.platform.isAndroid) {
+      browserPlatform = 'android';
+    }
+
     if (hardhatDebug == true) {
       chainId = 31337;
       _rpcUrl = 'http://localhost:8545';
@@ -218,7 +228,7 @@ class TasksServices extends ChangeNotifier {
   bool validChainIDWC = false;
   bool validChainIDMM = false;
 
-  Future<void> connectWalletWC() async {
+  Future<void> connectWalletWC(bool refresh) async {
     print('async');
     if (transactionTester != null) {
       var connector = await transactionTester.initWalletConnect();
@@ -285,13 +295,15 @@ class TasksServices extends ChangeNotifier {
         pendingBalanceToken = 0;
         walletConnectUri = '';
         walletConnectSessionUri = '';
-        connectWalletWC();
+        connectWalletWC(true);
         notifyListeners();
       });
       final SessionStatus? session = await transactionTester?.connect(
         onDisplayUri: (uri) => {
           walletConnectSessionUri = uri.split("?").first,
-          platform == 'mobile' ? launchURL(uri) : walletConnectUri = uri,
+          (platform == 'mobile' || browserPlatform == 'android') && !refresh
+              ? launchURL(uri)
+              : walletConnectUri = uri,
           notifyListeners()
         },
       );
@@ -533,7 +545,7 @@ class TasksServices extends ChangeNotifier {
     pendingBalanceToken = 0;
     walletConnectUri = '';
     walletConnectSessionUri = '';
-    connectWalletWC();
+    connectWalletWC(true);
     notifyListeners();
   }
 
