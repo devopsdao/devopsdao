@@ -364,9 +364,9 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                         showDialog(
                             context: context,
                             builder: (context) => TaskInformationDialog(
-                                  role: 'customer',
-                                  object: objList[index],
-                                ));
+                                role: 'customer',
+                                task: objList[index],
+                                shimmerEnabled: false));
                         final String taskAddress = tasksServices
                             .filterResults.values
                             .toList()[index]

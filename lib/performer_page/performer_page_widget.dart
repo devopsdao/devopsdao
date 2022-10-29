@@ -358,9 +358,9 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                         showDialog(
                             context: context,
                             builder: (context) => TaskInformationDialog(
-                                  role: 'performer',
-                                  object: objList[index],
-                                ));
+                                role: 'performer',
+                                task: objList[index],
+                                shimmerEnabled: false));
                         final String taskAddress = tasksServices
                             .filterResults.values
                             .toList()[index]

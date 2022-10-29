@@ -330,7 +330,10 @@ class _WalletPagesState extends State<WalletPages> {
               ),
               const Spacer(),
               ChooseWalletButton(
-                active: tasksServices.platform == 'web' ? true : false,
+                active:
+                    tasksServices.platform == 'web' && tasksServices.mmAvailable
+                        ? true
+                        : false,
                 buttonName: 'metamask',
                 borderRadius: widget.borderRadius,
                 buttonWidth: innerWidth,
@@ -788,9 +791,9 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             tasksServices.browserPlatform != 'android')) {
       buttonText = 'Refresh QR';
     } else if (!tasksServices.walletConnectedWC &&
-            widget.buttonName == 'wallet_connect' &&
-            tasksServices.platform == 'mobile' ||
-        tasksServices.browserPlatform == 'android') {
+        widget.buttonName == 'wallet_connect' &&
+        (tasksServices.platform == 'mobile' ||
+            tasksServices.browserPlatform == 'android')) {
       buttonText = 'Connect';
     } else if (tasksServices.walletConnectedMM &&
         tasksServices.validChainIDMM &&
