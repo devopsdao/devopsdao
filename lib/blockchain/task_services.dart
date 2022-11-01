@@ -307,7 +307,7 @@ class TasksServices extends ChangeNotifier {
         onDisplayUri: (uri) => {
           walletConnectSessionUri = uri.split("?").first,
           (platform == 'mobile' || browserPlatform == 'android') && !refresh
-              ? launchURL(uri)
+              ? {launchURL(uri), walletConnectUri = uri}
               : walletConnectUri = uri,
           notifyListeners()
         },

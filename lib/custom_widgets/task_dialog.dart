@@ -22,6 +22,9 @@ import 'package:flutter/services.dart';
 
 import '../custom_widgets/data_loading_dialog.dart';
 
+import 'dart:ui' as ui;
+
+
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
@@ -970,19 +973,21 @@ class _DialogPagesState extends State<DialogPages> {
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 14.0, 20.0, 16.0),
+                padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
                 width: innerWidth + 8,
-                child: Wrap(
-                  direction: Axis.horizontal,
+                child: Row(
+                  // direction: Axis.horizontal,
+                  // crossAxisAlignment: WrapCrossAlignment.start,
                   children: [
                     // ##################### ACTION BUTTONS PART ######################## //
                     // ************************ NEW (EXCHANGE) ************************** //
-                    if ((task.contractOwner != tasksServices.publicAddress ||
-                            tasksServices.hardhatDebug == true) &&
-                        tasksServices.publicAddress != null &&
-                        tasksServices.validChainID &&
-                        role == 'tasks')
+                    if ( role == 'tasks')
                       TaskDialogButton(
+                        inactive: (task.contractOwner !=
+                            tasksServices.publicAddress ||
+                            tasksServices.hardhatDebug == true)
+                            && tasksServices.validChainID &&
+                            tasksServices.publicAddress != null ? false : true,
                         buttonName: 'Participate',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1010,6 +1015,7 @@ class _DialogPagesState extends State<DialogPages> {
                         (role == 'performer' ||
                             tasksServices.hardhatDebug == true))
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Start the task',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1036,6 +1042,7 @@ class _DialogPagesState extends State<DialogPages> {
                         (role == 'performer' ||
                             tasksServices.hardhatDebug == true))
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Review',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1066,6 +1073,7 @@ class _DialogPagesState extends State<DialogPages> {
                             task.contractValueToken != 0))
                       // WithdrawButton(object: task),
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Withdraw',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1089,6 +1097,7 @@ class _DialogPagesState extends State<DialogPages> {
                     if (role == 'customer' ||
                         tasksServices.hardhatDebug == true)
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Topup',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1137,6 +1146,7 @@ class _DialogPagesState extends State<DialogPages> {
                         (role == 'customer' ||
                             tasksServices.hardhatDebug == true))
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Sign Review',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1163,6 +1173,7 @@ class _DialogPagesState extends State<DialogPages> {
                         (role == 'customer' ||
                             tasksServices.hardhatDebug == true))
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Rate task',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1193,6 +1204,7 @@ class _DialogPagesState extends State<DialogPages> {
                         (task.taskState == "progress" ||
                             task.taskState == "review"))
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Request audit',
                         buttonColorRequired: Colors.orangeAccent.shade700,
                         callback: () {
@@ -1218,6 +1230,7 @@ class _DialogPagesState extends State<DialogPages> {
                             tasksServices.hardhatDebug == true) &&
                         task.auditState == 'requested')
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'Take audit',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1241,6 +1254,7 @@ class _DialogPagesState extends State<DialogPages> {
                             tasksServices.hardhatDebug == true) &&
                         task.auditState == 'performing')
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'In favor of Customer',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1263,6 +1277,7 @@ class _DialogPagesState extends State<DialogPages> {
                             tasksServices.hardhatDebug == true) &&
                         task.auditState == 'performing')
                       TaskDialogButton(
+                        inactive: false,
                         buttonName: 'In favor of Performer',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
@@ -1456,12 +1471,15 @@ class TaskDialogButton extends StatefulWidget {
   final Color buttonColorRequired;
   final VoidCallback callback;
   final Task? task;
+  final bool inactive;
   const TaskDialogButton(
       {Key? key,
-      required this.buttonName,
-      required this.buttonColorRequired,
-      required this.callback,
-      this.task})
+        required this.buttonName,
+        required this.buttonColorRequired,
+        required this.callback,
+        required this.inactive,
+        this.task
+      })
       : super(key: key);
 
   @override
@@ -1469,13 +1487,27 @@ class TaskDialogButton extends StatefulWidget {
 }
 
 class _TaskDialogButtonState extends State<TaskDialogButton> {
+
+
   late Color buttonColor;
   late Color textColor = Colors.white;
   late bool _buttonState = true;
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    final Size widthTextSize = (TextPainter(
+        text: TextSpan(text: widget.buttonName, style: TextStyle(fontSize: 18, color: textColor)),
+        maxLines: 1,
+        textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        textDirection: ui.TextDirection.ltr )
+      ..layout()).size;
     buttonColor = widget.buttonColorRequired;
+
+    if (widget.inactive == true) {
+      textColor = Colors.white;
+      buttonColor = Colors.grey;
+      _buttonState = false;
+    }
 
     // this check for WITHDRAW button:
     if (widget.task != null) {
@@ -1486,32 +1518,37 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
             tasksServices.destinationChain == 'Moonbase') {
           _buttonState = true;
         } else {
-          textColor = Colors.black26;
-          buttonColor = Colors.black54;
+          textColor = Colors.white;
+          buttonColor = Colors.grey;
           _buttonState = false;
         }
       }
     }
 
-    return Container(
-      padding: const EdgeInsets.all(4.0),
-      child: Material(
-        elevation: 9,
-        borderRadius: BorderRadius.circular(6),
-        color: buttonColor,
-        child: InkWell(
-          onTap: _buttonState ? widget.callback : null,
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            // height: 40.0,
-            // width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              widget.buttonName,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, color: textColor),
+
+    return Expanded(
+
+      child: Container(
+        width: widthTextSize.width + 100,
+        padding: const EdgeInsets.all(4.0),
+        child: Material(
+          elevation: 9,
+          borderRadius: BorderRadius.circular(6),
+          color: buttonColor,
+          child: InkWell(
+            onTap: _buttonState ? widget.callback : null,
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              // height: 40.0,
+
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                widget.buttonName,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: textColor),
+              ),
             ),
           ),
         ),
