@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../blockchain/interface.dart';
 import 'algorand_transaction_tester.dart';
 import 'ethereum_transaction_tester.dart';
 import 'transaction_tester.dart';
-import 'wallet_connect_lifecycle.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:provider/provider.dart';
@@ -221,7 +219,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
   }
 
   void _changeNetworks(String? network) {
-    if (network == null) return null;
+    if (network == null) return;
     final newNetworkIndex = _networks.indexOf(network);
     final newNetwork = NetworkType.values[newNetworkIndex];
 
@@ -484,7 +482,7 @@ class _WalletPagesState extends State<WalletPages> {
                                                           color:
                                                               Colors.black54)),
                                                 ])),
-                                            WalletConnectButton(
+                                            const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
                                             const SizedBox(height: 12),
@@ -520,7 +518,7 @@ class _WalletPagesState extends State<WalletPages> {
                                                           color:
                                                               Colors.black54)),
                                                 ])),
-                                            WalletConnectButton(
+                                            const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
                                             const SizedBox(height: 12),
@@ -603,7 +601,7 @@ class _WalletPagesState extends State<WalletPages> {
                                             ),
                                           ),
                                           const Spacer(),
-                                          WalletConnectButton(
+                                          const WalletConnectButton(
                                             buttonName: 'wallet_connect',
                                           ),
                                           const Spacer(),
@@ -765,8 +763,6 @@ class WalletConnectButton extends StatefulWidget {
 }
 
 class _WalletConnectButtonState extends State<WalletConnectButton> {
-  TransactionState _state2 = TransactionState.disconnected;
-
   // late String assetName;
   // late Color buttonColor = Colors.black26;
   // late int page = 0;
@@ -878,7 +874,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
                 child: Text(
                   buttonText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],

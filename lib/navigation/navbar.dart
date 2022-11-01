@@ -1,27 +1,12 @@
-import 'package:provider/provider.dart';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import '../auditor_page/auditor_page_widget.dart';
-import '../blockchain/interface.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/internationalization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../index.dart';
 
-import 'package:devopsdao/blockchain/task_services.dart';
-
-import '../tasks_page//tasks_page_widget.dart';
-
-import 'authenticator.dart';
 import 'beamer_delegate.dart';
-import 'package:beamer/beamer.dart';
 
 class NavBarPage extends StatefulWidget {
-  NavBarPage({Key? key, this.initialPage}) : super(key: key);
+  const NavBarPage({Key? key, this.initialPage}) : super(key: key);
 
   final String? initialPage;
 

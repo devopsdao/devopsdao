@@ -44,10 +44,12 @@ class AlgorandTransactionTester extends TransactionTester {
   //   );
   // }
 
+  @override
   Future<void> initSession() async {
     throw UnimplementedError();
   }
 
+  @override
   Future initWalletConnect() async {
     final sessionStorage = WalletConnectSecureStorage();
     final session = await sessionStorage.getSession();

@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:http/http.dart';
 import 'transaction_tester.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';

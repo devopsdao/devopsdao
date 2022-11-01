@@ -69,11 +69,11 @@ class _HomePageWidgetState extends State<HomePageWidget>
       hideBeforeAnimating: false,
       fadeIn: true,
       initialState: AnimationState(
-        offset: Offset(0, 70),
+        offset: const Offset(0, 70),
         opacity: 0,
       ),
       finalState: AnimationState(
-        offset: Offset(0, 0),
+        offset: const Offset(0, 0),
         opacity: 1,
       ),
     ),
@@ -82,7 +82,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
   // bool _flag = true;
   late AnimationController _animationController;
-  late Animation<double> _myAnimation;
 
   @override
   void initState() {
@@ -92,10 +91,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
           .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
     );
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    _myAnimation =
-        CurvedAnimation(curve: Curves.linear, parent: _animationController);
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 450));
   }
 
   final TextEditingController titleController = TextEditingController();
@@ -129,10 +126,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
     //   }
     // });
 
-    bool _isFloatButtonVisible = false;
+    bool isFloatButtonVisible = false;
 
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
-      _isFloatButtonVisible = true;
+      isFloatButtonVisible = true;
     }
 
     return Scaffold(
@@ -154,7 +151,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
-          LoadButtonIndicator(),
+          const LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
@@ -184,7 +181,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   borderRadius: 30,
                   borderWidth: 1,
                   buttonSize: 60,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.account_balance_wallet,
                     color: Colors.white,
                     size: 30,
@@ -199,7 +196,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
                     showDialog(
                       context: context,
-                      builder: (context) => MyWalletPage(
+                      builder: (context) => const MyWalletPage(
                         title: '',
                       ),
                     );
@@ -216,7 +213,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   borderRadius: 30,
                   borderWidth: 1,
                   buttonSize: 60,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.cloud_off,
                     color: Colors.white,
                     size: 30,
@@ -249,20 +246,20 @@ class _HomePageWidgetState extends State<HomePageWidget>
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: _isFloatButtonVisible
+      backgroundColor: const Color(0xFF1E2429),
+      floatingActionButton: isFloatButtonVisible
           ? FloatingActionButton(
               onPressed: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateJobWidget(),
+                    builder: (context) => const CreateJobWidget(),
                   ),
                 );
               },
               backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
               elevation: 8,
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: Colors.white,
                 size: 28,
@@ -274,24 +271,24 @@ class _HomePageWidgetState extends State<HomePageWidget>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            // colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            // colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
             colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background_shape_tiles_small.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/images/background_shape_tiles_small.png"),
+          //   // fit: BoxFit.cover,
+          //   repeat: ImageRepeat.repeat,
+          // ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             tasksServices.isLoading
-                ? LoadIndicator()
+                ? const LoadIndicator()
                 : Image.asset(
                     'assets/images/logo.png',
                     width: 163,
@@ -299,7 +296,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     fit: BoxFit.fitHeight,
                   ).animated([animationsMap['imageOnPageLoadAnimation']!]),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
               child: Text(
                 'Welcome to Devopsdao',
                 style: FlutterFlowTheme.of(context).title1.override(
@@ -311,7 +308,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
               ).animated([animationsMap['textOnPageLoadAnimation']!]),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -319,11 +316,12 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     decoration: BoxDecoration(
-                      color: Color(0xFF39BAD2),
+                      color: const Color(0xFF39BAD2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -361,11 +359,12 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     decoration: BoxDecoration(
-                      color: Color(0xFF247888),
+                      color: const Color(0xFF247888),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -404,16 +403,16 @@ class _HomePageWidgetState extends State<HomePageWidget>
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.92,
                 decoration: BoxDecoration(
-                  color: Color(0xFF39BAD2),
+                  color: const Color(0xFF39BAD2),
                   borderRadius: BorderRadius.circular(8),
                   shape: BoxShape.rectangle,
                 ),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -456,7 +455,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.92,
                 decoration: BoxDecoration(
@@ -465,7 +464,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   shape: BoxShape.rectangle,
                 ),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,

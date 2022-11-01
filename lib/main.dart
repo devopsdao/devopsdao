@@ -1,20 +1,12 @@
 import 'package:provider/provider.dart';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'auditor_page/auditor_page_widget.dart';
 import 'blockchain/interface.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
-import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'index.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
-
-import 'tasks_page/tasks_page_widget.dart';
 
 import 'navigation/authenticator.dart';
 import 'navigation/beamer_delegate.dart';
@@ -65,7 +57,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale? _locale;
-  ThemeMode _themeMode = FlutterFlowTheme.themeMode;
 
   bool displaySplashImage = true;
 
@@ -79,7 +70,6 @@ class _MyAppState extends State<MyApp> {
 
   void setLocale(Locale value) => setState(() => _locale = value);
   void setThemeMode(ThemeMode mode) => setState(() {
-        _themeMode = mode;
         FlutterFlowTheme.saveThemeMode(mode);
       });
 

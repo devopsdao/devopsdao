@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,8 +28,6 @@ class _PaymentState extends State<Payment> {
   late double minPrice;
   late double maxPrice;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -40,7 +37,7 @@ class _PaymentState extends State<Payment> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var Interface = context.watch<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
     if (tasksServices.taskTokenSymbol == 'ETH') {
       dropdownValue = 'DEV';
       minPrice = devLowPrice;
@@ -65,14 +62,12 @@ class _PaymentState extends State<Payment> {
       children: [
         TextFormField(
           controller: valueController,
-
           inputFormatters: [
             LengthLimitingTextInputFormatter(8),
             FilteringTextInputFormatter.allow(RegExp(r'\d*\.?\d*')),
           ],
           autofocus: true,
           obscureText: false,
-
           decoration: InputDecoration(
             labelText: 'Value:',
             labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
@@ -109,16 +104,15 @@ class _PaymentState extends State<Payment> {
           onChanged: (text) {
             print('First text field: $text');
             setState(() {
-              Interface.tokensEntered = double.parse(text);
+              interface.tokensEntered = double.parse(text);
             });
           },
-
         ),
         Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 15),
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 25, 0, 15),
           child: SliderTheme(
             data: SliderThemeData(
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 14),
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14),
               activeTrackColor: setBlackAndWhite,
               inactiveTrackColor: setBlackAndWhite,
               trackHeight: 5.0,
@@ -133,7 +127,7 @@ class _PaymentState extends State<Payment> {
                 setState(() {
                   _currentPriceValue = value;
                   valueController!.text = value.toString();
-                  Interface.tokensEntered = value;
+                  interface.tokensEntered = value;
                 });
               },
             ),
@@ -147,11 +141,10 @@ class _PaymentState extends State<Payment> {
                     style: DefaultTextStyle.of(context)
                         .style
                         .apply(fontSizeFactor: 1.3, color: setBlackAndWhite),
-                    children: <TextSpan>[
+                    children: const <TextSpan>[
                   TextSpan(
                       text: 'Select Token: ',
-                      style: const TextStyle(
-                          height: 2, fontWeight: FontWeight.bold)),
+                      style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                 ])),
             DropdownButton<String>(
               isExpanded: true,
@@ -160,7 +153,7 @@ class _PaymentState extends State<Payment> {
               elevation: 16,
               dropdownColor: setGrey,
               style: TextStyle(color: setBlackAndWhite),
-              hint: Text('Choose token (${dropdownValue})'),
+              hint: Text('Choose token ($dropdownValue)'),
               underline: Container(
                 height: 2,
                 color: setBlackAndWhite,
@@ -173,13 +166,13 @@ class _PaymentState extends State<Payment> {
                   tasksServices.taskTokenSymbol = value!;
                 }
                 if (value == 'DEV') {
-                  Interface.tokensEntered = 0.0;
+                  interface.tokensEntered = 0.0;
                   valueController!.text = '0.0';
                   _currentPriceValue = 0.0;
                   minPrice = devLowPrice;
                   maxPrice = devHighPrice;
                 } else {
-                  Interface.tokensEntered = 0.0;
+                  interface.tokensEntered = 0.0;
                   valueController!.text = '0.0';
                   _currentPriceValue = 0.0;
                   minPrice = ausdcLowPrice;
