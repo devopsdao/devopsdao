@@ -259,6 +259,12 @@ class _WalletPagesState extends State<WalletPages> {
   int defaultTab = 0;
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
@@ -283,6 +289,8 @@ class _WalletPagesState extends State<WalletPages> {
         tasksServices.browserPlatform == 'android') {
       defaultTab = 0;
     }
+
+
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
