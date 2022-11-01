@@ -1,10 +1,8 @@
-import 'package:flutter/services.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../custom_widgets/payment.dart';
-import '../custom_widgets/selectMenu.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -29,7 +27,6 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
   TextEditingController? titleFieldController;
   TextEditingController? valueController;
   // TextEditingController valueController = TextEditingController();
-  double _currentPriceValue = 0.0;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final animationsMap = {
@@ -64,7 +61,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var Interface = context.watch<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
 
     return Scaffold(
       key: scaffoldKey,
@@ -108,16 +105,16 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/images/background.png"),
+          //   // fit: BoxFit.cover,
+          //   repeat: ImageRepeat.repeat,
+          // ),
         ),
         child: Form(
           key: formKey,
@@ -311,7 +308,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                             titleFieldController!.text,
                             descriptionController!.text,
                             // valueController!.text,
-                            Interface.tokensEntered,
+                            interface.tokensEntered,
                             nanoId);
                         Navigator.pop(context);
                         showDialog(

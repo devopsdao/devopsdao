@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -122,7 +124,6 @@ class TasksServices extends ChangeNotifier {
   int chainId = 0;
   bool isLoading = true;
   bool isLoadingBackground = false;
-  final bool _walletconnect = true;
 
   late Web3Client _web3client;
 
@@ -681,9 +682,9 @@ class TasksServices extends ChangeNotifier {
 
     thr = Debouncing(duration: const Duration(seconds: 10));
     await connectContracts();
-    thr.debounce(() {
-      fetchTasks();
-    });
+    // thr.debounce(() {
+    fetchTasks();
+    // });
     await myBalance();
     await monitorEvents();
 

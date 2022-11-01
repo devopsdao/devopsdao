@@ -1,8 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
-import 'package:badges/badges.dart';
 import 'package:devopsdao/custom_widgets/participants_list.dart';
 import 'package:devopsdao/custom_widgets/payment.dart';
-import 'package:devopsdao/custom_widgets/selectMenu.dart';
+import 'package:devopsdao/custom_widgets/select_menu.dart';
 import 'package:devopsdao/custom_widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,6 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:beamer/beamer.dart';
 
 import 'package:flutter/services.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../custom_widgets/data_loading_dialog.dart';
 
@@ -75,9 +73,9 @@ class _TaskDialog extends State<TaskDialog> {
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
   final String role;
-  Task task;
-  bool shimmerEnabled;
-  TaskInformationDialog({
+  final Task task;
+  final bool shimmerEnabled;
+  const TaskInformationDialog({
     Key? key,
     // required this.taskCount,
     required this.role,
@@ -170,10 +168,10 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
                                         children: [
-                                          WidgetSpan(
+                                          const WidgetSpan(
                                               child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 5.0),
+                                            padding:
+                                                EdgeInsets.only(right: 5.0),
                                             child: Icon(
                                               Icons.copy,
                                               size: 20,
@@ -203,14 +201,14 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                   //         content: Text(
                                   //             'Copied to your clipboard !')));
                                   Flushbar(
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.copy,
                                             size: 20,
                                             color: Colors.white,
                                           ),
                                           message:
                                               'Task URL copied to your clipboard!',
-                                          duration: Duration(seconds: 2),
+                                          duration: const Duration(seconds: 2),
                                           backgroundColor: Colors.blueAccent,
                                           shouldIconPulse: false)
                                       .show(context);
@@ -649,8 +647,7 @@ class _DialogPagesState extends State<DialogPages> {
                         borderRadius:
                             BorderRadius.circular(widget.borderRadius),
                       ),
-                      child: Container(
-                          child: ListBody(
+                      child: ListBody(
                         children: <Widget>[
                           // RichText(
                           //     text: TextSpan(
@@ -710,33 +707,31 @@ class _DialogPagesState extends State<DialogPages> {
                           if (task.taskState == 'completed' &&
                               (role == 'customer' ||
                                   tasksServices.hardhatDebug == true))
-                            Container(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    RatingBar.builder(
-                                      initialRating: 4,
-                                      minRating: 1,
-                                      direction: Axis.horizontal,
-                                      allowHalfRating: true,
-                                      itemCount: 5,
-                                      itemPadding: const EdgeInsets.symmetric(
-                                          horizontal: 5.0),
-                                      itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      itemSize: 30.0,
-                                      onRatingUpdate: (rating) {
-                                        setState(() {
-                                          enableRatingButton = true;
-                                        });
-                                        ratingScore = rating;
-                                        tasksServices.myNotifyListeners();
-                                      },
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  RatingBar.builder(
+                                    initialRating: 4,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
                                     ),
-                                  ]),
-                            ),
+                                    itemSize: 30.0,
+                                    onRatingUpdate: (rating) {
+                                      setState(() {
+                                        enableRatingButton = true;
+                                      });
+                                      ratingScore = rating;
+                                      tasksServices.myNotifyListeners();
+                                    },
+                                  ),
+                                ]),
 
                           // ************************ PERFORMER ROLE ************************** //
 
@@ -805,7 +800,7 @@ class _DialogPagesState extends State<DialogPages> {
                           // ************************ AUDITOR ROLE ************************** //
                           // ************************ EMPTY ************************** //
                         ],
-                      )),
+                      ),
                     ),
                   ),
                 ),
@@ -1032,7 +1027,7 @@ class _DialogPagesState extends State<DialogPages> {
                               message: messageForStateController!.text);
                           Navigator.pop(context);
                           RouteInformation routeInfo =
-                              new RouteInformation(location: '/performer');
+                              const RouteInformation(location: '/performer');
                           Beamer.of(context).updateRouteInformation(routeInfo);
 
                           showDialog(
@@ -1059,7 +1054,7 @@ class _DialogPagesState extends State<DialogPages> {
                               message: messageForStateController!.text);
                           Navigator.pop(context);
                           RouteInformation routeInfo =
-                              new RouteInformation(location: '/performer');
+                              const RouteInformation(location: '/performer');
                           Beamer.of(context).updateRouteInformation(routeInfo);
                           showDialog(
                               context: context,
@@ -1109,7 +1104,7 @@ class _DialogPagesState extends State<DialogPages> {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                    title: Text('Topup contract'),
+                                    title: const Text('Topup contract'),
                                     // backgroundColor: Colors.black,
                                     content: const Payment(
                                       purpose: 'topup',
@@ -1164,7 +1159,7 @@ class _DialogPagesState extends State<DialogPages> {
                           // context.beamToNamed('/customer');
                           Navigator.pop(context);
                           RouteInformation routeInfo =
-                              new RouteInformation(location: '/customer');
+                              const RouteInformation(location: '/customer');
                           Beamer.of(context).updateRouteInformation(routeInfo);
                           showDialog(
                               context: context,
@@ -1318,66 +1313,62 @@ class _DialogPagesState extends State<DialogPages> {
           //     child:
           Column(
             children: [
-              Container(
-                  child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: GestureDetector(
-                          onTap: () {
-                            interface.TasksController.animateToPage(2,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.ease);
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  // height: MediaQuery.of(context).size.width * .08,
-                                  // width: MediaQuery.of(context).size.width * .57
-                                  width: innerWidth,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        widget.borderRadius),
-                                  ),
-                                  child: Container(
-                                      padding: const EdgeInsets.all(6),
-                                      child: RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            TextSpan(
-                                              text: task.description,
-                                            )
-                                          ])))),
-                              // const Spacer(),
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      const TextSpan(
-                                          text: 'Created: ',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text:
-                                              DateFormat('MM/dd/yyyy, hh:mm a')
-                                                  .format(task.createTime),
+              Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: GestureDetector(
+                      onTap: () {
+                        interface.TasksController.animateToPage(2,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.all(8.0),
+                              // height: MediaQuery.of(context).size.width * .08,
+                              // width: MediaQuery.of(context).size.width * .57
+                              width: innerWidth,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(widget.borderRadius),
+                              ),
+                              child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  child: RichText(
+                                      text: TextSpan(
                                           style: DefaultTextStyle.of(context)
                                               .style
-                                              .apply(fontSizeFactor: 1.0))
-                                    ])),
-                              ),
-                            ],
-                          )))),
+                                              .apply(fontSizeFactor: 1.0),
+                                          children: <TextSpan>[
+                                        TextSpan(
+                                          text: task.description,
+                                        )
+                                      ])))),
+                          // const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            child: RichText(
+                                text: TextSpan(
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                    children: <TextSpan>[
+                                  const TextSpan(
+                                      text: 'Created: ',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: DateFormat('MM/dd/yyyy, hh:mm a')
+                                          .format(task.createTime),
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.0))
+                                ])),
+                          ),
+                        ],
+                      ))),
 
               // const SizedBox(height: 14),
               Container(

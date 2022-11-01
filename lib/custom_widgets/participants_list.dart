@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:devopsdao/blockchain/task.dart';
 import 'package:devopsdao/custom_widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,8 +19,6 @@ class ParticipantList extends StatefulWidget {
 }
 
 class _ParticipantListState extends State<ParticipantList> {
-  bool _buttonState = false;
-
   late List participants;
   late String status;
 
@@ -63,7 +60,7 @@ class _ParticipantListState extends State<ParticipantList> {
                     participants[index2], status, widget.obj.nanoId);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                    new RouteInformation(location: '/customer');
+                    const RouteInformation(location: '/customer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(

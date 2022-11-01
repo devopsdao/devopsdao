@@ -111,16 +111,16 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                 if (dropdownValue != 'Moonbase')
                   TextSpan(
                       text:
-                          'Transfer fee from Moonbase via Axelar to ${dropdownValue} is: ${tasksServices.transferFee}',
+                          'Transfer fee from Moonbase via Axelar to $dropdownValue is: ${tasksServices.transferFee}',
                       style: const TextStyle(
                           height: 1.8, fontWeight: FontWeight.bold)),
                 if (widget.object.contractValueToken <
                         tasksServices.transferFee &&
                     dropdownValue != 'Moonbase')
-                  TextSpan(
+                  const TextSpan(
                       text:
                           '\nFunds stored in the contract are less \nthan Axelar transaction fee: ',
-                      style: const TextStyle(
+                      style: TextStyle(
                           height: 1.8,
                           fontWeight: FontWeight.bold,
                           color: Colors.redAccent)),
@@ -153,11 +153,10 @@ class _SelectTokenMenuState extends State<SelectTokenMenu> {
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.3, color: Colors.white),
-                children: <TextSpan>[
+                children: const <TextSpan>[
               TextSpan(
                   text: 'Select Token: ',
-                  style:
-                      const TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                  style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
             ])),
         DropdownButton<String>(
           isExpanded: true,
@@ -166,7 +165,7 @@ class _SelectTokenMenuState extends State<SelectTokenMenu> {
           elevation: 16,
           dropdownColor: Colors.blueGrey,
           style: const TextStyle(color: Colors.white),
-          hint: Text('Choose token (${dropdownValue})'),
+          hint: Text('Choose token ($dropdownValue)'),
           underline: Container(
             height: 2,
             color: Colors.white,

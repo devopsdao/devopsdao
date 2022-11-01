@@ -7,7 +7,6 @@ import '../custom_widgets/loading.dart';
 import '../custom_widgets/task_item.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
-import '../blockchain/task.dart';
 
 import 'package:beamer/beamer.dart';
 
@@ -86,7 +85,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       final task = tasksServices.tasks[widget.taskAddress];
 
       if (task != null) {
-        tabIndex = tabs[task!.taskState];
+        tabIndex = tabs[task.taskState];
       }
     }
 
@@ -149,16 +148,16 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/images/background.png"),
+          //   // fit: BoxFit.cover,
+          //   repeat: ImageRepeat.repeat,
+          // ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -328,57 +327,55 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    List objList = tasksServices.filterResults!.values.toList();
+    List objList = tasksServices.filterResults.values.toList();
 
-    return Container(
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-        child: RefreshIndicator(
-          onRefresh: () async {
-            tasksServices.isLoadingBackground = true;
-            tasksServices.fetchTasks();
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          tasksServices.isLoadingBackground = true;
+          tasksServices.fetchTasks();
+        },
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          scrollDirection: Axis.vertical,
+          itemCount: objList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+              child: InkWell(
+                  onTap: () {
+                    // setState(() {
+                    //   // Toggle light when tapped.
+                    // });
+                    // if (obj[index].taskState != "new")
+                    if (tasksServices.filterResults.values
+                            .toList()
+                            .elementAt(index) !=
+                        null) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => TaskInformationDialog(
+                              role: 'performer',
+                              task: objList[index],
+                              shimmerEnabled: false));
+                      final String taskAddress = tasksServices
+                          .filterResults.values
+                          .toList()[index]
+                          .taskAddress
+                          .toString();
+                      RouteInformation routeInfo =
+                          RouteInformation(location: '/performer/$taskAddress');
+                      Beamer.of(context).updateRouteInformation(routeInfo);
+                      // context.popToNamed('/performer/$taskAddress');
+                    }
+                  },
+                  child: TaskItem(
+                    role: 'performer',
+                    object: objList[index],
+                  )),
+            );
           },
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.vertical,
-            itemCount: objList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                child: InkWell(
-                    onTap: () {
-                      // setState(() {
-                      //   // Toggle light when tapped.
-                      // });
-                      // if (obj[index].taskState != "new")
-                      if (tasksServices.filterResults.values
-                              .toList()
-                              .elementAt(index) !=
-                          null) {
-                        showDialog(
-                            context: context,
-                            builder: (context) => TaskInformationDialog(
-                                role: 'performer',
-                                task: objList[index],
-                                shimmerEnabled: false));
-                        final String taskAddress = tasksServices
-                            .filterResults.values
-                            .toList()[index]
-                            .taskAddress
-                            .toString();
-                        RouteInformation routeInfo = RouteInformation(
-                            location: '/performer/$taskAddress');
-                        Beamer.of(context).updateRouteInformation(routeInfo);
-                        // context.popToNamed('/performer/$taskAddress');
-                      }
-                    },
-                    child: TaskItem(
-                      role: 'performer',
-                      object: objList[index],
-                    )),
-              );
-            },
-          ),
         ),
       ),
     );

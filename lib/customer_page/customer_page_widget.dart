@@ -105,8 +105,6 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       }
     }
 
-    bool _lightIsOn = false;
-
     return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
@@ -131,7 +129,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
               ),
             ],
           ),
-          actions: [
+          actions: const [
             SearchButton(),
             LoadButtonIndicator(),
           ],
@@ -161,16 +159,16 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           height: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+              colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
               stops: [0, 0.5, 1],
               begin: AlignmentDirectional(1, -1),
               end: AlignmentDirectional(-1, 1),
             ),
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.png"),
-              // fit: BoxFit.cover,
-              repeat: ImageRepeat.repeat,
-            ),
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/background.png"),
+            //   // fit: BoxFit.cover,
+            //   repeat: ImageRepeat.repeat,
+            // ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -335,7 +333,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    List objList = tasksServices.filterResults!.values.toList();
+    List objList = tasksServices.filterResults.values.toList();
     // TODO: implement build
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),

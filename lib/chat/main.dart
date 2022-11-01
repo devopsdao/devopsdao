@@ -1,25 +1,14 @@
-import 'dart:convert';
-import 'dart:io';
-
 // import 'package:file_picker/file_picker.dart';
 import 'package:devopsdao/blockchain/task_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:http/http.dart' as http;
 // import 'package:image_picker/image_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:mime/mime.dart';
 // import 'package:open_filex/open_filex.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:webthree/webthree.dart';
 
-import '../blockchain/task_services.dart';
 import '../blockchain/task.dart';
-import '../tasks_page/tasks_page_widget.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -58,7 +47,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    if(tasksServices.publicAddress != null) {
+    if (tasksServices.publicAddress != null) {
       logged = true;
     }
 
@@ -75,11 +64,9 @@ class _ChatPageState extends State<ChatPage> {
         user: types.User(id: tasksServices.publicAddress.toString()),
         inputOptions: const InputOptions(
           sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-            // inputClearMode: InputClearMode
-
+          // inputClearMode: InputClearMode
         ),
         theme: const DefaultChatTheme(
-
           inputBackgroundColor: Colors.black87,
           inputBorderRadius: BorderRadius.all(
             Radius.circular(10),
@@ -352,8 +339,7 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-    setState(() {
-    });
+    setState(() {});
 
     return Material(
       elevation: 0,
@@ -373,19 +359,12 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
               child: Text(
                 'Please connect your wallet',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
           ],
         ),
       ),
     );
-
-
-
-
   }
 }

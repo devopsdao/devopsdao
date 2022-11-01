@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 
-import 'package:devopsdao/blockchain/task_services.dart';
-
 import '../flutter_flow/flutter_flow_theme.dart';
 
 class LoadIndicator extends StatefulWidget {
@@ -30,7 +28,7 @@ class _LoadIndicator extends State<LoadIndicator> {
     return Container(
         child: Center(
       child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
           child: Align(
               alignment: Alignment.center,
               child: Column(
@@ -43,8 +41,8 @@ class _LoadIndicator extends State<LoadIndicator> {
                           children: <TextSpan>[
                         TextSpan(
                             text:
-                                'Browser platform: ${tasksServices.browserPlatform}, Collecting Tasks from blockchain: ${taskLoadedState} of ${tasksServices.totalTaskLen}',
-                            style: TextStyle(
+                                'Browser platform: ${tasksServices.browserPlatform}, Collecting Tasks from blockchain: $taskLoadedState of ${tasksServices.totalTaskLen}',
+                            style: const TextStyle(
                               height: 2,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -60,7 +58,7 @@ class _LoadIndicator extends State<LoadIndicator> {
                         //   )
                         // ),
                       ])),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
                     child: CircularProgressIndicator(),
                   ),
@@ -99,37 +97,35 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
               alignment: Alignment.center,
               child: Text(
                 taskLoadedState.toString(),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
             badgeColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-            animationDuration: Duration(milliseconds: 300),
+            animationDuration: const Duration(milliseconds: 300),
             animationType: BadgeAnimationType.scale,
             shape: BadgeShape.circle,
             borderRadius: BorderRadius.circular(5),
           ),
-        Container(
-          child: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 60,
-            icon: tasksServices.isLoadingBackground
-                ? LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white,
-                    size: 30,
-                  )
-                : Icon(
-                    Icons.refresh,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-            onPressed: () async {
-              tasksServices.isLoadingBackground = true;
-              tasksServices.fetchTasks();
-            },
-          ),
+        FlutterFlowIconButton(
+          borderColor: Colors.transparent,
+          borderRadius: 30,
+          borderWidth: 1,
+          buttonSize: 60,
+          icon: tasksServices.isLoadingBackground
+              ? LoadingAnimationWidget.staggeredDotsWave(
+                  color: Colors.white,
+                  size: 30,
+                )
+              : const Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                  size: 30,
+                ),
+          onPressed: () async {
+            tasksServices.isLoadingBackground = true;
+            tasksServices.fetchTasks();
+          },
         ),
       ],
     );
