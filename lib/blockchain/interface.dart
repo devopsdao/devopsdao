@@ -37,6 +37,9 @@ class InterfaceServices extends ChangeNotifier {
   late int pageWalletViewNumber = 0;
   late String whichWalletButtonPressed = '';
 
+  // wallet/main.dart controller for tabs
+  late TabController walletTabController;
+
   // ****** SETTINGS ******** //
 // border radius:
   final double borderRadius = 8.0;

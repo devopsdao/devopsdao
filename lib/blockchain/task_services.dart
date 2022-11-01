@@ -103,6 +103,7 @@ class TasksServices extends ChangeNotifier {
   bool walletConnected = false;
   bool walletConnectedWC = false;
   bool walletConnectedMM = false;
+  bool mmAvailable = false;
   String walletConnectUri = '';
   String walletConnectSessionUri = '';
   var walletConnectSession;
@@ -150,6 +151,9 @@ class TasksServices extends ChangeNotifier {
     final BrowserDetector browserInfo = BrowserDetector();
     if (browserInfo.platform.isAndroid) {
       browserPlatform = 'android';
+    }
+    if (platform == 'web' && window.ethereum != null) {
+      mmAvailable = true;
     }
 
     if (hardhatDebug == true) {
@@ -302,7 +306,7 @@ class TasksServices extends ChangeNotifier {
         onDisplayUri: (uri) => {
           walletConnectSessionUri = uri.split("?").first,
           (platform == 'mobile' || browserPlatform == 'android') && !refresh
-              ? launchURL(uri)
+              ? {launchURL(uri), walletConnectUri = uri}
               : walletConnectUri = uri,
           notifyListeners()
         },

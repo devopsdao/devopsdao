@@ -319,10 +319,11 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                     context: context,
                                                     builder: (context) =>
                                                         TaskInformationDialog(
-                                                          role: 'tasks',
-                                                          object:
-                                                              objList[index],
-                                                        ));
+                                                            role: 'tasks',
+                                                            task:
+                                                                objList[index],
+                                                            shimmerEnabled:
+                                                                true));
                                                 final String taskAddress =
                                                     tasksServices
                                                         .filterResults.values

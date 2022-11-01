@@ -304,7 +304,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                             ),
                       ),
                     ),
-
                     tasksServices.isLoading
                         ? const LoadIndicator()
                         : const Expanded(
@@ -386,7 +385,8 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                       context: context,
                       builder: (context) => TaskInformationDialog(
                             role: 'auditor',
-                            object: objList[index],
+                            task: objList[index],
+                            shimmerEnabled: false,
                           ));
                   final String taskAddress = tasksServices.filterResults.values
                       .toList()[index]

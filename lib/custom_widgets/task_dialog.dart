@@ -20,6 +20,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:beamer/beamer.dart';
 
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../custom_widgets/data_loading_dialog.dart';
 
@@ -61,11 +62,12 @@ class _TaskDialog extends State<TaskDialog> {
         print('taskAddress: ${widget.taskAddress}');
         print('role: ${widget.role}');
         return TaskInformationDialog(
-          role: widget.role,
-          object: task,
-        );
+            role: widget.role, task: task, shimmerEnabled: false);
       }
     }
+    // return TaskInformationDialog(
+    //     role: widget.role, task: task, shimmerEnabled: true);
+
     return const AppDataLoadingDialogWidget();
   }
 }
@@ -73,13 +75,15 @@ class _TaskDialog extends State<TaskDialog> {
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
   final String role;
-  final Task object;
-  const TaskInformationDialog(
-      {Key? key,
-      // required this.taskCount,
-      required this.role,
-      required this.object})
-      : super(key: key);
+  Task task;
+  bool shimmerEnabled;
+  TaskInformationDialog({
+    Key? key,
+    // required this.taskCount,
+    required this.role,
+    required this.task,
+    required this.shimmerEnabled,
+  }) : super(key: key);
 
   @override
   _TaskInformationDialogState createState() => _TaskInformationDialogState();
@@ -93,10 +97,10 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    task = widget.object;
+    task = widget.task;
     final double borderRadius = interface.borderRadius;
 
-    if(widget.role == 'customer') {
+    if (widget.role == 'customer') {
       backgroundPicture = "assets/images/cross.png";
     } else if (widget.role == 'performer') {
       backgroundPicture = "assets/images/cyrcle.png";
@@ -104,7 +108,9 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       backgroundPicture = "assets/images/cross.png";
     }
 
-      return LayoutBuilder(builder: (context, constraints) {
+    bool shimmerEnabled = widget.shimmerEnabled;
+
+    return LayoutBuilder(builder: (context, constraints) {
       // print('max:  ${constraints.maxHeight}');
       // print('max * : ${constraints.maxHeight * .65}');
       // print(constraints.minWidth);
@@ -156,8 +162,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(child:
-                                    RichText(
+                                  Expanded(
+                                    child: RichText(
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -165,11 +171,15 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                       text: TextSpan(
                                         children: [
                                           WidgetSpan(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(right: 5.0),
-
-                                            child: Icon(Icons.copy, size: 20, color: Colors.black26,),)
-                                          ),
+                                              child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 5.0),
+                                            child: Icon(
+                                              Icons.copy,
+                                              size: 20,
+                                              color: Colors.black26,
+                                            ),
+                                          )),
                                           TextSpan(
                                             text: task.title,
                                             style: const TextStyle(
@@ -183,7 +193,6 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                   )
                                 ],
                               ),
-
                               onTap: () async {
                                 Clipboard.setData(new ClipboardData(
                                         text:
@@ -194,12 +203,17 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                   //         content: Text(
                                   //             'Copied to your clipboard !')));
                                   Flushbar(
-                                    icon: Icon(Icons.copy, size: 20, color: Colors.white,),
-                                      message: 'Task URL copied to your clipboard!',
-                                      duration: Duration(seconds: 2),
-                                    backgroundColor: Colors.blueAccent,
-                                      shouldIconPulse: false
-                                  ).show(context);
+                                          icon: Icon(
+                                            Icons.copy,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                          message:
+                                              'Task URL copied to your clipboard!',
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: Colors.blueAccent,
+                                          shouldIconPulse: false)
+                                      .show(context);
                                 });
                               },
                             )),
@@ -253,10 +267,12 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                       ),
                     ),
                     child: DialogPages(
-                        borderRadius: borderRadius,
-                        requiredTask: task,
-                        requiredRole: widget.role,
-                        topConstraints: constraints),
+                      borderRadius: borderRadius,
+                      task: task,
+                      role: widget.role,
+                      topConstraints: constraints,
+                      shimmerEnabled: shimmerEnabled,
+                    ),
                   ),
                 ]),
               ),
@@ -544,17 +560,19 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 class DialogPages extends StatefulWidget {
   // final String buttonName;
   final double borderRadius;
-  final Task requiredTask;
-  final String requiredRole;
+  final Task task;
+  final String role;
   final BoxConstraints topConstraints;
+  bool shimmerEnabled;
 
-  const DialogPages(
+  DialogPages(
       {Key? key,
       // required this.buttonName,
       required this.borderRadius,
-      required this.requiredTask,
-      required this.requiredRole,
-      required this.topConstraints})
+      required this.task,
+      required this.role,
+      required this.topConstraints,
+      required this.shimmerEnabled})
       : super(key: key);
 
   @override
@@ -585,8 +603,9 @@ class _DialogPagesState extends State<DialogPages> {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
 
-    Task task = widget.requiredTask;
-    String role = widget.requiredRole;
+    Task task = widget.task;
+    String role = widget.role;
+    bool shimmerEnabled = widget.shimmerEnabled;
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
@@ -603,6 +622,11 @@ class _DialogPagesState extends State<DialogPages> {
         //   // print(number);
         // },
         children: <Widget>[
+          // Shimmer.fromColors(
+          //   baseColor: Colors.grey[300]!,
+          //   highlightColor: Colors.grey[100]!,
+          //   enabled: shimmerEnabled,
+          //   child:
           Column(
             children: [
               // const SizedBox(height: 50),
@@ -801,7 +825,11 @@ class _DialogPagesState extends State<DialogPages> {
                       padding: const EdgeInsets.all(8.0),
                       width: innerWidth,
                       decoration: BoxDecoration(
-                        borderRadius:
+                        borderRadius: // Shimmer.fromColors(
+                            //     baseColor: Colors.grey[300]!,
+                            //     highlightColor: Colors.grey[100]!,
+                            //     enabled: shimmerEnabled,
+                            //     child:
                             BorderRadius.circular(widget.borderRadius),
                       ),
                       child: ListBody(
@@ -878,73 +906,75 @@ class _DialogPagesState extends State<DialogPages> {
               // ),
               // const SizedBox(height: 14),
               if ((task.contractOwner != tasksServices.publicAddress ||
-                  tasksServices.hardhatDebug == true) &&
+                      tasksServices.hardhatDebug == true) &&
                   tasksServices.publicAddress != null &&
                   tasksServices.validChainID &&
                   role == 'tasks')
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    // constraints: const BoxConstraints(maxHeight: 500),
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: SingleChildScrollView(
-                      child: TextFormField(
-                        controller: messageForStateController,
-                        // onChanged: (_) => EasyDebounce.debounce(
-                        //   'messageForStateController',
-                        //   Duration(milliseconds: 2000),
-                        //   () => setState(() {}),
-                        // ),
-                        autofocus: false,
-                        obscureText: false,
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                      // constraints: const BoxConstraints(maxHeight: 500),
+                      padding: const EdgeInsets.all(8.0),
+                      width: innerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child: SingleChildScrollView(
+                        child: TextFormField(
+                          controller: messageForStateController,
+                          // onChanged: (_) => EasyDebounce.debounce(
+                          //   'messageForStateController',
+                          //   Duration(milliseconds: 2000),
+                          //   () => setState(() {}),
+                          // ),
+                          autofocus: false,
+                          obscureText: false,
 
-                        decoration: const InputDecoration(
-                          labelText: 'Tap to message',
-                          labelStyle:
-                              TextStyle(fontSize: 17.0, color: Colors.black54),
-                          hintText: '[Enter your message here..]',
-                          hintStyle:
-                              TextStyle(fontSize: 15.0, color: Colors.black54),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
+                          decoration: const InputDecoration(
+                            labelText: 'Tap to message',
+                            labelStyle: TextStyle(
+                                fontSize: 17.0, color: Colors.black54),
+                            hintText: '[Enter your message here..]',
+                            hintStyle: TextStyle(
+                                fontSize: 15.0, color: Colors.black54),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
                             ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
                             ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.black87,
+                                    lineHeight: null,
+                                  ),
+                          minLines: 1,
+                          maxLines: 3,
                         ),
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.black87,
-                              lineHeight: null,
-                            ),
-                        minLines: 1,
-                        maxLines: 3,
                       ),
                     ),
                   ),
                 ),
-              ),
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
               const Spacer(),
               Container(
@@ -1065,7 +1095,7 @@ class _DialogPagesState extends State<DialogPages> {
                                     taskName: 'withdrawToChain',
                                   ));
                         },
-                        taskObject: task,
+                        task: task,
                       ),
 
                     // *********************** CUSTOMER BUTTONS *********************** //
@@ -1281,6 +1311,11 @@ class _DialogPagesState extends State<DialogPages> {
               )
             ],
           ),
+          // Shimmer.fromColors(
+          //     baseColor: Colors.grey[300]!,
+          //     highlightColor: Colors.grey[100]!,
+          //     enabled: shimmerEnabled,
+          //     child:
           Column(
             children: [
               Container(
@@ -1444,7 +1479,7 @@ class TaskDialogButton extends StatefulWidget {
   final String buttonName;
   final Color buttonColorRequired;
   final VoidCallback callback;
-  final Task? taskObject;
+  final Task? task;
   final bool inactive;
   const TaskDialogButton(
       {Key? key,
@@ -1452,7 +1487,7 @@ class TaskDialogButton extends StatefulWidget {
         required this.buttonColorRequired,
         required this.callback,
         required this.inactive,
-        this.taskObject
+        this.task
       })
       : super(key: key);
 
@@ -1484,11 +1519,11 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
     }
 
     // this check for WITHDRAW button:
-    if (widget.taskObject != null) {
-      if (widget.taskObject!.contractValue != 0) {
+    if (widget.task != null) {
+      if (widget.task!.contractValue != 0) {
         _buttonState = true;
-      } else if (widget.taskObject!.contractValueToken != 0) {
-        if (widget.taskObject!.contractValueToken > tasksServices.transferFee ||
+      } else if (widget.task!.contractValueToken != 0) {
+        if (widget.task!.contractValueToken > tasksServices.transferFee ||
             tasksServices.destinationChain == 'Moonbase') {
           _buttonState = true;
         } else {
