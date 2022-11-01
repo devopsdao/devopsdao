@@ -17,7 +17,7 @@ class InterfaceServices extends ChangeNotifier {
   late String whichWalletButtonPressed = '';
 
   // wallet/main.dart controller for tabs
-  late TabController walletTabController = TabController(length: 2, vsync: );
+  // late TabController walletTabController = TabController(length: 2, vsync: );
 
   // ****** SETTINGS ******** //
 // border radius:

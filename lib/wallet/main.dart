@@ -428,7 +428,7 @@ class _WalletPagesState extends State<WalletPages> {
                                   height: 30,
                                   child: TabBar(
                                     labelColor: Colors.black,
-                                    controller: interface.walletTabController,
+                                    // controller: interface.walletTabController,
                                     // indicatorColor: Colors.black26,
                                     // indicatorWeight: 10,
                                     // indicatorSize: TabBarIndicatorSize.label,
