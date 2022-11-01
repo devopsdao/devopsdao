@@ -267,7 +267,7 @@ class _WalletPagesState extends State<WalletPages> {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
 
-    print(interface.pageWalletViewNumber);
+    // print(interface.pageWalletViewNumber);
     // interface.pageWalletViewNumber = 0;
 
     _displayUri = tasksServices.walletConnectUri;
