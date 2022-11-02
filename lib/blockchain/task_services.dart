@@ -76,7 +76,7 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = false;
+  bool hardhatDebug = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1246,7 +1246,7 @@ class TasksServices extends ChangeNotifier {
       'taskParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    message ??= 'Participate this task';
+    message ??= 'Taking this task';
     replyTo ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
@@ -1280,7 +1280,7 @@ class TasksServices extends ChangeNotifier {
       'taskAuditParticipate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    message ??= 'Participate this task';
+    message ??= 'Taking task for audit';
     replyTo ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(
         address: contractAddress, client: _web3client, chainId: chainId);
@@ -1318,7 +1318,7 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = 'pending';
     late String txn;
     // String message = 'moving this task';
-    message ??= 'changing task status to $state';
+    message ??= 'Changing task status to $state';
     replyTo ??= BigInt.from(0);
     score ??= BigInt.from(5);
     TaskContract taskContract = TaskContract(
@@ -1365,7 +1365,7 @@ class TasksServices extends ChangeNotifier {
       'taskAuditDecision': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    message ??= 'Auditor task decision';
+    message ??= 'Auditor decision';
     replyTo ??= BigInt.from(0);
     score ??= BigInt.from(5);
     TaskContract taskContract = TaskContract(

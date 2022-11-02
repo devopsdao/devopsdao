@@ -24,7 +24,6 @@ import '../custom_widgets/data_loading_dialog.dart';
 
 import 'dart:ui' as ui;
 
-
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
@@ -114,12 +113,11 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       // print(constraints.minWidth);
       return StatefulBuilder(
         builder: (context, setState) {
-
           // ****** Count Screen size with keyboard and without ***** ///
           final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-          final double screenSizeNoKeyboard = constraints.maxHeight - 120 ;
-              // < 400 ? 330
-              // : constraints.maxHeight - 140;
+          final double screenSizeNoKeyboard = constraints.maxHeight - 120;
+          // < 400 ? 330
+          // : constraints.maxHeight - 140;
           final double screenSize = screenSizeNoKeyboard - keyboardSize;
           // print('keyboardSize: $keyboardSize');
           // print('screenSizeNoKeyboard: $screenSizeNoKeyboard');
@@ -341,6 +339,29 @@ class _DialogPagesState extends State<DialogPages> {
     Task task = widget.task;
     String role = widget.role;
     bool shimmerEnabled = widget.shimmerEnabled;
+    String messageHint = '';
+
+    if (task.taskState == 'new' && task.participants.length == 0) {
+      messageHint = 'Write why you are the best Performer for this task';
+    } else if (task.taskState == 'new' && task.participants.length > 0) {
+      messageHint = 'Write why you have selected this Performer';
+    } else if (task.taskState == 'agreed') {
+      messageHint = 'Write about your implementation plans';
+    } else if (task.taskState == 'progress') {
+      messageHint = 'Write your request for review to the Customer';
+    } else if (task.taskState == 'review') {
+      messageHint = 'Write your request for review to the Customer';
+    } else if (task.taskState == 'audit' && task.auditState == 'requested') {
+      messageHint = 'Write your request for audit to the Auditor';
+    } else if (task.taskState == 'audit' && task.auditState == 'performing') {
+      messageHint = 'Write a tip for your selected Auditor';
+    } else if (task.taskState == 'audit' && task.auditState == 'finished') {
+      messageHint = 'Write your Audit decision reasoning';
+    } else if (task.taskState == 'completed') {
+      messageHint = 'Write your thanks message to the Customer';
+    } else if (task.taskState == 'canceled') {
+      messageHint = 'Write your thanks message to the Perfomer';
+    }
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
@@ -641,7 +662,10 @@ class _DialogPagesState extends State<DialogPages> {
                       tasksServices.hardhatDebug == true) &&
                   tasksServices.publicAddress != null &&
                   tasksServices.validChainID &&
-                  role == 'tasks')
+                  (task.taskState != 'new' ||
+                      task.taskState == 'new' && task.participants.isEmpty)
+              // && role == 'tasks'
+              )
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -665,14 +689,14 @@ class _DialogPagesState extends State<DialogPages> {
                         autofocus: false,
                         obscureText: false,
 
-                        decoration: const InputDecoration(
-                          labelText: 'Tap to message',
-                          labelStyle: TextStyle(
+                        decoration: InputDecoration(
+                          labelText: messageHint,
+                          labelStyle: const TextStyle(
                               fontSize: 17.0, color: Colors.black54),
                           hintText: '[Enter your message here..]',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                               fontSize: 15.0, color: Colors.black54),
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white,
                               width: 1,
@@ -682,7 +706,7 @@ class _DialogPagesState extends State<DialogPages> {
                               topRight: Radius.circular(4.0),
                             ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white,
                               width: 1,
@@ -693,12 +717,11 @@ class _DialogPagesState extends State<DialogPages> {
                             ),
                           ),
                         ),
-                        style:
-                            FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.black87,
-                                  lineHeight: null,
-                                ),
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Poppins',
+                              color: Colors.black87,
+                              lineHeight: null,
+                            ),
                         minLines: 1,
                         maxLines: 3,
                       ),
@@ -714,9 +737,6 @@ class _DialogPagesState extends State<DialogPages> {
                   width: innerWidth,
                   message: messageForStateController!.text,
                   enableRatingButton: enableRatingButton)
-
-
-
             ],
           ),
           // Shimmer.fromColors(
@@ -855,32 +875,29 @@ class _DialogPagesState extends State<DialogPages> {
             ],
           ),
           Center(
-            child: Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              child: Container(
-                  padding: const EdgeInsets.all(6.0),
-                  // height: MediaQuery.of(context).size.height * .58,
-                  height: widget.topConstraints.maxHeight * .66 < 365
-                      ? 280
-                      : widget.topConstraints.maxHeight * .66,
-                  // width: MediaQuery.of(context).size.width * .57
-                  width: innerWidth,
-                  // height: 540,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(widget.borderRadius),
-                  ),
-                  child:
-                      ChatPage(task: task, tasksServices: tasksServices))))
+              child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: Container(
+                      padding: const EdgeInsets.all(6.0),
+                      // height: MediaQuery.of(context).size.height * .58,
+                      height: widget.topConstraints.maxHeight * .66 < 365
+                          ? 280
+                          : widget.topConstraints.maxHeight * .66,
+                      // width: MediaQuery.of(context).size.width * .57
+                      width: innerWidth,
+                      // height: 540,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child:
+                          ChatPage(task: task, tasksServices: tasksServices))))
         ],
       );
     });
   }
 }
-
-
-
 
 class DialogButtonSet extends StatefulWidget {
   final Task task;
@@ -891,12 +908,11 @@ class DialogButtonSet extends StatefulWidget {
 
   const DialogButtonSet(
       {Key? key,
-        required this.task,
-        required this.role,
-        required this.width,
-        required this.message,
-        required this.enableRatingButton
-      })
+      required this.task,
+      required this.role,
+      required this.width,
+      required this.message,
+      required this.enableRatingButton})
       : super(key: key);
 
   @override
@@ -904,8 +920,6 @@ class DialogButtonSet extends StatefulWidget {
 }
 
 class _DialogButtonSetState extends State<DialogButtonSet> {
-
-
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -925,39 +939,38 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
         children: [
           // ##################### ACTION BUTTONS PART ######################## //
           // ************************ NEW (EXCHANGE) ************************** //
-          if ( role == 'tasks')
+          if (role == 'tasks')
             TaskDialogButton(
-              inactive: (task.contractOwner !=
-                  tasksServices.publicAddress ||
-                  tasksServices.hardhatDebug == true)
-                  && tasksServices.validChainID &&
-                  tasksServices.publicAddress != null ? false : true,
+              inactive: (task.contractOwner != tasksServices.publicAddress ||
+                          tasksServices.hardhatDebug == true) &&
+                      tasksServices.validChainID &&
+                      tasksServices.publicAddress != null
+                  ? false
+                  : true,
               buttonName: 'Participate',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskParticipate(
-                    task.taskAddress, task.nanoId,
+                tasksServices.taskParticipate(task.taskAddress, task.nanoId,
                     message: message);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/tasks');
+                    const RouteInformation(location: '/tasks');
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskParticipate',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskParticipate',
+                        ));
               },
             ),
           // ********************** PERFORMER BUTTONS ************************* //
           if (task.taskState == "agreed" &&
-              (role == 'performer' ||
-                  tasksServices.hardhatDebug == true))
+              (role == 'performer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Start the task',
@@ -966,25 +979,24 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress,
-                    task.participant, 'progress', task.nanoId,
+                tasksServices.taskStateChange(
+                    task.taskAddress, task.participant, 'progress', task.nanoId,
                     message: message);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/performer');
+                    const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
           if (task.taskState == "progress" &&
-              (role == 'performer' ||
-                  tasksServices.hardhatDebug == true))
+              (role == 'performer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Review',
@@ -993,19 +1005,19 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress,
-                    task.participant, 'review', task.nanoId,
+                tasksServices.taskStateChange(
+                    task.taskAddress, task.participant, 'review', task.nanoId,
                     message: message);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/performer');
+                    const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
 
@@ -1013,9 +1025,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               (role == 'customer' ||
                   role == 'performer' ||
                   tasksServices.hardhatDebug == true) &&
-              (task.contractValue != 0 ||
-                  task.contractValueToken != 0))
-          // WithdrawButton(object: task),
+              (task.contractValue != 0 || task.contractValueToken != 0))
+            // WithdrawButton(object: task),
             TaskDialogButton(
               inactive: false,
               buttonName: 'Withdraw',
@@ -1024,22 +1035,20 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.withdrawToChain(
-                    task.taskAddress, task.nanoId);
+                tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'withdrawToChain',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'withdrawToChain',
+                        ));
               },
               task: task,
             ),
 
           // *********************** CUSTOMER BUTTONS *********************** //
-          if (role == 'customer' ||
-              tasksServices.hardhatDebug == true)
+          if (role == 'customer' || tasksServices.hardhatDebug == true)
             TaskDialogButton(
               inactive: false,
               buttonName: 'Topup',
@@ -1048,47 +1057,42 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Topup contract'),
-                      // backgroundColor: Colors.black,
-                      content: const Payment(
-                        purpose: 'topup',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            tasksServices.addTokens(
-                                task.taskAddress,
-                                interface.tokensEntered,
-                                task.nanoId);
-                            Navigator.pop(context);
+                          title: const Text('Topup contract'),
+                          // backgroundColor: Colors.black,
+                          content: const Payment(
+                            purpose: 'topup',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                tasksServices.addTokens(task.taskAddress,
+                                    interface.tokensEntered, task.nanoId);
+                                Navigator.pop(context);
 
-                            showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    WalletAction(
-                                      nanoId: task.nanoId,
-                                      taskName: 'addTokens',
-                                    ));
-                          },
-                          style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.green),
-                          child: const Text('Topup contract'),
-                        ),
-                        TextButton(
-                            child: const Text('Close'),
-                            onPressed: () =>
-                                context.beamToNamed('/tasks')
-                          // Navigator.pop(context),
-                        ),
-                      ],
-                    ));
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => WalletAction(
+                                          nanoId: task.nanoId,
+                                          taskName: 'addTokens',
+                                        ));
+                              },
+                              style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.green),
+                              child: const Text('Topup contract'),
+                            ),
+                            TextButton(
+                                child: const Text('Close'),
+                                onPressed: () => context.beamToNamed('/tasks')
+                                // Navigator.pop(context),
+                                ),
+                          ],
+                        ));
               },
             ),
 
           if (task.taskState == 'review' &&
-              (role == 'customer' ||
-                  tasksServices.hardhatDebug == true))
+              (role == 'customer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Sign Review',
@@ -1103,19 +1107,18 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 // context.beamToNamed('/customer');
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/customer');
+                    const RouteInformation(location: '/customer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
           if (task.taskState == 'completed' &&
-              (role == 'customer' ||
-                  tasksServices.hardhatDebug == true))
+              (role == 'customer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Rate task',
@@ -1123,19 +1126,19 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               callback: () {
                 (task.rating == 0 && enableRatingButton)
                     ? () {
-                  setState(() {
-                    task.justLoaded = false;
-                  });
-                  // tasksServices.rateTask(
-                  //     task.taskAddress, ratingScore, task.nanoId);
-                  Navigator.pop(context);
-                  showDialog(
-                      context: context,
-                      builder: (context) => WalletAction(
-                        nanoId: task.nanoId,
-                        taskName: 'rateTask',
-                      ));
-                }
+                        setState(() {
+                          task.justLoaded = false;
+                        });
+                        // tasksServices.rateTask(
+                        //     task.taskAddress, ratingScore, task.nanoId);
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction(
+                                  nanoId: task.nanoId,
+                                  taskName: 'rateTask',
+                                ));
+                      }
                     : null;
               },
             ),
@@ -1143,10 +1146,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
           // ************************* AUDIT REQUEST ************************* //
           if ((role == 'performer' ||
-              role == 'customer' ||
-              tasksServices.hardhatDebug == true) &&
-              (task.taskState == "progress" ||
-                  task.taskState == "review"))
+                  role == 'customer' ||
+                  tasksServices.hardhatDebug == true) &&
+              (task.taskState == "progress" || task.taskState == "review"))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Request audit',
@@ -1155,23 +1157,22 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress,
-                    task.participant, 'audit', task.nanoId,
+                tasksServices.taskStateChange(
+                    task.taskAddress, task.participant, 'audit', task.nanoId,
                     message: message);
                 Navigator.pop(context);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
 
           // ************************* AUDITOR BUTTONS ************************ //
-          if ((role == 'auditor' ||
-              tasksServices.hardhatDebug == true) &&
+          if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'requested')
             TaskDialogButton(
               inactive: false,
@@ -1188,14 +1189,13 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditParticipate',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskAuditParticipate',
+                        ));
               },
             ),
 
-          if ((role == 'auditor' ||
-              tasksServices.hardhatDebug == true) &&
+          if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'performing')
             TaskDialogButton(
               inactive: false,
@@ -1212,13 +1212,12 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditDecision',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskAuditDecision',
+                        ));
               },
             ),
-          if ((role == 'auditor' ||
-              tasksServices.hardhatDebug == true) &&
+          if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'performing')
             TaskDialogButton(
               inactive: false,
@@ -1235,9 +1234,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditDecision',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskAuditDecision',
+                        ));
               },
             ),
 
@@ -1251,7 +1250,6 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
   }
 }
 
-
 class TaskDialogButton extends StatefulWidget {
   final String buttonName;
   final Color buttonColorRequired;
@@ -1260,12 +1258,11 @@ class TaskDialogButton extends StatefulWidget {
   final bool inactive;
   const TaskDialogButton(
       {Key? key,
-        required this.buttonName,
-        required this.buttonColorRequired,
-        required this.callback,
-        required this.inactive,
-        this.task
-      })
+      required this.buttonName,
+      required this.buttonColorRequired,
+      required this.callback,
+      required this.inactive,
+      this.task})
       : super(key: key);
 
   @override
@@ -1273,8 +1270,6 @@ class TaskDialogButton extends StatefulWidget {
 }
 
 class _TaskDialogButtonState extends State<TaskDialogButton> {
-
-
   late Color buttonColor;
   late Color textColor = Colors.white;
   late bool _buttonState = true;
@@ -1282,11 +1277,14 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     final Size widthTextSize = (TextPainter(
-        text: TextSpan(text: widget.buttonName, style: TextStyle(fontSize: 18, color: textColor)),
-        maxLines: 1,
-        textScaleFactor: MediaQuery.of(context).textScaleFactor,
-        textDirection: ui.TextDirection.ltr )
-      ..layout()).size;
+            text: TextSpan(
+                text: widget.buttonName,
+                style: TextStyle(fontSize: 18, color: textColor)),
+            maxLines: 1,
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            textDirection: ui.TextDirection.ltr)
+          ..layout())
+        .size;
     buttonColor = widget.buttonColorRequired;
 
     if (widget.inactive == true) {
@@ -1312,7 +1310,6 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
     }
 
     return Expanded(
-
       child: Container(
         width: widthTextSize.width + 100,
         padding: const EdgeInsets.all(4.0),

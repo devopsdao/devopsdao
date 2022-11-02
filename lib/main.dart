@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         splashFactory: NoSplash.splashFactory,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
         // primaryColor: const Color(0xff31d493),
         // cardColor: Colors.black,
         // textTheme: const TextTheme(
