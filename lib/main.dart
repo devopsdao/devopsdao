@@ -97,8 +97,18 @@ class _MyAppState extends State<MyApp> {
       ],
       locale: _locale,
       supportedLocales: const [Locale('en', '')],
-      theme: ThemeData(brightness: Brightness.light),
-      darkTheme: ThemeData(brightness: Brightness.dark),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        splashFactory: NoSplash.splashFactory,
+        iconTheme: const IconThemeData(color: Colors.black),
+        // primaryColor: const Color(0xff31d493),
+        // cardColor: Colors.black,
+        // textTheme: const TextTheme(
+        //     bodyText1: TextStyle(fontSize: 20, color: Colors.white)),
+        // colorScheme: ColorScheme.light().copyWith(secondary: Colors.black),
+      ),
+      darkTheme: ThemeData(
+          brightness: Brightness.dark, splashFactory: NoSplash.splashFactory),
       // Theme mode settings:
       // themeMode: _themeMode,
       themeMode: ThemeMode.light,

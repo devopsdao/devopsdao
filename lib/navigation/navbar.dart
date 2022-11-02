@@ -47,7 +47,7 @@ class _NavBarPageState extends State<NavBarPage> {
         beamerDelegate.beamToNamed(tabs.keys.toList()[i])
       },
       // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
-      backgroundColor: FlutterFlowTheme.of(context).black600,
+      backgroundColor: Colors.black,
       selectedItemColor: Colors.white,
       unselectedItemColor: FlutterFlowTheme.of(context).grayIcon,
       showSelectedLabels: true,

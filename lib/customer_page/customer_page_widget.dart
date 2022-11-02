@@ -159,7 +159,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           height: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
+              colors: [Colors.black, Colors.black, Colors.black],
               stops: [0, 0.5, 1],
               begin: AlignmentDirectional(1, -1),
               end: AlignmentDirectional(-1, 1),

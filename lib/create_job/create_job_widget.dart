@@ -9,6 +9,10 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_markdown/flutter_markdown.dart';
+// import 'package:markdown_editable_textinput/format_markdown.dart';
+// import 'package:markdown_editable_textinput/markdown_text_input.dart';
+import 'package:simple_markdown_editor_plus/simple_markdown_editor_plus.dart';
 
 import '../blockchain/task_services.dart';
 
@@ -62,6 +66,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    String description = '';
+    TextEditingController _controller = TextEditingController();
 
     return Scaffold(
       key: scaffoldKey,
@@ -105,7 +111,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
+            colors: [Colors.white, Colors.white, Colors.white],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
@@ -144,13 +150,13 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       decoration: const InputDecoration(
                         labelText: 'Title:',
                         labelStyle:
-                            TextStyle(fontSize: 17.0, color: Colors.white),
+                            TextStyle(fontSize: 17.0, color: Colors.black),
                         hintText: '[Enter the Title..]',
                         hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white),
+                            TextStyle(fontSize: 15.0, color: Colors.black),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.only(
@@ -160,7 +166,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.only(
@@ -171,11 +177,58 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       ),
                       style: FlutterFlowTheme.of(context).bodyText1.override(
                             fontFamily: 'Poppins',
-                            color: Colors.white,
+                            color: Colors.black,
                             lineHeight: 2,
                           ),
                       maxLines: 1,
                     ),
+                    // const Spacer(),
+
+                    // MarkdownTextInput(
+                    //   (String value) => setState(() => description = value),
+                    //   description,
+                    //   label: 'Description',
+                    //   maxLines: 10,
+                    //   actions: MarkdownType.values,
+                    //   controller: controller,
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 10),
+                    //   child: MarkdownBody(
+                    //     data: description,
+                    //     shrinkWrap: true,
+                    //   ),
+                    // ),
+                    // const MarkdownAutoPreview(
+                    //   decoration: InputDecoration(
+                    //     hintText: 'Markdown Auto Preview',
+                    //   ),
+                    //   style: TextStyle(color: Colors.black),
+                    //   emojiConvert: true,
+                    //   cursorColor: Colors.black,
+                    //   maxLines: 10,
+                    //   // minLines: 1,
+                    //   // expands: true,
+                    // ),
+                    // const SplittedMarkdownFormField(
+                    //   markdownSyntax: '## Headline',
+                    //   style: TextStyle(color: Colors.black),
+                    //   toolbarBackground: Colors.black,
+                    //   expandableBackground: Colors.black,
+                    //   decoration: InputDecoration(
+                    //       hintText: 'Splitted Markdown FormField',
+                    //       iconColor: Colors.black),
+                    //   cursorColor: Colors.black,
+                    //   emojiConvert: true,
+                    //   minLines: 5,
+                    //   maxLines: 5,
+                    // ),
+                    // MarkdownFormField(
+                    //   controller: _controller,
+                    //   enableToolBar: true,
+                    //   emojiConvert: true,
+                    //   autoCloseAfterSelectEmoji: false,
+                    // ),
 
                     TextFormField(
                       controller: descriptionController,
@@ -189,13 +242,13 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       decoration: const InputDecoration(
                         labelText: 'Description:',
                         labelStyle:
-                            TextStyle(fontSize: 17.0, color: Colors.white),
+                            TextStyle(fontSize: 17.0, color: Colors.black),
                         hintText: '[Job description...]',
                         hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white),
+                            TextStyle(fontSize: 15.0, color: Colors.black),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.only(
@@ -205,7 +258,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.black,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.only(
@@ -216,7 +269,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                       ),
                       style: FlutterFlowTheme.of(context).bodyText1.override(
                             fontFamily: 'Poppins',
-                            color: Colors.white,
+                            color: Colors.black,
                             lineHeight: 2,
                           ),
                       maxLines: 4,
@@ -238,9 +291,9 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                     //   obscureText: false,
                     //   decoration: InputDecoration(
                     //     labelText: 'Value',
-                    //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                    //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.black),
                     //     hintText: '[Please enter the value]',
-                    //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                    //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.black),
                     //     enabledBorder: UnderlineInputBorder(
                     //       borderSide: BorderSide(
                     //         color: Color(0x00000000),
@@ -264,7 +317,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                     //   ),
                     //   style: FlutterFlowTheme.of(context).bodyText1.override(
                     //     fontFamily: 'Poppins',
-                    //     color: Colors.white,
+                    //     color: Colors.black,
                     //   ),
                     //   maxLines: 1,
                     //   keyboardType: TextInputType.number,
@@ -275,8 +328,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget>
                     //     data: SliderThemeData(
                     //       // thumbColor: Colors.red,
                     //       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 14),
-                    //       activeTrackColor: Colors.white,
-                    //       inactiveTrackColor: Colors.white,
+                    //       activeTrackColor: Colors.black,
+                    //       inactiveTrackColor: Colors.black,
                     //       trackHeight: 5.0,
                     //     ),
                     //     child: Slider(

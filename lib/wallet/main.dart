@@ -259,7 +259,6 @@ class _WalletPagesState extends State<WalletPages> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -287,8 +286,6 @@ class _WalletPagesState extends State<WalletPages> {
         tasksServices.browserPlatform == 'android') {
       defaultTab = 0;
     }
-
-
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
@@ -792,13 +789,11 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
       buttonText = 'Switch network';
     } else if (!tasksServices.walletConnectedWC &&
         widget.buttonName == 'wallet_connect' &&
-        (tasksServices.platform != 'mobile' &&
-            tasksServices.browserPlatform != 'android')) {
+        (interface.pageWalletViewNumber == 2)) {
       buttonText = 'Refresh QR';
     } else if (!tasksServices.walletConnectedWC &&
         widget.buttonName == 'wallet_connect' &&
-        (tasksServices.platform == 'mobile' ||
-            tasksServices.browserPlatform == 'android')) {
+        (interface.pageWalletViewNumber == 1)) {
       buttonText = 'Connect';
     } else if (tasksServices.walletConnectedMM &&
         tasksServices.validChainIDMM &&
