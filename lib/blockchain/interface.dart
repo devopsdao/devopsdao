@@ -14,7 +14,7 @@ class InterfaceServices extends ChangeNotifier {
   late PageController TasksController = PageController(initialPage: 0);
 
   // Input text on task_dialog.dart
-  late String messageForStateController;
+  late String taskMessage;
 
   late int pageWalletViewNumber = 0;
   late String whichWalletButtonPressed = '';
