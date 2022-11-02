@@ -343,16 +343,16 @@ class _DialogPagesState extends State<DialogPages> {
     bool shimmerEnabled = widget.shimmerEnabled;
     String messageHint = '';
 
-    if (task.taskState == 'new' && task.participants.length == 0) {
+    if (task.taskState == 'new' && role == 'tasks') {
       messageHint = 'Write why you are the best Performer for this task';
-    } else if (task.taskState == 'new' && task.participants.length > 0) {
+    } else if (task.taskState == 'new' && role == 'customer') {
       messageHint = 'Write why you have selected this Performer';
     } else if (task.taskState == 'agreed') {
       messageHint = 'Write about your implementation plans';
     } else if (task.taskState == 'progress') {
       messageHint = 'Write your request for review to the Customer';
     } else if (task.taskState == 'review') {
-      messageHint = 'Write your request for review to the Customer';
+      messageHint = 'Write your review signature notes to the Performer';
     } else if (task.taskState == 'audit' && task.auditState == 'requested') {
       messageHint = 'Write your request for audit to the Auditor';
     } else if (task.taskState == 'audit' && task.auditState == 'performing') {
@@ -660,12 +660,8 @@ class _DialogPagesState extends State<DialogPages> {
               //   borderRadius: widget.borderRadius,
               // ),
               // const SizedBox(height: 14),
-              if ((task.contractOwner != tasksServices.publicAddress ||
-                      tasksServices.hardhatDebug == true) &&
-                  tasksServices.publicAddress != null &&
-                  tasksServices.validChainID &&
-                  (task.taskState != 'new' ||
-                      task.taskState == 'new' && task.participants.isEmpty)
+              if (tasksServices.publicAddress != null &&
+                  tasksServices.validChainID
               // && role == 'tasks'
               )
                 Container(
