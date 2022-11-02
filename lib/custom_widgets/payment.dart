@@ -51,7 +51,7 @@ class _PaymentState extends State<Payment> {
     late Color setBlackAndWhite;
     late Color setGrey;
     if (widget.purpose == 'create') {
-      setBlackAndWhite = Colors.white;
+      setBlackAndWhite = Colors.black;
       setGrey = Colors.blueGrey;
     } else {
       setBlackAndWhite = Colors.black;

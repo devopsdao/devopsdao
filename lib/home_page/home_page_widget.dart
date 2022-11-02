@@ -271,8 +271,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            // colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
-            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
+            // colors: [Colors.black, Colors.black, Colors.black],
+            colors: [Colors.black, Colors.black, Colors.black],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
@@ -316,7 +316,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF39BAD2),
+                      color: const Color(0xff31d493),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
@@ -359,7 +359,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF247888),
+                      color: const Color(0xffff8222),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
@@ -407,7 +407,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.92,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF39BAD2),
+                  color: const Color(0xff1da5f1),
                   borderRadius: BorderRadius.circular(8),
                   shape: BoxShape.rectangle,
                 ),
@@ -459,7 +459,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.92,
                 decoration: BoxDecoration(
-                  color: Colors.teal,
+                  color: Color(0xffc75394),
                   borderRadius: BorderRadius.circular(8),
                   shape: BoxShape.rectangle,
                 ),
