@@ -326,29 +326,6 @@ class _DialogPagesState extends State<DialogPages> {
     Task task = widget.task;
     String role = widget.role;
     bool shimmerEnabled = widget.shimmerEnabled;
-    String messageHint = '';
-
-    if (task.taskState == 'new' && role == 'tasks') {
-      messageHint = 'Write why you are the best Performer for this task';
-    } else if (task.taskState == 'new' && role == 'customer') {
-      messageHint = 'Write why you have selected this Performer';
-    } else if (task.taskState == 'agreed') {
-      messageHint = 'Write about your implementation plans';
-    } else if (task.taskState == 'progress') {
-      messageHint = 'Write your request for review to the Customer';
-    } else if (task.taskState == 'review') {
-      messageHint = 'Write your review signature notes to the Performer';
-    } else if (task.taskState == 'audit' && task.auditState == 'requested') {
-      messageHint = 'Write your request for audit to the Auditor';
-    } else if (task.taskState == 'audit' && task.auditState == 'performing') {
-      messageHint = 'Write a tip for your selected Auditor';
-    } else if (task.taskState == 'audit' && task.auditState == 'finished') {
-      messageHint = 'Write your Audit decision reasoning';
-    } else if (task.taskState == 'completed') {
-      messageHint = 'Write your thanks message to the Customer';
-    } else if (task.taskState == 'canceled') {
-      messageHint = 'Write your thanks message to the Perfomer';
-    }
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
@@ -828,15 +805,14 @@ class DialogButtonSet extends StatefulWidget {
   final bool enableRatingButton;
   final double borderRadius;
 
-  const DialogButtonSet(
-      {Key? key,
-      required this.task,
-      required this.role,
-      required this.width,
-      required this.borderRadius,
-      required this.enableRatingButton,
-      })
-      : super(key: key);
+  const DialogButtonSet({
+    Key? key,
+    required this.task,
+    required this.role,
+    required this.width,
+    required this.borderRadius,
+    required this.enableRatingButton,
+  }) : super(key: key);
 
   @override
   _DialogButtonSetState createState() => _DialogButtonSetState();
@@ -864,48 +840,50 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           // ************************ NEW (EXCHANGE) ************************** //
           if (role == 'tasks')
             TaskDialogButton(
-              inactive: (task.contractOwner != tasksServices.publicAddress ||
-                          tasksServices.hardhatDebug == true) &&
-                      tasksServices.validChainID &&
-                      tasksServices.publicAddress != null
-                  ? false
-                  : true,
-              buttonName: 'Participate',
-              buttonColorRequired: Colors.lightBlue.shade600,
-              callback: () {
-                setState(() {
-                  task.justLoaded = false;
-                });
-                tasksServices.taskParticipate(
-                    task.taskAddress, task.nanoId,
-                    message: interface.taskMessage);
-                Navigator.pop(context);
-                RouteInformation routeInfo =
-                    const RouteInformation(location: '/tasks');
-                Beamer.of(context).updateRouteInformation(routeInfo);
+                inactive: (task.contractOwner != tasksServices.publicAddress ||
+                            tasksServices.hardhatDebug == true) &&
+                        tasksServices.validChainID &&
+                        tasksServices.publicAddress != null
+                    ? false
+                    : true,
+                messageHint:
+                    'Write why you are the best Performer for this task',
+                buttonName: 'Participate',
+                buttonColorRequired: Colors.lightBlue.shade600,
+                callback: () {
+                  setState(() {
+                    task.justLoaded = false;
+                  });
+                  tasksServices.taskParticipate(task.taskAddress, task.nanoId,
+                      message: interface.taskMessage);
+                  Navigator.pop(context);
+                  RouteInformation routeInfo =
+                      const RouteInformation(location: '/tasks');
+                  Beamer.of(context).updateRouteInformation(routeInfo);
 
-                showDialog(
-                    context: context,
-                    builder: (context) => WalletAction(
-                          nanoId: task.nanoId,
-                          taskName: 'taskParticipate',
-                        ));
-              }, borderRadius: widget.borderRadius,
-                innerWidth: innerWidth
-            ),
+                  showDialog(
+                      context: context,
+                      builder: (context) => WalletAction(
+                            nanoId: task.nanoId,
+                            taskName: 'taskParticipate',
+                          ));
+                },
+                borderRadius: widget.borderRadius,
+                innerWidth: innerWidth),
           // ********************** PERFORMER BUTTONS ************************* //
           if (task.taskState == "agreed" &&
               (role == 'performer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
+              messageHint: 'Write about your implementation plans',
               buttonName: 'Start the task',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress,
-                    task.participant, 'progress', task.nanoId,
+                tasksServices.taskStateChange(
+                    task.taskAddress, task.participant, 'progress', task.nanoId,
                     message: interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
@@ -918,21 +896,23 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
-              }, borderRadius: widget.borderRadius,
-                innerWidth: innerWidth,
+              },
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
             ),
           if (task.taskState == "progress" &&
               (role == 'performer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
+              messageHint: 'Write your request for review to the Customer',
               buttonName: 'Review',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress,
-                    task.participant, 'review', task.nanoId,
+                tasksServices.taskStateChange(
+                    task.taskAddress, task.participant, 'review', task.nanoId,
                     message: interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
@@ -944,7 +924,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
-              },borderRadius: widget.borderRadius,
+              },
+              borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
             ),
 
@@ -956,6 +937,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             // WithdrawButton(object: task),
             TaskDialogButton(
               inactive: false,
+              messageHint: '',
               buttonName: 'Withdraw',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -971,7 +953,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           taskName: 'withdrawToChain',
                         ));
               },
-              task: task,borderRadius: widget.borderRadius,
+              task: task,
+              borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
             ),
 
@@ -979,6 +962,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           if (role == 'customer' || tasksServices.hardhatDebug == true)
             TaskDialogButton(
               inactive: false,
+              messageHint: '',
               buttonName: 'Topup',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1016,7 +1000,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                                 ),
                           ],
                         ));
-              },borderRadius: widget.borderRadius,
+              },
+              borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
             ),
 
@@ -1026,6 +1011,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
               inactive: false,
+              messageHint: 'Write your review signature notes to the Performer',
               buttonName: 'Sign Review',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1054,6 +1040,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
               inactive: false,
+              messageHint: '',
               buttonName: 'Rate task',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1086,14 +1073,15 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
               inactive: false,
+              messageHint: 'Write your request for audit to the Auditor',
               buttonName: 'Request audit',
               buttonColorRequired: Colors.orangeAccent.shade700,
               callback: () {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress,
-                    task.participant, 'audit', task.nanoId,
+                tasksServices.taskStateChange(
+                    task.taskAddress, task.participant, 'audit', task.nanoId,
                     message: interface.taskMessage);
                 Navigator.pop(context);
 
@@ -1113,6 +1101,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
               inactive: false,
+              messageHint: 'Write why you fit as an Auditor',
               buttonName: 'Take audit',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1138,6 +1127,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
               inactive: false,
+              messageHint: 'Write your Audit decision reasoning',
               buttonName: 'In favor of Customer',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1162,6 +1152,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               borderRadius: widget.borderRadius,
               innerWidth: innerWidth,
               inactive: false,
+              messageHint: 'Write your Audit decision reasoning',
               buttonName: 'In favor of Performer',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1209,8 +1200,7 @@ class TaskDialogButton extends StatefulWidget {
       required this.borderRadius,
       this.task,
       required this.innerWidth,
-        required this.messageHint
-      })
+      required this.messageHint})
       : super(key: key);
 
   @override
@@ -1222,6 +1212,7 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
   late Color textColor = Colors.white;
   late bool _buttonState = true;
   late double innerWidth = widget.innerWidth;
+  late String messageHint = widget.messageHint;
 
   TextEditingController? messageForStateController;
 
@@ -1276,72 +1267,71 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
 
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.only(top: 14.0),
-          child: Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            child: Container(
-              // constraints: const BoxConstraints(maxHeight: 500),
-              padding: const EdgeInsets.all(8.0),
-              width: innerWidth,
-              decoration: BoxDecoration(
-                borderRadius:
-                BorderRadius.circular(widget.borderRadius),
-              ),
-              child: TextFormField(
-                controller: messageForStateController,
-                // onChanged: (_) => EasyDebounce.debounce(
-                //   'messageForStateController',
-                //   Duration(milliseconds: 2000),
-                //   () => setState(() {}),
-                // ),
-                autofocus: false,
-                obscureText: false,
-                onTapOutside: (test) {
-                  interface.taskMessage = messageForStateController!.text;
-                },
+        if (messageHint != '')
+          Container(
+            padding: const EdgeInsets.only(top: 14.0),
+            child: Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              child: Container(
+                // constraints: const BoxConstraints(maxHeight: 500),
+                padding: const EdgeInsets.all(8.0),
+                width: innerWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                ),
+                child: TextFormField(
+                  controller: messageForStateController,
+                  // onChanged: (_) => EasyDebounce.debounce(
+                  //   'messageForStateController',
+                  //   Duration(milliseconds: 2000),
+                  //   () => setState(() {}),
+                  // ),
+                  autofocus: false,
+                  obscureText: false,
+                  onTapOutside: (test) {
+                    interface.taskMessage = messageForStateController!.text;
+                  },
 
-                decoration: InputDecoration(
-                  labelText: messageHint,
-                  labelStyle: const TextStyle(
-                      fontSize: 17.0, color: Colors.black54),
-                  hintText: '[Enter your message here..]',
-                  hintStyle: const TextStyle(
-                      fontSize: 15.0, color: Colors.black54),
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1,
+                  decoration: InputDecoration(
+                    labelText: messageHint,
+                    labelStyle:
+                        const TextStyle(fontSize: 17.0, color: Colors.black54),
+                    hintText: '[Enter your message here..]',
+                    hintStyle:
+                        const TextStyle(fontSize: 15.0, color: Colors.black54),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
                     ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
                     ),
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.white,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
-                  ),
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: Colors.black87,
+                        lineHeight: null,
+                      ),
+                  minLines: 1,
+                  maxLines: 3,
                 ),
-                style: FlutterFlowTheme.of(context).bodyText1.override(
-                  fontFamily: 'Poppins',
-                  color: Colors.black87,
-                  lineHeight: null,
-                ),
-                minLines: 1,
-                maxLines: 3,
               ),
             ),
           ),
-        ),
-
         Spacer(),
         Expanded(
           child: Container(
