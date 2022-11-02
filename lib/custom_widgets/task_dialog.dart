@@ -316,21 +316,6 @@ class _DialogPagesState extends State<DialogPages> {
   bool enableRatingButton = false;
   double ratingScore = 0;
 
-  TextEditingController? messageForStateController;
-
-  @override
-  void initState() {
-    super.initState();
-    messageForStateController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    // Don't forget to dispose all of your controllers!
-    messageForStateController!.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
@@ -660,75 +645,11 @@ class _DialogPagesState extends State<DialogPages> {
               //   borderRadius: widget.borderRadius,
               // ),
               // const SizedBox(height: 14),
-              if (tasksServices.publicAddress != null &&
-                  tasksServices.validChainID
-              // && role == 'tasks'
-              )
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    child: Container(
-                      // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: TextFormField(
-                        controller: messageForStateController,
-                        // onChanged: (_) => EasyDebounce.debounce(
-                        //   'messageForStateController',
-                        //   Duration(milliseconds: 2000),
-                        //   () => setState(() {}),
-                        // ),
-                        autofocus: false,
-                        obscureText: false,
-                        onTapOutside: (test) {
-                          interface.taskMessage = messageForStateController!.text;
-                        },
+              // if (tasksServices.publicAddress != null &&
+              //     tasksServices.validChainID
+              // // && role == 'tasks'
+              // )
 
-                        decoration: InputDecoration(
-                          labelText: messageHint,
-                          labelStyle: const TextStyle(
-                              fontSize: 17.0, color: Colors.black54),
-                          hintText: '[Enter your message here..]',
-                          hintStyle: const TextStyle(
-                              fontSize: 15.0, color: Colors.black54),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                        ),
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.black87,
-                              lineHeight: null,
-                            ),
-                        minLines: 1,
-                        maxLines: 3,
-                      ),
-                    ),
-                  ),
-                ),
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
               const Spacer(),
 
@@ -736,6 +657,7 @@ class _DialogPagesState extends State<DialogPages> {
                   task: task,
                   role: role,
                   width: innerWidth,
+                  borderRadius: widget.borderRadius,
                   // message: messageForStateController!.text,
                   enableRatingButton: enableRatingButton)
             ],
@@ -903,16 +825,17 @@ class DialogButtonSet extends StatefulWidget {
   final Task task;
   final String role;
   final double width;
-  // final String message;
   final bool enableRatingButton;
+  final double borderRadius;
 
   const DialogButtonSet(
       {Key? key,
       required this.task,
       required this.role,
       required this.width,
-      // required this.message,
-      required this.enableRatingButton})
+      required this.borderRadius,
+      required this.enableRatingButton,
+      })
       : super(key: key);
 
   @override
@@ -967,7 +890,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           nanoId: task.nanoId,
                           taskName: 'taskParticipate',
                         ));
-              },
+              }, borderRadius: widget.borderRadius,
+                innerWidth: innerWidth
             ),
           // ********************** PERFORMER BUTTONS ************************* //
           if (task.taskState == "agreed" &&
@@ -994,7 +918,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
-              },
+              }, borderRadius: widget.borderRadius,
+                innerWidth: innerWidth,
             ),
           if (task.taskState == "progress" &&
               (role == 'performer' || tasksServices.hardhatDebug == true))
@@ -1019,7 +944,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
-              },
+              },borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
             ),
 
           if (task.taskState == "completed" &&
@@ -1045,7 +971,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                           taskName: 'withdrawToChain',
                         ));
               },
-              task: task,
+              task: task,borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
             ),
 
           // *********************** CUSTOMER BUTTONS *********************** //
@@ -1089,12 +1016,15 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                                 ),
                           ],
                         ));
-              },
+              },borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
             ),
 
           if (task.taskState == 'review' &&
               (role == 'customer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
               inactive: false,
               buttonName: 'Sign Review',
               buttonColorRequired: Colors.lightBlue.shade600,
@@ -1121,6 +1051,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           if (task.taskState == 'completed' &&
               (role == 'customer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
               inactive: false,
               buttonName: 'Rate task',
               buttonColorRequired: Colors.lightBlue.shade600,
@@ -1151,6 +1083,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                   tasksServices.hardhatDebug == true) &&
               (task.taskState == "progress" || task.taskState == "review"))
             TaskDialogButton(
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
               inactive: false,
               buttonName: 'Request audit',
               buttonColorRequired: Colors.orangeAccent.shade700,
@@ -1176,6 +1110,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'requested')
             TaskDialogButton(
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
               inactive: false,
               buttonName: 'Take audit',
               buttonColorRequired: Colors.lightBlue.shade600,
@@ -1199,6 +1135,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'performing')
             TaskDialogButton(
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
               inactive: false,
               buttonName: 'In favor of Customer',
               buttonColorRequired: Colors.lightBlue.shade600,
@@ -1221,6 +1159,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'performing')
             TaskDialogButton(
+              borderRadius: widget.borderRadius,
+              innerWidth: innerWidth,
               inactive: false,
               buttonName: 'In favor of Performer',
               buttonColorRequired: Colors.lightBlue.shade600,
@@ -1257,13 +1197,20 @@ class TaskDialogButton extends StatefulWidget {
   final VoidCallback callback;
   final Task? task;
   final bool inactive;
+  final double borderRadius;
+  final double innerWidth;
+  final String messageHint;
   const TaskDialogButton(
       {Key? key,
       required this.buttonName,
       required this.buttonColorRequired,
       required this.callback,
       required this.inactive,
-      this.task})
+      required this.borderRadius,
+      this.task,
+      required this.innerWidth,
+        required this.messageHint
+      })
       : super(key: key);
 
   @override
@@ -1274,9 +1221,26 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
   late Color buttonColor;
   late Color textColor = Colors.white;
   late bool _buttonState = true;
+  late double innerWidth = widget.innerWidth;
+
+  TextEditingController? messageForStateController;
+
+  @override
+  void initState() {
+    super.initState();
+    messageForStateController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    messageForStateController!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
     final Size widthTextSize = (TextPainter(
             text: TextSpan(
                 text: widget.buttonName,
@@ -1310,32 +1274,103 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
       }
     }
 
-    return Expanded(
-      child: Container(
-        width: widthTextSize.width + 100,
-        padding: const EdgeInsets.all(4.0),
-        child: Material(
-          elevation: 9,
-          borderRadius: BorderRadius.circular(6),
-          color: buttonColor,
-          child: InkWell(
-            onTap: _buttonState ? widget.callback : null,
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(top: 14.0),
+          child: Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             child: Container(
-              padding: const EdgeInsets.all(10.0),
-              // height: 40.0,
-
+              // constraints: const BoxConstraints(maxHeight: 500),
+              padding: const EdgeInsets.all(8.0),
+              width: innerWidth,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius:
+                BorderRadius.circular(widget.borderRadius),
               ),
-              child: Text(
-                widget.buttonName,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: textColor),
+              child: TextFormField(
+                controller: messageForStateController,
+                // onChanged: (_) => EasyDebounce.debounce(
+                //   'messageForStateController',
+                //   Duration(milliseconds: 2000),
+                //   () => setState(() {}),
+                // ),
+                autofocus: false,
+                obscureText: false,
+                onTapOutside: (test) {
+                  interface.taskMessage = messageForStateController!.text;
+                },
+
+                decoration: InputDecoration(
+                  labelText: messageHint,
+                  labelStyle: const TextStyle(
+                      fontSize: 17.0, color: Colors.black54),
+                  hintText: '[Enter your message here..]',
+                  hintStyle: const TextStyle(
+                      fontSize: 15.0, color: Colors.black54),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(4.0),
+                      topRight: Radius.circular(4.0),
+                    ),
+                  ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(4.0),
+                      topRight: Radius.circular(4.0),
+                    ),
+                  ),
+                ),
+                style: FlutterFlowTheme.of(context).bodyText1.override(
+                  fontFamily: 'Poppins',
+                  color: Colors.black87,
+                  lineHeight: null,
+                ),
+                minLines: 1,
+                maxLines: 3,
               ),
             ),
           ),
         ),
-      ),
+
+        Spacer(),
+        Expanded(
+          child: Container(
+            width: widthTextSize.width + 100,
+            padding: const EdgeInsets.all(4.0),
+            child: Material(
+              elevation: 9,
+              borderRadius: BorderRadius.circular(6),
+              color: buttonColor,
+              child: InkWell(
+                onTap: _buttonState ? widget.callback : null,
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  // height: 40.0,
+
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    widget.buttonName,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: textColor),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
