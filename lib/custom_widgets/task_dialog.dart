@@ -329,7 +329,7 @@ class _DialogPagesState extends State<DialogPages> {
   @override
   void dispose() {
     // Don't forget to dispose all of your controllers!
-    // _pageController.dispose();
+    messageForStateController!.dispose();
     super.dispose();
   }
 
@@ -337,6 +337,8 @@ class _DialogPagesState extends State<DialogPages> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
+
+    interface.messageForStateController = messageForStateController!.text;
 
     Task task = widget.task;
     String role = widget.role;
@@ -664,6 +666,9 @@ class _DialogPagesState extends State<DialogPages> {
                         // ),
                         autofocus: false,
                         obscureText: false,
+                        onTapOutside: (test) {
+                          interface.messageForStateController = messageForStateController!.text;
+                        },
 
                         decoration: const InputDecoration(
                           labelText: 'Tap to message',
@@ -712,7 +717,7 @@ class _DialogPagesState extends State<DialogPages> {
                   task: task,
                   role: role,
                   width: innerWidth,
-                  message: messageForStateController!.text,
+                  // message: messageForStateController!.text,
                   enableRatingButton: enableRatingButton)
 
 
@@ -854,16 +859,15 @@ class _DialogPagesState extends State<DialogPages> {
               const SizedBox(height: 14),
             ],
           ),
-          Center(
+          Container(
+            padding: const EdgeInsets.all(12  ),
             child: Material(
               elevation: 10,
               borderRadius: BorderRadius.circular(widget.borderRadius),
               child: Container(
                   padding: const EdgeInsets.all(6.0),
                   // height: MediaQuery.of(context).size.height * .58,
-                  height: widget.topConstraints.maxHeight * .66 < 365
-                      ? 280
-                      : widget.topConstraints.maxHeight * .66,
+                  height: widget.topConstraints.maxHeight,
                   // width: MediaQuery.of(context).size.width * .57
                   width: innerWidth,
                   // height: 540,
@@ -886,7 +890,7 @@ class DialogButtonSet extends StatefulWidget {
   final Task task;
   final String role;
   final double width;
-  final String message;
+  // final String message;
   final bool enableRatingButton;
 
   const DialogButtonSet(
@@ -894,7 +898,7 @@ class DialogButtonSet extends StatefulWidget {
         required this.task,
         required this.role,
         required this.width,
-        required this.message,
+        // required this.message,
         required this.enableRatingButton
       })
       : super(key: key);
@@ -913,7 +917,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
     Task task = widget.task;
     String role = widget.role;
     double innerWidth = widget.width;
-    String message = widget.message;
+    // String message = interface.messageForStateController.text;
     bool enableRatingButton = widget.enableRatingButton;
 
     return Container(
@@ -940,7 +944,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskParticipate(
                     task.taskAddress, task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/tasks');
@@ -968,7 +972,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskStateChange(task.taskAddress,
                     task.participant, 'progress', task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/performer');
@@ -995,7 +999,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskStateChange(task.taskAddress,
                     task.participant, 'review', task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/performer');
@@ -1099,7 +1103,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskStateChange(task.taskAddress,
                     task.participant, 'completed', task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 // context.beamToNamed('/customer');
                 Navigator.pop(context);
                 RouteInformation routeInfo =
@@ -1157,7 +1161,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskStateChange(task.taskAddress,
                     task.participant, 'audit', task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
 
                 showDialog(
@@ -1183,7 +1187,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskAuditParticipate(
                     task.taskAddress, task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
@@ -1207,7 +1211,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskAuditDecision(
                     task.taskAddress, 'customer', task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
@@ -1230,7 +1234,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 });
                 tasksServices.taskAuditDecision(
                     task.taskAddress, 'performer', task.nanoId,
-                    message: message);
+                    message: interface.messageForStateController);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
