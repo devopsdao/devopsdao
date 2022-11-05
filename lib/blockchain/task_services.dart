@@ -158,6 +158,7 @@ class TasksServices extends ChangeNotifier {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
+    print('version $version-$buildNumber');
 
     final BrowserDetector browserInfo = BrowserDetector();
     if (browserInfo.platform.isAndroid) {

@@ -149,7 +149,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   ),
             ),
             Text(
-                'Platform: ${tasksServices.platform} Browser platform: ${tasksServices.browserPlatform}, version ${tasksServices.version} build: ${tasksServices.buildNumber}',
+                'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform} Browser platform: ${tasksServices.browserPlatform}',
                 style: const TextStyle(
                   height: 2,
                   fontWeight: FontWeight.bold,
