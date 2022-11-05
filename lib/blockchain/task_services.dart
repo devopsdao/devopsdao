@@ -42,6 +42,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 // import 'package:device_info_plus/device_info_plus.dart';
 import 'package:browser_detector/browser_detector.dart' hide Platform;
 
+import 'package:package_info_plus/package_info_plus.dart';
+
 // import 'dart:html' hide Platform;
 
 @JS()
@@ -115,6 +117,9 @@ class TasksServices extends ChangeNotifier {
 
   String platform = 'mobile';
   String? browserPlatform;
+
+  String version = '';
+  String buildNumber = '';
   //final String _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
   //final String _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
@@ -149,6 +154,11 @@ class TasksServices extends ChangeNotifier {
   Future<void> init() async {
     // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     // WebBrowserInfo webBrowserInfo = await deviceInfoPlugin.webBrowserInfo;
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+    buildNumber = packageInfo.buildNumber;
+
     final BrowserDetector browserInfo = BrowserDetector();
     if (browserInfo.platform.isAndroid) {
       browserPlatform = 'android';

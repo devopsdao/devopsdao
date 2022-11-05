@@ -41,7 +41,7 @@ class _LoadIndicator extends State<LoadIndicator> {
                           children: <TextSpan>[
                         TextSpan(
                             text:
-                                'Browser platform: ${tasksServices.browserPlatform}, Collecting Tasks from blockchain: $taskLoadedState of ${tasksServices.totalTaskLen}',
+                                'Collecting Tasks from blockchain: $taskLoadedState of ${tasksServices.totalTaskLen}',
                             style: const TextStyle(
                               height: 2,
                               fontWeight: FontWeight.bold,
