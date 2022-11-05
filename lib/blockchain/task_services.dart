@@ -173,8 +173,10 @@ class TasksServices extends ChangeNotifier {
       _wsUrl = 'ws://localhost:8545';
     } else {
       chainId = 1287;
-      _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
-      _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
+      _rpcUrl =
+          'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
+      _wsUrl =
+          'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
     }
     isDeviceConnected = false;
 
@@ -310,6 +312,7 @@ class TasksServices extends ChangeNotifier {
         pendingBalanceToken = 0;
         walletConnectUri = '';
         walletConnectSessionUri = '';
+        fetchTasks();
         connectWalletWC(true);
         notifyListeners();
       });
@@ -543,6 +546,7 @@ class TasksServices extends ChangeNotifier {
     ethBalanceToken = 0;
     pendingBalance = 0;
     pendingBalanceToken = 0;
+    fetchTasks();
     notifyListeners();
   }
 
@@ -560,6 +564,7 @@ class TasksServices extends ChangeNotifier {
     pendingBalanceToken = 0;
     walletConnectUri = '';
     walletConnectSessionUri = '';
+    fetchTasks();
     connectWalletWC(true);
     notifyListeners();
   }
