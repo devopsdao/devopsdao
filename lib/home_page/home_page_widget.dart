@@ -148,6 +148,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     fontSize: 22,
                   ),
             ),
+            Text(
+                'Platform: ${tasksServices.platform} Browser platform: ${tasksServices.browserPlatform}, version ${tasksServices.version} build: ${tasksServices.buildNumber}',
+                style: const TextStyle(
+                  height: 2,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 16,
+                )),
           ],
         ),
         actions: [
