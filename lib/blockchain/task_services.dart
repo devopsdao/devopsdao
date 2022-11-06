@@ -155,11 +155,6 @@ class TasksServices extends ChangeNotifier {
     // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     // WebBrowserInfo webBrowserInfo = await deviceInfoPlugin.webBrowserInfo;
 
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    version = packageInfo.version;
-    buildNumber = packageInfo.buildNumber;
-    print('version $version-$buildNumber');
-
     final BrowserDetector browserInfo = BrowserDetector();
     if (browserInfo.platform.isAndroid) {
       browserPlatform = 'android';
@@ -680,6 +675,13 @@ class TasksServices extends ChangeNotifier {
 
   late Map fees;
   Future<void> startup() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+    buildNumber = packageInfo.buildNumber;
+    print('version $version-$buildNumber');
+
     String addressesFile =
         await rootBundle.loadString('lib/blockchain/abi/addresses.json');
     var addresses = jsonDecode(addressesFile);

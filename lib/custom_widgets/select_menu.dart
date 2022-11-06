@@ -40,9 +40,9 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
     String valueName = '';
 
     if (widget.object.contractValue != 0.0) {
-      valueName = 'eth';
+      valueName = 'ETH';
     } else if (widget.object.contractValueToken != 0.0) {
-      valueName = 'ausdc';
+      valueName = 'aUSDC';
     }
 
     return Column(
@@ -56,7 +56,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
         //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
         //     ]
         // )),
-        if (valueName == 'eth')
+        if (valueName == 'ETH')
           DropdownButton<String>(
             isExpanded: true,
             value: dropdownValue,
@@ -101,7 +101,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
               );
             }).toList(),
           ),
-        if (valueName == 'ausdc')
+        if (valueName == 'aUSDC')
           RichText(
               text: TextSpan(
                   style: DefaultTextStyle.of(context)

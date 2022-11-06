@@ -138,7 +138,7 @@ class _TaskItemState extends State<TaskItem> {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            '${task.contractValue} ETH',
+                            '${task.contractValue} DEV',
                             style: FlutterFlowTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
