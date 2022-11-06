@@ -24,6 +24,8 @@ import '../custom_widgets/data_loading_dialog.dart';
 
 import 'dart:ui' as ui;
 
+import 'package:rive/rive.dart';
+
 class TaskDialog extends StatefulWidget {
   final String role;
   final String taskAddress;
@@ -180,14 +182,14 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                         children: [
                                           const WidgetSpan(
                                               child: Padding(
-                                                padding:
+                                            padding:
                                                 EdgeInsets.only(right: 5.0),
-                                                child: Icon(
-                                                  Icons.copy,
-                                                  size: 20,
-                                                  color: Colors.black26,
-                                                ),
-                                              )),
+                                            child: Icon(
+                                              Icons.copy,
+                                              size: 20,
+                                              color: Colors.black26,
+                                            ),
+                                          )),
                                           TextSpan(
                                             text: task.title,
                                             style: const TextStyle(
@@ -203,24 +205,24 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               ),
                               onTap: () async {
                                 Clipboard.setData(new ClipboardData(
-                                    text:
-                                    'https://dodao.dev/index.html#/${widget.role}/${task.taskAddress.toString()}'))
+                                        text:
+                                            'https://dodao.dev/index.html#/${widget.role}/${task.taskAddress.toString()}'))
                                     .then((_) {
                                   // ScaffoldMessenger.of(context)
                                   //     .showSnackBar(const SnackBar(
                                   //         content: Text(
                                   //             'Copied to your clipboard !')));
                                   Flushbar(
-                                      icon: const Icon(
-                                        Icons.copy,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
-                                      message:
-                                      'Task URL copied to your clipboard!',
-                                      duration: const Duration(seconds: 2),
-                                      backgroundColor: Colors.blueAccent,
-                                      shouldIconPulse: false)
+                                          icon: const Icon(
+                                            Icons.copy,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                          message:
+                                              'Task URL copied to your clipboard!',
+                                          duration: const Duration(seconds: 2),
+                                          backgroundColor: Colors.blueAccent,
+                                          shouldIconPulse: false)
                                       .show(context);
                                 });
                               },
@@ -233,7 +235,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                             // context.beamBack();
                             Navigator.pop(context);
                             RouteInformation routeInfo =
-                            RouteInformation(location: '/${widget.role}');
+                                RouteInformation(location: '/${widget.role}');
                             Beamer.of(context)
                                 .updateRouteInformation(routeInfo);
                           },
@@ -300,12 +302,12 @@ class DialogPages extends StatefulWidget {
 
   DialogPages(
       {Key? key,
-        // required this.buttonName,
-        required this.borderRadius,
-        required this.task,
-        required this.role,
-        required this.topConstraints,
-        required this.shimmerEnabled})
+      // required this.buttonName,
+      required this.borderRadius,
+      required this.task,
+      required this.role,
+      required this.topConstraints,
+      required this.shimmerEnabled})
       : super(key: key);
 
   @override
@@ -391,6 +393,24 @@ class _DialogPagesState extends State<DialogPages> {
       messageHint = 'Write your thanks message to the Perfomer';
     }
 
+    SMINumber? _rating;
+
+    void _onRiveInit(Artboard artboard) {
+      final controller = StateMachineController.fromArtboard(
+        artboard,
+        'State Machine 1',
+        onStateChange: (stateMachineName, animationName) {
+          print(stateMachineName);
+          print(animationName);
+          print(_rating!.value);
+        },
+      );
+      artboard.addController(controller!);
+      _rating = controller.findInput<double>('Rating') as SMINumber;
+    }
+
+    void _hitBump() => debugPrint("${_rating!.value}");
+
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
       // print (dialogConstraints.maxWidth);
@@ -406,6 +426,14 @@ class _DialogPagesState extends State<DialogPages> {
         //   // print(number);
         // },
         children: <Widget>[
+          // GestureDetector(
+          //   child: RiveAnimation.file(
+          //     'assets/rive_animations/rating_animation.riv',
+          //     fit: BoxFit.fitWidth,
+          //     onInit: _onRiveInit,
+          //   ),
+          //   onTap: _hitBump,
+          // ),
           // Shimmer.fromColors(
           //   baseColor: Colors.grey[300]!,
           //   highlightColor: Colors.grey[100]!,
@@ -431,7 +459,7 @@ class _DialogPagesState extends State<DialogPages> {
                       width: innerWidth,
                       decoration: BoxDecoration(
                         borderRadius:
-                        BorderRadius.circular(widget.borderRadius),
+                            BorderRadius.circular(widget.borderRadius),
                       ),
                       child: ListBody(
                         children: <Widget>[
@@ -452,7 +480,7 @@ class _DialogPagesState extends State<DialogPages> {
                               task.title,
                               textAlign: TextAlign.center,
                               style:
-                              const TextStyle(fontWeight: FontWeight.bold),
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
 
@@ -464,10 +492,10 @@ class _DialogPagesState extends State<DialogPages> {
                                           .style
                                           .apply(fontSizeFactor: 1.0),
                                       children: <TextSpan>[
-                                        TextSpan(
-                                          text: task.description,
-                                        )
-                                      ]))),
+                                    TextSpan(
+                                      text: task.description,
+                                    )
+                                  ]))),
 
                           // ********************** CUSTOMER ROLE ************************* //
 
@@ -482,12 +510,12 @@ class _DialogPagesState extends State<DialogPages> {
                                           .style
                                           .apply(fontSizeFactor: 1.0),
                                       children: const <TextSpan>[
-                                        TextSpan(
-                                            text: 'Rate the task:',
-                                            style: TextStyle(
-                                                height: 2,
-                                                fontWeight: FontWeight.bold)),
-                                      ])),
+                                    TextSpan(
+                                        text: 'Rate the task:',
+                                        style: TextStyle(
+                                            height: 2,
+                                            fontWeight: FontWeight.bold)),
+                                  ])),
                             ),
 
                           if (task.taskState == 'completed' &&
@@ -496,27 +524,50 @@ class _DialogPagesState extends State<DialogPages> {
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  RatingBar.builder(
-                                    initialRating: 4,
-                                    minRating: 1,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    itemPadding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    itemBuilder: (context, _) => const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    itemSize: 30.0,
-                                    onRatingUpdate: (rating) {
-                                      setState(() {
-                                        enableRatingButton = true;
-                                      });
-                                      ratingScore = rating;
-                                      tasksServices.myNotifyListeners();
-                                    },
-                                  ),
+                                  // RatingBar.builder(
+                                  //   initialRating: 4,
+                                  //   minRating: 1,
+                                  //   direction: Axis.horizontal,
+                                  //   allowHalfRating: true,
+                                  //   itemCount: 5,
+                                  //   itemPadding: const EdgeInsets.symmetric(
+                                  //       horizontal: 5.0),
+                                  //   itemBuilder: (context, _) => const Icon(
+                                  //     Icons.star,
+                                  //     color: Colors.amber,
+                                  //   ),
+                                  //   itemSize: 30.0,
+                                  //   onRatingUpdate: (rating) {
+                                  //     setState(() {
+                                  //       enableRatingButton = true;
+                                  //     });
+                                  //     ratingScore = rating;
+                                  //     tasksServices.myNotifyListeners();
+                                  //   },
+                                  // ),
+                                  // Container(
+                                  //   child: GestureDetector(
+                                  //     child: RiveAnimation.file(
+                                  //       'assets/rive_animations/rating_animation.riv',
+                                  //       fit: BoxFit.fill,
+                                  //       alignment: Alignment.center,
+                                  //       onInit: _onRiveInit,
+                                  //     ),
+                                  //     onTap: _hitBump,
+                                  //   ),
+                                  // )
+                                  RateAnimatedWidget(
+                                    task: task,
+                                  )
+
+                                  // GestureDetector(
+                                  //   child: RiveAnimation.network(
+                                  //     'https://public.rive.app/community/runtime-files/3145-6649-star-rating.riv',
+                                  //     fit: BoxFit.scaleDown,
+                                  //     onInit: _onRiveInit,
+                                  //   ),
+                                  //   onTap: _hitBump,
+                                  // ),
                                 ]),
 
                           // ************************ PERFORMER ROLE ************************** //
@@ -542,14 +593,14 @@ class _DialogPagesState extends State<DialogPages> {
                                         .style
                                         .apply(fontSizeFactor: 1.0),
                                     children: const <TextSpan>[
-                                      TextSpan(
-                                          text:
+                                  TextSpan(
+                                      text:
                                           'Warning, this contract on Audit state \n'
-                                              'Please choose auditor: ',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                    ])),
+                                          'Please choose auditor: ',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                ])),
                           if (task.taskState == "audit" &&
                               task.auditState == "performing" &&
                               (role == 'customer' ||
@@ -561,18 +612,18 @@ class _DialogPagesState extends State<DialogPages> {
                                         .style
                                         .apply(fontSizeFactor: 1.0),
                                     children: <TextSpan>[
-                                      const TextSpan(
-                                          text: 'Your request is being resolved \n'
-                                              'Your auditor: \n',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text: task.auditor.toString(),
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 0.7))
-                                    ])),
+                                  const TextSpan(
+                                      text: 'Your request is being resolved \n'
+                                          'Your auditor: \n',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: task.auditor.toString(),
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 0.7))
+                                ])),
                           if (task.taskState == "audit" &&
                               task.auditState == "requested" &&
                               (role == 'customer' ||
@@ -607,11 +658,11 @@ class _DialogPagesState extends State<DialogPages> {
                       width: innerWidth,
                       decoration: BoxDecoration(
                         borderRadius: // Shimmer.fromColors(
-                        //     baseColor: Colors.grey[300]!,
-                        //     highlightColor: Colors.grey[100]!,
-                        //     enabled: shimmerEnabled,
-                        //     child:
-                        BorderRadius.circular(widget.borderRadius),
+                            //     baseColor: Colors.grey[300]!,
+                            //     highlightColor: Colors.grey[100]!,
+                            //     enabled: shimmerEnabled,
+                            //     child:
+                            BorderRadius.circular(widget.borderRadius),
                       ),
                       child: ListBody(
                         children: <Widget>[
@@ -623,12 +674,12 @@ class _DialogPagesState extends State<DialogPages> {
                                         .style
                                         .apply(fontSizeFactor: 1.0),
                                     children: const <TextSpan>[
-                                      TextSpan(
-                                          text: 'Choose contractor: ',
-                                          style: TextStyle(
-                                              height: 1,
-                                              fontWeight: FontWeight.bold)),
-                                    ])),
+                                  TextSpan(
+                                      text: 'Choose contractor: ',
+                                      style: TextStyle(
+                                          height: 1,
+                                          fontWeight: FontWeight.bold)),
+                                ])),
                           ),
                           ParticipantList(
                             listType: 'customer',
@@ -655,69 +706,74 @@ class _DialogPagesState extends State<DialogPages> {
                       children: <Widget>[
                         Expanded(
                             child: ListBody(
-                              children: <Widget>[
-                                RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text: '${task.contractValue} DEV \n',
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0)),
-                                          TextSpan(
-                                              text: '${task.contractValueToken} aUSDC',
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0))
-                                        ])),
-                              ],
-                            )),
-                        if (role == 'customer' || tasksServices.hardhatDebug == true)
-                        TaskDialogButton(
-                          padding: 6.0,
-                          inactive: false,
-                          buttonName: 'Topup',
-                          buttonColorRequired: Colors.lightBlue.shade600,
-                          callback: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Topup contract'),
-                                // backgroundColor: Colors.black,
-                                content: const Payment(
-                                  purpose: 'topup',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      tasksServices.addTokens(task.taskAddress,
-                                          interface.tokensEntered, task.nanoId);
-                                      Navigator.pop(context);
+                          children: <Widget>[
+                            RichText(
+                                text: TextSpan(
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                    children: <TextSpan>[
+                                  TextSpan(
+                                      text: '${task.contractValue} DEV \n',
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.0)),
+                                  TextSpan(
+                                      text: '${task.contractValueToken} aUSDC',
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.0))
+                                ])),
+                          ],
+                        )),
+                        if (role == 'customer' ||
+                            tasksServices.hardhatDebug == true)
+                          TaskDialogButton(
+                            padding: 6.0,
+                            inactive: false,
+                            buttonName: 'Topup',
+                            buttonColorRequired: Colors.lightBlue.shade600,
+                            callback: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                        title: const Text('Topup contract'),
+                                        // backgroundColor: Colors.black,
+                                        content: const Payment(
+                                          purpose: 'topup',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              tasksServices.addTokens(
+                                                  task.taskAddress,
+                                                  interface.tokensEntered,
+                                                  task.nanoId);
+                                              Navigator.pop(context);
 
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => WalletAction(
-                                            nanoId: task.nanoId,
-                                            taskName: 'addTokens',
-                                          ));
-                                    },
-                                    style: TextButton.styleFrom(
-                                        primary: Colors.white,
-                                        backgroundColor: Colors.green),
-                                    child: const Text('Topup contract'),
-                                  ),
-                                  TextButton(
-                                      child: const Text('Close'),
-                                      onPressed: () => context.beamToNamed('/tasks')
-                                    // Navigator.pop(context),
-                                  ),
-                                ],
-                              ));
-                          },
-                        ),
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      WalletAction(
+                                                        nanoId: task.nanoId,
+                                                        taskName: 'addTokens',
+                                                      ));
+                                            },
+                                            style: TextButton.styleFrom(
+                                                primary: Colors.white,
+                                                backgroundColor: Colors.green),
+                                            child: const Text('Topup contract'),
+                                          ),
+                                          TextButton(
+                                              child: const Text('Close'),
+                                              onPressed: () =>
+                                                  context.beamToNamed('/tasks')
+                                              // Navigator.pop(context),
+                                              ),
+                                        ],
+                                      ));
+                            },
+                          ),
                       ],
                     ),
                   ),
@@ -744,7 +800,7 @@ class _DialogPagesState extends State<DialogPages> {
                       width: innerWidth,
                       decoration: BoxDecoration(
                         borderRadius:
-                        BorderRadius.circular(widget.borderRadius),
+                            BorderRadius.circular(widget.borderRadius),
                       ),
                       child: TextFormField(
                         controller: messageForStateController,
@@ -790,10 +846,10 @@ class _DialogPagesState extends State<DialogPages> {
                           ),
                         ),
                         style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Poppins',
-                          color: Colors.black87,
-                          lineHeight: null,
-                        ),
+                              fontFamily: 'Poppins',
+                              color: Colors.black87,
+                              lineHeight: null,
+                            ),
                         minLines: 1,
                         maxLines: 3,
                       ),
@@ -836,7 +892,7 @@ class _DialogPagesState extends State<DialogPages> {
                               width: innerWidth,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                BorderRadius.circular(widget.borderRadius),
+                                    BorderRadius.circular(widget.borderRadius),
                               ),
                               child: Container(
                                   padding: const EdgeInsets.all(6),
@@ -846,10 +902,10 @@ class _DialogPagesState extends State<DialogPages> {
                                               .style
                                               .apply(fontSizeFactor: 1.0),
                                           children: <TextSpan>[
-                                            TextSpan(
-                                              text: task.description,
-                                            )
-                                          ])))),
+                                        TextSpan(
+                                          text: task.description,
+                                        )
+                                      ])))),
                           // const Spacer(),
                           Container(
                             padding: const EdgeInsets.all(6),
@@ -859,18 +915,18 @@ class _DialogPagesState extends State<DialogPages> {
                                         .style
                                         .apply(fontSizeFactor: 1.0),
                                     children: <TextSpan>[
-                                      const TextSpan(
-                                          text: 'Created: ',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text: DateFormat('MM/dd/yyyy, hh:mm a')
-                                              .format(task.createTime),
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 1.0))
-                                    ])),
+                                  const TextSpan(
+                                      text: 'Created: ',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                  TextSpan(
+                                      text: DateFormat('MM/dd/yyyy, hh:mm a')
+                                          .format(task.createTime),
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.0))
+                                ])),
                           ),
                         ],
                       ))),
@@ -889,7 +945,7 @@ class _DialogPagesState extends State<DialogPages> {
                               width: innerWidth,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                BorderRadius.circular(widget.borderRadius),
+                                    BorderRadius.circular(widget.borderRadius),
                               ),
                               child: ListBody(children: <Widget>[
                                 RichText(
@@ -898,34 +954,34 @@ class _DialogPagesState extends State<DialogPages> {
                                             .style
                                             .apply(fontSizeFactor: 1.0),
                                         children: <TextSpan>[
-                                          const TextSpan(
-                                              text: 'Contract owner: \n',
-                                              style: TextStyle(
-                                                  height: 1,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: task.contractOwner.toString(),
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 0.7))
-                                        ])),
+                                      const TextSpan(
+                                          text: 'Contract owner: \n',
+                                          style: TextStyle(
+                                              height: 1,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text: task.contractOwner.toString(),
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 0.7))
+                                    ])),
                                 RichText(
                                     text: TextSpan(
                                         style: DefaultTextStyle.of(context)
                                             .style
                                             .apply(fontSizeFactor: 1.0),
                                         children: <TextSpan>[
-                                          const TextSpan(
-                                              text: 'Contract address: \n',
-                                              style: TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: task.taskAddress.toString(),
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 0.7))
-                                        ])),
+                                      const TextSpan(
+                                          text: 'Contract address: \n',
+                                          style: TextStyle(
+                                              height: 2,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text: task.taskAddress.toString(),
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 0.7))
+                                    ])),
                                 // RichText(
                                 //   text: TextSpan(
                                 //     style: DefaultTextStyle.of(context)
@@ -960,10 +1016,10 @@ class _DialogPagesState extends State<DialogPages> {
                       // height: 540,
                       decoration: BoxDecoration(
                         borderRadius:
-                        BorderRadius.circular(widget.borderRadius),
+                            BorderRadius.circular(widget.borderRadius),
                       ),
                       child:
-                      ChatPage(task: task, tasksServices: tasksServices))))
+                          ChatPage(task: task, tasksServices: tasksServices))))
         ],
       );
     });
@@ -979,11 +1035,11 @@ class DialogButtonSet extends StatefulWidget {
 
   const DialogButtonSet(
       {Key? key,
-        required this.task,
-        required this.role,
-        required this.width,
-        // required this.message,
-        required this.enableRatingButton})
+      required this.task,
+      required this.role,
+      required this.width,
+      // required this.message,
+      required this.enableRatingButton})
       : super(key: key);
 
   @override
@@ -1013,9 +1069,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           if (role == 'tasks')
             TaskDialogButton(
               inactive: (task.contractOwner != tasksServices.publicAddress ||
-                  tasksServices.hardhatDebug == true) &&
-                  tasksServices.validChainID &&
-                  tasksServices.publicAddress != null
+                          tasksServices.hardhatDebug == true) &&
+                      tasksServices.validChainID &&
+                      tasksServices.publicAddress != null
                   ? false
                   : true,
               buttonName: 'Participate',
@@ -1028,15 +1084,15 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                     message: interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/tasks');
+                    const RouteInformation(location: '/tasks');
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskParticipate',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskParticipate',
+                        ));
               },
             ),
           // ********************** PERFORMER BUTTONS ************************* //
@@ -1055,15 +1111,15 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                     message: interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/performer');
+                    const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
           if (task.taskState == "progress" &&
@@ -1081,14 +1137,14 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                     message: interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/performer');
+                    const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
 
@@ -1097,7 +1153,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                   role == 'performer' ||
                   tasksServices.hardhatDebug == true) &&
               (task.contractValue != 0 || task.contractValueToken != 0))
-          // WithdrawButton(object: task),
+            // WithdrawButton(object: task),
             TaskDialogButton(
               inactive: false,
               buttonName: 'Withdraw',
@@ -1111,9 +1167,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'withdrawToChain',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'withdrawToChain',
+                        ));
               },
               task: task,
             ),
@@ -1128,37 +1184,37 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Topup contract'),
-                      // backgroundColor: Colors.black,
-                      content: const Payment(
-                        purpose: 'topup',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            tasksServices.addTokens(task.taskAddress,
-                                interface.tokensEntered, task.nanoId);
-                            Navigator.pop(context);
+                          title: const Text('Topup contract'),
+                          // backgroundColor: Colors.black,
+                          content: const Payment(
+                            purpose: 'topup',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                tasksServices.addTokens(task.taskAddress,
+                                    interface.tokensEntered, task.nanoId);
+                                Navigator.pop(context);
 
-                            showDialog(
-                                context: context,
-                                builder: (context) => WalletAction(
-                                  nanoId: task.nanoId,
-                                  taskName: 'addTokens',
-                                ));
-                          },
-                          style: TextButton.styleFrom(
-                              primary: Colors.white,
-                              backgroundColor: Colors.green),
-                          child: const Text('Topup contract'),
-                        ),
-                        TextButton(
-                            child: const Text('Close'),
-                            onPressed: () => context.beamToNamed('/tasks')
-                          // Navigator.pop(context),
-                        ),
-                      ],
-                    ));
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => WalletAction(
+                                          nanoId: task.nanoId,
+                                          taskName: 'addTokens',
+                                        ));
+                              },
+                              style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.green),
+                              child: const Text('Topup contract'),
+                            ),
+                            TextButton(
+                                child: const Text('Close'),
+                                onPressed: () => context.beamToNamed('/tasks')
+                                // Navigator.pop(context),
+                                ),
+                          ],
+                        ));
               },
             ),
 
@@ -1178,14 +1234,14 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 // context.beamToNamed('/customer');
                 Navigator.pop(context);
                 RouteInformation routeInfo =
-                const RouteInformation(location: '/customer');
+                    const RouteInformation(location: '/customer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
           if (task.taskState == 'completed' &&
@@ -1197,19 +1253,19 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               callback: () {
                 (task.rating == 0 && enableRatingButton)
                     ? () {
-                  setState(() {
-                    task.justLoaded = false;
-                  });
-                  // tasksServices.rateTask(
-                  //     task.taskAddress, ratingScore, task.nanoId);
-                  Navigator.pop(context);
-                  showDialog(
-                      context: context,
-                      builder: (context) => WalletAction(
-                        nanoId: task.nanoId,
-                        taskName: 'rateTask',
-                      ));
-                }
+                        setState(() {
+                          task.justLoaded = false;
+                        });
+                        // tasksServices.rateTask(
+                        //     task.taskAddress, ratingScore, task.nanoId);
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction(
+                                  nanoId: task.nanoId,
+                                  taskName: 'rateTask',
+                                ));
+                      }
                     : null;
               },
             ),
@@ -1217,8 +1273,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
           // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
           // ************************* AUDIT REQUEST ************************* //
           if ((role == 'performer' ||
-              role == 'customer' ||
-              tasksServices.hardhatDebug == true) &&
+                  role == 'customer' ||
+                  tasksServices.hardhatDebug == true) &&
               (task.taskState == "progress" || task.taskState == "review"))
             TaskDialogButton(
               inactive: false,
@@ -1236,9 +1292,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskStateChange',
+                        ));
               },
             ),
 
@@ -1260,9 +1316,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditParticipate',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskAuditParticipate',
+                        ));
               },
             ),
 
@@ -1283,9 +1339,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditDecision',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskAuditDecision',
+                        ));
               },
             ),
           if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
@@ -1305,9 +1361,9 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditDecision',
-                    ));
+                          nanoId: task.nanoId,
+                          taskName: 'taskAuditDecision',
+                        ));
               },
             ),
 
@@ -1321,6 +1377,52 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
   }
 }
 
+class RateAnimatedWidget extends StatefulWidget {
+  final Task? task;
+  const RateAnimatedWidget({
+    Key? key,
+    this.task,
+  }) : super(key: key);
+
+  @override
+  _RateAnimatedWidgetState createState() => _RateAnimatedWidgetState();
+}
+
+class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
+  @override
+  Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+
+    SMINumber? _rating;
+
+    void _onRiveInit(Artboard artboard) {
+      final controller = StateMachineController.fromArtboard(
+        artboard,
+        'State Machine 1',
+        onStateChange: (stateMachineName, animationName) {
+          print(stateMachineName);
+          print(animationName);
+          print(_rating!.value);
+        },
+      );
+      artboard.addController(controller!);
+      _rating = controller.findInput<double>('Rating') as SMINumber;
+    }
+
+    void _hitBump() => debugPrint("${_rating!.value}");
+    return Container(
+        child: GestureDetector(
+      child: RiveAnimation.file(
+        'assets/rive_animations/rating_animation.riv',
+        fit: BoxFit.fill,
+        alignment: Alignment.center,
+        onInit: _onRiveInit,
+      ),
+      onTap: _hitBump,
+    ));
+  }
+}
+
 class TaskDialogButton extends StatefulWidget {
   final String buttonName;
   final Color buttonColorRequired;
@@ -1330,13 +1432,12 @@ class TaskDialogButton extends StatefulWidget {
   final double? padding;
   const TaskDialogButton(
       {Key? key,
-        required this.buttonName,
-        required this.buttonColorRequired,
-        required this.callback,
-        required this.inactive,
-        this.task,
-        this.padding
-      })
+      required this.buttonName,
+      required this.buttonColorRequired,
+      required this.callback,
+      required this.inactive,
+      this.task,
+      this.padding})
       : super(key: key);
 
   @override
@@ -1351,13 +1452,13 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     final Size widthTextSize = (TextPainter(
-        text: TextSpan(
-            text: widget.buttonName,
-            style: TextStyle(fontSize: 18, color: textColor)),
-        maxLines: 1,
-        textScaleFactor: MediaQuery.of(context).textScaleFactor,
-        textDirection: ui.TextDirection.ltr)
-      ..layout())
+            text: TextSpan(
+                text: widget.buttonName,
+                style: TextStyle(fontSize: 18, color: textColor)),
+            maxLines: 1,
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            textDirection: ui.TextDirection.ltr)
+          ..layout())
         .size;
     buttonColor = widget.buttonColorRequired;
 

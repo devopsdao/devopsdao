@@ -60,6 +60,7 @@ dependencies:
   provider: ^6.0.2
   qr_flutter: ^4.0.0
   rate_limiter: ^0.1.1
+  rive: ^0.9.1
   scan: ^1.6.0
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
