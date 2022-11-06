@@ -39,12 +39,12 @@ class _ParticipantListState extends State<ParticipantList> {
     print(MediaQuery.of(context).size.height);
 
     return Container(
-      height: 100.0, // Change as per your requirement
-      width: 270.0, // Change as per your requirement
+      // height: 100.0, // Change as per your requirement
+      // width: 270.0, // Change as per your requirement
       child: ListView.builder(
+          shrinkWrap: true,
           // padding: EdgeInsets.zero,
           // scrollDirection: Axis.vertical,
-          // shrinkWrap: true,
           // physics: NeverScrollableScrollPhysics(),
           itemCount: participants.length,
           itemBuilder: (context2, index2) {

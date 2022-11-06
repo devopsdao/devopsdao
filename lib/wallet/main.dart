@@ -64,14 +64,11 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
     if (tasksServices.walletConnectedWC || tasksServices.walletConnectedMM) {
       if (tasksServices.walletConnectedMM) {
-        // interface.pageWalletViewNumber = 1;
         interface.controller = PageController(initialPage: 1);
       } else if (tasksServices.walletConnectedWC) {
-        // interface.pageWalletViewNumber = 2;
         interface.controller = PageController(initialPage: 2);
       }
     } else {
-      // interface.pageWalletViewNumber = 0;
       interface.controller = PageController(initialPage: 0);
     }
 
@@ -86,7 +83,6 @@ class _MyWalletPageState extends State<MyWalletPage> {
         disableBackButton = false;
       }
     }
-    print(disableBackButton);
 
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
@@ -265,9 +261,6 @@ class _WalletPagesState extends State<WalletPages> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-
-    // print(interface.pageWalletViewNumber);
-    // interface.pageWalletViewNumber = 0;
 
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {

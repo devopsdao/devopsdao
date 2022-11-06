@@ -78,7 +78,7 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = false;
+  bool hardhatDebug = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1586,7 +1586,6 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> myNotifyListeners() async {
     notifyListeners();
-    print('fired once');
   }
 
   Future<void> testTaskCreation() async {
