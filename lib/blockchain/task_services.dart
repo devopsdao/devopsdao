@@ -329,7 +329,8 @@ class TasksServices extends ChangeNotifier {
         if (hardhatDebug == false) {
           credentials = await wallectConnectTransaction?.getCredentials();
         }
-        publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
+        publicAddressWC =
+            await wallectConnectTransaction?.getPublicAddress(session);
         publicAddress = publicAddressWC;
       } else {
         walletConnectState = TransactionState.failed;
@@ -1065,6 +1066,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> fetchTasks() async {
     isLoadingBackground = true;
     List totalTaskList = await tasksFacet.getTaskContracts();
+    List totalTaskListReversed = List.from(totalTaskList.reversed);
     totalTaskLen = totalTaskList.length;
     notifyListeners();
 
@@ -1076,7 +1078,7 @@ class TasksServices extends ChangeNotifier {
 
     if (loopRunning == false) {
       loopRunning = true;
-      for (var i = 0; i < totalTaskList.length; i++) {
+      for (var i = 0; i < totalTaskListReversed.length; i++) {
         if (stopLoopRunning) {
           tasks.clear();
           stopLoopRunning = false;
@@ -1085,12 +1087,14 @@ class TasksServices extends ChangeNotifier {
           break;
         }
         try {
-          tasks[totalTaskList[i].toString()] = await getTask(totalTaskList[i]);
+          tasks[totalTaskListReversed[i].toString()] =
+              await getTask(totalTaskListReversed[i]);
           tasksLoaded++;
           notifyListeners();
-          await monitorTaskEvents(totalTaskList[i]);
+          await monitorTaskEvents(totalTaskListReversed[i]);
         } on GetTaskException {
-          print('could not get task ${totalTaskList[i]} from blockchain');
+          print(
+              'could not get task ${totalTaskListReversed[i]} from blockchain');
         }
       }
 
