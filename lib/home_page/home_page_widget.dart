@@ -148,14 +148,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     fontSize: 22,
                   ),
             ),
-            Text(
-                'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform} Browser platform: ${tasksServices.browserPlatform}',
-                style: const TextStyle(
-                  height: 2,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 16,
-                )),
           ],
         ),
         actions: [
@@ -524,7 +516,15 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   ),
                 ),
               ),
-            )
+            ),
+            Text(
+                'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
+                style: const TextStyle(
+                  height: 2,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 11,
+                )),
           ],
         ).animated([animationsMap['columnOnPageLoadAnimation']!]),
       ).animated([animationsMap['containerOnPageLoadAnimation']!]),

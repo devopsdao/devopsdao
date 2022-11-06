@@ -54,7 +54,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             context: context,
             builder: (context) => TaskDialog(
                   taskAddress: widget.taskAddress!,
-                  role: 'auditor',
+                  fromPage: 'auditor',
                 ));
       });
     }
@@ -363,15 +363,15 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   //     builder: (context) {
                   //       return StatefulBuilder(builder: (context, setState) {
                   //         return TaskInformationDialog(
-                  //             role: 'auditor', object: objList[index]);
+                  //             fromPage: 'auditor', object: objList[index]);
                   //       });
                   //     });
-                  // => TaskInformationDialog(role: 'auditor', object: objList[index]),);
+                  // => TaskInformationDialog(fromPage: 'auditor', object: objList[index]),);
 
                   showDialog(
                       context: context,
                       builder: (context) => TaskInformationDialog(
-                            role: 'auditor',
+                            fromPage: 'auditor',
                             task: objList[index],
                             shimmerEnabled: false,
                           ));
@@ -383,7 +383,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                       RouteInformation(location: '/auditor/$taskAddress');
                   Beamer.of(context).updateRouteInformation(routeInfo);
                 },
-                child: TaskItem(role: 'auditor', object: objList[index]),
+                child: TaskItem(fromPage: 'auditor', object: objList[index]),
               ),
             );
           },

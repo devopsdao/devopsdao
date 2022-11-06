@@ -9,12 +9,12 @@ import '../flutter_flow/flutter_flow_util.dart';
 
 class TaskItem extends StatefulWidget {
   // final int taskCount;
-  final String role;
+  final String fromPage;
   final Task object;
   const TaskItem(
       {Key? key,
       // required this.taskCount,
-      required this.role,
+      required this.fromPage,
       required this.object})
       : super(key: key);
 
@@ -53,9 +53,9 @@ class _TaskItemState extends State<TaskItem> {
             return Colors.lightBlueAccent;
           } else if (task.taskState == "canceled") {
             return Colors.orange;
-          } else if (task.taskState == "audit" && widget.role != 'auditor') {
+          } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
             return Colors.orangeAccent;
-          } else if (task.taskState == "audit" && widget.role == 'auditor') {
+          } else if (task.taskState == "audit" && widget.fromPage == 'auditor') {
             return Colors.white;
           } else {
             return Colors.white;
@@ -181,10 +181,10 @@ class _TaskItemState extends State<TaskItem> {
           // *********** BADGE ************ //
 
           if ((task.taskState == "new" || task.taskState == "audit") &&
-              (widget.role == 'performer' ||
-                  widget.role == 'customer' ||
-                  widget.role == 'auditor' ||
-                  (widget.role == 'tasks' && taskCount != 0)))
+              (widget.fromPage == 'performer' ||
+                  widget.fromPage == 'customer' ||
+                  widget.fromPage == 'auditor' ||
+                  (widget.fromPage == 'tasks' && taskCount != 0)))
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
               child: Badge(
@@ -201,9 +201,9 @@ class _TaskItemState extends State<TaskItem> {
                   if (task.taskState == "new") {
                     return Colors.redAccent;
                   } else if (task.taskState == "audit" &&
-                      widget.role != "auditor") {
+                      widget.fromPage != "auditor") {
                     return Colors.blueGrey;
-                  } else if (widget.role == "auditor") {
+                  } else if (widget.fromPage == "auditor") {
                     return Colors.green;
                   } else {
                     return Colors.white;

@@ -27,9 +27,10 @@ import 'dart:ui' as ui;
 import 'package:rive/rive.dart';
 
 class TaskDialog extends StatefulWidget {
-  final String role;
+  final String fromPage;
   final String taskAddress;
-  const TaskDialog({Key? key, required this.taskAddress, required this.role})
+  const TaskDialog(
+      {Key? key, required this.taskAddress, required this.fromPage})
       : super(key: key);
 
   @override
@@ -59,13 +60,13 @@ class _TaskDialog extends State<TaskDialog> {
       task = tasksServices.tasks[widget.taskAddress]!;
       if (task != null) {
         print('taskAddress: ${widget.taskAddress}');
-        print('role: ${widget.role}');
+        print('fromPage: ${widget.fromPage}');
         return TaskInformationDialog(
-            role: widget.role, task: task, shimmerEnabled: false);
+            fromPage: widget.fromPage, task: task, shimmerEnabled: false);
       }
     }
     // return TaskInformationDialog(
-    //     role: widget.role, task: task, shimmerEnabled: true);
+    //     fromPage: widget.fromPage, task: task, shimmerEnabled: true);
 
     return const AppDataLoadingDialogWidget();
   }
@@ -73,13 +74,13 @@ class _TaskDialog extends State<TaskDialog> {
 
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
-  final String role;
+  final String fromPage;
   final Task task;
   final bool shimmerEnabled;
   const TaskInformationDialog({
     Key? key,
     // required this.taskCount,
-    required this.role,
+    required this.fromPage,
     required this.task,
     required this.shimmerEnabled,
   }) : super(key: key);
@@ -90,6 +91,7 @@ class TaskInformationDialog extends StatefulWidget {
 
 class _TaskInformationDialogState extends State<TaskInformationDialog> {
   late Task task;
+  bool disableBackButton = true;
   String backgroundPicture = "assets/images/niceshape.png";
 
   @override
@@ -99,12 +101,18 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
     task = widget.task;
     final double borderRadius = interface.borderRadius;
 
-    if (widget.role == 'customer') {
+    if (widget.fromPage == 'customer') {
       backgroundPicture = "assets/images/cross.png";
-    } else if (widget.role == 'performer') {
+    } else if (widget.fromPage == 'performer') {
       backgroundPicture = "assets/images/cyrcle.png";
-    } else if (widget.role == 'audit') {
+    } else if (widget.fromPage == 'audit') {
       backgroundPicture = "assets/images/cross.png";
+    }
+
+    if (interface.pageDialogViewNumber == 0) {
+      disableBackButton = true;
+    } else {
+      disableBackButton = false;
     }
 
     bool shimmerEnabled = widget.shimmerEnabled;
@@ -139,7 +147,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     width: 400,
                     child: Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 30,
                           child: InkWell(
                             onTap: () {
@@ -153,13 +161,14 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               height: 30,
                               width: 30,
                               child: Row(
-                                children: const <Widget>[
-                                  Expanded(
-                                    child: Icon(
-                                      Icons.arrow_back,
-                                      size: 30,
+                                children: <Widget>[
+                                  if (!disableBackButton)
+                                    const Expanded(
+                                      child: Icon(
+                                        Icons.arrow_back,
+                                        size: 30,
+                                      ),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -206,7 +215,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               onTap: () async {
                                 Clipboard.setData(new ClipboardData(
                                         text:
-                                            'https://dodao.dev/index.html#/${widget.role}/${task.taskAddress.toString()}'))
+                                            'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
                                     .then((_) {
                                   // ScaffoldMessenger.of(context)
                                   //     .showSnackBar(const SnackBar(
@@ -230,12 +239,12 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                         const Spacer(),
                         InkWell(
                           onTap: () {
-                            // print(widget.role);
-                            // context.beamToNamed('/${widget.role}');
+                            // print(widget.fromPage);
+                            // context.beamToNamed('/${widget.fromPage}');
                             // context.beamBack();
                             Navigator.pop(context);
-                            RouteInformation routeInfo =
-                                RouteInformation(location: '/${widget.role}');
+                            RouteInformation routeInfo = RouteInformation(
+                                location: '/${widget.fromPage}');
                             Beamer.of(context)
                                 .updateRouteInformation(routeInfo);
                           },
@@ -277,7 +286,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     child: DialogPages(
                       borderRadius: borderRadius,
                       task: task,
-                      role: widget.role,
+                      fromPage: widget.fromPage,
                       topConstraints: constraints,
                       shimmerEnabled: shimmerEnabled,
                     ),
@@ -296,7 +305,7 @@ class DialogPages extends StatefulWidget {
   // final String buttonName;
   final double borderRadius;
   final Task task;
-  final String role;
+  final String fromPage;
   final BoxConstraints topConstraints;
   bool shimmerEnabled;
 
@@ -305,7 +314,7 @@ class DialogPages extends StatefulWidget {
       // required this.buttonName,
       required this.borderRadius,
       required this.task,
-      required this.role,
+      required this.fromPage,
       required this.topConstraints,
       required this.shimmerEnabled})
       : super(key: key);
@@ -341,90 +350,112 @@ class _DialogPagesState extends State<DialogPages> {
     interface.taskMessage = messageForStateController!.text;
 
     Task task = widget.task;
-    String role = widget.role;
+    String fromPage = widget.fromPage;
     bool shimmerEnabled = widget.shimmerEnabled;
     String messageHint = '';
-    String proccessButtonName = '';
+    // String processName = '';
 
-    if (task.taskState == 'new' && role == 'tasks') {
-      String proccessButtonName = 'Participate';
-    } else if (task.taskState == 'new' && role == 'customer') {
-      String proccessButtonName = '';
+    if (task.taskState == 'new' && fromPage == 'tasks') {
+      interface.dialogProcess = {
+        'name': 'newOnTasks',
+        'buttonName': 'Participate',
+        'hint': 'Write why you are the best Performer for this task'
+      };
+    } else if (task.taskState == 'new' && fromPage == 'customer') {
+      interface.dialogProcess = {
+        'name': 'newOnCustomer',
+        'buttonName': '-',
+        'hint': 'Write why you have selected this Performer'
+      };
     } else if (task.taskState == 'agreed' &&
-        (role == 'performer' || tasksServices.hardhatDebug == true)) {
-      String proccessButtonName = 'Start the task';
+        (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+      interface.dialogProcess = {
+        'name': 'agreedOnPerformer',
+        'buttonName': 'Start the task',
+        'hint': 'Write about your implementation plans'
+      };
     } else if (task.taskState == 'progress' &&
-        (role == 'performer' || tasksServices.hardhatDebug == true)) {
-      String proccessButtonName = 'Review';
+        (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+      interface.dialogProcess = {
+        'name': 'progressOnPerformer',
+        'buttonName': 'Review',
+        'hint': 'Write about your implementation plans'
+      };
     } else if (task.taskState == 'review' &&
-        (role == 'customer' || tasksServices.hardhatDebug == true)) {
-      String proccessButtonName = 'Sign Review';
+        (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+      interface.dialogProcess = {
+        'name': 'reviewOnCustomer',
+        'buttonName': 'Sign Review',
+        'hint': 'Write your request for review to the Customer'
+      };
     } else if (task.taskState == 'audit' && task.auditState == 'requested') {
-      String proccessButtonName = '';
+      interface.dialogProcess = {
+        'name': 'auditRequested',
+        'buttonName': '-',
+        'hint': 'Write your request for audit to the Auditor'
+      };
     } else if (task.taskState == 'audit' && task.auditState == 'performing') {
-      String proccessButtonName = '';
+      interface.dialogProcess = {
+        'name': 'auditPerforming',
+        'buttonName': '-',
+        'hint': 'Write a tip for your selected Auditor'
+      };
     } else if (task.taskState == 'audit' && task.auditState == 'finished') {
-      String proccessButtonName = '';
+      interface.dialogProcess = {
+        'name': 'auditFinished',
+        'buttonName': '-',
+        'hint': 'Write your Audit decision reasoning'
+      };
     } else if (task.taskState == 'completed') {
-      String proccessButtonName = 'Completed';
+      interface.dialogProcess = {
+        'name': 'completedState',
+        'buttonName': '-',
+        'hint': 'Write your thanks message to the Customer'
+      };
     } else if (task.taskState == 'canceled') {
-      String proccessButtonName = '';
+      interface.dialogProcess = {
+        'name': 'canceledState',
+        'buttonName': '-',
+        'hint': 'Write your thanks message to the Customer'
+      };
     }
 
-    if (task.taskState == 'new' && role == 'tasks') {
-      messageHint = 'Write why you are the best Performer for this task';
-    } else if (task.taskState == 'new' && role == 'customer') {
-      messageHint = 'Write why you have selected this Performer';
-    } else if (task.taskState == 'agreed') {
-      messageHint = 'Write about your implementation plans';
-    } else if (task.taskState == 'progress') {
-      messageHint = 'Write your request for review to the Customer';
-    } else if (task.taskState == 'review') {
-      messageHint = 'Write your review signature notes to the Performer';
-    } else if (task.taskState == 'audit' && task.auditState == 'requested') {
-      messageHint = 'Write your request for audit to the Auditor';
-    } else if (task.taskState == 'audit' && task.auditState == 'performing') {
-      messageHint = 'Write a tip for your selected Auditor';
-    } else if (task.taskState == 'audit' && task.auditState == 'finished') {
-      messageHint = 'Write your Audit decision reasoning';
-    } else if (task.taskState == 'completed') {
-      messageHint = 'Write your thanks message to the Customer';
-    } else if (task.taskState == 'canceled') {
-      messageHint = 'Write your thanks message to the Perfomer';
-    }
-
-    SMINumber? _rating;
-
-    void _onRiveInit(Artboard artboard) {
-      final controller = StateMachineController.fromArtboard(
-        artboard,
-        'State Machine 1',
-        onStateChange: (stateMachineName, animationName) {
-          print(stateMachineName);
-          print(animationName);
-          print(_rating!.value);
-        },
-      );
-      artboard.addController(controller!);
-      _rating = controller.findInput<double>('Rating') as SMINumber;
-    }
-
-    void _hitBump() => debugPrint("${_rating!.value}");
-
+    // if (task.taskState == 'new' && fromPage == 'tasks') {
+    //   messageHint = 'Write why you are the best Performer for this task';
+    // } else if (task.taskState == 'new' && fromPage == 'customer') {
+    //   messageHint = 'Write why you have selected this Performer';
+    // } else if (task.taskState == 'agreed') {
+    //   messageHint = 'Write about your implementation plans';
+    // } else if (task.taskState == 'progress') {
+    //   messageHint = 'Write your request for review to the Customer';
+    // } else if (task.taskState == 'review') {
+    //   messageHint = 'Write your review signature notes to the Performer';
+    // } else if (task.taskState == 'audit' && task.auditState == 'requested') {
+    //   messageHint = 'Write your request for audit to the Auditor';
+    // } else if (task.taskState == 'audit' && task.auditState == 'performing') {
+    //   messageHint = 'Write a tip for your selected Auditor';
+    // } else if (task.taskState == 'audit' && task.auditState == 'finished') {
+    //   messageHint = 'Write your Audit decision reasoning';
+    // } else if (task.taskState == 'completed') {
+    //   messageHint = 'Write your thanks message to the Customer';
+    // } else if (task.taskState == 'canceled') {
+    //   messageHint = 'Write your thanks message to the Perfomer';
+    // }
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
       // print (dialogConstraints.maxWidth);
+
       return PageView(
         scrollDirection: Axis.horizontal,
         // pageSnapping: false,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
         controller: interface.TasksController,
-        // onPageChanged: (number) {
-        //   interface.pageWalletViewNumber = number;
-        //   tasksServices.myNotifyListeners();
-        //   // print(number);
-        // },
+        onPageChanged: (number) {
+          interface.pageDialogViewNumber = number;
+          tasksServices.myNotifyListeners();
+          // print(number);
+        },
         children: <Widget>[
           // GestureDetector(
           //   child: RiveAnimation.file(
@@ -474,33 +505,36 @@ class _DialogPagesState extends State<DialogPages> {
                           //               style: TextStyle(fontWeight: FontWeight.bold)),
                           //           TextSpan(text: task.nanoId)
                           //         ])),
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            child: Text(
-                              task.title,
-                              textAlign: TextAlign.center,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
+                          // Container(
+                          //   padding: const EdgeInsets.all(6),
+                          //   child: Text(
+                          //     task.title,
+                          //     textAlign: TextAlign.center,
+                          //     style:
+                          //     const TextStyle(fontWeight: FontWeight.bold),
+                          //   ),
+                          // ),
 
                           Container(
                               padding: const EdgeInsets.all(6),
-                              child: RichText(
-                                  text: TextSpan(
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0),
-                                      children: <TextSpan>[
-                                    TextSpan(
-                                      text: task.description,
-                                    )
-                                  ]))),
+                              child: LimitedBox(
+                                maxHeight: 50,
+                                child: RichText(
+                                    text: TextSpan(
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 1.0),
+                                        children: <TextSpan>[
+                                      TextSpan(
+                                        text: task.description,
+                                      )
+                                    ])),
+                              )),
 
                           // ********************** CUSTOMER ROLE ************************* //
 
                           if (task.taskState == 'completed' &&
-                              (role == 'customer' ||
+                              (fromPage == 'customer' ||
                                   tasksServices.hardhatDebug == true))
                             Container(
                               padding: const EdgeInsets.all(6),
@@ -519,73 +553,41 @@ class _DialogPagesState extends State<DialogPages> {
                             ),
 
                           if (task.taskState == 'completed' &&
-                              (role == 'customer' ||
+                              (fromPage == 'customer' ||
                                   tasksServices.hardhatDebug == true))
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  // RatingBar.builder(
-                                  //   initialRating: 4,
-                                  //   minRating: 1,
-                                  //   direction: Axis.horizontal,
-                                  //   allowHalfRating: true,
-                                  //   itemCount: 5,
-                                  //   itemPadding: const EdgeInsets.symmetric(
-                                  //       horizontal: 5.0),
-                                  //   itemBuilder: (context, _) => const Icon(
-                                  //     Icons.star,
-                                  //     color: Colors.amber,
-                                  //   ),
-                                  //   itemSize: 30.0,
-                                  //   onRatingUpdate: (rating) {
-                                  //     setState(() {
-                                  //       enableRatingButton = true;
-                                  //     });
-                                  //     ratingScore = rating;
-                                  //     tasksServices.myNotifyListeners();
-                                  //   },
-                                  // ),
-                                  // Container(
-                                  //   child: GestureDetector(
-                                  //     child: RiveAnimation.file(
-                                  //       'assets/rive_animations/rating_animation.riv',
-                                  //       fit: BoxFit.fill,
-                                  //       alignment: Alignment.center,
-                                  //       onInit: _onRiveInit,
-                                  //     ),
-                                  //     onTap: _hitBump,
-                                  //   ),
-                                  // )
-                                  RateAnimatedWidget(
-                                    task: task,
-                                  )
-
-                                  // GestureDetector(
-                                  //   child: RiveAnimation.network(
-                                  //     'https://public.rive.app/community/runtime-files/3145-6649-star-rating.riv',
-                                  //     fit: BoxFit.scaleDown,
-                                  //     onInit: _onRiveInit,
-                                  //   ),
-                                  //   onTap: _hitBump,
-                                  // ),
+                                  RatingBar.builder(
+                                    initialRating: 4,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    itemSize: 30.0,
+                                    onRatingUpdate: (rating) {
+                                      setState(() {
+                                        enableRatingButton = true;
+                                      });
+                                      ratingScore = rating;
+                                      tasksServices.myNotifyListeners();
+                                    },
+                                  ),
                                 ]),
-
-                          // ************************ PERFORMER ROLE ************************** //
-
-                          if (task.taskState == 'completed' &&
-                              (role == 'performer' ||
-                                  tasksServices.hardhatDebug == true) &&
-                              (task.contractValue != 0 ||
-                                  task.contractValueToken != 0))
-                            SelectNetworkMenu(object: task),
 
                           // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
                           // *************************** AUDIT ******************************** //
 
                           if (task.taskState == "audit" &&
                               task.auditState == "requested" &&
-                              (role == 'customer' ||
-                                  role == 'performer' ||
+                              (fromPage == 'customer' ||
+                                  fromPage == 'performer' ||
                                   tasksServices.hardhatDebug == true))
                             RichText(
                                 text: TextSpan(
@@ -603,8 +605,8 @@ class _DialogPagesState extends State<DialogPages> {
                                 ])),
                           if (task.taskState == "audit" &&
                               task.auditState == "performing" &&
-                              (role == 'customer' ||
-                                  role == 'performer' ||
+                              (fromPage == 'customer' ||
+                                  fromPage == 'performer' ||
                                   tasksServices.hardhatDebug == true))
                             RichText(
                                 text: TextSpan(
@@ -626,8 +628,8 @@ class _DialogPagesState extends State<DialogPages> {
                                 ])),
                           if (task.taskState == "audit" &&
                               task.auditState == "requested" &&
-                              (role == 'customer' ||
-                                  role == 'performer' ||
+                              (fromPage == 'customer' ||
+                                  fromPage == 'performer' ||
                                   tasksServices.hardhatDebug == true))
                             ParticipantList(
                               listType: 'audit',
@@ -645,7 +647,8 @@ class _DialogPagesState extends State<DialogPages> {
               // const SizedBox(height: 14),
 
               if (task.taskState == "new" &&
-                  (role == 'customer' || tasksServices.hardhatDebug == true)
+                  task.participants.isNotEmpty &&
+                  (fromPage == 'customer' || tasksServices.hardhatDebug == true)
               // && task.participants.isNotEmpty
               )
                 Container(
@@ -691,6 +694,7 @@ class _DialogPagesState extends State<DialogPages> {
                   ),
                 ),
               // const SizedBox(height: 14),
+              // if (!FocusScope.of(context).hasFocus)
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
@@ -726,7 +730,7 @@ class _DialogPagesState extends State<DialogPages> {
                                 ])),
                           ],
                         )),
-                        if (role == 'customer' ||
+                        if (fromPage == 'customer' ||
                             tasksServices.hardhatDebug == true)
                           TaskDialogButton(
                             padding: 6.0,
@@ -786,9 +790,8 @@ class _DialogPagesState extends State<DialogPages> {
               // ),
               // const SizedBox(height: 14),
               if (tasksServices.publicAddress != null &&
-                  tasksServices.validChainID
-              // && role == 'tasks'
-              )
+                  tasksServices.validChainID &&
+                  (interface.dialogProcess['buttonName'] != '-'))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -818,7 +821,21 @@ class _DialogPagesState extends State<DialogPages> {
                         },
 
                         decoration: InputDecoration(
-                          labelText: messageHint,
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              interface.TasksController.animateToPage(2,
+                                  duration: const Duration(milliseconds: 700),
+                                  curve: Curves.ease);
+                            },
+                            icon: const Icon(Icons.chat),
+                            // focusColor: Colors.black  ,
+                            highlightColor: Colors.grey,
+                            // disabledColor: Colors.red,
+                            hoverColor: Colors.transparent,
+                            color: Colors.blueAccent,
+                            // splashColor: Colors.black,
+                          ),
+                          labelText: interface.dialogProcess['hint'],
                           labelStyle: const TextStyle(
                               fontSize: 17.0, color: Colors.black54),
                           hintText: '[Enter your message here..]',
@@ -856,12 +873,36 @@ class _DialogPagesState extends State<DialogPages> {
                     ),
                   ),
                 ),
+              // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
+
+              if (task.taskState == 'completed' &&
+                  (fromPage == 'performer' ||
+                      tasksServices.hardhatDebug == true) &&
+                  (task.contractValue != 0 || task.contractValueToken != 0))
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                      // constraints: const BoxConstraints(maxHeight: 500),
+                      padding: const EdgeInsets.all(8.0),
+                      width: innerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child: SelectNetworkMenu(object: task),
+                    ),
+                  ),
+                ),
+
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
               const Spacer(),
 
               DialogButtonSet(
                   task: task,
-                  role: role,
+                  fromPage: fromPage,
                   width: innerWidth,
                   // message: messageForStateController!.text,
                   enableRatingButton: enableRatingButton)
@@ -1028,7 +1069,7 @@ class _DialogPagesState extends State<DialogPages> {
 
 class DialogButtonSet extends StatefulWidget {
   final Task task;
-  final String role;
+  final String fromPage;
   final double width;
   // final String message;
   final bool enableRatingButton;
@@ -1036,7 +1077,7 @@ class DialogButtonSet extends StatefulWidget {
   const DialogButtonSet(
       {Key? key,
       required this.task,
-      required this.role,
+      required this.fromPage,
       required this.width,
       // required this.message,
       required this.enableRatingButton})
@@ -1052,7 +1093,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     Task task = widget.task;
-    String role = widget.role;
+    String fromPage = widget.fromPage;
     double innerWidth = widget.width;
     // String message = interface.taskMessage.text;
     bool enableRatingButton = widget.enableRatingButton;
@@ -1066,7 +1107,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
         children: [
           // ##################### ACTION BUTTONS PART ######################## //
           // ************************ NEW (EXCHANGE) ************************** //
-          if (role == 'tasks')
+          if (fromPage == 'tasks')
             TaskDialogButton(
               inactive: (task.contractOwner != tasksServices.publicAddress ||
                           tasksServices.hardhatDebug == true) &&
@@ -1097,7 +1138,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             ),
           // ********************** PERFORMER BUTTONS ************************* //
           if (task.taskState == "agreed" &&
-              (role == 'performer' || tasksServices.hardhatDebug == true))
+              (fromPage == 'performer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Start the task',
@@ -1123,7 +1164,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               },
             ),
           if (task.taskState == "progress" &&
-              (role == 'performer' || tasksServices.hardhatDebug == true))
+              (fromPage == 'performer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Review',
@@ -1149,8 +1190,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             ),
 
           if (task.taskState == "completed" &&
-              (role == 'customer' ||
-                  role == 'performer' ||
+              (fromPage == 'customer' ||
+                  fromPage == 'performer' ||
                   tasksServices.hardhatDebug == true) &&
               (task.contractValue != 0 || task.contractValueToken != 0))
             // WithdrawButton(object: task),
@@ -1175,51 +1216,51 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             ),
 
           // *********************** CUSTOMER BUTTONS *********************** //
-          if (role == 'customer' || tasksServices.hardhatDebug == true)
-            TaskDialogButton(
-              inactive: false,
-              buttonName: 'Topup',
-              buttonColorRequired: Colors.lightBlue.shade600,
-              callback: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('Topup contract'),
-                          // backgroundColor: Colors.black,
-                          content: const Payment(
-                            purpose: 'topup',
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                tasksServices.addTokens(task.taskAddress,
-                                    interface.tokensEntered, task.nanoId);
-                                Navigator.pop(context);
-
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => WalletAction(
-                                          nanoId: task.nanoId,
-                                          taskName: 'addTokens',
-                                        ));
-                              },
-                              style: TextButton.styleFrom(
-                                  primary: Colors.white,
-                                  backgroundColor: Colors.green),
-                              child: const Text('Topup contract'),
-                            ),
-                            TextButton(
-                                child: const Text('Close'),
-                                onPressed: () => context.beamToNamed('/tasks')
-                                // Navigator.pop(context),
-                                ),
-                          ],
-                        ));
-              },
-            ),
+          // if (fromPage == 'customer' || tasksServices.hardhatDebug == true)
+          //   TaskDialogButton(
+          //     inactive: false,
+          //     buttonName: 'Topup',
+          //     buttonColorRequired: Colors.lightBlue.shade600,
+          //     callback: () {
+          //       showDialog(
+          //           context: context,
+          //           builder: (context) => AlertDialog(
+          //             title: const Text('Topup contract'),
+          //             // backgroundColor: Colors.black,
+          //             content: const Payment(
+          //               purpose: 'topup',
+          //             ),
+          //             actions: [
+          //               TextButton(
+          //                 onPressed: () {
+          //                   tasksServices.addTokens(task.taskAddress,
+          //                       interface.tokensEntered, task.nanoId);
+          //                   Navigator.pop(context);
+          //
+          //                   showDialog(
+          //                       context: context,
+          //                       builder: (context) => WalletAction(
+          //                         nanoId: task.nanoId,
+          //                         taskName: 'addTokens',
+          //                       ));
+          //                 },
+          //                 style: TextButton.styleFrom(
+          //                     primary: Colors.white,
+          //                     backgroundColor: Colors.green),
+          //                 child: const Text('Topup contract'),
+          //               ),
+          //               TextButton(
+          //                   child: const Text('Close'),
+          //                   onPressed: () => context.beamToNamed('/tasks')
+          //                 // Navigator.pop(context),
+          //               ),
+          //             ],
+          //           ));
+          //     },
+          //   ),
 
           if (task.taskState == 'review' &&
-              (role == 'customer' || tasksServices.hardhatDebug == true))
+              (fromPage == 'customer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Sign Review',
@@ -1245,7 +1286,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               },
             ),
           if (task.taskState == 'completed' &&
-              (role == 'customer' || tasksServices.hardhatDebug == true))
+              (fromPage == 'customer' || tasksServices.hardhatDebug == true))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Rate task',
@@ -1272,8 +1313,8 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
 
           // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
           // ************************* AUDIT REQUEST ************************* //
-          if ((role == 'performer' ||
-                  role == 'customer' ||
+          if ((fromPage == 'performer' ||
+                  fromPage == 'customer' ||
                   tasksServices.hardhatDebug == true) &&
               (task.taskState == "progress" || task.taskState == "review"))
             TaskDialogButton(
@@ -1299,7 +1340,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             ),
 
           // ************************* AUDITOR BUTTONS ************************ //
-          if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
+          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'requested')
             TaskDialogButton(
               inactive: false,
@@ -1322,7 +1363,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
               },
             ),
 
-          if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
+          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'performing')
             TaskDialogButton(
               inactive: false,
@@ -1344,7 +1385,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                         ));
               },
             ),
-          if ((role == 'auditor' || tasksServices.hardhatDebug == true) &&
+          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
               task.auditState == 'performing')
             TaskDialogButton(
               inactive: false,

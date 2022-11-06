@@ -46,7 +46,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
               context: context,
               builder: (context) => TaskDialog(
                     taskAddress: widget.taskAddress!,
-                    role: 'performer',
+                    fromPage: 'performer',
                   ));
         }
       });
@@ -356,7 +356,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                       showDialog(
                           context: context,
                           builder: (context) => TaskInformationDialog(
-                              role: 'performer',
+                              fromPage: 'performer',
                               task: objList[index],
                               shimmerEnabled: false));
                       final String taskAddress = tasksServices
@@ -371,7 +371,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                     }
                   },
                   child: TaskItem(
-                    role: 'performer',
+                    fromPage: 'performer',
                     object: objList[index],
                   )),
             );

@@ -82,7 +82,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         showDialog(
             context: context,
             builder: (context) =>
-                TaskDialog(taskAddress: widget.taskAddress!, role: 'tasks'));
+                TaskDialog(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
       });
     }
   }
@@ -315,7 +315,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                     context: context,
                                                     builder: (context) =>
                                                         TaskInformationDialog(
-                                                            role: 'tasks',
+                                                            fromPage: 'tasks',
                                                             task:
                                                                 objList[index],
                                                             shimmerEnabled:
@@ -339,7 +339,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                 //         TaskDialog(index: index));
                                               },
                                               child: TaskItem(
-                                                role: 'tasks',
+                                                fromPage: 'tasks',
                                                 object: tasksServices
                                                     .filterResults.values
                                                     .toList()[index],

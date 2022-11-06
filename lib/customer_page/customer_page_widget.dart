@@ -51,7 +51,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
             context: context,
             builder: (context) => TaskDialog(
                   taskAddress: widget.taskAddress!,
-                  role: 'customer',
+                  fromPage: 'customer',
                 ));
       });
     }
@@ -362,7 +362,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                         showDialog(
                             context: context,
                             builder: (context) => TaskInformationDialog(
-                                role: 'customer',
+                                fromPage: 'customer',
                                 task: objList[index],
                                 shimmerEnabled: false));
                         final String taskAddress = tasksServices
@@ -378,7 +378,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       }
                     },
                     child: TaskItem(
-                      role: 'customer',
+                      fromPage: 'customer',
                       object: objList[index],
                     )),
               );
