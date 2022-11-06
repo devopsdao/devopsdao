@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blockchain/interface.dart';
-import 'algorand_transaction_tester.dart';
-import 'ethereum_transaction_tester.dart';
-import 'transaction_tester.dart';
+import 'algorand_walletconnect_transaction.dart';
+import 'ethereum_walletconnect_transaction.dart';
+import 'walletconnect_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:provider/provider.dart';
@@ -47,8 +47,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
   NetworkType? _network = NetworkType.ethereum;
   // TransactionState _state = TransactionState.disconnected;
   // TransactionState _state2 = TransactionState.disconnected;
-  // TransactionTester? _transactionTester = EthereumTransactionTester();
-  late TransactionTester? _transactionTester;
+  // WallectConnectTransaction? _wallectConnectTransaction = EthereumWallectConnectTransaction();
+  late WallectConnectTransaction? _wallectConnectTransaction;
 
   bool disableBackButton = true;
 
@@ -225,10 +225,10 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
     switch (newNetwork) {
       case NetworkType.algorand:
-        _transactionTester = AlgorandTransactionTester();
+        _wallectConnectTransaction = AlgorandWalletConnectTransaction();
         break;
       case NetworkType.ethereum:
-        _transactionTester = EthereumTransactionTester();
+        _wallectConnectTransaction = EthereumWallectConnectTransaction();
         break;
     }
 
@@ -857,7 +857,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             //   tasksServices.myNotifyListeners();
             // }
             // if (tasksServices.walletConnected) {
-            //   await tasksServices.transactionTester?.disconnect();
+            //   await tasksServices.wallectConnectTransaction?.disconnect();
             // } else {
             //   tasksServices.initComplete
             //       ? tasksServices.connectWalletWC()

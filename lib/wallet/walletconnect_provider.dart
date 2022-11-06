@@ -1,11 +1,11 @@
 import 'package:walletconnect_dart/walletconnect_dart.dart';
-import './ethereum_transaction_tester.dart';
+import 'ethereum_walletconnect_transaction.dart';
 import 'package:webthree/webthree.dart';
 
-abstract class TransactionTester {
-  // TransactionTester({required this.connector});
+abstract class WallectConnectTransaction {
+  // WallectConnectTransaction({required this.connector});
 
-  TransactionTester();
+  WallectConnectTransaction();
 
   Future<void> initSession();
 

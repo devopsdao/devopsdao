@@ -501,7 +501,7 @@ class _WalletAction extends State<WalletAction> {
         //       style: TextButton.styleFrom(
         //           primary: Colors.white, backgroundColor: Colors.red),
         //       onPressed: () async {
-        //         await tasksServices.transactionTester?.disconnect();
+        //         await tasksServices.wallectConnectTransaction?.disconnect();
         //         // _transactionStateToAction(context, state: _state);
         //         setState(() {});
         //         // Navigator.pop(context);

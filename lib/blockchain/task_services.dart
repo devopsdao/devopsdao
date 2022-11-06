@@ -34,7 +34,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 // import 'dart:io' if (dart.library.html) 'dart:html';
 
-import '../wallet/ethereum_transaction_tester.dart';
+import '../wallet/ethereum_walletconnect_transaction.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -101,7 +101,7 @@ class TasksServices extends ChangeNotifier {
   EthereumAddress? publicAddress;
   EthereumAddress? publicAddressWC;
   EthereumAddress? publicAddressMM;
-  var transactionTester;
+  var wallectConnectTransaction;
 
   var walletConnectState;
   bool walletConnected = false;
@@ -191,11 +191,11 @@ class TasksServices extends ChangeNotifier {
       });
     }
 
-    if (transactionTester == null) {
-      transactionTester = EthereumTransactionTester();
+    if (wallectConnectTransaction == null) {
+      wallectConnectTransaction = EthereumWallectConnectTransaction();
     }
-    await transactionTester?.initSession();
-    await transactionTester?.removeSession();
+    await wallectConnectTransaction?.initSession();
+    await wallectConnectTransaction?.removeSession();
     _web3client = Web3Client(
       _rpcUrl,
       http.Client(),
@@ -243,8 +243,8 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> connectWalletWC(bool refresh) async {
     print('async');
-    if (transactionTester != null) {
-      var connector = await transactionTester.initWalletConnect();
+    if (wallectConnectTransaction != null) {
+      var connector = await wallectConnectTransaction.initWalletConnect();
 
       if (walletConnected == false) {
         print("disconnected");
@@ -259,7 +259,7 @@ class TasksServices extends ChangeNotifier {
         walletConnectedWC = true;
         () async {
           if (hardhatDebug == false) {
-            credentials = await transactionTester?.getCredentials();
+            credentials = await wallectConnectTransaction?.getCredentials();
             chainId = session.chainId;
             if (chainId == 1287) {
               validChainID = true;
@@ -270,7 +270,7 @@ class TasksServices extends ChangeNotifier {
               await switchNetworkWC();
             }
             publicAddressWC =
-                await transactionTester?.getPublicAddress(session);
+                await wallectConnectTransaction?.getPublicAddress(session);
             publicAddress = publicAddressWC;
           } else {
             chainId = 31337;
@@ -312,7 +312,7 @@ class TasksServices extends ChangeNotifier {
         connectWalletWC(true);
         notifyListeners();
       });
-      final SessionStatus? session = await transactionTester?.connect(
+      final SessionStatus? session = await wallectConnectTransaction?.connect(
         onDisplayUri: (uri) => {
           walletConnectSessionUri = uri.split("?").first,
           (platform == 'mobile' || browserPlatform == 'android') && !refresh
@@ -327,9 +327,9 @@ class TasksServices extends ChangeNotifier {
         walletConnectState = TransactionState.failed;
       } else if (walletConnected == true) {
         if (hardhatDebug == false) {
-          credentials = await transactionTester?.getCredentials();
+          credentials = await wallectConnectTransaction?.getCredentials();
         }
-        publicAddressWC = await transactionTester?.getPublicAddress(session);
+        publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
         publicAddress = publicAddressWC;
       } else {
         walletConnectState = TransactionState.failed;
@@ -499,7 +499,7 @@ class TasksServices extends ChangeNotifier {
       final params = <String, dynamic>{
         'chainId': 0x507,
       };
-      var result = await transactionTester?.switchNetwork(0x507);
+      var result = await wallectConnectTransaction?.switchNetwork(0x507);
       // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
       chainChangeRequest = true;
     } catch (e) {
@@ -509,7 +509,7 @@ class TasksServices extends ChangeNotifier {
     if (chainChangeRequest == true) {
       try {
         // chainId = walletConnectSession.chainId;
-        // chainId = await transactionTester?.getChainId();
+        // chainId = await wallectConnectTransaction?.getChainId();
         chainIdHex = await _web3client.makeRPCCall('eth_chainId');
       } catch (e) {
         print(e);
@@ -547,7 +547,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> disconnectWC() async {
-    await transactionTester?.disconnect();
+    await wallectConnectTransaction?.disconnect();
     walletConnected = false;
     walletConnectedWC = false;
     publicAddress = null;

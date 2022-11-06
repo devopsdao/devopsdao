@@ -1,24 +1,24 @@
 import 'package:algorand_dart/algorand_dart.dart';
-import 'transaction_tester.dart';
+import 'walletconnect_provider.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';
 
-class AlgorandTransactionTester extends TransactionTester {
+class AlgorandWalletConnectTransaction extends WallectConnectTransaction {
   late final Algorand algorand;
   late final AlgorandWalletConnectProvider provider;
   late final WalletConnect connector;
 
-  AlgorandTransactionTester() {
+  AlgorandWalletConnectTransaction() {
     initWalletConnect();
   }
 
-  // AlgorandTransactionTester._internal({
+  // AlgorandWalletConnectTransaction._internal({
   //   required WalletConnect connector,
   //   required this.algorand,
   //   required this.provider,
   // }) : super(connector: connector);
 
-  // factory AlgorandTransactionTester() {
+  // factory AlgorandWalletConnectTransaction() {
   //   final algorand = Algorand(
   //     algodClient: AlgodClient(apiUrl: AlgoExplorer.TESTNET_ALGOD_API_URL),
   //   );
@@ -37,7 +37,7 @@ class AlgorandTransactionTester extends TransactionTester {
 
   //   final provider = AlgorandWalletConnectProvider(connector);
 
-  //   return AlgorandTransactionTester._internal(
+  //   return AlgorandWalletConnectTransaction._internal(
   //     connector: connector,
   //     algorand: algorand,
   //     provider: provider,

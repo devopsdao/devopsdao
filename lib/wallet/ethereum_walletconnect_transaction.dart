@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'transaction_tester.dart';
+import 'walletconnect_provider.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';
 import 'package:webthree/src/crypto/secp256k1.dart';
@@ -56,7 +56,7 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
   }
 }
 
-class EthereumTransactionTester extends TransactionTester {
+class EthereumWallectConnectTransaction extends WallectConnectTransaction {
   late final Web3Client ethereum;
   late EthereumWalletConnectProvider provider;
   late WalletConnectSession? session;
@@ -64,19 +64,19 @@ class EthereumTransactionTester extends TransactionTester {
   late EthereumAddress? publicAddress;
   late WalletConnect connector;
 
-  // EthereumTransactionTester(connector) : super(connector: connector);
+  // EthereumWallectConnectTransaction(connector) : super(connector: connector);
 
-  EthereumTransactionTester() {
+  EthereumWallectConnectTransaction() {
     // initWalletConnect();
   }
 
-  // EthereumTransactionTester._internal({
+  // EthereumWallectConnectTransaction._internal({
   //   required WalletConnect connector,
   //   required this.ethereum,
   //   required this.provider,
   // }) : super(connector: connector);
 
-  // factory EthereumTransactionTester() {
+  // factory EthereumWallectConnectTransaction() {
   //   final ethereum = Web3Client('https://ropsten.infura.io/', Client());
 
   //   final sessionStorage = WalletConnectSecureStorage();
@@ -97,7 +97,7 @@ class EthereumTransactionTester extends TransactionTester {
 
   //   final provider = EthereumWalletConnectProvider(connector);
 
-  //   return EthereumTransactionTester._internal(
+  //   return EthereumWallectConnectTransaction._internal(
   //     connector: connector,
   //     ethereum: ethereum,
   //     provider: provider,
