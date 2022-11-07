@@ -636,27 +636,28 @@ class _DialogPagesState extends State<DialogPages> {
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  RatingBar.builder(
-                                    initialRating: 4,
-                                    minRating: 1,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    itemPadding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    itemBuilder: (context, _) => const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    itemSize: 30.0,
-                                    onRatingUpdate: (rating) {
-                                      setState(() {
-                                        enableRatingButton = true;
-                                      });
-                                      ratingScore = rating;
-                                      tasksServices.myNotifyListeners();
-                                    },
-                                  ),
+                                  // RatingBar.builder(
+                                  //   initialRating: 4,
+                                  //   minRating: 1,
+                                  //   direction: Axis.horizontal,
+                                  //   allowHalfRating: true,
+                                  //   itemCount: 5,
+                                  //   itemPadding: const EdgeInsets.symmetric(
+                                  //       horizontal: 5.0),
+                                  //   itemBuilder: (context, _) => const Icon(
+                                  //     Icons.star,
+                                  //     color: Colors.amber,
+                                  //   ),
+                                  //   itemSize: 30.0,
+                                  //   onRatingUpdate: (rating) {
+                                  //     setState(() {
+                                  //       enableRatingButton = true;
+                                  //     });
+                                  //     ratingScore = rating;
+                                  //     tasksServices.myNotifyListeners();
+                                  //   },
+                                  // ),
+                                  RateAnimatedWidget()
                                 ]),
 
                           // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
@@ -923,7 +924,7 @@ class _DialogPagesState extends State<DialogPages> {
                           ),
                           labelText: interface.dialogProcess['labelMessage'],
                           labelStyle: const TextStyle(
-                            fontSize: 17.0, color: Colors.black54),
+                              fontSize: 17.0, color: Colors.black54),
                           hintText: '[Enter your message here..]',
                           hintStyle: const TextStyle(
                               fontSize: 14.0, color: Colors.black54),
@@ -1523,33 +1524,38 @@ class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-    SMINumber? _rating;
+    SMINumber? rating;
 
     void _onRiveInit(Artboard artboard) {
-      final controller = StateMachineController.fromArtboard(
+      final StateMachineController? controller =
+          StateMachineController.fromArtboard(
         artboard,
         'State Machine 1',
-        onStateChange: (stateMachineName, animationName) {
-          print(stateMachineName);
-          print(animationName);
-          print(_rating!.value);
-        },
+        // onStateChange: (stateMachineName, animationName) {
+        //   print(stateMachineName);
+        //   print(animationName);
+        //   print(rating!.value);
+        // },
       );
       artboard.addController(controller!);
-      _rating = controller.findInput<double>('Rating') as SMINumber;
+      // rating = controller.findInput<double>('Rating') as SMINumber;
     }
 
-    void _hitBump() => debugPrint("${_rating!.value}");
-    return Container(
+    // void hitBump() => debugPrint("${rating!.value}");
+    void hitBump() => print('test');
+    return SizedBox.fromSize(
+        // dimension: 200,
+        size: const Size.fromHeight(100),
+        // constraints: const BoxConstraints.expand(),
         child: GestureDetector(
-      child: RiveAnimation.file(
-        'assets/rive_animations/rating_animation.riv',
-        fit: BoxFit.fill,
-        alignment: Alignment.center,
-        onInit: _onRiveInit,
-      ),
-      onTap: _hitBump,
-    ));
+          onTap: hitBump,
+          child: RiveAnimation.asset(
+            'assets/rive_animations/rating_animation.riv',
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            onInit: _onRiveInit,
+          ),
+        ));
   }
 }
 
