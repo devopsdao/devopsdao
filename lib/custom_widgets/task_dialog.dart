@@ -359,64 +359,64 @@ class _DialogPagesState extends State<DialogPages> {
       interface.dialogProcess = {
         'name': 'newOnTasks',
         'buttonName': 'Participate',
-        'hint': 'Write why you are the best Performer for this task'
+        'labelMessage': 'Write why you are the best Performer for this task'
       };
     } else if (task.taskState == 'new' && fromPage == 'customer') {
       interface.dialogProcess = {
         'name': 'newOnCustomer',
         'buttonName': '-',
-        'hint': 'Write why you have selected this Performer'
+        'labelMessage': 'Write why you have selected this Performer'
       };
     } else if (task.taskState == 'agreed' &&
         (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogProcess = {
         'name': 'agreedOnPerformer',
         'buttonName': 'Start the task',
-        'hint': 'Write about your implementation plans'
+        'labelMessage': 'Write about your implementation plans'
       };
     } else if (task.taskState == 'progress' &&
         (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogProcess = {
         'name': 'progressOnPerformer',
         'buttonName': 'Review',
-        'hint': 'Write about your implementation plans'
+        'labelMessage': 'Write about your implementation plans'
       };
     } else if (task.taskState == 'review' &&
         (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
       interface.dialogProcess = {
         'name': 'reviewOnCustomer',
         'buttonName': 'Sign Review',
-        'hint': 'Write your request for review to the Customer'
+        'labelMessage': 'Write your request for review to the Customer'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'requested') {
       interface.dialogProcess = {
         'name': 'auditRequested',
         'buttonName': '-',
-        'hint': 'Write your request for audit to the Auditor'
+        'labelMessage': 'Write your request for audit to the Auditor'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'performing') {
       interface.dialogProcess = {
         'name': 'auditPerforming',
         'buttonName': '-',
-        'hint': 'Write a tip for your selected Auditor'
+        'labelMessage': 'Write a tip for your selected Auditor'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'finished') {
       interface.dialogProcess = {
         'name': 'auditFinished',
         'buttonName': '-',
-        'hint': 'Write your Audit decision reasoning'
+        'labelMessage': 'Write your Audit decision reasoning'
       };
     } else if (task.taskState == 'completed') {
       interface.dialogProcess = {
         'name': 'completedState',
         'buttonName': '-',
-        'hint': 'Write your thanks message to the Customer'
+        'labelMessage': 'Write your thanks message to the Customer'
       };
     } else if (task.taskState == 'canceled') {
       interface.dialogProcess = {
         'name': 'canceledState',
         'buttonName': '-',
-        'hint': 'Write your thanks message to the Customer'
+        'labelMessage': 'Write your thanks message to the Customer'
       };
     }
 
@@ -835,12 +835,12 @@ class _DialogPagesState extends State<DialogPages> {
                             color: Colors.blueAccent,
                             // splashColor: Colors.black,
                           ),
-                          labelText: interface.dialogProcess['hint'],
+                          labelText: interface.dialogProcess['labelMessage'],
                           labelStyle: const TextStyle(
-                              fontSize: 17.0, color: Colors.black54),
+                            fontSize: 17.0, color: Colors.black54),
                           hintText: '[Enter your message here..]',
                           hintStyle: const TextStyle(
-                              fontSize: 15.0, color: Colors.black54),
+                              fontSize: 14.0, color: Colors.black54),
                           enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.white,
