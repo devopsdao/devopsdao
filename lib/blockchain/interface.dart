@@ -15,8 +15,15 @@ class InterfaceServices extends ChangeNotifier {
 
   //  ************ task_dialog **************//
   // PageView Controller for task_dialog.dart
-  late PageController TasksController = PageController(initialPage: 0);
-  late int pageDialogViewNumber = 0;
+  late PageController tasksController = PageController(initialPage: 1);
+  late int pageDialogViewNumber = 1; //initial starts from 1 page
+  Map<String, int> dialogPages = {
+    'topup' : 0,
+    'main' : 1,
+    'description' : 2,
+    'chat' : 3,
+  };
+
   Map<String, String> dialogProcess = {
     'name' : 'custom null',
     'buttonName' : 'custom null',
