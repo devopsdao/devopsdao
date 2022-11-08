@@ -20,6 +20,7 @@ import 'package:beamer/beamer.dart';
 
 import 'package:flutter/services.dart';
 
+
 import '../custom_widgets/data_loading_dialog.dart';
 
 import 'dart:ui' as ui;
@@ -91,7 +92,7 @@ class TaskInformationDialog extends StatefulWidget {
 
 class _TaskInformationDialogState extends State<TaskInformationDialog> {
   late Task task;
-  bool disableBackButton = true;
+  int backButtonShowIcon = 1;
   String backgroundPicture = "assets/images/niceshape.png";
 
   @override
@@ -109,11 +110,11 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       backgroundPicture = "assets/images/cross.png";
     }
 
-    if (interface.pageDialogViewNumber == 0) {
-      disableBackButton = true;
-    } else {
-      disableBackButton = false;
-    }
+    // if (interface.pageDialogViewNumber == interface.dialogPages['main']) {
+    //   backButtonShowIcon = true;
+    // } else {
+    //   backButtonShowIcon = false;
+    // }
 
     bool shimmerEnabled = widget.shimmerEnabled;
 
@@ -151,8 +152,9 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                           width: 30,
                           child: InkWell(
                             onTap: () {
-                              interface.TasksController.animateToPage(0,
-                                  duration: const Duration(milliseconds: 300),
+                              interface.tasksController.animateToPage(
+                                  interface.dialogPages['main']!,
+                                  duration: const Duration(milliseconds: 400),
                                   curve: Curves.ease);
                             },
                             borderRadius: BorderRadius.circular(16),
@@ -162,10 +164,18 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               width: 30,
                               child: Row(
                                 children: <Widget>[
-                                  if (!disableBackButton)
+                                  if (interface.pageDialogViewNumber == interface.dialogPages['description'] ||
+                                      interface.pageDialogViewNumber == interface.dialogPages['chat'])
                                     const Expanded(
                                       child: Icon(
                                         Icons.arrow_back,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  if (interface.pageDialogViewNumber == interface.dialogPages['topup'])
+                                    const Expanded(
+                                      child: Icon(
+                                        Icons.arrow_forward,
                                         size: 30,
                                       ),
                                     ),
@@ -213,7 +223,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                 ],
                               ),
                               onTap: () async {
-                                Clipboard.setData(new ClipboardData(
+                                Clipboard.setData(ClipboardData(
                                         text:
                                             'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
                                     .then((_) {
@@ -327,6 +337,7 @@ class _DialogPagesState extends State<DialogPages> {
   bool enableRatingButton = false;
   double ratingScore = 0;
 
+
   TextEditingController? messageForStateController;
 
   @override
@@ -346,6 +357,8 @@ class _DialogPagesState extends State<DialogPages> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
+
+
 
     interface.taskMessage = messageForStateController!.text;
 
@@ -450,7 +463,7 @@ class _DialogPagesState extends State<DialogPages> {
         // pageSnapping: false,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
-        controller: interface.TasksController,
+        controller: interface.tasksController,
         onPageChanged: (number) {
           interface.pageDialogViewNumber = number;
           tasksServices.myNotifyListeners();
@@ -472,6 +485,63 @@ class _DialogPagesState extends State<DialogPages> {
           //   child:
           Column(
             children: [
+              Center(
+                child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    height: widget.topConstraints.maxHeight - 200,
+                    width: innerWidth,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                      BorderRadius.circular(widget.borderRadius),
+                    ),
+                    child: Payment(purpose: 'topup',)
+                  )
+                ),
+              ),
+
+              const Spacer(),
+
+              Container(
+                padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                width: innerWidth + 8,
+                child: Row(
+                  // direction: Axis.horizontal,
+                  // crossAxisAlignment: WrapCrossAlignment.start,
+                  children: [
+                    TaskDialogButton(
+                      // padding: 8.0,
+                      inactive: interface.tokensEntered == 0.0 ? true : false,
+                      buttonName: 'Topup contract',
+                      buttonColorRequired: Colors.lightBlue.shade600,
+                      callback: () {
+                        tasksServices.addTokens(
+                            task.taskAddress,
+                            interface.tokensEntered,
+                            task.nanoId);
+                        Navigator.pop(context);
+
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                WalletAction(
+                                  nanoId: task.nanoId,
+                                  taskName: 'addTokens',
+                                )
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              )
+
+
+            ],
+          ),
+          Column(
+            children: [
               // const SizedBox(height: 50),
               Center(
                 child: Material(
@@ -479,7 +549,8 @@ class _DialogPagesState extends State<DialogPages> {
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   child: GestureDetector(
                     onTap: () {
-                      interface.TasksController.animateToPage(1,
+                      interface.tasksController.animateToPage(
+                          interface.dialogPages['description']!,
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.ease);
                     },
@@ -518,17 +589,24 @@ class _DialogPagesState extends State<DialogPages> {
                           Container(
                               padding: const EdgeInsets.all(6),
                               child: LimitedBox(
-                                maxHeight: 50,
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      TextSpan(
-                                        text: task.description,
-                                      )
-                                    ])),
+                                maxHeight: 570,
+                                child: LayoutBuilder(builder: (context, constraints) {
+                                  debugPrint('Max height: ${constraints.heightConstraints()}, max width: ${constraints.maxWidth}');
+                                  return RichText(
+                                      text: TextSpan(
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 1.0),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: task.description,
+                                            )
+                                          ]));// create function here to adapt to the parent widget's constraints
+                                }),
+
+
+
+
                               )),
 
                           // ********************** CUSTOMER ROLE ************************* //
@@ -739,44 +817,50 @@ class _DialogPagesState extends State<DialogPages> {
                             buttonName: 'Topup',
                             buttonColorRequired: Colors.lightBlue.shade600,
                             callback: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        title: const Text('Topup contract'),
-                                        // backgroundColor: Colors.black,
-                                        content: const Payment(
-                                          purpose: 'topup',
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              tasksServices.addTokens(
-                                                  task.taskAddress,
-                                                  interface.tokensEntered,
-                                                  task.nanoId);
-                                              Navigator.pop(context);
-
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      WalletAction(
-                                                        nanoId: task.nanoId,
-                                                        taskName: 'addTokens',
-                                                      ));
-                                            },
-                                            style: TextButton.styleFrom(
-                                                primary: Colors.white,
-                                                backgroundColor: Colors.green),
-                                            child: const Text('Topup contract'),
-                                          ),
-                                          TextButton(
-                                              child: const Text('Close'),
-                                              onPressed: () =>
-                                                  context.beamToNamed('/tasks')
-                                              // Navigator.pop(context),
-                                              ),
-                                        ],
-                                      ));
+                              interface.tasksController.animateToPage(
+                                  interface.dialogPages['topup']!,
+                                  duration: const Duration(milliseconds: 400),
+                                  curve: Curves.ease
+                              );
+                              // showDialog(
+                              //     context: context,
+                              //     builder: (context) => AlertDialog(
+                              //           title: const Text('Topup contract'),
+                              //           // backgroundColor: Colors.black,
+                              //           content: const Payment(
+                              //             purpose: 'topup',
+                              //           ),
+                              //           actions: [
+                              //             TextButton(
+                              //               onPressed: () {
+                              //                 tasksServices.addTokens(
+                              //                     task.taskAddress,
+                              //                     interface.tokensEntered,
+                              //                     task.nanoId);
+                              //                 Navigator.pop(context);
+                              //
+                              //                 showDialog(
+                              //                     context: context,
+                              //                     builder: (context) =>
+                              //                         WalletAction(
+                              //                           nanoId: task.nanoId,
+                              //                           taskName: 'addTokens',
+                              //                         ));
+                              //               },
+                              //               style: TextButton.styleFrom(
+                              //                   primary: Colors.white,
+                              //                   backgroundColor: Colors.green),
+                              //               child: const Text('Topup contract'),
+                              //             ),
+                              //             TextButton(
+                              //                 child: const Text('Close'),
+                              //                 onPressed: () =>
+                              //                     context.beamToNamed('/tasks')
+                              //                 // Navigator.pop(context),
+                              //                 ),
+                              //           ],
+                              //         )
+                              // );
                             },
                           ),
                       ],
@@ -824,9 +908,11 @@ class _DialogPagesState extends State<DialogPages> {
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                             onPressed: () {
-                              interface.TasksController.animateToPage(2,
-                                  duration: const Duration(milliseconds: 700),
-                                  curve: Curves.ease);
+                              interface.tasksController.animateToPage(
+                              interface.dialogPages['chat']!,
+                                duration: const Duration(milliseconds: 600),
+                                curve: Curves.ease
+                              );
                             },
                             icon: const Icon(Icons.chat),
                             // focusColor: Colors.black  ,
@@ -905,8 +991,8 @@ class _DialogPagesState extends State<DialogPages> {
                   task: task,
                   fromPage: fromPage,
                   width: innerWidth,
-                  // message: messageForStateController!.text,
-                  enableRatingButton: enableRatingButton)
+                  enableRatingButton: enableRatingButton
+              )
             ],
           ),
           // Shimmer.fromColors(
@@ -921,9 +1007,11 @@ class _DialogPagesState extends State<DialogPages> {
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   child: GestureDetector(
                       onTap: () {
-                        interface.TasksController.animateToPage(2,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease);
+                        interface.tasksController.animateToPage(
+                          interface.dialogPages['chat']!,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease
+                        );
                       },
                       child: Column(
                         children: [
@@ -971,7 +1059,9 @@ class _DialogPagesState extends State<DialogPages> {
                                 ])),
                           ),
                         ],
-                      ))),
+                      )
+                  )
+              ),
 
               // const SizedBox(height: 14),
               Container(
@@ -1191,8 +1281,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             ),
 
           if (task.taskState == "completed" &&
-              (fromPage == 'customer' ||
-                  fromPage == 'performer' ||
+              (fromPage == 'performer' ||
                   tasksServices.hardhatDebug == true) &&
               (task.contractValue != 0 || task.contractValueToken != 0))
             // WithdrawButton(object: task),

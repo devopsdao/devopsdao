@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:throttling/throttling.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
@@ -28,6 +29,8 @@ class _PaymentState extends State<Payment> {
   late double minPrice;
   late double maxPrice;
 
+  late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 200));
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +56,9 @@ class _PaymentState extends State<Payment> {
     if (widget.purpose == 'create') {
       setBlackAndWhite = Colors.black;
       setGrey = Colors.blueGrey;
+    } else if (widget.purpose == 'topup') {
+      setBlackAndWhite = Colors.black;
+      setGrey = Colors.white;
     } else {
       setBlackAndWhite = Colors.black;
       setGrey = Colors.grey;
@@ -102,9 +108,12 @@ class _PaymentState extends State<Payment> {
           maxLines: 1,
           keyboardType: TextInputType.number,
           onChanged: (text) {
-            print('First text field: $text');
+            // print('First text field: $text');
             setState(() {
               interface.tokensEntered = double.parse(text);
+            });
+            debounceNotifyListener.debounce(() {
+              tasksServices.myNotifyListeners();
             });
           },
         ),
@@ -128,7 +137,12 @@ class _PaymentState extends State<Payment> {
                   _currentPriceValue = value;
                   valueController!.text = value.toString();
                   interface.tokensEntered = value;
+
                 });
+                debounceNotifyListener.debounce(() {
+                  tasksServices.myNotifyListeners();
+                });
+
               },
             ),
           ),
@@ -158,6 +172,7 @@ class _PaymentState extends State<Payment> {
                 height: 2,
                 color: setBlackAndWhite,
               ),
+
               onChanged: (String? value) {
                 // This is called when the user selects an item.
                 if (value == 'DEV') {
@@ -180,7 +195,9 @@ class _PaymentState extends State<Payment> {
                 }
                 setState(() {
                   dropdownValue = value!;
+
                 });
+
               },
               items: selectToken.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
@@ -191,6 +208,7 @@ class _PaymentState extends State<Payment> {
             ),
           ],
         ),
+
       ],
     );
   }
