@@ -401,16 +401,23 @@ class _DialogPagesState extends State<DialogPages> {
         'buttonName': 'Sign Review',
         'labelMessage': 'Write your request for review to the Customer'
       };
+    } else if (task.taskState == 'review' &&
+        (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+      interface.dialogProcess = {
+        'name': 'reviewOnCustomer',
+        'buttonName': 'Sign Review',
+        'labelMessage': 'Write your request for review to the Customer'
+      };
     } else if (task.taskState == 'audit' && task.auditState == 'requested') {
       interface.dialogProcess = {
         'name': 'auditRequested',
-        'buttonName': '-',
+        'buttonName': 'Take audit',
         'labelMessage': 'Write your request for audit to the Auditor'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'performing') {
       interface.dialogProcess = {
         'name': 'auditPerforming',
-        'buttonName': '-',
+        'buttonName': 'In favor of',
         'labelMessage': 'Write a tip for your selected Auditor'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'finished') {
@@ -497,7 +504,7 @@ class _DialogPagesState extends State<DialogPages> {
                       borderRadius:
                       BorderRadius.circular(widget.borderRadius),
                     ),
-                    child: Payment(purpose: 'topup',)
+                    child: const Payment(purpose: 'topup',)
                   )
                 ),
               ),
@@ -635,7 +642,7 @@ class _DialogPagesState extends State<DialogPages> {
                                   tasksServices.hardhatDebug == true))
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
+                                children: const [
                                   // RatingBar.builder(
                                   //   initialRating: 4,
                                   //   minRating: 1,
