@@ -20,7 +20,6 @@ import 'package:beamer/beamer.dart';
 
 import 'package:flutter/services.dart';
 
-
 import '../custom_widgets/data_loading_dialog.dart';
 
 import 'dart:ui' as ui;
@@ -164,15 +163,19 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               width: 30,
                               child: Row(
                                 children: <Widget>[
-                                  if (interface.pageDialogViewNumber == interface.dialogPages['description'] ||
-                                      interface.pageDialogViewNumber == interface.dialogPages['chat'])
+                                  if (interface.pageDialogViewNumber ==
+                                          interface
+                                              .dialogPages['description'] ||
+                                      interface.pageDialogViewNumber ==
+                                          interface.dialogPages['chat'])
                                     const Expanded(
                                       child: Icon(
                                         Icons.arrow_back,
                                         size: 30,
                                       ),
                                     ),
-                                  if (interface.pageDialogViewNumber == interface.dialogPages['topup'])
+                                  if (interface.pageDialogViewNumber ==
+                                      interface.dialogPages['topup'])
                                     const Expanded(
                                       child: Icon(
                                         Icons.arrow_forward,
@@ -337,7 +340,6 @@ class _DialogPagesState extends State<DialogPages> {
   bool enableRatingButton = false;
   double ratingScore = 0;
 
-
   TextEditingController? messageForStateController;
 
   @override
@@ -358,8 +360,6 @@ class _DialogPagesState extends State<DialogPages> {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
 
-
-
     interface.taskMessage = messageForStateController!.text;
 
     Task task = widget.task;
@@ -372,52 +372,52 @@ class _DialogPagesState extends State<DialogPages> {
       interface.dialogProcess = {
         'name': 'newOnTasks',
         'buttonName': 'Participate',
-        'labelMessage': 'Write why you are the best Performer for this task'
+        'labelMessage': 'Why you are the best Performer?'
       };
     } else if (task.taskState == 'new' && fromPage == 'customer') {
       interface.dialogProcess = {
         'name': 'newOnCustomer',
         'buttonName': '-',
-        'labelMessage': 'Write why you have selected this Performer'
+        'labelMessage': 'Why you have selected this Performer?'
       };
     } else if (task.taskState == 'agreed' &&
         (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogProcess = {
         'name': 'agreedOnPerformer',
         'buttonName': 'Start the task',
-        'labelMessage': 'Write about your implementation plans'
+        'labelMessage': 'Summarize your implementation plans'
       };
     } else if (task.taskState == 'progress' &&
         (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogProcess = {
         'name': 'progressOnPerformer',
         'buttonName': 'Review',
-        'labelMessage': 'Write about your implementation plans'
+        'labelMessage': 'Tell about your work to review'
       };
     } else if (task.taskState == 'review' &&
         (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
       interface.dialogProcess = {
         'name': 'reviewOnCustomer',
         'buttonName': 'Sign Review',
-        'labelMessage': 'Write your request for review to the Customer'
+        'labelMessage': 'Share your review comments'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'requested') {
       interface.dialogProcess = {
         'name': 'auditRequested',
         'buttonName': '-',
-        'labelMessage': 'Write your request for audit to the Auditor'
+        'labelMessage': 'Request audit from Auditor'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'performing') {
       interface.dialogProcess = {
         'name': 'auditPerforming',
         'buttonName': '-',
-        'labelMessage': 'Write a tip for your selected Auditor'
+        'labelMessage': 'Share more details with selected Auditor'
       };
     } else if (task.taskState == 'audit' && task.auditState == 'finished') {
       interface.dialogProcess = {
         'name': 'auditFinished',
         'buttonName': '-',
-        'labelMessage': 'Write your Audit decision reasoning'
+        'labelMessage': 'Conclude your Audit decision reasoning'
       };
     } else if (task.taskState == 'completed') {
       interface.dialogProcess = {
@@ -487,23 +487,21 @@ class _DialogPagesState extends State<DialogPages> {
             children: [
               Center(
                 child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    height: widget.topConstraints.maxHeight - 200,
-                    width: innerWidth,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                      BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: Payment(purpose: 'topup',)
-                  )
-                ),
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                        padding: const EdgeInsets.all(12.0),
+                        height: widget.topConstraints.maxHeight - 200,
+                        width: innerWidth,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(widget.borderRadius),
+                        ),
+                        child: Payment(
+                          purpose: 'topup',
+                        ))),
               ),
-
               const Spacer(),
-
               Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
                 width: innerWidth + 8,
@@ -517,27 +515,21 @@ class _DialogPagesState extends State<DialogPages> {
                       buttonName: 'Topup contract',
                       buttonColorRequired: Colors.lightBlue.shade600,
                       callback: () {
-                        tasksServices.addTokens(
-                            task.taskAddress,
-                            interface.tokensEntered,
-                            task.nanoId);
+                        tasksServices.addTokens(task.taskAddress,
+                            interface.tokensEntered, task.nanoId);
                         Navigator.pop(context);
 
                         showDialog(
                             context: context,
-                            builder: (context) =>
-                                WalletAction(
+                            builder: (context) => WalletAction(
                                   nanoId: task.nanoId,
                                   taskName: 'addTokens',
-                                )
-                        );
+                                ));
                       },
                     ),
                   ],
                 ),
               )
-
-
             ],
           ),
           Column(
@@ -590,23 +582,21 @@ class _DialogPagesState extends State<DialogPages> {
                               padding: const EdgeInsets.all(6),
                               child: LimitedBox(
                                 maxHeight: 570,
-                                child: LayoutBuilder(builder: (context, constraints) {
-                                  debugPrint('Max height: ${constraints.heightConstraints()}, max width: ${constraints.maxWidth}');
+                                child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                  debugPrint(
+                                      'Max height: ${constraints.heightConstraints()}, max width: ${constraints.maxWidth}');
                                   return RichText(
                                       text: TextSpan(
                                           style: DefaultTextStyle.of(context)
                                               .style
                                               .apply(fontSizeFactor: 1.0),
                                           children: <TextSpan>[
-                                            TextSpan(
-                                              text: task.description,
-                                            )
-                                          ]));// create function here to adapt to the parent widget's constraints
+                                        TextSpan(
+                                          text: task.description,
+                                        )
+                                      ])); // create function here to adapt to the parent widget's constraints
                                 }),
-
-
-
-
                               )),
 
                           // ********************** CUSTOMER ROLE ************************* //
@@ -820,8 +810,7 @@ class _DialogPagesState extends State<DialogPages> {
                               interface.tasksController.animateToPage(
                                   interface.dialogPages['topup']!,
                                   duration: const Duration(milliseconds: 400),
-                                  curve: Curves.ease
-                              );
+                                  curve: Curves.ease);
                               // showDialog(
                               //     context: context,
                               //     builder: (context) => AlertDialog(
@@ -909,10 +898,9 @@ class _DialogPagesState extends State<DialogPages> {
                           suffixIcon: IconButton(
                             onPressed: () {
                               interface.tasksController.animateToPage(
-                              interface.dialogPages['chat']!,
-                                duration: const Duration(milliseconds: 600),
-                                curve: Curves.ease
-                              );
+                                  interface.dialogPages['chat']!,
+                                  duration: const Duration(milliseconds: 600),
+                                  curve: Curves.ease);
                             },
                             icon: const Icon(Icons.chat),
                             // focusColor: Colors.black  ,
@@ -991,8 +979,7 @@ class _DialogPagesState extends State<DialogPages> {
                   task: task,
                   fromPage: fromPage,
                   width: innerWidth,
-                  enableRatingButton: enableRatingButton
-              )
+                  enableRatingButton: enableRatingButton)
             ],
           ),
           // Shimmer.fromColors(
@@ -1008,10 +995,9 @@ class _DialogPagesState extends State<DialogPages> {
                   child: GestureDetector(
                       onTap: () {
                         interface.tasksController.animateToPage(
-                          interface.dialogPages['chat']!,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease
-                        );
+                            interface.dialogPages['chat']!,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
                       },
                       child: Column(
                         children: [
@@ -1059,9 +1045,7 @@ class _DialogPagesState extends State<DialogPages> {
                                 ])),
                           ),
                         ],
-                      )
-                  )
-              ),
+                      ))),
 
               // const SizedBox(height: 14),
               Container(
@@ -1281,8 +1265,7 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
             ),
 
           if (task.taskState == "completed" &&
-              (fromPage == 'performer' ||
-                  tasksServices.hardhatDebug == true) &&
+              (fromPage == 'performer' || tasksServices.hardhatDebug == true) &&
               (task.contractValue != 0 || task.contractValueToken != 0))
             // WithdrawButton(object: task),
             TaskDialogButton(
