@@ -401,19 +401,24 @@ class _DialogPagesState extends State<DialogPages> {
         'buttonName': 'Sign Review',
         'labelMessage': 'Share your review comments'
       };
-    } else if (task.taskState == 'audit' && task.auditState == 'requested') {
+    } else if ((task.taskState == 'progress' &&
+            (fromPage == 'customer' || tasksServices.hardhatDebug == true)) ||
+        (task.taskState == 'review' &&
+            (fromPage == 'customer' ||
+                fromPage == 'performer' ||
+                tasksServices.hardhatDebug == true))) {
       interface.dialogProcess = {
         'name': 'auditRequested',
         'buttonName': '-',
-        'labelMessage': 'Request audit from Auditor'
+        'labelMessage': 'Request audit by Auditor'
       };
-    } else if (task.taskState == 'audit' && task.auditState == 'performing') {
+    } else if (task.taskState == 'audit' && task.auditState == 'requested') {
       interface.dialogProcess = {
         'name': 'auditPerforming',
         'buttonName': '-',
         'labelMessage': 'Share more details with selected Auditor'
       };
-    } else if (task.taskState == 'audit' && task.auditState == 'finished') {
+    } else if (task.taskState == 'audit' && task.auditState == 'performing') {
       interface.dialogProcess = {
         'name': 'auditFinished',
         'buttonName': '-',
