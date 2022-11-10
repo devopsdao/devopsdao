@@ -1010,7 +1010,7 @@ class _DialogPagesState extends State<DialogPages> {
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
               const Spacer(),
 
-              DialogButtonSet(
+              DialogButtonSetOnFirstPage(
                   task: task,
                   fromPage: fromPage,
                   width: innerWidth,
@@ -1150,7 +1150,41 @@ class _DialogPagesState extends State<DialogPages> {
                                 //               .apply(fontSizeFactor: 1.0))
                                 //     ])),
                               ]))))),
-              const SizedBox(height: 14),
+              // const SizedBox(height: 14),
+              // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
+              // ************************* AUDIT REQUEST ************************* //
+              if ((fromPage == 'performer' ||
+                  fromPage == 'customer' ||
+                  tasksServices.hardhatDebug == true) &&
+                  (task.taskState == "progress" || task.taskState == "review") &&
+                  task.contractOwner != tasksServices.publicAddress)
+              const Spacer(),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                  width: innerWidth + 8,
+                  child: TaskDialogButton(
+                    inactive: false,
+                    buttonName: 'Request audit',
+                    buttonColorRequired: Colors.orangeAccent.shade700,
+                    callback: () {
+                      setState(() {
+                        task.justLoaded = false;
+                      });
+                      tasksServices.taskStateChange(
+                          task.taskAddress, task.participant, 'audit', task.nanoId,
+                          message: interface.taskMessage);
+                      Navigator.pop(context);
+
+                      showDialog(
+                          context: context,
+                          builder: (context) => WalletAction(
+                            nanoId: task.nanoId,
+                            taskName: 'taskStateChange',
+                          ));
+                    },
+                  ),
+                )
+
             ],
           ),
           Container(
@@ -1177,14 +1211,14 @@ class _DialogPagesState extends State<DialogPages> {
   }
 }
 
-class DialogButtonSet extends StatefulWidget {
+class DialogButtonSetOnFirstPage extends StatefulWidget {
   final Task task;
   final String fromPage;
   final double width;
   // final String message;
   final bool enableRatingButton;
 
-  const DialogButtonSet(
+  const DialogButtonSetOnFirstPage(
       {Key? key,
       required this.task,
       required this.fromPage,
@@ -1197,7 +1231,7 @@ class DialogButtonSet extends StatefulWidget {
   _DialogButtonSetState createState() => _DialogButtonSetState();
 }
 
-class _DialogButtonSetState extends State<DialogButtonSet> {
+class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -1416,34 +1450,6 @@ class _DialogButtonSetState extends State<DialogButtonSet> {
                                 ));
                       }
                     : null;
-              },
-            ),
-
-          // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
-          // ************************* AUDIT REQUEST ************************* //
-          if ((fromPage == 'performer' ||
-                  fromPage == 'customer' ||
-                  tasksServices.hardhatDebug == true) &&
-              (task.taskState == "progress" || task.taskState == "review"))
-            TaskDialogButton(
-              inactive: false,
-              buttonName: 'Request audit',
-              buttonColorRequired: Colors.orangeAccent.shade700,
-              callback: () {
-                setState(() {
-                  task.justLoaded = false;
-                });
-                tasksServices.taskStateChange(
-                    task.taskAddress, task.participant, 'audit', task.nanoId,
-                    message: interface.taskMessage);
-                Navigator.pop(context);
-
-                showDialog(
-                    context: context,
-                    builder: (context) => WalletAction(
-                          nanoId: task.nanoId,
-                          taskName: 'taskStateChange',
-                        ));
               },
             ),
 
