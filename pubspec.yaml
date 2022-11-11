@@ -45,6 +45,7 @@ dependencies:
   flutter_secure_storage_linux: ^1.1.0
   flutter_svg: ^1.1.5
   font_awesome_flutter: ^10.1.0
+  g_json: ^4.1.0
   google_fonts: ^3.0.1
   html: ^0.15.0
   http: ^0.13.4

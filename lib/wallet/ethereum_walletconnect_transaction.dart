@@ -174,12 +174,33 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
     await sessionStorage.removeSession();
   }
 
-  Future<void> switchNetwork(int chainId) async {
+  Future<void> switchNetwork(String chainId) async {
     final params = <String, dynamic>{
-      'chainId': '0x507',
+      'chainId': chainId,
     };
     final response = await connector.sendCustomRequest(
         method: 'wallet_switchEthereumChain', params: [params]);
+    print(response);
+
+    // return session;
+  }
+
+  Future<void> addNetwork(String chainId) async {
+    final params = <String, dynamic>{
+      'chainId': '0x507',
+      'chainName': 'Moonbase alpha',
+      'nativeCurrency': <String, dynamic>{
+        'name': 'DEV',
+        'symbol': 'DEV',
+        'decimals': 18,
+      },
+      'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
+      'blockExplorerUrls': ['https://moonbase.moonscan.io'],
+      'iconUrls': [''],
+    };
+
+    final response = await connector
+        .sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
     print(response);
 
     // return session;

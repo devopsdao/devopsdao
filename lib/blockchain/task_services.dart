@@ -44,16 +44,94 @@ import 'package:browser_detector/browser_detector.dart' hide Platform;
 
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:g_json/g_json.dart';
+
 // import 'dart:html' hide Platform;
+
+import 'package:js/js_util.dart';
+
+Object mapToJsObject(Map map) {
+  var object = newObject();
+  map.forEach((k, v) {
+    if (v is Map) {
+      setProperty(object, k, mapToJsObject(v));
+    } else {
+      setProperty(object, k, v);
+    }
+  });
+  return object;
+}
+
+Map jsObjectToMap(dynamic jsObject) {
+  Map result = {};
+  List keys = _objectKeys(jsObject);
+  for (dynamic key in keys) {
+    dynamic value = getProperty(jsObject, key);
+    List nestedKeys = objectKeys(value);
+    if ((nestedKeys).isNotEmpty) {
+      //nested property
+      result[key] = jsObjectToMap(value);
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+List<String> objectKeys(dynamic jsObject) {
+  // if (jsObject == null || jsObject is String || jsObject is num || jsObject is bool) return;
+  return _objectKeys(jsObject);
+}
+
+@JS('Object.keys')
+external List<String> _objectKeys(jsObject);
 
 @JS()
 @anonymous
-class JSrawRequestParams {
+class JSrawRequestSwitchChainParams {
   external String get chainId;
 
   // Must have an unnamed factory constructor with named arguments.
-  external factory JSrawRequestParams({String chainId});
+  external factory JSrawRequestSwitchChainParams({String chainId});
 }
+
+@JS()
+@anonymous
+class JSrawRequestAddChainParams {
+  // external String get params;
+  external String get chainId;
+  external String get chainName;
+  external Map<String, dynamic> get nativeCurrency;
+  external List get rpcUrls;
+  external String get blockExplorerUrls;
+  external String get iconUrls;
+  //   final params = <String, dynamic>{
+  //   'chainId': '0x507',
+  //   'chainName': 'Moonbase alpha',
+  //   'nativeCurrency': <String, dynamic>{
+  //     'name': 'DEV',
+  //     'symbol': 'DEV',
+  //     'decimals': 18,
+  //   },
+  //   'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
+  //   'blockExplorerUrls': ['https://moonbase.moonscan.io'],
+  //   'iconUrls': [''],
+  // };
+
+  // Must have an unnamed factory constructor with named arguments.
+  external factory JSrawRequestAddChainParams(
+      {String chainId,
+      String chainName,
+      Map<String, dynamic> nativeCurrency,
+      List rpcUrls,
+      List blockExplorerUrls,
+      List iconUrls});
+  // Must have an unnamed factory constructor with named arguments.
+  // external factory JSrawRequestAddChainParams({params});
+}
+
+@JS('JSON.stringify')
+external String stringify(Object obj);
 
 // Object jsToDart(jsObject) {
 //   if (jsObject is JsArray || jsObject is Iterable) {
@@ -456,12 +534,21 @@ class TasksServices extends ChangeNotifier {
     late final chainIdHex;
     bool chainChangeRequest = false;
     bool userRejected = false;
+    bool chainNotAdded = false;
     try {
       await eth.rawRequest('wallet_switchEthereumChain',
-          params: [JSrawRequestParams(chainId: '0x507')]);
+          params: [JSrawRequestSwitchChainParams(chainId: '0x507')]);
       chainChangeRequest = true;
     } catch (e) {
       userRejected = true;
+      var errorObj = jsObjectToMap(e);
+      String errorJson = stringify(e);
+      final error = JSON.parse(errorJson);
+      if (error['code'] == 4902) {
+        chainNotAdded = true;
+        addNetworkMM();
+      }
+      // print(err);
     }
     if (!userRejected && chainChangeRequest) {
       try {
@@ -469,6 +556,11 @@ class TasksServices extends ChangeNotifier {
         chainIdHex = await _web3client.makeRPCCall('eth_chainId');
       } catch (e) {
         print(e);
+        // print(JSrawRequestAddChainParams(params: e));
+        if (e ==
+            '"Unrecognized chain ID \"0x507\". Try adding the chain using wallet_addEthereumChain first."') {
+          addNetworkMM();
+        }
       }
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
@@ -497,10 +589,10 @@ class TasksServices extends ChangeNotifier {
     bool chainChangeRequest = false;
     var chainIdWC;
     try {
-      final params = <String, dynamic>{
-        'chainId': 0x507,
-      };
-      var result = await wallectConnectTransaction?.switchNetwork(0x507);
+      // final params = <String, dynamic>{
+      //   'chainId': '0x507',
+      // };
+      var result = await wallectConnectTransaction?.switchNetwork('0x507');
       // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
       chainChangeRequest = true;
     } catch (e) {
@@ -528,6 +620,70 @@ class TasksServices extends ChangeNotifier {
         validChainID = false;
         validChainIDWC = false;
       }
+    }
+    notifyListeners();
+  }
+
+  Future<void> addNetworkMM() async {
+    final eth = window.ethereum;
+    if (eth == null) {
+      print('MetaMask is not available');
+      return;
+    }
+    bool chainAddRequest = false;
+    bool userRejected = false;
+    try {
+      final params = <String, dynamic>{
+        'chainId': '0x507',
+        'chainName': 'Moonbase alpha',
+        'nativeCurrency': <String, dynamic>{
+          'name': 'DEV',
+          'symbol': 'DEV',
+          'decimals': 18,
+        },
+        'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
+        'blockExplorerUrls': ['https://moonbase.moonscan.io'],
+        'iconUrls': [''],
+      };
+      // await eth.rawRequest('wallet_switchEthereumChain',
+      //     params: [JSrawRequestAddChainParams(params: params)]);
+      await eth.rawRequest('wallet_addEthereumChain', params: [
+        // JSrawRequestAddChainParams(
+        //   chainId: params['chainId'],
+        //   nativeCurrency: params['nativeCurrency'],
+        //   rpcUrls: params['rpcUrls'],
+        //   chainName: params['chainName'],
+        //   blockExplorerUrls: params['blockExplorerUrls'],
+        //   // iconUrls: params['iconUrls']
+        // )
+        mapToJsObject(params)
+      ]);
+      chainAddRequest = true;
+    } catch (e) {
+      userRejected = true;
+    }
+    notifyListeners();
+  }
+
+  Future<void> addNetworkWC() async {
+    // final eth = window.ethereum;
+    // if (eth == null) {
+    //   print('MetaMask is not available');
+    //   return;
+    // }
+    late final chainIdHex;
+    bool chainAddRequest = false;
+    var chainIdWC;
+    try {
+      // final params = <String, dynamic>{
+      //   'chainId': '0x507',
+      // };
+      var result = await wallectConnectTransaction?.addNetwork('0x507');
+      // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
+      chainAddRequest = true;
+    } catch (e) {
+      chainAddRequest = false;
+      print(e);
     }
     notifyListeners();
   }
