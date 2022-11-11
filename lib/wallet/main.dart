@@ -273,10 +273,12 @@ class _WalletPagesState extends State<WalletPages> {
     if (tasksServices.platform == 'linux') {
       defaultTab = 1;
     } else if (tasksServices.platform == 'web' &&
-        tasksServices.browserPlatform != 'android') {
+        tasksServices.browserPlatform != 'android' &&
+        tasksServices.browserPlatform != 'ios') {
       defaultTab = 1;
     } else if (tasksServices.platform == 'mobile' ||
-        tasksServices.browserPlatform == 'android') {
+        tasksServices.browserPlatform == 'android' ||
+        tasksServices.browserPlatform == 'ios') {
       defaultTab = 0;
     }
 
@@ -438,7 +440,10 @@ class _WalletPagesState extends State<WalletPages> {
                                                         'mobile' ||
                                                     tasksServices
                                                             .browserPlatform ==
-                                                        'android'
+                                                        'android' ||
+                                                    tasksServices
+                                                            .browserPlatform ==
+                                                        'ios'
                                                 ? 'Mobile'
                                                 : 'Desktop')),
                                       ),
@@ -454,7 +459,9 @@ class _WalletPagesState extends State<WalletPages> {
                                     children: [
                                       if (tasksServices.platform == 'mobile' ||
                                           tasksServices.browserPlatform ==
-                                              'android')
+                                              'android' ||
+                                          tasksServices.browserPlatform ==
+                                              'ios')
                                         Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -490,7 +497,9 @@ class _WalletPagesState extends State<WalletPages> {
                                       if (tasksServices.platform == 'linux' ||
                                           tasksServices.platform == 'web' &&
                                               tasksServices.browserPlatform !=
-                                                  'android')
+                                                  'android' &&
+                                              tasksServices.browserPlatform !=
+                                                  'ios')
                                         Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,

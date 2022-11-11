@@ -9,6 +9,10 @@ import 'package:js/js.dart'
     if (dart.library.io) 'package:webthree/src/browser/js_stub.dart'
     if (dart.library.js) 'package:js/js.dart';
 
+import 'package:js/js_util.dart'
+    if (dart.library.io) 'package:webthree/src/browser/js_util_stub.dart'
+    if (dart.library.js) 'package:js/js_util.dart';
+
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:throttling/throttling.dart';
@@ -48,8 +52,6 @@ import 'package:g_json/g_json.dart';
 
 // import 'dart:html' hide Platform;
 
-import 'package:js/js_util.dart';
-
 Object mapToJsObject(Map map) {
   var object = newObject();
   map.forEach((k, v) {
@@ -67,7 +69,10 @@ Map jsObjectToMap(dynamic jsObject) {
   List keys = _objectKeys(jsObject);
   for (dynamic key in keys) {
     dynamic value = getProperty(jsObject, key);
-    List nestedKeys = objectKeys(value);
+    List nestedKeys = [];
+    if (value is List) {
+      nestedKeys = objectKeys(value);
+    }
     if ((nestedKeys).isNotEmpty) {
       //nested property
       result[key] = jsObjectToMap(value);
@@ -156,7 +161,7 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = true;
+  bool hardhatDebug = false;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -236,6 +241,9 @@ class TasksServices extends ChangeNotifier {
     final BrowserDetector browserInfo = BrowserDetector();
     if (browserInfo.platform.isAndroid) {
       browserPlatform = 'android';
+    }
+    if (browserInfo.platform.isIOS) {
+      browserPlatform = 'ios';
     }
     if (platform == 'web' && window.ethereum != null) {
       mmAvailable = true;
@@ -446,6 +454,9 @@ class TasksServices extends ChangeNotifier {
         try {
           chainIdHex = await eth.rawRequest('eth_chainId');
         } catch (e) {
+          String errorJson = stringify(e);
+          final error = JSON.parse(errorJson);
+          if (error['code'] == 4902) {}
           print(e);
         }
         if (chainIdHex != null) {
@@ -531,7 +542,7 @@ class TasksServices extends ChangeNotifier {
       print('MetaMask is not available');
       return;
     }
-    late final chainIdHex;
+    late final String chainIdHex;
     bool chainChangeRequest = false;
     bool userRejected = false;
     bool chainNotAdded = false;
@@ -540,13 +551,12 @@ class TasksServices extends ChangeNotifier {
           params: [JSrawRequestSwitchChainParams(chainId: '0x507')]);
       chainChangeRequest = true;
     } catch (e) {
-      userRejected = true;
-      var errorObj = jsObjectToMap(e);
-      String errorJson = stringify(e);
-      final error = JSON.parse(errorJson);
+      var error = jsObjectToMap(e);
       if (error['code'] == 4902) {
         chainNotAdded = true;
         addNetworkMM();
+      } else {
+        userRejected = true;
       }
       // print(err);
     }
@@ -556,11 +566,6 @@ class TasksServices extends ChangeNotifier {
         chainIdHex = await _web3client.makeRPCCall('eth_chainId');
       } catch (e) {
         print(e);
-        // print(JSrawRequestAddChainParams(params: e));
-        if (e ==
-            '"Unrecognized chain ID \"0x507\". Try adding the chain using wallet_addEthereumChain first."') {
-          addNetworkMM();
-        }
       }
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
@@ -585,7 +590,7 @@ class TasksServices extends ChangeNotifier {
     //   print('MetaMask is not available');
     //   return;
     // }
-    late final chainIdHex;
+    late final String chainIdHex;
     bool chainChangeRequest = false;
     var chainIdWC;
     try {
@@ -597,7 +602,12 @@ class TasksServices extends ChangeNotifier {
       chainChangeRequest = true;
     } catch (e) {
       chainChangeRequest = false;
+      WalletConnectException error = e as WalletConnectException;
       print(e);
+      if (error.message ==
+          'Unrecognized chain ID "0x507". Try adding the chain using wallet_addEthereumChain first.') {
+        addNetworkWC();
+      }
     }
     if (chainChangeRequest == true) {
       try {
@@ -630,6 +640,7 @@ class TasksServices extends ChangeNotifier {
       print('MetaMask is not available');
       return;
     }
+    late final String chainIdHex;
     bool chainAddRequest = false;
     bool userRejected = false;
     try {
@@ -661,6 +672,31 @@ class TasksServices extends ChangeNotifier {
       chainAddRequest = true;
     } catch (e) {
       userRejected = true;
+      var error = jsObjectToMap(e);
+      if (error['code'] == 4902) {
+      } else {}
+    }
+
+    if (!userRejected && chainAddRequest) {
+      try {
+        // chainIdHex = await eth.rawRequest('eth_chainId');
+        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+      } catch (e) {
+        print(e);
+      }
+      if (chainIdHex != null) {
+        chainId = int.parse(chainIdHex);
+      }
+      if (chainId == 1287) {
+        validChainID = true;
+        validChainIDMM = true;
+        publicAddress = publicAddressMM;
+        fetchTasks();
+        myBalance();
+      } else {
+        validChainID = false;
+        validChainIDMM = false;
+      }
     }
     notifyListeners();
   }
@@ -671,7 +707,7 @@ class TasksServices extends ChangeNotifier {
     //   print('MetaMask is not available');
     //   return;
     // }
-    late final chainIdHex;
+    late final String chainIdHex;
     bool chainAddRequest = false;
     var chainIdWC;
     try {
@@ -684,6 +720,28 @@ class TasksServices extends ChangeNotifier {
     } catch (e) {
       chainAddRequest = false;
       print(e);
+    }
+    if (chainAddRequest == true) {
+      try {
+        // chainId = walletConnectSession.chainId;
+        // chainId = await wallectConnectTransaction?.getChainId();
+        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+      } catch (e) {
+        print(e);
+      }
+      if (chainIdHex != null) {
+        chainId = int.parse(chainIdHex);
+      }
+      if (chainId == 1287) {
+        validChainID = true;
+        validChainIDWC = true;
+        publicAddress = publicAddressWC;
+        fetchTasks();
+        myBalance();
+      } else {
+        validChainID = false;
+        validChainIDWC = false;
+      }
     }
     notifyListeners();
   }
