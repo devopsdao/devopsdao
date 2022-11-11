@@ -401,7 +401,10 @@ class TasksServices extends ChangeNotifier {
       final SessionStatus? session = await wallectConnectTransaction?.connect(
         onDisplayUri: (uri) => {
           walletConnectSessionUri = uri.split("?").first,
-          (platform == 'mobile' || browserPlatform == 'android') && !refresh
+          (platform == 'mobile' ||
+                      browserPlatform == 'android' ||
+                      browserPlatform == 'ios') &&
+                  !refresh
               ? {launchURL(uri), walletConnectUri = uri}
               : walletConnectUri = uri,
           notifyListeners()
