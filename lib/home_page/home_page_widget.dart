@@ -250,11 +250,15 @@ class _HomePageWidgetState extends State<HomePageWidget>
       floatingActionButton: isFloatButtonVisible
           ? FloatingActionButton(
               onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateJobWidget(),
-                  ),
+                // await Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const CreateJobWidget(),
+                //   ),
+                // );
+                showDialog(
+                  context: context,
+                  builder: (context) => const CreateJobDialog(),
                 );
               },
               backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,

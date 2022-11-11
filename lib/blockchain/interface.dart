@@ -45,4 +45,12 @@ class InterfaceServices extends ChangeNotifier {
   // ****** SETTINGS ******** //
 // border radius:
   final double borderRadius = 8.0;
+
+// ***********  create_job_widget ************ ////
+
+
+  late PageController pageViewNewTaskController = PageController(initialPage: 0);
 }
+
+
+
