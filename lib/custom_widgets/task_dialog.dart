@@ -136,11 +136,11 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 
           return WillPopScope(
             onWillPop: () async => false,
-            child: SingleChildScrollView(
-              child: Dialog(
-                insetPadding: const EdgeInsets.all(20),
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            child: Dialog(
+              insetPadding: const EdgeInsets.all(20),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: SingleChildScrollView(
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -638,57 +638,7 @@ class _DialogPagesState extends State<DialogPages> {
 
                           // ********************** CUSTOMER ROLE ************************* //
 
-                          if (task.taskState == 'completed' &&
-                              (fromPage == 'customer' ||
-                                  tasksServices.hardhatDebug == true))
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RichText(
-                                  text: TextSpan(
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0),
-                                      children: const <TextSpan>[
-                                    TextSpan(
-                                        text: 'Rate the task:',
-                                        style: TextStyle(
-                                            height: 2,
-                                            fontWeight: FontWeight.bold)),
-                                  ])),
-                            ),
 
-                          if (task.taskState == 'completed' &&
-                              (fromPage == 'customer' ||
-                                  tasksServices.hardhatDebug == true))
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    // RatingBar.builder(
-                                    //   initialRating: 4,
-                                    //   minRating: 1,
-                                    //   direction: Axis.horizontal,
-                                    //   allowHalfRating: true,
-                                    //   itemCount: 5,
-                                    //   itemPadding: const EdgeInsets.symmetric(
-                                    //       horizontal: 5.0),
-                                    //   itemBuilder: (context, _) => const Icon(
-                                    //     Icons.star,
-                                    //     color: Colors.amber,
-                                    //   ),
-                                    //   itemSize: 30.0,
-                                    //   onRatingUpdate: (rating) {
-                                    //     setState(() {
-                                    //       enableRatingButton = true;
-                                    //     });
-                                    //     ratingScore = rating;
-                                    //     tasksServices.myNotifyListeners();
-                                    //   },
-                                    // ),
-                                    RateAnimatedWidget()
-                                  ]),
-                            ),
 
                           // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
                           // *************************** AUDIT ******************************** //
@@ -763,6 +713,82 @@ class _DialogPagesState extends State<DialogPages> {
                 ),
               ),
               // const SizedBox(height: 14),
+
+
+
+
+              if (task.taskState == 'completed' &&
+                  (fromPage == 'customer' ||
+                      tasksServices.hardhatDebug == true))
+
+
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                      width: innerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topLeft,
+                            padding: const EdgeInsets.all(8.0),
+                            child: RichText(
+                                text: TextSpan(
+                                  style: DefaultTextStyle.of(context)
+                                    .style
+                                    .apply(fontSizeFactor: 1.0),
+                                  children: const <TextSpan>[
+                                    TextSpan(
+                                      text: 'Rate the task:',
+                                      style: TextStyle(
+                                          height: 2,
+                                          fontWeight: FontWeight.bold)),
+                                  ])),
+                          ),
+
+                          Container(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: const [
+                                  // RatingBar.builder(
+                                  //   initialRating: 4,
+                                  //   minRating: 1,
+                                  //   direction: Axis.horizontal,
+                                  //   allowHalfRating: true,
+                                  //   itemCount: 5,
+                                  //   itemPadding: const EdgeInsets.symmetric(
+                                  //       horizontal: 5.0),
+                                  //   itemBuilder: (context, _) => const Icon(
+                                  //     Icons.star,
+                                  //     color: Colors.amber,
+                                  //   ),
+                                  //   itemSize: 30.0,
+                                  //   onRatingUpdate: (rating) {
+                                  //     setState(() {
+                                  //       enableRatingButton = true;
+                                  //     });
+                                  //     ratingScore = rating;
+                                  //     tasksServices.myNotifyListeners();
+                                  //   },
+                                  // ),
+                                  RateAnimatedWidget()
+                                ]),
+                          ),
+                        ],
+                      )
+                    ),
+                  ),
+                ),
+
+
+
 
               if (task.taskState == "new" &&
                   task.participants.isNotEmpty &&
@@ -1153,16 +1179,17 @@ class _DialogPagesState extends State<DialogPages> {
               // const SizedBox(height: 14),
               // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
               // ************************* AUDIT REQUEST ************************* //
+              const Spacer(),
               if ((fromPage == 'performer' ||
                   fromPage == 'customer' ||
                   tasksServices.hardhatDebug == true) &&
                   (task.taskState == "progress" || task.taskState == "review") &&
                   task.contractOwner != tasksServices.publicAddress)
-              const Spacer(),
                 Container(
                   padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
                   width: innerWidth + 8,
                   child: TaskDialogButton(
+
                     inactive: false,
                     buttonName: 'Request audit',
                     buttonColorRequired: Colors.orangeAccent.shade700,
@@ -1172,7 +1199,7 @@ class _DialogPagesState extends State<DialogPages> {
                       });
                       tasksServices.taskStateChange(
                           task.taskAddress, task.participant, 'audit', task.nanoId,
-                          message: interface.taskMessage);
+                          message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                       Navigator.pop(context);
 
                       showDialog(
@@ -1266,7 +1293,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                   task.justLoaded = false;
                 });
                 tasksServices.taskParticipate(task.taskAddress, task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
                     const RouteInformation(location: '/tasks');
@@ -1293,7 +1320,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.taskStateChange(
                     task.taskAddress, task.participant, 'progress', task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
                     const RouteInformation(location: '/performer');
@@ -1319,7 +1346,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.taskStateChange(
                     task.taskAddress, task.participant, 'review', task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 RouteInformation routeInfo =
                     const RouteInformation(location: '/performer');
@@ -1413,7 +1440,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.taskStateChange(task.taskAddress,
                     task.participant, 'completed', task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 // context.beamToNamed('/customer');
                 Navigator.pop(context);
                 RouteInformation routeInfo =
@@ -1466,7 +1493,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.taskAuditParticipate(
                     task.taskAddress, task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
@@ -1489,7 +1516,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.taskAuditDecision(
                     task.taskAddress, 'customer', task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
@@ -1511,7 +1538,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.taskAuditDecision(
                     task.taskAddress, 'performer', task.nanoId,
-                    message: interface.taskMessage);
+                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 showDialog(
                     context: context,
@@ -1569,7 +1596,7 @@ class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
     void hitBump() => print('test');
     return SizedBox.fromSize(
         // dimension: 200,
-        size: const Size.fromHeight(100),
+        size: const Size.fromHeight(60),
         // constraints: const BoxConstraints.expand(),
         child: GestureDetector(
           onTap: hitBump,

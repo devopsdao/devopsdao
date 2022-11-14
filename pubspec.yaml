@@ -73,7 +73,7 @@ dependencies:
   walletconnect_dart: ^0.0.11
   walletconnect_secure_storage: ^1.0.0
   web_socket_channel: ^2.2.0
-  webthree: ^2.5.3
+  webthree: ^2.5.4
 
 dependency_overrides:
   font_awesome_flutter: ^10.1.0
