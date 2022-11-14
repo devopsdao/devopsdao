@@ -384,8 +384,6 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
             },
           ),
         ),
-
-
       ],
     );
   }

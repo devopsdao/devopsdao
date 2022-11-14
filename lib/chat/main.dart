@@ -82,48 +82,48 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void _handleAttachmentPressed() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) => SafeArea(
-        child: SizedBox(
-          height: 144,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // _handleImageSelection();
-                },
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text('Photo'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text('File'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text('Cancel'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // void _handleAttachmentPressed() {
+  //   showModalBottomSheet<void>(
+  //     context: context,
+  //     builder: (BuildContext context) => SafeArea(
+  //       child: SizedBox(
+  //         height: 144,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+  //           children: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 // _handleImageSelection();
+  //               },
+  //               child: const Align(
+  //                 alignment: AlignmentDirectional.centerStart,
+  //                 child: Text('Photo'),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 // _handleFileSelection();
+  //               },
+  //               child: const Align(
+  //                 alignment: AlignmentDirectional.centerStart,
+  //                 child: Text('File'),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: const Align(
+  //                 alignment: AlignmentDirectional.centerStart,
+  //                 child: Text('Cancel'),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // void _handleFileSelection() async {
   //   final result = await FilePicker.platform.pickFiles(
@@ -343,7 +343,7 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
 
     return Material(
       elevation: 0,
-      color: Colors.black87,
+      color: Colors.black54,
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
         padding: const EdgeInsets.all(16.0),
