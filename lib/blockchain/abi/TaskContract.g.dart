@@ -83,16 +83,16 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> sendMessage(
-    String message,
-    BigInt replyTo, {
+    String _message,
+    BigInt _replyTo, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[4];
     assert(checkSignature(function, 'd013bef0'));
     final params = [
-      message,
-      replyTo,
+      _message,
+      _replyTo,
     ];
     return write(
       credentials,
@@ -106,9 +106,9 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> taskAuditDecision(
-    String favour,
-    String message,
-    BigInt replyTo,
+    String _favour,
+    String _message,
+    BigInt _replyTo,
     BigInt rating, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
@@ -116,9 +116,9 @@ class TaskContract extends _i1.GeneratedContract {
     final function = self.abi.functions[5];
     assert(checkSignature(function, '05923940'));
     final params = [
-      favour,
-      message,
-      replyTo,
+      _favour,
+      _message,
+      _replyTo,
       rating,
     ];
     return write(
@@ -133,16 +133,16 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> taskAuditParticipate(
-    String message,
-    BigInt replyTo, {
+    String _message,
+    BigInt _replyTo, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[6];
     assert(checkSignature(function, '16da43f6'));
     final params = [
-      message,
-      replyTo,
+      _message,
+      _replyTo,
     ];
     return write(
       credentials,
@@ -156,16 +156,16 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> taskParticipate(
-    String message,
-    BigInt replyTo, {
+    String _message,
+    BigInt _replyTo, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[7];
     assert(checkSignature(function, '14f99556'));
     final params = [
-      message,
-      replyTo,
+      _message,
+      _replyTo,
     ];
     return write(
       credentials,
@@ -179,22 +179,22 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> taskStateChange(
-    _i1.EthereumAddress participant,
-    String state,
-    String message,
-    BigInt replyTo,
-    BigInt score, {
+    _i1.EthereumAddress _participant,
+    String _state,
+    String _message,
+    BigInt _replyTo,
+    BigInt _score, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[8];
     assert(checkSignature(function, '45345850'));
     final params = [
-      participant,
-      state,
-      message,
-      replyTo,
-      score,
+      _participant,
+      _state,
+      _message,
+      _replyTo,
+      _score,
     ];
     return write(
       credentials,
@@ -208,16 +208,16 @@ class TaskContract extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> transferToaddress(
-    _i1.EthereumAddress addressToSend,
-    String chain, {
+    _i1.EthereumAddress _addressToSend,
+    String _chain, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[9];
     assert(checkSignature(function, 'f74657bb'));
     final params = [
-      addressToSend,
-      chain,
+      _addressToSend,
+      _chain,
     ];
     return write(
       credentials,

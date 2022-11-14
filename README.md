@@ -18,6 +18,11 @@ or
 flutter build web
 ```
 
+or to build a release for all platforms and deploy to ArWeave
+```
+cider bump patch && flutter build apk && flutter build web && arkb deploy build/web/ --force
+```
+
 ### IMPORTANT:
 
 If you are not using VScode, be sure to first get the packages:
