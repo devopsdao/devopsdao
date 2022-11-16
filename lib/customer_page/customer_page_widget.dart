@@ -69,7 +69,8 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   }
 
   int tabIndex = 0;
-  // int savedIndex = 999;
+  int savedIndex = 999;
+  bool firstLoad = true;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +84,10 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       if (task != null) {
         tabIndex = tabs[task.taskState];
       }
+    }
+    if (firstLoad) {
+      tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
+      firstLoad = false;
     }
 
     void changeTab(index) {
@@ -109,10 +114,10 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       //   tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
       // }
     }
-    late Debouncing debounceChangeTab0 = Debouncing(duration: const Duration(milliseconds: 2000));
-    late Debouncing debounceChangeTab1 = Debouncing(duration: const Duration(milliseconds: 2000));
-    late Debouncing debounceChangeTab2 = Debouncing(duration: const Duration(milliseconds: 2000));
-    late Debouncing debounceChangeTab3 = Debouncing(duration: const Duration(milliseconds: 2000));
+    late Throttling debounceChangeTab0 = Throttling(duration: const Duration(milliseconds: 2000));
+    late Throttling debounceChangeTab1 = Throttling(duration: const Duration(milliseconds: 2000));
+    late Throttling debounceChangeTab2 = Throttling(duration: const Duration(milliseconds: 2000));
+    late Throttling debounceChangeTab3 = Throttling(duration: const Duration(milliseconds: 2000));
 
     return Scaffold(
         key: scaffoldKey,
@@ -301,26 +306,26 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                         late double metrics = scrollNotification.metrics.pixels;
                                         // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
                                         setState(() {
-                                          if ((metrics < tabWidth && (tabIndex > 1))) {
+                                          if ((metrics < tabWidth - (tabWidth / 5) && (tabIndex >= 1))) {
                                             print('first');
-                                            debounceChangeTab0.debounce(() {
+                                            debounceChangeTab0.throttle(() {
                                               changeTab(0);
                                             });
                                           } else if (((metrics > tabWidth / 5 && tabIndex == 0) && (metrics < tabWidth + (tabWidth / 5))) ||
                                               (metrics > tabWidth && metrics < tabWidth * 2 - (tabWidth / 5) && tabIndex == 2)) {
                                             print('second');
-                                            debounceChangeTab1.debounce(() {
+                                            debounceChangeTab1.throttle(() {
                                               changeTab(1);
                                             });
                                           } else if ((metrics > tabWidth + (tabWidth / 5)) ||
                                               (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3)) {
                                             print('third');
-                                            debounceChangeTab2.debounce(() {
+                                            debounceChangeTab2.throttle(() {
                                               changeTab(2);
                                             });
                                           } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
                                             print('forth');
-                                            debounceChangeTab3.debounce(() {
+                                            debounceChangeTab3.throttle(() {
                                               changeTab(3);
                                             });
                                           }
