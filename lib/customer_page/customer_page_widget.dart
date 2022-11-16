@@ -311,17 +311,19 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                             debounceChangeTab0.throttle(() {
                                               changeTab(0, metrics);
                                             });
-                                          } else if (((metrics > tabWidth / 5 && tabIndex == 0) && (metrics < tabWidth + (tabWidth / 5))) ||
+                                          } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
+                                                  (metrics < tabWidth + (tabWidth / 5)) &&
+                                                  prevMetrics < metrics) ||
                                               (metrics > tabWidth &&
                                                   metrics < tabWidth * 2 - (tabWidth / 5) &&
                                                   tabIndex == 2 &&
-                                                  prevMetrics < metrics)) {
+                                                  prevMetrics > metrics)) {
                                             print('second');
                                             debounceChangeTab1.throttle(() {
                                               changeTab(1, metrics);
                                             });
                                           } else if ((metrics > tabWidth + (tabWidth / 5)) ||
-                                              (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3)) {
+                                              (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
                                             print('third');
                                             debounceChangeTab2.throttle(() {
                                               changeTab(2, metrics);
