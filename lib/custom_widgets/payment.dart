@@ -109,8 +109,9 @@ class _PaymentState extends State<Payment> {
                         LengthLimitingTextInputFormatter(8),
                         FilteringTextInputFormatter.allow(RegExp(r'\d*\.?\d*')),
                       ],
-                      autofocus: true,
+                      autofocus: false,
                       obscureText: false,
+
                       decoration: InputDecoration(
                         labelText: 'Your value:',
                         labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
@@ -151,6 +152,7 @@ class _PaymentState extends State<Payment> {
                         if(!dropdown.hasMatch(valueController!.text)) {
                           valueController!.text = '${valueController!.text} $dropdownValue';
                         }
+                        FocusScope.of(context).unfocus();
                       },
                       onChanged: (text) {
                         // print('First text field: $text');
@@ -340,7 +342,7 @@ class _PaymentState extends State<Payment> {
                   lineHeight: null,
                 ),
                 minLines: 1,
-                maxLines: 3,
+                maxLines: 5,
               ),
             ),
           ),

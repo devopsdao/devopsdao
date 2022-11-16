@@ -47,6 +47,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   @override
   void initState() {
     super.initState();
+
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
@@ -100,7 +101,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       }
       tabIndex = index;
       prevMetrics = metrics;
-      print('saved index changed to: $index');
+      // print('saved index changed to: $index');
       // }
     }
 
@@ -144,7 +145,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
             ],
           ),
           actions: const [
-            SearchButton(),
+            // SearchButton(),
             LoadButtonIndicator(),
           ],
           centerTitle: false,
@@ -192,14 +193,14 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                     length: 3,
                     initialIndex: tabIndex,
                     child: Builder(builder: (BuildContext context) {
-                      final TabController controller = DefaultTabController.of(context)!;
-                      controller.addListener(() {
-                        // print(controller.index);
-                        // changeTab(controller.index);
-                        if (!controller.indexIsChanging) {
-                          // print(controller.index);
-                        }
-                      });
+                      // final TabController controller = DefaultTabController.of(context)!;
+                      // controller.addListener(() {
+                      //   // print(controller.index);
+                      //   // changeTab(controller.index);
+                      //   if (!controller.indexIsChanging) {
+                      //     // print(controller.index);
+                      //   }
+                      // });
                       return Column(
                         children: [
                           TabBar(
@@ -340,6 +341,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                       return false;
                                     },
                                     child: const TabBarView(
+                                      physics: NeverScrollableScrollPhysics(),
                                       children: [
                                         mySubmitterTabWidget(
                                           tabName: 'selection',
