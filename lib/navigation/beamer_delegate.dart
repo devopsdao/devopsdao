@@ -19,31 +19,31 @@ void createBeamerDelegate() {
     transitionDelegate: const NoAnimationTransitionDelegate(),
     locationBuilder: RoutesLocationBuilder(
       routes: {
-        '/home': (context, state, data) => Scaffold(
-            body: const HomePageWidget(),
+        '/home': (context, state, data) => const Scaffold(
+            body: HomePageWidget(),
             bottomNavigationBar: NavBarPage(
               initialPage: '/home',
             )),
-        '/tasks': (context, state, data) => Scaffold(
-              body: const TasksPageWidget(),
+        '/tasks': (context, state, data) => const Scaffold(
+              body: TasksPageWidget(),
               bottomNavigationBar: NavBarPage(
                 initialPage: '/tasks',
               ),
             ),
-        '/performer': (context, state, data) => Scaffold(
-              body: const PerformerPageWidget(),
+        '/performer': (context, state, data) => const Scaffold(
+              body: PerformerPageWidget(),
               bottomNavigationBar: NavBarPage(
                 initialPage: '/performer',
               ),
             ),
-        '/customer': (context, state, data) => Scaffold(
-              body: const CustomerPageWidget(),
+        '/customer': (context, state, data) => const Scaffold(
+              body: CustomerPageWidget(),
               bottomNavigationBar: NavBarPage(
                 initialPage: '/customer',
               ),
             ),
-        '/auditor': (context, state, data) => Scaffold(
-              body: const AuditorPageWidget(),
+        '/auditor': (context, state, data) => const Scaffold(
+              body: AuditorPageWidget(),
               bottomNavigationBar: NavBarPage(
                 initialPage: '/auditor',
               ),
@@ -52,7 +52,7 @@ void createBeamerDelegate() {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
             body: TasksPageWidget(taskAddress: taskAddress),
-            bottomNavigationBar: NavBarPage(
+            bottomNavigationBar: const NavBarPage(
               initialPage: '/tasks',
             ),
           );
@@ -61,7 +61,7 @@ void createBeamerDelegate() {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
             body: CustomerPageWidget(taskAddress: taskAddress),
-            bottomNavigationBar: NavBarPage(
+            bottomNavigationBar: const NavBarPage(
               initialPage: '/customer',
             ),
           );
@@ -70,7 +70,7 @@ void createBeamerDelegate() {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
             body: PerformerPageWidget(taskAddress: taskAddress),
-            bottomNavigationBar: NavBarPage(
+            bottomNavigationBar: const NavBarPage(
               initialPage: '/performer',
             ),
           );
@@ -79,7 +79,7 @@ void createBeamerDelegate() {
           String taskAddress = state.pathParameters['taskAddress']!;
           return Scaffold(
             body: AuditorPageWidget(taskAddress: taskAddress),
-            bottomNavigationBar: NavBarPage(
+            bottomNavigationBar: const NavBarPage(
               initialPage: '/auditor',
             ),
           );

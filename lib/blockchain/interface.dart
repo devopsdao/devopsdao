@@ -1,43 +1,62 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
 // import 'package:js/js.dart';
 
-import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
-import 'package:nanoid/nanoid.dart';
-import 'package:throttling/throttling.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
-import '../custom_widgets/wallet_action.dart';
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
-import 'task.dart';
-import 'package:webthree/webthree.dart';
-import 'package:http/http.dart' as http;
-import 'package:web_socket_channel/io.dart';
-
-import '../wallet/ethereum_transaction_tester.dart';
-import '../wallet/main.dart';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class InterfaceServices extends ChangeNotifier {
   // Payments goes here (create_job_widget.dart -> payment.dart):
   late double tokensEntered = 0.0;
 
+  //  ************ Wallet **************//
+  late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/main.dart
   late PageController controller = PageController(initialPage: 0);
-  // PageView Controller for task_dialog.dart
-  late PageController TasksController = PageController(initialPage: 0);
 
-  late int pageWalletViewNumber = 0;
+  //  ************ task_dialog **************//
+  // PageView Controller for task_dialog.dart
+  late PageController dialogPagesController = PageController(initialPage: 1);
+  late int pageDialogViewNumber = 1; //initial starts from 1 page
+  Map<String, int> dialogPages = {
+    'topup' : 0,
+    'main' : 1,
+    'description' : 2,
+    'chat' : 3,
+  };
+
+  Map<String, String> dialogProcess = {
+    'name' : 'custom null',
+    'buttonName' : 'custom null',
+    'hint' : 'custom null',
+  };
+
+  // Input text on task_dialog.dart
+  late String taskMessage;
+
+  // Hint message for task_dialog
+  // late String messageHint;
+
+
   late String whichWalletButtonPressed = '';
+
+  // wallet/main.dart controller for tabs
+  // late TabController walletTabController = TabController(length: 2, vsync: );
 
   // ****** SETTINGS ******** //
 // border radius:
   final double borderRadius = 8.0;
+
+// ***********  create_job_widget ************ ////
+
+
+  late PageController pageViewNewTaskController = PageController(initialPage: 0);
+
+
+
+  // -------------------- Sizes for Dialog window ------------------------- //
+  final double maxInternalDialogWidth = 480;
+  final double maxDialogWidth = 650;
 }
+
+
+

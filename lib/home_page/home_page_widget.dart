@@ -19,8 +19,7 @@ class HomePageWidget extends StatefulWidget {
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget>
-    with TickerProviderStateMixin {
+class _HomePageWidgetState extends State<HomePageWidget> {
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -69,11 +68,11 @@ class _HomePageWidgetState extends State<HomePageWidget>
       hideBeforeAnimating: false,
       fadeIn: true,
       initialState: AnimationState(
-        offset: Offset(0, 70),
+        offset: const Offset(0, 70),
         opacity: 0,
       ),
       finalState: AnimationState(
-        offset: Offset(0, 0),
+        offset: const Offset(0, 0),
         opacity: 1,
       ),
     ),
@@ -82,20 +81,17 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
   // bool _flag = true;
   late AnimationController _animationController;
-  late Animation<double> _myAnimation;
 
   @override
   void initState() {
     super.initState();
-    startPageLoadAnimations(
-      animationsMap.values
-          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-      this,
-    );
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    _myAnimation =
-        CurvedAnimation(curve: Curves.linear, parent: _animationController);
+    // startPageLoadAnimations(
+    //   animationsMap.values
+    //       .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
+    //   this,
+    // );
+    // _animationController = AnimationController(
+    //     vsync: this, duration: const Duration(milliseconds: 450));
   }
 
   final TextEditingController titleController = TextEditingController();
@@ -129,10 +125,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
     //   }
     // });
 
-    bool _isFloatButtonVisible = false;
+    bool isFloatButtonVisible = false;
 
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
-      _isFloatButtonVisible = true;
+      isFloatButtonVisible = true;
     }
 
     return Scaffold(
@@ -154,7 +150,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
           ],
         ),
         actions: [
-          LoadButtonIndicator(),
+          const LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
@@ -184,7 +180,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   borderRadius: 30,
                   borderWidth: 1,
                   buttonSize: 60,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.account_balance_wallet,
                     color: Colors.white,
                     size: 30,
@@ -199,7 +195,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
                     showDialog(
                       context: context,
-                      builder: (context) => MyWalletPage(
+                      builder: (context) => const MyWalletPage(
                         title: '',
                       ),
                     );
@@ -216,7 +212,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                   borderRadius: 30,
                   borderWidth: 1,
                   buttonSize: 60,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.cloud_off,
                     color: Colors.white,
                     size: 30,
@@ -249,20 +245,24 @@ class _HomePageWidgetState extends State<HomePageWidget>
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: Color(0xFF1E2429),
-      floatingActionButton: _isFloatButtonVisible
+      backgroundColor: const Color(0xFF1E2429),
+      floatingActionButton: isFloatButtonVisible
           ? FloatingActionButton(
               onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateJobWidget(),
-                  ),
+                // await Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const CreateJobWidget(),
+                //   ),
+                // );
+                showDialog(
+                  context: context,
+                  builder: (context) => const CreateJobDialog(),
                 );
               },
               backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
               elevation: 8,
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: Colors.white,
                 size: 28,
@@ -274,253 +274,269 @@ class _HomePageWidgetState extends State<HomePageWidget>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            // colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
-            colors: [Color(0x0002c63a), Color(0x0002c63a), Color(0x0002c63a)],
+            // colors: [Colors.black, Colors.black, Colors.black],
+            colors: [Colors.black, Colors.black, Colors.black],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background_shape_tiles_small.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/images/background_shape_tiles_small.png"),
+          //   // fit: BoxFit.cover,
+          //   repeat: ImageRepeat.repeat,
+          // ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            tasksServices.isLoading
-                ? LoadIndicator()
-                : Image.asset(
-                    'assets/images/logo.png',
-                    width: 163,
-                    height: 140,
-                    fit: BoxFit.fitHeight,
-                  ).animated([animationsMap['imageOnPageLoadAnimation']!]),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-              child: Text(
-                'Welcome to Devopsdao',
-                style: FlutterFlowTheme.of(context).title1.override(
-                      fontFamily: 'Lexend Deca',
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              tasksServices.isLoading
+                  ? const LoadIndicator()
+                  : Image.asset(
+                      'assets/images/logo.png',
+                      width: 163,
+                      height: 140,
+                      fit: BoxFit.fitHeight,
                     ),
-              ).animated([animationsMap['textOnPageLoadAnimation']!]),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF39BAD2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'In your wallet',
-                            style:
-                                FlutterFlowTheme.of(context).bodyText2.override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBtnText,
-                                    ),
-                          ),
-                          Text(
-                            '${tasksServices.ethBalance} DEV',
-                            style: FlutterFlowTheme.of(context).title2.override(
-                                  fontFamily: 'Poppins',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBtnText,
-                                ),
-                          ),
-                          Text(
-                            '${tasksServices.ethBalanceToken} aUSDC',
-                            style: FlutterFlowTheme.of(context).title2.override(
-                                  fontFamily: 'Poppins',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBtnText,
-                                ),
-                          ),
-                        ],
+                  // .animated([animationsMap['imageOnPageLoadAnimation']!]),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
+                child: Text(
+                  'Welcome to Devopsdao',
+                  style: FlutterFlowTheme.of(context).title1.override(
+                        fontFamily: 'Lexend Deca',
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF247888),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Pending',
-                            style:
-                                FlutterFlowTheme.of(context).bodyText2.override(
-                                      fontFamily: 'Poppins',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBtnText,
-                                    ),
-                          ),
-                          Text(
-                            '${tasksServices.pendingBalance} DEV',
-                            style: FlutterFlowTheme.of(context).title2.override(
-                                  fontFamily: 'Poppins',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBtnText,
-                                ),
-                          ),
-                          Text(
-                            '${tasksServices.pendingBalanceToken} aUSDC',
-                            style: FlutterFlowTheme.of(context).title2.override(
-                                  fontFamily: 'Poppins',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBtnText,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.92,
-                decoration: BoxDecoration(
-                  color: Color(0xFF39BAD2),
-                  borderRadius: BorderRadius.circular(8),
-                  shape: BoxShape.rectangle,
                 ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Wallet address',
-                        style: FlutterFlowTheme.of(context).bodyText2.override(
-                              fontFamily: 'Poppins',
-                              color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
-                            ),
+                    // .animated([animationsMap['textOnPageLoadAnimation']!]),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff31d493),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      if (tasksServices.publicAddress != null)
-                        SelectableText(
-                          '${tasksServices.publicAddress}',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText2
-                              .override(
-                                fontFamily: 'Poppins',
-                                fontSize: 11,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryBtnText,
-                              ),
-                        )
-                      else
+                      child: Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'In your wallet',
+                              style:
+                                  FlutterFlowTheme.of(context).bodyText2.override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBtnText,
+                                      ),
+                            ),
+                            Text(
+                              '${tasksServices.ethBalance} DEV',
+                              style: FlutterFlowTheme.of(context).title2.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBtnText,
+                                  ),
+                            ),
+                            Text(
+                              '${tasksServices.ethBalanceToken} aUSDC',
+                              style: FlutterFlowTheme.of(context).title2.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBtnText,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      decoration: BoxDecoration(
+                        color: const Color(0xffff8222),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pending',
+                              style:
+                                  FlutterFlowTheme.of(context).bodyText2.override(
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBtnText,
+                                      ),
+                            ),
+                            Text(
+                              '${tasksServices.pendingBalance} DEV',
+                              style: FlutterFlowTheme.of(context).title2.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBtnText,
+                                  ),
+                            ),
+                            Text(
+                              '${tasksServices.pendingBalanceToken} aUSDC',
+                              style: FlutterFlowTheme.of(context).title2.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBtnText,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.92,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff1da5f1),
+                    borderRadius: BorderRadius.circular(8),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          'Not Connected',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText2
-                              .override(
+                          'Wallet address',
+                          style: FlutterFlowTheme.of(context).bodyText2.override(
                                 fontFamily: 'Poppins',
                                 color:
                                     FlutterFlowTheme.of(context).primaryBtnText,
                               ),
                         ),
-                    ],
+                        if (tasksServices.publicAddress != null)
+                          SelectableText(
+                            '${tasksServices.publicAddress}',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 11,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryBtnText,
+                                ),
+                          )
+                        else
+                          Text(
+                            'Not Connected',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryBtnText,
+                                ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.92,
-                decoration: BoxDecoration(
-                  color: Colors.teal,
-                  borderRadius: BorderRadius.circular(8),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Your score:',
-                        style: FlutterFlowTheme.of(context).bodyText2.override(
-                              fontFamily: 'Poppins',
-                              color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
-                            ),
-                      ),
-                      if (tasksServices.publicAddress == null)
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.92,
+                  decoration: BoxDecoration(
+                    color: Color(0xffc75394),
+                    borderRadius: BorderRadius.circular(8),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          'Not Connected',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText2
-                              .override(
+                          'Your score:',
+                          style: FlutterFlowTheme.of(context).bodyText2.override(
                                 fontFamily: 'Poppins',
                                 color:
                                     FlutterFlowTheme.of(context).primaryBtnText,
                               ),
-                        )
-                      else if (tasksServices.scoredTaskCount == 0)
-                        Text(
-                          'No completed evaluated tasks',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText2
-                              .override(
-                                fontFamily: 'Poppins',
-                                color:
-                                    FlutterFlowTheme.of(context).primaryBtnText,
-                              ),
-                        )
-                      else
-                        SelectableText(
-                          '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
-                          style: FlutterFlowTheme.of(context)
-                              .bodyText2
-                              .override(
-                                fontFamily: 'Poppins',
-                                fontSize: 11,
-                                color:
-                                    FlutterFlowTheme.of(context).primaryBtnText,
-                              ),
-                        )
-                    ],
+                        ),
+                        if (tasksServices.publicAddress == null)
+                          Text(
+                            'Not Connected',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryBtnText,
+                                ),
+                          )
+                        else if (tasksServices.scoredTaskCount == 0)
+                          Text(
+                            'No completed evaluated tasks',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryBtnText,
+                                ),
+                          )
+                        else
+                          SelectableText(
+                            '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText2
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 11,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryBtnText,
+                                ),
+                          )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            )
-          ],
-        ).animated([animationsMap['columnOnPageLoadAnimation']!]),
-      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
+              Text(
+                  'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
+                  style: const TextStyle(
+                    height: 2,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 11,
+                  )),
+            ],
+          ),
+        )
+            // .animated([animationsMap['columnOnPageLoadAnimation']!]),
+      )
+          // .animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }

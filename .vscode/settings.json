@@ -1,0 +1,21 @@
+{
+    "cSpell.words": [
+        "arkb",
+        "Artboard",
+        "Arweave",
+        "Axelar",
+        "beamer",
+        "devopsdao",
+        "IERC",
+        "Moonbase",
+        "walletconnect",
+        "webthree"
+    ],
+    "dart.lineLength": 150,
+    "[dart]": {
+        "editor.rulers": [
+            150
+        ],
+    }
+
+}

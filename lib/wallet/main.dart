@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../blockchain/interface.dart';
-import 'algorand_transaction_tester.dart';
-import 'ethereum_transaction_tester.dart';
-import 'transaction_tester.dart';
-import 'wallet_connect_lifecycle.dart';
+import 'algorand_walletconnect_transaction.dart';
+import 'ethereum_walletconnect_transaction.dart';
+import 'walletconnect_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:provider/provider.dart';
@@ -43,13 +41,14 @@ class _MyWalletPageState extends State<MyWalletPage> {
   String txId = '';
   String _displayUri = '';
   var session;
+  String backgroundPicture = "assets/images/logo_half.png";
 
   static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
   NetworkType? _network = NetworkType.ethereum;
   // TransactionState _state = TransactionState.disconnected;
   // TransactionState _state2 = TransactionState.disconnected;
-  // TransactionTester? _transactionTester = EthereumTransactionTester();
-  late TransactionTester? _transactionTester;
+  // WallectConnectTransaction? _wallectConnectTransaction = EthereumWallectConnectTransaction();
+  late WallectConnectTransaction? _wallectConnectTransaction;
 
   bool disableBackButton = true;
 
@@ -63,23 +62,19 @@ class _MyWalletPageState extends State<MyWalletPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-
     if (tasksServices.walletConnectedWC || tasksServices.walletConnectedMM) {
-      if(tasksServices.walletConnectedMM ) {
-        // interface.pageWalletViewNumber = 1;
+      if (tasksServices.walletConnectedMM) {
         interface.controller = PageController(initialPage: 1);
       } else if (tasksServices.walletConnectedWC) {
-        // interface.pageWalletViewNumber = 2;
         interface.controller = PageController(initialPage: 2);
       }
     } else {
-      // interface.pageWalletViewNumber = 0;
       interface.controller = PageController(initialPage: 0);
     }
 
     final double borderRadius = interface.borderRadius;
 
-    if(interface.pageWalletViewNumber == 0 ) {
+    if (interface.pageWalletViewNumber == 0) {
       disableBackButton = true;
     } else {
       if (tasksServices.walletConnectedMM || tasksServices.walletConnectedWC) {
@@ -88,7 +83,6 @@ class _MyWalletPageState extends State<MyWalletPage> {
         disableBackButton = false;
       }
     }
-    print(disableBackButton);
 
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
@@ -118,7 +112,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
                     children: [
                       SizedBox(
                         width: 30,
-                        child: !disableBackButton ? InkWell(
+                        child: !disableBackButton
+                            ? InkWell(
                                 onTap: () {
                                   interface.controller.animateToPage(0,
                                       duration:
@@ -161,7 +156,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
-                          if (tasksServices.walletConnectedMM ) {
+                          if (tasksServices.walletConnectedMM) {
                             interface.pageWalletViewNumber = 1;
                           } else if (tasksServices.walletConnectedWC) {
                             interface.pageWalletViewNumber = 2;
@@ -203,8 +198,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
                   width: 400,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(9),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/images/logo_half.png"),
+                    image: DecorationImage(
+                      image: AssetImage(backgroundPicture),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -220,16 +215,16 @@ class _MyWalletPageState extends State<MyWalletPage> {
   }
 
   void _changeNetworks(String? network) {
-    if (network == null) return null;
+    if (network == null) return;
     final newNetworkIndex = _networks.indexOf(network);
     final newNetwork = NetworkType.values[newNetworkIndex];
 
     switch (newNetwork) {
       case NetworkType.algorand:
-        _transactionTester = AlgorandTransactionTester();
+        _wallectConnectTransaction = AlgorandWalletConnectTransaction();
         break;
       case NetworkType.ethereum:
-        _transactionTester = EthereumTransactionTester();
+        _wallectConnectTransaction = EthereumWallectConnectTransaction();
         break;
     }
 
@@ -257,16 +252,15 @@ class _WalletPagesState extends State<WalletPages> {
   String _displayUri = '';
   int defaultTab = 0;
 
-
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-
-
-    print(interface.pageWalletViewNumber);
-    // interface.pageWalletViewNumber = 0;
 
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
@@ -278,12 +272,15 @@ class _WalletPagesState extends State<WalletPages> {
 
     if (tasksServices.platform == 'linux') {
       defaultTab = 1;
-    } else if (tasksServices.platform == 'web') {
+    } else if (tasksServices.platform == 'web' &&
+        tasksServices.browserPlatform != 'android' &&
+        tasksServices.browserPlatform != 'ios') {
       defaultTab = 1;
-    } else if (tasksServices.platform == 'mobile') {
+    } else if (tasksServices.platform == 'mobile' ||
+        tasksServices.browserPlatform == 'android' ||
+        tasksServices.browserPlatform == 'ios') {
       defaultTab = 0;
     }
-
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
@@ -331,7 +328,10 @@ class _WalletPagesState extends State<WalletPages> {
               ),
               const Spacer(),
               ChooseWalletButton(
-                active: tasksServices.platform == 'web' ? true : false,
+                active:
+                    tasksServices.platform == 'web' && tasksServices.mmAvailable
+                        ? true
+                        : false,
                 buttonName: 'metamask',
                 borderRadius: widget.borderRadius,
                 buttonWidth: innerWidth,
@@ -420,6 +420,7 @@ class _WalletPagesState extends State<WalletPages> {
                                   height: 30,
                                   child: TabBar(
                                     labelColor: Colors.black,
+                                    // controller: interface.walletTabController,
                                     // indicatorColor: Colors.black26,
                                     // indicatorWeight: 10,
                                     // indicatorSize: TabBarIndicatorSize.label,
@@ -434,10 +435,17 @@ class _WalletPagesState extends State<WalletPages> {
                                         color: Colors.transparent,
                                         width: 120,
                                         child: Tab(
-                                            child: Text(
-                                                tasksServices.platform == 'mobile'
-                                                    ? 'Mobile'
-                                                    : 'Desktop')),
+                                            child: Text(tasksServices
+                                                            .platform ==
+                                                        'mobile' ||
+                                                    tasksServices
+                                                            .browserPlatform ==
+                                                        'android' ||
+                                                    tasksServices
+                                                            .browserPlatform ==
+                                                        'ios'
+                                                ? 'Mobile'
+                                                : 'Desktop')),
                                       ),
                                       const SizedBox(
                                         width: 120,
@@ -449,7 +457,11 @@ class _WalletPagesState extends State<WalletPages> {
                                 Expanded(
                                   child: TabBarView(
                                     children: [
-                                      if (tasksServices.platform == 'mobile')
+                                      if (tasksServices.platform == 'mobile' ||
+                                          tasksServices.browserPlatform ==
+                                              'android' ||
+                                          tasksServices.browserPlatform ==
+                                              'ios')
                                         Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -462,7 +474,8 @@ class _WalletPagesState extends State<WalletPages> {
                                                             context)
                                                         .style
                                                         .apply(
-                                                            fontSizeFactor: 1.0),
+                                                            fontSizeFactor:
+                                                                1.0),
                                                     children: const <TextSpan>[
                                                   TextSpan(
                                                       text:
@@ -472,16 +485,21 @@ class _WalletPagesState extends State<WalletPages> {
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           fontSize: 17,
-                                                          color: Colors.black54)),
+                                                          color:
+                                                              Colors.black54)),
                                                 ])),
-                                            WalletConnectButton(
+                                            const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
                                             const SizedBox(height: 12),
                                           ],
                                         ),
                                       if (tasksServices.platform == 'linux' ||
-                                          tasksServices.platform == 'web')
+                                          tasksServices.platform == 'web' &&
+                                              tasksServices.browserPlatform !=
+                                                  'android' &&
+                                              tasksServices.browserPlatform !=
+                                                  'ios')
                                         Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -494,7 +512,8 @@ class _WalletPagesState extends State<WalletPages> {
                                                             context)
                                                         .style
                                                         .apply(
-                                                            fontSizeFactor: 1.0),
+                                                            fontSizeFactor:
+                                                                1.0),
                                                     children: const <TextSpan>[
                                                   TextSpan(
                                                       text:
@@ -504,9 +523,10 @@ class _WalletPagesState extends State<WalletPages> {
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           fontSize: 17,
-                                                          color: Colors.black54)),
+                                                          color:
+                                                              Colors.black54)),
                                                 ])),
-                                            WalletConnectButton(
+                                            const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
                                             const SizedBox(height: 12),
@@ -522,7 +542,8 @@ class _WalletPagesState extends State<WalletPages> {
                                                   style: DefaultTextStyle.of(
                                                           context)
                                                       .style
-                                                      .apply(fontSizeFactor: 1.0),
+                                                      .apply(
+                                                          fontSizeFactor: 1.0),
                                                   children: const <TextSpan>[
                                                 TextSpan(
                                                     text: 'Scan QR code',
@@ -542,7 +563,8 @@ class _WalletPagesState extends State<WalletPages> {
                                               children: [
                                                 (_displayUri.isEmpty)
                                                     ? const Padding(
-                                                        padding: EdgeInsets.only(
+                                                        padding:
+                                                            EdgeInsets.only(
                                                           left: 10,
                                                           right: 10,
                                                           bottom: 10,
@@ -554,7 +576,8 @@ class _WalletPagesState extends State<WalletPages> {
                                                         gapless: false,
                                                       ),
                                                 Text(
-                                                  tasksServices.walletConnectedWC
+                                                  tasksServices
+                                                          .walletConnectedWC
                                                       ? 'Wallet connected'
                                                       : 'Wallet disconnected',
                                                   style: Theme.of(context)
@@ -575,16 +598,18 @@ class _WalletPagesState extends State<WalletPages> {
                                                     child: Text(
                                                       'Wrong network, please connect to Moonbase Alpha',
                                                       style: TextStyle(
-                                                          color: Colors.redAccent,
+                                                          color:
+                                                              Colors.redAccent,
                                                           fontSize: 20),
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
                                                   )
                                               ],
                                             ),
                                           ),
                                           const Spacer(),
-                                          WalletConnectButton(
+                                          const WalletConnectButton(
                                             buttonName: 'wallet_connect',
                                           ),
                                           const Spacer(),
@@ -607,8 +632,7 @@ class _WalletPagesState extends State<WalletPages> {
           ),
         ],
       );
-      }
-    );
+    });
   }
 }
 
@@ -686,7 +710,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
                   : null;
             } else if (widget.buttonName == 'wallet_connect') {
               tasksServices.initComplete
-                  ? tasksServices.connectWalletWC()
+                  ? tasksServices.connectWalletWC(false)
                   : null;
             }
           }
@@ -747,8 +771,6 @@ class WalletConnectButton extends StatefulWidget {
 }
 
 class _WalletConnectButtonState extends State<WalletConnectButton> {
-  TransactionState _state2 = TransactionState.disconnected;
-
   // late String assetName;
   // late Color buttonColor = Colors.black26;
   // late int page = 0;
@@ -768,8 +790,13 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
         widget.buttonName == 'wallet_connect') {
       buttonText = 'Switch network';
     } else if (!tasksServices.walletConnectedWC &&
-        widget.buttonName == 'wallet_connect') {
+        widget.buttonName == 'wallet_connect' &&
+        (interface.pageWalletViewNumber == 2)) {
       buttonText = 'Refresh QR';
+    } else if (!tasksServices.walletConnectedWC &&
+        widget.buttonName == 'wallet_connect' &&
+        (interface.pageWalletViewNumber == 1)) {
+      buttonText = 'Connect';
     } else if (tasksServices.walletConnectedMM &&
         tasksServices.validChainIDMM &&
         widget.buttonName == 'metamask') {
@@ -813,7 +840,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           } else if (widget.buttonName == 'wallet_connect') {
             if (!tasksServices.walletConnectedWC) {
               tasksServices.initComplete
-                  ? await tasksServices.connectWalletWC()
+                  ? await tasksServices.connectWalletWC(false)
                   : null;
             } else if (tasksServices.walletConnectedWC &&
                 !tasksServices.validChainIDWC) {
@@ -832,7 +859,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             //   tasksServices.myNotifyListeners();
             // }
             // if (tasksServices.walletConnected) {
-            //   await tasksServices.transactionTester?.disconnect();
+            //   await tasksServices.wallectConnectTransaction?.disconnect();
             // } else {
             //   tasksServices.initComplete
             //       ? tasksServices.connectWalletWC()
@@ -853,7 +880,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
                 child: Text(
                   buttonText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],

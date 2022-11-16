@@ -1,34 +1,10 @@
-import 'package:badges/badges.dart';
-import 'package:devopsdao/custom_widgets/participants_list.dart';
-import 'package:devopsdao/custom_widgets/payment.dart';
-import 'package:devopsdao/custom_widgets/selectMenu.dart';
-import 'package:devopsdao/custom_widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../chat/main.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-
-import 'package:devopsdao/blockchain/task_services.dart';
-
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import 'buttons.dart';
-
-import 'package:beamer/beamer.dart';
-
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../blockchain/task.dart';
-import '../blockchain/task_services.dart';
-import '../custom_widgets/task_dialog.dart';
 
 class AppDataLoadingDialog extends StatefulWidget {
   const AppDataLoadingDialog({Key? key}) : super(key: key);
@@ -57,7 +33,7 @@ class _AppDataLoadingDialog extends State<AppDataLoadingDialog> {
     //   task = tasksServices.tasksCustomerComplete[widget.taskAddress]!;
     // }
 
-    return AppDataLoadingDialogWidget();
+    return const AppDataLoadingDialogWidget();
   }
 }
 

@@ -1,21 +1,12 @@
-import 'dart:async';
-
-import 'package:badges/badges.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../create_job/create_job_widget.dart';
 import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/task_dialog.dart';
 import '../custom_widgets/loading.dart';
-import '../custom_widgets/participants_list.dart';
 import '../custom_widgets/task_item.dart';
-import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
@@ -63,7 +54,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
             context: context,
             builder: (context) => TaskDialog(
                   taskAddress: widget.taskAddress!,
-                  role: 'auditor',
+                  fromPage: 'auditor',
                 ));
       });
     }
@@ -85,8 +76,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-
-    bool _isFloatButtonVisible = false;
 
     Map tabs = {
       "requested": 0,
@@ -111,9 +100,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
         tasksServices.resetFilter(tasksServices.tasksAuditComplete);
       }
     }
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
-      _isFloatButtonVisible = true;
-    }
+    if (tasksServices.publicAddress != null && tasksServices.validChainID) {}
 
     return Scaffold(
       key: scaffoldKey,
@@ -170,16 +157,16 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
+            colors: [Colors.black, Colors.black, Colors.black],
             stops: [0, 0.5, 1],
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/images/background.png"),
+          //   // fit: BoxFit.cover,
+          //   repeat: ImageRepeat.repeat,
+          // ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -304,7 +291,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                             ),
                       ),
                     ),
-
                     tasksServices.isLoading
                         ? const LoadIndicator()
                         : const Expanded(
@@ -347,7 +333,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    List objList = tasksServices.filterResults!.values.toList();
+    List objList = tasksServices.filterResults.values.toList();
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
@@ -377,16 +363,17 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                   //     builder: (context) {
                   //       return StatefulBuilder(builder: (context, setState) {
                   //         return TaskInformationDialog(
-                  //             role: 'auditor', object: objList[index]);
+                  //             fromPage: 'auditor', object: objList[index]);
                   //       });
                   //     });
-                  // => TaskInformationDialog(role: 'auditor', object: objList[index]),);
+                  // => TaskInformationDialog(fromPage: 'auditor', object: objList[index]),);
 
                   showDialog(
                       context: context,
                       builder: (context) => TaskInformationDialog(
-                            role: 'auditor',
-                            object: objList[index],
+                            fromPage: 'auditor',
+                            task: objList[index],
+                            shimmerEnabled: false,
                           ));
                   final String taskAddress = tasksServices.filterResults.values
                       .toList()[index]
@@ -396,7 +383,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                       RouteInformation(location: '/auditor/$taskAddress');
                   Beamer.of(context).updateRouteInformation(routeInfo);
                 },
-                child: TaskItem(role: 'auditor', object: objList[index]),
+                child: TaskItem(fromPage: 'auditor', object: objList[index]),
               ),
             );
           },

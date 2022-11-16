@@ -1,348 +1,410 @@
-import 'package:flutter/services.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../custom_widgets/payment.dart';
-import '../custom_widgets/selectMenu.dart';
+import '../custom_widgets/task_dialog.dart';
 import '../custom_widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_markdown/flutter_markdown.dart';
+// import 'package:markdown_editable_textinput/format_markdown.dart';
+// import 'package:markdown_editable_textinput/markdown_text_input.dart';
+import 'package:simple_markdown_editor_plus/simple_markdown_editor_plus.dart';
 
 import '../blockchain/task_services.dart';
 
-typedef void GetColor(Color? color, String? string);
+
+class CreateJobDialog extends StatefulWidget {
+  const CreateJobDialog({Key? key}) : super(key: key);
+
+  @override
+  _CreateJobDialogState createState() => _CreateJobDialogState();
+}
+
+class _CreateJobDialogState extends State<CreateJobDialog> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SingleChildScrollView(
+        child: StatefulBuilder(builder: (context, setState) {
+          final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+          final double screenHeightSizeNoKeyboard = constraints.maxHeight - 120;
+          final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+          return WillPopScope(
+            child:  Dialog(
+              insetPadding: const EdgeInsets.all(20),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: CreateJobWidget(screenHeightSize: screenHeightSize)
+            ), onWillPop: () async => false,);
+        }),
+      );
+    });
+  }
+}
+
+
+
+
 
 class CreateJobWidget extends StatefulWidget {
-  const CreateJobWidget({Key? key}) : super(key: key);
-
+  final double screenHeightSize;
+  const CreateJobWidget({Key? key,
+    required this.screenHeightSize,
+  }) : super(key: key);
   @override
   _CreateJobWidgetState createState() => _CreateJobWidgetState();
 }
 
-class _CreateJobWidgetState extends State<CreateJobWidget>
-    with TickerProviderStateMixin {
+class _CreateJobWidgetState extends State<CreateJobWidget> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    var interface = context.watch<InterfaceServices>();
+    final double maxDialogWidth = interface.maxDialogWidth;
+    late String backgroundPicture = "assets/images/niceshape.png";
+    final screenHeightSize = widget.screenHeightSize;
+
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+      Container(
+        padding: const EdgeInsets.all(20),
+        width: maxDialogWidth,
+        child: Row(
+          children: [
+            const SizedBox(
+              width: 30,
+            ),
+            const Spacer(),
+            Expanded(
+                flex: 10,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: RichText(
+                        // softWrap: false,
+                        // overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          children: [
+                            // const WidgetSpan(
+                            //     child: Padding(
+                            //       padding:
+                            //       EdgeInsets.only(right: 5.0),
+                            //       child: Icon(
+                            //         Icons.copy,
+                            //         size: 20,
+                            //         color: Colors.black26,
+                            //       ),
+                            //     )),
+                            TextSpan(
+                              text: 'Add new Task',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+            const Spacer(),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                // RouteInformation routeInfo = RouteInformation(
+                //     location: '/${widget.fromPage}');
+                // Beamer.of(context)
+                //     .updateRouteInformation(routeInfo);
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(0.0),
+                height: 30,
+                width: 30,
+                // decoration: BoxDecoration(
+                //   borderRadius: BorderRadius.circular(6),
+                // ),
+                child: Row(
+                  children: const <Widget>[
+                    Expanded(
+                      child: Icon(
+                        Icons.close,
+                        size: 30,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      Container(
+        // *** SingleScrollChild enable here by using screenHeightSize:
+        // height: screenHeightSize,
+        height: 490,
+        width: maxDialogWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(9),
+          image: DecorationImage(
+            image: AssetImage(backgroundPicture),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: const NewTaskPages(),
+      ),
+    ]);
+  }
+}
+
+
+
+
+
+class NewTaskPages extends StatefulWidget {
+  const NewTaskPages({Key? key,
+  }) : super(key: key);
+  @override
+  _NewTaskPagesState createState() => _NewTaskPagesState();
+}
+
+class _NewTaskPagesState extends State<NewTaskPages> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return LayoutBuilder(builder: (ctx, dialogConstraints) {
+      double innerWidth = dialogConstraints.maxWidth - 50;
+      return PageView(
+          scrollDirection: Axis.horizontal,
+          // controller: interface.pageViewNewTaskController,
+          physics: const NeverScrollableScrollPhysics(),
+          onPageChanged: (number) {
+          },
+          children: <Widget>[
+            NewTaskMainPage(
+                innerWidth: innerWidth)
+          ]
+      );
+    });
+  }
+}
+
+
+
+
+class NewTaskMainPage extends StatefulWidget {
+  final double innerWidth;
+  const NewTaskMainPage({Key? key,
+    required this.innerWidth,
+  }) : super(key: key);
+
+  @override
+  _NewTaskMainPageState createState() => _NewTaskMainPageState();
+}
+
+class _NewTaskMainPageState extends State<NewTaskMainPage> {
   TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
   TextEditingController? valueController;
-  // TextEditingController valueController = TextEditingController();
-  double _currentPriceValue = 0.0;
-  final formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
 
   @override
   void initState() {
     super.initState();
-    startPageLoadAnimations(
-      animationsMap.values
-          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-      this,
-    );
     descriptionController = TextEditingController();
     titleFieldController = TextEditingController();
     valueController = TextEditingController();
   }
 
   @override
+  void dispose() {
+    // Don't forget to dispose all of your controllers!
+    descriptionController!.dispose();
+    titleFieldController!.dispose();
+    valueController!.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var Interface = context.watch<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
 
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        leading: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          borderWidth: 1,
-          buttonSize: 60,
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: Colors.white,
-            size: 30,
-          ),
-          onPressed: () async {
-            Navigator.pop(context);
+    final double maxInternalWidth = interface.maxInternalDialogWidth;
 
-            // showDialog(
-            //     context: context,
-            //     builder: (context) => WalletAction()
-            // );
-          },
-        ),
-        title: Text(
-          'Create  job',
-          style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
+    const Color textColor = Colors.black54;
+    final double borderRadius = interface.borderRadius;
+    final double innerWidth = widget.innerWidth;
+
+    return Column(
+      children: [
+        Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
               ),
-        ),
-        actions: [],
-        centerTitle: false,
-        elevation: 2,
-      ),
-      backgroundColor: const Color(0xFF1E2429),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF0E2517), Color(0xFF0D0D50), Color(0xFF531E59)],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            // fit: BoxFit.cover,
-            repeat: ImageRepeat.repeat,
-          ),
-        ),
-        child: Form(
-          key: formKey,
-          autovalidateMode: AutovalidateMode.disabled,
-          child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 15, 15, 15),
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                decoration: const BoxDecoration(
-                    // color: Colors.white70,
-                    // borderRadius: BorderRadius.circular(8),
-                    ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    TextFormField(
-                      controller: titleFieldController,
-                      // onChanged: (_) => EasyDebounce.debounce(
-                      //   'titleFieldController',
-                      //   Duration(milliseconds: 2000),
-                      //   () => setState(() {}),
-                      // ),
-                      autofocus: true,
-                      obscureText: false,
-
-                      decoration: const InputDecoration(
-                        labelText: 'Title:',
-                        labelStyle:
-                            TextStyle(fontSize: 17.0, color: Colors.white),
-                        hintText: '[Enter the Title..]',
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
-                            lineHeight: 2,
-                          ),
-                      maxLines: 1,
-                    ),
-
-                    TextFormField(
-                      controller: descriptionController,
-                      // onChanged: (_) => EasyDebounce.debounce(
-                      //   'descriptionController',
-                      //   Duration(milliseconds: 2000),
-                      //   () => setState(() {}),
-                      // ),
-                      autofocus: true,
-                      obscureText: false,
-                      decoration: const InputDecoration(
-                        labelText: 'Description:',
-                        labelStyle:
-                            TextStyle(fontSize: 17.0, color: Colors.white),
-                        hintText: '[Job description...]',
-                        hintStyle:
-                            TextStyle(fontSize: 15.0, color: Colors.white),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
-                            lineHeight: 2,
-                          ),
-                      maxLines: 4,
-                      keyboardType: TextInputType.multiline,
-                    ),
-
-                    // TextFormField(
-                    //   controller: valueController,
-                    //   // onChanged: (_) => EasyDebounce.debounce(
-                    //   //   'valueController',
-                    //   //   Duration(milliseconds: 2000),
-                    //   //       () => setState(() {}),
-                    //   // ),
-                    //   inputFormatters: [
-                    //     LengthLimitingTextInputFormatter(8),
-                    //     FilteringTextInputFormatter.allow(RegExp(r'\d*\.?\d*')),
-                    //   ],
-                    //   autofocus: true,
-                    //   obscureText: false,
-                    //   decoration: InputDecoration(
-                    //     labelText: 'Value',
-                    //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                    //     hintText: '[Please enter the value]',
-                    //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                    //     enabledBorder: UnderlineInputBorder(
-                    //       borderSide: BorderSide(
-                    //         color: Color(0x00000000),
-                    //         width: 1,
-                    //       ),
-                    //       borderRadius: const BorderRadius.only(
-                    //         topLeft: Radius.circular(4.0),
-                    //         topRight: Radius.circular(4.0),
-                    //       ),
-                    //     ),
-                    //     focusedBorder: UnderlineInputBorder(
-                    //       borderSide: BorderSide(
-                    //         color: Color(0x00000000),
-                    //         width: 1,
-                    //       ),
-                    //       borderRadius: const BorderRadius.only(
-                    //         topLeft: Radius.circular(4.0),
-                    //         topRight: Radius.circular(4.0),
-                    //       ),
-                    //     ),
-                    //   ),
-                    //   style: FlutterFlowTheme.of(context).bodyText1.override(
-                    //     fontFamily: 'Poppins',
-                    //     color: Colors.white,
-                    //   ),
-                    //   maxLines: 1,
-                    //   keyboardType: TextInputType.number,
+                  padding: const EdgeInsets.all(6.0),
+                  width: innerWidth,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(borderRadius),
+                  ),
+                  child: TextFormField(
+                    controller: titleFieldController,
+                    // onChanged: (_) => EasyDebounce.debounce(
+                    //   'titleFieldController',
+                    //   Duration(milliseconds: 2000),
+                    //   () => setState(() {}),
                     // ),
-                    // Padding(
-                    //   padding: EdgeInsetsDirectional.fromSTEB(0, 25, 0, 15),
-                    //   child: SliderTheme(
-                    //     data: SliderThemeData(
-                    //       // thumbColor: Colors.red,
-                    //       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 14),
-                    //       activeTrackColor: Colors.white,
-                    //       inactiveTrackColor: Colors.white,
-                    //       trackHeight: 5.0,
-                    //     ),
-                    //     child: Slider(
-                    //       value: _currentPriceValue,
-                    //       min: 0,
-                    //       max: 0.125,
-                    //       divisions: 100,
-                    //       label: _currentPriceValue.toString(),
-                    //       onChanged: (double value) {
-                    //         setState(() {
-                    //           _currentPriceValue = value;
-                    //           valueController!.text = value.toString();
-                    //         });
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    // SelectTokenMenu(),
-                    const Payment(
-                      purpose: 'create',
-                    ),
-                    const Spacer(),
-                    FFButtonWidget(
-                      onPressed: () {
-                        final nanoId = customAlphabet(
-                            '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
-                            12);
-                        tasksServices.createTaskContract(
-                            titleFieldController!.text,
-                            descriptionController!.text,
-                            // valueController!.text,
-                            Interface.tokensEntered,
-                            nanoId);
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (context) => WalletAction(
-                                  nanoId: nanoId,
-                                  taskName: 'createTaskContract',
-                                ));
-                      },
-                      text: 'Submit',
-                      options: FFButtonOptions(
-                        width: 130,
-                        height: 40,
-                        color: FlutterFlowTheme.of(context).maximumBlueGreen,
-                        textStyle:
-                            FlutterFlowTheme.of(context).subtitle2.override(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                ),
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
+                    autofocus: true,
+                    obscureText: false,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Title:',
+                      labelStyle:
+                      TextStyle(fontSize: 17.0, color: textColor),
+                      hintText: '[Enter the Title..]',
+                      hintStyle:
+                      TextStyle(fontSize: 14.0, color: textColor),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
                       ),
                     ),
-                  ],
-                ),
-              )),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                      fontFamily: 'Poppins',
+                      color: textColor,
+                      lineHeight: 1,
+                    ),
+                    maxLines: 1,
+                  ),
+              ),
+            )
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
+        Container(
+          padding:  const EdgeInsets.only(top: 14.0),
+          child: Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(6.0),
+                  width: innerWidth,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(borderRadius),
+                  ),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    // onChanged: (_) => EasyDebounce.debounce(
+                    //   'descriptionController',
+                    //   Duration(milliseconds: 2000),
+                    //   () => setState(() {}),
+                    // ),
+                    autofocus: true,
+                    obscureText: false,
+                    onTapOutside: (test) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Description:',
+                      labelStyle:
+                      TextStyle(fontSize: 17.0, color: textColor),
+                      hintText: '[Job description...]',
+                      hintStyle:
+                      TextStyle(fontSize: 14.0, color: textColor),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                      fontFamily: 'Poppins',
+                      color: textColor,
+                      lineHeight: 1,
+                    ),
+                    maxLines: 2,
+                    keyboardType: TextInputType.multiline,
+                  ),
+                ),
+              )
+          ),
+        ),
+        const SizedBox(height: 14),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxInternalWidth,
+          ),
+          child: Payment(
+              purpose: 'create', innerWidth: innerWidth,
+              borderRadius: borderRadius
+          ),
+        ),
+        const Spacer(),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxInternalWidth,
+          ),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+            width: innerWidth + 8,
+            child: Row(
+              children: [
+                TaskDialogButton(
+                  inactive: false,
+                  buttonName: 'Submit',
+                  buttonColorRequired: Colors.lightBlue.shade600,
+                  callback: () {
+                    final nanoId = customAlphabet(
+                        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
+                        12);
+                    tasksServices.createTaskContract(
+                        titleFieldController!.text,
+                        descriptionController!.text,
+                        // valueController!.text,
+                        interface.tokensEntered,
+                        nanoId);
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                          nanoId: nanoId,
+                          taskName: 'createTaskContract',
+                        ));
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

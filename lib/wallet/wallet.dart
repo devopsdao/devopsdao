@@ -19,7 +19,7 @@ class WalletConnector {
 
     final connector = WalletConnect(
       bridge: 'https://bridge.walletconnect.org',
-      clientMeta: PeerMeta(
+      clientMeta: const PeerMeta(
         name: 'WalletConnect',
         description: 'WalletConnect Developer App',
         url: 'https://walletconnect.org',
