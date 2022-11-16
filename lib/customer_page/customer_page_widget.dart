@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
 
+import 'package:throttling/throttling.dart';
+
 class CustomerPageWidget extends StatefulWidget {
   // static final beamLocation = BeamPage(key: ValueKey('Home'), child: CustomerPageWidget());
   // static final path = '/';
@@ -57,8 +59,6 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     }
   }
 
-
-
   final _searchKeywordController = TextEditingController();
 
   @override
@@ -68,21 +68,13 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   }
 
   int tabIndex = 0;
-  int savedIndex = 4;
+  int savedIndex = 999;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-    Map tabs = {
-      "new": 0,
-      "agreed": 1,
-      "progress": 1,
-      "review": 1,
-      "audit": 1,
-      "completed": 2,
-      "canceled": 2
-    };
+    Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
@@ -92,8 +84,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       }
     }
 
-    void onTabChanged(index) {
-
+    void changeTab(index) {
       if (savedIndex != index) {
         if (index == 0) {
           tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
@@ -105,11 +96,10 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
         savedIndex = index;
         print('saved index changed to: $index');
       }
-
     }
 
     if (_searchKeywordController.text.isEmpty) {
-      onTabChanged(tabIndex);
+      changeTab(tabIndex); //temp disable
       // if (tabIndex == 0) {
       //   tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
       // } else if (tabIndex == 1) {
@@ -118,7 +108,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       //   tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
       // }
     }
-
+    late Debouncing debounceChangeTab = Debouncing(duration: const Duration(milliseconds: 2000));
 
     return Scaffold(
         key: scaffoldKey,
@@ -190,185 +180,175 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
             children: [
               Expanded(
                 child: DefaultTabController(
-                  length: 3,
-                  initialIndex: tabIndex,
-                  child: Builder(builder: (BuildContext context) {
-                    final TabController controller = DefaultTabController.of(context)!;
-                    controller.addListener(() {
-                      // print(controller.index);
-                      // onTabChanged(controller.index);
-                      if (!controller.indexIsChanging) {
+                    length: 3,
+                    initialIndex: tabIndex,
+                    child: Builder(builder: (BuildContext context) {
+                      final TabController controller = DefaultTabController.of(context)!;
+                      controller.addListener(() {
                         // print(controller.index);
-
-                      }
-                    });
-                    return Column(
-                      children: [
-                        TabBar(
-                          labelColor: Colors.white,
-                          labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                          indicatorColor: const Color(0xFF47CBE4),
-                          indicatorWeight: 3,
-                          // isScrollable: true,
-                          onTap: (index) {
-                            _searchKeywordController.clear();
-                            tabIndex = index;
-                            // print(index);
-                            onTabChanged(index);
-                            // if (index == 0) {
-                            //   tasksServices.resetFilter(
-                            //       tasksServices.tasksCustomerSelection);
-                            // } else if (index == 1) {
-                            //   tasksServices.resetFilter(
-                            //       tasksServices.tasksCustomerProgress);
-                            // } else if (index == 2) {
-                            //   tasksServices.resetFilter(
-                            //       tasksServices.tasksCustomerComplete);
-                            // }
-                          },
-                          tabs: [
-                            Tab(
-                              child: BadgeTab(
-                                taskCount:
-                                tasksServices.tasksCustomerSelection.length,
-                                tabText: 'Selection',
-                              ),
-                            ),
-                            Tab(
-                              child: BadgeTab(
-                                  taskCount:
-                                  tasksServices.tasksCustomerProgress.length,
-                                  tabText: 'Progress'),
-                            ),
-                            Tab(
-                              child: BadgeTab(
-                                  taskCount:
-                                  tasksServices.tasksCustomerComplete.length,
-                                  tabText: 'Complete'),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              12, 12, 12, 12),
-                          // decoration: const BoxDecoration(
-                          //   // color: Colors.white70,
-                          //   // borderRadius: BorderRadius.circular(8),
-                          // ),
-                          child: TextField(
-                            controller: _searchKeywordController,
-                            onChanged: (searchKeyword) {
-                              if (tabIndex == 0) {
-                                tasksServices.runFilter(searchKeyword,
-                                    tasksServices.tasksCustomerSelection);
-                              } else if (tabIndex == 1) {
-                                tasksServices.runFilter(searchKeyword,
-                                    tasksServices.tasksCustomerProgress);
-                              } else if (tabIndex == 2) {
-                                tasksServices.runFilter(searchKeyword,
-                                    tasksServices.tasksCustomerComplete);
-                              }
+                        // changeTab(controller.index);
+                        if (!controller.indexIsChanging) {
+                          // print(controller.index);
+                        }
+                      });
+                      return Column(
+                        children: [
+                          TabBar(
+                            labelColor: Colors.white,
+                            labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                            indicatorColor: const Color(0xFF47CBE4),
+                            indicatorWeight: 3,
+                            // isScrollable: true,
+                            onTap: (index) {
+                              _searchKeywordController.clear();
+                              tabIndex = index;
+                              // print(index);
+                              // changeTab(index); //temp disable
+                              // if (index == 0) {
+                              //   tasksServices.resetFilter(
+                              //       tasksServices.tasksCustomerSelection);
+                              // } else if (index == 1) {
+                              //   tasksServices.resetFilter(
+                              //       tasksServices.tasksCustomerProgress);
+                              // } else if (index == 2) {
+                              //   tasksServices.resetFilter(
+                              //       tasksServices.tasksCustomerComplete);
+                              // }
                             },
-                            decoration: const InputDecoration(
-                              hintText: '[Find task by Title...]',
-                              hintStyle:
-                              TextStyle(fontSize: 15.0, color: Colors.white),
-                              labelStyle:
-                              TextStyle(fontSize: 17.0, color: Colors.white),
-                              labelText: 'Search',
-                              suffixIcon: Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
+                            tabs: [
+                              Tab(
+                                child: BadgeTab(
+                                  taskCount: tasksServices.tasksCustomerSelection.length,
+                                  tabText: 'Selection',
                                 ),
                               ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
+                              Tab(
+                                child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
                               ),
-                            ),
-                            style:
-                            FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              lineHeight: 2,
-                            ),
+                              Tab(
+                                child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Complete'),
+                              ),
+                            ],
                           ),
-                        ),
-                        tasksServices.isLoading
-                            ? const LoadIndicator()
-                            : Expanded(
-
-                          child: NotificationListener(
-                              onNotification: (scrollNotification) {
-                                // onTabChanged(tabIndex);
-                                // late int index = 0;
-                                if (scrollNotification is ScrollUpdateNotification) {
-
-                                  late int width = MediaQuery.of(context).size.width.round();
-                                  late int metrics = scrollNotification.metrics.pixels.round();
-                                  print('metrics: ${metrics}   width: $width');
-                                  setState(() {
-                                    if (metrics == 0) {
-                                      print('first');
-                                      onTabChanged(0);
-                                    } else if (metrics < width) {
-                                      print('second');
-                                      onTabChanged(1);
-                                    } else if (metrics < width + width) {
-                                      print('third');
-                                      onTabChanged(2);
-                                    } else if (metrics > (width)) {
-                                      print('forth');
-                                      onTabChanged(1);
-                                    }
-                                  });
-                                  // print(tabIndex);
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                            // decoration: const BoxDecoration(
+                            //   // color: Colors.white70,
+                            //   // borderRadius: BorderRadius.circular(8),
+                            // ),
+                            child: TextField(
+                              controller: _searchKeywordController,
+                              onChanged: (searchKeyword) {
+                                if (tabIndex == 0) {
+                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerSelection);
+                                } else if (tabIndex == 1) {
+                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerProgress);
+                                } else if (tabIndex == 2) {
+                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerComplete);
                                 }
-                                return false;
                               },
-                            child: const TabBarView(
-                              children: [
-                                mySubmitterTabWidget(
-                                  tabName: 'selection',
-                                ), //new
-                                mySubmitterTabWidget(
-                                  tabName: 'progress',
-                                ), //agreed
-                                mySubmitterTabWidget(
-                                  tabName: 'complete',
-                                ), //completed & canceled
-                              ],
+                              decoration: const InputDecoration(
+                                hintText: '[Find task by Title...]',
+                                hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                                labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                                labelText: 'Search',
+                                suffixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4.0),
+                                    topRight: Radius.circular(4.0),
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4.0),
+                                    topRight: Radius.circular(4.0),
+                                  ),
+                                ),
+                              ),
+                              style: FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    lineHeight: 2,
+                                  ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  })
-                ),
+                          tasksServices.isLoading
+                              ? const LoadIndicator()
+                              : Expanded(
+                                  child: NotificationListener(
+                                    onNotification: (scrollNotification) {
+                                      // changeTab(tabIndex);
+                                      // late int index = 0;
+                                      if (scrollNotification is ScrollUpdateNotification) {
+                                        late double tabWidth = MediaQuery.of(context).size.width;
+                                        late double metrics = scrollNotification.metrics.pixels;
+                                        print('metrics: ${metrics}   tabWidth: $tabWidth');
+                                        setState(() {
+                                          if ((metrics <= tabWidth / 5 && savedIndex == 0) || (metrics < tabWidth && savedIndex == 1)) {
+                                            print('first');
+                                            debounceChangeTab.debounce(() {
+                                              changeTab(0);
+                                            });
+                                          } else if ((metrics > tabWidth / 5 && savedIndex == 0) ||
+                                              (metrics > tabWidth && metrics < tabWidth - (tabWidth / 5) && savedIndex == 2)) {
+                                            print('second');
+                                            debounceChangeTab.debounce(() {
+                                              changeTab(1);
+                                            });
+                                          } else if ((metrics > tabWidth + (tabWidth / 5) && savedIndex == 1) ||
+                                              (metrics < tabWidth * 2 - (tabWidth / 5) && savedIndex == 3)) {
+                                            print('third');
+                                            debounceChangeTab.debounce(() {
+                                              changeTab(2);
+                                            });
+                                          } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && savedIndex == 2)) {
+                                            print('forth');
+                                            debounceChangeTab.debounce(() {
+                                              changeTab(3);
+                                            });
+                                          }
+                                        });
+                                        // print(tabIndex);
+                                      }
+                                      return false;
+                                    },
+                                    child: const TabBarView(
+                                      children: [
+                                        mySubmitterTabWidget(
+                                          tabName: 'selection',
+                                        ), //new
+                                        mySubmitterTabWidget(
+                                          tabName: 'progress',
+                                        ), //agreed
+                                        mySubmitterTabWidget(
+                                          tabName: 'complete',
+                                        ), //completed & canceled
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      );
+                    })),
               ),
             ],
           ),
         )
         // .animated([animationsMap['containerOnPageLoadAnimation']!]),
         );
-
-
   }
 }
 
@@ -413,23 +393,12 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       //   // Toggle light when tapped.
                       // });
 
-                      if (tasksServices.filterResults.values
-                              .toList()
-                              .elementAt(index) !=
-                          null) {
+                      if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
                         showDialog(
                             context: context,
-                            builder: (context) => TaskInformationDialog(
-                                fromPage: 'customer',
-                                task: objList[index],
-                                shimmerEnabled: false));
-                        final String taskAddress = tasksServices
-                            .filterResults.values
-                            .toList()[index]
-                            .taskAddress
-                            .toString();
-                        RouteInformation routeInfo = RouteInformation(
-                            location: '/customer/$taskAddress');
+                            builder: (context) => TaskInformationDialog(fromPage: 'customer', task: objList[index], shimmerEnabled: false));
+                        final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                        RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
                         Beamer.of(context).updateRouteInformation(routeInfo);
                         // context.popToNamed('/customer/$taskAddress');
                         // context.beamToNamed('/customer/$taskAddress');
