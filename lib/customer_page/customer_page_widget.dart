@@ -70,6 +70,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   int tabIndex = 0;
   int savedIndex = 999;
   bool firstLoad = true;
+  double prevMetrics = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +89,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
       firstLoad = false;
     }
-
-    void changeTab(index) {
+    void changeTab(index, metrics) {
       if (tabIndex != index) {
         if (index == 0) {
           tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
@@ -99,12 +99,13 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
         }
         tabIndex = index;
+        prevMetrics = metrics;
         print('saved index changed to: $index');
       }
     }
 
     if (_searchKeywordController.text.isEmpty) {
-      changeTab(tabIndex); //temp disable
+      changeTab(tabIndex, 0); //temp disable
       // if (tabIndex == 0) {
       //   tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
       // } else if (tabIndex == 1) {
@@ -305,27 +306,30 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                         late double metrics = scrollNotification.metrics.pixels;
                                         print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
                                         setState(() {
-                                          if ((metrics < tabWidth - (tabWidth / 5) && (tabIndex >= 1))) {
+                                          if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
                                             print('first');
                                             debounceChangeTab0.throttle(() {
-                                              changeTab(0);
+                                              changeTab(0, metrics);
                                             });
                                           } else if (((metrics > tabWidth / 5 && tabIndex == 0) && (metrics < tabWidth + (tabWidth / 5))) ||
-                                              (metrics > tabWidth && metrics < tabWidth * 2 - (tabWidth / 5) && tabIndex == 2)) {
+                                              (metrics > tabWidth &&
+                                                  metrics < tabWidth * 2 - (tabWidth / 5) &&
+                                                  tabIndex == 2 &&
+                                                  prevMetrics < metrics)) {
                                             print('second');
                                             debounceChangeTab1.throttle(() {
-                                              changeTab(1);
+                                              changeTab(1, metrics);
                                             });
                                           } else if ((metrics > tabWidth + (tabWidth / 5)) ||
                                               (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3)) {
                                             print('third');
                                             debounceChangeTab2.throttle(() {
-                                              changeTab(2);
+                                              changeTab(2, metrics);
                                             });
                                           } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
                                             print('forth');
                                             debounceChangeTab3.throttle(() {
-                                              changeTab(3);
+                                              changeTab(3, metrics);
                                             });
                                           }
                                         });
