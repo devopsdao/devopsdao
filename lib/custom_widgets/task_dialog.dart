@@ -96,8 +96,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    final double maxDialogWidth = interface.maxDialogWidth;
     task = widget.task;
     final double borderRadius = interface.borderRadius;
 
@@ -144,7 +144,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Container(
                     padding: const EdgeInsets.all(20),
-                    width: 400,
+                    width: maxDialogWidth,
                     child: Row(
                       children: [
                         SizedBox(
@@ -289,7 +289,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     height: screenSize,
                     // width: constraints.maxWidth * .8,
                     // height: 550,
-                    width: 400,
+                    width: maxDialogWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(9),
                       image: DecorationImage(
@@ -360,6 +360,8 @@ class _DialogPagesState extends State<DialogPages> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
+
+    final double maxInternalWidth = interface.maxInternalDialogWidth;
 
     interface.taskMessage = messageForStateController!.text;
 
@@ -437,27 +439,6 @@ class _DialogPagesState extends State<DialogPages> {
       };
     }
 
-    // if (task.taskState == 'new' && fromPage == 'tasks') {
-    //   messageHint = 'Write why you are the best Performer for this task';
-    // } else if (task.taskState == 'new' && fromPage == 'customer') {
-    //   messageHint = 'Write why you have selected this Performer';
-    // } else if (task.taskState == 'agreed') {
-    //   messageHint = 'Write about your implementation plans';
-    // } else if (task.taskState == 'progress') {
-    //   messageHint = 'Write your request for review to the Customer';
-    // } else if (task.taskState == 'review') {
-    //   messageHint = 'Write your review signature notes to the Performer';
-    // } else if (task.taskState == 'audit' && task.auditState == 'requested') {
-    //   messageHint = 'Write your request for audit to the Auditor';
-    // } else if (task.taskState == 'audit' && task.auditState == 'performing') {
-    //   messageHint = 'Write a tip for your selected Auditor';
-    // } else if (task.taskState == 'audit' && task.auditState == 'finished') {
-    //   messageHint = 'Write your Audit decision reasoning';
-    // } else if (task.taskState == 'completed') {
-    //   messageHint = 'Write your thanks message to the Customer';
-    // } else if (task.taskState == 'canceled') {
-    //   messageHint = 'Write your thanks message to the Perfomer';
-    // }
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
       // print (dialogConstraints.maxWidth);
@@ -487,751 +468,784 @@ class _DialogPagesState extends State<DialogPages> {
           //   highlightColor: Colors.grey[100]!,
           //   enabled: shimmerEnabled,
           //   child:
-          Column(
-            children: [
-              Payment(
-                  purpose: 'topup', innerWidth: innerWidth,
-                  borderRadius: widget.borderRadius
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: maxInternalWidth,
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                width: innerWidth + 8,
-                child: Row(
-                  // direction: Axis.horizontal,
-                  // crossAxisAlignment: WrapCrossAlignment.start,
-                  children: [
-                    TaskDialogButton(
-                      // padding: 8.0,
-                      inactive: interface.tokensEntered == 0.0 ? true : false,
-                      buttonName: 'Topup contract',
-                      buttonColorRequired: Colors.lightBlue.shade600,
-                      callback: () {
-                        tasksServices.addTokens(task.taskAddress,
-                            interface.tokensEntered, task.nanoId);
-                        Navigator.pop(context);
-
-                        showDialog(
-                            context: context,
-                            builder: (context) => WalletAction(
-                                  nanoId: task.nanoId,
-                                  taskName: 'addTokens',
-                                ));
-                      },
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          Column(
-            children: [
-              // const SizedBox(height: 50),
-              Center(
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: GestureDetector(
-                    onTap: () {
-                      interface.tasksController.animateToPage(
-                          interface.dialogPages['description']!,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease);
-                    },
-                    child: Container(
-
-                      // height: MediaQuery.of(context).size.width * .08,
-                      // width: MediaQuery.of(context).size.width * .57
-                      width: innerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: ListBody(
-                        children: <Widget>[
-                          // RichText(
-                          //     text: TextSpan(
-                          //         style: DefaultTextStyle.of(context)
-                          //             .style
-                          //             .apply(fontSizeFactor: 1.0),
-                          //         children: <TextSpan>[
-                          //           const TextSpan(
-                          //               text: 'id: \n',
-                          //               style: TextStyle(fontWeight: FontWeight.bold)),
-                          //           TextSpan(text: task.nanoId)
-                          //         ])),
-                          // Container(
-                          //   padding: const EdgeInsets.all(6),
-                          //   child: Text(
-                          //     task.title,
-                          //     textAlign: TextAlign.center,
-                          //     style:
-                          //     const TextStyle(fontWeight: FontWeight.bold),
-                          //   ),
-                          // ),
-                          LayoutBuilder(
-                              builder: (context, constraints) {
-                                final span = TextSpan(
-                                  text: task.description,
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .apply(fontSizeFactor: 1.0),
-                                );
-                                final tp = TextPainter(text: span, maxLines: 3, textDirection: ui.TextDirection.ltr);
-                                tp.layout(maxWidth: constraints.maxWidth);
-                                final numLines = tp.computeLineMetrics().length;
-
-
-                                // final tp =TextPainter(text:span,maxLines: 3,textDirection: TextDirection.ltr);
-                                // tp.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
-                                // print(tp.didExceedMaxLines);
-                                return LimitedBox(
-                                  maxHeight: tp.didExceedMaxLines ? 79: 65,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-
-                                      Container(
-                                          padding: const EdgeInsets.all(7.0),
-                                          // padding: const EdgeInsets.all(3),
-                                          child: RichText(
-                                            maxLines: 3,
-                                              text: span)
-                                      ),
-                                      if(tp.didExceedMaxLines)
-                                        Container(
-                                          alignment: Alignment.center,
-                                            height: 14,
-                                            width: constraints.maxWidth,
-                                            decoration:  const BoxDecoration(
-                                              color: Colors.orangeAccent,
-                                              borderRadius: BorderRadius.only(
-                                                bottomRight: Radius.circular(8.0),
-                                                bottomLeft: Radius.circular(8.0),
-                                              ),
-                                              // borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                                            ),
-                                            child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'Read more ',
-                                                      style: DefaultTextStyle.of(context)
-                                                          .style
-                                                          .apply(fontSizeFactor: 0.8, color: Colors.white),
-                                                    ),
-                                                    const WidgetSpan(
-                                                      child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                                    ),
-                                                  ],
-
-                                                )
-                                            )
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              }),
-
-
-
-                          // ********************** CUSTOMER ROLE ************************* //
-
-
-
-                          // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
-                          // *************************** AUDIT ******************************** //
-
-                          if (task.taskState == "audit" &&
-                              task.auditState == "requested" &&
-                              (fromPage == 'customer' ||
-                                  fromPage == 'performer' ||
-                                  tasksServices.hardhatDebug == true))
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RichText(
-                                  text: TextSpan(
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0),
-                                      children: const <TextSpan>[
-                                    TextSpan(
-                                        text:
-                                            'Warning, this contract on Audit state \n'
-                                            'Please choose auditor: ',
-                                        style: TextStyle(
-                                            height: 2,
-                                            fontWeight: FontWeight.bold)),
-                                  ])),
-                            ),
-                          if (task.taskState == "audit" &&
-                              task.auditState == "performing" &&
-                              (fromPage == 'customer' ||
-                                  fromPage == 'performer' ||
-                                  tasksServices.hardhatDebug == true))
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RichText(
-                                  text: TextSpan(
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0),
-                                      children: <TextSpan>[
-                                    const TextSpan(
-                                        text: 'Your request is being resolved \n'
-                                            'Your auditor: \n',
-                                        style: TextStyle(
-                                            height: 2,
-                                            fontWeight: FontWeight.bold)),
-                                    TextSpan(
-                                        text: task.auditor.toString(),
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 0.7))
-                                  ])),
-                            ),
-                          if (task.taskState == "audit" &&
-                              task.auditState == "requested" &&
-                              (fromPage == 'customer' ||
-                                  fromPage == 'performer' ||
-                                  tasksServices.hardhatDebug == true))
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ParticipantList(
-                                listType: 'audit',
-                                obj: task,
-                              ),
-                            ),
-
-                          // ************************ AUDITOR ROLE ************************** //
-                          // ************************ EMPTY ************************** //
-                        ],
-                      ),
-                    ),
+              child: Column(
+                children: [
+                  Payment(
+                      purpose: 'topup', innerWidth: innerWidth,
+                      borderRadius: widget.borderRadius
                   ),
-                ),
-              ),
-              // const SizedBox(height: 14),
-
-
-
-
-              if (task.taskState == 'completed' &&
-                  (fromPage == 'customer' ||
-                      tasksServices.hardhatDebug == true))
-
-
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    child: Container(
-                      width: innerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                        BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.topLeft,
-                            padding: const EdgeInsets.all(8.0),
-                            child: RichText(
-                                text: TextSpan(
-                                  style: DefaultTextStyle.of(context)
-                                    .style
-                                    .apply(fontSizeFactor: 1.0),
-                                  children: const <TextSpan>[
-                                    TextSpan(
-                                      text: 'Rate the task:',
-                                      style: TextStyle(
-                                          height: 2,
-                                          fontWeight: FontWeight.bold)),
-                                  ])),
-                          ),
-
-                          Container(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  // RatingBar.builder(
-                                  //   initialRating: 4,
-                                  //   minRating: 1,
-                                  //   direction: Axis.horizontal,
-                                  //   allowHalfRating: true,
-                                  //   itemCount: 5,
-                                  //   itemPadding: const EdgeInsets.symmetric(
-                                  //       horizontal: 5.0),
-                                  //   itemBuilder: (context, _) => const Icon(
-                                  //     Icons.star,
-                                  //     color: Colors.amber,
-                                  //   ),
-                                  //   itemSize: 30.0,
-                                  //   onRatingUpdate: (rating) {
-                                  //     setState(() {
-                                  //       enableRatingButton = true;
-                                  //     });
-                                  //     ratingScore = rating;
-                                  //     tasksServices.myNotifyListeners();
-                                  //   },
-                                  // ),
-                                  RateAnimatedWidget()
-                                ]),
-                          ),
-                        ],
-                      )
-                    ),
-                  ),
-                ),
-
-
-
-
-              if (task.taskState == "new" &&
-                  task.participants.isNotEmpty &&
-                  (fromPage == 'customer' || tasksServices.hardhatDebug == true)
-              // && task.participants.isNotEmpty
-              )
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: // Shimmer.fromColors(
-                            //     baseColor: Colors.grey[300]!,
-                            //     highlightColor: Colors.grey[100]!,
-                            //     enabled: shimmerEnabled,
-                            //     child:
-                            BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: ListBody(
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            child: RichText(
-                                text: TextSpan(
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 1.0),
-                                    children: const <TextSpan>[
-                                  TextSpan(
-                                      text: 'Choose contractor: ',
-                                      style: TextStyle(
-                                          height: 1,
-                                          fontWeight: FontWeight.bold)),
-                                ])),
-                          ),
-                          ParticipantList(
-                            listType: 'customer',
-                            obj: task,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              // const SizedBox(height: 14),
-              // if (!FocusScope.of(context).hasFocus)
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                    width: innerWidth + 8,
                     child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: ListBody(
-                          children: <Widget>[
-                            RichText(
-                                text: TextSpan(
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 1.0),
-                                    children: <TextSpan>[
-                                  TextSpan(
-                                      text: '${task.contractValue} DEV \n',
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0)),
-                                  TextSpan(
-                                      text: '${task.contractValueToken} aUSDC',
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0))
-                                ])),
-                          ],
-                        )),
-                        if (fromPage == 'customer' ||
-                            tasksServices.hardhatDebug == true)
-                          TaskDialogButton(
-                            padding: 6.0,
-                            inactive: false,
-                            buttonName: 'Topup',
-                            buttonColorRequired: Colors.lightBlue.shade600,
-                            callback: () {
-                              interface.tasksController.animateToPage(
-                                  interface.dialogPages['topup']!,
-                                  duration: const Duration(milliseconds: 400),
-                                  curve: Curves.ease);
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (context) => AlertDialog(
-                              //           title: const Text('Topup contract'),
-                              //           // backgroundColor: Colors.black,
-                              //           content: const Payment(
-                              //             purpose: 'topup',
-                              //           ),
-                              //           actions: [
-                              //             TextButton(
-                              //               onPressed: () {
-                              //                 tasksServices.addTokens(
-                              //                     task.taskAddress,
-                              //                     interface.tokensEntered,
-                              //                     task.nanoId);
-                              //                 Navigator.pop(context);
-                              //
-                              //                 showDialog(
-                              //                     context: context,
-                              //                     builder: (context) =>
-                              //                         WalletAction(
-                              //                           nanoId: task.nanoId,
-                              //                           taskName: 'addTokens',
-                              //                         ));
-                              //               },
-                              //               style: TextButton.styleFrom(
-                              //                   primary: Colors.white,
-                              //                   backgroundColor: Colors.green),
-                              //               child: const Text('Topup contract'),
-                              //             ),
-                              //             TextButton(
-                              //                 child: const Text('Close'),
-                              //                 onPressed: () =>
-                              //                     context.beamToNamed('/tasks')
-                              //                 // Navigator.pop(context),
-                              //                 ),
-                              //           ],
-                              //         )
-                              // );
-                            },
-                          ),
+                      // direction: Axis.horizontal,
+                      // crossAxisAlignment: WrapCrossAlignment.start,
+                      children: [
+                        TaskDialogButton(
+                          // padding: 8.0,
+                          inactive: interface.tokensEntered == 0.0 ? true : false,
+                          buttonName: 'Topup contract',
+                          buttonColorRequired: Colors.lightBlue.shade600,
+                          callback: () {
+                            tasksServices.addTokens(task.taskAddress,
+                                interface.tokensEntered, task.nanoId);
+                            Navigator.pop(context);
+
+                            showDialog(
+                                context: context,
+                                builder: (context) => WalletAction(
+                                      nanoId: task.nanoId,
+                                      taskName: 'addTokens',
+                                    ));
+                          },
+                        ),
                       ],
                     ),
-                  ),
-                ),
+                  )
+                ],
               ),
-              // ChooseWalletButton(
-              //   active: tasksServices.platform == 'mobile' ? true : false,
-              //   buttonName: 'metamask',
-              //   borderRadius: widget.borderRadius,
-              // ),
-              // const SizedBox(height: 14),
-              if (tasksServices.publicAddress != null &&
-                  tasksServices.validChainID &&
-                  (interface.dialogProcess['buttonName'] != '-'))
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
+            ),
+          ),
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: maxInternalWidth,
+              ),
+              child: Column(
+                children: [
+                  // const SizedBox(height: 50),
+                  Material(
                     elevation: 10,
                     borderRadius: BorderRadius.circular(widget.borderRadius),
-                    child: Container(
-                      // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: TextFormField(
-                        controller: messageForStateController,
-                        // onChanged: (_) => EasyDebounce.debounce(
-                        //   'messageForStateController',
-                        //   Duration(milliseconds: 2000),
-                        //   () => setState(() {}),
-                        // ),
-                        autofocus: false,
-                        obscureText: false,
-                        onTapOutside: (test) {
-                          FocusScope.of(context).unfocus();
-                          interface.taskMessage =
-                              messageForStateController!.text;
-                        },
+                    child: GestureDetector(
+                      onTap: () {
+                        interface.tasksController.animateToPage(
+                            interface.dialogPages['description']!,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      },
+                      child: Container(
 
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              interface.tasksController.animateToPage(
-                                  interface.dialogPages['chat']!,
-                                  duration: const Duration(milliseconds: 600),
-                                  curve: Curves.ease);
-                            },
-                            icon: const Icon(Icons.chat),
-                            // focusColor: Colors.black  ,
-                            highlightColor: Colors.grey,
-                            // disabledColor: Colors.red,
-                            hoverColor: Colors.transparent,
-                            color: Colors.blueAccent,
-                            // splashColor: Colors.black,
+                        // height: MediaQuery.of(context).size.width * .08,
+                        // width: MediaQuery.of(context).size.width * .57
+                        width: innerWidth,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(widget.borderRadius),
+                        ),
+                        child: ListBody(
+                          children: <Widget>[
+                            // RichText(
+                            //     text: TextSpan(
+                            //         style: DefaultTextStyle.of(context)
+                            //             .style
+                            //             .apply(fontSizeFactor: 1.0),
+                            //         children: <TextSpan>[
+                            //           const TextSpan(
+                            //               text: 'id: \n',
+                            //               style: TextStyle(fontWeight: FontWeight.bold)),
+                            //           TextSpan(text: task.nanoId)
+                            //         ])),
+                            // Container(
+                            //   padding: const EdgeInsets.all(6),
+                            //   child: Text(
+                            //     task.title,
+                            //     textAlign: TextAlign.center,
+                            //     style:
+                            //     const TextStyle(fontWeight: FontWeight.bold),
+                            //   ),
+                            // ),
+                            LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final span = TextSpan(
+                                    text: task.description,
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                  );
+                                  final tp = TextPainter(text: span, maxLines: 3, textDirection: ui.TextDirection.ltr);
+                                  tp.layout(maxWidth: constraints.maxWidth);
+                                  final numLines = tp.computeLineMetrics().length;
+
+
+                                  // final tp =TextPainter(text:span,maxLines: 3,textDirection: TextDirection.ltr);
+                                  // tp.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
+                                  // print(tp.didExceedMaxLines);
+                                  return LimitedBox(
+                                    maxHeight: tp.didExceedMaxLines ? 79: 65,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+
+                                        Container(
+                                            padding: const EdgeInsets.all(7.0),
+                                            // padding: const EdgeInsets.all(3),
+                                            child: RichText(
+                                              maxLines: 3,
+                                                text: span)
+                                        ),
+                                        if(tp.didExceedMaxLines)
+                                          Container(
+                                            alignment: Alignment.center,
+                                              height: 14,
+                                              width: constraints.maxWidth,
+                                              decoration:  const BoxDecoration(
+                                                color: Colors.orangeAccent,
+                                                borderRadius: BorderRadius.only(
+                                                  bottomRight: Radius.circular(8.0),
+                                                  bottomLeft: Radius.circular(8.0),
+                                                ),
+                                                // borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                              ),
+                                              child: RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: 'Read more ',
+                                                        style: DefaultTextStyle.of(context)
+                                                            .style
+                                                            .apply(fontSizeFactor: 0.8, color: Colors.white),
+                                                      ),
+                                                      const WidgetSpan(
+                                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                                      ),
+                                                    ],
+
+                                                  )
+                                              )
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+
+
+
+                            // ********************** CUSTOMER ROLE ************************* //
+
+
+
+                            // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
+                            // *************************** AUDIT ******************************** //
+
+                            if (task.taskState == "audit" &&
+                                task.auditState == "requested" &&
+                                (fromPage == 'customer' ||
+                                    fromPage == 'performer' ||
+                                    tasksServices.hardhatDebug == true))
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RichText(
+                                    text: TextSpan(
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 1.0),
+                                        children: const <TextSpan>[
+                                      TextSpan(
+                                          text:
+                                              'Warning, this contract on Audit state \n'
+                                              'Please choose auditor: ',
+                                          style: TextStyle(
+                                              height: 2,
+                                              fontWeight: FontWeight.bold)),
+                                    ])),
+                              ),
+                            if (task.taskState == "audit" &&
+                                task.auditState == "performing" &&
+                                (fromPage == 'customer' ||
+                                    fromPage == 'performer' ||
+                                    tasksServices.hardhatDebug == true))
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RichText(
+                                    text: TextSpan(
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 1.0),
+                                        children: <TextSpan>[
+                                      const TextSpan(
+                                          text: 'Your request is being resolved \n'
+                                              'Your auditor: \n',
+                                          style: TextStyle(
+                                              height: 2,
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text: task.auditor.toString(),
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 0.7))
+                                    ])),
+                              ),
+                            if (task.taskState == "audit" &&
+                                task.auditState == "requested" &&
+                                (fromPage == 'customer' ||
+                                    fromPage == 'performer' ||
+                                    tasksServices.hardhatDebug == true))
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ParticipantList(
+                                  listType: 'audit',
+                                  obj: task,
+                                ),
+                              ),
+
+                            // ************************ AUDITOR ROLE ************************** //
+                            // ************************ EMPTY ************************** //
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // const SizedBox(height: 14),
+
+
+
+
+                  if (task.taskState == 'completed' &&
+                      (fromPage == 'customer' ||
+                          tasksServices.hardhatDebug == true))
+
+
+                    Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(widget.borderRadius),
                           ),
-                          labelText: interface.dialogProcess['labelMessage'],
-                          labelStyle: const TextStyle(
-                              fontSize: 17.0, color: Colors.black54),
-                          hintText: '[Enter your message here..]',
-                          hintStyle: const TextStyle(
-                              fontSize: 14.0, color: Colors.black54),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide.none,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.topLeft,
+                                padding: const EdgeInsets.all(8.0),
+                                child: RichText(
+                                    text: TextSpan(
+                                      style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(fontSizeFactor: 1.0),
+                                      children: const <TextSpan>[
+                                        TextSpan(
+                                          text: 'Rate the task:',
+                                          style: TextStyle(
+                                              height: 2,
+                                              fontWeight: FontWeight.bold)),
+                                      ])),
+                              ),
+
+                              Container(
+                                padding: const EdgeInsets.all(1.0),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: const [
+                                      // RatingBar.builder(
+                                      //   initialRating: 4,
+                                      //   minRating: 1,
+                                      //   direction: Axis.horizontal,
+                                      //   allowHalfRating: true,
+                                      //   itemCount: 5,
+                                      //   itemPadding: const EdgeInsets.symmetric(
+                                      //       horizontal: 5.0),
+                                      //   itemBuilder: (context, _) => const Icon(
+                                      //     Icons.star,
+                                      //     color: Colors.amber,
+                                      //   ),
+                                      //   itemSize: 30.0,
+                                      //   onRatingUpdate: (rating) {
+                                      //     setState(() {
+                                      //       enableRatingButton = true;
+                                      //     });
+                                      //     ratingScore = rating;
+                                      //     tasksServices.myNotifyListeners();
+                                      //   },
+                                      // ),
+                                      RateAnimatedWidget()
+                                    ]),
+                              ),
+                            ],
+                          )
+                        ),
+                      ),
+                    ),
+
+
+
+
+                  if (task.taskState == "new" &&
+                      task.participants.isNotEmpty &&
+                      (fromPage == 'customer' || tasksServices.hardhatDebug == true)
+                  // && task.participants.isNotEmpty
+                  )
+                    Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: // Shimmer.fromColors(
+                                //     baseColor: Colors.grey[300]!,
+                                //     highlightColor: Colors.grey[100]!,
+                                //     enabled: shimmerEnabled,
+                                //     child:
+                                BorderRadius.circular(widget.borderRadius),
                           ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide.none,
+                          child: ListBody(
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                child: RichText(
+                                    text: TextSpan(
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 1.0),
+                                        children: const <TextSpan>[
+                                      TextSpan(
+                                          text: 'Choose contractor: ',
+                                          style: TextStyle(
+                                              height: 1,
+                                              fontWeight: FontWeight.bold)),
+                                    ])),
+                              ),
+                              ParticipantList(
+                                listType: 'customer',
+                                obj: task,
+                              ),
+                            ],
                           ),
                         ),
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.black87,
-                              lineHeight: null,
+                      ),
+                    ),
+                  // const SizedBox(height: 14),
+                  // if (!FocusScope.of(context).hasFocus)
+                  Container(
+                    padding: const EdgeInsets.only(top: 14.0),
+                    child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        width: innerWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                                child: ListBody(
+                              children: <Widget>[
+                                RichText(
+                                    text: TextSpan(
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 1.0),
+                                        children: <TextSpan>[
+                                      TextSpan(
+                                          text: '${task.contractValue} DEV \n',
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 1.0)),
+                                      TextSpan(
+                                          text: '${task.contractValueToken} aUSDC',
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .apply(fontSizeFactor: 1.0))
+                                    ])),
+                              ],
+                            )),
+                            if (fromPage == 'customer' ||
+                                tasksServices.hardhatDebug == true)
+                              TaskDialogButton(
+                                padding: 6.0,
+                                inactive: false,
+                                buttonName: 'Topup',
+                                buttonColorRequired: Colors.lightBlue.shade600,
+                                callback: () {
+                                  interface.tasksController.animateToPage(
+                                      interface.dialogPages['topup']!,
+                                      duration: const Duration(milliseconds: 400),
+                                      curve: Curves.ease);
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (context) => AlertDialog(
+                                  //           title: const Text('Topup contract'),
+                                  //           // backgroundColor: Colors.black,
+                                  //           content: const Payment(
+                                  //             purpose: 'topup',
+                                  //           ),
+                                  //           actions: [
+                                  //             TextButton(
+                                  //               onPressed: () {
+                                  //                 tasksServices.addTokens(
+                                  //                     task.taskAddress,
+                                  //                     interface.tokensEntered,
+                                  //                     task.nanoId);
+                                  //                 Navigator.pop(context);
+                                  //
+                                  //                 showDialog(
+                                  //                     context: context,
+                                  //                     builder: (context) =>
+                                  //                         WalletAction(
+                                  //                           nanoId: task.nanoId,
+                                  //                           taskName: 'addTokens',
+                                  //                         ));
+                                  //               },
+                                  //               style: TextButton.styleFrom(
+                                  //                   primary: Colors.white,
+                                  //                   backgroundColor: Colors.green),
+                                  //               child: const Text('Topup contract'),
+                                  //             ),
+                                  //             TextButton(
+                                  //                 child: const Text('Close'),
+                                  //                 onPressed: () =>
+                                  //                     context.beamToNamed('/tasks')
+                                  //                 // Navigator.pop(context),
+                                  //                 ),
+                                  //           ],
+                                  //         )
+                                  // );
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // ChooseWalletButton(
+                  //   active: tasksServices.platform == 'mobile' ? true : false,
+                  //   buttonName: 'metamask',
+                  //   borderRadius: widget.borderRadius,
+                  // ),
+                  // const SizedBox(height: 14),
+                  if (tasksServices.publicAddress != null &&
+                    tasksServices.validChainID &&
+                    (
+                    // interface.dialogProcess['buttonName'] == '-' ||
+                    interface.dialogProcess['buttonName'] == 'Participate' ||
+                    interface.dialogProcess['buttonName'] == 'Start the task' ||
+                    interface.dialogProcess['buttonName'] == 'Review' ||
+                    interface.dialogProcess['buttonName'] == 'In favor of' ||
+                    interface.dialogProcess['buttonName'] == 'Sign Review')
+                  )
+                    Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                          // constraints: const BoxConstraints(maxHeight: 500),
+                          padding: const EdgeInsets.all(8.0),
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(widget.borderRadius),
+                          ),
+                          child: TextFormField(
+                            controller: messageForStateController,
+                            // onChanged: (_) => EasyDebounce.debounce(
+                            //   'messageForStateController',
+                            //   Duration(milliseconds: 2000),
+                            //   () => setState(() {}),
+                            // ),
+                            autofocus: false,
+                            obscureText: false,
+                            onTapOutside: (test) {
+                              FocusScope.of(context).unfocus();
+                              interface.taskMessage =
+                                  messageForStateController!.text;
+                            },
+
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  interface.tasksController.animateToPage(
+                                      interface.dialogPages['chat']!,
+                                      duration: const Duration(milliseconds: 600),
+                                      curve: Curves.ease);
+                                },
+                                icon: const Icon(Icons.chat),
+                                // focusColor: Colors.black  ,
+                                highlightColor: Colors.grey,
+                                // disabledColor: Colors.red,
+                                hoverColor: Colors.transparent,
+                                color: Colors.blueAccent,
+                                // splashColor: Colors.black,
+                              ),
+                              labelText: interface.dialogProcess['labelMessage'],
+                              labelStyle: const TextStyle(
+                                  fontSize: 17.0, color: Colors.black54),
+                              hintText: '[Enter your message here..]',
+                              hintStyle: const TextStyle(
+                                  fontSize: 14.0, color: Colors.black54),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
                             ),
-                        minLines: 1,
-                        maxLines: 3,
+                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black87,
+                                  lineHeight: null,
+                                ),
+                            minLines: 1,
+                            maxLines: 3,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
+                  // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
-              if (task.taskState == 'completed' &&
-                  (fromPage == 'performer' ||
-                      tasksServices.hardhatDebug == true) &&
-                  (task.contractValue != 0 || task.contractValueToken != 0))
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    child: Container(
-                      // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
+                  if (task.taskState == 'completed' &&
+                      (fromPage == 'performer' ||
+                          tasksServices.hardhatDebug == true) &&
+                      (task.contractValue != 0 || task.contractValueToken != 0))
+                    Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                          // constraints: const BoxConstraints(maxHeight: 500),
+                          padding: const EdgeInsets.all(8.0),
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(widget.borderRadius),
+                          ),
+                          child: SelectNetworkMenu(object: task),
+                        ),
+                      ),
+                    ),
+
+                  // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
+                  const Spacer(),
+
+                  DialogButtonSetOnFirstPage(
+                      task: task,
+                      fromPage: fromPage,
                       width: innerWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: SelectNetworkMenu(object: task),
-                    ),
-                  ),
-                ),
-
-              // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
-              const Spacer(),
-
-              DialogButtonSetOnFirstPage(
-                  task: task,
-                  fromPage: fromPage,
-                  width: innerWidth,
-                  enableRatingButton: enableRatingButton)
-            ],
+                      enableRatingButton: enableRatingButton)
+                ],
+              ),
+            ),
           ),
           // Shimmer.fromColors(
           //     baseColor: Colors.grey[300]!,
           //     highlightColor: Colors.grey[100]!,
           //     enabled: shimmerEnabled,
           //     child:
-          Column(
-            children: [
-              Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: GestureDetector(
-                      onTap: () {
-                        interface.tasksController.animateToPage(
-                            interface.dialogPages['chat']!,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease);
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                              padding: const EdgeInsets.all(8.0),
-                              // height: MediaQuery.of(context).size.width * .08,
-                              // width: MediaQuery.of(context).size.width * .57
-                              width: innerWidth,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(widget.borderRadius),
-                              ),
-                              child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  child: RichText(
-                                      text: TextSpan(
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 1.0),
-                                          children: <TextSpan>[
-                                        TextSpan(
-                                          text: task.description,
-                                        )
-                                      ])))),
-                          // const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            child: RichText(
-                                text: TextSpan(
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(fontSizeFactor: 1.0),
-                                    children: <TextSpan>[
-                                  const TextSpan(
-                                      text: 'Created: ',
-                                      style: TextStyle(
-                                          height: 2,
-                                          fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                      text: DateFormat('MM/dd/yyyy, hh:mm a')
-                                          .format(task.createTime),
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0))
-                                ])),
-                          ),
-                        ],
-                      ))),
-
-              // const SizedBox(height: 14),
-              Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: maxInternalWidth,
+              ),
+              child: Column(
+                children: [
+                  Material(
                       elevation: 10,
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: GestureDetector(
-                          child: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              // height: MediaQuery.of(context).size.width * .08,
-                              // width: MediaQuery.of(context).size.width * .57
-                              width: innerWidth,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(widget.borderRadius),
-                              ),
-                              child: ListBody(children: <Widget>[
-                                RichText(
+                          onTap: () {
+                            interface.tasksController.animateToPage(
+                                interface.dialogPages['chat']!,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.ease);
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  // height: MediaQuery.of(context).size.width * .08,
+                                  // width: MediaQuery.of(context).size.width * .57
+                                  width: innerWidth,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(widget.borderRadius),
+                                  ),
+                                  child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      child: RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                              text: task.description,
+                                            )
+                                          ])))),
+                              // const Spacer(),
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                child: RichText(
                                     text: TextSpan(
                                         style: DefaultTextStyle.of(context)
                                             .style
                                             .apply(fontSizeFactor: 1.0),
                                         children: <TextSpan>[
                                       const TextSpan(
-                                          text: 'Contract owner: \n',
-                                          style: TextStyle(
-                                              height: 1,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text: task.contractOwner.toString(),
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 0.7))
-                                    ])),
-                                RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      const TextSpan(
-                                          text: 'Contract address: \n',
+                                          text: 'Created: ',
                                           style: TextStyle(
                                               height: 2,
                                               fontWeight: FontWeight.bold)),
                                       TextSpan(
-                                          text: task.taskAddress.toString(),
+                                          text: DateFormat('MM/dd/yyyy, hh:mm a')
+                                              .format(task.createTime),
                                           style: DefaultTextStyle.of(context)
                                               .style
-                                              .apply(fontSizeFactor: 0.7))
+                                              .apply(fontSizeFactor: 1.0))
                                     ])),
-                                // RichText(
-                                //   text: TextSpan(
-                                //     style: DefaultTextStyle.of(context)
-                                //         .style
-                                //         .apply(fontSizeFactor: 1.0),
-                                //     children: <TextSpan>[
-                                //       const TextSpan(
-                                //           text: 'Created: ',
-                                //           style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                //       TextSpan(
-                                //           text: DateFormat('MM/dd/yyyy, hh:mm a')
-                                //               .format(task.createdTime),
-                                //           style: DefaultTextStyle.of(context)
-                                //               .style
-                                //               .apply(fontSizeFactor: 1.0))
-                                //     ])),
-                              ]))))),
-              // const SizedBox(height: 14),
-              // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
-              // ************************* AUDIT REQUEST ************************* //
-              const Spacer(),
-              if ((fromPage == 'performer' ||
-                  fromPage == 'customer' ||
-                  tasksServices.hardhatDebug == true) &&
-                  (task.taskState == "progress" || task.taskState == "review") &&
-                  task.contractOwner != tasksServices.publicAddress)
-                Container(
-                  padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                  width: innerWidth + 8,
-                  child: TaskDialogButton(
+                              ),
+                            ],
+                          ))),
 
-                    inactive: false,
-                    buttonName: 'Request audit',
-                    buttonColorRequired: Colors.orangeAccent.shade700,
-                    callback: () {
-                      setState(() {
-                        task.justLoaded = false;
-                      });
-                      tasksServices.taskStateChange(
-                          task.taskAddress, task.participant, 'audit', task.nanoId,
-                          message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-                      Navigator.pop(context);
+                  // const SizedBox(height: 14),
+                  Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                          elevation: 10,
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          child: GestureDetector(
+                              child: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  // height: MediaQuery.of(context).size.width * .08,
+                                  // width: MediaQuery.of(context).size.width * .57
+                                  width: innerWidth,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(widget.borderRadius),
+                                  ),
+                                  child: ListBody(children: <Widget>[
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          const TextSpan(
+                                              text: 'Contract owner: \n',
+                                              style: TextStyle(
+                                                  height: 1,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: task.contractOwner.toString(),
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 0.7))
+                                        ])),
+                                    RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                          const TextSpan(
+                                              text: 'Contract address: \n',
+                                              style: TextStyle(
+                                                  height: 2,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: task.taskAddress.toString(),
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 0.7))
+                                        ])),
+                                    // RichText(
+                                    //   text: TextSpan(
+                                    //     style: DefaultTextStyle.of(context)
+                                    //         .style
+                                    //         .apply(fontSizeFactor: 1.0),
+                                    //     children: <TextSpan>[
+                                    //       const TextSpan(
+                                    //           text: 'Created: ',
+                                    //           style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                    //       TextSpan(
+                                    //           text: DateFormat('MM/dd/yyyy, hh:mm a')
+                                    //               .format(task.createdTime),
+                                    //           style: DefaultTextStyle.of(context)
+                                    //               .style
+                                    //               .apply(fontSizeFactor: 1.0))
+                                    //     ])),
+                                  ]))))),
+                  // const SizedBox(height: 14),
+                  // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
+                  // ************************* AUDIT REQUEST ************************* //
+                  const Spacer(),
+                  if ((fromPage == 'performer' ||
+                      fromPage == 'customer' ||
+                      tasksServices.hardhatDebug == true) &&
+                      (task.taskState == "progress" || task.taskState == "review") &&
+                      task.contractOwner != tasksServices.publicAddress)
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                      width: innerWidth + 8,
+                      child: TaskDialogButton(
 
-                      showDialog(
-                          context: context,
-                          builder: (context) => WalletAction(
-                            nanoId: task.nanoId,
-                            taskName: 'taskStateChange',
-                          ));
-                    },
-                  ),
-                )
+                        inactive: false,
+                        buttonName: 'Request audit',
+                        buttonColorRequired: Colors.orangeAccent.shade700,
+                        callback: () {
+                          setState(() {
+                            task.justLoaded = false;
+                          });
+                          tasksServices.taskStateChange(
+                              task.taskAddress, task.participant, 'audit', task.nanoId,
+                              message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                          Navigator.pop(context);
 
-            ],
+                          showDialog(
+                              context: context,
+                              builder: (context) => WalletAction(
+                                nanoId: task.nanoId,
+                                taskName: 'taskStateChange',
+                              ));
+                        },
+                      ),
+                    )
+
+                ],
+              ),
+            ),
           ),
-          Container(
+          Center(
+            child: Container(
               padding: const EdgeInsets.all(12),
               child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                elevation: 10,
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: maxInternalWidth,
+                  ),
                   child: Container(
-                      padding: const EdgeInsets.all(6.0),
-                      // height: MediaQuery.of(context).size.height * .58,
-                      height: widget.topConstraints.maxHeight,
-                      // width: MediaQuery.of(context).size.width * .57
-                      width: innerWidth,
-                      // height: 540,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child:
-                          ChatPage(task: task, tasksServices: tasksServices))))
+                    padding: const EdgeInsets.all(6.0),
+                    // height: widget.topConstraints.maxHeight,
+                    width: innerWidth,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(widget.borderRadius),
+                    ),
+                    child:
+                        ChatPage(task: task, tasksServices: tasksServices)
+                  ),
+                )
+              ),
+            )
+          )
         ],
       );
     });

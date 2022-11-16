@@ -51,8 +51,7 @@ class _ChatPageState extends State<ChatPage> {
       logged = true;
     }
 
-    return Scaffold(
-      body: Chat(
+    return Chat(
         messages: _messages,
         customBottomWidget: !logged ? const NotLoggedInput() : null,
         // onAttachmentPressed: _handleAttachmentPressed,
@@ -67,13 +66,14 @@ class _ChatPageState extends State<ChatPage> {
           // inputClearMode: InputClearMode
         ),
         theme: const DefaultChatTheme(
+
           inputBackgroundColor: Colors.black87,
           inputBorderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
         ),
-      ),
-    );
+      );
+
   }
 
   void _addMessage(types.Message message) {
@@ -355,12 +355,10 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
         ),
         child: Row(
           children: const <Widget>[
-            Expanded(
-              child: Text(
-                'Please connect your wallet',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
+            Text(
+              'Please connect your wallet',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
         ),

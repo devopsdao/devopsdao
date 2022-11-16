@@ -70,15 +70,20 @@ class CreateJobWidget extends StatefulWidget {
 
 class _CreateJobWidgetState extends State<CreateJobWidget> {
 
+
   @override
   Widget build(BuildContext context) {
+    var interface = context.watch<InterfaceServices>();
+    final double maxDialogWidth = interface.maxDialogWidth;
     late String backgroundPicture = "assets/images/niceshape.png";
     final screenSize = widget.screenSize;
 
-    return Column(mainAxisSize: MainAxisSize.min, children: [
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
       Container(
         padding: const EdgeInsets.all(20),
-        width: 400,
+        width: maxDialogWidth,
         child: Row(
           children: [
             const SizedBox(
@@ -157,7 +162,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
         height: screenSize,
         // width: constraints.maxWidth * .8,
         // height: 550,
-        width: 400,
+        width: maxDialogWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9),
           image: DecorationImage(
@@ -190,18 +195,14 @@ class _NewTaskPagesState extends State<NewTaskPages> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
       return PageView(
           scrollDirection: Axis.horizontal,
-          controller: interface.pageViewNewTaskController,
+          // controller: interface.pageViewNewTaskController,
           physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (number) {
-            // interface.example = number;
-            // tasksServices.myNotifyListeners();
           },
           children: <Widget>[
             NewTaskMainPage(topConstraints: widget.topConstraints,
@@ -254,7 +255,9 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    final Color textColor = Colors.black54;
+    final double maxInternalWidth = interface.maxInternalDialogWidth;
+
+    const Color textColor = Colors.black54;
     final double borderRadius = interface.borderRadius;
     final double innerWidth = widget.innerWidth;
 
@@ -263,45 +266,50 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
         Material(
             elevation: 10,
             borderRadius: BorderRadius.circular(borderRadius),
-            child: Container(
-                padding: const EdgeInsets.all(6.0),
-                // height: widget.topConstraints.maxHeight - 200,
-                width: innerWidth,
-                decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadius.circular(borderRadius),
-                ),
-                child: TextFormField(
-                  controller: titleFieldController,
-                  // onChanged: (_) => EasyDebounce.debounce(
-                  //   'titleFieldController',
-                  //   Duration(milliseconds: 2000),
-                  //   () => setState(() {}),
-                  // ),
-                  autofocus: true,
-                  obscureText: false,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
+              ),
+              child: Container(
+                  padding: const EdgeInsets.all(6.0),
+                  // height: widget.topConstraints.maxHeight - 200,
+                  width: innerWidth,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(borderRadius),
+                  ),
+                  child: TextFormField(
+                    controller: titleFieldController,
+                    // onChanged: (_) => EasyDebounce.debounce(
+                    //   'titleFieldController',
+                    //   Duration(milliseconds: 2000),
+                    //   () => setState(() {}),
+                    // ),
+                    autofocus: true,
+                    obscureText: false,
 
-                  decoration: InputDecoration(
-                    labelText: 'Title:',
-                    labelStyle:
-                    TextStyle(fontSize: 17.0, color: textColor),
-                    hintText: '[Enter the Title..]',
-                    hintStyle:
-                    TextStyle(fontSize: 14.0, color: textColor),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide.none,
+                    decoration: const InputDecoration(
+                      labelText: 'Title:',
+                      labelStyle:
+                      TextStyle(fontSize: 17.0, color: textColor),
+                      hintText: '[Enter the Title..]',
+                      hintStyle:
+                      TextStyle(fontSize: 14.0, color: textColor),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
                     ),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide.none,
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                      fontFamily: 'Poppins',
+                      color: textColor,
+                      lineHeight: 1,
                     ),
+                    maxLines: 1,
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                    fontFamily: 'Poppins',
-                    color: textColor,
-                    lineHeight: 2,
-                  ),
-                  maxLines: 1,
-                ),
+              ),
             )
         ),
         Container(
@@ -309,79 +317,98 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
           child: Material(
               elevation: 10,
               borderRadius: BorderRadius.circular(borderRadius),
-              child: Container(
-                padding: const EdgeInsets.all(6.0),
-                // height: widget.topConstraints.maxHeight - 200,
-                width: innerWidth,
-                decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadius.circular(borderRadius),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
                 ),
-                child: TextFormField(
-                  controller: descriptionController,
-                  // onChanged: (_) => EasyDebounce.debounce(
-                  //   'descriptionController',
-                  //   Duration(milliseconds: 2000),
-                  //   () => setState(() {}),
-                  // ),
-                  autofocus: true,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    labelText: 'Description:',
-                    labelStyle:
-                    TextStyle(fontSize: 17.0, color: textColor),
-                    hintText: '[Job description...]',
-                    hintStyle:
-                    TextStyle(fontSize: 14.0, color: textColor),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
+                child: Container(
+                  padding: const EdgeInsets.all(6.0),
+                  // height: widget.topConstraints.maxHeight - 200,
+                  width: innerWidth,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(borderRadius),
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                    fontFamily: 'Poppins',
-                    color: textColor,
-                    lineHeight: 2,
+                  child: TextFormField(
+                    controller: descriptionController,
+                    // onChanged: (_) => EasyDebounce.debounce(
+                    //   'descriptionController',
+                    //   Duration(milliseconds: 2000),
+                    //   () => setState(() {}),
+                    // ),
+                    autofocus: true,
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Description:',
+                      labelStyle:
+                      TextStyle(fontSize: 17.0, color: textColor),
+                      hintText: '[Job description...]',
+                      hintStyle:
+                      TextStyle(fontSize: 14.0, color: textColor),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                      fontFamily: 'Poppins',
+                      color: textColor,
+                      lineHeight: 1,
+                    ),
+                    maxLines: 2,
+                    keyboardType: TextInputType.multiline,
                   ),
-                  maxLines: 4,
-                  keyboardType: TextInputType.multiline,
                 ),
               )
           ),
         ),
         const SizedBox(height: 14),
-        Payment(
-            purpose: 'create', innerWidth: innerWidth,
-            borderRadius: borderRadius
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxInternalWidth,
+          ),
+          child: Payment(
+              purpose: 'create', innerWidth: innerWidth,
+              borderRadius: borderRadius
+          ),
         ),
         const Spacer(),
-        Container(
-          padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-          width: innerWidth + 8,
-          child: TaskDialogButton(
-            inactive: false,
-            buttonName: 'Submit',
-            buttonColorRequired: Colors.lightBlue.shade600,
-            callback: () {
-              final nanoId = customAlphabet(
-                  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
-                  12);
-              tasksServices.createTaskContract(
-                  titleFieldController!.text,
-                  descriptionController!.text,
-                  // valueController!.text,
-                  interface.tokensEntered,
-                  nanoId);
-              Navigator.pop(context);
-              showDialog(
-                  context: context,
-                  builder: (context) => WalletAction(
-                    nanoId: nanoId,
-                    taskName: 'createTaskContract',
-                  ));
-            },
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxInternalWidth,
+          ),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+            width: innerWidth + 8,
+            child: Row(
+              children: [
+                TaskDialogButton(
+                  inactive: false,
+                  buttonName: 'Submit',
+                  buttonColorRequired: Colors.lightBlue.shade600,
+                  callback: () {
+                    final nanoId = customAlphabet(
+                        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
+                        12);
+                    tasksServices.createTaskContract(
+                        titleFieldController!.text,
+                        descriptionController!.text,
+                        // valueController!.text,
+                        interface.tokensEntered,
+                        nanoId);
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (context) => WalletAction(
+                          nanoId: nanoId,
+                          taskName: 'createTaskContract',
+                        ));
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ],

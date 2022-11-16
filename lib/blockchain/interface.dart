@@ -50,6 +50,12 @@ class InterfaceServices extends ChangeNotifier {
 
 
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
+
+
+
+  // -------------------- Sizes for Dialog window ------------------------- //
+final double maxInternalDialogWidth = 480;
+  final double maxDialogWidth = 650;
 }
 
 
