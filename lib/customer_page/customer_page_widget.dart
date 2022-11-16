@@ -47,6 +47,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   @override
   void initState() {
     super.initState();
+
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
@@ -68,7 +69,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   }
 
   int tabIndex = 0;
-  int savedIndex = 999;
+  // int savedIndex = 999;
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +299,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                       if (scrollNotification is ScrollUpdateNotification) {
                                         late double tabWidth = MediaQuery.of(context).size.width;
                                         late double metrics = scrollNotification.metrics.pixels;
-                                        print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
+                                        // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
                                         setState(() {
                                           if ((metrics < tabWidth && (tabIndex > 1))) {
                                             print('first');
