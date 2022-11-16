@@ -288,6 +288,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         ? const LoadIndicator()
                         : const Expanded(
                             child: TabBarView(
+                              physics: NeverScrollableScrollPhysics(),
                               children: [
                                 MyPerformerTabWidget(
                                   tabName: 'applied',

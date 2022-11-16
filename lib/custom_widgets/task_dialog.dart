@@ -6,7 +6,9 @@ import 'package:devopsdao/custom_widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:horizontal_blocked_scroll_physics/horizontal_blocked_scroll_physics.dart';
 import 'package:provider/provider.dart';
+import 'package:webthree/credentials.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
@@ -125,13 +127,13 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
         builder: (context, setState) {
           // ****** Count Screen size with keyboard and without ***** ///
           final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-          final double screenSizeNoKeyboard = constraints.maxHeight - 120;
+          final double screenHeightSizeNoKeyboard = constraints.maxHeight - 120;
           // < 400 ? 330
           // : constraints.maxHeight - 140;
-          final double screenSize = screenSizeNoKeyboard - keyboardSize;
+          final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
           // print('keyboardSize: $keyboardSize');
-          // print('screenSizeNoKeyboard: $screenSizeNoKeyboard');
-          // print('screenSize: $screenSize');
+          // print('screenHeightSizeNoKeyboard: $screenHeightSizeNoKeyboard');
+          // print('screenHeightSize: $screenHeightSize');
           // print('constraints.maxHeight: $constraints.maxHeight');
 
           return WillPopScope(
@@ -151,7 +153,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                           width: 30,
                           child: InkWell(
                             onTap: () {
-                              interface.tasksController.animateToPage(
+                              interface.dialogPagesController.animateToPage(
                                   interface.dialogPages['main']!,
                                   duration: const Duration(milliseconds: 400),
                                   curve: Curves.ease);
@@ -190,7 +192,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                         const Spacer(),
                         Expanded(
                             flex: 10,
-                            child: InkWell(
+                            child: GestureDetector(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -286,7 +288,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                     ),
                   ),
                   Container(
-                    height: screenSize,
+                    height: screenHeightSize,
                     // width: constraints.maxWidth * .8,
                     // height: 550,
                     width: maxDialogWidth,
@@ -303,6 +305,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                       fromPage: widget.fromPage,
                       topConstraints: constraints,
                       shimmerEnabled: shimmerEnabled,
+                        screenHeightSize: screenHeightSize,
+                        screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard
                     ),
                   ),
                 ]),
@@ -321,6 +325,8 @@ class DialogPages extends StatefulWidget {
   final Task task;
   final String fromPage;
   final BoxConstraints topConstraints;
+  final double screenHeightSize;
+  final double screenHeightSizeNoKeyboard;
   bool shimmerEnabled;
 
   DialogPages(
@@ -330,7 +336,10 @@ class DialogPages extends StatefulWidget {
       required this.task,
       required this.fromPage,
       required this.topConstraints,
-      required this.shimmerEnabled})
+      required this.shimmerEnabled,
+
+      required this.screenHeightSize,
+        required this.screenHeightSizeNoKeyboard})
       : super(key: key);
 
   @override
@@ -356,6 +365,8 @@ class _DialogPagesState extends State<DialogPages> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
@@ -368,6 +379,10 @@ class _DialogPagesState extends State<DialogPages> {
     Task task = widget.task;
     String fromPage = widget.fromPage;
     bool shimmerEnabled = widget.shimmerEnabled;
+
+    // Map<String, int> taskPageViewPages = {
+    //
+    // }
 
     if (task.taskState == 'new' && fromPage == 'tasks') {
       interface.dialogProcess = {
@@ -446,9 +461,10 @@ class _DialogPagesState extends State<DialogPages> {
       return PageView(
         scrollDirection: Axis.horizontal,
         // pageSnapping: false,
+        physics: (interface.pageDialogViewNumber == 1 && fromPage != 'customer') ? RightBlockedScrollPhysics() : null,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
-        controller: interface.tasksController,
+        controller: interface.dialogPagesController,
         onPageChanged: (number) {
           interface.pageDialogViewNumber = number;
           tasksServices.myNotifyListeners();
@@ -469,46 +485,50 @@ class _DialogPagesState extends State<DialogPages> {
           //   enabled: shimmerEnabled,
           //   child:
           Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: maxInternalWidth,
-              ),
-              child: Column(
-                children: [
-                  Payment(
-                      purpose: 'topup', innerWidth: innerWidth,
-                      borderRadius: widget.borderRadius
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                    width: innerWidth + 8,
-                    child: Row(
-                      // direction: Axis.horizontal,
-                      // crossAxisAlignment: WrapCrossAlignment.start,
-                      children: [
-                        TaskDialogButton(
-                          // padding: 8.0,
-                          inactive: interface.tokensEntered == 0.0 ? true : false,
-                          buttonName: 'Topup contract',
-                          buttonColorRequired: Colors.lightBlue.shade600,
-                          callback: () {
-                            tasksServices.addTokens(task.taskAddress,
-                                interface.tokensEntered, task.nanoId);
-                            Navigator.pop(context);
-
-                            showDialog(
-                                context: context,
-                                builder: (context) => WalletAction(
-                                      nanoId: task.nanoId,
-                                      taskName: 'addTokens',
-                                    ));
-                          },
-                        ),
-                      ],
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
+                  maxHeight: widget.screenHeightSizeNoKeyboard,
+                  // maxHeight: widget.screenHeightSize
+                ),
+                child: Column(
+                  children: [
+                    Payment(
+                        purpose: 'topup', innerWidth: innerWidth,
+                        borderRadius: widget.borderRadius
                     ),
-                  )
-                ],
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                      width: innerWidth + 8,
+                      child: Row(
+                        // direction: Axis.horizontal,
+                        // crossAxisAlignment: WrapCrossAlignment.start,
+                        children: [
+                          TaskDialogButton(
+                            // padding: 8.0,
+                            inactive: interface.tokensEntered == 0.0 ? true : false,
+                            buttonName: 'Topup contract',
+                            buttonColorRequired: Colors.lightBlue.shade600,
+                            callback: () {
+                              tasksServices.addTokens(task.taskAddress,
+                                  interface.tokensEntered, task.nanoId);
+                              Navigator.pop(context);
+
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => WalletAction(
+                                        nanoId: task.nanoId,
+                                        taskName: 'addTokens',
+                                      ));
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -525,7 +545,7 @@ class _DialogPagesState extends State<DialogPages> {
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                     child: GestureDetector(
                       onTap: () {
-                        interface.tasksController.animateToPage(
+                        interface.dialogPagesController.animateToPage(
                             interface.dialogPages['description']!,
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.ease);
@@ -573,19 +593,18 @@ class _DialogPagesState extends State<DialogPages> {
                                   tp.layout(maxWidth: constraints.maxWidth);
                                   final numLines = tp.computeLineMetrics().length;
 
-
                                   // final tp =TextPainter(text:span,maxLines: 3,textDirection: TextDirection.ltr);
                                   // tp.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
                                   // print(tp.didExceedMaxLines);
                                   return LimitedBox(
-                                    maxHeight: tp.didExceedMaxLines ? 79: 65,
+                                    maxHeight: tp.didExceedMaxLines ? tp.height + 26: tp.height + 12,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
 
                                         Container(
-                                            padding: const EdgeInsets.all(7.0),
+                                            padding: const EdgeInsets.all(6.0),
                                             // padding: const EdgeInsets.all(3),
                                             child: RichText(
                                               maxLines: 3,
@@ -873,7 +892,7 @@ class _DialogPagesState extends State<DialogPages> {
                                 buttonName: 'Topup',
                                 buttonColorRequired: Colors.lightBlue.shade600,
                                 callback: () {
-                                  interface.tasksController.animateToPage(
+                                  interface.dialogPagesController.animateToPage(
                                       interface.dialogPages['topup']!,
                                       duration: const Duration(milliseconds: 400),
                                       curve: Curves.ease);
@@ -933,7 +952,8 @@ class _DialogPagesState extends State<DialogPages> {
                     tasksServices.validChainID &&
                     (
                     // interface.dialogProcess['buttonName'] == '-' ||
-                    interface.dialogProcess['buttonName'] == 'Participate' ||
+                    (interface.dialogProcess['buttonName'] == 'Participate' &&
+                        fromPage == 'tasks')||
                     interface.dialogProcess['buttonName'] == 'Start the task' ||
                     interface.dialogProcess['buttonName'] == 'Review' ||
                     interface.dialogProcess['buttonName'] == 'In favor of' ||
@@ -970,7 +990,7 @@ class _DialogPagesState extends State<DialogPages> {
                             decoration: InputDecoration(
                               suffixIcon: IconButton(
                                 onPressed: () {
-                                  interface.tasksController.animateToPage(
+                                  interface.dialogPagesController.animateToPage(
                                       interface.dialogPages['chat']!,
                                       duration: const Duration(milliseconds: 600),
                                       curve: Curves.ease);
@@ -1060,34 +1080,42 @@ class _DialogPagesState extends State<DialogPages> {
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: GestureDetector(
                           onTap: () {
-                            interface.tasksController.animateToPage(
+                            interface.dialogPagesController.animateToPage(
                                 interface.dialogPages['chat']!,
                                 duration: const Duration(milliseconds: 300),
                                 curve: Curves.ease);
                           },
                           child: Column(
                             children: [
-                              Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  // height: MediaQuery.of(context).size.width * .08,
-                                  // width: MediaQuery.of(context).size.width * .57
-                                  width: innerWidth,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(widget.borderRadius),
-                                  ),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    maxHeight: widget.screenHeightSizeNoKeyboard - 220,
+                                    minHeight: 40
+                                ),
+                                child: SingleChildScrollView(
                                   child: Container(
-                                      padding: const EdgeInsets.all(6),
-                                      child: RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                            TextSpan(
-                                              text: task.description,
-                                            )
-                                          ])))),
+                                      padding: const EdgeInsets.all(8.0),
+                                      // height: MediaQuery.of(context).size.width * .08,
+                                      // width: MediaQuery.of(context).size.width * .57
+                                      width: innerWidth,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(widget.borderRadius),
+                                      ),
+                                      child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          child: RichText(
+                                              text: TextSpan(
+                                                  style: DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(fontSizeFactor: 1.0),
+                                                  children: <TextSpan>[
+                                                TextSpan(
+                                                  text: task.description,
+                                                )
+                                              ])))),
+                                ),
+                              ),
                               // const Spacer(),
                               Container(
                                 padding: const EdgeInsets.all(6),
@@ -1130,40 +1158,154 @@ class _DialogPagesState extends State<DialogPages> {
                                         BorderRadius.circular(widget.borderRadius),
                                   ),
                                   child: ListBody(children: <Widget>[
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          const TextSpan(
-                                              text: 'Contract owner: \n',
-                                              style: TextStyle(
-                                                  height: 1,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: task.contractOwner.toString(),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        Clipboard.setData(ClipboardData(
+                                            text: task.contractOwner.toString() ))
+                                            .then((_) {
+                                          Flushbar(
+                                              icon: const Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              message:
+                                              '${task.contractOwner.toString()} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: Colors.blueAccent,
+                                              shouldIconPulse: false)
+                                              .show(context);
+                                        });
+                                      },
+
+                                      child: RichText(
+
+                                          text: TextSpan(
                                               style: DefaultTextStyle.of(context)
                                                   .style
-                                                  .apply(fontSizeFactor: 0.7))
-                                        ])),
-                                    RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: <TextSpan>[
-                                          const TextSpan(
-                                              text: 'Contract address: \n',
-                                              style: TextStyle(
-                                                  height: 2,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: task.taskAddress.toString(),
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children:[
+                                                const WidgetSpan(
+                                                    child: Padding(
+                                                      padding:
+                                                      EdgeInsets.only(right: 5.0),
+                                                      child: Icon(
+                                                        Icons.copy,
+                                                        size: 16,
+                                                        color: Colors.black26,
+                                                      ),
+                                                    )),
+
+                                            const TextSpan(
+
+                                                text: 'Contract owner: \n',
+                                                style: TextStyle(
+                                                    height: 1,
+                                                    fontWeight: FontWeight.bold)),
+
+                                            TextSpan(
+                                                text: task.contractOwner.toString(),
+                                                style: DefaultTextStyle.of(context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 0.7))
+                                          ])),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        Clipboard.setData(ClipboardData(
+                                            text: task.taskAddress.toString() ))
+                                            .then((_) {
+                                          Flushbar(
+                                              icon: const Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              message:
+                                              '${task.taskAddress.toString()} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: Colors.blueAccent,
+                                              shouldIconPulse: false)
+                                              .show(context);
+                                        });
+                                      },
+
+                                      child:  RichText(
+                                          text: TextSpan(
                                               style: DefaultTextStyle.of(context)
                                                   .style
-                                                  .apply(fontSizeFactor: 0.7))
-                                        ])),
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children:[
+                                                const WidgetSpan(
+                                                    child: Padding(
+                                                      padding:
+                                                      EdgeInsets.only(right: 5.0),
+                                                      child: Icon(
+                                                        Icons.copy,
+                                                        size: 16,
+                                                        color: Colors.black26,
+                                                      ),
+                                                    )),
+                                            const TextSpan(
+                                                text: 'Contract address: \n',
+                                                style: TextStyle(
+                                                    height: 2,
+                                                    fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: task.taskAddress.toString(),
+                                                style: DefaultTextStyle.of(context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 0.7))
+                                          ])),
+                                    ),
+                                    if(task.participant != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
+                                    GestureDetector(
+                                      onTap: () async {
+                                        Clipboard.setData(ClipboardData(
+                                            text: task.participant.toString() ))
+                                            .then((_) {
+                                          Flushbar(
+                                              icon: const Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              message:
+                                              '${task.participant.toString()} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: Colors.blueAccent,
+                                              shouldIconPulse: false)
+                                              .show(context);
+                                        });
+                                      },
+                                      child: RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context)
+                                                  .style
+                                                  .apply(fontSizeFactor: 1.0),
+                                              children:[
+                                                const WidgetSpan(
+                                                    child: Padding(
+                                                      padding:
+                                                      EdgeInsets.only(right: 5.0),
+                                                      child: Icon(
+                                                        Icons.copy,
+                                                        size: 16,
+                                                        color: Colors.black26,
+                                                      ),
+                                                    )),
+                                                const TextSpan(
+                                                    text: 'Performer: \n',
+                                                    style: TextStyle(
+                                                        height: 2,
+                                                        fontWeight: FontWeight.bold)),
+                                                TextSpan(
+                                                    text: task.participant.toString(),
+                                                    style: DefaultTextStyle.of(context)
+                                                        .style
+                                                        .apply(fontSizeFactor: 0.7))
+                                              ])),
+                                    ),
                                     // RichText(
                                     //   text: TextSpan(
                                     //     style: DefaultTextStyle.of(context)

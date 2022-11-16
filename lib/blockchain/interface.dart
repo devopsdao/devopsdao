@@ -15,7 +15,7 @@ class InterfaceServices extends ChangeNotifier {
 
   //  ************ task_dialog **************//
   // PageView Controller for task_dialog.dart
-  late PageController tasksController = PageController(initialPage: 1);
+  late PageController dialogPagesController = PageController(initialPage: 1);
   late int pageDialogViewNumber = 1; //initial starts from 1 page
   Map<String, int> dialogPages = {
     'topup' : 0,
@@ -54,7 +54,7 @@ class InterfaceServices extends ChangeNotifier {
 
 
   // -------------------- Sizes for Dialog window ------------------------- //
-final double maxInternalDialogWidth = 480;
+  final double maxInternalDialogWidth = 480;
   final double maxDialogWidth = 650;
 }
 

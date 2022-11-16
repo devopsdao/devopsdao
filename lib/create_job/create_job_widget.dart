@@ -35,20 +35,20 @@ class _CreateJobDialogState extends State<CreateJobDialog> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return StatefulBuilder(builder: (context, setState) {
-        final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-        final double screenSizeNoKeyboard = constraints.maxHeight - 120;
-        final double screenSize = screenSizeNoKeyboard - keyboardSize;
-        return WillPopScope(
-          child:  SingleChildScrollView(
-            child: Dialog(
+      return SingleChildScrollView(
+        child: StatefulBuilder(builder: (context, setState) {
+          final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+          final double screenHeightSizeNoKeyboard = constraints.maxHeight - 120;
+          final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+          return WillPopScope(
+            child:  Dialog(
               insetPadding: const EdgeInsets.all(20),
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: CreateJobWidget(screenSize: screenSize, topConstraints: constraints)
-            ),
-        ), onWillPop: () async => false,);
-      });
+              child: CreateJobWidget(screenHeightSize: screenHeightSize)
+            ), onWillPop: () async => false,);
+        }),
+      );
     });
   }
 }
@@ -58,11 +58,9 @@ class _CreateJobDialogState extends State<CreateJobDialog> {
 
 
 class CreateJobWidget extends StatefulWidget {
-  final double screenSize;
-  final BoxConstraints topConstraints;
+  final double screenHeightSize;
   const CreateJobWidget({Key? key,
-    required this.screenSize,
-    required this.topConstraints,
+    required this.screenHeightSize,
   }) : super(key: key);
   @override
   _CreateJobWidgetState createState() => _CreateJobWidgetState();
@@ -76,7 +74,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
     var interface = context.watch<InterfaceServices>();
     final double maxDialogWidth = interface.maxDialogWidth;
     late String backgroundPicture = "assets/images/niceshape.png";
-    final screenSize = widget.screenSize;
+    final screenHeightSize = widget.screenHeightSize;
 
     return Column(
         mainAxisSize: MainAxisSize.min,
@@ -159,9 +157,9 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
         ),
       ),
       Container(
-        height: screenSize,
-        // width: constraints.maxWidth * .8,
-        // height: 550,
+        // *** SingleScrollChild enable here by using screenHeightSize:
+        // height: screenHeightSize,
+        height: 490,
         width: maxDialogWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9),
@@ -170,9 +168,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
             fit: BoxFit.cover,
           ),
         ),
-        child: NewTaskPages(
-          topConstraints: widget.topConstraints,
-        ),
+        child: const NewTaskPages(),
       ),
     ]);
   }
@@ -183,9 +179,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
 
 
 class NewTaskPages extends StatefulWidget {
-  final BoxConstraints topConstraints;
   const NewTaskPages({Key? key,
-    required this.topConstraints,
   }) : super(key: key);
   @override
   _NewTaskPagesState createState() => _NewTaskPagesState();
@@ -205,7 +199,7 @@ class _NewTaskPagesState extends State<NewTaskPages> {
           onPageChanged: (number) {
           },
           children: <Widget>[
-            NewTaskMainPage(topConstraints: widget.topConstraints,
+            NewTaskMainPage(
                 innerWidth: innerWidth)
           ]
       );
@@ -217,10 +211,8 @@ class _NewTaskPagesState extends State<NewTaskPages> {
 
 
 class NewTaskMainPage extends StatefulWidget {
-  final BoxConstraints topConstraints;
   final double innerWidth;
   const NewTaskMainPage({Key? key,
-    required this.topConstraints,
     required this.innerWidth,
   }) : super(key: key);
 
@@ -272,7 +264,6 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
               ),
               child: Container(
                   padding: const EdgeInsets.all(6.0),
-                  // height: widget.topConstraints.maxHeight - 200,
                   width: innerWidth,
                   decoration: BoxDecoration(
                     borderRadius:
@@ -323,7 +314,6 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(6.0),
-                  // height: widget.topConstraints.maxHeight - 200,
                   width: innerWidth,
                   decoration: BoxDecoration(
                     borderRadius:
@@ -338,6 +328,9 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                     // ),
                     autofocus: true,
                     obscureText: false,
+                    onTapOutside: (test) {
+                      FocusScope.of(context).unfocus();
+                    },
                     decoration: const InputDecoration(
                       labelText: 'Description:',
                       labelStyle:
