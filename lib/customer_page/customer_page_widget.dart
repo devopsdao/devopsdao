@@ -115,10 +115,10 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       //   tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
       // }
     }
-    late Throttling debounceChangeTab0 = Throttling(duration: const Duration(milliseconds: 2000));
-    late Throttling debounceChangeTab1 = Throttling(duration: const Duration(milliseconds: 2000));
-    late Throttling debounceChangeTab2 = Throttling(duration: const Duration(milliseconds: 2000));
-    late Throttling debounceChangeTab3 = Throttling(duration: const Duration(milliseconds: 2000));
+    // late Throttling debounceChangeTab0 = Throttling(duration: const Duration(milliseconds: 2000));
+    // late Throttling debounceChangeTab1 = Throttling(duration: const Duration(milliseconds: 2000));
+    // late Throttling debounceChangeTab2 = Throttling(duration: const Duration(milliseconds: 2000));
+    // late Throttling debounceChangeTab3 = Throttling(duration: const Duration(milliseconds: 2000));
 
     return Scaffold(
         key: scaffoldKey,
