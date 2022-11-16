@@ -90,22 +90,22 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       firstLoad = false;
     }
     void changeTab(index, metrics) {
-      if (tabIndex != index) {
-        if (index == 0) {
-          tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
-        } else if (index == 1) {
-          tasksServices.resetFilter(tasksServices.tasksCustomerProgress);
-        } else if (index == 2) {
-          tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
-        }
-        tabIndex = index;
-        prevMetrics = metrics;
-        print('saved index changed to: $index');
+      // if (tabIndex != index) {
+      if (index == 0) {
+        tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
+      } else if (index == 1) {
+        tasksServices.resetFilter(tasksServices.tasksCustomerProgress);
+      } else if (index == 2) {
+        tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
       }
+      tabIndex = index;
+      prevMetrics = metrics;
+      print('saved index changed to: $index');
+      // }
     }
 
     if (_searchKeywordController.text.isEmpty) {
-      changeTab(tabIndex, 0); //temp disable
+      changeTab(tabIndex, 0.0); //temp disable
       // if (tabIndex == 0) {
       //   tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
       // } else if (tabIndex == 1) {
@@ -212,7 +212,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                               _searchKeywordController.clear();
                               tabIndex = index;
                               // print(index);
-                              // changeTab(index); //temp disable
+                              changeTab(index, 0.0); //temp disable
                               // if (index == 0) {
                               //   tasksServices.resetFilter(
                               //       tasksServices.tasksCustomerSelection);
@@ -304,37 +304,37 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                       if (scrollNotification is ScrollUpdateNotification) {
                                         late double tabWidth = MediaQuery.of(context).size.width;
                                         late double metrics = scrollNotification.metrics.pixels;
-                                        print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
-                                        setState(() {
-                                          if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
-                                            print('first');
-                                            debounceChangeTab0.throttle(() {
-                                              changeTab(0, metrics);
-                                            });
-                                          } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
-                                                  (metrics < tabWidth + (tabWidth / 5)) &&
-                                                  prevMetrics < metrics) ||
-                                              (metrics > tabWidth &&
-                                                  metrics < tabWidth * 2 - (tabWidth / 5) &&
-                                                  tabIndex == 2 &&
-                                                  prevMetrics > metrics)) {
-                                            print('second');
-                                            debounceChangeTab1.throttle(() {
-                                              changeTab(1, metrics);
-                                            });
-                                          } else if ((metrics > tabWidth + (tabWidth / 5)) ||
-                                              (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
-                                            print('third');
-                                            debounceChangeTab2.throttle(() {
-                                              changeTab(2, metrics);
-                                            });
-                                          } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
-                                            print('forth');
-                                            debounceChangeTab3.throttle(() {
-                                              changeTab(3, metrics);
-                                            });
-                                          }
-                                        });
+                                        // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
+                                        // setState(() {
+                                        //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
+                                        //     print('first');
+                                        //     debounceChangeTab0.throttle(() {
+                                        //       changeTab(0, metrics);
+                                        //     });
+                                        //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
+                                        //           (metrics < tabWidth + (tabWidth / 5)) &&
+                                        //           prevMetrics < metrics) ||
+                                        //       (metrics > tabWidth &&
+                                        //           metrics < tabWidth * 2 - (tabWidth / 5) &&
+                                        //           tabIndex == 2 &&
+                                        //           prevMetrics > metrics)) {
+                                        //     print('second');
+                                        //     debounceChangeTab1.throttle(() {
+                                        //       changeTab(1, metrics);
+                                        //     });
+                                        //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
+                                        //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
+                                        //     print('third');
+                                        //     debounceChangeTab2.throttle(() {
+                                        //       changeTab(2, metrics);
+                                        //     });
+                                        //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
+                                        //     print('forth');
+                                        //     debounceChangeTab3.throttle(() {
+                                        //       changeTab(3, metrics);
+                                        //     });
+                                        //   }
+                                        // });
                                         // print(tabIndex);
                                       }
                                       return false;
