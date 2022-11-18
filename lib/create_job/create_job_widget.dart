@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
+import 'package:throttling/throttling.dart';
 
 import '../blockchain/interface.dart';
 import '../custom_widgets/payment.dart';
@@ -158,8 +159,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
       ),
       Container(
         // *** SingleScrollChild enable here by using screenHeightSize:
-        // height: screenHeightSize,
-        height: 490,
+        height: screenHeightSize,
+        // height: 490,
         width: maxDialogWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9),
@@ -242,6 +243,8 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
     super.dispose();
   }
 
+  late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 200));
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -299,6 +302,12 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                       lineHeight: 1,
                     ),
                     maxLines: 1,
+                    onChanged:  (text) {
+
+                      debounceNotifyListener.debounce(() {
+                        tasksServices.myNotifyListeners();
+                      });
+                    },
                   ),
               ),
             )
@@ -350,8 +359,14 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                       color: textColor,
                       lineHeight: 1,
                     ),
-                    maxLines: 2,
+                    maxLines: 3,
                     keyboardType: TextInputType.multiline,
+                    onChanged:  (text) {
+
+                      debounceNotifyListener.debounce(() {
+                        tasksServices.myNotifyListeners();
+                      });
+                    },
                   ),
                 ),
               )
@@ -378,7 +393,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
             child: Row(
               children: [
                 TaskDialogButton(
-                  inactive: false,
+                  inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ? true : false,
                   buttonName: 'Submit',
                   buttonColorRequired: Colors.lightBlue.shade600,
                   callback: () {

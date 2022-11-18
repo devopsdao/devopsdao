@@ -54,8 +54,9 @@ class InterfaceServices extends ChangeNotifier {
 
 
   // -------------------- Sizes for Dialog window ------------------------- //
+  final double maxDialogWidth = 600;
   final double maxInternalDialogWidth = 480;
-  final double maxDialogWidth = 650;
+  final double maxGlobalWidth = 1000;
 }
 
 

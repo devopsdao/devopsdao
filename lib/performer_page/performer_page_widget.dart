@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../custom_widgets/badgetab.dart';
 import '../custom_widgets/task_dialog.dart';
@@ -70,6 +71,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
 
     Map tabs = {
       "new": 0,
@@ -146,6 +148,8 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
+        // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+        alignment: Alignment.center,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.black, Colors.black, Colors.black],
@@ -159,154 +163,157 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
           //   repeat: ImageRepeat.repeat,
           // ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: DefaultTabController(
-                length: 3,
-                initialIndex: tabIndex,
-                child: Column(
-                  children: [
-                    TabBar(
-                      labelColor: Colors.white,
-                      labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                      indicatorColor: const Color(0xFF47CBE4),
-                      indicatorWeight: 3,
-                      // isScrollable: true,
-                      onTap: (index) {
-                        _searchKeywordController.clear();
-                        tabIndex = index;
-                        print(index);
-                        if (index == 0) {
-                          tasksServices.resetFilter(
-                              tasksServices.tasksPerformerParticipate);
-                        } else if (index == 1) {
-                          tasksServices.resetFilter(
-                              tasksServices.tasksPerformerProgress);
-                        } else if (index == 2) {
-                          tasksServices.resetFilter(
-                              tasksServices.tasksPerformerComplete);
-                        }
-                      },
-                      tabs: [
-                        Tab(
-                          // icon: const FaIcon(
-                          //   FontAwesomeIcons.smileBeam,
-                          // ),
-                          child: BadgeTab(
-                            taskCount:
-                                tasksServices.tasksPerformerParticipate.length,
-                            tabText: 'Applied',
-                          ),
-                        ),
-                        Tab(
-                          // icon: const Icon(
-                          //   Icons.card_travel_outlined,
-                          // ),
-                          child: BadgeTab(
-                            taskCount:
-                                tasksServices.tasksPerformerProgress.length,
-                            tabText: 'Working',
-                          ),
-                        ),
-                        Tab(
-                          // icon: const Icon(
-                          //   Icons.done_outline,
-                          // ),
-                          child: BadgeTab(
-                            taskCount:
-                                tasksServices.tasksPerformerComplete.length,
-                            tabText: 'Complete',
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                      // decoration: const BoxDecoration(
-                      //   // color: Colors.white70,
-                      //   // borderRadius: BorderRadius.circular(8),
-                      // ),
-                      child: TextField(
-                        controller: _searchKeywordController,
-                        onChanged: (searchKeyword) {
-                          print(tabIndex);
-                          if (tabIndex == 0) {
-                            tasksServices.runFilter(searchKeyword,
+        child: SizedBox(
+          width: interface.maxGlobalWidth,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: DefaultTabController(
+                  length: 3,
+                  initialIndex: tabIndex,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        labelColor: Colors.white,
+                        labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                        indicatorColor: const Color(0xFF47CBE4),
+                        indicatorWeight: 3,
+                        // isScrollable: true,
+                        onTap: (index) {
+                          _searchKeywordController.clear();
+                          tabIndex = index;
+                          print(index);
+                          if (index == 0) {
+                            tasksServices.resetFilter(
                                 tasksServices.tasksPerformerParticipate);
-                          } else if (tabIndex == 1) {
-                            tasksServices.runFilter(searchKeyword,
+                          } else if (index == 1) {
+                            tasksServices.resetFilter(
                                 tasksServices.tasksPerformerProgress);
-                          } else if (tabIndex == 2) {
-                            tasksServices.runFilter(searchKeyword,
+                          } else if (index == 2) {
+                            tasksServices.resetFilter(
                                 tasksServices.tasksPerformerComplete);
                           }
                         },
-                        decoration: const InputDecoration(
-                          hintText: '[Find task by Title...]',
-                          hintStyle:
-                              TextStyle(fontSize: 15.0, color: Colors.white),
-                          labelStyle:
-                              TextStyle(fontSize: 17.0, color: Colors.white),
-                          labelText: 'Search',
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
+                        tabs: [
+                          Tab(
+                            // icon: const FaIcon(
+                            //   FontAwesomeIcons.smileBeam,
+                            // ),
+                            child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksPerformerParticipate.length,
+                              tabText: 'Applied',
                             ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
+                          Tab(
+                            // icon: const Icon(
+                            //   Icons.card_travel_outlined,
+                            // ),
+                            child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksPerformerProgress.length,
+                              tabText: 'Working',
                             ),
                           ),
-                        ),
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              lineHeight: 2,
+                          Tab(
+                            // icon: const Icon(
+                            //   Icons.done_outline,
+                            // ),
+                            child: BadgeTab(
+                              taskCount:
+                                  tasksServices.tasksPerformerComplete.length,
+                              tabText: 'Complete',
                             ),
+                          ),
+                        ],
                       ),
-                    ),
-                    tasksServices.isLoading
-                        ? const LoadIndicator()
-                        : const Expanded(
-                            child: TabBarView(
-                              physics: NeverScrollableScrollPhysics(),
-                              children: [
-                                MyPerformerTabWidget(
-                                  tabName: 'applied',
-                                ),
-                                MyPerformerTabWidget(
-                                  tabName: 'working',
-                                ),
-                                MyPerformerTabWidget(
-                                  tabName: 'complete',
-                                ),
-                              ],
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        // decoration: const BoxDecoration(
+                        //   // color: Colors.white70,
+                        //   // borderRadius: BorderRadius.circular(8),
+                        // ),
+                        child: TextField(
+                          controller: _searchKeywordController,
+                          onChanged: (searchKeyword) {
+                            print(tabIndex);
+                            if (tabIndex == 0) {
+                              tasksServices.runFilter(searchKeyword,
+                                  tasksServices.tasksPerformerParticipate);
+                            } else if (tabIndex == 1) {
+                              tasksServices.runFilter(searchKeyword,
+                                  tasksServices.tasksPerformerProgress);
+                            } else if (tabIndex == 2) {
+                              tasksServices.runFilter(searchKeyword,
+                                  tasksServices.tasksPerformerComplete);
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '[Find task by Title...]',
+                            hintStyle:
+                                TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle:
+                                TextStyle(fontSize: 17.0, color: Colors.white),
+                            labelText: 'Search',
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
                             ),
                           ),
-                  ],
+                          style: FlutterFlowTheme.of(context).bodyText1.override(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                lineHeight: 2,
+                              ),
+                        ),
+                      ),
+                      tasksServices.isLoading
+                          ? const LoadIndicator()
+                          : const Expanded(
+                              child: TabBarView(
+                                physics: NeverScrollableScrollPhysics(),
+                                children: [
+                                  MyPerformerTabWidget(
+                                    tabName: 'applied',
+                                  ),
+                                  MyPerformerTabWidget(
+                                    tabName: 'working',
+                                  ),
+                                  MyPerformerTabWidget(
+                                    tabName: 'complete',
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
