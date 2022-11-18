@@ -4,6 +4,7 @@ import 'package:devopsdao/custom_widgets/payment.dart';
 import 'package:devopsdao/custom_widgets/select_menu.dart';
 import 'package:devopsdao/custom_widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:horizontal_blocked_scroll_physics/horizontal_blocked_scroll_physics.dart';
@@ -26,7 +27,7 @@ import '../custom_widgets/data_loading_dialog.dart';
 
 import 'dart:ui' as ui;
 
-import 'package:rive/rive.dart';
+import 'package:rive/rive.dart' as rive;
 
 class TaskDialog extends StatefulWidget {
   final String fromPage;
@@ -461,7 +462,7 @@ class _DialogPagesState extends State<DialogPages> {
       return PageView(
         scrollDirection: Axis.horizontal,
         // pageSnapping: false,
-        physics: (interface.pageDialogViewNumber == 1 && fromPage != 'customer') ? RightBlockedScrollPhysics() : null,
+        physics: (fromPage == 'tasks' || fromPage == 'auditor') ? const RightBlockedScrollPhysics() : null,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
         controller: interface.dialogPagesController,
@@ -647,73 +648,7 @@ class _DialogPagesState extends State<DialogPages> {
 
 
 
-                            // ********************** CUSTOMER ROLE ************************* //
 
-
-
-                            // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
-                            // *************************** AUDIT ******************************** //
-
-                            if (task.taskState == "audit" &&
-                                task.auditState == "requested" &&
-                                (fromPage == 'customer' ||
-                                    fromPage == 'performer' ||
-                                    tasksServices.hardhatDebug == true))
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: const <TextSpan>[
-                                      TextSpan(
-                                          text:
-                                              'Warning, this contract on Audit state \n'
-                                              'Please choose auditor: ',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                    ])),
-                              ),
-                            if (task.taskState == "audit" &&
-                                task.auditState == "performing" &&
-                                (fromPage == 'customer' ||
-                                    fromPage == 'performer' ||
-                                    tasksServices.hardhatDebug == true))
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      const TextSpan(
-                                          text: 'Your request is being resolved \n'
-                                              'Your auditor: \n',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text: task.auditor.toString(),
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 0.7))
-                                    ])),
-                              ),
-                            if (task.taskState == "audit" &&
-                                task.auditState == "requested" &&
-                                (fromPage == 'customer' ||
-                                    fromPage == 'performer' ||
-                                    tasksServices.hardhatDebug == true))
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ParticipantList(
-                                  listType: 'audit',
-                                  obj: task,
-                                ),
-                              ),
 
                             // ************************ AUDITOR ROLE ************************** //
                             // ************************ EMPTY ************************** //
@@ -725,6 +660,91 @@ class _DialogPagesState extends State<DialogPages> {
                   // const SizedBox(height: 14),
 
 
+                  if (task.taskState == "audit" &&
+                      (fromPage == 'customer' ||
+                          fromPage == 'performer' ||
+                          tasksServices.hardhatDebug == true))
+
+                    Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                            width: innerWidth,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(widget.borderRadius),
+                            ),
+                            child: Column(
+                              children: [
+
+// ********************** CUSTOMER ROLE ************************* //
+
+
+
+                                // ****************** PERFORMER AND CUSTOMER ROLE ******************* //
+                                // *************************** AUDIT ******************************** //
+
+                                if (task.auditState == "requested" ||
+                                        tasksServices.hardhatDebug == true)
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: const <TextSpan>[
+                                              TextSpan(
+                                                  text:
+                                                  'Warning, this contract on Audit state \n'
+                                                      'Please choose auditor: ',
+                                                  style: TextStyle(
+                                                      height: 2,
+                                                      fontWeight: FontWeight.bold)),
+                                            ])),
+                                  ),
+                                if (task.auditState == "performing" ||
+                                        tasksServices.hardhatDebug == true)
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: <TextSpan>[
+                                              const TextSpan(
+                                                  text: 'Your request is being resolved \n'
+                                                      'Your auditor: \n',
+                                                  style: TextStyle(
+                                                      height: 2,
+                                                      fontWeight: FontWeight.bold)),
+                                              TextSpan(
+                                                  text: task.auditor.toString(),
+                                                  style: DefaultTextStyle.of(context)
+                                                      .style
+                                                      .apply(fontSizeFactor: 0.7))
+                                            ])),
+                                  ),
+                                if (  task.auditState == "requested" ||
+                                        tasksServices.hardhatDebug == true)
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ParticipantList(
+                                      listType: 'audit',
+                                      obj: task,
+                                    ),
+                                  ),
+                              ],
+                            )
+                        ),
+                      ),
+                    ),
 
 
                   if (task.taskState == 'completed' &&
@@ -1330,32 +1350,31 @@ class _DialogPagesState extends State<DialogPages> {
                   if ((fromPage == 'performer' ||
                       fromPage == 'customer' ||
                       tasksServices.hardhatDebug == true) &&
-                      (task.taskState == "progress" || task.taskState == "review") &&
-                      task.contractOwner != tasksServices.publicAddress)
+                      (task.taskState == "progress" || task.taskState == "review")
+                      // && task.contractOwner != tasksServices.publicAddress
+                  )
                     Container(
                       padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
                       width: innerWidth + 8,
-                      child: TaskDialogButton(
+                      child: Row(
+                        children: [
+                          TaskDialogButton(
 
-                        inactive: false,
-                        buttonName: 'Request audit',
-                        buttonColorRequired: Colors.orangeAccent.shade700,
-                        callback: () {
-                          setState(() {
-                            task.justLoaded = false;
-                          });
-                          tasksServices.taskStateChange(
-                              task.taskAddress, task.participant, 'audit', task.nanoId,
-                              message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-                          Navigator.pop(context);
+                            inactive: false,
+                            buttonName: 'Request audit',
+                            buttonColorRequired: Colors.orangeAccent.shade700,
+                            callback: () {
 
-                          showDialog(
-                              context: context,
-                              builder: (context) => WalletAction(
-                                nanoId: task.nanoId,
-                                taskName: 'taskStateChange',
-                              ));
-                        },
+
+                              //
+
+                              showDialog(
+                                context: context,
+                                builder: (context) => RequestAuditDialog(who: fromPage, task: task)
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     )
 
@@ -1517,11 +1536,11 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
             ),
 
           if (task.taskState == "completed" &&
-              (fromPage == 'performer' || tasksServices.hardhatDebug == true) &&
-              (task.contractValue != 0 || task.contractValueToken != 0))
+              (fromPage == 'performer' || tasksServices.hardhatDebug == true)
+              )
             // WithdrawButton(object: task),
             TaskDialogButton(
-              inactive: false,
+              inactive: (task.contractValue != 0 || task.contractValueToken != 0) ? false : true,
               buttonName: 'Withdraw',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
@@ -1729,13 +1748,12 @@ class RateAnimatedWidget extends StatefulWidget {
 class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
 
-    SMINumber? rating;
+    rive.SMINumber? rating;
 
-    void _onRiveInit(Artboard artboard) {
-      final StateMachineController? controller =
-          StateMachineController.fromArtboard(
+    void _onRiveInit(rive.Artboard artboard) {
+      final rive.StateMachineController? controller =
+          rive.StateMachineController.fromArtboard(
         artboard,
         'State Machine 1',
         // onStateChange: (stateMachineName, animationName) {
@@ -1756,7 +1774,7 @@ class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
         // constraints: const BoxConstraints.expand(),
         child: GestureDetector(
           onTap: hitBump,
-          child: RiveAnimation.asset(
+          child: rive.RiveAnimation.asset(
             'assets/rive_animations/rating_animation.riv',
             fit: BoxFit.contain,
             alignment: Alignment.center,
@@ -1809,23 +1827,25 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
       textColor = Colors.white;
       buttonColor = Colors.grey;
       _buttonState = false;
+    } else {
+      _buttonState = true;
     }
 
-    // this check for WITHDRAW button:
-    if (widget.task != null) {
-      if (widget.task!.contractValue != 0) {
-        _buttonState = true;
-      } else if (widget.task!.contractValueToken != 0) {
-        if (widget.task!.contractValueToken > tasksServices.transferFee ||
-            tasksServices.destinationChain == 'Moonbase') {
-          _buttonState = true;
-        } else {
-          textColor = Colors.white;
-          buttonColor = Colors.grey;
-          _buttonState = false;
-        }
-      }
-    }
+    // // this check for WITHDRAW button:
+    // if (widget.task != null) {
+    //   if (widget.task!.contractValue != 0) {
+    //     _buttonState = true;
+    //   } else if (widget.task!.contractValueToken != 0) {
+    //     if (widget.task!.contractValueToken > tasksServices.transferFee ||
+    //         tasksServices.destinationChain == 'Moonbase') {
+    //       _buttonState = true;
+    //     } else {
+    //       textColor = Colors.white;
+    //       buttonColor = Colors.grey;
+    //       _buttonState = false;
+    //     }
+    //   }
+    // }
 
     late double? padding = 10.0;
     if (widget.padding != null) {
@@ -1855,6 +1875,161 @@ class _TaskDialogButtonState extends State<TaskDialogButton> {
                 style: TextStyle(fontSize: 18, color: textColor),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class RequestAuditDialog extends StatefulWidget {
+  final String who;
+  final Task task;
+  const RequestAuditDialog(
+      {Key? key,
+        required this.who,
+        required this.task
+      })
+      : super(key: key);
+
+  @override
+  _RequestAuditDialogState createState() => _RequestAuditDialogState();
+}
+
+class _RequestAuditDialogState extends State<RequestAuditDialog> {
+  late String warningText;
+  late String link;
+
+  @override
+  Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
+
+    final Task task = widget.task;
+
+    if (widget.who == 'customer') {
+      warningText = 'Are you sure you want to start the Audit process? You will have to top-up the contract with 10% from the Task price, totaling: 10 USDC. For more information:';
+      link = 'https://docs.dodao.dev/audit_process.html#customer';
+    } else if (widget.who == 'performer') {
+      warningText = 'Are you sure you want to start the Audit process? Auditor will receive 10% from the funds allocated to the task, totaling: 10 USDC. For more information:';
+      link = 'https://docs.dodao.dev/audit_process.html#performer';
+    }
+
+
+    return Dialog(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      child: SizedBox(
+        height: 340,
+        width: 350,
+
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                child: const Icon(
+                  Icons.warning_amber,
+                  color: Colors.black45,
+                  size: 110,
+                ),
+              ),
+              RichText(
+                textAlign: TextAlign.center,
+                  text: TextSpan(
+                      style: DefaultTextStyle
+                          .of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.1),
+                      children: <TextSpan>[
+                        TextSpan(
+
+                          text: warningText,
+                        ),
+
+                      ])
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(0.0),
+                        height: 54.0,
+                        alignment: Alignment.center,
+                        //MediaQuery.of(context).size.width * .08,
+                        // width: halfWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            width: 0.5,
+                            color: Colors.black54//                   <--- border width here
+                          ),
+                        ),
+                        child: const Text(
+                          'Close',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16,),
+                  Expanded(
+                    child: InkWell(
+
+                      borderRadius: BorderRadius.circular(20.0),
+                      onTap: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          task.justLoaded = false;
+                        });
+                        tasksServices.taskStateChange(
+                            task.taskAddress, task.participant, 'audit', task.nanoId,
+                            message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            ));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(0.0),
+                        height: 54.0,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
+                            stops: [0, 0.6, 1],
+                          ),
+                        ),
+                        child: const Text(
+                          'Confirm',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
           ),
         ),
       ),
