@@ -462,7 +462,12 @@ class _DialogPagesState extends State<DialogPages> {
       return PageView(
         scrollDirection: Axis.horizontal,
         // pageSnapping: false,
-        physics: (fromPage == 'tasks' || fromPage == 'auditor') ? const RightBlockedScrollPhysics() : null,
+        physics: ((
+          fromPage == 'tasks' ||
+          fromPage == 'auditor' ||
+          fromPage == 'performer') &&
+          interface.pageDialogViewNumber == 1)
+            ? const RightBlockedScrollPhysics() : null,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
         controller: interface.dialogPagesController,
