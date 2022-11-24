@@ -16,19 +16,17 @@ class InterfaceServices extends ChangeNotifier {
   //  ************ task_dialog **************//
   // PageView Controller for task_dialog.dart
   late PageController dialogPagesController = PageController(initialPage: 1);
-  late int pageDialogViewNumber = 1; //initial starts from 1 page
-  Map<String, int> dialogPages = {
-    'topup' : 0,
-    'main' : 1,
-    'description' : 2,
-    'chat' : 3,
-  };
+  late int pageDialogViewNumber = 0; //initial starts from 1 page
+  Map<String, int> dialogPages = {};
 
   Map<String, String> dialogProcess = {
     'name' : 'custom null',
     'buttonName' : 'custom null',
     'hint' : 'custom null',
   };
+
+  // selected Performer or Auditor in participants_list.dart:
+  late Map<String, String> selectedUser = {};
 
   // Input text on task_dialog.dart
   late String taskMessage;

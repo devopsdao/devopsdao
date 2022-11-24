@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:beamer/beamer.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 
 class ParticipantList extends StatefulWidget {
@@ -21,10 +22,13 @@ class ParticipantList extends StatefulWidget {
 class _ParticipantListState extends State<ParticipantList> {
   late List participants;
   late String status;
+  late int selectedIndex = 99;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
+
     if (widget.listType == 'customer') {
       if (widget.obj.participants != null) {
         participants = widget.obj.participants;
@@ -32,14 +36,14 @@ class _ParticipantListState extends State<ParticipantList> {
         participants = [];
       }
       status = 'agreed';
-    } else if (widget.listType == 'audit') {
+    } else if (widget.listType == 'auditor') {
       participants = widget.obj.auditors;
-      status = 'audit';
+      status = 'auditor';
     }
-    print(MediaQuery.of(context).size.height);
+    print(selectedIndex);
 
     return Container(
-      // height: 100.0, // Change as per your requirement
+      padding: const EdgeInsets.all(6.0),      // height: 100.0, // Change as per your requirement
       // width: 270.0, // Change as per your requirement
       child: ListView.builder(
           shrinkWrap: true,
@@ -48,34 +52,63 @@ class _ParticipantListState extends State<ParticipantList> {
           // physics: NeverScrollableScrollPhysics(),
           itemCount: participants.length,
           itemBuilder: (context2, index2) {
-            return TextButton(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 13),
+            return ListTile(
+              title: Center(
+                child: RichText(
+                    text: TextSpan(
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 0.9),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: participants[index2].toString(),
+                              style: const TextStyle(
+                                height: 1,)),
+                        ])),
               ),
-              onPressed: () {
+              // style: TextButton.styleFrom(
+              //   textStyle: const TextStyle(fontSize: 13),
+              // ),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              selected: index2 == selectedIndex,
+              // selectedColor: Colors.green,
+              selectedTileColor: Colors.black26,
+              // trailing: const Icon(
+              //   Icons.info_sharp,
+              //   color: Colors.black45,
+              //   size: 20,
+              // ),
+              onTap: () {
                 setState(() {
-                  widget.obj.justLoaded = false;
+                  selectedIndex = index2;
+                  interface.selectedUser = {
+                    'address' : participants[index2].toString()
+                  };
                 });
-                tasksServices.taskStateChange(widget.obj.taskAddress,
-                    participants[index2], status, widget.obj.nanoId);
-                Navigator.pop(context);
-                RouteInformation routeInfo =
-                    const RouteInformation(location: '/customer');
-                Beamer.of(context).updateRouteInformation(routeInfo);
-
-                showDialog(
-                    context: context,
-                    builder: (context) => WalletAction(
-                          nanoId: widget.obj.nanoId,
-                          taskName: 'taskStateChange',
-                        ));
+                tasksServices.myNotifyListeners();
+                // tasksServices.taskStateChange(widget.obj.taskAddress,
+                //     participants[index2], status, widget.obj.nanoId);
+                // Navigator.pop(context);
+                // RouteInformation routeInfo =
+                //     const RouteInformation(location: '/customer');
+                // Beamer.of(context).updateRouteInformation(routeInfo);
+                //
+                // showDialog(
+                //     context: context,
+                //     builder: (context) => WalletAction(
+                //           nanoId: widget.obj.nanoId,
+                //           taskName: 'taskStateChange',
+                //         ));
               },
-              child: Text(
-                participants[index2].toString(),
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 0.7),
-              ),
+              // child: Text(
+              //   participants[index2].toString(),
+              //   style: DefaultTextStyle.of(context)
+              //       .style
+              //       .apply(fontSizeFactor: 0.7),
+              // ),
             );
           }),
     );
