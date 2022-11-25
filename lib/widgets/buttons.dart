@@ -1,6 +1,6 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:devopsdao/blockchain/task.dart';
-import 'package:devopsdao/custom_widgets/wallet_action.dart';
+import 'package:devopsdao/widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../create_job/create_job_widget.dart';
-import '../custom_widgets/loading.dart';
+import '../widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';

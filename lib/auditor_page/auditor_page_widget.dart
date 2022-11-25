@@ -2,10 +2,10 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
-import '../custom_widgets/badgetab.dart';
-import '../custom_widgets/task_dialog.dart';
-import '../custom_widgets/loading.dart';
-import '../custom_widgets/task_item.dart';
+import '../widgets/badgetab.dart';
+import '../task_dialog/main.dart';
+import '../widgets/loading.dart';
+import '../widgets/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';

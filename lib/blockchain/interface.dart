@@ -1,6 +1,8 @@
 // import 'package:js/js.dart';
 
 import 'package:flutter/material.dart';
+
+import '../task_dialog/dialog_states.dart';
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
 
@@ -14,21 +16,21 @@ class InterfaceServices extends ChangeNotifier {
   late PageController controller = PageController(initialPage: 0);
 
   //  ************ task_dialog **************//
-  // PageView Controller for task_dialog.dart
+  // PageView Controller for main.dart
   late PageController dialogPagesController = PageController(initialPage: 1);
   late int pageDialogViewNumber = 0; //initial starts from 1 page
-  Map<String, int> dialogPages = {};
+  // Map<String, int> dialogPages = {};
 
-  Map<String, String> dialogProcess = {
-    'name' : 'custom null',
-    'buttonName' : 'custom null',
-    'hint' : 'custom null',
-  };
+  // Map<String, String> dialogProcess = {
+  //   'name' : 'custom null',
+  //   'buttonName' : 'custom null',
+  //   'hint' : 'custom null',
+  // };
 
   // selected Performer or Auditor in participants_list.dart:
   late Map<String, String> selectedUser = {};
 
-  // Input text on task_dialog.dart
+  // Input text on main.dart
   late String taskMessage;
 
   // Hint message for task_dialog
@@ -41,12 +43,10 @@ class InterfaceServices extends ChangeNotifier {
   // late TabController walletTabController = TabController(length: 2, vsync: );
 
   // ****** SETTINGS ******** //
-// border radius:
+  // border radius:
   final double borderRadius = 8.0;
 
-// ***********  create_job_widget ************ ////
-
-
+  // ***********  create_job_widget ************ ////
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
 
 
