@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
 
 import '../blockchain/interface.dart';
-import '../custom_widgets/payment.dart';
-import '../custom_widgets/task_dialog.dart';
-import '../custom_widgets/wallet_action.dart';
+import '../widgets/payment.dart';
+import '../task_dialog/main.dart';
+import '../widgets/wallet_action.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_markdown_editor_plus/simple_markdown_editor_plus.dart';
 
 import '../blockchain/task_services.dart';
+import '../task_dialog/widget/dialog_button_widget.dart';
 
 
 class CreateJobDialog extends StatefulWidget {
