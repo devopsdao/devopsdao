@@ -44,8 +44,7 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static _MyAppState of(BuildContext context) =>
-      context.findAncestorStateOfType<_MyAppState>()!;
+  static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
 
   // Widget build(BuildContext context) {
   //   return MaterialApp.router(
@@ -64,8 +63,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1),
-        () => setState(() => displaySplashImage = false));
+    Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
   }
 
   void setLocale(Locale value) => setState(() => _locale = value);
@@ -85,8 +83,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       routerDelegate: beamerDelegate,
       routeInformationParser: BeamerParser(),
-      backButtonDispatcher:
-          BeamerBackButtonDispatcher(delegate: beamerDelegate),
+      backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
       debugShowCheckedModeBanner: false,
       title: 'devopsdao',
       localizationsDelegates: const [
@@ -98,17 +95,19 @@ class _MyAppState extends State<MyApp> {
       locale: _locale,
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
+        // useMaterial3: true,
         brightness: Brightness.light,
         splashFactory: NoSplash.splashFactory,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         // primaryColor: const Color(0xff31d493),
         // cardColor: Colors.black,
         // textTheme: const TextTheme(
         //     bodyText1: TextStyle(fontSize: 20, color: Colors.white)),
         // colorScheme: ColorScheme.light().copyWith(secondary: Colors.black),
       ),
-      darkTheme: ThemeData(
-          brightness: Brightness.dark, splashFactory: NoSplash.splashFactory),
+      darkTheme: ThemeData(brightness: Brightness.dark, splashFactory: NoSplash.splashFactory),
       // Theme mode settings:
       // themeMode: _themeMode,
       themeMode: ThemeMode.light,
