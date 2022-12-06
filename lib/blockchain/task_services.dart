@@ -246,7 +246,7 @@ class TasksServices extends ChangeNotifier {
       // _rpcUrl = 'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
       // _wsUrl = 'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
       _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
-      _wsUrl = 'wss://rpc.api.moonbase.moonbeam.network';
+      _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
     }
     isDeviceConnected = false;
 
