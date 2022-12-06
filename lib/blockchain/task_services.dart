@@ -1331,8 +1331,8 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchTasksCustomer(String state) async {
-    List totalTaskList = await tasksFacet.getTaskContractsCustomer(state);
+  Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
+    List totalTaskList = await tasksFacet.getTaskContractsCustomer(publicAddress);
     List totalTaskListReversed = List.from(totalTaskList.reversed);
     totalTaskLen = totalTaskList.length;
     notifyListeners();
@@ -1359,7 +1359,7 @@ class TasksServices extends ChangeNotifier {
           tasks.clear();
           stopLoopRunning = false;
           loopRunning = false;
-          fetchTasksCustomer(state);
+          fetchTasksCustomer(publicAddress);
           break;
         }
         try {
@@ -1388,8 +1388,8 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchTasksPerformer(String state) async {
-    List totalTaskList = await tasksFacet.getTaskContractsPerformer(state);
+  Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
+    List totalTaskList = await tasksFacet.getTaskContractsPerformer(publicAddress);
     List totalTaskListReversed = List.from(totalTaskList.reversed);
     totalTaskLen = totalTaskList.length;
     notifyListeners();
