@@ -8,11 +8,22 @@ class DialogProcess extends ChangeNotifier {
 
 Map<String, dynamic> dialogStates = {
   // ******* TASKS NEW ********* //
-  'tasks-new' : {
-    'name' : 'tasks-new',
+  'tasks-new-logged' : {
+    'name' : 'tasks-new-logged',
     'mainButtonName' : 'Participate',
     'secondButtonName' : '',
     'labelMessage' : 'Why you are the best Performer?',
+    'secondLabelMessage': '',
+    'pages' : {
+      'main': 0,
+      'description' : 1
+    },
+  },
+  'tasks-new-not-logged' : {
+    'name' : 'tasks-new-not-logged',
+    'mainButtonName' : '',
+    'secondButtonName' : '',
+    'labelMessage' : '',
     'secondLabelMessage': '',
     'pages' : {
       'main': 0,
@@ -38,7 +49,7 @@ Map<String, dynamic> dialogStates = {
     'mainButtonName': '',
     'secondButtonName' : 'Request audit',
     'labelMessage': '',
-    'secondLabelMessage': 'Why are you requesting an auditor?',
+    'secondLabelMessage': 'Why are you requesting for audit?',
     'pages' : {
       'topup': 0,
       'main': 1,
@@ -51,7 +62,7 @@ Map<String, dynamic> dialogStates = {
     'mainButtonName': '',
     'secondButtonName' : 'Request audit',
     'labelMessage': '',
-    'secondLabelMessage': 'Why are you requesting an auditor?',
+    'secondLabelMessage': 'Why are you requesting for audit?',
     'pages' : {
       'topup': 0,
       'main': 1,
@@ -65,7 +76,7 @@ Map<String, dynamic> dialogStates = {
     'mainButtonName': 'Sign Review',
     'secondButtonName' : 'Request audit',
     'labelMessage': 'Write your request for review to the Customer',
-    'secondLabelMessage': 'Why are you requesting an auditor?',
+    'secondLabelMessage': 'Why are you requesting for audit?',
     'pages' : {
       'topup': 0,
       'main': 1,
@@ -107,7 +118,8 @@ Map<String, dynamic> dialogStates = {
       'topup': 0,
       'main': 1,
       'description' : 2,
-      'chat' : 3,
+      'select' : 3,
+      'chat' : 4,
     },
   },
   'customer-audit-performing' : {
@@ -138,6 +150,17 @@ Map<String, dynamic> dialogStates = {
   // },
 
   // ******* PERFORMER ********* //
+  'performer-new' : {
+    'name' : 'performer-new',
+    'mainButtonName': '',
+    'secondButtonName' : '',
+    'labelMessage': '',
+    'secondLabelMessage': '',
+    'pages' : {
+      'main': 0,
+      'description' : 1,
+    },
+  },
   'performer-agreed' : {
     'name' : 'performer-agreed',
     'mainButtonName': 'Start the task',
@@ -167,7 +190,7 @@ Map<String, dynamic> dialogStates = {
     'mainButtonName': '',
     'secondButtonName' : 'Request audit',
     'labelMessage': '',
-    'secondLabelMessage': 'Why are you requesting an auditor?',
+    'secondLabelMessage': 'Why are you requesting for audit?',
     'pages' : {
       'main': 0,
       'description' : 1,
@@ -207,7 +230,8 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'select' : 2,
+      'chat' : 3,
     },
   },
   'performer-audit-performing' : {

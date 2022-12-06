@@ -353,30 +353,20 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
               child: InkWell(
                   onTap: () {
-                    // setState(() {
-                    //   // Toggle light when tapped.
-                    // });
-                    // if (obj[index].taskState != "new")
-                    if (tasksServices.filterResults.values
-                            .toList()
-                            .elementAt(index) !=
-                        null) {
-                      showDialog(
-                          context: context,
-                          builder: (context) => TaskInformationDialog(
-                              fromPage: 'performer',
-                              task: objList[index],
-                              shimmerEnabled: false));
-                      final String taskAddress = tasksServices
-                          .filterResults.values
-                          .toList()[index]
-                          .taskAddress
-                          .toString();
-                      RouteInformation routeInfo =
-                          RouteInformation(location: '/performer/$taskAddress');
-                      Beamer.of(context).updateRouteInformation(routeInfo);
-                      // context.popToNamed('/performer/$taskAddress');
-                    }
+                    showDialog(
+                        context: context,
+                        builder: (context) => TaskInformationDialog(
+                            fromPage: 'performer',
+                            task: objList[index],
+                            shimmerEnabled: false));
+                    final String taskAddress = tasksServices
+                        .filterResults.values
+                        .toList()[index]
+                        .taskAddress
+                        .toString();
+                    RouteInformation routeInfo =
+                        RouteInformation(location: '/performer/$taskAddress');
+                    Beamer.of(context).updateRouteInformation(routeInfo);
                   },
                   child: TaskItem(
                     fromPage: 'performer',

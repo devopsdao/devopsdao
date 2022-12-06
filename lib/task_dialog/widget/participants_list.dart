@@ -9,10 +9,9 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/task_services.dart';
 
 class ParticipantList extends StatefulWidget {
-  final String listType;
-  final Task obj;
+  final Task task;
 
-  const ParticipantList({Key? key, required this.obj, required this.listType})
+  const ParticipantList({Key? key, required this.task,})
       : super(key: key);
 
   @override
@@ -31,16 +30,16 @@ class _ParticipantListState extends State<ParticipantList> {
 
 
 
-    if (widget.listType == 'customer') {
-      if (widget.obj.participants != null) {
-        participants = widget.obj.participants;
+    if (interface.dialogCurrentState['name'] == 'customer-new') {
+      if (widget.task.participants != null) {
+        participants = widget.task.participants;
       } else {
         participants = [];
       }
-      // status = 'agreed';
-    } else if (widget.listType == 'auditor') {
-      participants = widget.obj.auditors;
-      // status = 'auditor';
+    } else if (
+        interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
+        interface.dialogCurrentState['name'] == 'performer-audit-requested') {
+      participants = widget.task.auditors;
     }
     print(selectedIndex);
 
@@ -88,8 +87,8 @@ class _ParticipantListState extends State<ParticipantList> {
                 };
               });
               tasksServices.myNotifyListeners();
-              // tasksServices.taskStateChange(widget.obj.taskAddress,
-              //     participants[index2], status, widget.obj.nanoId);
+              // tasksServices.taskStateChange(widget.task.taskAddress,
+              //     participants[index2], status, widget.task.nanoId);
               // Navigator.pop(context);
               // RouteInformation routeInfo =
               //     const RouteInformation(location: '/customer');
@@ -98,7 +97,7 @@ class _ParticipantListState extends State<ParticipantList> {
               // showDialog(
               //     context: context,
               //     builder: (context) => WalletAction(
-              //           nanoId: widget.obj.nanoId,
+              //           nanoId: widget.task.nanoId,
               //           taskName: 'taskStateChange',
               //         ));
             },

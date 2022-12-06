@@ -18,14 +18,8 @@ class InterfaceServices extends ChangeNotifier {
   //  ************ task_dialog **************//
   // PageView Controller for main.dart
   late PageController dialogPagesController = PageController(initialPage: 1);
-  late int pageDialogViewNumber = 0; //initial starts from 1 page
-  // Map<String, int> dialogPages = {};
-
-  // Map<String, String> dialogProcess = {
-  //   'name' : 'custom null',
-  //   'buttonName' : 'custom null',
-  //   'hint' : 'custom null',
-  // };
+  late int dialogPageNum = 0; //initial starts from 1 page
+  late Map<String, dynamic> dialogCurrentState;
 
   // selected Performer or Auditor in participants_list.dart:
   late Map<String, String> selectedUser = {};
@@ -42,19 +36,24 @@ class InterfaceServices extends ChangeNotifier {
   // wallet/main.dart controller for tabs
   // late TabController walletTabController = TabController(length: 2, vsync: );
 
-  // ****** SETTINGS ******** //
-  // border radius:
-  final double borderRadius = 8.0;
+
 
   // ***********  create_job_widget ************ ////
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
 
 
-
+  // ****** SETTINGS ******** //
+  // border radius:
+  final double borderRadius = 8.0;
   // -------------------- Sizes for Dialog window ------------------------- //
   final double maxDialogWidth = 600;
   final double maxInternalDialogWidth = 480;
   final double maxGlobalWidth = 1000;
+
+  Future updateDialogPageNum(number) async {
+    dialogPageNum = number;
+    notifyListeners();
+  }
 }
 
 
