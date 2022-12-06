@@ -121,12 +121,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "account_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "id_",
         "type": "uint256"
       }
     ],
@@ -145,12 +145,12 @@
     "inputs": [
       {
         "internalType": "address[]",
-        "name": "accounts",
+        "name": "accounts_",
         "type": "address[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "ids",
+        "name": "ids_",
         "type": "uint256[]"
       }
     ],
@@ -168,13 +168,32 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "id_",
+        "type": "uint256"
+      }
+    ],
+    "name": "exists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
-        "name": "account",
+        "name": "account_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "operator",
+        "name": "operator_",
         "type": "address"
       }
     ],
@@ -193,27 +212,46 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "mint",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "to",
+        "name": "to_",
         "type": "address"
       },
       {
         "internalType": "uint256[]",
-        "name": "ids",
+        "name": "ids_",
         "type": "uint256[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "amounts",
+        "name": "amounts_",
         "type": "uint256[]"
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "data_",
         "type": "bytes"
       }
     ],
@@ -226,27 +264,27 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
+        "name": "from_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "to",
+        "name": "to_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "id_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "amount_",
         "type": "uint256"
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "data_",
         "type": "bytes"
       }
     ],
@@ -259,18 +297,56 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "operator",
+        "name": "operator_",
         "type": "address"
       },
       {
         "internalType": "bool",
-        "name": "approved",
+        "name": "approved_",
         "type": "bool"
       }
     ],
     "name": "setApprovalForAll",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id_",
+        "type": "uint256"
+      }
+    ],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenID_",
+        "type": "uint256"
+      }
+    ],
+    "name": "uri",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

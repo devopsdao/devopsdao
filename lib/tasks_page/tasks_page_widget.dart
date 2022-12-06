@@ -80,10 +80,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     // _searchKeywordController.addListener(() {_changeField();});
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                TaskDialog(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
+        showDialog(context: context, builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
       });
     }
   }
@@ -213,8 +210,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                         decoration: const BoxDecoration(
                             // color: Colors.white70,
                             // borderRadius: BorderRadius.circular(8),
@@ -222,15 +218,12 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(
-                                searchKeyword, tasksServices.tasksNew);
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
-                            hintStyle:
-                                TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle:
-                                TextStyle(fontSize: 17.0, color: Colors.white),
+                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
                             labelText: 'Search',
                             suffixIcon: Icon(
                               Icons.search,
@@ -288,8 +281,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                               child: TabBarView(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0, 6, 0, 0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
                                     child: RefreshIndicator(
                                       onRefresh: () async {
                                         tasksServices.isLoadingBackground = true;
@@ -298,14 +290,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                       child: ListView.builder(
                                         padding: EdgeInsets.zero,
                                         scrollDirection: Axis.vertical,
-                                        itemCount: tasksServices
-                                            .filterResults.values
-                                            .toList()
-                                            .length,
+                                        itemCount: tasksServices.filterResults.values.toList().length,
                                         itemBuilder: (context, index) {
                                           return Padding(
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(16, 8, 16, 0),
+                                            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                                             child: InkWell(
                                                 onTap: () {
                                                   // print('tap');
@@ -324,25 +312,11 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) =>
-                                                          TaskInformationDialog(
-                                                              fromPage: 'tasks',
-                                                              task:
-                                                                  objList[index],
-                                                              shimmerEnabled:
-                                                                  true));
+                                                          TaskInformationDialog(fromPage: 'tasks', task: objList[index], shimmerEnabled: true));
                                                   final String taskAddress =
-                                                      tasksServices
-                                                          .filterResults.values
-                                                          .toList()[index]
-                                                          .taskAddress
-                                                          .toString();
-                                                  RouteInformation routeInfo =
-                                                      RouteInformation(
-                                                          location:
-                                                              '/tasks/$taskAddress');
-                                                  Beamer.of(context)
-                                                      .updateRouteInformation(
-                                                          routeInfo);
+                                                      tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                                                  RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
+                                                  Beamer.of(context).updateRouteInformation(routeInfo);
                                                   // showDialog(
                                                   //     context: context,
                                                   //     builder: (context) =>
@@ -350,9 +324,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                 },
                                                 child: TaskItem(
                                                   fromPage: 'tasks',
-                                                  object: tasksServices
-                                                      .filterResults.values
-                                                      .toList()[index],
+                                                  object: tasksServices.filterResults.values.toList()[index],
                                                 )),
                                           );
                                         },

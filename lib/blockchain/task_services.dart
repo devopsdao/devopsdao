@@ -1266,12 +1266,191 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchTasksByState(String state) async {
+    List totalTaskList = await tasksFacet.getTaskContractsByState(state);
+    List totalTaskListReversed = List.from(totalTaskList.reversed);
+    totalTaskLen = totalTaskList.length;
+    notifyListeners();
+
+    filterResults.clear();
+
+    if (state == "new") {
+      tasksNew.clear();
+      tasksCustomerSelection.clear();
+      tasksPerformerParticipate.clear();
+    } else if (state == "agreed" || state == "progress" || state == "review") {
+      tasksCustomerProgress.clear();
+      tasksPerformerProgress.clear();
+    } else if (state == 'audit') {
+      tasksAuditPending.clear();
+      tasksAuditApplied.clear();
+      tasksAuditWorkingOn.clear();
+      tasksAuditComplete.clear();
+    } else if (state == "completed" || state == "canceled") {
+      tasksCustomerComplete.clear();
+      tasksPerformerComplete.clear();
+    }
+
+    if (loopRunning) {
+      stopLoopRunning = true;
+    }
+
+    if (loopRunning == false) {
+      loopRunning = true;
+      for (var i = 0; i < totalTaskListReversed.length; i++) {
+        if (stopLoopRunning) {
+          tasks.clear();
+          stopLoopRunning = false;
+          loopRunning = false;
+          fetchTasksByState(state);
+          break;
+        }
+        try {
+          tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
+          tasksLoaded++;
+          notifyListeners();
+          await monitorTaskEvents(totalTaskListReversed[i]);
+        } on GetTaskException {
+          print('could not get task ${totalTaskListReversed[i]} from blockchain');
+        }
+      }
+
+      tasksLoaded = 0;
+
+      if (loopRunning) {
+        for (Task task in tasks.values) {
+          await refreshTask(task);
+        }
+
+        isLoading = false;
+        isLoadingBackground = false;
+        await myBalance();
+        notifyListeners();
+      }
+      loopRunning = false;
+    }
+  }
+
+  Future<void> fetchTasksCustomer(String state) async {
+    List totalTaskList = await tasksFacet.getTaskContractsCustomer(state);
+    List totalTaskListReversed = List.from(totalTaskList.reversed);
+    totalTaskLen = totalTaskList.length;
+    notifyListeners();
+
+    filterResults.clear();
+
+    tasksAuditPending.clear();
+    tasksAuditApplied.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
+
+    tasksCustomerSelection.clear();
+    tasksCustomerProgress.clear();
+    tasksCustomerComplete.clear();
+
+    if (loopRunning) {
+      stopLoopRunning = true;
+    }
+
+    if (loopRunning == false) {
+      loopRunning = true;
+      for (var i = 0; i < totalTaskListReversed.length; i++) {
+        if (stopLoopRunning) {
+          tasks.clear();
+          stopLoopRunning = false;
+          loopRunning = false;
+          fetchTasksCustomer(state);
+          break;
+        }
+        try {
+          tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
+          tasksLoaded++;
+          notifyListeners();
+          await monitorTaskEvents(totalTaskListReversed[i]);
+        } on GetTaskException {
+          print('could not get task ${totalTaskListReversed[i]} from blockchain');
+        }
+      }
+
+      tasksLoaded = 0;
+
+      if (loopRunning) {
+        for (Task task in tasks.values) {
+          await refreshTask(task);
+        }
+
+        isLoading = false;
+        isLoadingBackground = false;
+        await myBalance();
+        notifyListeners();
+      }
+      loopRunning = false;
+    }
+  }
+
+  Future<void> fetchTasksPerformer(String state) async {
+    List totalTaskList = await tasksFacet.getTaskContractsPerformer(state);
+    List totalTaskListReversed = List.from(totalTaskList.reversed);
+    totalTaskLen = totalTaskList.length;
+    notifyListeners();
+
+    filterResults.clear();
+
+    tasksAuditPending.clear();
+    tasksAuditApplied.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
+
+    tasksPerformerParticipate.clear();
+    tasksPerformerProgress.clear();
+    tasksPerformerComplete.clear();
+
+    if (loopRunning) {
+      stopLoopRunning = true;
+    }
+
+    if (loopRunning == false) {
+      loopRunning = true;
+      for (var i = 0; i < totalTaskListReversed.length; i++) {
+        if (stopLoopRunning) {
+          tasks.clear();
+          stopLoopRunning = false;
+          loopRunning = false;
+          fetchTasks();
+          break;
+        }
+        try {
+          tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
+          tasksLoaded++;
+          notifyListeners();
+          await monitorTaskEvents(totalTaskListReversed[i]);
+        } on GetTaskException {
+          print('could not get task ${totalTaskListReversed[i]} from blockchain');
+        }
+      }
+
+      tasksLoaded = 0;
+
+      if (loopRunning) {
+        for (Task task in tasks.values) {
+          await refreshTask(task);
+        }
+
+        isLoading = false;
+        isLoadingBackground = false;
+        await myBalance();
+        notifyListeners();
+      }
+      loopRunning = false;
+    }
+  }
+
   Future<void> approveSpend(EthereumAddress _contractAddress, EthereumAddress publicAddress, String symbol, BigInt amount, String nanoId) async {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      senderAddress = EthereumAddress.fromHex(accounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1403,7 +1582,7 @@ class TasksServices extends ChangeNotifier {
     var senderAddress;
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(accounts[2]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      senderAddress = EthereumAddress.fromHex(accounts[2]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1574,6 +1753,10 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
+
+  // Future<void> checkTokenBalance(EthereumAddress address, int tokenType) async {
+  //   TokenContract tokenContract = TokenContract(address: contractAddress, client: _web3client, chainId: chainId);
+  // }
 
   double gasPriceValue = 0;
   Future<void> getGasPrice(sourceChain, destinationChain, {tokenAddress, tokenSymbol}) async {
