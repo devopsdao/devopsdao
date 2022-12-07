@@ -33,10 +33,12 @@ Map<String, dynamic> dialogStates = {
   // ******* CUSTOMER ********* //
   'customer-new' : {
     'name' : 'customer-new',
-    'mainButtonName': 'Select performer',
+    'mainButtonName': '',
     'secondButtonName' : '',
-    'labelMessage': 'Why you have selected this Performer?',
+    'selectButtonName' : 'Select performer',
+    'labelMessage': '',
     'secondLabelMessage': '',
+    'selectLabelMessage': 'Why you have selected this Performer?',
     'pages' : {
       'topup': 0,
       'main': 1,
@@ -112,8 +114,10 @@ Map<String, dynamic> dialogStates = {
     'name' : 'customer-audit-requested',
     'mainButtonName': '',
     'secondButtonName' : '',
+    'selectButtonName' : 'Select auditor',
     'labelMessage': '',
     'secondLabelMessage': '',
+    'selectLabelMessage': 'Why you have selected this Auditor?',
     'pages' : {
       'topup': 0,
       'main': 1,
@@ -225,8 +229,10 @@ Map<String, dynamic> dialogStates = {
     'name' : 'performer-audit-requested',
     'mainButtonName': '',
     'secondButtonName' : '',
+    'selectButtonName' : 'Select auditor',
     'labelMessage': '',
     'secondLabelMessage': '',
+    'selectLabelMessage': 'Why you have selected this Auditor?',
     'pages' : {
       'main': 0,
       'description' : 1,
@@ -264,7 +270,19 @@ Map<String, dynamic> dialogStates = {
   'auditor-requested' : {
     'name' : 'auditor-requested',
     'mainButtonName': 'Take audit',
-    'secondButtonName' : 'Tell about your audit experience',
+    'secondButtonName' : '',
+    'labelMessage': 'Tell about your audit experience',
+    'secondLabelMessage': '',
+    'pages' : {
+      'main': 0,
+      'description' : 1,
+      'chat' : 2,
+    },
+  },
+  'auditor-applied' : {
+    'name' : 'auditor-applied',
+    'mainButtonName': '',
+    'secondButtonName' : '',
     'labelMessage': '',
     'secondLabelMessage': '',
     'pages' : {

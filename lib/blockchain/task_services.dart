@@ -150,6 +150,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -237,7 +238,7 @@ class TasksServices extends ChangeNotifier {
       mmAvailable = true;
     }
 
-    if (hardhatDebug == true) {
+    if (hardhatDebug == true  || hardhatLive == true) {
       chainId = 31337;
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
@@ -865,7 +866,10 @@ class TasksServices extends ChangeNotifier {
     var addresses = jsonDecode(addressesFile);
     _contractAddress = EthereumAddress.fromHex(addresses['contracts'][chainId.toString()]["Diamond"]);
 
-    if (hardhatDebug == true) {
+    if (hardhatDebug == true  || hardhatLive == true) {
+      Random random = Random();
+      int randomNum = random.nextInt(2);
+      print(randomNum);
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
       credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
@@ -918,7 +922,7 @@ class TasksServices extends ChangeNotifier {
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
       late BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false) {
+      if (hardhatDebug == false  && hardhatLive == false) {
         weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
@@ -1032,7 +1036,7 @@ class TasksServices extends ChangeNotifier {
       final BigInt weiBalance = await taskContract.getBalance();
       final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false) {
+      if (hardhatDebug == false  && hardhatLive == false) {
         weiBalanceToken = await web3GetBalanceToken(taskAddress, 'aUSDC');
       }
       final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
@@ -1109,7 +1113,7 @@ class TasksServices extends ChangeNotifier {
       } else if (task.participant == publicAddress) {
         tasksPerformerProgress[task.taskAddress.toString()] = task;
       }
-      if (hardhatDebug == true) {
+      if (hardhatDebug == true ) {
         tasksPerformerProgress[task.taskAddress.toString()] = task;
       }
     }
@@ -1517,6 +1521,8 @@ class TasksServices extends ChangeNotifier {
     late int priceInGwei = (price * 1000000000).toInt();
     final BigInt priceInBigInt = BigInt.from(price * 1e6);
     late String txn;
+
+    // message ??= 'Contract topped up for ${price.toString()} ';
 
     if (taskTokenSymbol == 'ETH') {
       final transaction = Transaction(

@@ -252,8 +252,10 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
             ),
 
           // ************************* AUDITOR BUTTONS ************************ //
-          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
-              task.auditState == 'requested')
+          if (
+            interface.dialogCurrentState['name'] == 'auditor-requested' ||
+            tasksServices.hardhatDebug == true
+          )
             TaskDialogButton(
               inactive: false,
               buttonName: 'Take audit',

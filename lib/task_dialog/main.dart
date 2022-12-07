@@ -174,7 +174,17 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 
     } else if ((task.taskState == 'audit' && task.auditState == 'requested') &&
         (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
-      interface.dialogCurrentState = dialogStates['auditor-requested'];
+      if (task.auditors.isNotEmpty) {
+        for(var i=0; i<task.auditors.length; i++){
+          if (task.auditors[i] == tasksServices.publicAddress) {
+            interface.dialogCurrentState = dialogStates['auditor-applied'];
+          } else {
+            interface.dialogCurrentState = dialogStates['auditor-requested'];
+          }
+        }
+      } else {
+        interface.dialogCurrentState = dialogStates['auditor-requested'];
+      }
     } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
     (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['auditor-performing'];
@@ -535,7 +545,9 @@ class _DialogPagesState extends State<DialogPages> {
                             buttonColorRequired: Colors.lightBlue.shade600,
                             callback: () {
                               tasksServices.addTokens(task.taskAddress,
-                                  interface.tokensEntered, task.nanoId);
+                                  interface.tokensEntered, task.nanoId,
+                                // message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                              );
                               Navigator.pop(context);
 
                               showDialog(
@@ -1525,7 +1537,6 @@ class _DialogPagesState extends State<DialogPages> {
                     if (
                       interface.dialogCurrentState['name'] == 'customer-progress' ||
                       interface.dialogCurrentState['name'] == 'customer-review' ||
-                      interface.dialogCurrentState['name'] == 'performer-progress' ||
                       interface.dialogCurrentState['name'] == 'performer-review' ||
                       tasksServices.hardhatDebug == true
                     )
