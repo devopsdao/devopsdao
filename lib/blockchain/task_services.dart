@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TasksFacet.g.dart';
+import 'abi/TokenFacet.g.dart';
 import 'abi/TaskContract.g.dart';
 import 'abi/IERC20.g.dart';
 import 'task.dart';
@@ -824,6 +825,17 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<BigInt> getAuditorNFTBalance(EthereumAddress address, String symbol, {BlockNum? atBlock}) async {
+    var response;
+    try {
+      response = await tokenFacet.balanceOf(publicAddress!, BigInt.from(1));
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
   // late dynamic credentials;
   late dynamic accounts;
   double? ethBalance = 0;
@@ -835,6 +847,7 @@ class TasksServices extends ChangeNotifier {
   double myScore = 0.0;
 
   late TasksFacet tasksFacet;
+  late TokenFacet tokenFacet;
   // late TaskContract taskContract;
 
   late DeployedContract _deployedContract;
@@ -907,6 +920,7 @@ class TasksServices extends ChangeNotifier {
 
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
     tasksFacet = TasksFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
   }
 
   Future<void> myBalance() async {
