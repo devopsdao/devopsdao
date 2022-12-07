@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../widgets/badgetab.dart';
-import '../widgets/buttons.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/task_item.dart';
@@ -13,12 +12,12 @@ import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
 
-import 'package:throttling/throttling.dart';
+import 'package:webthree/credentials.dart';
 
 class CustomerPageWidget extends StatefulWidget {
   // static final beamLocation = BeamPage(key: ValueKey('Home'), child: CustomerPageWidget());
   // static final path = '/';
-  final String? taskAddress;
+  final EthereumAddress? taskAddress;
   const CustomerPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
@@ -54,7 +53,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
         showDialog(
             context: context,
             builder: (context) => TaskDialog(
-                  taskAddress: widget.taskAddress!,
+                  taskAddress: widget.taskAddress,
                   fromPage: 'customer',
                 ));
       });
@@ -190,7 +189,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
             // ),
           ),
           child: SizedBox(
-          width: interface.maxGlobalWidth,
+            width: interface.maxGlobalWidth,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -419,7 +418,8 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
                         showDialog(
                             context: context,
-                            builder: (context) => TaskInformationDialog(fromPage: 'customer', task: objList[index], shimmerEnabled: false));
+                            builder: (context) =>
+                                TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
                         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
                         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
                         Beamer.of(context).updateRouteInformation(routeInfo);
