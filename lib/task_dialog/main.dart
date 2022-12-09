@@ -2,7 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:badges/badges.dart';
 import 'package:devopsdao/task_dialog/pages/4_selection.dart';
 import 'package:devopsdao/task_dialog/widget/participants_list.dart';
-import 'package:devopsdao/task_dialog/widget/request_audit_widget.dart';
+import 'package:devopsdao/task_dialog/widget/request_audit_alert.dart';
 import 'package:devopsdao/widgets/payment.dart';
 import 'package:devopsdao/widgets/select_menu.dart';
 import 'package:devopsdao/task_dialog/main_page_buttons.dart';
@@ -179,17 +179,21 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
           if (task.auditors[i] == tasksServices.publicAddress) {
             interface.dialogCurrentState = dialogStates['auditor-applied'];
           } else {
-            interface.dialogCurrentState = dialogStates['auditor-requested'];
+            interface.dialogCurrentState = dialogStates['auditor-new'];
           }
         }
       } else {
-        interface.dialogCurrentState = dialogStates['auditor-requested'];
+        interface.dialogCurrentState = dialogStates['auditor-new'];
       }
     } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
     (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['auditor-performing'];
     } else if ((task.taskState == 'audit' && task.auditState == 'finished') &&
     (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
+      // taskState = audit & auditState = finished - will not fires anyway. Should be deleted
+      interface.dialogCurrentState = dialogStates['auditor-finished'];
+    } else if ((task.taskState == 'completed' && task.auditState == 'finished') &&
+        (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['auditor-finished'];
     }
 
@@ -902,6 +906,8 @@ class _DialogPagesState extends State<DialogPages> {
                       ),
                     ),
 
+
+                  // ********* auditor choose part ************ //
                   if (
                     interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
                     interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
@@ -1001,7 +1007,7 @@ class _DialogPagesState extends State<DialogPages> {
                     ),
 
 
-
+                  // ********* Participant choose part ************ //
                   if (
                     interface.dialogCurrentState['name'] == 'customer-new' ||
                     tasksServices.hardhatDebug == true
@@ -1075,7 +1081,65 @@ class _DialogPagesState extends State<DialogPages> {
                       ),
                     ),
 
-                  // const SizedBox(height: 14),
+                  // ********* Audit Completed part ************ //
+                  if (
+                  interface.dialogCurrentState['name'] == 'auditor-finished' ||
+                      tasksServices.hardhatDebug == true
+                  )
+                  // if (task.taskState == "new" &&
+                  //     task.participants.isNotEmpty &&
+                  //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                    Container(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(widget.borderRadius),
+                          ),
+                          child: ListBody(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: const Icon(
+                                        Icons.new_releases,
+                                        size: 45,
+                                        color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: RichText(
+                                        text: TextSpan(
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .apply(fontSizeFactor: 1.0),
+                                            children: const <TextSpan>[
+
+                                              TextSpan(
+                                                  text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                                  style: TextStyle(
+                                                    height: 1,
+                                                  )
+                                              ),
+                                            ]
+                                        )
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // ************ Show prices and topup part ******** //
                   // if (!FocusScope.of(context).hasFocus)
                   Container(
                     padding: const EdgeInsets.only(top: 14.0),
@@ -1148,6 +1212,8 @@ class _DialogPagesState extends State<DialogPages> {
                   //       interface.dialogCurrentState['mainButtonName'] == 'In favor of' ||
                   //       interface.dialogCurrentState['mainButtonName'] == 'Sign Review'))
 
+
+                    // ********* Text Input ************ //
                     if (
                       interface.dialogCurrentState['name'] == 'tasks-new-logged' ||
                       interface.dialogCurrentState['name'] == 'performer-agreed' ||
@@ -1506,6 +1572,54 @@ class _DialogPagesState extends State<DialogPages> {
                                                         .apply(fontSizeFactor: 0.7))
                                               ])),
                                     ),
+                                    if(task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
+                                      GestureDetector(
+                                        onTap: () async {
+                                          Clipboard.setData(ClipboardData(
+                                              text: task.auditor.toString() ))
+                                              .then((_) {
+                                            Flushbar(
+                                                icon: const Icon(
+                                                  Icons.copy,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                                message:
+                                                '${task.auditor.toString()} copied to your clipboard!',
+                                                duration: const Duration(seconds: 2),
+                                                backgroundColor: Colors.blueAccent,
+                                                shouldIconPulse: false)
+                                                .show(context);
+                                          });
+                                        },
+                                        child: RichText(
+                                            text: TextSpan(
+                                                style: DefaultTextStyle.of(context)
+                                                    .style
+                                                    .apply(fontSizeFactor: 1.0),
+                                                children:[
+                                                  const WidgetSpan(
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsets.only(right: 5.0),
+                                                        child: Icon(
+                                                          Icons.copy,
+                                                          size: 16,
+                                                          color: Colors.black26,
+                                                        ),
+                                                      )),
+                                                  const TextSpan(
+                                                      text: 'Auditor selected: \n',
+                                                      style: TextStyle(
+                                                          height: 2,
+                                                          fontWeight: FontWeight.bold)),
+                                                  TextSpan(
+                                                      text: task.auditor.toString(),
+                                                      style: DefaultTextStyle.of(context)
+                                                          .style
+                                                          .apply(fontSizeFactor: 0.7))
+                                                ])),
+                                      ),
                                     // RichText(
                                     //   text: TextSpan(
                                     //     style: DefaultTextStyle.of(context)

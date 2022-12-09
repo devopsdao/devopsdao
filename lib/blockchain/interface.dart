@@ -31,6 +31,10 @@ class InterfaceServices extends ChangeNotifier {
   // late String messageHint;
 
 
+  // dialog context (for closing it from outside)
+  late BuildContext mainDialogContext;
+
+
   late String whichWalletButtonPressed = '';
 
   // wallet/main.dart controller for tabs

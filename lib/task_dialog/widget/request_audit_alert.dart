@@ -72,13 +72,16 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
               RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      style: DefaultTextStyle
-                          .of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.1),
+                      // style: DefaultTextStyle
+                      //     .of(context)
+                      //     .style
+                      //     .apply(fontSizeFactor: 1.1),
                       children: <TextSpan>[
                         TextSpan(
-
+                          style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold),
                           text: title,
                         ),
 
@@ -177,6 +180,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                     child: InkWell(
                       onTap: () {
                         Navigator.pop(context);
+
                       },
                       child: Container(
                         margin: const EdgeInsets.all(0.0),
@@ -210,6 +214,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
+                        Navigator.pop(interface.mainDialogContext);
                         setState(() {
                           task.justLoaded = false;
                         });

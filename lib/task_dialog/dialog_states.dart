@@ -267,8 +267,8 @@ Map<String, dynamic> dialogStates = {
 
 
   // ******* AUDITOR ********* //
-  'auditor-requested' : {
-    'name' : 'auditor-requested',
+  'auditor-new' : {
+    'name' : 'auditor-new',
     'mainButtonName': 'Take audit',
     'secondButtonName' : '',
     'labelMessage': 'Tell about your audit experience',

@@ -335,6 +335,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
     List objList = tasksServices.filterResults.values.toList();
 
     return Padding(
@@ -355,10 +356,13 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                   onTap: () {
                     showDialog(
                         context: context,
-                        builder: (context) => TaskInformationDialog(
+                        builder: (context) {
+                          interface.mainDialogContext = context;
+                          return TaskInformationDialog(
                             fromPage: 'performer',
                             task: objList[index],
-                            shimmerEnabled: false));
+                            shimmerEnabled: false);
+                        });
                     final String taskAddress = tasksServices
                         .filterResults.values
                         .toList()[index]

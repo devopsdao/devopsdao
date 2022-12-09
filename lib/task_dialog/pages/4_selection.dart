@@ -200,11 +200,12 @@ class _SelectedPageState extends State<SelectedPage> {
                           Beamer.of(context).updateRouteInformation(routeInfo);
 
                           showDialog(
-                              context: context,
-                              builder: (context) => WalletAction(
-                                nanoId: task.nanoId,
-                                taskName: 'taskStateChange',
-                              ));
+                            context: context,
+                            builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            )
+                          );
                         },
                       ),
                     ],

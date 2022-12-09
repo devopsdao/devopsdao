@@ -872,8 +872,8 @@ class TasksServices extends ChangeNotifier {
       print(randomNum);
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(accounts[2]["key"]);
+      publicAddress = EthereumAddress.fromHex(accounts[2]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1162,7 +1162,8 @@ class TasksServices extends ChangeNotifier {
 
     // **** AUDIT ****
     // For auditors:
-    if (task.taskState == "audit") {
+    if (task.taskState == "audit" ||
+        task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')) {
       // Auditor side:
       if (task.auditState == "requested") {
         if (task.auditors.isNotEmpty) {
@@ -1189,6 +1190,8 @@ class TasksServices extends ChangeNotifier {
           tasksAuditComplete[task.taskAddress.toString()] = task;
         }
       }
+
+
       if (hardhatDebug == true) {
         tasksAuditApplied[task.taskAddress.toString()] = task;
       }

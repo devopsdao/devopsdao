@@ -340,6 +340,8 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
+
     List objList = tasksServices.filterResults.values.toList();
 
     return Padding(
@@ -377,11 +379,14 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
 
                   showDialog(
                       context: context,
-                      builder: (context) => TaskInformationDialog(
+                      builder: (context) {
+                        interface.mainDialogContext = context;
+                        return TaskInformationDialog(
                             fromPage: 'auditor',
                             task: objList[index],
                             shimmerEnabled: false,
-                          ));
+                          );
+                      });
                   final String taskAddress = tasksServices.filterResults.values
                       .toList()[index]
                       .taskAddress
