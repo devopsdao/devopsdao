@@ -11,16 +11,17 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
+import 'package:webthree/credentials.dart';
+
 class AuditorPageWidget extends StatefulWidget {
-  final String? taskAddress;
+  final EthereumAddress? taskAddress;
   const AuditorPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
   _AuditorPageWidgetState createState() => _AuditorPageWidgetState();
 }
 
-class _AuditorPageWidgetState extends State<AuditorPageWidget>
-    with TickerProviderStateMixin {
+class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProviderStateMixin {
   // String _searchKeyword = '';
   int tabIndex = 0;
   final _searchKeywordController = TextEditingController();
@@ -54,7 +55,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
         showDialog(
             context: context,
             builder: (context) => TaskDialog(
-                  taskAddress: widget.taskAddress!,
+                  taskAddress: widget.taskAddress,
                   fromPage: 'auditor',
                 ));
       });
@@ -62,8 +63,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
     startPageLoadAnimations(
-      animationsMap.values
-          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
+      animationsMap.values.where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
       this,
     );
   }
@@ -192,17 +192,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                           _searchKeywordController.clear();
                           tabIndex = index;
                           if (index == 0) {
-                            tasksServices
-                                .resetFilter(tasksServices.tasksAuditPending);
+                            tasksServices.resetFilter(tasksServices.tasksAuditPending);
                           } else if (index == 1) {
-                            tasksServices
-                                .resetFilter(tasksServices.tasksAuditApplied);
+                            tasksServices.resetFilter(tasksServices.tasksAuditApplied);
                           } else if (index == 2) {
-                            tasksServices
-                                .resetFilter(tasksServices.tasksAuditWorkingOn);
+                            tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
                           } else if (index == 3) {
-                            tasksServices
-                                .resetFilter(tasksServices.tasksAuditComplete);
+                            tasksServices.resetFilter(tasksServices.tasksAuditComplete);
                           }
                         },
                         tabs: [
@@ -234,8 +230,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                         // decoration: const BoxDecoration(
                         //   // color: Colors.white70,
                         //   // borderRadius: BorderRadius.circular(8),
@@ -245,25 +240,19 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget>
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(
-                                  searchKeyword, tasksServices.tasksAuditPending);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditPending);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(
-                                  searchKeyword, tasksServices.tasksAuditApplied);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(searchKeyword,
-                                  tasksServices.tasksAuditWorkingOn);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditWorkingOn);
                             } else if (tabIndex == 3) {
-                              tasksServices.runFilter(searchKeyword,
-                                  tasksServices.tasksAuditComplete);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditComplete);
                             }
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
-                            hintStyle:
-                                TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle:
-                                TextStyle(fontSize: 17.0, color: Colors.white),
+                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
                             labelText: 'Search',
                             suffixIcon: Icon(
                               Icons.search,
@@ -383,8 +372,13 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                         interface.mainDialogContext = context;
                         return TaskInformationDialog(
                             fromPage: 'auditor',
-                            task: objList[index],
+                            taskAddress: objList[index].taskAddress,
                             shimmerEnabled: false,
+<<<<<<< HEAD
+                          ));
+                  final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                  RouteInformation routeInfo = RouteInformation(location: '/auditor/$taskAddress');
+=======
                           );
                       });
                   final String taskAddress = tasksServices.filterResults.values
@@ -393,6 +387,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                       .toString();
                   RouteInformation routeInfo =
                       RouteInformation(location: '/auditor/$taskAddress');
+>>>>>>> 4f420566fa5dd1a589019d3ae2235a2abc64d43c
                   Beamer.of(context).updateRouteInformation(routeInfo);
                 },
                 child: TaskItem(fromPage: 'auditor', object: objList[index]),

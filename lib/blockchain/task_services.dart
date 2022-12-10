@@ -17,7 +17,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TasksFacet.g.dart';
+import 'abi/TokenFacet.g.dart';
 import 'abi/TaskContract.g.dart';
+import 'abi/AxelarGMP.g.dart';
+import 'abi/Hyperlane.g.dart';
 import 'abi/IERC20.g.dart';
 import 'task.dart';
 import "package:universal_html/html.dart" hide Platform;
@@ -198,11 +201,22 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrl;
   late String _wsUrl;
 
+  late String _rpcUrlMatic;
+  late String _wsUrlMatic;
+
+  late String _rpcUrlAxelar;
+  late String _wsUrlAxelar;
+
   int chainId = 0;
+  int chainIdAxelar = 5;
+  int chainIdHyperlane = 80001;
+
   bool isLoading = true;
   bool isLoadingBackground = false;
 
   late Web3Client _web3client;
+  late Web3Client _web3clientAxelar;
+  late Web3Client _web3clientHyperlane;
 
   bool isDeviceConnected = false;
 
@@ -238,7 +252,7 @@ class TasksServices extends ChangeNotifier {
       mmAvailable = true;
     }
 
-    if (hardhatDebug == true  || hardhatLive == true) {
+    if (hardhatDebug == true || hardhatLive == true) {
       chainId = 31337;
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
@@ -248,6 +262,12 @@ class TasksServices extends ChangeNotifier {
       // _wsUrl = 'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
       _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+      _rpcUrlMatic = 'https://matic-mumbai.chainstacklabs.com';
+      _wsUrlMatic = 'wss://matic-mumbai.chainstacklabs.com';
+
+      _rpcUrlAxelar = 'https://rpc.ankr.com/eth_goerli';
+      _wsUrlAxelar = 'wss://rpc.ankr.com/eth_goerli';
       // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
       // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
     }
@@ -279,6 +299,30 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
+    _web3clientAxelar = Web3Client(
+      _rpcUrlAxelar,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrlAxelar);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrlAxelar).cast<String>();
+        }
+      },
+    );
+    _web3clientHyperlane = Web3Client(
+      _rpcUrlMatic,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrlMatic);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+        }
+      },
+    );
     await startup();
     // await getABI();
     // await getDeployedContract();
@@ -293,18 +337,28 @@ class TasksServices extends ChangeNotifier {
   late num totalTaskLen = 0;
   int tasksLoaded = 0;
   late EthereumAddress _contractAddress;
+  late EthereumAddress _contractAddressAxelar;
+  late EthereumAddress _contractAddressHyperlane;
   EthereumAddress zeroAddress = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
-  Future<void> getABI() async {
-    // String abiFile =
-    //     await rootBundle.loadString('lib/blockchain/abi/TasksFacet.json');
+  // Future<void> getABI() async {
+  //   // String abiFile =
+  //   //     await rootBundle.loadString('lib/blockchain/abi/TasksFacet.json');
 
-    // var jsonABI = jsonDecode(abiFile);
-    // _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI), 'TasksFacet');
+  //   // var jsonABI = jsonDecode(abiFile);
+  //   // _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI), 'TasksFacet');
 
-    String addressesFile = await rootBundle.loadString('lib/blockchain/abi/addresses.json');
-    var addresses = jsonDecode(addressesFile);
-    _contractAddress = EthereumAddress.fromHex(addresses["Diamond"]);
-  }
+  //   String addressesFile = await rootBundle.loadString('lib/blockchain/abi/addresses.json');
+  //   var addresses = jsonDecode(addressesFile);
+  //   _contractAddress = EthereumAddress.fromHex(addresses["Diamond"]);
+
+  //   String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
+  //   var addressesAxelar = jsonDecode(addressesFileAxelar);
+  //   _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar["Diamond"]);
+
+  //   String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
+  //   var addressesHyperlane = jsonDecode(addressesFileHyperlane);
+  //   _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane["Diamond"]);
+  // }
 
   bool validChainID = false;
   bool validChainIDWC = false;
@@ -330,7 +384,7 @@ class TasksServices extends ChangeNotifier {
           if (hardhatDebug == false) {
             credentials = await wallectConnectTransaction?.getCredentials();
             chainId = session.chainId;
-            if (chainId == 1287) {
+            if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
               validChainID = true;
               validChainIDWC = true;
             } else {
@@ -825,6 +879,17 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<BigInt> getAuditorNFTBalance(EthereumAddress address, String symbol, {BlockNum? atBlock}) async {
+    var response;
+    try {
+      response = await tokenFacet.balanceOf(publicAddress!, BigInt.from(1));
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
   // late dynamic credentials;
   late dynamic accounts;
   double? ethBalance = 0;
@@ -836,6 +901,9 @@ class TasksServices extends ChangeNotifier {
   double myScore = 0.0;
 
   late TasksFacet tasksFacet;
+  late TokenFacet tokenFacet;
+  late AxelarGMP axelarGMP;
+  late Hyperlane hyperlane;
   // late TaskContract taskContract;
 
   late DeployedContract _deployedContract;
@@ -866,10 +934,18 @@ class TasksServices extends ChangeNotifier {
     var addresses = jsonDecode(addressesFile);
     _contractAddress = EthereumAddress.fromHex(addresses['contracts'][chainId.toString()]["Diamond"]);
 
-    if (hardhatDebug == true  || hardhatLive == true) {
+    String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
+    var addressesAxelar = jsonDecode(addressesFileAxelar);
+    _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar['contracts'][chainIdAxelar.toString()]["Diamond"]);
+
+    String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
+    var addressesHyperlane = jsonDecode(addressesFileHyperlane);
+    _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane['contracts'][chainIdHyperlane.toString()]["Diamond"]);
+
+    if (hardhatDebug == true || hardhatLive == true) {
       Random random = Random();
       int randomNum = random.nextInt(2);
-      print(randomNum);
+
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
       credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
@@ -908,9 +984,14 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> connectContracts() async {
     EthereumAddress tokenContractAddress = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+    EthereumAddress tokenContractAddressGoerli = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
 
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
     tasksFacet = TasksFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    axelarGMP = AxelarGMP(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
+    hyperlane = Hyperlane(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
+    // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: _web3client, chainId: chainId);
   }
 
   Future<void> myBalance() async {
@@ -922,7 +1003,7 @@ class TasksServices extends ChangeNotifier {
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
       late BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false  && hardhatLive == false) {
+      if (hardhatDebug == false && hardhatLive == false) {
         weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
@@ -1036,7 +1117,7 @@ class TasksServices extends ChangeNotifier {
       final BigInt weiBalance = await taskContract.getBalance();
       final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
       BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false  && hardhatLive == false) {
+      if (hardhatDebug == false && hardhatLive == false) {
         weiBalanceToken = await web3GetBalanceToken(taskAddress, 'aUSDC');
       }
       final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
@@ -1070,6 +1151,12 @@ class TasksServices extends ChangeNotifier {
       return taskObject;
     }
     throw (GetTaskException);
+  }
+
+  Future<void> loadOneTask(taskAddress) async {
+    Task task = await getTask(taskAddress);
+    tasks[taskAddress] = task;
+    refreshTask(task);
   }
 
   Future<void> refreshTask(Task task) async {
@@ -1113,7 +1200,7 @@ class TasksServices extends ChangeNotifier {
       } else if (task.participant == publicAddress) {
         tasksPerformerProgress[task.taskAddress.toString()] = task;
       }
-      if (hardhatDebug == true ) {
+      if (hardhatDebug == true) {
         tasksPerformerProgress[task.taskAddress.toString()] = task;
       }
     }
@@ -1162,8 +1249,7 @@ class TasksServices extends ChangeNotifier {
 
     // **** AUDIT ****
     // For auditors:
-    if (task.taskState == "audit" ||
-        task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')) {
+    if (task.taskState == "audit" || task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')) {
       // Auditor side:
       if (task.auditState == "requested") {
         if (task.auditors.isNotEmpty) {
@@ -1190,7 +1276,6 @@ class TasksServices extends ChangeNotifier {
           tasksAuditComplete[task.taskAddress.toString()] = task;
         }
       }
-
 
       if (hardhatDebug == true) {
         tasksAuditApplied[task.taskAddress.toString()] = task;
@@ -1492,7 +1577,7 @@ class TasksServices extends ChangeNotifier {
           from: publicAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        txn = await hyperlane.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
             credentials: credentials, transaction: transaction);
       } else if (taskTokenSymbol == 'aUSDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);

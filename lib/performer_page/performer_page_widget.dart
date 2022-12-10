@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
 
+import 'package:webthree/credentials.dart';
+
 class PerformerPageWidget extends StatefulWidget {
-  final String? taskAddress;
+  final EthereumAddress? taskAddress;
   const PerformerPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
@@ -46,7 +48,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
           showDialog(
               context: context,
               builder: (context) => TaskDialog(
-                    taskAddress: widget.taskAddress!,
+                    taskAddress: widget.taskAddress,
                     fromPage: 'performer',
                   ));
         }
@@ -73,15 +75,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    Map tabs = {
-      "new": 0,
-      "agreed": 1,
-      "progress": 1,
-      "review": 1,
-      "audit": 1,
-      "completed": 2,
-      "canceled": 2
-    };
+    Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
@@ -185,14 +179,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           tabIndex = index;
                           print(index);
                           if (index == 0) {
-                            tasksServices.resetFilter(
-                                tasksServices.tasksPerformerParticipate);
+                            tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
                           } else if (index == 1) {
-                            tasksServices.resetFilter(
-                                tasksServices.tasksPerformerProgress);
+                            tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
                           } else if (index == 2) {
-                            tasksServices.resetFilter(
-                                tasksServices.tasksPerformerComplete);
+                            tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
                           }
                         },
                         tabs: [
@@ -201,8 +192,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                             //   FontAwesomeIcons.smileBeam,
                             // ),
                             child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksPerformerParticipate.length,
+                              taskCount: tasksServices.tasksPerformerParticipate.length,
                               tabText: 'Applied',
                             ),
                           ),
@@ -211,8 +201,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                             //   Icons.card_travel_outlined,
                             // ),
                             child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksPerformerProgress.length,
+                              taskCount: tasksServices.tasksPerformerProgress.length,
                               tabText: 'Working',
                             ),
                           ),
@@ -221,8 +210,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                             //   Icons.done_outline,
                             // ),
                             child: BadgeTab(
-                              taskCount:
-                                  tasksServices.tasksPerformerComplete.length,
+                              taskCount: tasksServices.tasksPerformerComplete.length,
                               tabText: 'Complete',
                             ),
                           ),
@@ -230,8 +218,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                         // decoration: const BoxDecoration(
                         //   // color: Colors.white70,
                         //   // borderRadius: BorderRadius.circular(8),
@@ -241,22 +228,17 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(searchKeyword,
-                                  tasksServices.tasksPerformerParticipate);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(searchKeyword,
-                                  tasksServices.tasksPerformerProgress);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(searchKeyword,
-                                  tasksServices.tasksPerformerComplete);
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
                             }
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
-                            hintStyle:
-                                TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle:
-                                TextStyle(fontSize: 17.0, color: Colors.white),
+                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
                             labelText: 'Search',
                             suffixIcon: Icon(
                               Icons.search,
@@ -322,8 +304,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
 
 class MyPerformerTabWidget extends StatefulWidget {
   final String tabName;
-  const MyPerformerTabWidget({Key? key, required this.tabName})
-      : super(key: key);
+  const MyPerformerTabWidget({Key? key, required this.tabName}) : super(key: key);
 
   @override
   _MyPerformerTabWidget createState() => _MyPerformerTabWidget();
@@ -356,6 +337,12 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                   onTap: () {
                     showDialog(
                         context: context,
+<<<<<<< HEAD
+                        builder: (context) =>
+                            TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+                    final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                    RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
+=======
                         builder: (context) {
                           interface.mainDialogContext = context;
                           return TaskInformationDialog(
@@ -370,6 +357,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                         .toString();
                     RouteInformation routeInfo =
                         RouteInformation(location: '/performer/$taskAddress');
+>>>>>>> 4f420566fa5dd1a589019d3ae2235a2abc64d43c
                     Beamer.of(context).updateRouteInformation(routeInfo);
                   },
                   child: TaskItem(

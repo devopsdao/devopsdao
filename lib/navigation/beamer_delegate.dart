@@ -2,6 +2,7 @@
 
 import 'package:beamer/beamer.dart';
 import 'package:devopsdao/auditor_page/auditor_page_widget.dart';
+import 'package:webthree/webthree.dart';
 import 'authenticator.dart';
 // import '../../screens.dart';
 import '../index.dart';
@@ -49,7 +50,7 @@ void createBeamerDelegate() {
               ),
             ),
         '/tasks/:taskAddress': (context, state, data) {
-          String taskAddress = state.pathParameters['taskAddress']!;
+          EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
             body: TasksPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: const NavBarPage(
@@ -58,7 +59,7 @@ void createBeamerDelegate() {
           );
         },
         '/customer/:taskAddress': (context, state, data) {
-          String taskAddress = state.pathParameters['taskAddress']!;
+          EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
             body: CustomerPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: const NavBarPage(
@@ -67,7 +68,7 @@ void createBeamerDelegate() {
           );
         },
         '/performer/:taskAddress': (context, state, data) {
-          String taskAddress = state.pathParameters['taskAddress']!;
+          EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
             body: PerformerPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: const NavBarPage(
@@ -76,7 +77,7 @@ void createBeamerDelegate() {
           );
         },
         '/auditor/:taskAddress': (context, state, data) {
-          String taskAddress = state.pathParameters['taskAddress']!;
+          EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
             body: AuditorPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: const NavBarPage(
@@ -91,8 +92,7 @@ void createBeamerDelegate() {
       BeamGuard(
         pathPatterns: ['/home1'],
         check: (_, __) => authenticator.isLoading,
-        beamToNamed: (_, __, deepLink) =>
-            authenticator.isAuthenticated ? (deepLink ?? '/home') : '/home',
+        beamToNamed: (_, __, deepLink) => authenticator.isAuthenticated ? (deepLink ?? '/home') : '/home',
       ),
       //   BeamGuard(
       //     pathPatterns: ['/login'],

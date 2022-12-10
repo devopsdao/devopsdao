@@ -12,8 +12,7 @@ import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
 
-import 'package:auto_animated/auto_animated.dart';
-import 'auto_animated_utils.dart';
+import 'package:webthree/credentials.dart';
 
 // class ExchangeFilterWidget extends ChangeNotifier {
 //   List<Task> filterResults = [];
@@ -42,7 +41,7 @@ import 'auto_animated_utils.dart';
 // }
 
 class TasksPageWidget extends StatefulWidget {
-  final String? taskAddress;
+  final EthereumAddress? taskAddress;
   const TasksPageWidget({Key? key, this.taskAddress}) : super(key: key);
 
   @override
@@ -311,8 +310,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                                   // print(objList);
                                                   showDialog(
                                                       context: context,
-                                                      builder: (context) =>
-                                                          TaskInformationDialog(fromPage: 'tasks', task: objList[index], shimmerEnabled: true));
+                                                      builder: (context) => TaskInformationDialog(
+                                                          fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
                                                   final String taskAddress =
                                                       tasksServices.filterResults.values.toList()[index].taskAddress.toString();
                                                   RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
