@@ -450,7 +450,7 @@ class _DialogPagesState extends State<DialogPages> {
 
     interface.taskMessage = messageForStateController!.text;
 
-    // Task task = widget.task;
+    Task task = widget.task;
     String fromPage = widget.fromPage;
     bool shimmerEnabled = widget.shimmerEnabled;
 
