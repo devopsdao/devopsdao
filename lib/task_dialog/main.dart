@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:badges/badges.dart';
 import 'package:devopsdao/task_dialog/pages/4_selection.dart';
 import 'package:devopsdao/task_dialog/widget/participants_list.dart';
 import 'package:devopsdao/task_dialog/widget/request_audit_alert.dart';
@@ -9,7 +10,10 @@ import 'package:devopsdao/task_dialog/dialog_states.dart';
 import 'package:devopsdao/widgets/wallet_action.dart';
 import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:devopsdao/task_dialog/widget/rate_widget.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:horizontal_blocked_scroll_physics/horizontal_blocked_scroll_physics.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
 
@@ -113,14 +117,6 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
       backgroundPicture = "assets/images/cross.png";
     }
 
-    // else {
-    //   print('Initial page in dialog not set! Default is 0');
-    //   interface.dialogPageNum = 0;
-    //   interface.dialogPagesController = PageController(initialPage: 0);
-    // }
-
-    bool shimmerEnabled = widget.shimmerEnabled;
-
     EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Task>(
         future: tasksServices.getTask(taskAddress), // a previously-obtained Future<String> or null
@@ -167,11 +163,25 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
               (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
             interface.dialogCurrentState = dialogStates['performer-audit-performing'];
           } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
-            interface.dialogCurrentState = dialogStates['auditor-requested'];
+            if (task.auditors.isNotEmpty) {
+              for (var i = 0; i < task.auditors.length; i++) {
+                if (task.auditors[i] == tasksServices.publicAddress) {
+                  interface.dialogCurrentState = dialogStates['auditor-applied'];
+                } else {
+                  interface.dialogCurrentState = dialogStates['auditor-new'];
+                }
+              }
+            } else {
+              interface.dialogCurrentState = dialogStates['auditor-new'];
+            }
           } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
               (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
             interface.dialogCurrentState = dialogStates['auditor-performing'];
           } else if ((task.taskState == 'audit' && task.auditState == 'finished') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
+            // taskState = audit & auditState = finished - will not fires anyway. Should be deleted
+            interface.dialogCurrentState = dialogStates['auditor-finished'];
+          } else if ((task.taskState == 'completed' && task.auditState == 'finished') &&
+              (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
             interface.dialogCurrentState = dialogStates['auditor-finished'];
           }
 
@@ -183,6 +193,13 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             // print(interface.dialogCurrentState['pages']['main']);
           }
 
+          // else {
+          //   print('Initial page in dialog not set! Default is 0');
+          //   interface.dialogPageNum = 0;
+          //   interface.dialogPagesController = PageController(initialPage: 0);
+          // }
+
+          bool shimmerEnabled = widget.shimmerEnabled;
           Widget child;
           child = LayoutBuilder(builder: (context, constraints) {
             // print('max:  ${constraints.maxHeight}');
@@ -433,7 +450,7 @@ class _DialogPagesState extends State<DialogPages> {
 
     interface.taskMessage = messageForStateController!.text;
 
-    Task task = widget.task;
+    // Task task = widget.task;
     String fromPage = widget.fromPage;
     bool shimmerEnabled = widget.shimmerEnabled;
 
@@ -473,39 +490,37 @@ class _DialogPagesState extends State<DialogPages> {
           //   enabled: shimmerEnabled,
           //   child:
           if (interface.dialogCurrentState['pages'].containsKey('topup'))
-          Center(
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: maxInternalWidth,
-                  maxHeight: widget.screenHeightSizeNoKeyboard,
-                  // maxHeight: widget.screenHeightSize
-                ),
-                child: Column(
-                  children: [
-                    Payment(
-                        purpose: 'topup', innerWidth: innerWidth,
-                        borderRadius: widget.borderRadius
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                      width: innerWidth + 8,
-                      child: Row(
-                        // direction: Axis.horizontal,
-                        // crossAxisAlignment: WrapCrossAlignment.start,
-                        children: [
-                          TaskDialogButton(
-                            // padding: 8.0,
-                            inactive: interface.tokensEntered == 0.0 ? true : false,
-                            buttonName: 'Topup contract',
-                            buttonColorRequired: Colors.lightBlue.shade600,
-                            callback: () {
-                              tasksServices.addTokens(task.taskAddress,
+            Center(
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: maxInternalWidth,
+                    maxHeight: widget.screenHeightSizeNoKeyboard,
+                    // maxHeight: widget.screenHeightSize
+                  ),
+                  child: Column(
+                    children: [
+                      Payment(purpose: 'topup', innerWidth: innerWidth, borderRadius: widget.borderRadius),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                        width: innerWidth + 8,
+                        child: Row(
+                          // direction: Axis.horizontal,
+                          // crossAxisAlignment: WrapCrossAlignment.start,
+                          children: [
+                            TaskDialogButton(
+                              // padding: 8.0,
+                              inactive: interface.tokensEntered == 0.0 ? true : false,
+                              buttonName: 'Topup contract',
+                              buttonColorRequired: Colors.lightBlue.shade600,
+                              callback: () {
+                                tasksServices.addTokens(
+                                  task.taskAddress,
                                   interface.tokensEntered, task.nanoId,
-                                // message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-                              );
-                              Navigator.pop(context);
+                                  // message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                                );
+                                Navigator.pop(context);
 
                                 showDialog(
                                     context: context,
@@ -822,76 +837,59 @@ class _DialogPagesState extends State<DialogPages> {
                         ),
                       ),
 
-
-                  // ********* auditor choose part ************ //
-                  if (
-                    interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
-                    interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
-                    interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
-                    interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
-                    tasksServices.hardhatDebug == true
-                  )
-                  // if (task.auditInitiator == tasksServices.publicAddress &&
-                  //     interface.dialogCurrentState['pages'].containsKey('select'))
-                    Container(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Material(
-                        elevation: 10,
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          width: innerWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
-                          child: ListBody(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: const Icon(
-                                        Icons.warning_amber_rounded,
-                                        size: 45,
-                                        color: Colors.orange), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                  'Warning, this contract on Audit state!',
-                                                  style: TextStyle(
-                                                      height: 1.1,
-                                                      fontWeight: FontWeight.bold)),
-                                              if (task.auditInitiator == tasksServices.publicAddress &&
-                                                  interface.dialogCurrentState['pages'].containsKey('select'))
-                                              Text( 'There '
-                                                        '${task.auditors.length == 1 ? 'is' : 'are'} '
-                                                        '${task.auditors.length.toString()} auditor'
-                                                        '${task.auditors.length == 1 ? '' : 's'}'
-                                                        ' waiting for your decision',
-                                                    style: const TextStyle(
-                                                      height: 1.1,
-                                                    )
-                                                ),
-                                              if(task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
-                                                  task.auditInitiator != tasksServices.publicAddress)
-                                              const Text(
-                                                  'the auditor is expected to be selected',
-                                                  style: TextStyle(
-                                                      height: 1.1)),
-                                              if(task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
-                                              const Text('Your request is being resolved by: ',
-                                                  style: TextStyle(
-                                                      height: 1.1
-                                                  )
-                                              ),
-                                              if(task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
-                                              Text( '${task.auditor}',
-                                                  style: const TextStyle(
-                                                      height: 1.5,
+                    // ********* auditor choose part ************ //
+                    if (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
+                        interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
+                        interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
+                        interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
+                        tasksServices.hardhatDebug == true)
+                      // if (task.auditInitiator == tasksServices.publicAddress &&
+                      //     interface.dialogCurrentState['pages'].containsKey('select'))
+                      Container(
+                        padding: const EdgeInsets.only(top: 14.0),
+                        child: Material(
+                          elevation: 10,
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            width: innerWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(widget.borderRadius),
+                            ),
+                            child: ListBody(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const Icon(Icons.warning_amber_rounded,
+                                          size: 45, color: Colors.orange), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                    ),
+                                    Expanded(
+                                        flex: 2,
+                                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                          const Text('Warning, this contract on Audit state!',
+                                              style: TextStyle(height: 1.1, fontWeight: FontWeight.bold)),
+                                          if (task.auditInitiator == tasksServices.publicAddress &&
+                                              interface.dialogCurrentState['pages'].containsKey('select'))
+                                            Text(
+                                                'There '
+                                                '${task.auditors.length == 1 ? 'is' : 'are'} '
+                                                '${task.auditors.length.toString()} auditor'
+                                                '${task.auditors.length == 1 ? '' : 's'}'
+                                                ' waiting for your decision',
+                                                style: const TextStyle(
+                                                  height: 1.1,
+                                                )),
+                                          if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
+                                              task.auditInitiator != tasksServices.publicAddress)
+                                            const Text('the auditor is expected to be selected', style: TextStyle(height: 1.1)),
+                                          if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
+                                            const Text('Your request is being resolved by: ', style: TextStyle(height: 1.1)),
+                                          if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
+                                            Text('${task.auditor}',
+                                                style: const TextStyle(
+                                                  height: 1.5,
                                                   fontSize: 9,
                                                   // backgroundColor: Colors.black12
                                                 )),
@@ -916,47 +914,36 @@ class _DialogPagesState extends State<DialogPages> {
                         ),
                       ),
 
-
-                  // ********* Participant choose part ************ //
-                  if (
-                    interface.dialogCurrentState['name'] == 'customer-new' ||
-                    tasksServices.hardhatDebug == true
-                  )
-                  // if (task.taskState == "new" &&
-                  //     task.participants.isNotEmpty &&
-                  //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
-                    Container(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Material(
-                        elevation: 10,
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          width: innerWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
-                          child: ListBody(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: const Icon(
-                                        Icons.new_releases,
-                                        size: 45,
-                                        color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-
-                                          TextSpan(
+                    // ********* Participant choose part ************ //
+                    if (interface.dialogCurrentState['name'] == 'customer-new' || tasksServices.hardhatDebug == true)
+                      // if (task.taskState == "new" &&
+                      //     task.participants.isNotEmpty &&
+                      //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                      Container(
+                        padding: const EdgeInsets.only(top: 14.0),
+                        child: Material(
+                          elevation: 10,
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            width: innerWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(widget.borderRadius),
+                            ),
+                            child: ListBody(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const Icon(Icons.new_releases,
+                                          size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: RichText(
+                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                                        TextSpan(
                                             text: 'There '
                                                 '${task.participants.length == 1 ? 'is' : 'are'} '
                                                 '${task.participants.length.toString()} participant'
@@ -985,7 +972,53 @@ class _DialogPagesState extends State<DialogPages> {
                         ),
                       ),
 
-                    // const SizedBox(height: 14),
+                    // ********* Audit Completed part ************ //
+                    if (interface.dialogCurrentState['name'] == 'auditor-finished' || tasksServices.hardhatDebug == true)
+                      // if (task.taskState == "new" &&
+                      //     task.participants.isNotEmpty &&
+                      //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                      Container(
+                        padding: const EdgeInsets.only(top: 14.0),
+                        child: Material(
+                          elevation: 10,
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            width: innerWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(widget.borderRadius),
+                            ),
+                            child: ListBody(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const Icon(Icons.new_releases,
+                                          size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                              children: const <TextSpan>[
+                                            TextSpan(
+                                                text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                                style: TextStyle(
+                                                  height: 1,
+                                                )),
+                                          ])),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    // ************ Show prices and topup part ******** //
                     // if (!FocusScope.of(context).hasFocus)
                     Container(
                       padding: const EdgeInsets.only(top: 14.0),
@@ -1047,200 +1080,70 @@ class _DialogPagesState extends State<DialogPages> {
                     //       interface.dialogCurrentState['mainButtonName'] == 'In favor of' ||
                     //       interface.dialogCurrentState['mainButtonName'] == 'Sign Review'))
 
-                  // ********* Audit Completed part ************ //
-                  if (
-                  interface.dialogCurrentState['name'] == 'auditor-finished' ||
-                      tasksServices.hardhatDebug == true
-                  )
-                  // if (task.taskState == "new" &&
-                  //     task.participants.isNotEmpty &&
-                  //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
-                    Container(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Material(
-                        elevation: 10,
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          width: innerWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
-                          child: ListBody(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: const Icon(
-                                        Icons.new_releases,
-                                        size: 45,
-                                        color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .apply(fontSizeFactor: 1.0),
-                                            children: const <TextSpan>[
-
-                                              TextSpan(
-                                                  text: 'Thank you for your contribution. This Task completed. You have earned: ',
-                                                  style: TextStyle(
-                                                    height: 1,
-                                                  )
-                                              ),
-                                            ]
-                                        )
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  // ************ Show prices and topup part ******** //
-                  // if (!FocusScope.of(context).hasFocus)
-                  Container(
-                    padding: const EdgeInsets.only(top: 14.0),
-                    child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        width: innerWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                                child: ListBody(
-                              children: <Widget>[
-                                RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      TextSpan(
-                                          text: '${task.contractValue} DEV \n',
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 1.0)),
-                                      TextSpan(
-                                          text: '${task.contractValueToken} aUSDC',
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 1.0))
-                                    ])),
-                              ],
-                            )),
-                            const Spacer(),
-                            if (fromPage == 'customer' ||
-                                tasksServices.hardhatDebug == true)
-                              TaskDialogButton(
-                                padding: 6.0,
-                                inactive: false,
-                                buttonName: 'Topup',
-                                buttonColorRequired: Colors.lightBlue.shade600,
-                                callback: () {
-                                  interface.dialogPagesController.animateToPage(
-                                      interface.dialogCurrentState['pages']['topup'] ?? 99,
-                                      duration: const Duration(milliseconds: 400),
-                                      curve: Curves.ease);
-                                },
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  // ChooseWalletButton(
-                  //   active: tasksServices.platform == 'mobile' ? true : false,
-                  //   buttonName: 'metamask',
-                  //   borderRadius: widget.borderRadius,
-                  // ),
-                  // const SizedBox(height: 14),
-                  // if (tasksServices.publicAddress != null &&
-                  //   tasksServices.validChainID &&
-                  //   ((interface.dialogCurrentState['mainButtonName'] == 'Participate' &&
-                  //       fromPage == 'tasks') ||
-                  //       interface.dialogCurrentState['mainButtonName'] == 'Start the task' ||
-                  //       interface.dialogCurrentState['mainButtonName'] == 'Review' ||
-                  //       interface.dialogCurrentState['mainButtonName'] == 'In favor of' ||
-                  //       interface.dialogCurrentState['mainButtonName'] == 'Sign Review'))
-
-
                     // ********* Text Input ************ //
-                    if (
-                      interface.dialogCurrentState['name'] == 'tasks-new-logged' ||
-                      interface.dialogCurrentState['name'] == 'performer-agreed' ||
-                      interface.dialogCurrentState['name'] == 'performer-progress' ||
-                      interface.dialogCurrentState['name'] == 'customer-review' ||
-                      tasksServices.hardhatDebug == true
-                    )
-                    Container(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Material(
-                        elevation: 10,
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                        child: Container(
-                          // constraints: const BoxConstraints(maxHeight: 500),
-                          padding: const EdgeInsets.all(8.0),
-                          width: innerWidth,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(widget.borderRadius),
-                          ),
-                          child: TextFormField(
-                            controller: messageForStateController,
-                            // onChanged: (_) => EasyDebounce.debounce(
-                            //   'messageForStateController',
-                            //   Duration(milliseconds: 2000),
-                            //   () => setState(() {}),
-                            // ),
-                            autofocus: false,
-                            obscureText: false,
-                            onTapOutside: (test) {
-                              FocusScope.of(context).unfocus();
-                              interface.taskMessage =
-                                  messageForStateController!.text;
-                            },
+                    if (interface.dialogCurrentState['name'] == 'tasks-new-logged' ||
+                        interface.dialogCurrentState['name'] == 'performer-agreed' ||
+                        interface.dialogCurrentState['name'] == 'performer-progress' ||
+                        interface.dialogCurrentState['name'] == 'customer-review' ||
+                        tasksServices.hardhatDebug == true)
+                      Container(
+                        padding: const EdgeInsets.only(top: 14.0),
+                        child: Material(
+                          elevation: 10,
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          child: Container(
+                            // constraints: const BoxConstraints(maxHeight: 500),
+                            padding: const EdgeInsets.all(8.0),
+                            width: innerWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(widget.borderRadius),
+                            ),
+                            child: TextFormField(
+                              controller: messageForStateController,
+                              // onChanged: (_) => EasyDebounce.debounce(
+                              //   'messageForStateController',
+                              //   Duration(milliseconds: 2000),
+                              //   () => setState(() {}),
+                              // ),
+                              autofocus: false,
+                              obscureText: false,
+                              onTapOutside: (test) {
+                                FocusScope.of(context).unfocus();
+                                interface.taskMessage = messageForStateController!.text;
+                              },
 
-                            decoration: InputDecoration(
-                              // suffixIcon: interface.dialogCurrentState['pages']['chat'] != null ? IconButton(
-                              //   onPressed: () {
-                              //     interface.dialogPagesController.animateToPage(
-                              //         interface.dialogCurrentState['pages']['chat'] ?? 99,
-                              //         duration: const Duration(milliseconds: 600),
-                              //         curve: Curves.ease);
-                              //   },
-                              //   icon: const Icon(Icons.chat),
-                              //   highlightColor: Colors.grey,
-                              //   hoverColor: Colors.transparent,
-                              //   color: Colors.blueAccent,
-                              //   // splashColor: Colors.black,
-                              // ) : null,
-                              labelText: interface.dialogCurrentState['labelMessage'],
-                              labelStyle: const TextStyle(
-                                  fontSize: 17.0, color: Colors.black54),
-                              hintText: '[Enter your message here..]',
-                              hintStyle: const TextStyle(
-                                  fontSize: 14.0, color: Colors.black54),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none,
+                              decoration: InputDecoration(
+                                // suffixIcon: interface.dialogCurrentState['pages']['chat'] != null ? IconButton(
+                                //   onPressed: () {
+                                //     interface.dialogPagesController.animateToPage(
+                                //         interface.dialogCurrentState['pages']['chat'] ?? 99,
+                                //         duration: const Duration(milliseconds: 600),
+                                //         curve: Curves.ease);
+                                //   },
+                                //   icon: const Icon(Icons.chat),
+                                //   highlightColor: Colors.grey,
+                                //   hoverColor: Colors.transparent,
+                                //   color: Colors.blueAccent,
+                                //   // splashColor: Colors.black,
+                                // ) : null,
+                                labelText: interface.dialogCurrentState['labelMessage'],
+                                labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
+                                hintText: '[Enter your message here..]',
+                                hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
+                                focusedBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                              style: FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.black87,
+                                    lineHeight: null,
+                                  ),
+                              minLines: 1,
+                              maxLines: 3,
                             ),
                           ),
                         ),
@@ -1285,341 +1188,61 @@ class _DialogPagesState extends State<DialogPages> {
           //     enabled: shimmerEnabled,
           //     child:
           if (interface.dialogCurrentState['pages'].containsKey('description'))
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: maxInternalWidth,
-              ),
-              child: Column(
-                children: [
-                  Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: GestureDetector(
-                          onTap: () {
-                            // interface.dialogPagesController.animateToPage(
-                            //     interface.dialogPages['chat'] == null ? interface.dialogPages['select']! : interface.dialogPages['chat']!,
-                            //     duration: const Duration(milliseconds: 300),
-                            //     curve: Curves.ease);
-                          },
-                          child: Column(
-                            children: [
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    maxHeight: widget.screenHeightSizeNoKeyboard - 220,
-                                    minHeight: 40
-                                ),
-                                child: SingleChildScrollView(
-                                  child: Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      // height: MediaQuery.of(context).size.width * .08,
-                                      // width: MediaQuery.of(context).size.width * .57
-                                      width: innerWidth,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(widget.borderRadius),
-                                      ),
-                                      child: Container(
-                                          padding: const EdgeInsets.all(6),
-                                          child: RichText(
-                                              text: TextSpan(
-                                                  style: DefaultTextStyle.of(context)
-                                                      .style
-                                                      .apply(fontSizeFactor: 1.0),
-                                                  children: <TextSpan>[
-                                                TextSpan(
-                                                  text: task.description,
-                                                )
-                                              ])))),
-                                ),
-                              ),
-                              // const Spacer(),
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                child: RichText(
-                                    text: TextSpan(
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 1.0),
-                                        children: <TextSpan>[
-                                      const TextSpan(
-                                          text: 'Created: ',
-                                          style: TextStyle(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text: DateFormat('MM/dd/yyyy, hh:mm a')
-                                              .format(task.createTime),
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .apply(fontSizeFactor: 1.0))
-                                    ])),
-                              ),
-                            ],
-                          ))),
-
-                  // const SizedBox(height: 14),
-                  Container(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Material(
-                          elevation: 10,
-                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                          child: GestureDetector(
-                              child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  // height: MediaQuery.of(context).size.width * .08,
-                                  // width: MediaQuery.of(context).size.width * .57
-                                  width: innerWidth,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(widget.borderRadius),
-                                  ),
-                                  child: ListBody(children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () async {
-                                        Clipboard.setData(ClipboardData(
-                                            text: task.contractOwner.toString() ))
-                                            .then((_) {
-                                          Flushbar(
-                                              icon: const Icon(
-                                                Icons.copy,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                              message:
-                                              '${task.contractOwner.toString()} copied to your clipboard!',
-                                              duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
-                                              shouldIconPulse: false)
-                                              .show(context);
-                                        });
-                                      },
-
-                                      child: RichText(
-
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children:[
-                                                const WidgetSpan(
-                                                    child: Padding(
-                                                      padding:
-                                                      EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.copy,
-                                                        size: 16,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
-
-                                            const TextSpan(
-
-                                                text: 'Contract owner: \n',
-                                                style: TextStyle(
-                                                    height: 1,
-                                                    fontWeight: FontWeight.bold)),
-
-                                            TextSpan(
-                                                text: task.contractOwner.toString(),
-                                                style: DefaultTextStyle.of(context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 0.7))
-                                          ])),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        Clipboard.setData(ClipboardData(
-                                            text: task.taskAddress.toString() ))
-                                            .then((_) {
-                                          Flushbar(
-                                              icon: const Icon(
-                                                Icons.copy,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                              message:
-                                              '${task.taskAddress.toString()} copied to your clipboard!',
-                                              duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
-                                              shouldIconPulse: false)
-                                              .show(context);
-                                        });
-                                      },
-
-                                      child:  RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children:[
-                                                const WidgetSpan(
-                                                    child: Padding(
-                                                      padding:
-                                                      EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.copy,
-                                                        size: 16,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
-                                            const TextSpan(
-                                                text: 'Contract address: \n',
-                                                style: TextStyle(
-                                                    height: 2,
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text: task.taskAddress.toString(),
-                                                style: DefaultTextStyle.of(context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 0.7))
-                                          ])),
-                                    ),
-                                    if(task.participant != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
-                                    GestureDetector(
-                                      onTap: () async {
-                                        Clipboard.setData(ClipboardData(
-                                            text: task.participant.toString() ))
-                                            .then((_) {
-                                          Flushbar(
-                                              icon: const Icon(
-                                                Icons.copy,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                              message:
-                                              '${task.participant.toString()} copied to your clipboard!',
-                                              duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
-                                              shouldIconPulse: false)
-                                              .show(context);
-                                        });
-                                      },
-                                      child: RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context)
-                                                  .style
-                                                  .apply(fontSizeFactor: 1.0),
-                                              children:[
-                                                const WidgetSpan(
-                                                    child: Padding(
-                                                      padding:
-                                                      EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.copy,
-                                                        size: 16,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
-                                                const TextSpan(
-                                                    text: 'Performer: \n',
-                                                    style: TextStyle(
-                                                        height: 2,
-                                                        fontWeight: FontWeight.bold)),
-                                                TextSpan(
-                                                    text: task.participant.toString(),
-                                                    style: DefaultTextStyle.of(context)
-                                                        .style
-                                                        .apply(fontSizeFactor: 0.7))
-                                              ])),
-                                    ),
-                                    if(task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
-                                      GestureDetector(
-                                        onTap: () async {
-                                          Clipboard.setData(ClipboardData(
-                                              text: task.auditor.toString() ))
-                                              .then((_) {
-                                            Flushbar(
-                                                icon: const Icon(
-                                                  Icons.copy,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
-                                                message:
-                                                '${task.auditor.toString()} copied to your clipboard!',
-                                                duration: const Duration(seconds: 2),
-                                                backgroundColor: Colors.blueAccent,
-                                                shouldIconPulse: false)
-                                                .show(context);
-                                          });
-                                        },
-                                        child: RichText(
-                                            text: TextSpan(
-                                                style: DefaultTextStyle.of(context)
-                                                    .style
-                                                    .apply(fontSizeFactor: 1.0),
-                                                children:[
-                                                  const WidgetSpan(
-                                                      child: Padding(
-                                                        padding:
-                                                        EdgeInsets.only(right: 5.0),
-                                                        child: Icon(
-                                                          Icons.copy,
-                                                          size: 16,
-                                                          color: Colors.black26,
-                                                        ),
-                                                      )),
-                                                  const TextSpan(
-                                                      text: 'Auditor selected: \n',
-                                                      style: TextStyle(
-                                                          height: 2,
-                                                          fontWeight: FontWeight.bold)),
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
+                ),
+                child: Column(
+                  children: [
+                    Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: GestureDetector(
+                            onTap: () {
+                              // interface.dialogPagesController.animateToPage(
+                              //     interface.dialogPages['chat'] == null ? interface.dialogPages['select']! : interface.dialogPages['chat']!,
+                              //     duration: const Duration(milliseconds: 300),
+                              //     curve: Curves.ease);
+                            },
+                            child: Column(
+                              children: [
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(maxHeight: widget.screenHeightSizeNoKeyboard - 220, minHeight: 40),
+                                  child: SingleChildScrollView(
+                                    child: Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        // height: MediaQuery.of(context).size.width * .08,
+                                        // width: MediaQuery.of(context).size.width * .57
+                                        width: innerWidth,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                                        ),
+                                        child: Container(
+                                            padding: const EdgeInsets.all(6),
+                                            child: RichText(
+                                                text: TextSpan(
+                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                                    children: <TextSpan>[
                                                   TextSpan(
-                                                      text: task.auditor.toString(),
-                                                      style: DefaultTextStyle.of(context)
-                                                          .style
-                                                          .apply(fontSizeFactor: 0.7))
-                                                ])),
-                                      ),
-                                    // RichText(
-                                    //   text: TextSpan(
-                                    //     style: DefaultTextStyle.of(context)
-                                    //         .style
-                                    //         .apply(fontSizeFactor: 1.0),
-                                    //     children: <TextSpan>[
-                                    //       const TextSpan(
-                                    //           text: 'Created: ',
-                                    //           style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                    //       TextSpan(
-                                    //           text: DateFormat('MM/dd/yyyy, hh:mm a')
-                                    //               .format(task.createdTime),
-                                    //           style: DefaultTextStyle.of(context)
-                                    //               .style
-                                    //               .apply(fontSizeFactor: 1.0))
-                                    //     ])),
-                                  ]))))),
-                  // const SizedBox(height: 14),
-                  // **************** CUSTOMER AND PERFORMER BUTTONS ****************** //
-                  // ************************* AUDIT REQUEST ************************* //
-                  const Spacer(),
-                  // if ((fromPage == 'performer' ||
-                  //     fromPage == 'customer' ||
-                  //     tasksServices.hardhatDebug == true) &&
-                  //     (task.taskState == "progress" || task.taskState == "review")
-                  //     // && task.contractOwner != tasksServices.publicAddress
-                  // )
-
-                    if (
-                      interface.dialogCurrentState['name'] == 'customer-progress' ||
-                      interface.dialogCurrentState['name'] == 'customer-review' ||
-                      interface.dialogCurrentState['name'] == 'performer-review' ||
-                      tasksServices.hardhatDebug == true
-                    )
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                      width: innerWidth + 8,
-                      child: Row(
-                        children: [
-                          TaskDialogButton(
-                            inactive: false,
-                            buttonName: 'Request audit',
-                            buttonColorRequired: Colors.orangeAccent.shade700,
-                            callback: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => RequestAuditDialog(who: fromPage, task: task)
-                              );
-                            }),
+                                                    text: task.description,
+                                                  )
+                                                ])))),
+                                  ),
+                                ),
+                                // const Spacer(),
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  child: RichText(
+                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                                    const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                    TextSpan(
+                                        text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
+                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                  ])),
+                                ),
+                              ],
+                            ))),
 
                     // const SizedBox(height: 14),
                     Container(
@@ -1736,6 +1359,39 @@ class _DialogPagesState extends State<DialogPages> {
                                                 style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
                                           ])),
                                         ),
+                                      if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
+                                        GestureDetector(
+                                          onTap: () async {
+                                            Clipboard.setData(ClipboardData(text: task.auditor.toString())).then((_) {
+                                              Flushbar(
+                                                      icon: const Icon(
+                                                        Icons.copy,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      ),
+                                                      message: '${task.auditor.toString()} copied to your clipboard!',
+                                                      duration: const Duration(seconds: 2),
+                                                      backgroundColor: Colors.blueAccent,
+                                                      shouldIconPulse: false)
+                                                  .show(context);
+                                            });
+                                          },
+                                          child: RichText(
+                                              text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
+                                            const WidgetSpan(
+                                                child: Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.copy,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )),
+                                            const TextSpan(text: 'Auditor selected: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: task.auditor.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                          ])),
+                                        ),
                                       // RichText(
                                       //   text: TextSpan(
                                       //     style: DefaultTextStyle.of(context)
@@ -1766,7 +1422,6 @@ class _DialogPagesState extends State<DialogPages> {
 
                     if (interface.dialogCurrentState['name'] == 'customer-progress' ||
                         interface.dialogCurrentState['name'] == 'customer-review' ||
-                        interface.dialogCurrentState['name'] == 'performer-progress' ||
                         interface.dialogCurrentState['name'] == 'performer-review' ||
                         tasksServices.hardhatDebug == true)
                       Container(
@@ -1788,6 +1443,7 @@ class _DialogPagesState extends State<DialogPages> {
                   ],
                 ),
               ),
+            ),
           if (interface.dialogCurrentState['pages'].containsKey('select'))
             SelectedPage(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard, innerWidth: innerWidth, task: task),
 
@@ -1813,7 +1469,7 @@ class _DialogPagesState extends State<DialogPages> {
                   )),
             )),
         ],
-      )))
-    ]);
-  });
-  }}
+      );
+    });
+  }
+}
