@@ -118,6 +118,8 @@ flutter:
     - assets/pdfs/
     - assets/
     - lib/blockchain/abi/addresses.json
+    - lib/blockchain/abi/axelar-addresses.json
+    - lib/blockchain/abi/hyperlane-addresses.json
     - lib/blockchain/accounts/hardhat.json
     - lib/blockchain/abi/Diamond.json
     - lib/blockchain/abi/TasksFacet.json
