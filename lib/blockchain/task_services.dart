@@ -209,7 +209,7 @@ class TasksServices extends ChangeNotifier {
 
   int chainId = 0;
   int chainIdAxelar = 5;
-  int chainIdHyperlane = 80001;
+  int chainIdHyperlane = 1287;
 
   bool isLoading = true;
   bool isLoadingBackground = false;
@@ -257,14 +257,17 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 1287;
+      chainId = 80001;
       // _rpcUrl = 'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
       // _wsUrl = 'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
-      _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
-      _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      // _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+      _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
+      _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
 
       _rpcUrlMatic = 'https://matic-mumbai.chainstacklabs.com';
-      _wsUrlMatic = 'wss://matic-mumbai.chainstacklabs.com';
+      _wsUrlMatic = 'wss://ws-matic-mumbai.chainstacklabs.com';
 
       _rpcUrlAxelar = 'https://rpc.ankr.com/eth_goerli';
       _wsUrlAxelar = 'wss://rpc.ankr.com/eth_goerli';
@@ -497,7 +500,7 @@ class TasksServices extends ChangeNotifier {
         if (chainIdHex != null) {
           chainId = int.parse(chainIdHex);
         }
-        if (chainId == 1287) {
+        if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
           validChainID = true;
           validChainIDMM = true;
         } else {
@@ -604,7 +607,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
         validChainID = true;
         validChainIDMM = true;
         publicAddress = publicAddressMM;
@@ -653,7 +656,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
         validChainID = true;
         validChainIDWC = true;
         publicAddress = publicAddressWC;
@@ -720,7 +723,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
         validChainID = true;
         validChainIDMM = true;
         publicAddress = publicAddressMM;
@@ -765,7 +768,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
         validChainID = true;
         validChainIDWC = true;
         publicAddress = publicAddressWC;
