@@ -1245,6 +1245,7 @@ class _DialogPagesState extends State<DialogPages> {
                           ),
                         ),
                       ),
+                    ),
                     // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
                     if ((task.contractValue != 0 || task.contractValueToken != 0) &&
