@@ -393,6 +393,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
     List objList = tasksServices.filterResults.values.toList();
     // TODO: implement build
     return Padding(
@@ -418,8 +419,15 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                       if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
                         showDialog(
                             context: context,
+<<<<<<< HEAD
                             builder: (context) =>
                                 TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+=======
+                            builder: (context) {
+                              interface.mainDialogContext = context;
+                              return TaskInformationDialog(fromPage: 'customer', task: objList[index], shimmerEnabled: false);
+                            });
+>>>>>>> 4f420566fa5dd1a589019d3ae2235a2abc64d43c
                         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
                         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
                         Beamer.of(context).updateRouteInformation(routeInfo);

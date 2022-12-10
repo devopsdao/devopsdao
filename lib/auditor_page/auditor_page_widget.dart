@@ -329,6 +329,8 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
+
     List objList = tasksServices.filterResults.values.toList();
 
     return Padding(
@@ -366,13 +368,26 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
 
                   showDialog(
                       context: context,
-                      builder: (context) => TaskInformationDialog(
+                      builder: (context) {
+                        interface.mainDialogContext = context;
+                        return TaskInformationDialog(
                             fromPage: 'auditor',
                             taskAddress: objList[index].taskAddress,
                             shimmerEnabled: false,
+<<<<<<< HEAD
                           ));
                   final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
                   RouteInformation routeInfo = RouteInformation(location: '/auditor/$taskAddress');
+=======
+                          );
+                      });
+                  final String taskAddress = tasksServices.filterResults.values
+                      .toList()[index]
+                      .taskAddress
+                      .toString();
+                  RouteInformation routeInfo =
+                      RouteInformation(location: '/auditor/$taskAddress');
+>>>>>>> 4f420566fa5dd1a589019d3ae2235a2abc64d43c
                   Beamer.of(context).updateRouteInformation(routeInfo);
                 },
                 child: TaskItem(fromPage: 'auditor', object: objList[index]),

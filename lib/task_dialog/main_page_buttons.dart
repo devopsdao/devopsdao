@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:devopsdao/task_dialog/widget/auditor_decision_alert.dart';
 import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -252,8 +253,10 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
             ),
 
           // ************************* AUDITOR BUTTONS ************************ //
-          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
-              task.auditState == 'requested')
+          if (
+            interface.dialogCurrentState['name'] == 'auditor-new' ||
+            tasksServices.hardhatDebug == true
+          )
             TaskDialogButton(
               inactive: false,
               buttonName: 'Take audit',
@@ -275,50 +278,42 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
               },
             ),
 
-          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
-              task.auditState == 'performing')
+          if (interface.dialogCurrentState['name'] == 'auditor-performing' ||
+              tasksServices.hardhatDebug == true)
             TaskDialogButton(
               inactive: false,
-              buttonName: 'In favor of Customer',
+              buttonName: interface.dialogCurrentState['mainButtonName'],
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
-                setState(() {
-                  task.justLoaded = false;
-                });
-                tasksServices.taskAuditDecision(
-                    task.taskAddress, 'customer', task.nanoId,
-                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-                Navigator.pop(context);
                 showDialog(
                     context: context,
-                    builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditDecision',
-                    ));
+                    builder: (context) => AuditorDecision( task: task)
+                );
+
               },
             ),
-          if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
-              task.auditState == 'performing')
-            TaskDialogButton(
-              inactive: false,
-              buttonName: 'In favor of Performer',
-              buttonColorRequired: Colors.lightBlue.shade600,
-              callback: () {
-                setState(() {
-                  task.justLoaded = false;
-                });
-                tasksServices.taskAuditDecision(
-                    task.taskAddress, 'performer', task.nanoId,
-                    message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-                Navigator.pop(context);
-                showDialog(
-                    context: context,
-                    builder: (context) => WalletAction(
-                      nanoId: task.nanoId,
-                      taskName: 'taskAuditDecision',
-                    ));
-              },
-            ),
+          // if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&
+          //     task.auditState == 'performing')
+          //   TaskDialogButton(
+          //     inactive: false,
+          //     buttonName: 'In favor of Performer',
+          //     buttonColorRequired: Colors.lightBlue.shade600,
+          //     callback: () {
+          //       setState(() {
+          //         task.justLoaded = false;
+          //       });
+          //       tasksServices.taskAuditDecision(
+          //           task.taskAddress, 'performer', task.nanoId,
+          //           message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+          //       Navigator.pop(context);
+          //       showDialog(
+          //           context: context,
+          //           builder: (context) => WalletAction(
+          //             nanoId: task.nanoId,
+          //             taskName: 'taskAuditDecision',
+          //           ));
+          //     },
+          //   ),
 
           // ************************ ALL ROLES BUTTONS ********************** //
           // TextButton(

@@ -76,7 +76,8 @@ class _SelectedPageState extends State<SelectedPage> {
                                                 fontWeight: FontWeight.bold)),
                                       ])),
                             ),
-                            if (task.participants.isEmpty)
+                            if (task.participants.isEmpty &&
+                                interface.dialogCurrentState['name'] == 'customer-new')
                               RichText(
                                   text: TextSpan(
                                       style: DefaultTextStyle.of(context)
@@ -85,6 +86,21 @@ class _SelectedPageState extends State<SelectedPage> {
                                       children: const <TextSpan>[
                                         TextSpan(
                                             text: 'Participants not applied to your Task yet. ',
+                                            style: TextStyle(
+                                              height: 2,)),
+                                      ])),
+                            if (task.auditors.isEmpty && (
+                                interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
+                                interface.dialogCurrentState['name'] == 'performer-audit-requested'
+                            ))
+                              RichText(
+                                  text: TextSpan(
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .apply(fontSizeFactor: 1.0),
+                                      children: const <TextSpan>[
+                                        TextSpan(
+                                            text: 'Auditors not applied to your request yet. ',
                                             style: TextStyle(
                                               height: 2,)),
                                       ])),
@@ -160,7 +176,7 @@ class _SelectedPageState extends State<SelectedPage> {
                       TaskDialogButton(
                         // padding: 8.0,
                         inactive: interface.selectedUser['address'] == null ? true : false,
-                        buttonName: interface.dialogCurrentState['mainButtonName'] ?? 'null: no name',
+                        buttonName: interface.dialogCurrentState['selectButtonName'] ?? 'null: no name',
                         buttonColorRequired: Colors.lightBlue.shade600,
                         callback: () {
                           setState(() {
@@ -184,11 +200,12 @@ class _SelectedPageState extends State<SelectedPage> {
                           Beamer.of(context).updateRouteInformation(routeInfo);
 
                           showDialog(
-                              context: context,
-                              builder: (context) => WalletAction(
-                                nanoId: task.nanoId,
-                                taskName: 'taskStateChange',
-                              ));
+                            context: context,
+                            builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskStateChange',
+                            )
+                          );
                         },
                       ),
                     ],

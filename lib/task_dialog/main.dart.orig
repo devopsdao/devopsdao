@@ -192,7 +192,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 
     } else if ((task.taskState == 'audit' && task.auditState == 'requested') &&
         (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
-      interface.dialogCurrentState = dialogStates['auditor-requested'];
+      interface.dialogCurrentState = dialogStates['auditor-new'];
     } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
     (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['auditor-performing'];
@@ -233,7 +233,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
     } else if ((task.taskState == 'audit' && task.auditState == 'performing') && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       dialogState = dialogStates['performer-audit-performing'];
     } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
-      dialogState = dialogStates['auditor-requested'];
+      dialogState = dialogStates['auditor-new'];
     } else if ((task.taskState == 'audit' && task.auditState == 'performing') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       dialogState = dialogStates['auditor-performing'];
     } else if ((task.taskState == 'audit' && task.auditState == 'finished') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
