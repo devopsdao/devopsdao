@@ -337,27 +337,10 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                   onTap: () {
                     showDialog(
                         context: context,
-<<<<<<< HEAD
                         builder: (context) =>
                             TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
                     final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
                     RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
-=======
-                        builder: (context) {
-                          interface.mainDialogContext = context;
-                          return TaskInformationDialog(
-                            fromPage: 'performer',
-                            task: objList[index],
-                            shimmerEnabled: false);
-                        });
-                    final String taskAddress = tasksServices
-                        .filterResults.values
-                        .toList()[index]
-                        .taskAddress
-                        .toString();
-                    RouteInformation routeInfo =
-                        RouteInformation(location: '/performer/$taskAddress');
->>>>>>> 4f420566fa5dd1a589019d3ae2235a2abc64d43c
                     Beamer.of(context).updateRouteInformation(routeInfo);
                   },
                   child: TaskItem(

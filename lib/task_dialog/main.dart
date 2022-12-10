@@ -1619,44 +1619,6 @@ class _DialogPagesState extends State<DialogPages> {
                                 builder: (context) => RequestAuditDialog(who: fromPage, task: task)
                               );
                             }),
-                            child: Column(
-                              children: [
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(maxHeight: widget.screenHeightSizeNoKeyboard - 220, minHeight: 40),
-                                  child: SingleChildScrollView(
-                                    child: Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        // height: MediaQuery.of(context).size.width * .08,
-                                        // width: MediaQuery.of(context).size.width * .57
-                                        width: innerWidth,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                                        ),
-                                        child: Container(
-                                            padding: const EdgeInsets.all(6),
-                                            child: RichText(
-                                                text: TextSpan(
-                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                                    children: <TextSpan>[
-                                                  TextSpan(
-                                                    text: task.description,
-                                                  )
-                                                ])))),
-                                  ),
-                                ),
-                                // const Spacer(),
-                                Container(
-                                  padding: const EdgeInsets.all(6),
-                                  child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                    const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                    TextSpan(
-                                        text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
-                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                  ])),
-                                ),
-                              ],
-                            ))),
 
                     // const SizedBox(height: 14),
                     Container(
@@ -1825,7 +1787,6 @@ class _DialogPagesState extends State<DialogPages> {
                   ],
                 ),
               ),
-            ),
           if (interface.dialogCurrentState['pages'].containsKey('select'))
             SelectedPage(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard, innerWidth: innerWidth, task: task),
 
@@ -1851,7 +1812,7 @@ class _DialogPagesState extends State<DialogPages> {
                   )),
             )),
         ],
-      );
-    });
-  }
-}
+      )))
+    ]);
+  });
+  }}
