@@ -31,6 +31,12 @@
       {
         "indexed": false,
         "internalType": "string",
+        "name": "logname",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
         "name": "sourceChain",
         "type": "string"
       },
