@@ -153,7 +153,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -171,6 +171,12 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasksCustomerComplete = {};
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
+
+  bool transportEnabled = true;
+  String transportUsed = '';
+  String transportSelected = '';
+  EthereumAddress transportAxelarAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
+  EthereumAddress transportHyperlaneAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
 
   var credentials;
   EthereumAddress? publicAddress;
@@ -1007,7 +1013,7 @@ class TasksServices extends ChangeNotifier {
 
       late BigInt weiBalanceToken = BigInt.from(0);
       if (hardhatDebug == false && hardhatLive == false) {
-        weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
+        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
@@ -1126,7 +1132,7 @@ class TasksServices extends ChangeNotifier {
       final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
-      print(task);
+      print('Task loaded: ${task.title}');
       var taskObject = Task(
         // nanoId: task[0],
         nanoId: task[1].toString(),
@@ -1150,6 +1156,11 @@ class TasksServices extends ChangeNotifier {
         justLoaded: true,
         contractValue: ethBalancePrecise,
         contractValueToken: ethBalanceToken,
+
+        // temporary solution. in the future "transport" String name will come directly from the block:
+        transport: (
+            task[9] == transportAxelarAdr || task[9] == transportHyperlaneAdr
+        ) ? task[9] : ''
       );
       return taskObject;
     }

@@ -146,6 +146,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
               justLoaded: true,
               contractValue: 0,
               contractValueToken: 0,
+              transport: ''
             );
           }
 
