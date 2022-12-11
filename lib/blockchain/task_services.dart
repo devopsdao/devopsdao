@@ -957,8 +957,8 @@ class TasksServices extends ChangeNotifier {
 
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[2]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[2]["address"]);
+      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
