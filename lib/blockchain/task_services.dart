@@ -153,7 +153,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1171,10 +1171,15 @@ class TasksServices extends ChangeNotifier {
     throw (GetTaskException);
   }
 
-  Future<void> loadOneTask(taskAddress) async {
-    Task task = await getTask(taskAddress);
-    tasks[taskAddress] = task;
-    refreshTask(task);
+  Future<Task> loadOneTask(taskAddress) async {
+    if (tasks.containsKey(taskAddress)) {
+      return tasks[taskAddress]!;
+    } else {
+      Task task = await getTask(taskAddress);
+      tasks[taskAddress] = task;
+      refreshTask(task);
+      return task;
+    }
   }
 
   Future<void> refreshTask(Task task) async {
