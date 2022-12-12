@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 
 class WalletAction extends StatefulWidget {
@@ -30,6 +31,7 @@ class _WalletAction extends State<WalletAction> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
 
     // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
     //
@@ -471,7 +473,21 @@ class _WalletAction extends State<WalletAction> {
                               //     )
                               // ),
                             ],
-                          )
+                          ),
+                        if (tasksServices.transportSelected.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.only(top: 50.0),
+                          child: Column(
+                            children: [
+                              const Text('Transport used:'),
+                              Container(
+                                padding: const EdgeInsets.all(4.0),
+                                // width: 128,
+                                child: interface.transportImages[tasksServices.transportSelected],
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ))
               ],

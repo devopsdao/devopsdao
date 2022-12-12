@@ -22,6 +22,7 @@ class Task {
   final double contractValue;
   final double contractValueToken;
   late bool justLoaded;
+  final String transport;
 
   Task({
     required this.nanoId,
@@ -45,5 +46,6 @@ class Task {
     required this.contractValue,
     required this.contractValueToken,
     required this.justLoaded,
+    required this.transport,
   });
 }

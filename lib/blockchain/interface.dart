@@ -10,6 +10,32 @@ class InterfaceServices extends ChangeNotifier {
   // Payments goes here (create_job_widget.dart -> payment.dart):
   late double tokensEntered = 0.0;
 
+
+  // ************* Transport Images ****** //
+  late Map<String, Widget> transportImages = {
+    'hyperlane': Image.asset(
+      'assets/images/hyperlane.png',
+      height: 36,
+      filterQuality: FilterQuality.medium,
+    ),
+    'axelar': Image.asset(
+      'assets/images/Axelar-Logo-Update.png',
+      height: 34,
+      filterQuality: FilterQuality.medium,
+    ),
+    'layerzero' : Image.asset(
+      'assets/images/LayerZero.png',
+      height: 44,
+      filterQuality: FilterQuality.medium,
+      isAntiAlias: true,
+    ),
+    'wormhole': Image.asset(
+      'assets/images/worm.png',
+      height: 34,
+      filterQuality: FilterQuality.medium,
+    )
+  };
+
   //  ************ Wallet **************//
   late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/main.dart

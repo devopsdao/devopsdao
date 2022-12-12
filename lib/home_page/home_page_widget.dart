@@ -188,16 +188,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     size: 30,
                   ),
                   onPressed: () async {
-                    // tasksServices.connectWallet();
-                    // () async {
-                    //   await tasksServices.connectWallet();
-                    //   print(
-                    //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
-                    // }();
-
                     showDialog(
                       context: context,
-                      builder: (context) => const MyWalletPage(
+                      builder: (context) => const WalletPageTop(
                         title: '',
                       ),
                     );

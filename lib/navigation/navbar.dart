@@ -33,7 +33,7 @@ class _NavBarPageState extends State<NavBarPage> {
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
       '/auditor': const HomePageWidget(),
-      // 'walletPage': MyWalletPage(title: 'WalletConnect'),
+      // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);

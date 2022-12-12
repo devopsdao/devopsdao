@@ -1,3 +1,4 @@
+import 'package:devopsdao/wallet/widgets/transport_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blockchain/interface.dart';
@@ -28,16 +29,16 @@ enum TransactionState {
   failed,
 }
 
-class MyWalletPage extends StatefulWidget {
-  const MyWalletPage({Key? key, required this.title}) : super(key: key);
+class WalletPageTop extends StatefulWidget {
+  const WalletPageTop({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyWalletPageState createState() => _MyWalletPageState();
+  _WalletPageTopState createState() => _WalletPageTopState();
 }
 
-class _MyWalletPageState extends State<MyWalletPage> {
+class _WalletPageTopState extends State<WalletPageTop> {
   String txId = '';
   String _displayUri = '';
   var session;
@@ -56,7 +57,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
   void dispose() {
     super.dispose();
   }
-
+  late String dropdownValue = 'axelar';
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -84,6 +85,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
       }
     }
 
+
+
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
@@ -96,8 +99,11 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return StatefulBuilder(builder: (context, setState) {
+        final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+        final double screenHeightSizeNoKeyboard = constraints.maxHeight * .7;
+        final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
         return Dialog(
-          insetPadding: const EdgeInsets.all(30),
+          insetPadding: const EdgeInsets.all(20),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           child: Column(
@@ -106,7 +112,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
                   width: 400,
                   child: Row(
                     children: [
@@ -154,6 +160,66 @@ class _MyWalletPageState extends State<MyWalletPage> {
                         ),
                       ),
                       const Spacer(),
+                      // InkWell(
+                      //   onTap: () {
+                      //
+                      //     showDialog(context: context, builder: (context) => Dialog(
+                      //       shape: const RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                      //         child: SizedBox(
+                      //           height: 100,
+                      //           width: 350,
+                      //           child: Padding(
+                      //               padding: const EdgeInsets.all(30.0),
+                      //             child: DropdownButton(
+                      //               isExpanded: true,
+                      //               value: dropdownValue,
+                      //               hint: Text('Choose transport ($dropdownValue)'),
+                      //               items: const [
+                      //                 DropdownMenuItem(value: 'axelar', child: Text('axelar')),
+                      //                 DropdownMenuItem(value: 'hyperlane', child: Text('hyperlane')),
+                      //                 DropdownMenuItem(value: 'layerzero', child: Text('layerzero')),
+                      //                 DropdownMenuItem(value: 'wormhole', child: Text('wormhole')),
+                      //               ],
+                      //               underline: Container(
+                      //                 height: 2,
+                      //                 color: Colors.black26,
+                      //               ),
+                      //               onChanged: (String? value) {
+                      //                 tasksServices.transportSelected = value!;
+                      //                 setState(() {
+                      //                   dropdownValue = value!;
+                      //                 });
+                      //                 Navigator.pop(context);
+                      //
+                      //               },
+                      //             )
+                      //           ),
+                      //         )
+                      //       )
+                      //     );
+                      //   },
+                      //   borderRadius: BorderRadius.circular(16),
+                      //   child: Container(
+                      //     padding: const EdgeInsets.all(0.0),
+                      //     height: 30,
+                      //     width: 30,
+                      //     // decoration: BoxDecoration(
+                      //     //   borderRadius: BorderRadius.circular(6),
+                      //     // ),
+                      //     child: Row(
+                      //       children: const <Widget>[
+                      //
+                      //         Expanded(
+                      //           child: Icon(
+                      //             Icons.info_outline_rounded,
+                      //             size: 30,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       InkWell(
                         onTap: () {
                           if (tasksServices.walletConnectedMM) {
@@ -176,6 +242,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                           // ),
                           child: Row(
                             children: const <Widget>[
+
                               Expanded(
                                 child: Icon(
                                   Icons.close,
@@ -190,9 +257,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                   ),
                 ),
                 Container(
-                  height: constraints.maxHeight * .7 > 580
-                      ? 580
-                      : constraints.maxHeight * .7,
+                  height: screenHeightSize,
                   // width: constraints.maxWidth * .8,
                   // height: 550,
                   width: 400,
@@ -203,8 +268,10 @@ class _MyWalletPageState extends State<MyWalletPage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  child: WalletPages(
+                  child: WalletPagesMiddle(
                     borderRadius: borderRadius,
+                    screenHeightSize: screenHeightSize,
+                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
                   ),
                 ),
                 // Container(height: 10),
@@ -234,24 +301,29 @@ class _MyWalletPageState extends State<MyWalletPage> {
   }
 }
 
-class WalletPages extends StatefulWidget {
+class WalletPagesMiddle extends StatefulWidget {
   // final String buttonName;
   final double borderRadius;
+  final double screenHeightSize;
+  final double screenHeightSizeNoKeyboard;
 
-  const WalletPages(
+  const WalletPagesMiddle(
       {Key? key,
       // required this.buttonName,
-      required this.borderRadius})
+      required this.borderRadius,
+      required this.screenHeightSize,
+      required this.screenHeightSizeNoKeyboard,
+      })
       : super(key: key);
 
   @override
-  _WalletPagesState createState() => _WalletPagesState();
+  _WalletPagesMiddleState createState() => _WalletPagesMiddleState();
 }
 
-class _WalletPagesState extends State<WalletPages> {
+class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
   String _displayUri = '';
   int defaultTab = 0;
-
+  late String dropdownValue = 'axelar';
   @override
   void initState() {
     super.initState();
@@ -283,7 +355,7 @@ class _WalletPagesState extends State<WalletPages> {
     }
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
-      double innerWidth = dialogConstraints.maxWidth - 50;
+      double innerWidth = dialogConstraints.maxWidth - 60;
       return PageView(
         scrollDirection: Axis.horizontal,
         // pageSnapping: false,
@@ -297,31 +369,24 @@ class _WalletPagesState extends State<WalletPages> {
         children: <Widget>[
           Column(
             children: [
-              const SizedBox(height: 50),
-              Center(
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    // height: MediaQuery.of(context).size.width * .08,
-                    // width: MediaQuery.of(context).size.width * .57
-                    width: innerWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: Row(
-                      children: const <Widget>[
-                        Expanded(
-                          child: Text(
-                            'By connecting a wallet, you agree to Terms of Service and Privacy Policy.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
+              const SizedBox(height: 30),
+              // const Spacer(),
+              Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  // height: MediaQuery.of(context).size.width * .08,
+                  // width: MediaQuery.of(context).size.width * .57
+                  width: innerWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                  ),
+                  child: const Text(
+                    'By connecting a wallet, you agree to Terms of Service and Privacy Policy.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -367,7 +432,7 @@ class _WalletPagesState extends State<WalletPages> {
                         padding: const EdgeInsets.all(8.0),
                         // height: MediaQuery.of(context).size.width * .08,
                         // width: MediaQuery.of(context).size.width * .57
-                        width: 300,
+                        width: innerWidth,
                         decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(widget.borderRadius),
@@ -393,30 +458,38 @@ class _WalletPagesState extends State<WalletPages> {
                 ),
               ]),
           ]),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    height: 480,
-                    // width: MediaQuery.of(context).size.width * .57
-                    width: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
+          Center(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  // maxWidth: maxInternalWidth,
+                  // maxHeight: widget.screenHeightSizeNoKeyboard,
+                  minHeight: widget.screenHeightSizeNoKeyboard - 300,
+                  // maxHeight: widget.screenHeightSize
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Material(
+                        elevation: 6,
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          height: widget.screenHeightSizeNoKeyboard - 40,
+                          // width: MediaQuery.of(context).size.width * .57
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(widget.borderRadius),
+                          ),
                           child: DefaultTabController(
                             length: 2,
                             initialIndex: defaultTab,
                             child: Column(
                               children: [
-                                Container(
+
+                                SizedBox(
                                   height: 30,
                                   child: TabBar(
                                     labelColor: Colors.black,
@@ -457,43 +530,102 @@ class _WalletPagesState extends State<WalletPages> {
                                 Expanded(
                                   child: TabBarView(
                                     children: [
+
+                                      // *********** Wallet Connect > Mobile page ************ //
                                       if (tasksServices.platform == 'mobile' ||
                                           tasksServices.browserPlatform ==
                                               'android' ||
                                           tasksServices.browserPlatform ==
                                               'ios')
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            RichText(
-                                                text: TextSpan(
-                                                    style: DefaultTextStyle.of(
-                                                            context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor:
-                                                                1.0),
-                                                    children: const <TextSpan>[
-                                                  TextSpan(
-                                                      text:
-                                                          'Connect to Mobile Wallet',
-                                                      style: TextStyle(
-                                                          height: 3,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 17,
-                                                          color:
-                                                              Colors.black54)),
-                                                ])),
+                                            const SizedBox(height: 22),
+                                            AnimatedCrossFade(
+                                              duration: const Duration(milliseconds: 300),
+                                              firstChild: RichText(
+                                                  text: TextSpan(
+                                                      style: DefaultTextStyle.of(
+                                                          context)
+                                                          .style
+                                                          .apply(
+                                                          fontSizeFactor:
+                                                          1.0),
+                                                      children: const <TextSpan>[
+                                                        TextSpan(
+                                                            text:
+                                                            'Connect to Mobile Wallet',
+                                                            style: TextStyle(
+                                                                height: 3,
+                                                                fontWeight:
+                                                                FontWeight.bold,
+                                                                fontSize: 17,
+                                                                color:
+                                                                Colors.black54)),
+                                                      ])),
+                                              secondChild: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                              crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            ),
+
+
+
+
+
+
+
+
+
+                                            // if (_displayUri.isNotEmpty)
+
+                                            // if (_displayUri.isEmpty)
+                                            // TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                            // const Spacer(),
+                                            // Padding(
+                                            //   padding: const EdgeInsets.only(bottom: 14.0),
+                                            //   child: Text(
+                                            //     tasksServices
+                                            //         .walletConnectedWC
+                                            //         ? 'Wallet connected'
+                                            //         : 'Wallet disconnected',
+                                            //     style: const TextStyle(
+                                            //         fontWeight:
+                                            //         FontWeight.bold,
+                                            //         fontSize: 17,
+                                            //         color: Colors.black54),
+                                            //
+                                            //     textAlign: TextAlign.center,
+                                            //   ),
+                                            // ),
+                                            const Spacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 14.0),
+                                              child: Text(
+                                                tasksServices
+                                                    .walletConnectedWC
+                                                    ? 'Wallet connected'
+                                                    : 'Wallet disconnected',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                    FontWeight.bold,
+                                                    fontSize: 17,
+                                                    color: Colors.black54),
+
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
                                             const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
-                                            const SizedBox(height: 12),
+                                            const SizedBox(height: 22),
                                           ],
                                         ),
+
+
+
+                                      // *********** Wallet Connect > Desktop page ************ //
                                       if (tasksServices.platform == 'linux' ||
                                           tasksServices.platform == 'web' &&
                                               tasksServices.browserPlatform !=
@@ -501,11 +633,12 @@ class _WalletPagesState extends State<WalletPages> {
                                               tasksServices.browserPlatform !=
                                                   'ios')
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
+                                            const SizedBox(height: 22),
                                             RichText(
                                                 text: TextSpan(
                                                     style: DefaultTextStyle.of(
@@ -526,94 +659,144 @@ class _WalletPagesState extends State<WalletPages> {
                                                           color:
                                                               Colors.black54)),
                                                 ])),
+                                            const Spacer(),
                                             const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
-                                            const SizedBox(height: 12),
+                                            const SizedBox(height: 22),
                                           ],
                                         ),
+
+
+
+
+                                      // *********** Wallet Connect > QR Code page ************ //
+
                                       Column(
                                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          RichText(
-                                              text: TextSpan(
-                                                  style: DefaultTextStyle.of(
-                                                          context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                                  children: const <TextSpan>[
-                                                TextSpan(
-                                                    text: 'Scan QR code',
-                                                    style: TextStyle(
-                                                        height: 3,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 17,
-                                                        color: Colors.black54)),
-                                              ])),
-                                          SizedBox(
-                                            height: 320,
-                                            width: 300,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                (_displayUri.isEmpty)
-                                                    ? const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                          left: 10,
-                                                          right: 10,
-                                                          bottom: 10,
-                                                        ),
-                                                      )
-                                                    : QrImage(
-                                                        data: _displayUri,
-                                                        size: 280,
-                                                        gapless: false,
+                                          const SizedBox(height: 22),
+                                          AnimatedCrossFade(
+                                            duration: const Duration(milliseconds: 300),
+                                            firstChild: SizedBox(
+                                              height: widget.screenHeightSizeNoKeyboard - 210,
+                                              child: Column(
+                                                // crossAxisAlignment:
+                                                // CrossAxisAlignment.center,
+                                                children: [
+                                                  RichText(
+                                                      text: TextSpan(
+                                                          style: DefaultTextStyle.of(
+                                                              context)
+                                                              .style
+                                                              .apply(
+                                                              fontSizeFactor: 1.0),
+                                                          children: const <TextSpan>[
+                                                            TextSpan(
+                                                                text: 'Scan QR code',
+                                                                style: TextStyle(
+                                                                    height: 3,
+                                                                    fontWeight:
+                                                                    FontWeight.bold,
+                                                                    fontSize: 17,
+                                                                    color: Colors.black54)),
+                                                          ])),
+                                                  const Spacer(),
+                                                  if (_displayUri.isNotEmpty)
+                                                  QrImage(
+                                                    data: _displayUri,
+                                                    size: 230,
+                                                    gapless: false,
+                                                  ),
+                                                  const Spacer(),
+                                                  if (!tasksServices
+                                                      .validChainIDWC &&
+                                                      tasksServices
+                                                          .walletConnectedWC)
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                        left: 16,
+                                                        right: 16,
+                                                        bottom: 16,
                                                       ),
-                                                Text(
-                                                  tasksServices
-                                                          .walletConnectedWC
-                                                      ? 'Wallet connected'
-                                                      : 'Wallet disconnected',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6,
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                if (!tasksServices
-                                                        .validChainIDWC &&
-                                                    tasksServices
-                                                        .walletConnectedWC)
-                                                  const Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: 16,
-                                                      right: 16,
-                                                      bottom: 16,
-                                                    ),
-                                                    child: Text(
-                                                      'Wrong network, please connect to Moonbase Alpha',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.redAccent,
-                                                          fontSize: 20),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  )
-                                              ],
+                                                      child: Text(
+                                                        'Wrong network, please connect to Moonbase Alpha',
+                                                        style: TextStyle(
+                                                            color:
+                                                            Colors.redAccent,
+                                                            fontSize: 20),
+                                                        textAlign:
+                                                        TextAlign.center,
+                                                      ),
+                                                    )
+                                                ],
+                                              ),
+                                            ),
+                                            secondChild: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                            crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                          ),
+                                          // if (_displayUri.isEmpty)
+                                          //
+                                          //
+                                          //
+                                          // // if (_displayUri.isNotEmpty)
+                                          // // const Spacer(),
+                                          // if (_displayUri.isNotEmpty)
+                                          //
+
+
+
+
+                                          // SizedBox(
+                                          //   // height: 260,
+                                          //   width: 250,
+                                          //   child: Column(
+                                          //     mainAxisAlignment:
+                                          //         MainAxisAlignment.center,
+                                          //     children: [
+                                          //       (_displayUri.isEmpty)
+                                          //           ? const Padding(
+                                          //               padding:
+                                          //                   EdgeInsets.only(
+                                          //                 left: 10,
+                                          //                 right: 10,
+                                          //                 bottom: 10,
+                                          //               ),
+                                          //             )
+                                          //           : QrImage(
+                                          //               data: _displayUri,
+                                          //               size: 230,
+                                          //               gapless: false,
+                                          //             ),
+                                          //
+                                          //
+                                          //     ],
+                                          //   ),
+                                          // ),
+                                          const Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 14.0),
+                                            child: Text(
+                                              tasksServices
+                                                  .walletConnectedWC
+                                                  ? 'Wallet connected'
+                                                  : 'Wallet disconnected',
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  fontSize: 17,
+                                                  color: Colors.black54),
+
+                                              textAlign: TextAlign.center,
                                             ),
                                           ),
-                                          const Spacer(),
                                           const WalletConnectButton(
                                             buttonName: 'wallet_connect',
                                           ),
-                                          const Spacer(),
-                                          const SizedBox(height: 12),
+                                          // const Spacer(),
+                                          const SizedBox(height: 22),
                                         ],
                                       ),
                                     ],
@@ -623,12 +806,12 @@ class _WalletPagesState extends State<WalletPages> {
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ],
       );
@@ -689,6 +872,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
       customIcon = SvgPicture.asset(
         assetName,
         color: Colors.black54,
+
       );
     }
 

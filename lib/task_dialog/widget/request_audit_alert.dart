@@ -29,6 +29,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
 
   TextEditingController? messageController;
 
+  @override
   void initState() {
     super.initState();
     messageController = TextEditingController();
