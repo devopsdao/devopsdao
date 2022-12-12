@@ -211,7 +211,7 @@ class TasksServices extends ChangeNotifier {
   late String _wsUrlAxelar;
 
   int chainId = 0;
-  int chainIdAxelar = 1287;
+  int chainIdAxelar = 80001;
   int chainIdHyperlane = 80001;
 
   bool isLoading = true;
@@ -263,11 +263,11 @@ class TasksServices extends ChangeNotifier {
       chainId = 1287;
       // _rpcUrl = 'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
       // _wsUrl = 'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
-      // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
-      // _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
 
-      _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
-      _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
+      // _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
+      // _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
 
       _rpcUrlMoonbeam = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       _wsUrlMoonbeam = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -309,14 +309,14 @@ class TasksServices extends ChangeNotifier {
       },
     );
     _web3clientAxelar = Web3Client(
-      _rpcUrlMoonbeam,
+      _rpcUrlMatic,
       http.Client(),
       socketConnector: () {
         if (platform == 'web') {
-          final uri = Uri.parse(_wsUrlMoonbeam);
+          final uri = Uri.parse(_wsUrlMatic);
           return WebSocketChannel.connect(uri).cast<String>();
         } else {
-          return IOWebSocketChannel.connect(_wsUrlMoonbeam).cast<String>();
+          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
         }
       },
     );
