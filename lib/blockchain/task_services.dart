@@ -315,7 +315,8 @@ class TasksServices extends ChangeNotifier {
       },
     );
     _web3clientAxelar = Web3Client(
-      _rpcUrlMoonbeam,
+      // _rpcUrlMoonbeam,
+      _rpcUrl,
       http.Client(),
       socketConnector: () {
         if (platform == 'web') {
@@ -327,7 +328,8 @@ class TasksServices extends ChangeNotifier {
       },
     );
     _web3clientHyperlane = Web3Client(
-      _rpcUrlMatic,
+      // _rpcUrlMatic,
+      _rpcUrl,
       http.Client(),
       socketConnector: () {
         if (platform == 'web') {
@@ -1019,7 +1021,7 @@ class TasksServices extends ChangeNotifier {
 
       late BigInt weiBalanceToken = BigInt.from(0);
       if (hardhatDebug == false && hardhatLive == false) {
-        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
+        weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
@@ -1138,7 +1140,7 @@ class TasksServices extends ChangeNotifier {
       final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
-      print('Task loaded: ${task.title}');
+      // print('Task loaded: ${task.title}');
       var taskObject = Task(
         // nanoId: task[0],
         nanoId: task[1].toString(),
@@ -1597,7 +1599,9 @@ class TasksServices extends ChangeNotifier {
           from: publicAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        txn = await axelarGMP.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        // txn = await axelarGMP.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        //     credentials: credentials, transaction: transaction);
+        txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
             credentials: credentials, transaction: transaction);
       } else if (taskTokenSymbol == 'aUSDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);

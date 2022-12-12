@@ -42,7 +42,7 @@
       {
         "indexed": false,
         "internalType": "bytes",
-        "name": "payload",
+        "name": "message",
         "type": "bytes"
       }
     ],
