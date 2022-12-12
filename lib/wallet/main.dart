@@ -414,14 +414,37 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (interface.whichWalletButtonPressed == 'metamask')
               Column(children: [
-                Container(
-                  height: 130,
-                  width: 130,
-                  padding: const EdgeInsets.all(18.0),
-                  child: SvgPicture.asset(
-                    'assets/images/metamask-icon2.svg',
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  firstChild: Container(
+                    height: 130,
+                    width: 130,
+                    padding: const EdgeInsets.all(18.0),
+                    child: SvgPicture.asset(
+                      'assets/images/metamask-icon2.svg',
+                    ),
                   ),
+                  secondChild: Center(
+                    child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        width: innerWidth,
+                        decoration: BoxDecoration(
+                          borderRadius:  BorderRadius.circular(widget.borderRadius),
+                        ),
+                        child: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 400,),
+                      ),
+                    ),
+                  ),
+
+
+
+
+                  crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                 ),
+                if (tasksServices.walletConnectedMM)
                 const SizedBox(height: 60),
                 if (tasksServices.walletConnectedMM)
                   Center(
@@ -453,9 +476,11 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                       ),
                     ),
                   ),
+                const SizedBox(height: 30),
                 const WalletConnectButton(
                   buttonName: 'metamask',
                 ),
+                const SizedBox(height: 30),
               ]),
           ]),
           Center(

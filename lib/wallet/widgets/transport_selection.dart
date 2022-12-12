@@ -92,17 +92,9 @@ class _TransportSelectionState extends State<TransportSelection> {
 
             if (tasksServices.transportSelected.isNotEmpty)
               Container(
-                // padding: const EdgeInsets.only(top: 50.0),
-                child: Column(
-                  children: [
-                    // const Text('Transport used:'),
-                    Container(
-                      padding: const EdgeInsets.all(4.0),
-                      height: 44,
-                      child: interface.transportImages[tasksServices.transportSelected],
-                    ),
-                  ],
-                ),
+                padding: const EdgeInsets.all(4.0),
+                height: 44,
+                child: interface.transportImages[tasksServices.transportSelected],
               )
           ],
         ),

@@ -1174,6 +1174,7 @@ class TasksServices extends ChangeNotifier {
   Future<Task> loadOneTask(taskAddress) async {
     if (tasks.containsKey(taskAddress)) {
       return tasks[taskAddress]!;
+
     } else {
       Task task = await getTask(taskAddress);
       tasks[taskAddress] = task;
