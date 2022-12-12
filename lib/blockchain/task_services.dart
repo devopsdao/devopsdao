@@ -174,7 +174,7 @@ class TasksServices extends ChangeNotifier {
 
   bool transportEnabled = true;
   String transportUsed = '';
-  String transportSelected = '';
+  String transportSelected = 'axelar';
   EthereumAddress transportAxelarAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
   EthereumAddress transportHyperlaneAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
 

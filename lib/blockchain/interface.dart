@@ -18,9 +18,9 @@ class InterfaceServices extends ChangeNotifier {
       height: 36,
       filterQuality: FilterQuality.medium,
     ),
-    'alexar': Image.asset(
+    'axelar': Image.asset(
       'assets/images/Axelar-Logo-Update.png',
-      height: 50,
+      height: 34,
       filterQuality: FilterQuality.medium,
     ),
     'layerzero' : Image.asset(

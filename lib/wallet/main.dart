@@ -1,3 +1,4 @@
+import 'package:devopsdao/wallet/widgets/transport_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blockchain/interface.dart';
@@ -56,7 +57,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
   void dispose() {
     super.dispose();
   }
-  late String dropdownValue = 'alexar';
+  late String dropdownValue = 'axelar';
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -99,7 +100,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
     return LayoutBuilder(builder: (context, constraints) {
       return StatefulBuilder(builder: (context, setState) {
         final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-        final double screenHeightSizeNoKeyboard = constraints.maxHeight - 120;
+        final double screenHeightSizeNoKeyboard = constraints.maxHeight * .7;
         final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
         return Dialog(
           insetPadding: const EdgeInsets.all(20),
@@ -159,66 +160,66 @@ class _WalletPageTopState extends State<WalletPageTop> {
                         ),
                       ),
                       const Spacer(),
-                      InkWell(
-                        onTap: () {
-
-                          showDialog(context: context, builder: (context) => Dialog(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                              child: SizedBox(
-                                height: 100,
-                                width: 350,
-                                child: Padding(
-                                    padding: const EdgeInsets.all(30.0),
-                                  child: DropdownButton(
-                                    isExpanded: true,
-                                    value: dropdownValue,
-                                    hint: Text('Choose transport ($dropdownValue)'),
-                                    items: const [
-                                      DropdownMenuItem(value: 'alexar', child: Text('alexar')),
-                                      DropdownMenuItem(value: 'hyperlane', child: Text('hyperlane')),
-                                      DropdownMenuItem(value: 'layerzero', child: Text('layerzero')),
-                                      DropdownMenuItem(value: 'wormhole', child: Text('wormhole')),
-                                    ],
-                                    underline: Container(
-                                      height: 2,
-                                      color: Colors.black26,
-                                    ),
-                                    onChanged: (String? value) {
-                                      tasksServices.transportSelected = value!;
-                                      setState(() {
-                                        dropdownValue = value!;
-                                      });
-                                      Navigator.pop(context);
-
-                                    },
-                                  )
-                                ),
-                              )
-                            )
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(0.0),
-                          height: 30,
-                          width: 30,
-                          // decoration: BoxDecoration(
-                          //   borderRadius: BorderRadius.circular(6),
-                          // ),
-                          child: Row(
-                            children: const <Widget>[
-
-                              Expanded(
-                                child: Icon(
-                                  Icons.info_outline_rounded,
-                                  size: 30,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //
+                      //     showDialog(context: context, builder: (context) => Dialog(
+                      //       shape: const RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                      //         child: SizedBox(
+                      //           height: 100,
+                      //           width: 350,
+                      //           child: Padding(
+                      //               padding: const EdgeInsets.all(30.0),
+                      //             child: DropdownButton(
+                      //               isExpanded: true,
+                      //               value: dropdownValue,
+                      //               hint: Text('Choose transport ($dropdownValue)'),
+                      //               items: const [
+                      //                 DropdownMenuItem(value: 'axelar', child: Text('axelar')),
+                      //                 DropdownMenuItem(value: 'hyperlane', child: Text('hyperlane')),
+                      //                 DropdownMenuItem(value: 'layerzero', child: Text('layerzero')),
+                      //                 DropdownMenuItem(value: 'wormhole', child: Text('wormhole')),
+                      //               ],
+                      //               underline: Container(
+                      //                 height: 2,
+                      //                 color: Colors.black26,
+                      //               ),
+                      //               onChanged: (String? value) {
+                      //                 tasksServices.transportSelected = value!;
+                      //                 setState(() {
+                      //                   dropdownValue = value!;
+                      //                 });
+                      //                 Navigator.pop(context);
+                      //
+                      //               },
+                      //             )
+                      //           ),
+                      //         )
+                      //       )
+                      //     );
+                      //   },
+                      //   borderRadius: BorderRadius.circular(16),
+                      //   child: Container(
+                      //     padding: const EdgeInsets.all(0.0),
+                      //     height: 30,
+                      //     width: 30,
+                      //     // decoration: BoxDecoration(
+                      //     //   borderRadius: BorderRadius.circular(6),
+                      //     // ),
+                      //     child: Row(
+                      //       children: const <Widget>[
+                      //
+                      //         Expanded(
+                      //           child: Icon(
+                      //             Icons.info_outline_rounded,
+                      //             size: 30,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       InkWell(
                         onTap: () {
                           if (tasksServices.walletConnectedMM) {
@@ -322,7 +323,7 @@ class WalletPagesMiddle extends StatefulWidget {
 class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
   String _displayUri = '';
   int defaultTab = 0;
-
+  late String dropdownValue = 'axelar';
   @override
   void initState() {
     super.initState();
@@ -529,43 +530,102 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                 Expanded(
                                   child: TabBarView(
                                     children: [
+
+                                      // *********** Wallet Connect > Mobile page ************ //
                                       if (tasksServices.platform == 'mobile' ||
                                           tasksServices.browserPlatform ==
                                               'android' ||
                                           tasksServices.browserPlatform ==
                                               'ios')
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            RichText(
-                                                text: TextSpan(
-                                                    style: DefaultTextStyle.of(
-                                                            context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor:
-                                                                1.0),
-                                                    children: const <TextSpan>[
-                                                  TextSpan(
-                                                      text:
-                                                          'Connect to Mobile Wallet',
-                                                      style: TextStyle(
-                                                          height: 3,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 17,
-                                                          color:
-                                                              Colors.black54)),
-                                                ])),
+                                            const SizedBox(height: 22),
+                                            AnimatedCrossFade(
+                                              duration: const Duration(milliseconds: 300),
+                                              firstChild: RichText(
+                                                  text: TextSpan(
+                                                      style: DefaultTextStyle.of(
+                                                          context)
+                                                          .style
+                                                          .apply(
+                                                          fontSizeFactor:
+                                                          1.0),
+                                                      children: const <TextSpan>[
+                                                        TextSpan(
+                                                            text:
+                                                            'Connect to Mobile Wallet',
+                                                            style: TextStyle(
+                                                                height: 3,
+                                                                fontWeight:
+                                                                FontWeight.bold,
+                                                                fontSize: 17,
+                                                                color:
+                                                                Colors.black54)),
+                                                      ])),
+                                              secondChild: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                              crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            ),
+
+
+
+
+
+
+
+
+
+                                            // if (_displayUri.isNotEmpty)
+
+                                            // if (_displayUri.isEmpty)
+                                            // TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                            // const Spacer(),
+                                            // Padding(
+                                            //   padding: const EdgeInsets.only(bottom: 14.0),
+                                            //   child: Text(
+                                            //     tasksServices
+                                            //         .walletConnectedWC
+                                            //         ? 'Wallet connected'
+                                            //         : 'Wallet disconnected',
+                                            //     style: const TextStyle(
+                                            //         fontWeight:
+                                            //         FontWeight.bold,
+                                            //         fontSize: 17,
+                                            //         color: Colors.black54),
+                                            //
+                                            //     textAlign: TextAlign.center,
+                                            //   ),
+                                            // ),
+                                            const Spacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 14.0),
+                                              child: Text(
+                                                tasksServices
+                                                    .walletConnectedWC
+                                                    ? 'Wallet connected'
+                                                    : 'Wallet disconnected',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                    FontWeight.bold,
+                                                    fontSize: 17,
+                                                    color: Colors.black54),
+
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
                                             const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
-                                            const SizedBox(height: 12),
+                                            const SizedBox(height: 22),
                                           ],
                                         ),
+
+
+
+                                      // *********** Wallet Connect > Desktop page ************ //
                                       if (tasksServices.platform == 'linux' ||
                                           tasksServices.platform == 'web' &&
                                               tasksServices.browserPlatform !=
@@ -573,11 +633,12 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                               tasksServices.browserPlatform !=
                                                   'ios')
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
+                                            const SizedBox(height: 22),
                                             RichText(
                                                 text: TextSpan(
                                                     style: DefaultTextStyle.of(
@@ -598,138 +659,144 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                           color:
                                                               Colors.black54)),
                                                 ])),
+                                            const Spacer(),
                                             const WalletConnectButton(
                                               buttonName: 'wallet_connect',
                                             ),
-                                            const SizedBox(height: 12),
+                                            const SizedBox(height: 22),
                                           ],
                                         ),
+
+
+
+
+                                      // *********** Wallet Connect > QR Code page ************ //
+
                                       Column(
                                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          if (tasksServices.transportEnabled)
-                                          const Spacer(),
-                                          if (tasksServices.transportEnabled)
-                                            Padding(
-                                              padding: const EdgeInsets.only(left: 10.0, right: 10),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Container(
-                                                    padding: const EdgeInsets.only(left: 2.0, right: 11),
-                                                    child: const Icon(Icons.new_releases,
-                                                        size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                          const SizedBox(height: 22),
+                                          AnimatedCrossFade(
+                                            duration: const Duration(milliseconds: 300),
+                                            firstChild: SizedBox(
+                                              height: widget.screenHeightSizeNoKeyboard - 210,
+                                              child: Column(
+                                                // crossAxisAlignment:
+                                                // CrossAxisAlignment.center,
+                                                children: [
+                                                  RichText(
+                                                      text: TextSpan(
+                                                          style: DefaultTextStyle.of(
+                                                              context)
+                                                              .style
+                                                              .apply(
+                                                              fontSizeFactor: 1.0),
+                                                          children: const <TextSpan>[
+                                                            TextSpan(
+                                                                text: 'Scan QR code',
+                                                                style: TextStyle(
+                                                                    height: 3,
+                                                                    fontWeight:
+                                                                    FontWeight.bold,
+                                                                    fontSize: 17,
+                                                                    color: Colors.black54)),
+                                                          ])),
+                                                  const Spacer(),
+                                                  if (_displayUri.isNotEmpty)
+                                                  QrImage(
+                                                    data: _displayUri,
+                                                    size: 230,
+                                                    gapless: false,
                                                   ),
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: RichText(
-                                                        text: TextSpan(
-                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                                            children: const <TextSpan>[
-                                                              TextSpan(
-                                                                  text: 'Connect with Moonbase-alpha or Hyperlane supported network',
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 16),),
-                                                            ])),
-                                                  ),
+                                                  const Spacer(),
+                                                  if (!tasksServices
+                                                      .validChainIDWC &&
+                                                      tasksServices
+                                                          .walletConnectedWC)
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                        left: 16,
+                                                        right: 16,
+                                                        bottom: 16,
+                                                      ),
+                                                      child: Text(
+                                                        'Wrong network, please connect to Moonbase Alpha',
+                                                        style: TextStyle(
+                                                            color:
+                                                            Colors.redAccent,
+                                                            fontSize: 20),
+                                                        textAlign:
+                                                        TextAlign.center,
+                                                      ),
+                                                    )
                                                 ],
                                               ),
                                             ),
-                                          // if (tasksServices.transportSelected.isNotEmpty)
-                                          //   Column(
-                                          //     children: [
+                                            secondChild: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                            crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                          ),
+                                          // if (_displayUri.isEmpty)
                                           //
-                                          //       Container(
-                                          //         padding: const EdgeInsets.only(top: 10.0),
-                                          //         // width: 128,
-                                          //         child: interface.transportImages[tasksServices.transportSelected],
-                                          //       ),
+                                          //
+                                          //
+                                          // // if (_displayUri.isNotEmpty)
+                                          // // const Spacer(),
+                                          // if (_displayUri.isNotEmpty)
+                                          //
+
+
+
+
+                                          // SizedBox(
+                                          //   // height: 260,
+                                          //   width: 250,
+                                          //   child: Column(
+                                          //     mainAxisAlignment:
+                                          //         MainAxisAlignment.center,
+                                          //     children: [
+                                          //       (_displayUri.isEmpty)
+                                          //           ? const Padding(
+                                          //               padding:
+                                          //                   EdgeInsets.only(
+                                          //                 left: 10,
+                                          //                 right: 10,
+                                          //                 bottom: 10,
+                                          //               ),
+                                          //             )
+                                          //           : QrImage(
+                                          //               data: _displayUri,
+                                          //               size: 230,
+                                          //               gapless: false,
+                                          //             ),
+                                          //
+                                          //
                                           //     ],
                                           //   ),
-
-
-
+                                          // ),
                                           const Spacer(),
-                                          RichText(
-                                              text: TextSpan(
-                                                  style: DefaultTextStyle.of(
-                                                          context)
-                                                      .style
-                                                      .apply(
-                                                          fontSizeFactor: 1.0),
-                                                  children: const <TextSpan>[
-                                                TextSpan(
-                                                    text: 'Scan QR code',
-                                                    style: TextStyle(
-                                                        height: 3,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 17,
-                                                        color: Colors.black54)),
-                                              ])),
-                                          const Spacer(),
-                                          SizedBox(
-                                            height: 260,
-                                            width: 250,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                (_displayUri.isEmpty)
-                                                    ? const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                          left: 10,
-                                                          right: 10,
-                                                          bottom: 10,
-                                                        ),
-                                                      )
-                                                    : QrImage(
-                                                        data: _displayUri,
-                                                        size: 230,
-                                                        gapless: false,
-                                                      ),
-                                                Text(
-                                                  tasksServices
-                                                          .walletConnectedWC
-                                                      ? 'Wallet connected'
-                                                      : 'Wallet disconnected',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6,
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                if (!tasksServices
-                                                        .validChainIDWC &&
-                                                    tasksServices
-                                                        .walletConnectedWC)
-                                                  const Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: 16,
-                                                      right: 16,
-                                                      bottom: 16,
-                                                    ),
-                                                    child: Text(
-                                                      'Wrong network, please connect to Moonbase Alpha',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.redAccent,
-                                                          fontSize: 20),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  )
-                                              ],
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 14.0),
+                                            child: Text(
+                                              tasksServices
+                                                  .walletConnectedWC
+                                                  ? 'Wallet connected'
+                                                  : 'Wallet disconnected',
+                                              style: const TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  fontSize: 17,
+                                                  color: Colors.black54),
+
+                                              textAlign: TextAlign.center,
                                             ),
                                           ),
-                                          const Spacer(),
                                           const WalletConnectButton(
                                             buttonName: 'wallet_connect',
                                           ),
-                                          const Spacer(),
-                                          const SizedBox(height: 12),
+                                          // const Spacer(),
+                                          const SizedBox(height: 22),
                                         ],
                                       ),
                                     ],
