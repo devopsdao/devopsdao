@@ -119,36 +119,35 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
     }
 
     EthereumAddress? taskAddress = widget.taskAddress;
-    return FutureBuilder<Task> (
-        future: tasksServices.getTask(taskAddress), // a previously-obtained Future<String> or null
+    return FutureBuilder<Task>(
+        future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             task = snapshot.data!;
           } else {
             task = Task(
-              nanoId: '111',
-              createTime: DateTime.now(),
-              taskType: 'task[2]',
-              title: 'Loading...',
-              description: 'Loading...',
-              symbol: 'none',
-              taskState: 'new',
-              auditState: '',
-              rating: 0,
-              contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              participants: [],
-              funders: [],
-              auditors: [],
-              messages: [],
-              taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              justLoaded: true,
-              contractValue: 0,
-              contractValueToken: 0,
-              transport: ''
-            );
+                nanoId: '111',
+                createTime: DateTime.now(),
+                taskType: 'task[2]',
+                title: 'Loading...',
+                description: 'Loading...',
+                symbol: 'none',
+                taskState: 'new',
+                auditState: '',
+                rating: 0,
+                contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+                participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+                auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+                auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+                participants: [],
+                funders: [],
+                auditors: [],
+                messages: [],
+                taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+                justLoaded: true,
+                contractValue: 0,
+                contractValueToken: 0,
+                transport: '');
           }
 
           if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
@@ -316,13 +315,13 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                               children: [
                                                 const WidgetSpan(
                                                     child: Padding(
-                                                      padding: EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.copy,
-                                                        size: 20,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
+                                                  padding: EdgeInsets.only(right: 5.0),
+                                                  child: Icon(
+                                                    Icons.copy,
+                                                    size: 20,
+                                                    color: Colors.black26,
+                                                  ),
+                                                )),
                                                 TextSpan(
                                                   text: task.title,
                                                   style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),
@@ -335,22 +334,22 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                     ),
                                     onTap: () async {
                                       Clipboard.setData(
-                                          ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
+                                              ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
                                           .then((_) {
                                         // ScaffoldMessenger.of(context)
                                         //     .showSnackBar(const SnackBar(
                                         //         content: Text(
                                         //             'Copied to your clipboard !')));
                                         Flushbar(
-                                            icon: const Icon(
-                                              Icons.copy,
-                                              size: 20,
-                                              color: Colors.white,
-                                            ),
-                                            message: 'Task URL copied to your clipboard!',
-                                            duration: const Duration(seconds: 2),
-                                            backgroundColor: Colors.blueAccent,
-                                            shouldIconPulse: false)
+                                                icon: const Icon(
+                                                  Icons.copy,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                                message: 'Task URL copied to your clipboard!',
+                                                duration: const Duration(seconds: 2),
+                                                backgroundColor: Colors.blueAccent,
+                                                shouldIconPulse: false)
                                             .show(context);
                                       });
                                     },
@@ -554,9 +553,9 @@ class _DialogPagesState extends State<DialogPages> {
                                 showDialog(
                                     context: context,
                                     builder: (context) => WalletAction(
-                                      nanoId: task.nanoId,
-                                      taskName: 'addTokens',
-                                    ));
+                                          nanoId: task.nanoId,
+                                          taskName: 'addTokens',
+                                        ));
                               },
                             ),
                           ],
@@ -573,7 +572,6 @@ class _DialogPagesState extends State<DialogPages> {
                 maxWidth: maxInternalWidth,
               ),
               child: Column(
-
                 children: [
                   // const SizedBox(height: 50),
                   Material(
@@ -702,16 +700,16 @@ class _DialogPagesState extends State<DialogPages> {
                                       ),
                                       child: RichText(
                                           text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'Read more ',
-                                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
-                                              ),
-                                              const WidgetSpan(
-                                                child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                              ),
-                                            ],
-                                          ))),
+                                        children: [
+                                          TextSpan(
+                                            text: 'Read more ',
+                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
+                                          ),
+                                          const WidgetSpan(
+                                            child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                          ),
+                                        ],
+                                      ))),
                               ],
                             ),
                           );
@@ -829,10 +827,9 @@ class _DialogPagesState extends State<DialogPages> {
                                   alignment: Alignment.topLeft,
                                   padding: const EdgeInsets.all(8.0),
                                   child: RichText(
-                                      text:
-                                      TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                        TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                      ])),
+                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                    TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                  ])),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.all(1.0),
@@ -872,8 +869,8 @@ class _DialogPagesState extends State<DialogPages> {
                       interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
                       interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
                       tasksServices.hardhatDebug == true)
-                  // if (task.auditInitiator == tasksServices.publicAddress &&
-                  //     interface.dialogCurrentState['pages'].containsKey('select'))
+                    // if (task.auditInitiator == tasksServices.publicAddress &&
+                    //     interface.dialogCurrentState['pages'].containsKey('select'))
                     Container(
                       padding: const EdgeInsets.only(top: 14.0),
                       child: Material(
@@ -903,10 +900,10 @@ class _DialogPagesState extends State<DialogPages> {
                                             interface.dialogCurrentState['pages'].containsKey('select'))
                                           Text(
                                               'There '
-                                                  '${task.auditors.length == 1 ? 'is' : 'are'} '
-                                                  '${task.auditors.length.toString()} auditor'
-                                                  '${task.auditors.length == 1 ? '' : 's'}'
-                                                  ' waiting for your decision',
+                                              '${task.auditors.length == 1 ? 'is' : 'are'} '
+                                              '${task.auditors.length.toString()} auditor'
+                                              '${task.auditors.length == 1 ? '' : 's'}'
+                                              ' waiting for your decision',
                                               style: const TextStyle(
                                                 height: 1.1,
                                               )),
@@ -945,9 +942,9 @@ class _DialogPagesState extends State<DialogPages> {
 
                   // ********* Participant choose part ************ //
                   if (interface.dialogCurrentState['name'] == 'customer-new' || tasksServices.hardhatDebug == true)
-                  // if (task.taskState == "new" &&
-                  //     task.participants.isNotEmpty &&
-                  //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                    // if (task.taskState == "new" &&
+                    //     task.participants.isNotEmpty &&
+                    //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
                     Container(
                       padding: const EdgeInsets.only(top: 14.0),
                       child: Material(
@@ -972,16 +969,16 @@ class _DialogPagesState extends State<DialogPages> {
                                     flex: 2,
                                     child: RichText(
                                         text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                          TextSpan(
-                                              text: 'There '
-                                                  '${task.participants.length == 1 ? 'is' : 'are'} '
-                                                  '${task.participants.length.toString()} participant'
-                                                  '${task.participants.length == 1 ? '' : 's'}'
-                                                  ' waiting for your decision',
-                                              style: const TextStyle(
-                                                height: 1,
-                                              )),
-                                        ])),
+                                      TextSpan(
+                                          text: 'There '
+                                              '${task.participants.length == 1 ? 'is' : 'are'} '
+                                              '${task.participants.length.toString()} participant'
+                                              '${task.participants.length == 1 ? '' : 's'}'
+                                              ' waiting for your decision',
+                                          style: const TextStyle(
+                                            height: 1,
+                                          )),
+                                    ])),
                                   ),
                                   TaskDialogButton(
                                     padding: 6.0,
@@ -1003,9 +1000,9 @@ class _DialogPagesState extends State<DialogPages> {
 
                   // ********* Audit Completed part ************ //
                   if (interface.dialogCurrentState['name'] == 'auditor-finished' || tasksServices.hardhatDebug == true)
-                  // if (task.taskState == "new" &&
-                  //     task.participants.isNotEmpty &&
-                  //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                    // if (task.taskState == "new" &&
+                    //     task.participants.isNotEmpty &&
+                    //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
                     Container(
                       padding: const EdgeInsets.only(top: 14.0),
                       child: Material(
@@ -1029,15 +1026,14 @@ class _DialogPagesState extends State<DialogPages> {
                                   Expanded(
                                     flex: 2,
                                     child: RichText(
-                                        text: TextSpan(
-                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                            children: const <TextSpan>[
-                                              TextSpan(
-                                                  text: 'Thank you for your contribution. This Task completed. You have earned: ',
-                                                  style: TextStyle(
-                                                    height: 1,
-                                                  )),
-                                            ])),
+                                        text:
+                                            TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                      TextSpan(
+                                          text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                          style: TextStyle(
+                                            height: 1,
+                                          )),
+                                    ])),
                                   ),
                                 ],
                               ),
@@ -1068,13 +1064,12 @@ class _DialogPagesState extends State<DialogPages> {
                                   children: <Widget>[
                                     RichText(
                                         text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                          TextSpan(
-                                              text: '${task.contractValue} DEV \n',
-                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                          TextSpan(
-                                              text: '${task.contractValueToken} aUSDC',
-                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                        ])),
+                                      TextSpan(
+                                          text: '${task.contractValue} DEV \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                      TextSpan(
+                                          text: '${task.contractValueToken} aUSDC',
+                                          style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                    ])),
                                   ],
                                 )),
                             const Spacer(),
@@ -1167,10 +1162,10 @@ class _DialogPagesState extends State<DialogPages> {
                               ),
                             ),
                             style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.black87,
-                              lineHeight: null,
-                            ),
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black87,
+                                  lineHeight: null,
+                                ),
                             minLines: 1,
                             maxLines: 3,
                           ),
@@ -1181,10 +1176,10 @@ class _DialogPagesState extends State<DialogPages> {
 
                   if ((task.contractValue != 0 || task.contractValueToken != 0) &&
                       (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
-                  // if (task.taskState == 'completed' &&
-                  //     (fromPage == 'performer' ||
-                  //         tasksServices.hardhatDebug == true) &&
-                  //     (task.contractValue != 0 || task.contractValueToken != 0))
+                    // if (task.taskState == 'completed' &&
+                    //     (fromPage == 'performer' ||
+                    //         tasksServices.hardhatDebug == true) &&
+                    //     (task.contractValue != 0 || task.contractValueToken != 0))
                     Container(
                       padding: const EdgeInsets.only(top: 14.0),
                       child: Material(
@@ -1205,42 +1200,40 @@ class _DialogPagesState extends State<DialogPages> {
                   // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
 
                   if (tasksServices.transportSelected.isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.only(right: 25.0,top: 14.0),
-                    child: Row(
-                      children: [
-                        const Spacer(),
-                        Container(
-                          width: 220,
-                          padding: const EdgeInsets.only(),
-                          child: Material(
-                            elevation: 10,
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                            child: Container(
-                              // constraints: const BoxConstraints(maxHeight: 500),
-                              padding: const EdgeInsets.all(5.0),
-                              width: innerWidth,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(widget.borderRadius),
-                              ),
-                              child: Column(
-                                children: [
-                                  const Text('Transport used:'),
-                                  Container(
-                                    padding: const EdgeInsets.all(2.0),
-                                    // width: 128,
-                                    child: interface.transportImages[tasksServices.transportSelected],
+                    Container(
+                      padding: const EdgeInsets.only(right: 25.0, top: 14.0),
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          Container(
+                            width: 220,
+                            padding: const EdgeInsets.only(),
+                            child: Material(
+                              elevation: 10,
+                              borderRadius: BorderRadius.circular(widget.borderRadius),
+                              child: Container(
+                                  // constraints: const BoxConstraints(maxHeight: 500),
+                                  padding: const EdgeInsets.all(5.0),
+                                  width: innerWidth,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(widget.borderRadius),
                                   ),
-                                ],
-                              )
+                                  child: Column(
+                                    children: [
+                                      const Text('Transport used:'),
+                                      Container(
+                                        padding: const EdgeInsets.all(2.0),
+                                        // width: 128,
+                                        child: interface.transportImages[tasksServices.transportSelected],
+                                      ),
+                                    ],
+                                  )),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   const Spacer(),
-
 
                   DialogButtonSetOnFirstPage(task: task, fromPage: fromPage, width: innerWidth, enableRatingButton: enableRatingButton)
                 ],
@@ -1288,10 +1281,10 @@ class _DialogPagesState extends State<DialogPages> {
                                                 text: TextSpan(
                                                     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
                                                     children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: task.description,
-                                                      )
-                                                    ])))),
+                                                  TextSpan(
+                                                    text: task.description,
+                                                  )
+                                                ])))),
                                   ),
                                 ),
                                 // const Spacer(),
@@ -1299,11 +1292,11 @@ class _DialogPagesState extends State<DialogPages> {
                                   padding: const EdgeInsets.all(6),
                                   child: RichText(
                                       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                        const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                        TextSpan(
-                                            text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
-                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                      ])),
+                                    const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                    TextSpan(
+                                        text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
+                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                  ])),
                                 ),
                               ],
                             ))),
@@ -1328,133 +1321,133 @@ class _DialogPagesState extends State<DialogPages> {
                                         onTap: () async {
                                           Clipboard.setData(ClipboardData(text: task.contractOwner.toString())).then((_) {
                                             Flushbar(
-                                                icon: const Icon(
-                                                  Icons.copy,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
-                                                message: '${task.contractOwner.toString()} copied to your clipboard!',
-                                                duration: const Duration(seconds: 2),
-                                                backgroundColor: Colors.blueAccent,
-                                                shouldIconPulse: false)
+                                                    icon: const Icon(
+                                                      Icons.copy,
+                                                      size: 20,
+                                                      color: Colors.white,
+                                                    ),
+                                                    message: '${task.contractOwner.toString()} copied to your clipboard!',
+                                                    duration: const Duration(seconds: 2),
+                                                    backgroundColor: Colors.blueAccent,
+                                                    shouldIconPulse: false)
                                                 .show(context);
                                           });
                                         },
                                         child: RichText(
                                             text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                              const WidgetSpan(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 5.0),
-                                                    child: Icon(
-                                                      Icons.copy,
-                                                      size: 16,
-                                                      color: Colors.black26,
-                                                    ),
-                                                  )),
-                                              const TextSpan(text: 'Contract owner: \n', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
-                                              TextSpan(
-                                                  text: task.contractOwner.toString(),
-                                                  style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                            ])),
+                                          const WidgetSpan(
+                                              child: Padding(
+                                            padding: EdgeInsets.only(right: 5.0),
+                                            child: Icon(
+                                              Icons.copy,
+                                              size: 16,
+                                              color: Colors.black26,
+                                            ),
+                                          )),
+                                          const TextSpan(text: 'Contract owner: \n', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: task.contractOwner.toString(),
+                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                        ])),
                                       ),
                                       GestureDetector(
                                         onTap: () async {
                                           Clipboard.setData(ClipboardData(text: task.taskAddress.toString())).then((_) {
                                             Flushbar(
-                                                icon: const Icon(
-                                                  Icons.copy,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
-                                                message: '${task.taskAddress.toString()} copied to your clipboard!',
-                                                duration: const Duration(seconds: 2),
-                                                backgroundColor: Colors.blueAccent,
-                                                shouldIconPulse: false)
+                                                    icon: const Icon(
+                                                      Icons.copy,
+                                                      size: 20,
+                                                      color: Colors.white,
+                                                    ),
+                                                    message: '${task.taskAddress.toString()} copied to your clipboard!',
+                                                    duration: const Duration(seconds: 2),
+                                                    backgroundColor: Colors.blueAccent,
+                                                    shouldIconPulse: false)
                                                 .show(context);
                                           });
                                         },
                                         child: RichText(
                                             text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                              const WidgetSpan(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 5.0),
-                                                    child: Icon(
-                                                      Icons.copy,
-                                                      size: 16,
-                                                      color: Colors.black26,
-                                                    ),
-                                                  )),
-                                              const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                              TextSpan(
-                                                  text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                            ])),
+                                          const WidgetSpan(
+                                              child: Padding(
+                                            padding: EdgeInsets.only(right: 5.0),
+                                            child: Icon(
+                                              Icons.copy,
+                                              size: 16,
+                                              color: Colors.black26,
+                                            ),
+                                          )),
+                                          const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                          TextSpan(
+                                              text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                        ])),
                                       ),
                                       if (task.participant != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                         GestureDetector(
                                           onTap: () async {
                                             Clipboard.setData(ClipboardData(text: task.participant.toString())).then((_) {
                                               Flushbar(
-                                                  icon: const Icon(
-                                                    Icons.copy,
-                                                    size: 20,
-                                                    color: Colors.white,
-                                                  ),
-                                                  message: '${task.participant.toString()} copied to your clipboard!',
-                                                  duration: const Duration(seconds: 2),
-                                                  backgroundColor: Colors.blueAccent,
-                                                  shouldIconPulse: false)
+                                                      icon: const Icon(
+                                                        Icons.copy,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      ),
+                                                      message: '${task.participant.toString()} copied to your clipboard!',
+                                                      duration: const Duration(seconds: 2),
+                                                      backgroundColor: Colors.blueAccent,
+                                                      shouldIconPulse: false)
                                                   .show(context);
                                             });
                                           },
                                           child: RichText(
                                               text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                                const WidgetSpan(
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.copy,
-                                                        size: 16,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
-                                                const TextSpan(text: 'Performer: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                TextSpan(
-                                                    text: task.participant.toString(),
-                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                              ])),
+                                            const WidgetSpan(
+                                                child: Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.copy,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )),
+                                            const TextSpan(text: 'Performer: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: task.participant.toString(),
+                                                style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                          ])),
                                         ),
                                       if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                         GestureDetector(
                                           onTap: () async {
                                             Clipboard.setData(ClipboardData(text: task.auditor.toString())).then((_) {
                                               Flushbar(
-                                                  icon: const Icon(
-                                                    Icons.copy,
-                                                    size: 20,
-                                                    color: Colors.white,
-                                                  ),
-                                                  message: '${task.auditor.toString()} copied to your clipboard!',
-                                                  duration: const Duration(seconds: 2),
-                                                  backgroundColor: Colors.blueAccent,
-                                                  shouldIconPulse: false)
+                                                      icon: const Icon(
+                                                        Icons.copy,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      ),
+                                                      message: '${task.auditor.toString()} copied to your clipboard!',
+                                                      duration: const Duration(seconds: 2),
+                                                      backgroundColor: Colors.blueAccent,
+                                                      shouldIconPulse: false)
                                                   .show(context);
                                             });
                                           },
                                           child: RichText(
                                               text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                                const WidgetSpan(
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.copy,
-                                                        size: 16,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
-                                                const TextSpan(text: 'Auditor selected: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                                TextSpan(
-                                                    text: task.auditor.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                              ])),
+                                            const WidgetSpan(
+                                                child: Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.copy,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )),
+                                            const TextSpan(text: 'Auditor selected: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: task.auditor.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                          ])),
                                         ),
                                       // RichText(
                                       //   text: TextSpan(
@@ -1514,24 +1507,24 @@ class _DialogPagesState extends State<DialogPages> {
           if (interface.dialogCurrentState['pages'].containsKey('chat'))
             Center(
                 child: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: maxInternalWidth,
+              padding: const EdgeInsets.all(12),
+              child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: maxInternalWidth,
+                    ),
+                    child: Container(
+                        padding: const EdgeInsets.all(6.0),
+                        // height: widget.topConstraints.maxHeight,
+                        width: innerWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
                         ),
-                        child: Container(
-                            padding: const EdgeInsets.all(6.0),
-                            // height: widget.topConstraints.maxHeight,
-                            width: innerWidth,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(widget.borderRadius),
-                            ),
-                            child: ChatPage(task: task, tasksServices: tasksServices)),
-                      )),
-                )),
+                        child: ChatPage(task: task, tasksServices: tasksServices)),
+                  )),
+            )),
         ],
       );
     });
