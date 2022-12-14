@@ -66,6 +66,39 @@ class _TaskDialog extends State<TaskDialog> {
   }
 }
 
+
+// class FutureTaskDialog extends StatefulWidget {
+//   final String fromPage;
+//   final EthereumAddress? taskAddress;
+//   const FutureTaskDialog({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
+//
+//   @override
+//   _FutureTaskDialog createState() => _FutureTaskDialog();
+// }
+//
+// class _FutureTaskDialog extends State<FutureTaskDialog> {
+//   late Task task;
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var tasksServices = context.watch<TasksServices>();
+//     if (tasksServices.tasks[widget.taskAddress] != null) {
+//       task = tasksServices.tasks[widget.taskAddress]!;
+//       print('taskAddress: ${widget.taskAddress}');
+//       print('fromPage: ${widget.fromPage}');
+//       return TaskInformationDialog(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: false);
+//     }
+//     // return TaskInformationDialog(
+//     //     fromPage: widget.fromPage, task: task, shimmerEnabled: true);
+//
+//     return const AppDataLoadingDialogWidget();
+//   }
+// }
+
 class TaskInformationDialog extends StatefulWidget {
   // final int taskCount;
   final String fromPage;
@@ -101,8 +134,8 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
-    var tasksServices = context.watch<TasksServices>();
+    var interface = context.read<InterfaceServices>();
+    var tasksServices = context.read<TasksServices>();
 
     // Task task = widget.task;
     String fromPage = widget.fromPage;
@@ -266,10 +299,52 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                     padding: const EdgeInsets.all(0.0),
                                     height: 30,
                                     width: 30,
-                                    child: Consumer<InterfaceServices>(
-                                      builder: (context, intfc, child) {
-                                        late String page = intfc.dialogCurrentState['pages'].entries
-                                            .firstWhere((element) => element.value == intfc.dialogPageNum)
+                                    child:
+
+
+                                    // Selector<InterfaceServices, int>(
+                                    //   selector: (_, model) {
+                                    //     return model.dialogPageNum;
+                                    //   },
+                                    //   builder: (context, dialogPageNum, child) {
+                                    //     late String page = interface.dialogCurrentState['pages'].entries
+                                    //         .firstWhere((element) => element.value == dialogPageNum)
+                                    //         .key;
+                                    //     return Row(
+                                    //       children: <Widget>[
+                                    //         if (page == 'topup')
+                                    //           const Expanded(
+                                    //             child: Icon(
+                                    //               Icons.arrow_forward,
+                                    //               size: 30,
+                                    //             ),
+                                    //           ),
+                                    //         if (page.toString() == 'main')
+                                    //           const Expanded(
+                                    //             child: Center(),
+                                    //           ),
+                                    //         if (page == 'description' || page == 'chat' || page == 'select')
+                                    //           const Expanded(
+                                    //             child: Icon(
+                                    //               Icons.arrow_back,
+                                    //               size: 30,
+                                    //             ),
+                                    //           ),
+                                    //       ],
+                                    //     );
+                                    //   },
+                                    // ),
+
+
+
+
+
+
+                                    Consumer<InterfaceServices>(
+                                      builder: (context, model, child) {
+                                        print('wow');
+                                        late String page = model.dialogCurrentState['pages'].entries
+                                            .firstWhere((element) => element.value == model.dialogPageNum)
                                             .key;
                                         return Row(
                                           children: <Widget>[
@@ -502,6 +577,15 @@ class _DialogPagesState extends State<DialogPages> {
           // interface.dialogPageNum = number;
           // tasksServices.myNotifyListeners();
           Provider.of<InterfaceServices>(context, listen: false).updateDialogPageNum(number);
+
+          // ChangeNotifierProvider(
+          //   create: (context) => InterfaceServices(),
+          //   child: MaterialApp(
+          //     title: 'Provider with NotifyListeners',
+          //     theme: ThemeData(primarySwatch: Colors.blue,),
+          //     home: MyHomePage(title: 'Home Page'),
+          //   ),
+          // );
         },
         children: <Widget>[
           // GestureDetector(
@@ -581,7 +665,7 @@ class _DialogPagesState extends State<DialogPages> {
                       onTap: () {
                         interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
                             duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                        tasksServices.myNotifyListeners();
+                        // tasksServices.myNotifyListeners();
                       },
                       child: Container(
                         // height: MediaQuery.of(context).size.width * .08,
