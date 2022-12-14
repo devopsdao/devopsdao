@@ -1,0 +1,42 @@
+[
+  {
+    "inputs": [],
+    "name": "addLiquidityETH",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "dstChainId",
+        "type": "uint16"
+      },
+      {
+        "internalType": "address payable",
+        "name": "refundAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "to",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountLD",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minAmountLD",
+        "type": "uint256"
+      }
+    ],
+    "name": "swapETH",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]

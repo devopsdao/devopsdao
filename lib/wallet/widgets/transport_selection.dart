@@ -8,12 +8,10 @@ import '../../blockchain/task_services.dart';
 class TransportSelection extends StatefulWidget {
   final double screenHeightSizeNoKeyboard;
 
-
-  const TransportSelection(
-      {Key? key,
-        required this.screenHeightSizeNoKeyboard,
-      })
-      : super(key: key);
+  const TransportSelection({
+    Key? key,
+    required this.screenHeightSizeNoKeyboard,
+  }) : super(key: key);
 
   @override
   _TransportSelectionState createState() => _TransportSelectionState();
@@ -26,7 +24,6 @@ class _TransportSelectionState extends State<TransportSelection> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-
 
     return SizedBox(
       height: widget.screenHeightSizeNoKeyboard - 210,
@@ -41,22 +38,18 @@ class _TransportSelectionState extends State<TransportSelection> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.only(left: 2.0, right: 11),
-                    child: const Icon(Icons.new_releases,
-                        size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                    child: const Icon(Icons.new_releases, size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
                   ),
                   Expanded(
                     flex: 2,
                     child: RichText(
-                        text: TextSpan(
-                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                            children: const <TextSpan>[
-                              TextSpan(
-                                text: 'Please select the transport you want to use:',
-                                // text: 'Connect with Moonbase-alpha or Hyperlane supported network',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),),
-                            ])),
+                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                      TextSpan(
+                        text: 'Connected to chain other than Moonbase-alpha. \nPlease select the interchain layer you want to use:',
+                        // text: 'Connect with Moonbase-alpha or Hyperlane supported network',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    ])),
                   ),
                 ],
               ),
@@ -84,18 +77,15 @@ class _TransportSelectionState extends State<TransportSelection> {
                       dropdownValue = value!;
                     });
                     // Navigator.pop(context);
-
                   },
-                )
-            ),
-
+                )),
 
             if (tasksServices.transportSelected.isNotEmpty)
               Container(
                 // padding: const EdgeInsets.only(top: 50.0),
                 child: Column(
                   children: [
-                    // const Text('Transport used:'),
+                    // const Text('Intrechain protocol'),
                     Container(
                       padding: const EdgeInsets.all(4.0),
                       height: 44,

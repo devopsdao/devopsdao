@@ -120,7 +120,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
 
     EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Task>(
-        future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
+        future: tasksServices.getTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             task = snapshot.data!;
@@ -1220,7 +1220,7 @@ class _DialogPagesState extends State<DialogPages> {
                                   ),
                                   child: Column(
                                     children: [
-                                      const Text('Transport used:'),
+                                      const Text('Interchain protocol:'),
                                       Container(
                                         padding: const EdgeInsets.all(2.0),
                                         // width: 128,
