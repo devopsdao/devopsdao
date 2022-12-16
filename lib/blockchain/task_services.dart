@@ -357,6 +357,18 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
+    _web3clientWormhole = Web3Client(
+      _rpcUrlMatic,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrlMatic);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+        }
+      },
+    );
     await startup();
     // await getABI();
     // await getDeployedContract();
@@ -988,9 +1000,9 @@ class TasksServices extends ChangeNotifier {
     var addressesLayerzero = jsonDecode(addressesFileLayerzero);
     _contractAddressLayerzero = EthereumAddress.fromHex(addressesLayerzero['contracts'][chainIdLayerzero.toString()]["Diamond"]);
 
-    // String addressesFileWormhole = await rootBundle.loadString('lib/blockchain/abi/wormhole-addresses.json');
-    // var addressesWormhole = jsonDecode(addressesFileWormhole);
-    // _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
+    String addressesFileWormhole = await rootBundle.loadString('lib/blockchain/abi/wormhole-addresses.json');
+    var addressesWormhole = jsonDecode(addressesFileWormhole);
+    _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
 
     if (hardhatDebug == true || hardhatLive == true) {
       Random random = Random();

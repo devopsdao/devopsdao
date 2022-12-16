@@ -121,7 +121,7 @@ flutter:
     - lib/blockchain/abi/axelar-addresses.json
     - lib/blockchain/abi/hyperlane-addresses.json
     - lib/blockchain/abi/layerzero-addresses.json
-    # - lib/blockchain/abi/wormhole-addresses.json
+    - lib/blockchain/abi/wormhole-addresses.json
     - lib/blockchain/accounts/hardhat.json
     - lib/blockchain/abi/Diamond.json
     - lib/blockchain/abi/TasksFacet.json
