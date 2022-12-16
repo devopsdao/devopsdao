@@ -281,6 +281,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
         "internalType": "string",
         "name": "_message",
         "type": "string"
@@ -298,6 +303,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
       {
         "internalType": "string",
         "name": "_favour",
@@ -327,6 +337,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
         "internalType": "string",
         "name": "_message",
         "type": "string"
@@ -345,6 +360,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
         "internalType": "string",
         "name": "_message",
         "type": "string"
@@ -362,6 +382,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
       {
         "internalType": "address payable",
         "name": "_participant",
@@ -410,9 +435,5 @@
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
   }
 ]

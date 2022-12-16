@@ -413,7 +413,7 @@ class _WalletAction extends State<WalletAction> {
                               // ),
                             ],
                           ),
-                        if (tasksServices.transportSelected.isNotEmpty)
+                        if (tasksServices.interchainSelected.isNotEmpty)
                           Container(
                             padding: const EdgeInsets.only(top: 50.0),
                             child: Column(
@@ -422,7 +422,7 @@ class _WalletAction extends State<WalletAction> {
                                 Container(
                                   padding: const EdgeInsets.all(4.0),
                                   // width: 128,
-                                  child: interface.transportImages[tasksServices.transportSelected],
+                                  child: interface.interchainImages[tasksServices.interchainSelected],
                                 ),
                               ],
                             ),

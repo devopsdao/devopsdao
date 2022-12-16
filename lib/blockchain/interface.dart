@@ -10,9 +10,8 @@ class InterfaceServices extends ChangeNotifier {
   // Payments goes here (create_job_widget.dart -> payment.dart):
   late double tokensEntered = 0.0;
 
-
   // ************* Transport Images ****** //
-  late Map<String, Widget> transportImages = {
+  late Map<String, Widget> interchainImages = {
     'hyperlane': Image.asset(
       'assets/images/hyperlane.png',
       height: 36,
@@ -23,7 +22,7 @@ class InterfaceServices extends ChangeNotifier {
       height: 34,
       filterQuality: FilterQuality.medium,
     ),
-    'layerzero' : Image.asset(
+    'layerzero': Image.asset(
       'assets/images/LayerZero.png',
       height: 44,
       filterQuality: FilterQuality.medium,
@@ -56,21 +55,16 @@ class InterfaceServices extends ChangeNotifier {
   // Hint message for task_dialog
   // late String messageHint;
 
-
   // dialog context (for closing it from outside)
   late BuildContext mainDialogContext;
-
 
   late String whichWalletButtonPressed = '';
 
   // wallet/main.dart controller for tabs
   // late TabController walletTabController = TabController(length: 2, vsync: );
 
-
-
   // ***********  create_job_widget ************ ////
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
-
 
   // ****** SETTINGS ******** //
   // border radius:
@@ -85,6 +79,3 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-

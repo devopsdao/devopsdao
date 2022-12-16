@@ -72,7 +72,7 @@ class _TransportSelectionState extends State<TransportSelection> {
                     color: Colors.black26,
                   ),
                   onChanged: (String? value) {
-                    tasksServices.transportSelected = value!;
+                    tasksServices.interchainSelected = value!;
                     setState(() {
                       dropdownValue = value!;
                     });
@@ -80,11 +80,11 @@ class _TransportSelectionState extends State<TransportSelection> {
                   },
                 )),
 
-            if (tasksServices.transportSelected.isNotEmpty)
+            if (tasksServices.interchainSelected.isNotEmpty)
               Container(
                 padding: const EdgeInsets.all(4.0),
                 height: 44,
-                child: interface.transportImages[tasksServices.transportSelected],
+                child: interface.interchainImages[tasksServices.interchainSelected],
               )
           ],
         ),

@@ -5,7 +5,7 @@ import 'package:webthree/webthree.dart' as _i1;
 import 'dart:typed_data' as _i2;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"inputs":[{"internalType":"address","name":"_endpoint","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"logname","type":"string"},{"indexed":false,"internalType":"uint16","name":"sourceChain","type":"uint16"},{"indexed":false,"internalType":"bytes","name":"sourceAddress","type":"bytes"},{"indexed":false,"internalType":"uint256","name":"_nonce","type":"uint256"},{"indexed":false,"internalType":"bytes","name":"payload","type":"bytes"}],"name":"Logs","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint16","name":"_srcChainId","type":"uint16"},{"indexed":false,"internalType":"address","name":"_from","type":"address"},{"indexed":false,"internalType":"uint16","name":"_count","type":"uint16"},{"indexed":false,"internalType":"bytes","name":"_payload","type":"bytes"}],"name":"ReceiveMsg","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"_nanoId","type":"string"},{"indexed":false,"internalType":"string","name":"_taskType","type":"string"},{"indexed":false,"internalType":"string","name":"_title","type":"string"},{"indexed":false,"internalType":"string","name":"_description","type":"string"},{"indexed":false,"internalType":"string","name":"_symbol","type":"string"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"TaskContractCreating","type":"event"},{"inputs":[{"internalType":"string","name":"_nanoId","type":"string"},{"internalType":"string","name":"_taskType","type":"string"},{"internalType":"string","name":"_title","type":"string"},{"internalType":"string","name":"_description","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"createTaskContract","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"endpoint","outputs":[{"internalType":"contract ILayerZeroEndpoint","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint16","name":"_dstChainId","type":"uint16"},{"internalType":"address","name":"_userApplication","type":"address"},{"internalType":"bytes","name":"_payload","type":"bytes"},{"internalType":"bool","name":"_payInZRO","type":"bool"},{"internalType":"bytes","name":"_adapterParams","type":"bytes"}],"name":"estimateFees","outputs":[{"internalType":"uint256","name":"nativeFee","type":"uint256"},{"internalType":"uint256","name":"zroFee","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint16","name":"_srcChainId","type":"uint16"},{"internalType":"bytes","name":"_from","type":"bytes"},{"internalType":"uint64","name":"_nonce","type":"uint64"},{"internalType":"bytes","name":"_payload","type":"bytes"}],"name":"lzReceive","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"message","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"messageCount","outputs":[{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"}]',
+  '[{"inputs":[{"internalType":"address","name":"_endpoint","type":"address"},{"internalType":"uint16","name":"destinationChain_","type":"uint16"},{"internalType":"address","name":"destinationAddress_","type":"address"},{"internalType":"address","name":"destinationDiamond_","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"logname","type":"string"},{"indexed":false,"internalType":"uint16","name":"sourceChain","type":"uint16"},{"indexed":false,"internalType":"bytes","name":"sourceAddress","type":"bytes"},{"indexed":false,"internalType":"uint256","name":"_nonce","type":"uint256"},{"indexed":false,"internalType":"bytes","name":"payload","type":"bytes"}],"name":"Logs","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint16","name":"_srcChainId","type":"uint16"},{"indexed":false,"internalType":"address","name":"_from","type":"address"},{"indexed":false,"internalType":"uint16","name":"_count","type":"uint16"},{"indexed":false,"internalType":"bytes","name":"_payload","type":"bytes"}],"name":"ReceiveMsg","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_sender","type":"address"},{"indexed":false,"internalType":"string","name":"_nanoId","type":"string"},{"indexed":false,"internalType":"string","name":"_taskType","type":"string"},{"indexed":false,"internalType":"string","name":"_title","type":"string"},{"indexed":false,"internalType":"string","name":"_description","type":"string"},{"indexed":false,"internalType":"string","name":"_symbol","type":"string"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"TaskContractCreating","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_sender","type":"address"},{"indexed":false,"internalType":"address","name":"_contractAddress","type":"address"},{"indexed":false,"internalType":"string","name":"_message","type":"string"},{"indexed":false,"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"TaskParticipating","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_sender","type":"address"},{"indexed":false,"internalType":"address","name":"_contractAddress","type":"address"},{"indexed":false,"internalType":"string","name":"_message","type":"string"},{"indexed":false,"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"TaskSendMessaging","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_sender","type":"address"},{"indexed":false,"internalType":"address","name":"_contractAddress","type":"address"},{"indexed":false,"internalType":"address","name":"_participant","type":"address"},{"indexed":false,"internalType":"string","name":"_state","type":"string"},{"indexed":false,"internalType":"string","name":"_message","type":"string"},{"indexed":false,"internalType":"uint256","name":"_replyTo","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_rating","type":"uint256"}],"name":"TaskStateChanging","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_sender","type":"address"},{"indexed":false,"internalType":"address","name":"_contractAddress","type":"address"},{"indexed":false,"internalType":"string","name":"_favour","type":"string"},{"indexed":false,"internalType":"string","name":"_message","type":"string"},{"indexed":false,"internalType":"uint256","name":"_replyTo","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_rating","type":"uint256"}],"name":"taskAuditDecisioning","type":"event"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_nanoId","type":"string"},{"internalType":"string","name":"_taskType","type":"string"},{"internalType":"string","name":"_title","type":"string"},{"internalType":"string","name":"_description","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"createTaskContract","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint16","name":"_dstChainId","type":"uint16"},{"internalType":"address","name":"_userApplication","type":"address"},{"internalType":"bytes","name":"_payload","type":"bytes"},{"internalType":"bool","name":"_payInZRO","type":"bool"},{"internalType":"bytes","name":"_adapterParams","type":"bytes"}],"name":"estimateFees","outputs":[{"internalType":"uint256","name":"nativeFee","type":"uint256"},{"internalType":"uint256","name":"zroFee","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint16","name":"_srcChainId","type":"uint16"},{"internalType":"bytes","name":"_from","type":"bytes"},{"internalType":"uint64","name":"_nonce","type":"uint64"},{"internalType":"bytes","name":"_payload","type":"bytes"}],"name":"lzReceive","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"_contractAddress","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"sendMessage","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"_contractAddress","type":"address"},{"internalType":"string","name":"_favour","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"_rating","type":"uint256"}],"name":"taskAuditDecision","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"_contractAddress","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskAuditParticipate","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"_contractAddress","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskParticipate","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"_contractAddress","type":"address"},{"internalType":"address payable","name":"_participant","type":"address"},{"internalType":"string","name":"_state","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"_rating","type":"uint256"}],"name":"taskStateChange","outputs":[],"stateMutability":"payable","type":"function"}]',
   'Layerzero',
 );
 
@@ -27,6 +27,7 @@ class Layerzero extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> createTaskContract(
+    _i1.EthereumAddress _sender,
     String _nanoId,
     String _taskType,
     String _title,
@@ -37,8 +38,9 @@ class Layerzero extends _i1.GeneratedContract {
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[1];
-    assert(checkSignature(function, 'd06d6da4'));
+    assert(checkSignature(function, '8ef08164'));
     final params = [
+      _sender,
       _nanoId,
       _taskType,
       _title,
@@ -57,25 +59,6 @@ class Layerzero extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<_i1.EthereumAddress> endpoint({
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[2];
-    assert(checkSignature(function, '5e280f11'));
-    final params = [];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as _i1.EthereumAddress);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
   Future<EstimateFees> estimateFees(
     BigInt _dstChainId,
     _i1.EthereumAddress _userApplication,
@@ -85,7 +68,7 @@ class Layerzero extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[3];
+    final function = self.abi.functions[2];
     assert(checkSignature(function, '40a7bb10'));
     final params = [
       _dstChainId,
@@ -114,7 +97,7 @@ class Layerzero extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[4];
+    final function = self.abi.functions[3];
     assert(checkSignature(function, '001d3567'));
     final params = [
       _srcChainId,
@@ -130,42 +113,149 @@ class Layerzero extends _i1.GeneratedContract {
     );
   }
 
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<_i2.Uint8List> message({
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> sendMessage(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _contractAddress,
+    String _message,
+    BigInt _replyTo, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[5];
-    assert(checkSignature(function, 'e21f37ce'));
-    final params = [];
-    final response = await read(
-      sender,
+    final function = self.abi.functions[4];
+    assert(checkSignature(function, 'cfb60097'));
+    final params = [
+      _sender,
+      _contractAddress,
+      _message,
+      _replyTo,
+    ];
+    return write(
+      credentials,
+      transaction,
       function,
       params,
-      atBlock,
     );
-    return (response[0] as _i2.Uint8List);
   }
 
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> messageCount({
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> taskAuditDecision(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _contractAddress,
+    String _favour,
+    String _message,
+    BigInt _replyTo,
+    BigInt _rating, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[6];
-    assert(checkSignature(function, '3dbcc8d1'));
-    final params = [];
-    final response = await read(
-      sender,
+    final function = self.abi.functions[5];
+    assert(checkSignature(function, '1b93cd79'));
+    final params = [
+      _sender,
+      _contractAddress,
+      _favour,
+      _message,
+      _replyTo,
+      _rating,
+    ];
+    return write(
+      credentials,
+      transaction,
       function,
       params,
-      atBlock,
     );
-    return (response[0] as BigInt);
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> taskAuditParticipate(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _contractAddress,
+    String _message,
+    BigInt _replyTo, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[6];
+    assert(checkSignature(function, 'a52a60c3'));
+    final params = [
+      _sender,
+      _contractAddress,
+      _message,
+      _replyTo,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> taskParticipate(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _contractAddress,
+    String _message,
+    BigInt _replyTo, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[7];
+    assert(checkSignature(function, 'bd90e593'));
+    final params = [
+      _sender,
+      _contractAddress,
+      _message,
+      _replyTo,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> taskStateChange(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _contractAddress,
+    _i1.EthereumAddress _participant,
+    String _state,
+    String _message,
+    BigInt _replyTo,
+    BigInt _rating, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[8];
+    assert(checkSignature(function, 'bf8546fe'));
+    final params = [
+      _sender,
+      _contractAddress,
+      _participant,
+      _state,
+      _message,
+      _replyTo,
+      _rating,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
   }
 
   /// Returns a live stream of all Logs events emitted by this contract.
@@ -230,6 +320,90 @@ class Layerzero extends _i1.GeneratedContract {
       return TaskContractCreating(decoded);
     });
   }
+
+  /// Returns a live stream of all TaskParticipating events emitted by this contract.
+  Stream<TaskParticipating> taskParticipatingEvents({
+    _i1.BlockNum? fromBlock,
+    _i1.BlockNum? toBlock,
+  }) {
+    final event = self.event('TaskParticipating');
+    final filter = _i1.FilterOptions.events(
+      contract: self,
+      event: event,
+      fromBlock: fromBlock,
+      toBlock: toBlock,
+    );
+    return client.events(filter).map((_i1.FilterEvent result) {
+      final decoded = event.decodeResults(
+        result.topics!,
+        result.data!,
+      );
+      return TaskParticipating(decoded);
+    });
+  }
+
+  /// Returns a live stream of all TaskSendMessaging events emitted by this contract.
+  Stream<TaskSendMessaging> taskSendMessagingEvents({
+    _i1.BlockNum? fromBlock,
+    _i1.BlockNum? toBlock,
+  }) {
+    final event = self.event('TaskSendMessaging');
+    final filter = _i1.FilterOptions.events(
+      contract: self,
+      event: event,
+      fromBlock: fromBlock,
+      toBlock: toBlock,
+    );
+    return client.events(filter).map((_i1.FilterEvent result) {
+      final decoded = event.decodeResults(
+        result.topics!,
+        result.data!,
+      );
+      return TaskSendMessaging(decoded);
+    });
+  }
+
+  /// Returns a live stream of all TaskStateChanging events emitted by this contract.
+  Stream<TaskStateChanging> taskStateChangingEvents({
+    _i1.BlockNum? fromBlock,
+    _i1.BlockNum? toBlock,
+  }) {
+    final event = self.event('TaskStateChanging');
+    final filter = _i1.FilterOptions.events(
+      contract: self,
+      event: event,
+      fromBlock: fromBlock,
+      toBlock: toBlock,
+    );
+    return client.events(filter).map((_i1.FilterEvent result) {
+      final decoded = event.decodeResults(
+        result.topics!,
+        result.data!,
+      );
+      return TaskStateChanging(decoded);
+    });
+  }
+
+  /// Returns a live stream of all taskAuditDecisioning events emitted by this contract.
+  Stream<taskAuditDecisioning> taskAuditDecisioningEvents({
+    _i1.BlockNum? fromBlock,
+    _i1.BlockNum? toBlock,
+  }) {
+    final event = self.event('taskAuditDecisioning');
+    final filter = _i1.FilterOptions.events(
+      contract: self,
+      event: event,
+      fromBlock: fromBlock,
+      toBlock: toBlock,
+    );
+    return client.events(filter).map((_i1.FilterEvent result) {
+      final decoded = event.decodeResults(
+        result.topics!,
+        result.data!,
+      );
+      return taskAuditDecisioning(decoded);
+    });
+  }
 }
 
 class EstimateFees {
@@ -279,12 +453,15 @@ class ReceiveMsg {
 
 class TaskContractCreating {
   TaskContractCreating(List<dynamic> response)
-      : nanoId = (response[0] as String),
-        taskType = (response[1] as String),
-        title = (response[2] as String),
-        description = (response[3] as String),
-        symbol = (response[4] as String),
-        amount = (response[5] as BigInt);
+      : sender = (response[0] as _i1.EthereumAddress),
+        nanoId = (response[1] as String),
+        taskType = (response[2] as String),
+        title = (response[3] as String),
+        description = (response[4] as String),
+        symbol = (response[5] as String),
+        amount = (response[6] as BigInt);
+
+  final _i1.EthereumAddress sender;
 
   final String nanoId;
 
@@ -297,4 +474,83 @@ class TaskContractCreating {
   final String symbol;
 
   final BigInt amount;
+}
+
+class TaskParticipating {
+  TaskParticipating(List<dynamic> response)
+      : sender = (response[0] as _i1.EthereumAddress),
+        contractAddress = (response[1] as _i1.EthereumAddress),
+        message = (response[2] as String),
+        replyTo = (response[3] as BigInt);
+
+  final _i1.EthereumAddress sender;
+
+  final _i1.EthereumAddress contractAddress;
+
+  final String message;
+
+  final BigInt replyTo;
+}
+
+class TaskSendMessaging {
+  TaskSendMessaging(List<dynamic> response)
+      : sender = (response[0] as _i1.EthereumAddress),
+        contractAddress = (response[1] as _i1.EthereumAddress),
+        message = (response[2] as String),
+        replyTo = (response[3] as BigInt);
+
+  final _i1.EthereumAddress sender;
+
+  final _i1.EthereumAddress contractAddress;
+
+  final String message;
+
+  final BigInt replyTo;
+}
+
+class TaskStateChanging {
+  TaskStateChanging(List<dynamic> response)
+      : sender = (response[0] as _i1.EthereumAddress),
+        contractAddress = (response[1] as _i1.EthereumAddress),
+        participant = (response[2] as _i1.EthereumAddress),
+        state = (response[3] as String),
+        message = (response[4] as String),
+        replyTo = (response[5] as BigInt),
+        rating = (response[6] as BigInt);
+
+  final _i1.EthereumAddress sender;
+
+  final _i1.EthereumAddress contractAddress;
+
+  final _i1.EthereumAddress participant;
+
+  final String state;
+
+  final String message;
+
+  final BigInt replyTo;
+
+  final BigInt rating;
+}
+
+class taskAuditDecisioning {
+  taskAuditDecisioning(List<dynamic> response)
+      : sender = (response[0] as _i1.EthereumAddress),
+        contractAddress = (response[1] as _i1.EthereumAddress),
+        favour = (response[2] as String),
+        message = (response[3] as String),
+        replyTo = (response[4] as BigInt),
+        rating = (response[5] as BigInt);
+
+  final _i1.EthereumAddress sender;
+
+  final _i1.EthereumAddress contractAddress;
+
+  final String favour;
+
+  final String message;
+
+  final BigInt replyTo;
+
+  final BigInt rating;
 }

@@ -1,56 +1,43 @@
 [
   {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_endpoint",
-        "type": "address"
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "origin",
+        "type": "uint32"
       },
       {
-        "internalType": "uint16",
-        "name": "destinationChain_",
-        "type": "uint16"
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "sender",
+        "type": "bytes32"
       },
       {
-        "internalType": "address",
-        "name": "destinationAddress_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "destinationDiamond_",
-        "type": "address"
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "message",
+        "type": "bytes"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "name": "ReceivedMessage",
+    "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "logname",
-        "type": "string"
+        "internalType": "uint32",
+        "name": "destinationDomain",
+        "type": "uint32"
       },
       {
         "indexed": false,
-        "internalType": "uint16",
-        "name": "sourceChain",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "sourceAddress",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_nonce",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "destinationAddress",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -59,38 +46,7 @@
         "type": "bytes"
       }
     ],
-    "name": "Logs",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "_srcChainId",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "_count",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
-      }
-    ],
-    "name": "ReceiveMsg",
+    "name": "SentMessage",
     "type": "event"
   },
   {
@@ -342,63 +298,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_dstChainId",
-        "type": "uint16"
+        "internalType": "uint32",
+        "name": "_origin",
+        "type": "uint32"
       },
       {
-        "internalType": "address",
-        "name": "_userApplication",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bool",
-        "name": "_payInZRO",
-        "type": "bool"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_adapterParams",
-        "type": "bytes"
-      }
-    ],
-    "name": "estimateFees",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "nativeFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "zroFee",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_srcChainId",
-        "type": "uint16"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_from",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_nonce",
-        "type": "uint64"
+        "internalType": "bytes32",
+        "name": "_sourceAddress",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -406,7 +313,7 @@
         "type": "bytes"
       }
     ],
-    "name": "lzReceive",
+    "name": "handle",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

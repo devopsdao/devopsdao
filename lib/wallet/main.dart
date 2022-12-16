@@ -57,6 +57,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
   void dispose() {
     super.dispose();
   }
+
   late String dropdownValue = 'axelar';
   @override
   Widget build(BuildContext context) {
@@ -85,8 +86,6 @@ class _WalletPageTopState extends State<WalletPageTop> {
       }
     }
 
-
-
     _displayUri = tasksServices.walletConnectUri;
     // if (tasksServices.walletConnectUri != '') {
     //   _displayUri = tasksServices.walletConnectUri;
@@ -104,8 +103,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
         final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
         return Dialog(
           insetPadding: const EdgeInsets.all(20),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
           child: Column(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // crossAxisAlignment: CrossAxisAlignment.center,
@@ -121,10 +119,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
                         child: !disableBackButton
                             ? InkWell(
                                 onTap: () {
-                                  interface.controller.animateToPage(0,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.ease);
+                                  interface.controller.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.ease);
                                 },
                                 borderRadius: BorderRadius.circular(16),
                                 child: Container(
@@ -151,10 +146,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
                           children: [
                             TextSpan(
                               text: 'Connect Wallet',
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -186,7 +178,7 @@ class _WalletPageTopState extends State<WalletPageTop> {
                       //                 color: Colors.black26,
                       //               ),
                       //               onChanged: (String? value) {
-                      //                 tasksServices.transportSelected = value!;
+                      //                 tasksServices.interchainSelected = value!;
                       //                 setState(() {
                       //                   dropdownValue = value!;
                       //                 });
@@ -242,7 +234,6 @@ class _WalletPageTopState extends State<WalletPageTop> {
                           // ),
                           child: Row(
                             children: const <Widget>[
-
                               Expanded(
                                 child: Icon(
                                   Icons.close,
@@ -307,14 +298,13 @@ class WalletPagesMiddle extends StatefulWidget {
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
 
-  const WalletPagesMiddle(
-      {Key? key,
-      // required this.buttonName,
-      required this.borderRadius,
-      required this.screenHeightSize,
-      required this.screenHeightSizeNoKeyboard,
-      })
-      : super(key: key);
+  const WalletPagesMiddle({
+    Key? key,
+    // required this.buttonName,
+    required this.borderRadius,
+    required this.screenHeightSize,
+    required this.screenHeightSizeNoKeyboard,
+  }) : super(key: key);
 
   @override
   _WalletPagesMiddleState createState() => _WalletPagesMiddleState();
@@ -344,13 +334,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
 
     if (tasksServices.platform == 'linux') {
       defaultTab = 1;
-    } else if (tasksServices.platform == 'web' &&
-        tasksServices.browserPlatform != 'android' &&
-        tasksServices.browserPlatform != 'ios') {
+    } else if (tasksServices.platform == 'web' && tasksServices.browserPlatform != 'android' && tasksServices.browserPlatform != 'ios') {
       defaultTab = 1;
-    } else if (tasksServices.platform == 'mobile' ||
-        tasksServices.browserPlatform == 'android' ||
-        tasksServices.browserPlatform == 'ios') {
+    } else if (tasksServices.platform == 'mobile' || tasksServices.browserPlatform == 'android' || tasksServices.browserPlatform == 'ios') {
       defaultTab = 0;
     }
 
@@ -393,10 +379,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               ),
               const Spacer(),
               ChooseWalletButton(
-                active:
-                    tasksServices.platform == 'web' && tasksServices.mmAvailable
-                        ? true
-                        : false,
+                active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
                 buttonName: 'metamask',
                 borderRadius: widget.borderRadius,
                 buttonWidth: innerWidth,
@@ -432,20 +415,17 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                         padding: const EdgeInsets.all(8.0),
                         width: innerWidth,
                         decoration: BoxDecoration(
-                          borderRadius:  BorderRadius.circular(widget.borderRadius),
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
                         ),
-                        child: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 400,),
+                        child: TransportSelection(
+                          screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 400,
+                        ),
                       ),
                     ),
                   ),
-
-
-
-
                   crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                 ),
-                if (tasksServices.walletConnectedMM)
-                const SizedBox(height: 60),
+                if (tasksServices.walletConnectedMM) const SizedBox(height: 60),
                 if (tasksServices.walletConnectedMM)
                   Center(
                     child: Material(
@@ -457,8 +437,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                         // width: MediaQuery.of(context).size.width * .57
                         width: innerWidth,
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(widget.borderRadius),
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
                         ),
                         child: Row(
                           children: const <Widget>[
@@ -513,7 +492,6 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                             initialIndex: defaultTab,
                             child: Column(
                               children: [
-
                                 SizedBox(
                                   height: 30,
                                   child: TabBar(
@@ -524,8 +502,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                     // indicatorSize: TabBarIndicatorSize.label,
                                     // labelPadding: const EdgeInsets.only(left: 16, right: 16),
                                     indicator: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            4), // Creates border
+                                        borderRadius: BorderRadius.circular(4), // Creates border
                                         color: Colors.black26),
                                     // isScrollable: true,
                                     tabs: [
@@ -533,15 +510,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                         color: Colors.transparent,
                                         width: 120,
                                         child: Tab(
-                                            child: Text(tasksServices
-                                                            .platform ==
-                                                        'mobile' ||
-                                                    tasksServices
-                                                            .browserPlatform ==
-                                                        'android' ||
-                                                    tasksServices
-                                                            .browserPlatform ==
-                                                        'ios'
+                                            child: Text(tasksServices.platform == 'mobile' ||
+                                                    tasksServices.browserPlatform == 'android' ||
+                                                    tasksServices.browserPlatform == 'ios'
                                                 ? 'Mobile'
                                                 : 'Desktop')),
                                       ),
@@ -555,53 +526,32 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                 Expanded(
                                   child: TabBarView(
                                     children: [
-
                                       // *********** Wallet Connect > Mobile page ************ //
                                       if (tasksServices.platform == 'mobile' ||
-                                          tasksServices.browserPlatform ==
-                                              'android' ||
-                                          tasksServices.browserPlatform ==
-                                              'ios')
+                                          tasksServices.browserPlatform == 'android' ||
+                                          tasksServices.browserPlatform == 'ios')
                                         Column(
                                           // mainAxisAlignment:
                                           //     MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const SizedBox(height: 22),
                                             AnimatedCrossFade(
                                               duration: const Duration(milliseconds: 300),
                                               firstChild: RichText(
                                                   text: TextSpan(
-                                                      style: DefaultTextStyle.of(
-                                                          context)
-                                                          .style
-                                                          .apply(
-                                                          fontSizeFactor:
-                                                          1.0),
+                                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
                                                       children: const <TextSpan>[
-                                                        TextSpan(
-                                                            text:
-                                                            'Connect to Mobile Wallet',
-                                                            style: TextStyle(
-                                                                height: 3,
-                                                                fontWeight:
-                                                                FontWeight.bold,
-                                                                fontSize: 17,
-                                                                color:
-                                                                Colors.black54)),
-                                                      ])),
-                                              secondChild: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                                    TextSpan(
+                                                        text: 'Connect to Mobile Wallet',
+                                                        style:
+                                                            TextStyle(height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
+                                                  ])),
+                                              secondChild: TransportSelection(
+                                                screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
+                                              ),
                                               crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                             ),
-
-
-
-
-
-
-
-
 
                                             // if (_displayUri.isNotEmpty)
 
@@ -628,16 +578,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                             Padding(
                                               padding: const EdgeInsets.only(bottom: 14.0),
                                               child: Text(
-                                                tasksServices
-                                                    .walletConnectedWC
-                                                    ? 'Wallet connected'
-                                                    : 'Wallet disconnected',
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                    FontWeight.bold,
-                                                    fontSize: 17,
-                                                    color: Colors.black54),
-
+                                                tasksServices.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
+                                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
@@ -648,41 +590,24 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           ],
                                         ),
 
-
-
                                       // *********** Wallet Connect > Desktop page ************ //
                                       if (tasksServices.platform == 'linux' ||
                                           tasksServices.platform == 'web' &&
-                                              tasksServices.browserPlatform !=
-                                                  'android' &&
-                                              tasksServices.browserPlatform !=
-                                                  'ios')
+                                              tasksServices.browserPlatform != 'android' &&
+                                              tasksServices.browserPlatform != 'ios')
                                         Column(
                                           // mainAxisAlignment:
                                           //     MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const SizedBox(height: 22),
                                             RichText(
                                                 text: TextSpan(
-                                                    style: DefaultTextStyle.of(
-                                                            context)
-                                                        .style
-                                                        .apply(
-                                                            fontSizeFactor:
-                                                                1.0),
+                                                    style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
                                                     children: const <TextSpan>[
                                                   TextSpan(
-                                                      text:
-                                                          'Connect to Desktop Wallet',
-                                                      style: TextStyle(
-                                                          height: 3,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 17,
-                                                          color:
-                                                              Colors.black54)),
+                                                      text: 'Connect to Desktop Wallet',
+                                                      style: TextStyle(height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
                                                 ])),
                                             const Spacer(),
                                             const WalletConnectButton(
@@ -692,15 +617,11 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           ],
                                         ),
 
-
-
-
                                       // *********** Wallet Connect > QR Code page ************ //
 
                                       Column(
                                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           const SizedBox(height: 22),
                                           AnimatedCrossFade(
@@ -713,33 +634,22 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 children: [
                                                   RichText(
                                                       text: TextSpan(
-                                                          style: DefaultTextStyle.of(
-                                                              context)
-                                                              .style
-                                                              .apply(
-                                                              fontSizeFactor: 1.0),
+                                                          style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
                                                           children: const <TextSpan>[
-                                                            TextSpan(
-                                                                text: 'Scan QR code',
-                                                                style: TextStyle(
-                                                                    height: 3,
-                                                                    fontWeight:
-                                                                    FontWeight.bold,
-                                                                    fontSize: 17,
-                                                                    color: Colors.black54)),
-                                                          ])),
+                                                        TextSpan(
+                                                            text: 'Scan QR code',
+                                                            style: TextStyle(
+                                                                height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
+                                                      ])),
                                                   const Spacer(),
                                                   if (_displayUri.isNotEmpty)
-                                                  QrImage(
-                                                    data: _displayUri,
-                                                    size: 230,
-                                                    gapless: false,
-                                                  ),
+                                                    QrImage(
+                                                      data: _displayUri,
+                                                      size: 230,
+                                                      gapless: false,
+                                                    ),
                                                   const Spacer(),
-                                                  if (!tasksServices
-                                                      .validChainIDWC &&
-                                                      tasksServices
-                                                          .walletConnectedWC)
+                                                  if (!tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
                                                     const Padding(
                                                       padding: EdgeInsets.only(
                                                         left: 16,
@@ -748,18 +658,16 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                       ),
                                                       child: Text(
                                                         'Wrong network, please connect to Moonbase Alpha',
-                                                        style: TextStyle(
-                                                            color:
-                                                            Colors.redAccent,
-                                                            fontSize: 20),
-                                                        textAlign:
-                                                        TextAlign.center,
+                                                        style: TextStyle(color: Colors.redAccent, fontSize: 20),
+                                                        textAlign: TextAlign.center,
                                                       ),
                                                     )
                                                 ],
                                               ),
                                             ),
-                                            secondChild: TransportSelection(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,),
+                                            secondChild: TransportSelection(
+                                              screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
+                                            ),
                                             crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                           ),
                                           // if (_displayUri.isEmpty)
@@ -770,9 +678,6 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           // // const Spacer(),
                                           // if (_displayUri.isNotEmpty)
                                           //
-
-
-
 
                                           // SizedBox(
                                           //   // height: 260,
@@ -804,16 +709,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           Padding(
                                             padding: const EdgeInsets.only(bottom: 14.0),
                                             child: Text(
-                                              tasksServices
-                                                  .walletConnectedWC
-                                                  ? 'Wallet connected'
-                                                  : 'Wallet disconnected',
-                                              style: const TextStyle(
-                                                  fontWeight:
-                                                  FontWeight.bold,
-                                                  fontSize: 17,
-                                                  color: Colors.black54),
-
+                                              tasksServices.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
+                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54),
                                               textAlign: TextAlign.center,
                                             ),
                                           ),
@@ -849,12 +746,7 @@ class ChooseWalletButton extends StatefulWidget {
   final bool active;
   final String buttonName;
   final double borderRadius;
-  const ChooseWalletButton(
-      {Key? key,
-      required this.active,
-      required this.buttonName,
-      required this.borderRadius,
-      required this.buttonWidth})
+  const ChooseWalletButton({Key? key, required this.active, required this.buttonName, required this.borderRadius, required this.buttonWidth})
       : super(key: key);
 
   @override
@@ -897,7 +789,6 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
       customIcon = SvgPicture.asset(
         assetName,
         color: Colors.black54,
-
       );
     }
 
@@ -910,17 +801,11 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
             interface.whichWalletButtonPressed = widget.buttonName;
             // tasksServices.myNotifyListeners();
             // controller.jumpToPage(page);
-            interface.controller.animateToPage(page,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeIn);
+            interface.controller.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
             if (widget.buttonName == 'metamask') {
-              tasksServices.initComplete
-                  ? tasksServices.connectWalletMM()
-                  : null;
+              tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
             } else if (widget.buttonName == 'wallet_connect') {
-              tasksServices.initComplete
-                  ? tasksServices.connectWalletWC(false)
-                  : null;
+              tasksServices.initComplete ? tasksServices.connectWalletWC(false) : null;
             }
           }
         },
@@ -945,8 +830,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
                         bottomLeft: Radius.circular(8.0),
                       ),
                     ),
-                    child: Container(
-                        padding: const EdgeInsets.all(9.0), child: customIcon));
+                    child: Container(padding: const EdgeInsets.all(9.0), child: customIcon));
               }),
               Expanded(
                 child: Text(
@@ -990,32 +874,19 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
     var tasksServices = context.watch<TasksServices>();
     late String buttonText;
 
-    if (tasksServices.walletConnectedWC &&
-        tasksServices.validChainIDWC &&
-        widget.buttonName == 'wallet_connect') {
+    if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC && widget.buttonName == 'wallet_connect') {
       buttonText = 'Disconnect';
-    } else if (tasksServices.walletConnectedWC &&
-        !tasksServices.validChainIDWC &&
-        widget.buttonName == 'wallet_connect') {
+    } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC && widget.buttonName == 'wallet_connect') {
       buttonText = 'Switch network';
-    } else if (!tasksServices.walletConnectedWC &&
-        widget.buttonName == 'wallet_connect' &&
-        (interface.pageWalletViewNumber == 2)) {
+    } else if (!tasksServices.walletConnectedWC && widget.buttonName == 'wallet_connect' && (interface.pageWalletViewNumber == 2)) {
       buttonText = 'Refresh QR';
-    } else if (!tasksServices.walletConnectedWC &&
-        widget.buttonName == 'wallet_connect' &&
-        (interface.pageWalletViewNumber == 1)) {
+    } else if (!tasksServices.walletConnectedWC && widget.buttonName == 'wallet_connect' && (interface.pageWalletViewNumber == 1)) {
       buttonText = 'Connect';
-    } else if (tasksServices.walletConnectedMM &&
-        tasksServices.validChainIDMM &&
-        widget.buttonName == 'metamask') {
+    } else if (tasksServices.walletConnectedMM && tasksServices.validChainIDMM && widget.buttonName == 'metamask') {
       buttonText = 'Disconnect';
-    } else if (tasksServices.walletConnectedMM &&
-        !tasksServices.validChainIDMM &&
-        widget.buttonName == 'metamask') {
+    } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM && widget.buttonName == 'metamask') {
       buttonText = 'Switch network';
-    } else if (!tasksServices.walletConnectedMM &&
-        widget.buttonName == 'metamask') {
+    } else if (!tasksServices.walletConnectedMM && widget.buttonName == 'metamask') {
       buttonText = 'Connect';
     }
 
@@ -1031,37 +902,23 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           //     curve: Curves.easeIn);
           if (widget.buttonName == 'metamask') {
             if (!tasksServices.walletConnectedMM) {
-              tasksServices.initComplete
-                  ? await tasksServices.connectWalletMM()
-                  : null;
-            } else if (tasksServices.walletConnectedMM &&
-                !tasksServices.validChainIDMM) {
-              tasksServices.initComplete
-                  ? await tasksServices.switchNetworkMM()
-                  : null;
-            } else if (tasksServices.walletConnectedMM &&
-                tasksServices.validChainIDMM) {
-              tasksServices.initComplete
-                  ? await tasksServices.disconnectMM()
-                  : null;
+              tasksServices.initComplete ? await tasksServices.connectWalletMM() : null;
+            } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM) {
+              tasksServices.initComplete ? await tasksServices.switchNetworkMM() : null;
+            } else if (tasksServices.walletConnectedMM && tasksServices.validChainIDMM) {
+              tasksServices.initComplete ? await tasksServices.disconnectMM() : null;
               buttonText = 'Connect';
             }
           } else if (widget.buttonName == 'wallet_connect') {
             if (!tasksServices.walletConnectedWC) {
-              tasksServices.initComplete
-                  ? await tasksServices.connectWalletWC(false)
-                  : null;
-            } else if (tasksServices.walletConnectedWC &&
-                !tasksServices.validChainIDWC) {
+              tasksServices.initComplete ? await tasksServices.connectWalletWC(false) : null;
+            } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC) {
               tasksServices.initComplete
                   ? await tasksServices.switchNetworkWC()
                   // ? null
                   : null;
-            } else if (tasksServices.walletConnectedWC &&
-                tasksServices.validChainIDWC) {
-              tasksServices.initComplete
-                  ? {await tasksServices.disconnectWC()}
-                  : null;
+            } else if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC) {
+              tasksServices.initComplete ? {await tasksServices.disconnectWC()} : null;
               // buttonName = 'Refresh QR';
             }
             // if(buttonText == 'Disconnect') {

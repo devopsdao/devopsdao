@@ -1,29 +1,26 @@
 [
   {
+    "inputs": [],
+    "name": "InvalidAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotApprovedByGateway",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_endpoint",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "destinationChain_",
-        "type": "uint16"
-      },
-      {
-        "internalType": "address",
-        "name": "destinationAddress_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "destinationDiamond_",
-        "type": "address"
+        "indexed": false,
+        "internalType": "string",
+        "name": "logname",
+        "type": "string"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "name": "LogSimple",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -36,21 +33,15 @@
       },
       {
         "indexed": false,
-        "internalType": "uint16",
+        "internalType": "string",
         "name": "sourceChain",
-        "type": "uint16"
+        "type": "string"
       },
       {
         "indexed": false,
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "sourceAddress",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_nonce",
-        "type": "uint256"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -65,43 +56,6 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "_srcChainId",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "_count",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
-      }
-    ],
-    "name": "ReceiveMsg",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
       {
         "indexed": false,
         "internalType": "string",
@@ -148,12 +102,6 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "_contractAddress",
         "type": "address"
       },
@@ -179,12 +127,6 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "_contractAddress",
         "type": "address"
       },
@@ -207,12 +149,6 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
       {
         "indexed": false,
         "internalType": "address",
@@ -256,12 +192,6 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
       {
         "indexed": false,
         "internalType": "address",
@@ -342,73 +272,80 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_dstChainId",
-        "type": "uint16"
+        "internalType": "bytes32",
+        "name": "commandId",
+        "type": "bytes32"
       },
       {
-        "internalType": "address",
-        "name": "_userApplication",
-        "type": "address"
+        "internalType": "string",
+        "name": "sourceChain",
+        "type": "string"
       },
       {
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bool",
-        "name": "_payInZRO",
-        "type": "bool"
+        "internalType": "string",
+        "name": "sourceAddress",
+        "type": "string"
       },
       {
         "internalType": "bytes",
-        "name": "_adapterParams",
+        "name": "payload",
         "type": "bytes"
       }
     ],
-    "name": "estimateFees",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "nativeFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "zroFee",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "execute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_srcChainId",
-        "type": "uint16"
+        "internalType": "bytes32",
+        "name": "commandId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "sourceChain",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "sourceAddress",
+        "type": "string"
       },
       {
         "internalType": "bytes",
-        "name": "_from",
+        "name": "payload",
         "type": "bytes"
       },
       {
-        "internalType": "uint64",
-        "name": "_nonce",
-        "type": "uint64"
+        "internalType": "string",
+        "name": "tokenSymbol",
+        "type": "string"
       },
       {
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "name": "lzReceive",
+    "name": "executeWithToken",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gateway",
+    "outputs": [
+      {
+        "internalType": "contract IAxelarGateway",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

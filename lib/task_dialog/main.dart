@@ -66,7 +66,6 @@ class _TaskDialog extends State<TaskDialog> {
   }
 }
 
-
 // class FutureTaskDialog extends StatefulWidget {
 //   final String fromPage;
 //   final EthereumAddress? taskAddress;
@@ -301,46 +300,40 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                     width: 30,
                                     child:
 
+                                        // Selector<InterfaceServices, int>(
+                                        //   selector: (_, model) {
+                                        //     return model.dialogPageNum;
+                                        //   },
+                                        //   builder: (context, dialogPageNum, child) {
+                                        //     late String page = interface.dialogCurrentState['pages'].entries
+                                        //         .firstWhere((element) => element.value == dialogPageNum)
+                                        //         .key;
+                                        //     return Row(
+                                        //       children: <Widget>[
+                                        //         if (page == 'topup')
+                                        //           const Expanded(
+                                        //             child: Icon(
+                                        //               Icons.arrow_forward,
+                                        //               size: 30,
+                                        //             ),
+                                        //           ),
+                                        //         if (page.toString() == 'main')
+                                        //           const Expanded(
+                                        //             child: Center(),
+                                        //           ),
+                                        //         if (page == 'description' || page == 'chat' || page == 'select')
+                                        //           const Expanded(
+                                        //             child: Icon(
+                                        //               Icons.arrow_back,
+                                        //               size: 30,
+                                        //             ),
+                                        //           ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // ),
 
-                                    // Selector<InterfaceServices, int>(
-                                    //   selector: (_, model) {
-                                    //     return model.dialogPageNum;
-                                    //   },
-                                    //   builder: (context, dialogPageNum, child) {
-                                    //     late String page = interface.dialogCurrentState['pages'].entries
-                                    //         .firstWhere((element) => element.value == dialogPageNum)
-                                    //         .key;
-                                    //     return Row(
-                                    //       children: <Widget>[
-                                    //         if (page == 'topup')
-                                    //           const Expanded(
-                                    //             child: Icon(
-                                    //               Icons.arrow_forward,
-                                    //               size: 30,
-                                    //             ),
-                                    //           ),
-                                    //         if (page.toString() == 'main')
-                                    //           const Expanded(
-                                    //             child: Center(),
-                                    //           ),
-                                    //         if (page == 'description' || page == 'chat' || page == 'select')
-                                    //           const Expanded(
-                                    //             child: Icon(
-                                    //               Icons.arrow_back,
-                                    //               size: 30,
-                                    //             ),
-                                    //           ),
-                                    //       ],
-                                    //     );
-                                    //   },
-                                    // ),
-
-
-
-
-
-
-                                    Consumer<InterfaceServices>(
+                                        Consumer<InterfaceServices>(
                                       builder: (context, model, child) {
                                         print('wow');
                                         late String page = model.dialogCurrentState['pages'].entries
@@ -1283,7 +1276,7 @@ class _DialogPagesState extends State<DialogPages> {
 
                   // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
 
-                  if (tasksServices.transportSelected.isNotEmpty)
+                  if (tasksServices.interchainSelected.isNotEmpty)
                     Container(
                       padding: const EdgeInsets.only(right: 25.0, top: 14.0),
                       child: Row(
@@ -1308,7 +1301,7 @@ class _DialogPagesState extends State<DialogPages> {
                                       Container(
                                         padding: const EdgeInsets.all(2.0),
                                         // width: 128,
-                                        child: interface.transportImages[tasksServices.transportSelected],
+                                        child: interface.interchainImages[tasksServices.interchainSelected],
                                       ),
                                     ],
                                   )),

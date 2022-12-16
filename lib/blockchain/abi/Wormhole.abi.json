@@ -2,14 +2,19 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_endpoint",
-        "type": "address"
+        "internalType": "uint16",
+        "name": "_chainId",
+        "type": "uint16"
       },
       {
         "internalType": "uint16",
-        "name": "destinationChain_",
+        "name": "destChainId_",
         "type": "uint16"
+      },
+      {
+        "internalType": "address",
+        "name": "wormhole_core_bridge_address",
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -33,24 +38,31 @@
         "internalType": "string",
         "name": "logname",
         "type": "string"
+      }
+    ],
+    "name": "LogSimple",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "logname",
+        "type": "string"
       },
       {
         "indexed": false,
-        "internalType": "uint16",
+        "internalType": "string",
         "name": "sourceChain",
-        "type": "uint16"
+        "type": "string"
       },
       {
         "indexed": false,
-        "internalType": "bytes",
+        "internalType": "string",
         "name": "sourceAddress",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_nonce",
-        "type": "uint256"
+        "type": "string"
       },
       {
         "indexed": false,
@@ -66,31 +78,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "_srcChainId",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "_from",
+        "name": "previousOwner",
         "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "_count",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
       }
     ],
-    "name": "ReceiveMsg",
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
@@ -299,6 +299,24 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "sender",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_chainId",
+        "type": "uint16"
+      }
+    ],
+    "name": "addTrustedAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_sender",
         "type": "address"
@@ -342,42 +360,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_dstChainId",
-        "type": "uint16"
-      },
-      {
         "internalType": "address",
-        "name": "_userApplication",
+        "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_payload",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bool",
-        "name": "_payInZRO",
-        "type": "bool"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_adapterParams",
-        "type": "bytes"
       }
     ],
-    "name": "estimateFees",
+    "name": "lastMessage",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "nativeFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "zroFee",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -386,27 +379,75 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      },
+      {
         "internalType": "uint16",
-        "name": "_srcChainId",
+        "name": "",
         "type": "uint16"
-      },
+      }
+    ],
+    "name": "myTrustedContracts",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "bytes",
-        "name": "_from",
-        "type": "bytes"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_nonce",
-        "type": "uint64"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_payload",
+        "name": "VAA",
         "type": "bytes"
       }
     ],
-    "name": "lzReceive",
+    "name": "processMyMessage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "processedMessages",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -574,6 +615,19 @@
     "name": "taskStateChange",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

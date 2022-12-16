@@ -1,31 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_endpoint",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "destinationChain_",
-        "type": "uint16"
-      },
-      {
-        "internalType": "address",
-        "name": "destinationAddress_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "destinationDiamond_",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
