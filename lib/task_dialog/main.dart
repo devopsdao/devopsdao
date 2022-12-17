@@ -1256,7 +1256,7 @@ class _DialogPagesState extends State<DialogPages> {
                                   ),
                                   child: Column(
                                     children: [
-                                      const Text('Transport used:'),
+                                      const Text('Interchain protocol:'),
                                       Container(
                                         padding: const EdgeInsets.all(2.0),
                                         // width: 128,

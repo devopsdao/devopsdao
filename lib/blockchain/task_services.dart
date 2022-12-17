@@ -21,6 +21,8 @@ import 'abi/TokenFacet.g.dart';
 import 'abi/TaskContract.g.dart';
 import 'abi/AxelarGMP.g.dart';
 import 'abi/Hyperlane.g.dart';
+import 'abi/Layerzero.g.dart';
+// import 'abi/Wormhole.g.dart';
 import 'abi/IERC20.g.dart';
 import 'task.dart';
 import "package:universal_html/html.dart" hide Platform;
@@ -213,12 +215,14 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlMatic;
   late String _wsUrlMatic;
 
-  late String _rpcUrlAxelar;
-  late String _wsUrlAxelar;
+  late String _rpcUrlGoerli;
+  late String _wsUrlGoerli;
 
   int chainId = 0;
   int chainIdAxelar = 80001;
   int chainIdHyperlane = 80001;
+  int chainIdLayerzero = 80001;
+  int chainIdWormhole = 80001;
 
   bool isLoading = true;
   bool isLoadingBackground = false;
@@ -226,6 +230,8 @@ class TasksServices extends ChangeNotifier {
   late Web3Client _web3client;
   late Web3Client _web3clientAxelar;
   late Web3Client _web3clientHyperlane;
+  late Web3Client _web3clientLayerzero;
+  late Web3Client _web3clientWormhole;
 
   bool isDeviceConnected = false;
 
@@ -281,8 +287,8 @@ class TasksServices extends ChangeNotifier {
       _rpcUrlMatic = 'https://matic-mumbai.chainstacklabs.com';
       _wsUrlMatic = 'wss://ws-matic-mumbai.chainstacklabs.com';
 
-      _rpcUrlAxelar = 'https://rpc.ankr.com/eth_goerli';
-      _wsUrlAxelar = 'wss://rpc.ankr.com/eth_goerli';
+      _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
+      _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
       // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
       // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
     }
@@ -327,8 +333,19 @@ class TasksServices extends ChangeNotifier {
     //   },
     // );
     _web3clientHyperlane = Web3Client(
-      // _rpcUrlMatic,
-      _rpcUrl,
+      _rpcUrlMatic,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrlMatic);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+        }
+      },
+    );
+    _web3clientLayerzero = Web3Client(
+      _rpcUrlMatic,
       http.Client(),
       socketConnector: () {
         if (platform == 'web') {
@@ -355,6 +372,8 @@ class TasksServices extends ChangeNotifier {
   late EthereumAddress _contractAddress;
   late EthereumAddress _contractAddressAxelar;
   late EthereumAddress _contractAddressHyperlane;
+  late EthereumAddress _contractAddressLayerzero;
+  late EthereumAddress _contractAddressWormhole;
   EthereumAddress zeroAddress = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
   // Future<void> getABI() async {
   //   // String abiFile =
@@ -400,7 +419,11 @@ class TasksServices extends ChangeNotifier {
           if (hardhatDebug == false) {
             credentials = await wallectConnectTransaction?.getCredentials();
             chainId = session.chainId;
-            if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
+            if (chainId == 1287 ||
+                chainId == chainIdAxelar ||
+                chainId == chainIdHyperlane ||
+                chainId == chainIdLayerzero ||
+                chainId == chainIdWormhole) {
               validChainID = true;
               validChainIDWC = true;
             } else {
@@ -513,7 +536,7 @@ class TasksServices extends ChangeNotifier {
         if (chainIdHex != null) {
           chainId = int.parse(chainIdHex);
         }
-        if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
+        if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane || chainId == chainIdLayerzero || chainId == chainIdWormhole) {
           validChainID = true;
           validChainIDMM = true;
         } else {
@@ -620,7 +643,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane || chainId == chainIdLayerzero || chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDMM = true;
         publicAddress = publicAddressMM;
@@ -669,7 +692,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane || chainId == chainIdLayerzero || chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDWC = true;
         publicAddress = publicAddressWC;
@@ -736,7 +759,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane || chainId == chainIdLayerzero || chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDMM = true;
         publicAddress = publicAddressMM;
@@ -781,7 +804,7 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane) {
+      if (chainId == 1287 || chainId == chainIdAxelar || chainId == chainIdHyperlane || chainId == chainIdLayerzero || chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDWC = true;
         publicAddress = publicAddressWC;
@@ -920,6 +943,8 @@ class TasksServices extends ChangeNotifier {
   late TokenFacet tokenFacet;
   late AxelarGMP axelarGMP;
   late Hyperlane hyperlane;
+  late Layerzero layerzero;
+  // late Wormhole wormhole;
   // late TaskContract taskContract;
 
   late DeployedContract _deployedContract;
@@ -957,6 +982,14 @@ class TasksServices extends ChangeNotifier {
     String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
     var addressesHyperlane = jsonDecode(addressesFileHyperlane);
     _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane['contracts'][chainIdHyperlane.toString()]["Diamond"]);
+
+    String addressesFileLayerzero = await rootBundle.loadString('lib/blockchain/abi/layerzero-addresses.json');
+    var addressesLayerzero = jsonDecode(addressesFileLayerzero);
+    _contractAddressLayerzero = EthereumAddress.fromHex(addressesLayerzero['contracts'][chainIdLayerzero.toString()]["Diamond"]);
+
+    // String addressesFileWormhole = await rootBundle.loadString('lib/blockchain/abi/wormhole-addresses.json');
+    // var addressesWormhole = jsonDecode(addressesFileWormhole);
+    // _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
 
     if (hardhatDebug == true || hardhatLive == true) {
       Random random = Random();
@@ -1007,6 +1040,8 @@ class TasksServices extends ChangeNotifier {
     tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     // axelarGMP = AxelarGMP(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
     hyperlane = Hyperlane(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
+    layerzero = Layerzero(address: _contractAddressLayerzero, client: _web3clientLayerzero, chainId: chainIdLayerzero);
+    // wormhole = Hyperlane(address: _contractAddressWormhole, client: _web3clientWormhole, chainId: chainIdWormhole);
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: _web3client, chainId: chainId);
   }
 
@@ -1341,6 +1376,31 @@ class TasksServices extends ChangeNotifier {
         }
       }
 
+      // for (var i = 0; i < totalTaskListReversed.length; i++) {
+      //   if (stopLoopRunning) {
+      //     tasks.clear();
+      //     stopLoopRunning = false;
+      //     loopRunning = false;
+      //     fetchTasks();
+      //     break;
+      //   }
+      //   try {
+      //     // tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
+      //     downloaders.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
+      //     tasksLoaded++;
+      //     notifyListeners();
+      //     monitors.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
+      //     // await monitorTaskEvents(totalTaskListReversed[i]);
+      //   } on GetTaskException {
+      //     print('could not get task ${totalTaskListReversed[i]} from blockchain');
+      //   }
+      // }
+
+      // try {
+      //   await Future.wait<void>(downloaders as Iterable<Future>);
+      //   await Future.wait<void>(downloaders as Iterable<Future>);
+      // } on GetTaskException {}
+
       tasksLoaded = 0;
 
       if (loopRunning) {
@@ -1602,10 +1662,10 @@ class TasksServices extends ChangeNotifier {
           from: publicAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        // txn = await axelarGMP.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //     credentials: credentials, transaction: transaction);
-        txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        txn = await layerzero.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
             credentials: credentials, transaction: transaction);
+        // txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        //     credentials: credentials, transaction: transaction);
       } else if (taskTokenSymbol == 'aUSDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);
         final transaction = Transaction(

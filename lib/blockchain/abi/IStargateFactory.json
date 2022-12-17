@@ -1,0 +1,21 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_srcPoolId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPool",
+    "outputs": [
+      {
+        "internalType": "contract IStargatePool",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
