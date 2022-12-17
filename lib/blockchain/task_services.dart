@@ -321,18 +321,18 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
-    // _web3clientAxelar = Web3Client(
-    //   _rpcUrlMatic,
-    //   http.Client(),
-    //   socketConnector: () {
-    //     if (platform == 'web') {
-    //       final uri = Uri.parse(_wsUrlMatic);
-    //       return WebSocketChannel.connect(uri).cast<String>();
-    //     } else {
-    //       return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
-    //     }
-    //   },
-    // );
+    _web3clientAxelar = Web3Client(
+      _rpcUrlMatic,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrlMatic);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+        }
+      },
+    );
     _web3clientHyperlane = Web3Client(
       _rpcUrlMatic,
       http.Client(),
@@ -1011,8 +1011,8 @@ class TasksServices extends ChangeNotifier {
 
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[2]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[2]["address"]);
+      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1171,7 +1171,6 @@ class TasksServices extends ChangeNotifier {
   Future<void> resetFilter(Map<String, Task> taskList) async {
     filterResults.clear();
     filterResults = Map.from(taskList);
-    // notifyListeners();
   }
 
   late bool loopRunning = false;
