@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
+import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
@@ -393,48 +394,88 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
-    List objList = tasksServices.filterResults.values.toList();
+    // List objList = tasksServices.filterResults.values.toList();
     // TODO: implement build
-    return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-        child: RefreshIndicator(
-          onRefresh: () async {
-            tasksServices.isLoadingBackground = true;
-            tasksServices.fetchTasks();
-          },
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.vertical,
-            itemCount: objList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                child: InkWell(
-                    onTap: () {
-                      // setState(() {
-                      //   // Toggle light when tapped.
-                      // });
+    return
 
-                      if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
-                        showDialog(
-                            context: context,
-                            builder: (context) =>
-                                TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                        final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                        RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
-                        Beamer.of(context).updateRouteInformation(routeInfo);
-                        // context.popToNamed('/customer/$taskAddress');
-                        // context.beamToNamed('/customer/$taskAddress');
-                      }
-                    },
-                    child: TaskItem(
-                      fromPage: 'customer',
-                      object: objList[index],
-                    )),
-              );
-            },
-          ),
-        ));
+      // Selector<InterfaceServices, int>(
+      //   selector: (_, model) {
+      //     return model.dialogPageNum;
+      //   },
+      //   builder: (context, dialogPageNum, child) {
+      //     late String page = interface.dialogCurrentState['pages'].entries
+      //         .firstWhere((element) => element.value == dialogPageNum)
+      //         .key;
+      //     return Row(
+      //       children: <Widget>[
+      //         if (page == 'topup')
+      //           const Expanded(
+      //             child: Icon(
+      //               Icons.arrow_forward,
+      //               size: 30,
+      //             ),
+      //           ),
+      //         if (page.toString() == 'main')
+      //           const Expanded(
+      //             child: Center(),
+      //           ),
+      //         if (page == 'description' || page == 'chat' || page == 'select')
+      //           const Expanded(
+      //             child: Icon(
+      //               Icons.arrow_back,
+      //               size: 30,
+      //             ),
+      //           ),
+      //       ],
+      //     );
+      //   },
+      // ),
+
+      Selector<TasksServices, Map<String, Task>>(
+          selector: (_, model) => model.filterResults,
+          builder: (_, filter, __) {
+          List objList = filter.values.toList();
+          return Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                tasksServices.isLoadingBackground = true;
+                tasksServices.fetchTasks();
+              },
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                scrollDirection: Axis.vertical,
+                itemCount: objList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                    child: InkWell(
+                        onTap: () {
+                          // setState(() {
+                          //   // Toggle light when tapped.
+                          // });
+
+                          if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
+                            showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+                            final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                            RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
+                            Beamer.of(context).updateRouteInformation(routeInfo);
+                            // context.popToNamed('/customer/$taskAddress');
+                            // context.beamToNamed('/customer/$taskAddress');
+                          }
+                        },
+                        child: TaskItem(
+                          fromPage: 'customer',
+                          object: objList[index],
+                        )),
+                  );
+                },
+              ),
+            ));
+        }
+      );
   }
 }

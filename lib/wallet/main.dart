@@ -395,72 +395,71 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
             ],
           ),
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            if (interface.whichWalletButtonPressed == 'metamask')
-              Column(children: [
-                AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 300),
-                  firstChild: Container(
-                    height: 130,
-                    width: 130,
-                    padding: const EdgeInsets.all(18.0),
-                    child: SvgPicture.asset(
-                      'assets/images/metamask-icon2.svg',
-                    ),
-                  ),
-                  secondChild: Center(
-                    child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        width: innerWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                        ),
-                        child: TransportSelection(
-                          screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 400,
-                        ),
-                      ),
-                    ),
-                  ),
-                  crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            // if (interface.whichWalletButtonPressed == 'metamask')
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              firstChild: Container(
+                height: 130,
+                width: 130,
+                padding: const EdgeInsets.all(18.0),
+                child: SvgPicture.asset(
+                  'assets/images/metamask-icon2.svg',
                 ),
-                if (tasksServices.walletConnectedMM) const SizedBox(height: 60),
-                if (tasksServices.walletConnectedMM)
-                  Center(
-                    child: Material(
-                      elevation: 10,
+              ),
+              secondChild: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: innerWidth,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        // height: MediaQuery.of(context).size.width * .08,
-                        // width: MediaQuery.of(context).size.width * .57
-                        width: innerWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                        ),
-                        child: Row(
-                          children: const <Widget>[
-                            Expanded(
-                              child: Text(
-                                'You are now connected to Metamask, to completely disconnect please use Metamask menu --> connected sites.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
+                    ),
+                    child: TransportSelection(
+                      screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
+                    ),
+                  ),
+                ),
+              ),
+              crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            ),
+            if (tasksServices.walletConnectedMM) const SizedBox(height: 20),
+            if (tasksServices.walletConnectedMM)
+              Center(
+                child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    // height: MediaQuery.of(context).size.width * .08,
+                    // width: MediaQuery.of(context).size.width * .57
+                    width: innerWidth,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                    ),
+                    child: Row(
+                      children: const <Widget>[
+                        Expanded(
+                          child: Text(
+                            'You are now connected to Metamask, to completely disconnect please use Metamask menu --> connected sites.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                const SizedBox(height: 30),
-                const WalletConnectButton(
-                  buttonName: 'metamask',
                 ),
-                const SizedBox(height: 30),
-              ]),
+              ),
+            const SizedBox(height: 20),
+            const WalletConnectButton(
+              buttonName: 'metamask',
+            ),
+            const SizedBox(height: 30),
           ]),
           Center(
             child: SingleChildScrollView(

@@ -8,6 +8,20 @@ class DialogProcess extends ChangeNotifier {
 
 Map<String, dynamic> dialogStates = {
   // ******* TASKS NEW ********* //
+  'empty' : {
+    'name' : 'empty',
+    'mainButtonName' : '',
+    'secondButtonName' : '',
+    'labelMessage' : '',
+    'secondLabelMessage': '',
+    'pages' : {
+      'main': 0,
+      // '1' : 1,
+      // '2' : 2,
+      // '3' : 3,
+      // '4' : 4,
+    },
+  },
   'tasks-new-logged' : {
     'name' : 'tasks-new-logged',
     'mainButtonName' : 'Participate',
