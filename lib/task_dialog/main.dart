@@ -124,12 +124,10 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
   String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
-  late bool initDone;
 
   @override
   void initState() {
     super.initState();
-    initDone = true;
   }
 
   @override
@@ -165,7 +163,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                 title: 'Loading...',
                 description: 'Loading...',
                 symbol: 'none',
-                taskState: 'new',
+                taskState: 'empty',
                 auditState: '',
                 rating: 0,
                 contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
@@ -183,7 +181,9 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                 transport: '');
           }
 
-          if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
+          if (task.taskState == 'empty') {
+            interface.dialogCurrentState = dialogStates['empty'];
+          } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
             interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];
           } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.validChainID) {
             interface.dialogCurrentState = dialogStates['tasks-new-logged'];
@@ -228,6 +228,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
               for (var i = 0; i < task.auditors.length; i++) {
                 if (task.auditors[i] == tasksServices.publicAddress) {
                   interface.dialogCurrentState = dialogStates['auditor-applied'];
+                  break;
                 } else {
                   interface.dialogCurrentState = dialogStates['auditor-new'];
                 }
@@ -246,21 +247,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
             interface.dialogCurrentState = dialogStates['auditor-finished'];
           }
 
-          // init first page in dialog:
-          if (interface.dialogCurrentState['pages']['main'] != null && initDone == true) {
-            initDone = false;
-            interface.dialogPageNum = interface.dialogCurrentState['pages']['main'];
-            interface.dialogPagesController = PageController(initialPage: interface.dialogCurrentState['pages']['main']);
-            // print(interface.dialogCurrentState['pages']['main']);
-          }
-
-          // else {
-          //   print('Initial page in dialog not set! Default is 0');
-          //   interface.dialogPageNum = 0;
-          //   interface.dialogPagesController = PageController(initialPage: 0);
-          // }
-
-          bool shimmerEnabled = widget.shimmerEnabled;
+          // bool shimmerEnabled = widget.shimmerEnabled;
           Widget child;
           child = LayoutBuilder(builder: (context, constraints) {
             // print('max:  ${constraints.maxHeight}');
@@ -302,50 +289,13 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                     child:
 
 
-                                    // Selector<InterfaceServices, int>(
-                                    //   selector: (_, model) {
-                                    //     return model.dialogPageNum;
-                                    //   },
-                                    //   builder: (context, dialogPageNum, child) {
-                                    //     late String page = interface.dialogCurrentState['pages'].entries
-                                    //         .firstWhere((element) => element.value == dialogPageNum)
-                                    //         .key;
-                                    //     return Row(
-                                    //       children: <Widget>[
-                                    //         if (page == 'topup')
-                                    //           const Expanded(
-                                    //             child: Icon(
-                                    //               Icons.arrow_forward,
-                                    //               size: 30,
-                                    //             ),
-                                    //           ),
-                                    //         if (page.toString() == 'main')
-                                    //           const Expanded(
-                                    //             child: Center(),
-                                    //           ),
-                                    //         if (page == 'description' || page == 'chat' || page == 'select')
-                                    //           const Expanded(
-                                    //             child: Icon(
-                                    //               Icons.arrow_back,
-                                    //               size: 30,
-                                    //             ),
-                                    //           ),
-                                    //       ],
-                                    //     );
-                                    //   },
-                                    // ),
-
-
-
-
-
-
                                     Consumer<InterfaceServices>(
                                       builder: (context, model, child) {
-                                        print('wow');
-                                        late String page = model.dialogCurrentState['pages'].entries
-                                            .firstWhere((element) => element.value == model.dialogPageNum)
-                                            .key;
+                                        late Map <String, int> mapPages = model.dialogCurrentState['pages'];
+                                        late String page = mapPages.entries
+                                            .firstWhere((element) => element.value == model.dialogPageNum, orElse: () {
+                                              return const MapEntry('main', 0);
+                                            }).key;
                                         return Row(
                                           children: <Widget>[
                                             if (page == 'topup')
@@ -368,6 +318,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                               ),
                                           ],
                                         );
+
                                       },
                                     ),
                                   ),
@@ -435,7 +386,7 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                                   // print(widget.fromPage);
                                   // context.beamToNamed('/${widget.fromPage}');
                                   // context.beamBack();
-                                  // interface.dialogPageNum = interface.dialogPages['main'] ?? 0; // reset page to *main*
+                                  interface.dialogPageNum = interface.dialogCurrentState['pages']['main']; // reset page to *main*
                                   interface.selectedUser = {}; // reset
                                   Navigator.pop(context);
                                   RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');
@@ -476,15 +427,15 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: DialogPages(
+                          child: interface.dialogCurrentState['name'] != 'empty' ? DialogPages(
                             borderRadius: borderRadius,
                             task: task,
                             fromPage: widget.fromPage,
                             topConstraints: constraints,
-                            shimmerEnabled: shimmerEnabled,
+                            // shimmerEnabled: shimmerEnabled,
                             screenHeightSize: screenHeightSize,
                             screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
-                          ),
+                          ) : null,
                         ),
                       ]),
                     ),
@@ -506,7 +457,7 @@ class DialogPages extends StatefulWidget {
   final BoxConstraints topConstraints;
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
-  bool shimmerEnabled;
+  // bool shimmerEnabled;
 
   DialogPages({
     Key? key,
@@ -515,7 +466,7 @@ class DialogPages extends StatefulWidget {
     required this.task,
     required this.fromPage,
     required this.topConstraints,
-    required this.shimmerEnabled,
+    // required this.shimmerEnabled,
     required this.screenHeightSize,
     required this.screenHeightSizeNoKeyboard,
   }) : super(key: key);
@@ -530,10 +481,12 @@ class _DialogPagesState extends State<DialogPages> {
 
   TextEditingController? messageForStateController;
 
+  late bool initDone;
   @override
   void initState() {
     super.initState();
     messageForStateController = TextEditingController();
+    initDone = true;
   }
 
   @override
@@ -555,7 +508,23 @@ class _DialogPagesState extends State<DialogPages> {
 
     Task task = widget.task;
     String fromPage = widget.fromPage;
-    bool shimmerEnabled = widget.shimmerEnabled;
+    // bool shimmerEnabled = widget.shimmerEnabled;
+
+    // init first page in dialog:
+    if (interface.dialogCurrentState['pages']['main'] != null &&
+        initDone == true
+    ) {
+      initDone = false;
+      interface.dialogPageNum = interface.dialogCurrentState['pages']['main'];
+      interface.dialogPagesController = PageController(initialPage: interface.dialogCurrentState['pages']['main']);
+      // print(interface.dialogCurrentState['pages']['main']);
+    }
+    // else {
+    //   print('Initial page in dialog not set! Default is 0');
+    //   interface.dialogPageNum = 0;
+    //   interface.dialogPagesController = PageController(initialPage: 0);
+    // }
+
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerWidth = dialogConstraints.maxWidth - 50;
@@ -568,24 +537,13 @@ class _DialogPagesState extends State<DialogPages> {
         //   fromPage == 'tasks' ||
         //   fromPage == 'auditor' ||
         //   fromPage == 'performer') &&
-        //   interface.dialogPageNum == 1)
+        //   interface.di6666Num == 1)
         //     ? const RightBlockedScrollPhysics() : null,
         // physics: BouncingScrollPhysics(),
         // physics: const NeverScrollableScrollPhysics(),
         controller: interface.dialogPagesController,
         onPageChanged: (number) {
-          // interface.dialogPageNum = number;
-          // tasksServices.myNotifyListeners();
           Provider.of<InterfaceServices>(context, listen: false).updateDialogPageNum(number);
-
-          // ChangeNotifierProvider(
-          //   create: (context) => InterfaceServices(),
-          //   child: MaterialApp(
-          //     title: 'Provider with NotifyListeners',
-          //     theme: ThemeData(primarySwatch: Colors.blue,),
-          //     home: MyHomePage(title: 'Home Page'),
-          //   ),
-          // );
         },
         children: <Widget>[
           // GestureDetector(
@@ -635,6 +593,7 @@ class _DialogPagesState extends State<DialogPages> {
                                 Navigator.pop(context);
 
                                 showDialog(
+
                                     context: context,
                                     builder: (context) => WalletAction(
                                           nanoId: task.nanoId,
@@ -650,6 +609,8 @@ class _DialogPagesState extends State<DialogPages> {
                 ),
               ),
             ),
+          if (interface.dialogCurrentState['pages'].containsKey('empty'))
+            Center(),
           if (interface.dialogCurrentState['pages'].containsKey('main'))
             ConstrainedBox(
               constraints: BoxConstraints(
@@ -663,7 +624,8 @@ class _DialogPagesState extends State<DialogPages> {
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                     child: GestureDetector(
                       onTap: () {
-                        interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
+                        interface.dialogPagesController.animateToPage(
+                            interface.dialogCurrentState['pages']['description']!,
                             duration: const Duration(milliseconds: 300), curve: Curves.ease);
                         // tasksServices.myNotifyListeners();
                       },
@@ -705,16 +667,6 @@ class _DialogPagesState extends State<DialogPages> {
                                             // padding: const EdgeInsets.all(3),
                                             child: RichText(maxLines: 3, text: text)),
                                       ),
-                                      // TaskDialogButton(
-                                      //   padding: 6.0,
-                                      //   inactive: false,
-                                      //
-                                      //   buttonName: 'Up',
-                                      //   buttonColorRequired: Colors.lightBlue.shade600,
-                                      //   callback: () {
-                                      //     Provider.of<InterfaceServices>(context, listen: false).updateDialogPageNum(6);
-                                      //   },
-                                      // ),
 
                                       Container(
                                         width: 54,

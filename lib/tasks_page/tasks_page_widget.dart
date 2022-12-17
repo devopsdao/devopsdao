@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
+import 'package:animations/animations.dart';
 
 // class ExchangeFilterWidget extends ChangeNotifier {
 //   List<Task> filterResults = [];
@@ -110,7 +111,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     //       context: context,
     //       builder: (context) => TaskDialog(index: widget.index!));
     // }
-
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -198,146 +198,171 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         ),
         child: SizedBox(
           width: interface.maxGlobalWidth,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: DefaultTabController(
-                  length: 1,
-                  initialIndex: 0,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        decoration: const BoxDecoration(
-                            // color: Colors.white70,
-                            // borderRadius: BorderRadius.circular(8),
-                            ),
-                        child: TextField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search',
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
+          child: DefaultTabController(
+            length: 1,
+            initialIndex: 0,
+            child: LayoutBuilder(
+                builder: (context, constraints) {
+              // print('max:  ${constraints.maxHeight}');
+              // print('max * : ${constraints.maxHeight * .65}');
+              // print(constraints.minWidth);
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: constraints.minWidth - 70,
+                          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                          decoration: const BoxDecoration(
+                              // color: Colors.white70,
+                              // borderRadius: BorderRadius.circular(8),
+                              ),
+                          child: TextField(
+                            controller: _searchKeywordController,
+                            onChanged: (searchKeyword) {
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                            },
+                            decoration: const InputDecoration(
+                              hintText: '[Find task by Title...]',
+                              hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                              labelText: 'Search',
+                              suffixIcon: Icon(
+                                Icons.search,
                                 color: Colors.white,
-                                width: 1,
                               ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
+                                ),
                               ),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
+                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  lineHeight: 2,
+                                ),
+                          ),
+                        ),
+                        Material(
+                          color: Colors.black,
+                          child: Ink(
+                            height: 60,
+                            width: 60,
+                            // color: Colors.black,
+
+                            child:InkWell (
+                              splashColor: Colors.white,
+                              onTap: () {
+                                print("tapped me");
+                              },
+                              borderRadius: BorderRadius.circular(36),
+                              child: const Icon(
+                                Icons.playlist_add_check_circle_outlined,
+                                size: 40,
                                 color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
                               ),
                             ),
                           ),
-                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                                lineHeight: 2,
-                              ),
                         ),
-                      ),
-                      // TabBar(
-                      //   labelColor: Colors.white,с
-                      //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                      //   indicatorColor: Color(0xFF47CBE4),
-                      //   indicatorWeight: 3,
-                      //   tabs: [
-                      //     Tab(
-                      //       text: 'New offers',
-                      //     ),
-                      //     // Tab(
-                      //     //   text: 'Reserved tab',
-                      //     // ),
-                      //     // Tab(
-                      //     //   text: 'Reserved tab',
-                      //     // ),
-                      //   ],
-                      // ),
+                      ],
+                    ),
+                    // TabBar(
+                    //   labelColor: Colors.white,с
+                    //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                    //   indicatorColor: Color(0xFF47CBE4),
+                    //   indicatorWeight: 3,
+                    //   tabs: [
+                    //     Tab(
+                    //       text: 'New offers',
+                    //     ),
+                    //     // Tab(
+                    //     //   text: 'Reserved tab',
+                    //     // ),
+                    //     // Tab(
+                    //     //   text: 'Reserved tab',
+                    //     // ),
+                    //   ],
+                    // ),
 
-                      tasksServices.isLoading
-                          ? const LoadIndicator()
-                          : Expanded(
-                              child: TabBarView(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                    child: RefreshIndicator(
-                                      onRefresh: () async {
-                                        tasksServices.isLoadingBackground = true;
-                                        tasksServices.fetchTasks();
+                    tasksServices.isLoading
+                        ? const LoadIndicator()
+                        : Expanded(
+                            child: TabBarView(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                                  child: RefreshIndicator(
+                                    onRefresh: () async {
+                                      tasksServices.isLoadingBackground = true;
+                                      tasksServices.fetchTasks();
+                                    },
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: tasksServices.filterResults.values.toList().length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                          child: InkWell(
+                                              onTap: () {
+                                                // print('tap');
+
+                                                setState(() {
+                                                  // Toggle light when tapped.
+                                                });
+                                                // final taskAddress =
+                                                //     tasksServices
+                                                //         .filterResults.values
+                                                //         .toList()[index]
+                                                //         .taskAddress;
+                                                // context.popToNamed(
+                                                //     '/tasks/$taskAddress');
+                                                // print(objList);
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) => TaskInformationDialog(
+                                                        fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
+                                                final String taskAddress =
+                                                    tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                                                RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
+                                                Beamer.of(context).updateRouteInformation(routeInfo);
+                                                // showDialog(
+                                                //     context: context,
+                                                //     builder: (context) =>
+                                                //         TaskDialog(index: index));
+                                              },
+                                              child: TaskItem(
+                                                fromPage: 'tasks',
+                                                object: tasksServices.filterResults.values.toList()[index],
+                                              )),
+                                        );
                                       },
-                                      child: ListView.builder(
-                                        padding: EdgeInsets.zero,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: tasksServices.filterResults.values.toList().length,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                            child: InkWell(
-                                                onTap: () {
-                                                  // print('tap');
-
-                                                  setState(() {
-                                                    // Toggle light when tapped.
-                                                  });
-                                                  // final taskAddress =
-                                                  //     tasksServices
-                                                  //         .filterResults.values
-                                                  //         .toList()[index]
-                                                  //         .taskAddress;
-                                                  // context.popToNamed(
-                                                  //     '/tasks/$taskAddress');
-                                                  // print(objList);
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) => TaskInformationDialog(
-                                                          fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
-                                                  final String taskAddress =
-                                                      tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                                                  RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
-                                                  Beamer.of(context).updateRouteInformation(routeInfo);
-                                                  // showDialog(
-                                                  //     context: context,
-                                                  //     builder: (context) =>
-                                                  //         TaskDialog(index: index));
-                                                },
-                                                child: TaskItem(
-                                                  fromPage: 'tasks',
-                                                  object: tasksServices.filterResults.values.toList()[index],
-                                                )),
-                                          );
-                                        },
-                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+                          ),
+                  ],
+                );
+              }
+            ),
           ),
         ),
       ),

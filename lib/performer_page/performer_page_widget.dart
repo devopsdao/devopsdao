@@ -177,7 +177,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         onTap: (index) {
                           _searchKeywordController.clear();
                           tabIndex = index;
-                          print(index);
+                          // print(index);
                           if (index == 0) {
                             tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
                           } else if (index == 1) {
@@ -185,6 +185,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           } else if (index == 2) {
                             tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
                           }
+
                         },
                         tabs: [
                           Tab(

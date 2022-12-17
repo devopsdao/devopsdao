@@ -153,7 +153,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -314,18 +314,18 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
-    _web3clientAxelar = Web3Client(
-      _rpcUrlMatic,
-      http.Client(),
-      socketConnector: () {
-        if (platform == 'web') {
-          final uri = Uri.parse(_wsUrlMatic);
-          return WebSocketChannel.connect(uri).cast<String>();
-        } else {
-          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
-        }
-      },
-    );
+    // _web3clientAxelar = Web3Client(
+    //   _rpcUrlMatic,
+    //   http.Client(),
+    //   socketConnector: () {
+    //     if (platform == 'web') {
+    //       final uri = Uri.parse(_wsUrlMatic);
+    //       return WebSocketChannel.connect(uri).cast<String>();
+    //     } else {
+    //       return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+    //     }
+    //   },
+    // );
     _web3clientHyperlane = Web3Client(
       // _rpcUrlMatic,
       _rpcUrl,
@@ -964,8 +964,8 @@ class TasksServices extends ChangeNotifier {
 
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(accounts[2]["key"]);
+      publicAddress = EthereumAddress.fromHex(accounts[2]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1005,7 +1005,7 @@ class TasksServices extends ChangeNotifier {
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
     tasksFacet = TasksFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
-    axelarGMP = AxelarGMP(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
+    // axelarGMP = AxelarGMP(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
     hyperlane = Hyperlane(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: _web3client, chainId: chainId);
   }
@@ -1121,6 +1121,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> resetFilter(Map<String, Task> taskList) async {
     filterResults.clear();
     filterResults = Map.from(taskList);
+    // notifyListeners();
   }
 
   late bool loopRunning = false;

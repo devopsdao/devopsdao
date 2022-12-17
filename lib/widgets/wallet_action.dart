@@ -122,6 +122,7 @@ class _WalletAction extends State<WalletAction> {
     }
 
     return AlertDialog(
+
       // title: Text('Connect your wallet'),
       content: SingleChildScrollView(
         child: ListBody(
