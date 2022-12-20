@@ -160,7 +160,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           Center(
             child: Container(
               width: 150,
-              height: 34,
+              height: 30,
               padding: const EdgeInsets.all(4.0),
 
 
@@ -183,7 +183,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 child: const Text(
                   'Connect wallet',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ),
