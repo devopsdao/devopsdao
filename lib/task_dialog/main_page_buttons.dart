@@ -14,16 +14,13 @@ class DialogButtonSetOnFirstPage extends StatefulWidget {
   final Task task;
   final String fromPage;
   final double width;
-  // final String message;
-  final bool enableRatingButton;
 
   const DialogButtonSetOnFirstPage(
       {Key? key,
         required this.task,
         required this.fromPage,
         required this.width,
-        // required this.message,
-        required this.enableRatingButton})
+      })
       : super(key: key);
 
   @override
@@ -33,13 +30,12 @@ class DialogButtonSetOnFirstPage extends StatefulWidget {
 class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var tasksServices = context.read<TasksServices>();
+    var interface = context.read<InterfaceServices>();
     Task task = widget.task;
     String fromPage = widget.fromPage;
     double innerWidth = widget.width;
     // String message = interface.taskMessage.text;
-    bool enableRatingButton = widget.enableRatingButton;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
@@ -233,7 +229,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
               buttonName: 'Rate task',
               buttonColorRequired: Colors.lightBlue.shade600,
               callback: () {
-                (task.rating == 0 && enableRatingButton)
+                (task.rating == 0)
                     ? () {
                   setState(() {
                     task.justLoaded = false;

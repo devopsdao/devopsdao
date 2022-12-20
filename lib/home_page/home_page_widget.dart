@@ -1,6 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
+import '../create_job/create_job_as_page.dart';
+import '../create_job/create_job_call_button.dart';
 import '../create_job/create_job_widget.dart';
 import '../widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
@@ -79,6 +82,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     ),
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   // bool _flag = true;
   late AnimationController _animationController;
@@ -242,28 +247,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       ),
       backgroundColor: const Color(0xFF1E2429),
       floatingActionButton: isFloatButtonVisible
-          ? FloatingActionButton(
-              onPressed: () async {
-                // await Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const CreateJobWidget(),
-                //   ),
-                // );
-                showDialog(
-                  context: context,
-                  builder: (context) => const CreateJobDialog(),
-                );
-              },
-              backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-              elevation: 8,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 28,
-              ),
-            )
-          : null,
+          ? const CreateCallButton() : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -547,9 +531,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             })
           ),
         )
-            // .animated([animationsMap['columnOnPageLoadAnimation']!]),
       )
-          // .animated([animationsMap['containerOnPageLoadAnimation']!]),
     );
   }
 }

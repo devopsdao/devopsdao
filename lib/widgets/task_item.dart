@@ -41,8 +41,8 @@ class _TaskItemState extends State<TaskItem> {
     }
 
     return Container(
-      width: double.infinity,
-      height: 86,
+      // width: double.infinity,
+      // height: 86,
       decoration: BoxDecoration(
         color: (() {
           if (task.taskState == "agreed" || task.taskState == "new") {
@@ -61,13 +61,13 @@ class _TaskItemState extends State<TaskItem> {
             return Colors.white;
           }
         }()),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 5,
-            color: Color(0x4D000000),
-            offset: Offset(0, 2),
-          )
-        ],
+        // boxShadow: const [
+        //   BoxShadow(
+        //     blurRadius: 5,
+        //     color: Color(0x4D000000),
+        //     offset: Offset(0, 2),
+        //   )
+        // ],
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

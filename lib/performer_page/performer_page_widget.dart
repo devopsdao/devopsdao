@@ -2,9 +2,11 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../task_dialog/initial_click_on_task.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/tags/tag_call_button.dart';
 import '../widgets/task_item.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -217,61 +219,66 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           ),
                         ],
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        // decoration: const BoxDecoration(
-                        //   // color: Colors.white70,
-                        //   // borderRadius: BorderRadius.circular(8),
-                        // ),
-                        child: TextField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            print(tabIndex);
-                            if (tabIndex == 0) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
-                            } else if (tabIndex == 1) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
-                            } else if (tabIndex == 2) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
-                            }
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search',
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
+                      Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width - 70,
+                            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                            // decoration: const BoxDecoration(
+                            //   // color: Colors.white70,
+                            //   // borderRadius: BorderRadius.circular(8),
+                            // ),
+                            child: TextField(
+                              controller: _searchKeywordController,
+                              onChanged: (searchKeyword) {
+                                print(tabIndex);
+                                if (tabIndex == 0) {
+                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
+                                } else if (tabIndex == 1) {
+                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
+                                } else if (tabIndex == 2) {
+                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                hintText: '[Find task by Title...]',
+                                hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                                labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                                labelText: 'Search',
+                                suffixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4.0),
+                                    topRight: Radius.circular(4.0),
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(4.0),
+                                    topRight: Radius.circular(4.0),
+                                  ),
+                                ),
                               ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
+                              style: FlutterFlowTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    lineHeight: 2,
+                                  ),
                             ),
                           ),
-                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                                lineHeight: 2,
-                              ),
-                        ),
+                          const TagCallButton(),
+                        ],
                       ),
                       tasksServices.isLoading
                           ? const LoadIndicator()
@@ -334,20 +341,23 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-              child: InkWell(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) =>
-                            TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                    final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                    RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
-                    Beamer.of(context).updateRouteInformation(routeInfo);
-                  },
-                  child: TaskItem(
-                    fromPage: 'performer',
-                    object: objList[index],
-                  )),
+              child: ClickOnTask(fromPage: 'performer', index: index,)
+
+
+              // InkWell(
+              //     onTap: () {
+              //       showDialog(
+              //           context: context,
+              //           builder: (context) =>
+              //               TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+              //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+              //       RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
+              //       Beamer.of(context).updateRouteInformation(routeInfo);
+              //     },
+              //     child: TaskItem(
+              //       fromPage: 'performer',
+              //       object: objList[index],
+              //     )),
             );
           },
         ),

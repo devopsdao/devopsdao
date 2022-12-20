@@ -2,7 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:devopsdao/task_dialog/dialog_states.dart';
+import 'package:devopsdao/task_dialog/states.dart';
 import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';

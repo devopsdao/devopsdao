@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../task_dialog/dialog_states.dart';
+import '../task_dialog/states.dart';
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
 

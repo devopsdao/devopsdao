@@ -1,6 +1,12 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
+import '../create_job/create_job_as_page.dart';
+import '../create_job/create_job_call_button.dart';
+import '../task_dialog/initial_click_on_task.dart';
+import '../task_dialog/main_as_page.dart';
+import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tags.dart';
 import '/blockchain/task_services.dart';
 import '/create_job/create_job_widget.dart';
 import '/widgets/loading.dart';
@@ -52,6 +58,8 @@ class TasksPageWidget extends StatefulWidget {
 class _TasksPageWidgetState extends State<TasksPageWidget> {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
+  final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+
   // _changeField() {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
   // }
@@ -106,6 +114,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
     List objList = tasksServices.filterResults.values.toList();
 
+
     // if (widget.index != null) {
     //   showDialog(
     //       context: context,
@@ -155,29 +164,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         elevation: 2,
       ),
       backgroundColor: const Color(0xFF1E2429),
+
       floatingActionButton: isFloatButtonVisible
-          ? FloatingActionButton(
-              onPressed: () async {
-                // await Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const CreateJobWidget(),
-                //   ),
-                // );
-                showDialog(
-                  context: context,
-                  builder: (context) => const CreateJobDialog(),
-                );
-              },
-              backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
-              elevation: 8,
-              child: const Icon(
-                Icons.add,
-                color: Color(0xFFFCFCFC),
-                size: 28,
-              ),
-            )
-          : null,
+          ? const CreateCallButton() : null,
+
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -259,27 +249,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                 ),
                           ),
                         ),
-                        Material(
-                          color: Colors.black,
-                          child: Ink(
-                            height: 60,
-                            width: 60,
-                            // color: Colors.black,
-
-                            child:InkWell (
-                              splashColor: Colors.white,
-                              onTap: () {
-                                print("tapped me");
-                              },
-                              borderRadius: BorderRadius.circular(36),
-                              child: const Icon(
-                                Icons.playlist_add_check_circle_outlined,
-                                size: 40,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                        const TagCallButton(),
                       ],
                     ),
                     // TabBar(
@@ -319,38 +289,40 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                          child: InkWell(
-                                              onTap: () {
-                                                // print('tap');
+                                          child:  ClickOnTask(fromPage: 'tasks', index: index,)
 
-                                                setState(() {
-                                                  // Toggle light when tapped.
-                                                });
-                                                // final taskAddress =
-                                                //     tasksServices
-                                                //         .filterResults.values
-                                                //         .toList()[index]
-                                                //         .taskAddress;
-                                                // context.popToNamed(
-                                                //     '/tasks/$taskAddress');
-                                                // print(objList);
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) => TaskInformationDialog(
-                                                        fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
-                                                final String taskAddress =
-                                                    tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                                                RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
-                                                Beamer.of(context).updateRouteInformation(routeInfo);
-                                                // showDialog(
-                                                //     context: context,
-                                                //     builder: (context) =>
-                                                //         TaskDialog(index: index));
-                                              },
-                                              child: TaskItem(
-                                                fromPage: 'tasks',
-                                                object: tasksServices.filterResults.values.toList()[index],
-                                              )),
+                                          // InkWell(
+                                          //     onTap: () {
+                                          //       // print('tap');
+                                          //
+                                          //       setState(() {
+                                          //         // Toggle light when tapped.
+                                          //       });
+                                          //       // final taskAddress =
+                                          //       //     tasksServices
+                                          //       //         .filterResults.values
+                                          //       //         .toList()[index]
+                                          //       //         .taskAddress;
+                                          //       // context.popToNamed(
+                                          //       //     '/tasks/$taskAddress');
+                                          //       // print(objList);
+                                          //       showDialog(
+                                          //           context: context,
+                                          //           builder: (context) => TaskInformationDialog(
+                                          //               fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
+                                          //       final String taskAddress =
+                                          //           tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                                          //       RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
+                                          //       Beamer.of(context).updateRouteInformation(routeInfo);
+                                          //       // showDialog(
+                                          //       //     context: context,
+                                          //       //     builder: (context) =>
+                                          //       //         TaskDialog(index: index));
+                                          //     },
+                                          //     child: TaskItem(
+                                          //       fromPage: 'tasks',
+                                          //       object: tasksServices.filterResults.values.toList()[index],
+                                          //     )),
                                         );
                                       },
                                     ),

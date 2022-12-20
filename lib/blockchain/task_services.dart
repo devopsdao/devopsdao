@@ -321,54 +321,60 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
-    _web3clientAxelar = Web3Client(
-      _rpcUrlMatic,
-      http.Client(),
-      socketConnector: () {
-        if (platform == 'web') {
-          final uri = Uri.parse(_wsUrlMatic);
-          return WebSocketChannel.connect(uri).cast<String>();
-        } else {
-          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
-        }
-      },
-    );
-    _web3clientHyperlane = Web3Client(
-      _rpcUrlMatic,
-      http.Client(),
-      socketConnector: () {
-        if (platform == 'web') {
-          final uri = Uri.parse(_wsUrlMatic);
-          return WebSocketChannel.connect(uri).cast<String>();
-        } else {
-          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
-        }
-      },
-    );
-    _web3clientLayerzero = Web3Client(
-      _rpcUrlMatic,
-      http.Client(),
-      socketConnector: () {
-        if (platform == 'web') {
-          final uri = Uri.parse(_wsUrlMatic);
-          return WebSocketChannel.connect(uri).cast<String>();
-        } else {
-          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
-        }
-      },
-    );
-    _web3clientWormhole = Web3Client(
-      _rpcUrlMatic,
-      http.Client(),
-      socketConnector: () {
-        if (platform == 'web') {
-          final uri = Uri.parse(_wsUrlMatic);
-          return WebSocketChannel.connect(uri).cast<String>();
-        } else {
-          return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
-        }
-      },
-    );
+    // templorary fix:
+    if(hardhatLive == false) {
+      _web3clientAxelar = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      _web3clientHyperlane = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      _web3clientLayerzero = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      _web3clientWormhole = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+    }
+
+
+
     await startup();
     // await getABI();
     // await getDeployedContract();
@@ -1053,10 +1059,13 @@ class TasksServices extends ChangeNotifier {
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
     tasksFacet = TasksFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
-    axelarFacet = AxelarFacet(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
-    hyperlaneFacet = HyperlaneFacet(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
-    layerzeroFacet = LayerzeroFacet(address: _contractAddressLayerzero, client: _web3clientLayerzero, chainId: chainIdLayerzero);
-    wormholeFacet = WormholeFacet(address: _contractAddressWormhole, client: _web3clientWormhole, chainId: chainIdWormhole);
+    //templorary fix:
+    if (hardhatLive == false) {
+      axelarFacet = AxelarFacet(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
+      hyperlaneFacet = HyperlaneFacet(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
+      layerzeroFacet = LayerzeroFacet(address: _contractAddressLayerzero, client: _web3clientLayerzero, chainId: chainIdLayerzero);
+      wormholeFacet = WormholeFacet(address: _contractAddressWormhole, client: _web3clientWormhole, chainId: chainIdWormhole);
+    }
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: _web3client, chainId: chainId);
   }
 
@@ -1400,10 +1409,12 @@ class TasksServices extends ChangeNotifier {
       int batchItemCount = 0;
 
       for (var i = 0; i < totalTaskListReversed.length; i++) {
+
         try {
           downloaders.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
           monitors.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
           batchItemCount++;
+          // print('batchItemCount: ${batchItemCount}');
           if (batchItemCount == batchSize) {
             downloadBatches.add([...downloaders]);
             monitorBatches.add([...downloaders]);
@@ -1411,8 +1422,7 @@ class TasksServices extends ChangeNotifier {
             monitors.clear();
             batchItemCount = 0;
           }
-          tasksLoaded++;
-          notifyListeners();
+
         } on GetTaskException {
           print('could not get task ${totalTaskListReversed[i]} from blockchain');
         }
@@ -1421,9 +1431,12 @@ class TasksServices extends ChangeNotifier {
       try {
         for (var batchId = 0; batchId < totalBatches; batchId++) {
           await Future.wait<void>(downloadBatches[batchId]);
-          print('downloaded $batchId');
+          print('downloaded $batchId | total: $totalBatches');
           await Future.delayed(Duration(milliseconds: 200));
+          tasksLoaded += batchSize;
+          notifyListeners();
         }
+
       } on GetTaskException {}
 
       filterResults.clear();
