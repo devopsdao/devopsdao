@@ -322,7 +322,7 @@ class TasksServices extends ChangeNotifier {
       },
     );
     // templorary fix:
-    if(hardhatLive == false) {
+    if (hardhatLive == false) {
       _web3clientAxelar = Web3Client(
         _rpcUrlMatic,
         http.Client(),
@@ -372,8 +372,6 @@ class TasksServices extends ChangeNotifier {
         },
       );
     }
-
-
 
     await startup();
     // await getABI();
@@ -1182,8 +1180,8 @@ class TasksServices extends ChangeNotifier {
     filterResults = Map.from(taskList);
   }
 
-  late bool loopRunning = false;
-  late bool stopLoopRunning = false;
+  // late bool loopRunning = false;
+  // late bool stopLoopRunning = false;
 
   Future<Task> getTask(taskAddress) async {
     TaskContract taskContract = TaskContract(address: taskAddress, client: _web3client, chainId: chainId);
@@ -1375,115 +1373,105 @@ class TasksServices extends ChangeNotifier {
 
     tasks.clear();
 
-    if (loopRunning) {
-      stopLoopRunning = true;
+    // for (var i = 0; i < totalTaskListReversed.length; i++) {
+    //   if (stopLoopRunning) {
+    //     tasks.clear();
+    //     stopLoopRunning = false;
+    //     loopRunning = false;
+    //     fetchTasks();
+    //     break;
+    //   }
+    //   try {
+    //     tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
+    //     tasksLoaded++;
+    //     notifyListeners();
+    //     await monitorTaskEvents(totalTaskListReversed[i]);
+    //   } on GetTaskException {
+    //     print('could not get task ${totalTaskListReversed[i]} from blockchain');
+    //   }
+    // }
+
+    List<List<Future<Task>>> downloadBatches = [];
+    List<List<Future<Task>>> monitorBatches = [];
+
+    List<Future<Task>> downloaders = [];
+    List<Future<Task>> monitors = [];
+    int batchSize = 10;
+    int totalBatches = (totalTaskListReversed.length / batchSize).floor();
+    int batchItemCount = 0;
+
+    for (var i = 0; i < totalTaskListReversed.length; i++) {
+      try {
+        downloaders.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
+        monitors.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
+        batchItemCount++;
+        // print('batchItemCount: ${batchItemCount}');
+        if (batchItemCount == batchSize) {
+          downloadBatches.add([...downloaders]);
+          monitorBatches.add([...downloaders]);
+          downloaders.clear();
+          monitors.clear();
+          batchItemCount = 0;
+        }
+      } on GetTaskException {
+        print('could not get task ${totalTaskListReversed[i]} from blockchain');
+      }
     }
 
-    if (loopRunning == false) {
-      loopRunning = true;
-      // for (var i = 0; i < totalTaskListReversed.length; i++) {
-      //   if (stopLoopRunning) {
-      //     tasks.clear();
-      //     stopLoopRunning = false;
-      //     loopRunning = false;
-      //     fetchTasks();
-      //     break;
-      //   }
-      //   try {
-      //     tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
-      //     tasksLoaded++;
-      //     notifyListeners();
-      //     await monitorTaskEvents(totalTaskListReversed[i]);
-      //   } on GetTaskException {
-      //     print('could not get task ${totalTaskListReversed[i]} from blockchain');
-      //   }
-      // }
-
-      List<List<Future<Task>>> downloadBatches = [];
-      List<List<Future<Task>>> monitorBatches = [];
-
-      List<Future<Task>> downloaders = [];
-      List<Future<Task>> monitors = [];
-      int batchSize = 10;
-      int totalBatches = (totalTaskListReversed.length / batchSize).floor();
-      int batchItemCount = 0;
-
-      for (var i = 0; i < totalTaskListReversed.length; i++) {
-
-        try {
-          downloaders.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
-          monitors.add(getTask(totalTaskListReversed[i]).then((result) => tasks[totalTaskListReversed[i].toString()] = result));
-          batchItemCount++;
-          // print('batchItemCount: ${batchItemCount}');
-          if (batchItemCount == batchSize) {
-            downloadBatches.add([...downloaders]);
-            monitorBatches.add([...downloaders]);
-            downloaders.clear();
-            monitors.clear();
-            batchItemCount = 0;
-          }
-
-        } on GetTaskException {
-          print('could not get task ${totalTaskListReversed[i]} from blockchain');
-        }
+    try {
+      for (var batchId = 0; batchId < totalBatches; batchId++) {
+        await Future.wait<void>(downloadBatches[batchId]);
+        print('downloaded $batchId | total: $totalBatches');
+        await Future.delayed(Duration(milliseconds: 200));
+        tasksLoaded += batchSize;
+        notifyListeners();
       }
+    } on GetTaskException {}
 
-      try {
-        for (var batchId = 0; batchId < totalBatches; batchId++) {
-          await Future.wait<void>(downloadBatches[batchId]);
-          print('downloaded $batchId | total: $totalBatches');
-          await Future.delayed(Duration(milliseconds: 200));
-          tasksLoaded += batchSize;
-          notifyListeners();
-        }
+    filterResults.clear();
+    tasksNew.clear();
 
-      } on GetTaskException {}
+    tasksAuditPending.clear();
+    tasksAuditApplied.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
 
-      filterResults.clear();
-      tasksNew.clear();
+    tasksCustomerSelection.clear();
+    tasksCustomerProgress.clear();
+    tasksCustomerComplete.clear();
 
-      tasksAuditPending.clear();
-      tasksAuditApplied.clear();
-      tasksAuditWorkingOn.clear();
-      tasksAuditComplete.clear();
+    tasksPerformerParticipate.clear();
+    tasksPerformerProgress.clear();
+    tasksPerformerComplete.clear();
 
-      tasksCustomerSelection.clear();
-      tasksCustomerProgress.clear();
-      tasksCustomerComplete.clear();
+    pendingBalance = 0;
+    pendingBalanceToken = 0;
+    score = 0;
+    scoredTaskCount = 0;
 
-      tasksPerformerParticipate.clear();
-      tasksPerformerProgress.clear();
-      tasksPerformerComplete.clear();
-
-      pendingBalance = 0;
-      pendingBalanceToken = 0;
-      score = 0;
-      scoredTaskCount = 0;
-
-      for (Task task in tasks.values) {
-        await refreshTask(task);
-      }
-
-      // Final Score Calculation
-      if (score != 0) {
-        myScore = score / scoredTaskCount;
-      }
-
-      isLoading = false;
-      isLoadingBackground = false;
-      await myBalance();
-      notifyListeners();
-      // runFilter(searchKeyword); // reset search bar
-      try {
-        for (var batchId = 0; batchId < totalBatches; batchId++) {
-          await Future.wait<void>(monitorBatches[batchId]);
-          print('monitoring $batchId');
-          await Future.delayed(Duration(milliseconds: 200));
-
-          // await Future.wait<void>(monitors[batchId]);
-        }
-      } on GetTaskException {}
+    for (Task task in tasks.values) {
+      await refreshTask(task);
     }
+
+    // Final Score Calculation
+    if (score != 0) {
+      myScore = score / scoredTaskCount;
+    }
+
+    isLoading = false;
+    isLoadingBackground = false;
+    await myBalance();
+    notifyListeners();
+    // runFilter(searchKeyword); // reset search bar
+    try {
+      for (var batchId = 0; batchId < totalBatches; batchId++) {
+        await Future.wait<void>(monitorBatches[batchId]);
+        print('monitoring $batchId');
+        await Future.delayed(Duration(milliseconds: 200));
+
+        // await Future.wait<void>(monitors[batchId]);
+      }
+    } on GetTaskException {}
   }
 
   Future<void> fetchTasksByState(String state) async {
