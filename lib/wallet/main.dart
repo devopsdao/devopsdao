@@ -30,9 +30,8 @@ enum TransactionState {
 }
 
 class WalletPageTop extends StatefulWidget {
-  const WalletPageTop({Key? key, required this.title}) : super(key: key);
+  const WalletPageTop({Key? key, }) : super(key: key);
 
-  final String title;
 
   @override
   _WalletPageTopState createState() => _WalletPageTopState();

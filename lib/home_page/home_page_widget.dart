@@ -157,53 +157,59 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           ],
         ),
         actions: [
-          const LoadButtonIndicator(),
-          // Row(
-          //   mainAxisSize: MainAxisSize.max,
-          //   children: [
-          //     FlutterFlowIconButton(
-          //       borderColor: Colors.transparent,
-          //       borderRadius: 30,
-          //       borderWidth: 1,
-          //       buttonSize: 60,
-          //       icon: Icon(
-          //         Icons.account_balance_wallet,
-          //         color: Colors.white,
-          //         size: 30,
-          //       ),
-          //       onPressed: () async {
-          //         await tasksServices.getCredentials();
-          //       },
-          //     ),
-          //   ],
-          // ),/
-          if (tasksServices.isDeviceConnected ||
-              tasksServices.platform == 'web')
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                FlutterFlowIconButton(
-                  borderColor: Colors.transparent,
-                  borderRadius: 30,
-                  borderWidth: 1,
-                  buttonSize: 60,
-                  icon: const Icon(
-                    Icons.account_balance_wallet,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                  onPressed: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const WalletPageTop(
-                        title: '',
-                      ),
-                    );
-                  },
+          Center(
+            child: Container(
+              width: 150,
+              height: 34,
+              padding: const EdgeInsets.all(4.0),
+
+
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: const LinearGradient(
+                  colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+                  stops: [0.1, 0.5, 1],
                 ),
-              ],
-            )
-          else
+              ),
+              child: InkWell(
+                highlightColor: Colors.white,
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const WalletPageTop(
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Connect wallet',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          // FlutterFlowIconButton(
+          //   borderColor: Colors.transparent,
+          //   borderRadius: 30,
+          //   borderWidth: 1,
+          //   buttonSize: 60,
+          //   icon: const Icon(
+          //     Icons.account_balance_wallet,
+          //     color: Colors.white,
+          //     size: 30,
+          //   ),
+          //   onPressed: () async {
+          //     showDialog(
+          //       context: context,
+          //       builder: (context) => const WalletPageTop(
+          //       ),
+          //     );
+          //   },
+          // ),
+          const LoadButtonIndicator(),
+
+
+          if (!tasksServices.isDeviceConnected)
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -222,25 +228,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     // () async {
                     //   await tasksServices.connectWallet();
                     //   print(
-                    //       "test fdasssssssssssssssssssssssssvczxvczxvz!!!!!!!!!");
                     // }();
                   },
                 ),
               ],
             ),
-          // Row(
-          //   mainAxisSize: MainAxisSize.max,
-          //   children: [
-          //     Padding(
-          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-          //       child: Icon(
-          //         Icons.settings_outlined,
-          //         color: FlutterFlowTheme.of(context).primaryBtnText,
-          //         size: 24,
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
         centerTitle: false,
         elevation: 2,
