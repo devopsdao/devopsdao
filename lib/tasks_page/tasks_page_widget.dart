@@ -5,6 +5,7 @@ import '../create_job/create_job_as_page.dart';
 import '../create_job/create_job_call_button.dart';
 import '../task_dialog/initial_click_on_task.dart';
 import '../task_dialog/main_as_page.dart';
+import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
 import '/blockchain/task_services.dart';
@@ -99,6 +100,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     super.dispose();
   }
 
+  List<String> deleteItems = [];
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -111,6 +114,21 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
     }
+
+
+
+    void deleteItem(String id) async {
+      setState(() {
+        deleteItems.add(id);
+      });
+      Future.delayed(const Duration(milliseconds: 350)).whenComplete(() {
+        setState(() {
+          deleteItems.removeWhere((i) => i == id);
+        });
+      });
+    }
+
+
 
     List objList = tasksServices.filterResults.values.toList();
 
@@ -249,9 +267,62 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                 ),
                           ),
                         ),
-                        const TagCallButton(),
+                        const TagCallButton(page: 'tasks',),
                       ],
                     ),
+                    Consumer<InterfaceServices>(
+                      builder: (context, model, child) {
+                        return Wrap(
+                          alignment: WrapAlignment.start,
+                          direction: Axis.horizontal,
+                          children: model.tasksTagsList.map((e) {
+
+                            return WrappedChip(
+
+                              key: ValueKey(e),
+                              theme: 'black',
+                              nft: e.nft ?? false,
+                              name: e.tag!,
+                              // callback: () {
+                              //   model.removeTag(i.tag);
+                              // },
+                              control: true,
+                              page: 'tasks'
+                              // onDeleted: () {
+                              //   //
+                              //   if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
+                              // },
+                            );
+
+
+                            // bool isMarkedForDelete = deleteItems.where((i) {
+                            //       // print('model: ${model.selectedTagsList.indexOf(e)}');
+                            //       // print('i: ${i}');
+                            //       return i == model.selectedTagsList.indexOf(e).toString();
+                            //
+                            //     }).isNotEmpty;
+                            // print(isMarkedForDelete); print(deleteItems);
+                            // return AnimatedContainer(
+                            //   key: ObjectKey(e),
+                            //   duration: const Duration(milliseconds: 350),
+                            //   width: isMarkedForDelete ? 0 : 100,
+                            //   child: AnimatedOpacity(
+                            //     duration: const Duration(milliseconds: 350),
+                            //     opacity: isMarkedForDelete ? 0 : 1,
+                            //     child: Chip(
+                            //       label: Text(e.tag!),
+                            //       onDeleted: () {
+                            //       if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
+                            //     },),
+                            //
+                            //
+                            //
+                            //   ),
+                            // );
+                          }).toList());
+                      }
+                    ),
+
                     // TabBar(
                     //   labelColor: Colors.white,с
                     //   labelStyle: FlutterFlowTheme.of(context).bodyText1,

@@ -10,6 +10,7 @@ import '../widgets/tags/tag_call_button.dart';
 import '../widgets/task_item.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
+import '../widgets/tags/wrapped_chip.dart';
 
 import 'package:beamer/beamer.dart';
 
@@ -161,148 +162,162 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
         ),
         child: SizedBox(
           width: interface.maxGlobalWidth,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: DefaultTabController(
-                  length: 3,
-                  initialIndex: tabIndex,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        labelColor: Colors.white,
-                        labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                        indicatorColor: const Color(0xFF47CBE4),
-                        indicatorWeight: 3,
-                        // isScrollable: true,
-                        onTap: (index) {
-                          _searchKeywordController.clear();
-                          tabIndex = index;
-                          // print(index);
-                          if (index == 0) {
-                            tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
-                          } else if (index == 1) {
-                            tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
-                          } else if (index == 2) {
-                            tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
-                          }
+          child: DefaultTabController(
+            length: 3,
+            initialIndex: tabIndex,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  children: [
+                    TabBar(
+                      labelColor: Colors.white,
+                      labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                      indicatorColor: const Color(0xFF47CBE4),
+                      indicatorWeight: 3,
+                      // isScrollable: true,
+                      onTap: (index) {
+                        _searchKeywordController.clear();
+                        tabIndex = index;
+                        // print(index);
+                        if (index == 0) {
+                          tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
+                        } else if (index == 1) {
+                          tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
+                        } else if (index == 2) {
+                          tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
+                        }
 
-                        },
-                        tabs: [
-                          Tab(
-                            // icon: const FaIcon(
-                            //   FontAwesomeIcons.smileBeam,
-                            // ),
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksPerformerParticipate.length,
-                              tabText: 'Applied',
-                            ),
+                      },
+                      tabs: [
+                        Tab(
+                          // icon: const FaIcon(
+                          //   FontAwesomeIcons.smileBeam,
+                          // ),
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksPerformerParticipate.length,
+                            tabText: 'Applied',
                           ),
-                          Tab(
-                            // icon: const Icon(
-                            //   Icons.card_travel_outlined,
-                            // ),
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksPerformerProgress.length,
-                              tabText: 'Working',
-                            ),
+                        ),
+                        Tab(
+                          // icon: const Icon(
+                          //   Icons.card_travel_outlined,
+                          // ),
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksPerformerProgress.length,
+                            tabText: 'Working',
                           ),
-                          Tab(
-                            // icon: const Icon(
-                            //   Icons.done_outline,
-                            // ),
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksPerformerComplete.length,
-                              tabText: 'Complete',
-                            ),
+                        ),
+                        Tab(
+                          // icon: const Icon(
+                          //   Icons.done_outline,
+                          // ),
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksPerformerComplete.length,
+                            tabText: 'Complete',
                           ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width - 70,
-                            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                            // decoration: const BoxDecoration(
-                            //   // color: Colors.white70,
-                            //   // borderRadius: BorderRadius.circular(8),
-                            // ),
-                            child: TextField(
-                              controller: _searchKeywordController,
-                              onChanged: (searchKeyword) {
-                                print(tabIndex);
-                                if (tabIndex == 0) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
-                                } else if (tabIndex == 1) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
-                                } else if (tabIndex == 2) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                hintText: '[Find task by Title...]',
-                                hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                                labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                                labelText: 'Search',
-                                suffixIcon: Icon(
-                                  Icons.search,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: constraints.minWidth - 70,
+                          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                          // decoration: const BoxDecoration(
+                          //   // color: Colors.white70,
+                          //   // borderRadius: BorderRadius.circular(8),
+                          // ),
+                          child: TextField(
+                            controller: _searchKeywordController,
+                            onChanged: (searchKeyword) {
+                              print(tabIndex);
+                              if (tabIndex == 0) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
+                              } else if (tabIndex == 1) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
+                              } else if (tabIndex == 2) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
+                              }
+                            },
+                            decoration: const InputDecoration(
+                              hintText: '[Find task by Title...]',
+                              hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                              labelText: 'Search',
+                              suffixIcon: Icon(
+                                Icons.search,
+                                color: Colors.white,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
                                   color: Colors.white,
+                                  width: 1,
                                 ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.white,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.white,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
                                 ),
                               ),
-                              style: FlutterFlowTheme.of(context).bodyText1.override(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                    lineHeight: 2,
-                                  ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
+                                ),
+                              ),
+                            ),
+                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  lineHeight: 2,
+                                ),
+                          ),
+                        ),
+                        TagCallButton(page: 'performer',),
+                      ],
+                    ),
+                    Consumer<InterfaceServices>(
+                        builder: (context, model, child) {
+                          return Wrap(
+                              alignment: WrapAlignment.start,
+                              direction: Axis.horizontal,
+                              children: model.performerTagsList.map((e) {
+                                return WrappedChip(
+                                    key: ValueKey(e),
+                                    theme: 'black',
+                                    nft: e.nft ?? false,
+                                    name: e.tag!,
+                                    control: true,
+                                    page: 'performer'
+                                );
+                              }).toList());
+                        }
+                    ),
+                    tasksServices.isLoading
+                        ? const LoadIndicator()
+                        : const Expanded(
+                            child: TabBarView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                MyPerformerTabWidget(
+                                  tabName: 'applied',
+                                ),
+                                MyPerformerTabWidget(
+                                  tabName: 'working',
+                                ),
+                                MyPerformerTabWidget(
+                                  tabName: 'complete',
+                                ),
+                              ],
                             ),
                           ),
-                          const TagCallButton(),
-                        ],
-                      ),
-                      tasksServices.isLoading
-                          ? const LoadIndicator()
-                          : const Expanded(
-                              child: TabBarView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: [
-                                  MyPerformerTabWidget(
-                                    tabName: 'applied',
-                                  ),
-                                  MyPerformerTabWidget(
-                                    tabName: 'working',
-                                  ),
-                                  MyPerformerTabWidget(
-                                    tabName: 'complete',
-                                  ),
-                                ],
-                              ),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+                  ],
+                );
+              }
+            ),
           ),
         ),
       ),

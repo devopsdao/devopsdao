@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../task_dialog/states.dart';
+import '../widgets/tags/tags.dart';
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
 
@@ -66,6 +67,38 @@ class InterfaceServices extends ChangeNotifier {
   // ***********  create_job_widget ************ ////
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
 
+
+  // ***********  tags  ************ ////
+
+  late List<SimpleTags> auditorTagsList = [];
+  late List<SimpleTags> tasksTagsList = [];
+  late List<SimpleTags> customerTagsList = [];
+  late List<SimpleTags> performerTagsList = [];
+  Future updateTagList(list, {required String page}) async {
+    if (page == 'auditor') {
+      auditorTagsList = list;
+    } else if (page == 'tasks') {
+      tasksTagsList = list;
+    } else if (page == 'customer') {
+      customerTagsList = list;
+    } else if (page == 'performer') {
+      performerTagsList = list;
+    }
+    notifyListeners();
+  }
+  Future removeTag(tagName, {required String page}) async {
+    if (page == 'auditor') {
+      auditorTagsList.removeWhere((item) => item.tag == tagName);
+    } else if (page == 'tasks') {
+      tasksTagsList.removeWhere((item) => item.tag == tagName);
+    } else if (page == 'customer') {
+      customerTagsList.removeWhere((item) => item.tag == tagName);
+    } else if (page == 'performer') {
+      performerTagsList.removeWhere((item) => item.tag == tagName);
+    }
+    notifyListeners();
+  }
+
   // ****** SETTINGS ******** //
   // border radius:
   final double borderRadius = 8.0;
@@ -79,3 +112,14 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+// class TagsValueController extends ValueNotifier{
+//   TagsValueController(List<SimpleTags>super.value);
+//
+//   void addTag(SimpleTags val) {
+//     value.add(val);
+//     print(value.first.tag);
+//     notifyListeners();
+//   }
+// }

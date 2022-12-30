@@ -59,37 +59,37 @@ class _WithdrawButtonState extends State<WithdrawButton> {
   }
 }
 
-class SearchButton extends StatefulWidget {
-  const SearchButton({Key? key}) : super(key: key);
-
-  @override
-  _SearchButtonState createState() => _SearchButtonState();
-}
-
-class _SearchButtonState extends State<SearchButton> {
-  TextEditingController textController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-
-    setState(() {});
-
-    return Row(
-      children: [
-        Padding(
-            padding: const EdgeInsets.only(top: 0.0, right: 10, left: 10),
-            child: AnimSearchBar(
-              width: 400,
-              color: Colors.black,
-              textController: textController,
-              onSuffixTap: () {
-                setState(() {
-                  textController.clear();
-                });
-              },
-            )),
-      ],
-    );
-  }
-}
+// class SearchButton extends StatefulWidget {
+//   const SearchButton({Key? key}) : super(key: key);
+//
+//   @override
+//   _SearchButtonState createState() => _SearchButtonState();
+// }
+//
+// class _SearchButtonState extends State<SearchButton> {
+//   TextEditingController textController = TextEditingController();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var tasksServices = context.watch<TasksServices>();
+//
+//     setState(() {});
+//
+//     return Row(
+//       children: [
+//         Padding(
+//             padding: const EdgeInsets.only(top: 0.0, right: 10, left: 10),
+//             child: AnimSearchBar(
+//               width: 400,
+//               color: Colors.black,
+//               textController: textController,
+//               onSuffixTap: () {
+//                 setState(() {
+//                   textController.clear();
+//                 });
+//               },
+//             )),
+//       ],
+//     );
+//   }
+// }

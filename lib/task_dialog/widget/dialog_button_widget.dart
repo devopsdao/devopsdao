@@ -35,11 +35,11 @@ class _TaskDialogButtonState extends State<TaskDialogButton> with SingleTickerPr
   late bool _buttonState = true;
 
   late final AnimationController _controller = AnimationController(
-      duration: const Duration(milliseconds: 450),
-      vsync: this,
-      value: 0.0,
-      lowerBound: 0.0,
-      upperBound: 1.0
+    duration: const Duration(milliseconds: 450),
+    vsync: this,
+    value: 0.0,
+    lowerBound: 0.0,
+    upperBound: 1.0
   );
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
@@ -51,9 +51,8 @@ class _TaskDialogButtonState extends State<TaskDialogButton> with SingleTickerPr
     super.initState();
 
     Future.delayed(
-        const Duration(milliseconds: 250),
-            () { _controller.forward();
-        });
+      const Duration(milliseconds: 250),
+        () { _controller.forward(); });
   }
 
   @override

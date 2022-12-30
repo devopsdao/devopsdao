@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 
 
 class TagCallButton extends StatelessWidget {
-  const TagCallButton({Key? key}) : super(key: key);
+  const TagCallButton({Key? key, required this.page}) : super(key: key);
+  final String page;
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
       transitionDuration: const Duration(milliseconds: 300),
       transitionType: _transitionType,
       openBuilder: (BuildContext context, VoidCallback _) {
-        return const TagsPage();
+        return TagsPage(page: page);
         // return const _DetailsPage(
         //   includeMarkAsDoneButton: false,
         // );

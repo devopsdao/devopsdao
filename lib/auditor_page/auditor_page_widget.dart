@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
+import '../widgets/tags/wrapped_chip.dart';
 
 class AuditorPageWidget extends StatefulWidget {
   final EthereumAddress? taskAddress;
@@ -176,140 +177,154 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
         ),
         child: SizedBox(
           width: interface.maxGlobalWidth,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: DefaultTabController(
-                  length: 4,
-                  initialIndex: tabIndex,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        labelColor: Colors.white,
-                        labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                        indicatorColor: const Color(0xFF47CBE4),
-                        indicatorWeight: 3,
-                        onTap: (index) {
-                          _searchKeywordController.clear();
-                          tabIndex = index;
-                          if (index == 0) {
-                            tasksServices.resetFilter(tasksServices.tasksAuditPending);
-                          } else if (index == 1) {
-                            tasksServices.resetFilter(tasksServices.tasksAuditApplied);
-                          } else if (index == 2) {
-                            tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
-                          } else if (index == 3) {
-                            tasksServices.resetFilter(tasksServices.tasksAuditComplete);
-                          }
-                        },
-                        tabs: [
-                          Tab(
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksAuditPending.length,
-                              tabText: 'Pending',
-                            ),
+          child: DefaultTabController(
+            length: 4,
+            initialIndex: tabIndex,
+            child: LayoutBuilder(
+                builder: (context, constraints) {
+                return Column(
+                  children: [
+                    TabBar(
+                      labelColor: Colors.white,
+                      labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                      indicatorColor: const Color(0xFF47CBE4),
+                      indicatorWeight: 3,
+                      onTap: (index) {
+                        _searchKeywordController.clear();
+                        tabIndex = index;
+                        if (index == 0) {
+                          tasksServices.resetFilter(tasksServices.tasksAuditPending);
+                        } else if (index == 1) {
+                          tasksServices.resetFilter(tasksServices.tasksAuditApplied);
+                        } else if (index == 2) {
+                          tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
+                        } else if (index == 3) {
+                          tasksServices.resetFilter(tasksServices.tasksAuditComplete);
+                        }
+                      },
+                      tabs: [
+                        Tab(
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksAuditPending.length,
+                            tabText: 'Pending',
                           ),
-                          Tab(
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksAuditApplied.length,
-                              tabText: 'Applied',
-                            ),
+                        ),
+                        Tab(
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksAuditApplied.length,
+                            tabText: 'Applied',
                           ),
-                          Tab(
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksAuditWorkingOn.length,
-                              tabText: 'Working',
-                            ),
+                        ),
+                        Tab(
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksAuditWorkingOn.length,
+                            tabText: 'Working',
                           ),
-                          Tab(
-                            child: BadgeTab(
-                              taskCount: tasksServices.tasksAuditComplete.length,
-                              tabText: 'Complete',
-                            ),
+                        ),
+                        Tab(
+                          child: BadgeTab(
+                            taskCount: tasksServices.tasksAuditComplete.length,
+                            tabText: 'Complete',
                           ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width - 70,
-                            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                            // decoration: const BoxDecoration(
-                            //   // color: Colors.white70,
-                            //   // borderRadius: BorderRadius.circular(8),
-                            // ),
-                            child: TextField(
-                              controller: _searchKeywordController,
-                              onChanged: (searchKeyword) {
-                                print(tabIndex);
-                                if (tabIndex == 0) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditPending);
-                                } else if (tabIndex == 1) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
-                                } else if (tabIndex == 2) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditWorkingOn);
-                                } else if (tabIndex == 3) {
-                                  tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditComplete);
-                                }
-                              },
-                              decoration: const InputDecoration(
-                                hintText: '[Find task by Title...]',
-                                hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                                labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                                labelText: 'Search',
-                                suffixIcon: Icon(
-                                  Icons.search,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: constraints.minWidth - 70,
+                          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                          // decoration: const BoxDecoration(
+                          //   // color: Colors.white70,
+                          //   // borderRadius: BorderRadius.circular(8),
+                          // ),
+                          child: TextField(
+                            controller: _searchKeywordController,
+                            onChanged: (searchKeyword) {
+                              print(tabIndex);
+                              if (tabIndex == 0) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditPending);
+                              } else if (tabIndex == 1) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
+                              } else if (tabIndex == 2) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditWorkingOn);
+                              } else if (tabIndex == 3) {
+                                tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditComplete);
+                              }
+                            },
+                            decoration: const InputDecoration(
+                              hintText: '[Find task by Title...]',
+                              hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                              labelText: 'Search',
+                              suffixIcon: Icon(
+                                Icons.search,
+                                color: Colors.white,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
                                   color: Colors.white,
+                                  width: 1,
                                 ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.white,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.white,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
                                 ),
                               ),
-                              style: FlutterFlowTheme.of(context).bodyText1.override(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                    lineHeight: 2,
-                                  ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(4.0),
+                                ),
+                              ),
+                            ),
+                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  lineHeight: 2,
+                                ),
+                          ),
+                        ),
+                        const TagCallButton(page: 'auditor',),
+                      ],
+                    ),
+                    Consumer<InterfaceServices>(
+                        builder: (context, model, child) {
+                          return Wrap(
+                              alignment: WrapAlignment.start,
+                              direction: Axis.horizontal,
+                              children: model.auditorTagsList.map((e) {
+                                return WrappedChip(
+                                    key: ValueKey(e),
+                                    theme: 'black',
+                                    nft: e.nft ?? false,
+                                    name: e.tag!,
+                                    control: true,
+                                    page: 'auditor'
+                                );
+                              }).toList());
+                        }
+                    ),
+                    tasksServices.isLoading
+                        ? const LoadIndicator()
+                        : const Expanded(
+                            child: TabBarView(
+                              children: [
+                                PendingTabWidget(tabName: 'pending'),
+                                PendingTabWidget(tabName: 'applied'),
+                                PendingTabWidget(tabName: 'working'),
+                                PendingTabWidget(tabName: 'done'),
+                              ],
                             ),
                           ),
-                          const TagCallButton(),
-                        ],
-                      ),
-                      tasksServices.isLoading
-                          ? const LoadIndicator()
-                          : const Expanded(
-                              child: TabBarView(
-                                children: [
-                                  PendingTabWidget(tabName: 'pending'),
-                                  PendingTabWidget(tabName: 'applied'),
-                                  PendingTabWidget(tabName: 'working'),
-                                  PendingTabWidget(tabName: 'done'),
-                                ],
-                              ),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+                  ],
+                );
+              }
+            ),
           ),
         ),
       ).animated([animationsMap['containerOnPageLoadAnimation']!]),
