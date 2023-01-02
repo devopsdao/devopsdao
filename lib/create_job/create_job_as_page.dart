@@ -1,16 +1,12 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
 
 import '../blockchain/interface.dart';
 import '../widgets/payment.dart';
-import '../task_dialog/main.dart';
+import '../widgets/tags/tag_call_button.dart';
 import '../widgets/wallet_action.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
 // import 'package:markdown_editable_textinput/format_markdown.dart';
@@ -19,7 +15,7 @@ import 'package:simple_markdown_editor_plus/simple_markdown_editor_plus.dart';
 
 import '../blockchain/task_services.dart';
 import '../task_dialog/widget/dialog_button_widget.dart';
-
+import '../widgets/tags/wrapped_chip.dart';
 
 class CreateJobPage extends StatefulWidget {
   const CreateJobPage({Key? key}) : super(key: key);
@@ -160,7 +156,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
           ],
         ),
       ),
-      Container(
+      SizedBox(
         // *** SingleScrollChild enable here by using screenHeightSize:
         height: screenHeightSize,
         // height: 490,
@@ -364,6 +360,57 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                         tasksServices.myNotifyListeners();
                       });
                     },
+                  ),
+                ),
+              )
+          ),
+        ),
+        Container(
+          padding:  const EdgeInsets.only(top: 14.0),
+          child: Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: maxInternalWidth,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: innerWidth,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(borderRadius),
+                  ),
+                  child:  LayoutBuilder(
+                      builder: (context, constraints) {
+                        final double width = constraints.maxWidth - 60;
+                      return Row(
+                        children: <Widget>[
+                          Consumer<InterfaceServices>(
+                              builder: (context, model, child) {
+                                return Container(
+                                  width: width,
+                                  child: Wrap(
+                                      alignment: WrapAlignment.start,
+                                      direction: Axis.horizontal,
+                                      children: model.createTagsList.map((e) {
+                                        return WrappedChip(
+                                            key: ValueKey(e),
+                                            theme: 'white',
+                                            nft: e.nft ?? false,
+                                            name: e.tag!,
+                                            control: true,
+                                            page: 'create'
+                                        );
+                                      }).toList()),
+                                );
+                              }
+                          ),
+                          const Spacer(),
+                          TagCallButton(page: 'create',),
+                        ],
+                      );
+                    }
                   ),
                 ),
               )

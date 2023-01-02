@@ -76,6 +76,7 @@ class HeaderThemeData with Diagnosticable {
     this.boxShadow,
     this.searchFieldBorderRadius = 100,
     this.searchFieldHintText = 'Search here...',
+    this.searchFieldLabelText = 'Default label...',
     this.searchFieldHintTextStyle,
   });
 
@@ -139,6 +140,8 @@ class HeaderThemeData with Diagnosticable {
   /// The default is "Search here..."
   final String? searchFieldHintText;
 
+  final String? searchFieldLabelText;
+
   /// The [TextStyle] for search field hint text
   final TextStyle? searchFieldHintTextStyle;
 
@@ -153,6 +156,7 @@ class HeaderThemeData with Diagnosticable {
     VisualDensity? visualDensity,
     double? searchFieldBorderRadius,
     String? searchFieldHintText,
+    String? searchFieldLabelText,
     TextStyle? searchFieldHintTextStyle,
     Color? shadowColor,
     Color? selectedShadowColor,
@@ -176,6 +180,7 @@ class HeaderThemeData with Diagnosticable {
       searchFieldBorderRadius:
           searchFieldBorderRadius ?? this.searchFieldBorderRadius,
       searchFieldHintText: searchFieldHintText ?? this.searchFieldHintText,
+      searchFieldLabelText: searchFieldLabelText ?? this.searchFieldLabelText,
       searchFieldHintTextStyle:
           searchFieldHintTextStyle ?? this.searchFieldHintTextStyle,
     );
@@ -201,6 +206,7 @@ class HeaderThemeData with Diagnosticable {
       boxShadow: a.boxShadow,
       searchFieldBorderRadius: a.searchFieldBorderRadius,
       searchFieldHintText: a.searchFieldHintText,
+      searchFieldLabelText: a.searchFieldLabelText,
       searchFieldHintTextStyle: a.searchFieldHintTextStyle,
     );
   }
@@ -217,6 +223,7 @@ class HeaderThemeData with Diagnosticable {
           searchFieldIconColor == other.searchFieldIconColor &&
           boxShadow == other.boxShadow &&
           searchFieldBorderRadius == other.searchFieldBorderRadius &&
+          searchFieldLabelText == other.searchFieldLabelText &&
           searchFieldHintText == other.searchFieldHintText &&
           searchFieldHintTextStyle == other.searchFieldHintTextStyle &&
           backgroundColor == other.backgroundColor;
@@ -231,6 +238,7 @@ class HeaderThemeData with Diagnosticable {
       boxShadow.hashCode ^
       searchFieldBorderRadius.hashCode ^
       searchFieldHintText.hashCode ^
+      searchFieldLabelText.hashCode ^
       searchFieldHintTextStyle.hashCode ^
       backgroundColor.hashCode;
 
@@ -249,6 +257,8 @@ class HeaderThemeData with Diagnosticable {
         'searchFieldBorderRadius', searchFieldBorderRadius));
     properties.add(DiagnosticsProperty<String>(
         'searchFieldHintText', searchFieldHintText));
+    properties.add(DiagnosticsProperty<String>(
+        'searchFieldLabelText', searchFieldLabelText));
     properties.add(DiagnosticsProperty<TextStyle>(
         'searchFieldHintTextStyle', searchFieldHintTextStyle));
     properties

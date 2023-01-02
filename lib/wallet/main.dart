@@ -424,7 +424,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               ),
               crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
             ),
-            if (tasksServices.walletConnectedMM) const SizedBox(height: 20),
+            if (tasksServices.walletConnectedMM)
+              const SizedBox(height: 20),
             if (tasksServices.walletConnectedMM)
               Center(
                 child: Material(
@@ -534,22 +535,22 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const SizedBox(height: 22),
-                                            AnimatedCrossFade(
-                                              duration: const Duration(milliseconds: 300),
-                                              firstChild: RichText(
-                                                  text: TextSpan(
-                                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                                      children: const <TextSpan>[
-                                                    TextSpan(
-                                                        text: 'Connect to Mobile Wallet',
-                                                        style:
-                                                            TextStyle(height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
-                                                  ])),
-                                              secondChild: TransportSelection(
-                                                screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
-                                              ),
-                                              crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            ),
+                                            // AnimatedCrossFade(
+                                            //   duration: const Duration(milliseconds: 300),
+                                            //   firstChild: RichText(
+                                            //       text: TextSpan(
+                                            //           style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                            //           children: const <TextSpan>[
+                                            //         TextSpan(
+                                            //             text: 'Connect to Mobile Wallet',
+                                            //             style:
+                                            //                 TextStyle(height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
+                                            //       ])),
+                                            //   secondChild: TransportSelection(
+                                            //     screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
+                                            //   ),
+                                            //   crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            // ),
 
                                             // if (_displayUri.isNotEmpty)
 
@@ -630,6 +631,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 // crossAxisAlignment:
                                                 // CrossAxisAlignment.center,
                                                 children: [
+                                                  if(_displayUri.isNotEmpty)
                                                   RichText(
                                                       text: TextSpan(
                                                           style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
@@ -666,7 +668,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                             secondChild: TransportSelection(
                                               screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
                                             ),
-                                            crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            // crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                            crossFadeState: true ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                           ),
                                           // if (_displayUri.isEmpty)
                                           //

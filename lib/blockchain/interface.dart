@@ -74,6 +74,7 @@ class InterfaceServices extends ChangeNotifier {
   late List<SimpleTags> tasksTagsList = [];
   late List<SimpleTags> customerTagsList = [];
   late List<SimpleTags> performerTagsList = [];
+  late List<SimpleTags> createTagsList = [];
   Future updateTagList(list, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList = list;
@@ -83,6 +84,8 @@ class InterfaceServices extends ChangeNotifier {
       customerTagsList = list;
     } else if (page == 'performer') {
       performerTagsList = list;
+    } else if (page == 'create') {
+      createTagsList = list;
     }
     notifyListeners();
   }
@@ -95,6 +98,8 @@ class InterfaceServices extends ChangeNotifier {
       customerTagsList.removeWhere((item) => item.tag == tagName);
     } else if (page == 'performer') {
       performerTagsList.removeWhere((item) => item.tag == tagName);
+    } else if (page == 'create') {
+      createTagsList.removeWhere((item) => item.tag == tagName);
     }
     notifyListeners();
   }

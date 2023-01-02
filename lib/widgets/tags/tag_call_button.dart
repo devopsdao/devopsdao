@@ -29,7 +29,7 @@ class TagCallButton extends StatelessWidget {
       ),
       openElevation: 0,
       openColor: Colors.white,
-      closedColor: Colors.purpleAccent,
+      closedColor: Colors.white,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return Container(
           decoration: const BoxDecoration(

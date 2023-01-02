@@ -258,8 +258,6 @@ class _TaskInformationDialogState extends State<TaskInformationDialog> {
                 // ****** Count Screen size with keyboard and without ***** ///
                 final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
                 final double screenHeightSizeNoKeyboard = constraints.maxHeight - 120;
-                // < 400 ? 330
-                // : constraints.maxHeight - 140;
                 final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
 
                 return WillPopScope(
