@@ -1025,7 +1025,7 @@ class TasksServices extends ChangeNotifier {
     await connectContracts();
     // thr.debounce(() {
     // fetchTasksByState("new");
-    // fetchTasks(); // to fix enable fetchTasks
+    fetchTasks(); // to fix enable fetchTasks
     // });
     await myBalance();
     await monitorEvents();
