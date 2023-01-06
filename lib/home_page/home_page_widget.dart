@@ -180,11 +180,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   );
                 },
-                child: const Text(
+                child: tasksServices.walletConnected ? const Text(
                   'Connect wallet',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
+                ) : const Text(
+                    'Wallet connected',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                )
               ),
             ),
           ),

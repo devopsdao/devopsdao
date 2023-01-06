@@ -16,7 +16,10 @@ class TagCallButton extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 300),
       transitionType: _transitionType,
       openBuilder: (BuildContext context, VoidCallback _) {
-        return TagsPage(page: page);
+        return Container(
+          color: Colors.white,
+            child: TagsPage(page: page)
+        );
         // return const _DetailsPage(
         //   includeMarkAsDoneButton: false,
         // );
@@ -27,9 +30,9 @@ class TagCallButton extends StatelessWidget {
           Radius.circular(15.0),
         ),
       ),
-      openElevation: 0,
+      openElevation: 2,
       openColor: Colors.white,
-      closedColor: Colors.white,
+      closedColor: Colors.purpleAccent,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return Container(
           decoration: const BoxDecoration(

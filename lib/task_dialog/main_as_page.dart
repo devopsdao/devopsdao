@@ -37,32 +37,32 @@ import 'dart:ui' as ui;
 
 import 'main.dart';
 
-class TaskDialogPage extends StatefulWidget {
-  final String fromPage;
-  final EthereumAddress? taskAddress;
-  const TaskDialogPage({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
+// class TaskDialogPage extends StatefulWidget {
+//   final String fromPage;
+//   final EthereumAddress? taskAddress;
+//   const TaskDialogPage({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
 
-  @override
-  _TaskDialogPage createState() => _TaskDialogPage();
-}
+//   @override
+//   _TaskDialogPage createState() => _TaskDialogPage();
+// }
 
-class _TaskDialogPage extends State<TaskDialogPage> {
-  late Task task;
-  @override
-  void initState() {
-    super.initState();
-  }
+// class _TaskDialogPage extends State<TaskDialogPage> {
+//   late Task task;
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    if (tasksServices.tasks[widget.taskAddress] != null) {
-      task = tasksServices.tasks[widget.taskAddress]!;
-      return TaskInformationFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: false);
-    }
-    return const AppDataLoadingDialogWidget();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     var tasksServices = context.watch<TasksServices>();
+//     if (tasksServices.tasks[widget.taskAddress] != null) {
+//       task = tasksServices.tasks[widget.taskAddress]!;
+//       return TaskInformationFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: false);
+//     }
+//     return const AppDataLoadingDialogWidget();
+//   }
+// }
 
 class TaskInformationFuture extends StatefulWidget {
   final String fromPage;
@@ -80,7 +80,7 @@ class TaskInformationFuture extends StatefulWidget {
 }
 
 class _TaskInformationFutureState extends State<TaskInformationFuture> {
-  late Task task;
+
   String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
@@ -92,53 +92,52 @@ class _TaskInformationFutureState extends State<TaskInformationFuture> {
 
   @override
   Widget build(BuildContext context) {
+    late Task task;
     var interface = context.read<InterfaceServices>();
     var tasksServices = context.read<TasksServices>();
 
     EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Task>(
-      future: tasksServices.getTask(taskAddress), // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          task = snapshot.data!;
-          return TaskInformationPage(fromPage: widget.fromPage, task: task, isLoading: false);
-        }
-        task = Task(
-            nanoId: '111',
-            createTime: DateTime.now(),
-            taskType: 'task[2]',
-            title: 'Loading...',
-            description: 'Loading...',
-            symbol: 'none',
-            taskState: 'empty',
-            auditState: '',
-            rating: 0,
-            contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-            participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-            auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-            auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-            participants: [],
-            funders: [],
-            auditors: [],
-            messages: [],
-            taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-            justLoaded: true,
-            contractValue: 0,
-            contractValueToken: 0,
-            transport: '');
-        return TaskInformationPage(fromPage: widget.fromPage, task: task, isLoading: true);
-
-    });
+        future: tasksServices.getTask(taskAddress), // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            task = snapshot.data!;
+            return TaskInformationPage(fromPage: widget.fromPage, task: task, isLoading: false);
+          }
+          task = Task(
+              nanoId: '111',
+              createTime: DateTime.now(),
+              taskType: 'task[2]',
+              title: 'Loading...',
+              description: 'Loading...',
+              symbol: 'none',
+              taskState: 'empty',
+              auditState: '',
+              rating: 0,
+              contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+              participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+              auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+              auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+              participants: [],
+              funders: [],
+              auditors: [],
+              messages: [],
+              taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+              justLoaded: true,
+              contractValue: 0,
+              contractValueToken: 0,
+              transport: '');
+          return TaskInformationPage(fromPage: widget.fromPage, task: task, isLoading: true);
+        });
   }
 }
-
-
 
 class TaskInformationPage extends StatefulWidget {
   final String fromPage;
   final Task task;
   final bool isLoading;
-  const TaskInformationPage({ Key? key,
+  const TaskInformationPage({
+    Key? key,
     required this.task,
     required this.fromPage,
     required this.isLoading,
@@ -149,7 +148,6 @@ class TaskInformationPage extends StatefulWidget {
 }
 
 class _TaskInformationPageState extends State<TaskInformationPage> {
-
   String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
@@ -199,11 +197,9 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
       interface.dialogCurrentState = dialogStates['customer-completed'];
     } else if (task.taskState == 'canceled' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['customer-canceled'];
-    } else if ((task.taskState == 'audit' && task.auditState == 'requested') &&
-        (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+    } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['customer-audit-requested'];
-    } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
-        (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+    } else if ((task.taskState == 'audit' && task.auditState == 'performing') && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['customer-audit-performing'];
     } else if (task.taskState == 'agreed' && fromPage == 'performer') {
       interface.dialogCurrentState = dialogStates['performer-agreed'];
@@ -215,11 +211,9 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
       interface.dialogCurrentState = dialogStates['performer-completed'];
     } else if (task.taskState == 'canceled' && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['performer-canceled'];
-    } else if ((task.taskState == 'audit' && task.auditState == 'requested') &&
-        (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+    } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['performer-audit-requested'];
-    } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
-        (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+    } else if ((task.taskState == 'audit' && task.auditState == 'performing') && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['performer-audit-performing'];
     } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       if (task.auditors.isNotEmpty) {
@@ -234,25 +228,19 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
       } else {
         interface.dialogCurrentState = dialogStates['auditor-new'];
       }
-    } else if ((task.taskState == 'audit' && task.auditState == 'performing') &&
-        (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
+    } else if ((task.taskState == 'audit' && task.auditState == 'performing') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['auditor-performing'];
     } else if ((task.taskState == 'audit' && task.auditState == 'finished') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       // taskState = audit & auditState = finished - will not fires anyway. Should be deleted
       interface.dialogCurrentState = dialogStates['auditor-finished'];
-    } else if ((task.taskState == 'completed' && task.auditState == 'finished') &&
-        (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
+    } else if ((task.taskState == 'completed' && task.auditState == 'finished') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       interface.dialogCurrentState = dialogStates['auditor-finished'];
     }
 
     return Container(
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.circular(9),
-        image: DecorationImage(
-            image: AssetImage(backgroundPicture),
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.bottomRight
-        ),
+        image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
       ),
       child: LayoutBuilder(builder: (context, constraints) {
         return StatefulBuilder(
@@ -331,13 +319,13 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
                                       children: [
                                         const WidgetSpan(
                                             child: Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.copy,
-                                                size: 20,
-                                                color: Colors.black26,
-                                              ),
-                                            )),
+                                          padding: EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.copy,
+                                            size: 20,
+                                            color: Colors.black26,
+                                          ),
+                                        )),
                                         TextSpan(
                                           text: task.title,
                                           style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),
@@ -350,19 +338,19 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
                             ),
                             onTap: () async {
                               Clipboard.setData(
-                                ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
-                                .then((_) {
+                                      ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
+                                  .then((_) {
                                 Flushbar(
-                                  icon: const Icon(
-                                    Icons.copy,
-                                    size: 20,
-                                    color: Colors.white,
-                                  ),
-                                  message: 'Task URL copied to your clipboard!',
-                                  duration: const Duration(seconds: 2),
-                                  backgroundColor: Colors.blueAccent,
-                                  shouldIconPulse: false)
-                                  .show(context);
+                                        icon: const Icon(
+                                          Icons.copy,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                        message: 'Task URL copied to your clipboard!',
+                                        duration: const Duration(seconds: 2),
+                                        backgroundColor: Colors.blueAccent,
+                                        shouldIconPulse: false)
+                                    .show(context);
                               });
                             },
                           )),
@@ -403,14 +391,17 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
 
                   child: widget.isLoading == false
                       ? DialogPages(
-                    borderRadius: borderRadius,
-                    task: task,
-                    fromPage: widget.fromPage,
-                    topConstraints: constraints,
-                    screenHeightSize: screenHeightSize,
-                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
-                  )
-                      : ShimmeredTaskPages(borderRadius: borderRadius, task: task,),
+                          borderRadius: borderRadius,
+                          task: task,
+                          fromPage: widget.fromPage,
+                          topConstraints: constraints,
+                          screenHeightSize: screenHeightSize,
+                          screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
+                        )
+                      : ShimmeredTaskPages(
+                          borderRadius: borderRadius,
+                          task: task,
+                        ),
                 ),
               ]),
             );
@@ -420,10 +411,6 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
     );
   }
 }
-
-
-
-
 
 class ShimmeredTaskPages extends StatefulWidget {
   final double borderRadius;
@@ -440,9 +427,6 @@ class ShimmeredTaskPages extends StatefulWidget {
 }
 
 class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
-
-
-
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
@@ -472,13 +456,7 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                     child: Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
-                        child: Container(
-
-                            height: 62,
-                            width: innerWidth,
-                            color: Colors.grey[300]
-                        )
-                    ),
+                        child: Container(height: 62, width: innerWidth, color: Colors.grey[300])),
                   ),
                   // ************ Show prices and topup part ******** //
                   Padding(
@@ -486,26 +464,14 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                     child: Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
-                        child: Container(
-                            padding: const EdgeInsets.only(top: 14),
-                            height: 50,
-                            width: innerWidth,
-                            color: Colors.grey[300]
-                        )
-                    ),
+                        child: Container(padding: const EdgeInsets.only(top: 14), height: 50, width: innerWidth, color: Colors.grey[300])),
                   ),
 
                   // ********* Text Input ************ //
                   Shimmer.fromColors(
                       baseColor: Colors.grey[350]!,
                       highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 14),
-                          height: 70,
-                          width: innerWidth,
-                          color: Colors.grey[350]
-                      )
-                  )
+                      child: Container(padding: const EdgeInsets.only(top: 14), height: 70, width: innerWidth, color: Colors.grey[350]))
                 ],
               ),
             ),
@@ -514,8 +480,3 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
     });
   }
 }
-
-
-
-
-

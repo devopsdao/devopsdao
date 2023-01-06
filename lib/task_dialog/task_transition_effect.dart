@@ -1,36 +1,33 @@
 
 import 'package:animations/animations.dart';
 import 'package:beamer/beamer.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:webthree/credentials.dart';
 
 import '../blockchain/task_services.dart';
+import '../widgets/data_loading_dialog.dart';
 import '../widgets/task_item.dart';
 import 'main_as_page.dart';
 
 
 
-class ClickOnTask extends StatefulWidget {
+class ClickOnTask extends StatelessWidget {
   final String fromPage;
   final int index;
   const ClickOnTask({Key? key,
     required this.fromPage,
     required this.index
   }) : super(key: key);
-  @override
-  _ClickOnTaskState createState() => _ClickOnTaskState();
-}
 
-class _ClickOnTaskState extends State<ClickOnTask> {
 
 
   final ContainerTransitionType _transitionType2 = ContainerTransitionType.fadeThrough;
 
   @override
   Widget build(BuildContext context) {
-    final String fromPage = widget.fromPage;
-    final int index = widget.index;
+    // final String fromPage = fromPage;
+    // final int index = index;
 
     var tasksServices = context.watch<TasksServices>();
     return OpenContainer(
@@ -57,6 +54,49 @@ class _ClickOnTaskState extends State<ClickOnTask> {
           fromPage: fromPage,
           object: tasksServices.filterResults.values.toList()[index],
         );
+      },
+    );
+  }
+}
+
+class LoadTaskByLink extends StatelessWidget {
+  final String fromPage;
+  final EthereumAddress? taskAddress;
+  const LoadTaskByLink({Key? key,
+    required this.fromPage,
+    required this.taskAddress
+  }) : super(key: key);
+
+
+
+  final ContainerTransitionType _transitionType2 = ContainerTransitionType.fadeThrough;
+
+  @override
+  Widget build(BuildContext context) {
+    // final String fromPage = fromPage;
+    // final int index = index;
+
+    var tasksServices = context.watch<TasksServices>();
+    return OpenContainer(
+      transitionType: _transitionType2,
+      openBuilder: (BuildContext context, VoidCallback _) {
+        final String taskAddressString = taskAddress.toString();
+        RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
+        Beamer.of(context).updateRouteInformation(routeInfo);
+        return TaskInformationFuture(
+            fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true);
+      },
+      transitionDuration: const Duration(milliseconds: 400),
+      closedElevation: 0,
+      closedShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      openElevation: 0,
+      closedColor: Colors.white,
+      closedBuilder: (BuildContext context, VoidCallback openContainer) {
+        return const AppDataLoadingDialogWidget();
       },
     );
   }

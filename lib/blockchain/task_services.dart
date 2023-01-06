@@ -1025,7 +1025,7 @@ class TasksServices extends ChangeNotifier {
     await connectContracts();
     // thr.debounce(() {
     // fetchTasksByState("new");
-    fetchTasks();
+    // fetchTasks(); // to fix enable fetchTasks
     // });
     await myBalance();
     await monitorEvents();
@@ -1230,11 +1230,11 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Task> loadOneTask(taskAddress) async {
-    if (tasks.containsKey(taskAddress)) {
+    if (tasks.containsKey(taskAddress.toString())) {
       return tasks[taskAddress]!;
     } else {
       Task task = await getTask(taskAddress);
-      tasks[taskAddress] = task;
+      tasks[taskAddress.toString()] = task;
       refreshTask(task);
       return task;
     }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/interface.dart';
 import '../create_job/create_job_as_page.dart';
 import '../create_job/create_job_call_button.dart';
-import '../task_dialog/initial_click_on_task.dart';
+import '../task_dialog/task_transition_effect.dart';
 import '../task_dialog/main_as_page.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
