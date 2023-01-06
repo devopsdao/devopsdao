@@ -98,7 +98,7 @@ class _TaskInformationFutureState extends State<TaskInformationFuture> {
 
     EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Task>(
-        future: tasksServices.getTask(taskAddress), // a previously-obtained Future<String> or null
+        future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             task = snapshot.data!;
