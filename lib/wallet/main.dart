@@ -292,14 +292,14 @@ class _WalletPageTopState extends State<WalletPageTop> {
 }
 
 class WalletPagesMiddle extends StatefulWidget {
-  // final String buttonName;
+  // final String buttonFunction;
   final double borderRadius;
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
 
   const WalletPagesMiddle({
     Key? key,
-    // required this.buttonName,
+    // required this.buttonFunction,
     required this.borderRadius,
     required this.screenHeightSize,
     required this.screenHeightSizeNoKeyboard,
@@ -379,22 +379,23 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               const Spacer(),
               ChooseWalletButton(
                 active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
-                buttonName: 'metamask',
+                buttonFunction: 'metamask',
                 borderRadius: widget.borderRadius,
                 buttonWidth: innerWidth,
               ),
               const SizedBox(height: 12),
               ChooseWalletButton(
                 active: true,
-                buttonName: 'wallet_connect',
+                buttonFunction: 'wallet_connect',
                 borderRadius: widget.borderRadius,
                 buttonWidth: innerWidth,
               ),
               const Spacer(),
             ],
           ),
+
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            // if (interface.whichWalletButtonPressed == 'metamask')
+            if (interface.whichWalletButtonPressed == 'metamask')
             AnimatedCrossFade(
               duration: const Duration(milliseconds: 300),
               firstChild: Container(
@@ -456,8 +457,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                 ),
               ),
             const SizedBox(height: 20),
+            if (interface.whichWalletButtonPressed == 'metamask')
             const WalletConnectButton(
-              buttonName: 'metamask',
+              buttonFunction: 'metamask',
             ),
             const SizedBox(height: 30),
           ]),
@@ -583,7 +585,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                               ),
                                             ),
                                             const WalletConnectButton(
-                                              buttonName: 'wallet_connect',
+                                              buttonFunction: 'wallet_connect',
+                                              buttonName: 'Connect',
                                             ),
                                             const SizedBox(height: 22),
                                           ],
@@ -610,7 +613,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 ])),
                                             const Spacer(),
                                             const WalletConnectButton(
-                                              buttonName: 'wallet_connect',
+                                              buttonFunction: 'wallet_connect',
+                                              buttonName: 'Connect',
                                             ),
                                             const SizedBox(height: 22),
                                           ],
@@ -716,7 +720,8 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                             ),
                                           ),
                                           const WalletConnectButton(
-                                            buttonName: 'wallet_connect',
+                                            buttonFunction: 'wallet_connect',
+                                            buttonName: 'Refresh QR',
                                           ),
                                           // const Spacer(),
                                           const SizedBox(height: 22),
@@ -745,9 +750,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
 class ChooseWalletButton extends StatefulWidget {
   final double buttonWidth;
   final bool active;
-  final String buttonName;
+  final String buttonFunction;
   final double borderRadius;
-  const ChooseWalletButton({Key? key, required this.active, required this.buttonName, required this.borderRadius, required this.buttonWidth})
+  const ChooseWalletButton({Key? key, required this.active, required this.buttonFunction, required this.borderRadius, required this.buttonWidth})
       : super(key: key);
 
   @override
@@ -768,12 +773,12 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
     late String name;
-    if (widget.buttonName == 'metamask') {
+    if (widget.buttonFunction == 'metamask') {
       name = 'Metamask';
       assetName = 'assets/images/metamask-icon2.svg';
       buttonColor = Colors.teal.shade900;
       page = 1;
-    } else if (widget.buttonName == 'wallet_connect') {
+    } else if (widget.buttonFunction == 'wallet_connect') {
       name = 'Wallet Connect';
       assetName = 'assets/images/wc_logo.svg';
       buttonColor = Colors.purple.shade900;
@@ -799,13 +804,13 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
       child: InkWell(
         onTap: () {
           if (widget.active) {
-            interface.whichWalletButtonPressed = widget.buttonName;
+            interface.whichWalletButtonPressed = widget.buttonFunction;
             // tasksServices.myNotifyListeners();
             // controller.jumpToPage(page);
             interface.controller.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-            if (widget.buttonName == 'metamask') {
+            if (widget.buttonFunction == 'metamask') {
               tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
-            } else if (widget.buttonName == 'wallet_connect') {
+            } else if (widget.buttonFunction == 'wallet_connect') {
               tasksServices.initComplete ? tasksServices.connectWalletWC(false) : null;
             }
           }
@@ -852,11 +857,14 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
 }
 
 class WalletConnectButton extends StatefulWidget {
+  final String buttonFunction;
   final String buttonName;
+
   // final double borderRadius;
   const WalletConnectButton({
     Key? key,
-    required this.buttonName,
+    required this.buttonFunction,
+    this.buttonName = '',
     // required this.borderRadius
   }) : super(key: key);
 
@@ -873,21 +881,21 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-    late String buttonText;
+    late String buttonText = 'name not set';
 
-    if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC && widget.buttonName == 'wallet_connect') {
+    if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC && widget.buttonFunction == 'wallet_connect') {
       buttonText = 'Disconnect';
-    } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC && widget.buttonName == 'wallet_connect') {
+    } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC && widget.buttonFunction == 'wallet_connect') {
       buttonText = 'Switch network';
-    } else if (!tasksServices.walletConnectedWC && widget.buttonName == 'wallet_connect' && (interface.pageWalletViewNumber == 2)) {
+    } else if (!tasksServices.walletConnectedWC && widget.buttonFunction == 'wallet_connect' && (widget.buttonName == 'Refresh QR')) {
       buttonText = 'Refresh QR';
-    } else if (!tasksServices.walletConnectedWC && widget.buttonName == 'wallet_connect' && (interface.pageWalletViewNumber == 1)) {
+    } else if (!tasksServices.walletConnectedWC && widget.buttonFunction == 'wallet_connect' && (widget.buttonName == 'Connect')) {
       buttonText = 'Connect';
-    } else if (tasksServices.walletConnectedMM && tasksServices.validChainIDMM && widget.buttonName == 'metamask') {
+    } else if (tasksServices.walletConnectedMM && tasksServices.validChainIDMM && widget.buttonFunction == 'metamask') {
       buttonText = 'Disconnect';
-    } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM && widget.buttonName == 'metamask') {
+    } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM && widget.buttonFunction == 'metamask') {
       buttonText = 'Switch network';
-    } else if (!tasksServices.walletConnectedMM && widget.buttonName == 'metamask') {
+    } else if (!tasksServices.walletConnectedMM && widget.buttonFunction == 'metamask') {
       buttonText = 'Connect';
     }
 
@@ -901,7 +909,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           // interface.controller.animateToPage(page,
           //     duration: const Duration(milliseconds: 300),
           //     curve: Curves.easeIn);
-          if (widget.buttonName == 'metamask') {
+          if (widget.buttonFunction == 'metamask') {
             if (!tasksServices.walletConnectedMM) {
               tasksServices.initComplete ? await tasksServices.connectWalletMM() : null;
             } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM) {
@@ -910,7 +918,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
               tasksServices.initComplete ? await tasksServices.disconnectMM() : null;
               buttonText = 'Connect';
             }
-          } else if (widget.buttonName == 'wallet_connect') {
+          } else if (widget.buttonFunction == 'wallet_connect') {
             if (!tasksServices.walletConnectedWC) {
               tasksServices.initComplete ? await tasksServices.connectWalletWC(false) : null;
             } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC) {

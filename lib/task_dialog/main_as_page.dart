@@ -249,9 +249,13 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
             final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
             final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
             final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+            final statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
             return SingleChildScrollView(
               child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                  height: statusBarHeight,
+                ),
                 Container(
                   padding: const EdgeInsets.all(20),
                   width: maxDialogWidth,
@@ -384,7 +388,7 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
                   ),
                 ),
                 SizedBox(
-                  height: screenHeightSize,
+                  height: screenHeightSize - statusBarHeight,
                   // width: constraints.maxWidth * .8,
                   // height: 550,
                   width: maxDialogWidth,

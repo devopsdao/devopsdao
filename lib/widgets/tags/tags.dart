@@ -45,7 +45,10 @@ class _TagsPageState extends State<TagsPage> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double maxHeight = constraints.maxHeight - (myPadding * 2);
+        final double myHeight = constraints.maxHeight - (myPadding * 2);
+        final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
+        final double maxHeight = myHeight - statusBarHeight - 100;
+
         return Align(
           alignment: Alignment.center,
           child: Container(
@@ -54,6 +57,9 @@ class _TagsPageState extends State<TagsPage> {
             width: maxDialogWidth,
             child: Column(
               children: [
+                Container(
+                  height: statusBarHeight,
+                ),
                 Row(
                   children: [
                     const SizedBox(
@@ -166,7 +172,7 @@ class _TagsPageState extends State<TagsPage> {
                   ),
                 ),
                 SizedBox(
-                  height: maxHeight - 100,
+                  height: maxHeight,
                   child: FilterListWidget<SimpleTags>(
                     hideSelectedTextCount: true,
                     themeData: FilterListThemeData(
