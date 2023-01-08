@@ -90,7 +90,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     text: task.description,
                     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
                   );
-                  final textHeight = TextPainter(text: text, maxLines: 3, textDirection: ui.TextDirection.ltr);
+                  final textHeight = TextPainter(text: text, maxLines: 5, textDirection: ui.TextDirection.ltr);
                   final oneLineHeight = TextPainter(text: text, maxLines: 1, textDirection: ui.TextDirection.ltr);
                   textHeight.layout(maxWidth: constraints.maxWidth);
                   oneLineHeight.layout(maxWidth: constraints.maxWidth);
@@ -100,7 +100,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   // textHeight.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
                   // print(tp.didExceedMaxLines);
                   return LimitedBox(
-                    maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * 3) + 12,
+                    maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * 5) + 12,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +114,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 child: Container(
                                     padding: const EdgeInsets.all(6.0),
                                     // padding: const EdgeInsets.all(3),
-                                    child: RichText(maxLines: 3, text: text)),
+                                    child: RichText(maxLines: 5, text: text)),
                               ),
 
                               Container(
