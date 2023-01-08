@@ -76,6 +76,8 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
     final double maxDialogWidth = interface.maxDialogWidth;
     final screenHeightSize = widget.screenHeightSize;
 
+    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -158,7 +160,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
       ),
       SizedBox(
         // *** SingleScrollChild enable here by using screenHeightSize:
-        height: screenHeightSize,
+        height: screenHeightSize - statusBarHeight,
         // height: 490,
         width: maxDialogWidth,
 
