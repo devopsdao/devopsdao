@@ -99,7 +99,7 @@ class _PaymentState extends State<Payment> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
-                    flex: 8,
+                    flex: 7,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -210,7 +210,7 @@ class _PaymentState extends State<Payment> {
                     ),
                   ),
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
