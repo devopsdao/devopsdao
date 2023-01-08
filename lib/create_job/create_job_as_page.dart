@@ -331,7 +331,8 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                               color: textColor,
                               lineHeight: 1,
                             ),
-                            maxLines: 3,
+                            minLines: 1,
+                            maxLines: 30,
                             keyboardType: TextInputType.multiline,
                             onChanged:  (text) {
 
