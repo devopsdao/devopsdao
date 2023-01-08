@@ -227,6 +227,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: maxHeight,
+              minHeight: maxHeight
             ),
             child: Column(
               children: [
@@ -332,7 +333,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                               lineHeight: 1,
                             ),
                             minLines: 1,
-                            maxLines: 30,
+                            maxLines: 10,
                             keyboardType: TextInputType.multiline,
                             onChanged:  (text) {
 
