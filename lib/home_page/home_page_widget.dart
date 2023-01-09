@@ -159,9 +159,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         actions: [
           Center(
             child: Container(
-              width: 150,
+              // width: 150,
               height: 30,
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
 
 
               decoration: BoxDecoration(
@@ -180,10 +180,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   );
                 },
-                child: tasksServices.walletConnected ? const Text(
-                  'Wallet connected',
+                child: tasksServices.walletConnected ? Text(
+                  '${tasksServices.publicAddress.toString().substring(0, 5)}'
+                  '...'
+                  '${tasksServices.publicAddress.toString()
+                      .substring(tasksServices.publicAddress.toString().length - 5)}'
+                  ,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ) : const Text(
                   'Connect wallet',
                   textAlign: TextAlign.center,

@@ -364,6 +364,7 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
                           interface.dialogPageNum = interface.dialogCurrentState['pages']['main']; // reset page to *main*
                           interface.selectedUser = {}; // reset
                           Navigator.pop(context);
+                          interface.emptyTaskMessage();
                           RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');
                           Beamer.of(context).updateRouteInformation(routeInfo);
                         },
@@ -400,7 +401,7 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
                           fromPage: widget.fromPage,
                           topConstraints: constraints,
                           screenHeightSize: screenHeightSize,
-                          screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
+                          screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
                         )
                       : ShimmeredTaskPages(
                           borderRadius: borderRadius,

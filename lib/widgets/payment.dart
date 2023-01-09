@@ -59,6 +59,9 @@ class _PaymentState extends State<Payment> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
+    //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
+    messageControllerForTopup!.text = interface.taskTopupMessage;
+
     late double borderRadius = widget.borderRadius;
     late double innerWidth = widget.innerWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
@@ -306,7 +309,7 @@ class _PaymentState extends State<Payment> {
                 obscureText: false,
                 onTapOutside: (test) {
                   FocusScope.of(context).unfocus();
-                  interface.taskMessage =
+                  interface.taskTopupMessage =
                       messageControllerForTopup!.text;
                 },
 

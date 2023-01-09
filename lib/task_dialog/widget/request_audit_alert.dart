@@ -181,7 +181,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                     child: InkWell(
                       onTap: () {
                         Navigator.pop(context);
-
+                        interface.emptyTaskMessage();
                       },
                       child: Container(
                         margin: const EdgeInsets.all(0.0),
@@ -216,6 +216,8 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.pop(interface.mainDialogContext);
+                        interface.emptyTaskMessage();
+
                         setState(() {
                           task.justLoaded = false;
                         });

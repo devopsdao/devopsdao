@@ -171,6 +171,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.pop(interface.mainDialogContext);
+                        interface.emptyTaskMessage();
                         setState(() {
                           task.justLoaded = false;
                         });
@@ -178,6 +179,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                             task.taskAddress, 'customer', task.nanoId,
                             message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
 
+                        interface.emptyTaskMessage();
                         showDialog(
                             context: context,
                             builder: (context) => WalletAction(
@@ -220,12 +222,14 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.pop(interface.mainDialogContext);
+                        interface.emptyTaskMessage();
                         setState(() {
                           task.justLoaded = false;
                         });
                         tasksServices.taskAuditDecision(
                             task.taskAddress, 'performer', task.nanoId,
                             message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                        interface.emptyTaskMessage();
                         showDialog(
                             context: context,
                             builder: (context) => WalletAction(

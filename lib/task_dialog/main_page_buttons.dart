@@ -63,6 +63,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 tasksServices.taskParticipate(task.taskAddress, task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
+                interface.emptyTaskMessage();
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/tasks');
                 Beamer.of(context).updateRouteInformation(routeInfo);
@@ -90,6 +91,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                     task.taskAddress, task.participant, 'progress', task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
+                interface.emptyTaskMessage();
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
@@ -116,6 +118,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                     task.taskAddress, task.participant, 'review', task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
+                interface.emptyTaskMessage();
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
@@ -142,6 +145,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 });
                 tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
                 Navigator.pop(context);
+                interface.emptyTaskMessage();
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
@@ -211,6 +215,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 // context.beamToNamed('/customer');
                 Navigator.pop(context);
+                interface.emptyTaskMessage();
                 RouteInformation routeInfo =
                 const RouteInformation(location: '/customer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
@@ -237,6 +242,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                   // tasksServices.rateTask(
                   //     task.taskAddress, ratingScore, task.nanoId);
                   Navigator.pop(context);
+                  interface.emptyTaskMessage();
                   showDialog(
                       context: context,
                       builder: (context) => WalletAction(
@@ -265,6 +271,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                     task.taskAddress, task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
+                interface.emptyTaskMessage();
                 showDialog(
                     context: context,
                     builder: (context) => WalletAction(
@@ -302,6 +309,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
           //           task.taskAddress, 'performer', task.nanoId,
           //           message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
           //       Navigator.pop(context);
+          // interface.emptyTaskMessage();
           //       showDialog(
           //           context: context,
           //           builder: (context) => WalletAction(

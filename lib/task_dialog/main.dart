@@ -612,7 +612,8 @@ class _DialogPagesState extends State<DialogPages> {
                   ),
                   child: Column(
                     children: [
-                      Payment(purpose: 'topup', innerWidth: innerWidth, borderRadius: widget.borderRadius),
+                      Payment(
+                          purpose: 'topup', innerWidth: innerWidth, borderRadius: widget.borderRadius),
                       const Spacer(),
                       Container(
                         padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
@@ -633,6 +634,7 @@ class _DialogPagesState extends State<DialogPages> {
                                   // message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                                 );
                                 Navigator.pop(context);
+                                interface.emptyTaskMessage();
 
                                 showDialog(
                                     context: context,

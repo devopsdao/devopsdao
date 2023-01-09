@@ -62,6 +62,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
     final Task task = widget.task;
     final String fromPage = widget.fromPage;
 
+    //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
+    messageForStateController!.text = interface.taskMessage;
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: maxInternalWidth,

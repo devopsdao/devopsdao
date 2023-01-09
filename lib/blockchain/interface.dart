@@ -51,7 +51,12 @@ class InterfaceServices extends ChangeNotifier {
   late Map<String, String> selectedUser = {};
 
   // Input text on main.dart
-  late String taskMessage;
+  late String taskMessage = '';
+  late String taskTopupMessage = '';
+  Future emptyTaskMessage() async {
+    taskMessage = '';
+    taskTopupMessage = '';
+  }
 
   // Hint message for task_dialog
   // late String messageHint;

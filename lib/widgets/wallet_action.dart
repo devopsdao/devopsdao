@@ -414,7 +414,8 @@ class _WalletAction extends State<WalletAction> {
                               // ),
                             ],
                           ),
-                        if (tasksServices.interchainSelected.isNotEmpty)
+                        // if (tasksServices.interchainSelected.isNotEmpty)
+                        if(false)
                           Container(
                             padding: const EdgeInsets.only(top: 50.0),
                             child: Column(

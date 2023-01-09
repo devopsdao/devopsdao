@@ -195,6 +195,7 @@ class _SelectedPageState extends State<SelectedPage> {
                               EthereumAddress.fromHex(interface.selectedUser['address']!), status, task.nanoId);
                           interface.selectedUser = {}; // reset
                           Navigator.pop(context);
+                          interface.emptyTaskMessage();
                           RouteInformation routeInfo =
                             const RouteInformation(location: '/customer');
                           Beamer.of(context).updateRouteInformation(routeInfo);

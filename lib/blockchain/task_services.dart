@@ -415,6 +415,7 @@ class TasksServices extends ChangeNotifier {
   bool validChainID = false;
   bool validChainIDWC = false;
   bool validChainIDMM = false;
+  bool closeWalletDialog = false;
 
   Future<void> connectWalletWC(bool refresh) async {
     print('async');
@@ -432,6 +433,7 @@ class TasksServices extends ChangeNotifier {
         walletConnectState = TransactionState.connected;
         walletConnected = true;
         walletConnectedWC = true;
+        // closeWalletDialog = true;
         () async {
           if (hardhatDebug == false) {
             credentials = await wallectConnectTransaction?.getCredentials();
@@ -541,6 +543,7 @@ class TasksServices extends ChangeNotifier {
         publicAddress = publicAddressMM;
         walletConnected = true;
         walletConnectedMM = true;
+        closeWalletDialog = true;
         late final chainIdHex;
         try {
           chainIdHex = await eth.rawRequest('eth_chainId');
@@ -1399,6 +1402,7 @@ class TasksServices extends ChangeNotifier {
     int batchSize = 10;
     int totalBatches = (totalTaskListReversed.length / batchSize).floor();
     int batchItemCount = 0;
+    tasksLoaded = 0;
 
     for (var i = 0; i < totalTaskListReversed.length; i++) {
       try {
@@ -1600,6 +1604,7 @@ class TasksServices extends ChangeNotifier {
     int batchSize = 10;
     int totalBatches = (taskList.length / batchSize).floor();
     int batchItemCount = 0;
+    tasksLoaded = 0;
 
     for (var i = 0; i < taskList.length; i++) {
       try {
@@ -1732,11 +1737,12 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> addTokens(EthereumAddress addressToSend, double price, String nanoId) async {
+  Future<void> addTokens(EthereumAddress addressToSend, double price, String nanoId, {String? message}) async {
     print(price);
     transactionStatuses[nanoId] = {
       'addTokens': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'}
     };
+    message ??= 'Added $price $taskTokenSymbol to contract';
     late int priceInGwei = (price * 1000000000).toInt();
     final BigInt priceInBigInt = BigInt.from(price * 1e6);
     late String txn;
@@ -1769,6 +1775,8 @@ class TasksServices extends ChangeNotifier {
       final transaction = Transaction(
         from: senderAddress,
       );
+      /// todo: add messages to transfer function in contract
+      // txn = await ierc20.transfer(addressToSend, priceInBigInt, message, credentials: creds, transaction: transaction);
       txn = await ierc20.transfer(addressToSend, priceInBigInt, credentials: creds, transaction: transaction);
     }
     isLoading = false;

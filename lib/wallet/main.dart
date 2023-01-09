@@ -93,6 +93,11 @@ class _WalletPageTopState extends State<WalletPageTop> {
       tasksServices.walletConnectUri = '';
     }
 
+    if (tasksServices.closeWalletDialog) {
+      Navigator.pop(context);
+      tasksServices.closeWalletDialog = false;
+    }
+
     // int page = interface.pageWalletViewNumber;
 
     return LayoutBuilder(builder: (context, constraints) {
