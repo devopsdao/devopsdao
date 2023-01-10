@@ -156,7 +156,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -433,7 +433,7 @@ class TasksServices extends ChangeNotifier {
         walletConnectState = TransactionState.connected;
         walletConnected = true;
         walletConnectedWC = true;
-        // closeWalletDialog = true;
+        closeWalletDialog = true;
         () async {
           if (hardhatDebug == false) {
             credentials = await wallectConnectTransaction?.getCredentials();
@@ -996,21 +996,25 @@ class TasksServices extends ChangeNotifier {
     var addresses = jsonDecode(addressesFile);
     _contractAddress = EthereumAddress.fromHex(addresses['contracts'][chainId.toString()]["Diamond"]);
 
-    String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
-    var addressesAxelar = jsonDecode(addressesFileAxelar);
-    _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar['contracts'][chainIdAxelar.toString()]["Diamond"]);
+    if(hardhatLive == false) {
+      String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
+      var addressesAxelar = jsonDecode(addressesFileAxelar);
+      _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar['contracts'][chainIdAxelar.toString()]["Diamond"]);
 
-    String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
-    var addressesHyperlane = jsonDecode(addressesFileHyperlane);
-    _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane['contracts'][chainIdHyperlane.toString()]["Diamond"]);
+      String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
+      var addressesHyperlane = jsonDecode(addressesFileHyperlane);
+      _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane['contracts'][chainIdHyperlane.toString()]["Diamond"]);
 
-    String addressesFileLayerzero = await rootBundle.loadString('lib/blockchain/abi/layerzero-addresses.json');
-    var addressesLayerzero = jsonDecode(addressesFileLayerzero);
-    _contractAddressLayerzero = EthereumAddress.fromHex(addressesLayerzero['contracts'][chainIdLayerzero.toString()]["Diamond"]);
+      String addressesFileLayerzero = await rootBundle.loadString('lib/blockchain/abi/layerzero-addresses.json');
+      var addressesLayerzero = jsonDecode(addressesFileLayerzero);
+      _contractAddressLayerzero = EthereumAddress.fromHex(addressesLayerzero['contracts'][chainIdLayerzero.toString()]["Diamond"]);
 
-    String addressesFileWormhole = await rootBundle.loadString('lib/blockchain/abi/wormhole-addresses.json');
-    var addressesWormhole = jsonDecode(addressesFileWormhole);
-    _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
+      String addressesFileWormhole = await rootBundle.loadString('lib/blockchain/abi/wormhole-addresses.json');
+      var addressesWormhole = jsonDecode(addressesFileWormhole);
+      _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
+    }
+
+
 
     if (hardhatDebug == true || hardhatLive == true) {
       Random random = Random();
@@ -1685,16 +1689,16 @@ class TasksServices extends ChangeNotifier {
           from: senderAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'axelar') {
+        if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'axelar') {
           txn = await axelarFacet.createTaskContractAxelar(senderAddress, nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
               credentials: credentials, transaction: transaction);
-        } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'hyperlane') {
+        } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'hyperlane') {
           txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
               credentials: credentials, transaction: transaction);
-        } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'layerzero') {
+        } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'layerzero') {
           txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
               credentials: credentials, transaction: transaction);
-        } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'wormhole') {
+        } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'wormhole') {
           txn = await wormholeFacet.createTaskContractWormhole(senderAddress, nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
               credentials: credentials, transaction: transaction);
         } else {
