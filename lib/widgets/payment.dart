@@ -125,9 +125,9 @@ class _PaymentState extends State<Payment> {
                             obscureText: false,
 
                             decoration: InputDecoration(
-                              labelText: 'Your value:',
+                              labelText: 'Task value:',
                               labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
-                              hintText: '[Please enter the value]',
+                              hintText: '[Please enter Task value]',
                               hintStyle: TextStyle(fontSize: 14.0, color: setBlackAndWhite),
                               // enabledBorder: const UnderlineInputBorder(
                               //   borderSide: BorderSide(

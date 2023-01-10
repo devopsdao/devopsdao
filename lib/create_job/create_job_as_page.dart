@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
@@ -188,6 +189,8 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
   TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
   TextEditingController? valueController;
+  TextEditingController? githubLinkController;
+
 
   @override
   void initState() {
@@ -195,6 +198,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
     descriptionController = TextEditingController();
     titleFieldController = TextEditingController();
     valueController = TextEditingController();
+    githubLinkController = TextEditingController();
   }
 
   @override
@@ -203,6 +207,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
     descriptionController!.dispose();
     titleFieldController!.dispose();
     valueController!.dispose();
+    githubLinkController!.dispose();
     super.dispose();
   }
 
@@ -364,31 +369,55 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                           ),
                           child:  LayoutBuilder(
                               builder: (context, constraints) {
-                                final double width = constraints.maxWidth - 60;
+                                final double width = constraints.maxWidth - 66;
                               return Row(
                                 children: <Widget>[
                                   Consumer<InterfaceServices>(
                                       builder: (context, model, child) {
-                                        return Container(
-                                          width: width,
-                                          child: Wrap(
-                                              alignment: WrapAlignment.start,
-                                              direction: Axis.horizontal,
-                                              children: model.createTagsList.map((e) {
-                                                return WrappedChip(
-                                                    key: ValueKey(e),
-                                                    theme: 'white',
-                                                    nft: e.nft ?? false,
-                                                    name: e.tag!,
-                                                    control: true,
-                                                    page: 'create'
-                                                );
-                                              }).toList()),
-                                        );
+                                        if (model.createTagsList.isNotEmpty) {
+                                          return SizedBox(
+                                            width: width,
+                                            child: Wrap(
+                                                alignment: WrapAlignment.start,
+                                                direction: Axis.horizontal,
+                                                children: model.createTagsList.map((e) {
+                                                  return WrappedChip(
+                                                      key: ValueKey(e),
+                                                      theme: 'white',
+                                                      nft: e.nft ?? false,
+                                                      name: e.tag!,
+                                                      control: true,
+                                                      page: 'create'
+                                                  );
+                                                }).toList()),
+                                          );
+                                        } else {
+                                          return Row(
+                                            children: <Widget>[
+                                              // Container(
+                                              //   padding: const EdgeInsets.all(2.0),
+                                              //   child: const Icon(Icons.new_releases,
+                                              //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                              // ),
+                                              RichText(
+                                                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                                    TextSpan(
+                                                        text: 'Add relevant tags and NFT tags',
+                                                        style: TextStyle(
+                                                          height: 1,
+                                                        )),
+                                                  ])),
+                                            ],
+                                          );
+                                        }
+
                                       }
                                   ),
                                   const Spacer(),
-                                  TagCallButton(page: 'create',),
+                                  const Padding(
+                                    padding: EdgeInsets.all(6.0),
+                                    child: TagCallButton(page: 'create',),
+                                  ),
                                 ],
                               );
                             }
@@ -397,6 +426,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                       )
                   ),
                 ),
+
                 const SizedBox(height: 14),
                 ConstrainedBox(
                   constraints: BoxConstraints(
@@ -405,6 +435,98 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                   child: Payment(
                       purpose: 'create', innerWidth: innerWidth,
                       borderRadius: borderRadius
+                  ),
+                ),
+                Container(
+                  padding:  const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(borderRadius),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: maxInternalWidth,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: innerWidth,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(borderRadius),
+                          ),
+                          child:  LayoutBuilder(
+                              builder: (context, constraints) {
+                                final double width = constraints.maxWidth - 66;
+                                return Column(
+                                  children: <Widget>[
+
+                                    TextFormField(
+                                      controller: githubLinkController,
+                                      autofocus: true,
+                                      obscureText: false,
+                                      onTapOutside: (test) {
+                                        FocusScope.of(context).unfocus();
+                                      },
+
+                                      decoration: InputDecoration(
+                                        labelText: 'Enter GitHub link here:',
+                                        labelStyle:
+                                        const TextStyle(fontSize: 17.0, color: textColor),
+                                        // hintText: '[Job description...]',
+                                        hintStyle:
+                                        const TextStyle(fontSize: 14.0, color: textColor),
+                                        focusedBorder: const UnderlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        enabledBorder: const UnderlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        suffixIcon: IconButton(
+                                          onPressed: () async {
+                                            final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                            setState(() {
+                                              githubLinkController!.text = '${clipboardData?.text}';
+                                            });
+                                          },
+                                          icon: const Icon(Icons.content_paste_outlined),
+                                          padding: const EdgeInsets.only(right: 12.0),
+                                          highlightColor: Colors.grey,
+                                          hoverColor: Colors.transparent,
+                                          color: Colors.blueAccent,
+                                          splashColor: Colors.black,
+                                        ),
+                                      ),
+                                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                                        fontFamily: 'Poppins',
+                                        color: textColor,
+                                        lineHeight: 1,
+                                      ),
+                                      minLines: 1,
+                                      maxLines: 1,
+                                      keyboardType: TextInputType.multiline,
+                                      onChanged:  (text) {
+
+                                        debounceNotifyListener.debounce(() {
+                                          tasksServices.myNotifyListeners();
+                                        });
+                                      },
+                                    ),
+                                    
+                                    if (githubLinkController!.text.isNotEmpty)
+                                      const AnimatedSize(
+                                        duration: Duration(seconds: 1),
+                                        curve: Curves.fastOutSlowIn,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text('This repository URL will be used for automatic Task acceptance based on accepted merge request.'),
+                                        )
+                                      ),
+
+                                  ],
+                                );
+                              }
+                          ),
+                        ),
+                      )
                   ),
                 ),
                 const Spacer(),
