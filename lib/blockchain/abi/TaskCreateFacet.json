@@ -27,19 +27,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "taskAddress",
-        "type": "address"
-      }
-    ],
-    "name": "addTaskToBlacklist",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address payable",
         "name": "_sender",
         "type": "address"
@@ -96,89 +83,6 @@
       }
     ],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTaskContracts",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_taskState",
-        "type": "string"
-      }
-    ],
-    "name": "getTaskContractsByState",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "contractOwner",
-        "type": "address"
-      }
-    ],
-    "name": "getTaskContractsCustomer",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "participant",
-        "type": "address"
-      }
-    ],
-    "name": "getTaskContractsPerformer",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "taskAddress",
-        "type": "address"
-      }
-    ],
-    "name": "removeTaskFromBlacklist",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

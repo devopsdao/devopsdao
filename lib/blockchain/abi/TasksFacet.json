@@ -1,59 +1,5 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "nanoId",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "taskAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "taskOwner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "description",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "JobContractCreated",
-    "type": "event"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -94,39 +40,51 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "address payable",
         "name": "_sender",
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "_nanoId",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_taskType",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_title",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_description",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "nanoId",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "taskType",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "symbols",
+            "type": "string[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "amounts",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct TaskData",
+        "name": "taskData",
+        "type": "tuple"
       }
     ],
     "name": "createTaskContract",
@@ -138,19 +96,6 @@
       }
     ],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "gateway",
-    "outputs": [
-      {
-        "internalType": "contract IAxelarGateway",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

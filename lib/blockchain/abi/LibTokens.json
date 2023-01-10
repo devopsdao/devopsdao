@@ -121,12 +121,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account_",
+        "name": "_owner",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "id_",
+        "name": "_id",
         "type": "uint256"
       }
     ],
@@ -145,12 +145,12 @@
     "inputs": [
       {
         "internalType": "address[]",
-        "name": "accounts_",
+        "name": "_owners",
         "type": "address[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "ids_",
+        "name": "_ids",
         "type": "uint256[]"
       }
     ],
@@ -169,12 +169,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account_",
+        "name": "_owner",
         "type": "address"
       },
       {
         "internalType": "string",
-        "name": "name_",
+        "name": "_name",
         "type": "string"
       }
     ],
@@ -192,30 +192,25 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_uri",
-        "type": "string"
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
       },
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "_isNF",
-        "type": "bool"
-      }
-    ],
-    "name": "create",
-    "outputs": [
       {
         "internalType": "uint256",
-        "name": "_type",
+        "name": "_id",
         "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
+    "name": "balanceOfNfType",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -240,13 +235,51 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNonFungibleBaseType",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getNonFungibleIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
-        "name": "account_",
+        "name": "_owner",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "operator_",
+        "name": "_operator",
         "type": "address"
       }
     ],
@@ -267,66 +300,140 @@
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
+      }
+    ],
+    "name": "isFungible",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "isNonFungible",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "isNonFungibleBaseType",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "isNonFungibleItem",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_operator",
+        "type": "address"
       },
       {
-        "internalType": "address[]",
-        "name": "_to",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
       },
       {
         "internalType": "uint256[]",
-        "name": "_quantities",
+        "name": "_ids",
         "type": "uint256[]"
-      }
-    ],
-    "name": "mintFungible",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_type",
-        "type": "uint256"
       },
       {
-        "internalType": "address[]",
-        "name": "_to",
-        "type": "address[]"
+        "internalType": "uint256[]",
+        "name": "_values",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
-    "name": "mintNonFungible",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "onERC1155BatchReceived",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "operator",
+        "name": "_operator",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "from",
+        "name": "_from",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "_id",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "value",
+        "name": "_value",
         "type": "uint256"
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "_data",
         "type": "bytes"
       }
     ],
@@ -338,91 +445,45 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to_",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "ids_",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "amounts_",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data_",
-        "type": "bytes"
-      }
-    ],
-    "name": "safeBatchTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "from_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to_",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
-        "name": "id_",
+        "name": "_id",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data_",
-        "type": "bytes"
       }
     ],
-    "name": "safeTransferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "ownerOf",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "operator_",
-        "type": "address"
-      },
+        "internalType": "bytes4",
+        "name": "_interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
       {
         "internalType": "bool",
-        "name": "approved_",
+        "name": "",
         "type": "bool"
       }
     ],
-    "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -448,7 +509,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "tokenID_",
+        "name": "_id",
         "type": "uint256"
       }
     ],

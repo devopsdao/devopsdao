@@ -38,67 +38,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address payable",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "nanoId",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "taskType",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "title",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "description",
-            "type": "string"
-          },
-          {
-            "internalType": "string[]",
-            "name": "tags",
-            "type": "string[]"
-          },
-          {
-            "internalType": "string[]",
-            "name": "symbols",
-            "type": "string[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "amounts",
-            "type": "uint256[]"
-          }
-        ],
-        "internalType": "struct TaskData",
-        "name": "taskData",
-        "type": "tuple"
-      }
-    ],
-    "name": "createTaskContract",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "getTaskContracts",
     "outputs": [

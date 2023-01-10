@@ -94,15 +94,21 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
+        "internalType": "string[]",
+        "name": "_tags",
+        "type": "string[]"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "string[]",
+        "name": "_symbol",
+        "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
         "name": "_amount",
-        "type": "uint256"
+        "type": "uint256[]"
       }
     ],
     "name": "TaskContractCreating",
@@ -288,34 +294,46 @@
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "_nanoId",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_taskType",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_title",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_description",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "nanoId",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "taskType",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "symbols",
+            "type": "string[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "amounts",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct TaskData",
+        "name": "_taskData",
+        "type": "tuple"
       }
     ],
     "name": "createTaskContractWormhole",

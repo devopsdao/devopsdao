@@ -27,7 +27,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "neaxelarner",
+        "name": "newOwner",
         "type": "address"
       }
     ],
