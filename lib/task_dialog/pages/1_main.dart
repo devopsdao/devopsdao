@@ -67,7 +67,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
     final double innerWidth = widget.innerWidth;
     final Task task = widget.task;
     final String fromPage = widget.fromPage;
-    
+
 
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
@@ -904,6 +904,15 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         ),
                                         interface.statusText
                                       ])),
+                                ),
+
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text(
+                                      '* Please wait until your pull request is merged in to '
+                                      'the repository or till customer manually accepts Task completion:',
+                                  style: TextStyle(fontSize: 10),),
                                 ),
 
                                 // Container(
