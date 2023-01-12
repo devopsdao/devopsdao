@@ -205,7 +205,7 @@ Map<String, dynamic> dialogStates = {
   },
   'performer-review' : {
     'name' : 'performer-review',
-    'mainButtonName': '',
+    'mainButtonName': 'Check merge',
     'secondButtonName' : 'Request audit',
     'labelMessage': '',
     'secondLabelMessage': 'Why are you requesting for audit?',

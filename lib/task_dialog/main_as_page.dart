@@ -367,6 +367,11 @@ class _TaskInformationPageState extends State<TaskInformationPage> {
                           interface.emptyTaskMessage();
                           RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');
                           Beamer.of(context).updateRouteInformation(routeInfo);
+
+                          interface.statusText = const TextSpan(
+                              text: 'Not created',
+                              style: TextStyle( fontWeight: FontWeight.bold)
+                          );
                         },
                         borderRadius: BorderRadius.circular(16),
                         child: Container(

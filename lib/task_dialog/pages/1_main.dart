@@ -1,5 +1,8 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
@@ -36,6 +39,7 @@ class MainTaskPage extends StatefulWidget {
 
 class _MainTaskPageState extends State<MainTaskPage> {
 
+  TextEditingController? pullRequestController;
   TextEditingController? messageForStateController;
 
 
@@ -43,11 +47,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
   @override
   void initState() {
     super.initState();
+    pullRequestController = TextEditingController();
     messageForStateController = TextEditingController();
   }
 
   @override
   void dispose() {
+    pullRequestController!.dispose();
     messageForStateController!.dispose();
     super.dispose();
   }
@@ -61,6 +67,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
     final double innerWidth = widget.innerWidth;
     final Task task = widget.task;
     final String fromPage = widget.fromPage;
+    
 
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
@@ -660,6 +667,323 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 ),
               ),
             ),
+
+
+          // ********* GitHub pull/request Input ************ //
+          if ( interface.dialogCurrentState['name'] == 'performer-progress' ||
+              interface.dialogCurrentState['name'] == 'performer-review' ||
+              tasksServices.hardhatDebug == true)
+            Container(
+              padding:  const EdgeInsets.only(top: 14.0),
+              child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      // maxWidth: maxInternalWidth,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: innerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child:  LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('Create a pull request with a following name: '),
+                                ),
+                                // Container(
+                                //   padding: const EdgeInsets.all(5.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: Column(
+                                //     children: [
+                                //       const Text(
+                                //         '#NNX-06 Fix glitches on chat page in Task dialog',
+                                //         style: TextStyle(fontWeight: FontWeight.bold),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+
+
+                                GestureDetector(
+                                  onTap: () async {
+                                    Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on chat page in Task dialog')).then((_) {
+                                      Flushbar(
+                                          icon: const Icon(
+                                            Icons.copy,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                          message: 'Pull request name copied to your clipboard!',
+                                          duration: const Duration(seconds: 2),
+                                          backgroundColor: Colors.blueAccent,
+                                          shouldIconPulse: false)
+                                          .show(context);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    alignment: Alignment.topLeft,
+                                    child: RichText(
+                                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const [
+                                          WidgetSpan(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.copy,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )
+                                          ),
+                                          TextSpan(
+                                            text: '#NNX-06 Fix glitches on chat page in Task dialog',
+                                            style: TextStyle( fontWeight: FontWeight.bold)
+                                          ),
+                                        ])),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('In customer repository: '),
+                                ),
+
+                                Builder(
+                                  builder: (context) {
+                                    final Uri toLaunch =
+                                    Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
+                                    return Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.topLeft,
+                                      child: GestureDetector(
+                                        onTap:  () async {
+                                          if (!await launchUrl(
+                                            toLaunch,
+                                            mode: LaunchMode.externalApplication,
+                                          )) {
+                                            throw 'Could not launch $toLaunch';
+                                          }
+                                        },
+                                        child: RichText(
+                                            text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                            children: [
+                                              const WidgetSpan(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(right: 5.0),
+                                                    child: Icon(
+                                                      Icons.link,
+                                                      size: 16,
+                                                      color: Colors.black26,
+                                                    ),
+                                                  )
+                                              ),
+
+                                              TextSpan(
+                                                  text: toLaunch.toString(),
+                                                  style: const TextStyle( fontWeight: FontWeight.bold)
+                                              ),
+                                            ])),
+                                      ),
+                                    );
+                                  }
+                                ),
+
+
+                                // TextFormField(
+                                //   controller: pullRequestController,
+                                //   autofocus: true,
+                                //   obscureText: false,
+                                //   onTapOutside: (test) {
+                                //     FocusScope.of(context).unfocus();
+                                //   },
+                                //
+                                //   decoration: InputDecoration(
+                                //     labelText: 'Create a pull request with a following name:',
+                                //     labelStyle:
+                                //     const TextStyle(fontSize: 17.0, color: Colors.black54),
+                                //     // hintText: '[Job description...]',
+                                //     hintStyle:
+                                //     const TextStyle(fontSize: 14.0, color: Colors.black54),
+                                //     focusedBorder: const UnderlineInputBorder(
+                                //       borderSide: BorderSide.none,
+                                //     ),
+                                //     enabledBorder: const UnderlineInputBorder(
+                                //       borderSide: BorderSide.none,
+                                //     ),
+                                //     suffixIcon: IconButton(
+                                //       onPressed: () async {
+                                //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                //         setState(() {
+                                //           pullRequestController!.text = '${clipboardData?.text}';
+                                //         });
+                                //       },
+                                //       icon: const Icon(Icons.content_paste_outlined),
+                                //       padding: const EdgeInsets.only(right: 12.0),
+                                //       highlightColor: Colors.grey,
+                                //       hoverColor: Colors.transparent,
+                                //       color: Colors.blueAccent,
+                                //       splashColor: Colors.black,
+                                //     ),
+                                //   ),
+                                //   style: FlutterFlowTheme.of(context).bodyText1.override(
+                                //     fontFamily: 'Poppins',
+                                //     color: Colors.black54,
+                                //     lineHeight: 1,
+                                //   ),
+                                //   minLines: 1,
+                                //   maxLines: 1,
+                                //   keyboardType: TextInputType.multiline,
+                                //   onChanged:  (text) {
+                                //
+                                //     // debounceNotifyListener.debounce(() {
+                                //     //   tasksServices.myNotifyListeners();
+                                //     // });
+                                //   },
+                                // ),
+
+                              ],
+                            );
+                          }
+                      ),
+                    ),
+                  )
+              ),
+            ),
+
+          // ********* GitHub pull/request Input ************ //
+          if ( interface.dialogCurrentState['name'] == 'performer-review' ||
+              tasksServices.hardhatDebug == true)
+            Container(
+              padding:  const EdgeInsets.only(top: 14.0),
+              child: Material(
+                  elevation: 10,
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      // maxWidth: maxInternalWidth,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: innerWidth,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child:  LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('Pull request status:'),
+                                ),
+
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  alignment: Alignment.topLeft,
+                                  child: RichText(
+                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children:  [
+                                        const WidgetSpan(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.api,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )
+                                        ),
+                                        interface.statusText
+                                      ])),
+                                ),
+
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                //           children: const [
+                                //             WidgetSpan(
+                                //                 child: Padding(
+                                //                   padding: EdgeInsets.only(right: 5.0),
+                                //                   child: Icon(
+                                //                     Icons.api,
+                                //                     size: 16,
+                                //                     color: Colors.black26,
+                                //                   ),
+                                //                 )
+                                //             ),
+                                //
+                                //             TextSpan(
+                                //                 text: 'Open',
+                                //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                //             ),
+                                //           ])),
+                                // ),
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                //           children: const [
+                                //             WidgetSpan(
+                                //                 child: Padding(
+                                //                   padding: EdgeInsets.only(right: 5.0),
+                                //                   child: Icon(
+                                //                     Icons.api,
+                                //                     size: 16,
+                                //                     color: Colors.black26,
+                                //                   ),
+                                //                 )
+                                //             ),
+                                //
+                                //             TextSpan(
+                                //                 text: 'Closed (merged)',
+                                //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                //             ),
+                                //           ])),
+                                // ),
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                //           children: const [
+                                //             WidgetSpan(
+                                //                 child: Padding(
+                                //                   padding: EdgeInsets.only(right: 5.0),
+                                //                   child: Icon(
+                                //                     Icons.api,
+                                //                     size: 16,
+                                //                     color: Colors.black26,
+                                //                   ),
+                                //                 )
+                                //             ),
+                                //
+                                //             TextSpan(
+                                //                 text: 'Closed (rejected)',
+                                //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                //             ),
+                                //           ])),
+                                // )
+                              ],
+                            );
+                          }
+                      ),
+                    ),
+                  )
+              ),
+            ),
+
           // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
           if ((task.contractValue != 0 || task.contractValueToken != 0) &&

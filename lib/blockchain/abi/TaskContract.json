@@ -2,55 +2,49 @@
   {
     "inputs": [
       {
-        "internalType": "address payable",
-        "name": "_sender",
-        "type": "address"
+        "internalType": "string",
+        "name": "_nanoId",
+        "type": "string"
       },
       {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "nanoId",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "taskType",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "title",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "description",
-            "type": "string"
-          },
-          {
-            "internalType": "string[]",
-            "name": "tags",
-            "type": "string[]"
-          },
-          {
-            "internalType": "string[]",
-            "name": "symbols",
-            "type": "string[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "amounts",
-            "type": "uint256[]"
-          }
-        ],
-        "internalType": "struct TaskData",
-        "name": "_taskData",
-        "type": "tuple"
+        "internalType": "string",
+        "name": "_taskType",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_title",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "address payable",
+        "name": "_contractOwner",
+        "type": "address"
       }
     ],
     "stateMutability": "payable",
     "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "message",
+        "type": "string"
+      }
+    ],
+    "name": "RevertReason",
+    "type": "error"
   },
   {
     "anonymous": false,
@@ -123,6 +117,19 @@
   },
   {
     "inputs": [],
+    "name": "gateway",
+    "outputs": [
+      {
+        "internalType": "contract IAxelarGateway",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getBalance",
     "outputs": [
       {
@@ -166,24 +173,9 @@
             "type": "string"
           },
           {
-            "internalType": "string[]",
-            "name": "tags",
-            "type": "string[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "tagsNFT",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "string[]",
-            "name": "symbols",
-            "type": "string[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "amounts",
-            "type": "uint256[]"
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
           },
           {
             "internalType": "string",
@@ -289,11 +281,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "_message",
         "type": "string"
@@ -311,11 +298,6 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
       {
         "internalType": "string",
         "name": "_favour",
@@ -345,11 +327,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "_message",
         "type": "string"
@@ -368,11 +345,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
-      {
         "internalType": "string",
         "name": "_message",
         "type": "string"
@@ -390,11 +362,6 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_sender",
-        "type": "address"
-      },
       {
         "internalType": "address payable",
         "name": "_participant",
@@ -443,5 +410,9 @@
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
   }
 ]
