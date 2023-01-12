@@ -996,7 +996,7 @@ class TasksServices extends ChangeNotifier {
     var addresses = jsonDecode(addressesFile);
     _contractAddress = EthereumAddress.fromHex(addresses['contracts'][chainId.toString()]["Diamond"]);
 
-    if(hardhatLive == false) {
+    if (hardhatLive == false) {
       String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
       var addressesAxelar = jsonDecode(addressesFileAxelar);
       _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar['contracts'][chainIdAxelar.toString()]["Diamond"]);
@@ -1013,8 +1013,6 @@ class TasksServices extends ChangeNotifier {
       var addressesWormhole = jsonDecode(addressesFileWormhole);
       _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
     }
-
-
 
     if (hardhatDebug == true || hardhatLive == true) {
       Random random = Random();
@@ -1425,7 +1423,7 @@ class TasksServices extends ChangeNotifier {
         print('could not get task ${totalTaskListReversed[i]} from blockchain');
       }
     }
-    if(batchItemCount > 0){
+    if (batchItemCount > 0) {
       downloadBatches.add([...downloaders]);
       monitorBatches.add([...downloaders]);
       downloaders.clear();
@@ -1693,53 +1691,52 @@ class TasksServices extends ChangeNotifier {
         from: senderAddress,
       );
 
+      List<String> symbols = [taskTokenSymbol];
+      List<int> amounts = [priceInBigInt.toInt()];
+      late TaskData taskData =
+          new TaskData(nanoId: nanoId, taskType: taskType, title: title, description: description, symbols: symbols, amounts: amounts);
+
       if (taskTokenSymbol == 'ETH') {
         final transaction = Transaction(
           from: senderAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        // if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'axelar') {
-        //   txn = await axelarFacet.createTaskContractAxelar(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'hyperlane') {
-        //   txn = await hyperlaneFacet.createTaskContractHyperlane(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'layerzero') {
-        //   txn = await layerzeroFacet.createTaskContractLayerzero(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'wormhole') {
-        //   txn = await wormholeFacet.createTaskContractWormhole(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else {
-        //   txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: creds, transaction: transaction);
-        // }
+
         txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
             credentials: creds, transaction: transaction);
+
+        // if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'axelar') {
+        //   txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'hyperlane') {
+        //   txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'layerzero') {
+        //   txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((chainId != 1287 && chainId != 31337) && interchainSelected == 'wormhole') {
+        //   txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else {
+        //   txn = await tasksFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+        // }
       } else if (taskTokenSymbol == 'aUSDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);
         final transaction = Transaction(
           from: senderAddress,
           // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        // if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'axelar') {
-        //   txn = await axelarFacet.createTaskContractAxelar(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'hyperlane') {
-        //   txn = await hyperlaneFacet.createTaskContractHyperlane(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'layerzero') {
-        //   txn = await layerzeroFacet.createTaskContractLayerzero(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'wormhole') {
-        //   txn = await wormholeFacet.createTaskContractWormhole(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: credentials, transaction: transaction);
-        // } else {
-        //   txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-        //       credentials: creds, transaction: transaction);
-        // }
+
         txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
             credentials: creds, transaction: transaction);
+
+        // if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'axelar') {
+        //   txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'hyperlane') {
+        //   txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'layerzero') {
+        //   txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'wormhole') {
+        //   txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else {
+        //   txn = await tasksFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+        // }
         print(txn);
       }
       isLoading = false;
@@ -1792,6 +1789,7 @@ class TasksServices extends ChangeNotifier {
       final transaction = Transaction(
         from: senderAddress,
       );
+
       /// todo: add messages to transfer function in contract
       // txn = await ierc20.transfer(addressToSend, priceInBigInt, message, credentials: creds, transaction: transaction);
       txn = await ierc20.transfer(addressToSend, priceInBigInt, credentials: creds, transaction: transaction);
@@ -1945,8 +1943,7 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score,
     //       credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score,
-        credentials: creds, transaction: transaction);
+    txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -2185,6 +2182,7 @@ class TasksServices extends ChangeNotifier {
   //       credentials: credentials, transaction: transaction);
   //   var taskContracts = await tasksFacet.getTaskContracts();
   //
+
   //   TaskContract taskContract = TaskContract(address: taskContracts[0], client: _web3client, chainId: chainId);
   //   var taskInfo = await taskContract.getTaskInfo();
   // }

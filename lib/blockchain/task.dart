@@ -49,3 +49,15 @@ class Task {
     required this.transport,
   });
 }
+
+class TaskData {
+  final String nanoId;
+  final String taskType;
+  final String title;
+  final String description;
+  final List<String> symbols;
+  final List<int> amounts;
+
+  TaskData(
+      {required this.nanoId, required this.taskType, required this.title, required this.description, required this.symbols, required this.amounts});
+}
