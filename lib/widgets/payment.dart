@@ -12,12 +12,11 @@ const List<String> selectToken = <String>['DEV', 'aUSDC'];
 
 class Payment extends StatefulWidget {
   final String purpose;
-  final double innerWidth;
-  final double borderRadius;
+  final double innerPaddingWidth;
   const Payment({Key? key,
     required this.purpose,
-    required this.innerWidth,
-  required this.borderRadius}) : super(key: key);
+    required this.innerPaddingWidth,
+  }) : super(key: key);
 
   @override
   _PaymentState createState() => _PaymentState();
@@ -34,7 +33,7 @@ class _PaymentState extends State<Payment> {
   late double minPrice;
   late double maxPrice;
 
-  TextEditingController? messageControllerForTopup;
+
 
 
   late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 200));
@@ -43,13 +42,11 @@ class _PaymentState extends State<Payment> {
   void initState() {
     super.initState();
     valueController = TextEditingController();
-    messageControllerForTopup = TextEditingController();
   }
 
   @override
   void dispose() {
     // Don't forget to dispose all of your controllers!
-    messageControllerForTopup!.dispose();
     valueController!.dispose();
     super.dispose();
   }
@@ -59,11 +56,10 @@ class _PaymentState extends State<Payment> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
-    messageControllerForTopup!.text = interface.taskTopupMessage;
 
-    late double borderRadius = widget.borderRadius;
-    late double innerWidth = widget.innerWidth;
+
+    late double borderRadius = interface.borderRadius;
+    late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
       dropdownValue = 'DEV';
       minPrice = devLowPrice;
@@ -96,7 +92,7 @@ class _PaymentState extends State<Payment> {
             child: Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.all(9.0),
-              width: innerWidth,
+              width: innerPaddingWidth,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +106,7 @@ class _PaymentState extends State<Payment> {
 
                           // padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                           // height: widget.topConstraints.maxHeight - 200,
-                          width: innerWidth,
+                          width: innerPaddingWidth,
                           decoration: BoxDecoration(
                             borderRadius:
                             BorderRadius.circular(borderRadius),
@@ -125,7 +121,7 @@ class _PaymentState extends State<Payment> {
                             obscureText: false,
 
                             decoration: InputDecoration(
-                              labelText: 'Task value:',
+                              labelText: 'Value:',
                               labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
                               hintText: '[Please enter Task value]',
                               hintStyle: TextStyle(fontSize: 14.0, color: setBlackAndWhite),
@@ -284,60 +280,8 @@ class _PaymentState extends State<Payment> {
               ),
             )
         ),
-        if(widget.purpose == 'topup')
-        Container(
-          padding: const EdgeInsets.only(top: 14.0),
-          child: Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            child: Container(
-              // constraints: const BoxConstraints(maxHeight: 500),
-              padding: const EdgeInsets.all(8.0),
-              width: innerWidth,
-              decoration: BoxDecoration(
-                borderRadius:
-                BorderRadius.circular(widget.borderRadius),
-              ),
-              child: TextFormField(
-                controller: messageControllerForTopup,
-                // onChanged: (_) => EasyDebounce.debounce(
-                //   'messageForStateController',
-                //   Duration(milliseconds: 2000),
-                //   () => setState(() {}),
-                // ),
-                autofocus: false,
-                obscureText: false,
-                onTapOutside: (test) {
-                  FocusScope.of(context).unfocus();
-                  interface.taskTopupMessage =
-                      messageControllerForTopup!.text;
-                },
-
-                decoration: const InputDecoration(
-                  labelText: 'Your message here..',
-                  labelStyle: TextStyle(
-                      fontSize: 17.0, color: Colors.black54),
-                  hintText: '[Enter your message here..]',
-                  hintStyle: TextStyle(
-                      fontSize: 14.0, color: Colors.black54),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: FlutterFlowTheme.of(context).bodyText1.override(
-                  fontFamily: 'Poppins',
-                  color: Colors.black87,
-                  lineHeight: null,
-                ),
-                minLines: 1,
-                maxLines: 5,
-              ),
-            ),
-          ),
-        ),
+        // if(widget.purpose == 'topup')
+        //
       ],
     );
   }

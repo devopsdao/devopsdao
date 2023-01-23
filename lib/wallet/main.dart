@@ -345,7 +345,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
     }
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
-      double innerWidth = dialogConstraints.maxWidth - 60;
+      double innerPaddingWidth = dialogConstraints.maxWidth - 60;
       return PageView(
         scrollDirection: Axis.horizontal,
         // pageSnapping: false,
@@ -368,7 +368,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                   padding: const EdgeInsets.all(16.0),
                   // height: MediaQuery.of(context).size.width * .08,
                   // width: MediaQuery.of(context).size.width * .57
-                  width: innerWidth,
+                  width: innerPaddingWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                   ),
@@ -386,14 +386,14 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                 active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
                 buttonFunction: 'metamask',
                 borderRadius: widget.borderRadius,
-                buttonWidth: innerWidth,
+                buttonWidth: innerPaddingWidth,
               ),
               const SizedBox(height: 12),
               ChooseWalletButton(
                 active: true,
                 buttonFunction: 'wallet_connect',
                 borderRadius: widget.borderRadius,
-                buttonWidth: innerWidth,
+                buttonWidth: innerPaddingWidth,
               ),
               const Spacer(),
             ],
@@ -418,7 +418,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
-                    width: innerWidth,
+                    width: innerPaddingWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                     ),
@@ -441,7 +441,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                     padding: const EdgeInsets.all(8.0),
                     // height: MediaQuery.of(context).size.width * .08,
                     // width: MediaQuery.of(context).size.width * .57
-                    width: innerWidth,
+                    width: innerPaddingWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                     ),
@@ -472,7 +472,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
             child: SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  // maxWidth: maxInternalWidth,
+                  // maxWidth: maxStaticInternalWidth,
                   // maxHeight: widget.screenHeightSizeNoKeyboard,
                   minHeight: widget.screenHeightSizeNoKeyboard - 300,
                   // maxHeight: widget.screenHeightSize
@@ -489,7 +489,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                           padding: const EdgeInsets.all(10.0),
                           height: widget.screenHeightSizeNoKeyboard - 40,
                           // width: MediaQuery.of(context).size.width * .57
-                          width: innerWidth,
+                          width: innerPaddingWidth,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(widget.borderRadius),
                           ),

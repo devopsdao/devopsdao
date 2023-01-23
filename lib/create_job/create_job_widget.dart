@@ -74,7 +74,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    final double maxDialogWidth = interface.maxDialogWidth;
+    final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
     late String backgroundPicture = "assets/images/niceshape.png";
     final screenHeightSize = widget.screenHeightSize;
 
@@ -83,7 +83,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
         children: [
       Container(
         padding: const EdgeInsets.all(20),
-        width: maxDialogWidth,
+        width: maxStaticDialogWidth,
         child: Row(
           children: [
             const SizedBox(
@@ -162,7 +162,7 @@ class _CreateJobWidgetState extends State<CreateJobWidget> {
         // *** SingleScrollChild enable here by using screenHeightSize:
         height: screenHeightSize,
         // height: 490,
-        width: maxDialogWidth,
+        width: maxStaticDialogWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9),
           image: DecorationImage(
@@ -193,7 +193,7 @@ class _NewTaskPagesState extends State<NewTaskPages> {
   Widget build(BuildContext context) {
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
-      double innerWidth = dialogConstraints.maxWidth - 50;
+      double innerPaddingWidth = dialogConstraints.maxWidth - 50;
       return PageView(
           scrollDirection: Axis.horizontal,
           // controller: interface.pageViewNewTaskController,
@@ -202,7 +202,7 @@ class _NewTaskPagesState extends State<NewTaskPages> {
           },
           children: <Widget>[
             NewTaskMainPage(
-                innerWidth: innerWidth)
+                innerPaddingWidth: innerPaddingWidth)
           ]
       );
     });
@@ -213,9 +213,9 @@ class _NewTaskPagesState extends State<NewTaskPages> {
 
 
 class NewTaskMainPage extends StatefulWidget {
-  final double innerWidth;
+  final double innerPaddingWidth;
   const NewTaskMainPage({Key? key,
-    required this.innerWidth,
+    required this.innerPaddingWidth,
   }) : super(key: key);
 
   @override
@@ -251,11 +251,11 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    final double maxInternalWidth = interface.maxInternalDialogWidth;
+    final double maxStaticInternalWidth = interface.maxStaticInternalDialogWidth;
 
     const Color textColor = Colors.black54;
     final double borderRadius = interface.borderRadius;
-    final double innerWidth = widget.innerWidth;
+    final double innerPaddingWidth = widget.innerPaddingWidth;
 
     return Column(
       children: [
@@ -264,11 +264,11 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
             borderRadius: BorderRadius.circular(borderRadius),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: maxInternalWidth,
+                  maxWidth: maxStaticInternalWidth,
               ),
               child: Container(
                   padding: const EdgeInsets.all(6.0),
-                  width: innerWidth,
+                  width: innerPaddingWidth,
                   decoration: BoxDecoration(
                     borderRadius:
                     BorderRadius.circular(borderRadius),
@@ -320,11 +320,11 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
               borderRadius: BorderRadius.circular(borderRadius),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: maxInternalWidth,
+                  maxWidth: maxStaticInternalWidth,
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(6.0),
-                  width: innerWidth,
+                  width: innerPaddingWidth,
                   decoration: BoxDecoration(
                     borderRadius:
                     BorderRadius.circular(borderRadius),
@@ -376,21 +376,20 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
         const SizedBox(height: 14),
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: maxInternalWidth,
+            maxWidth: maxStaticInternalWidth,
           ),
           child: Payment(
-              purpose: 'create', innerWidth: innerWidth,
-              borderRadius: borderRadius
+              purpose: 'create', innerPaddingWidth: innerPaddingWidth,
           ),
         ),
         const Spacer(),
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: maxInternalWidth,
+            maxWidth: maxStaticInternalWidth,
           ),
           child: Container(
             padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-            width: innerWidth + 8,
+            width: innerPaddingWidth + 8,
             child: Row(
               children: [
                 TaskDialogButton(

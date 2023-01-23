@@ -38,12 +38,12 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
     var interface = context.read<InterfaceServices>();
     Task task = widget.task;
     String fromPage = widget.fromPage;
-    double innerWidth = widget.width;
+    double innerPaddingWidth = widget.width;
     // String message = interface.taskMessage.text;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-      width: innerWidth + 8,
+      width: innerPaddingWidth + 8,
       child: Row(
         // direction: Axis.horizontal,
         // crossAxisAlignment: WrapCrossAlignment.start,
@@ -335,7 +335,6 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                     context: context,
                     builder: (context) => AuditorDecision( task: task)
                 );
-
               },
             ),
           // if ((fromPage == 'auditor' || tasksServices.hardhatDebug == true) &&

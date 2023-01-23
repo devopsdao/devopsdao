@@ -40,7 +40,7 @@ class _TagsPageState extends State<TagsPage> {
     } else {
       selectedListData = [];
     }
-    final double maxDialogWidth = interface.maxDialogWidth;
+    final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
     const double myPadding = 8.0;
 
     return LayoutBuilder(
@@ -54,7 +54,7 @@ class _TagsPageState extends State<TagsPage> {
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.all(myPadding),
-            width: maxDialogWidth,
+            width: maxStaticDialogWidth,
             child: Column(
               children: [
                 Container(

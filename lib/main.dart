@@ -95,12 +95,14 @@ class _MyAppState extends State<MyApp> {
       locale: _locale,
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.transparent,
         // useMaterial3: true,
         brightness: Brightness.light,
         splashFactory: NoSplash.splashFactory,
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
+
         // primaryColor: const Color(0xff31d493),
         // cardColor: Colors.black,
         // textTheme: const TextTheme(

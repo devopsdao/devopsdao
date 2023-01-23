@@ -8,7 +8,8 @@ import 'package:webthree/credentials.dart';
 import '../blockchain/task_services.dart';
 import '../widgets/data_loading_dialog.dart';
 import '../widgets/task_item.dart';
-import 'main_as_page.dart';
+import 'main.dart';
+import 'shimmer.dart';
 
 
 
@@ -37,7 +38,7 @@ class ClickOnTask extends StatelessWidget {
         tasksServices.filterResults.values.toList()[index].taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
         Beamer.of(context).updateRouteInformation(routeInfo);
-        return TaskInformationFuture(
+        return TaskDialogFuture(
             fromPage: fromPage, taskAddress: tasksServices.filterResults.values.toList()[index].taskAddress, shimmerEnabled: true);
       },
       transitionDuration: const Duration(milliseconds: 400),
@@ -83,7 +84,7 @@ class LoadTaskByLink extends StatelessWidget {
         final String taskAddressString = taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
         Beamer.of(context).updateRouteInformation(routeInfo);
-        return TaskInformationFuture(
+        return TaskDialogFuture(
             fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true);
       },
       transitionDuration: const Duration(milliseconds: 400),
