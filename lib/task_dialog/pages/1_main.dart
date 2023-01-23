@@ -75,6 +75,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
     messageForStateController!.text = interface.taskMessage;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top: 5.0),
