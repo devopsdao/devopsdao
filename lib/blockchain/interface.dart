@@ -49,6 +49,9 @@ class InterfaceServices extends ChangeNotifier {
 
   // selected Performer or Auditor in participants_list.dart:
   late Map<String, String> selectedUser = {};
+  // participants_list.dart & 3_selection.dart & auditor
+  final double tileHeight = 34;
+  final double heightForInfo = 140;
 
   // Input text on main.dart
   late String taskMessage = '';
@@ -119,9 +122,9 @@ class InterfaceServices extends ChangeNotifier {
   // border radius:
   final double borderRadius = 8.0;
   // -------------------- Sizes for Dialog window ------------------------- //
-  final double maxDialogWidth = 600;
-  final double maxInternalDialogWidth = 480;
-  final double maxGlobalWidth = 1000;
+  final double maxStaticDialogWidth = 600;
+  final double maxStaticInternalDialogWidth = 480;
+  final double maxStaticGlobalWidth = 1000;
 
   Future updateDialogPageNum(number) async {
     dialogPageNum = number;

@@ -149,10 +149,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             Text(
               'Devopsdao',
               style: FlutterFlowTheme.of(context).title2.override(
-                    fontFamily: 'Poppins',
-                    color: Colors.white,
-                    fontSize: 22,
-                  ),
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 22,
+              ),
             ),
           ],
         ),
@@ -270,7 +270,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         child: SingleChildScrollView(
           child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-            width: interface.maxGlobalWidth,
+            width: interface.maxStaticGlobalWidth,
             child: LayoutBuilder(builder: (context, constraints){
               final double halfWidth = constraints.maxWidth / 2 - 8;
               final double fullWidth = constraints.maxWidth;

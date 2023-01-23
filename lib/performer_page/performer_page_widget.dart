@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
@@ -50,7 +51,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
         if (widget.taskAddress != null) {
           showDialog(
               context: context,
-              builder: (context) => TaskDialog(
+              builder: (context) => TaskDialogBeamer(
                     taskAddress: widget.taskAddress,
                     fromPage: 'performer',
                   ));
@@ -161,7 +162,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
           // ),
         ),
         child: SizedBox(
-          width: interface.maxGlobalWidth,
+          width: interface.maxStaticGlobalWidth,
           child: DefaultTabController(
             length: 3,
             initialIndex: tabIndex,

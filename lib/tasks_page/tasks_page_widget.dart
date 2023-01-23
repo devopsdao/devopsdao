@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import '../blockchain/interface.dart';
 import '../create_job/create_job_as_page.dart';
 import '../create_job/create_job_call_button.dart';
+import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
-import '../task_dialog/main_as_page.dart';
+import '../task_dialog/shimmer.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
@@ -89,7 +90,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     // _searchKeywordController.addListener(() {_changeField();});
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(context: context, builder: (context) => TaskDialog(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
+        showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
       });
     }
   }
@@ -136,7 +137,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     // if (widget.index != null) {
     //   showDialog(
     //       context: context,
-    //       builder: (context) => TaskDialog(index: widget.index!));
+    //       builder: (context) => TaskDialogBeamer(index: widget.index!));
     // }
     return Scaffold(
       key: scaffoldKey,
@@ -205,7 +206,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           // ),
         ),
         child: SizedBox(
-          width: interface.maxGlobalWidth,
+          width: interface.maxStaticGlobalWidth,
           child: DefaultTabController(
             length: 1,
             initialIndex: 0,
@@ -388,7 +389,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                           //       // showDialog(
                                           //       //     context: context,
                                           //       //     builder: (context) =>
-                                          //       //         TaskDialog(index: index));
+                                          //       //         TaskDialogBeamer(index: index));
                                           //     },
                                           //     child: TaskItem(
                                           //       fromPage: 'tasks',

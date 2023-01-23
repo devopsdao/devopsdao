@@ -23,16 +23,16 @@ import '../blockchain/task.dart';
 //   );
 // }
 
-class ChatPage extends StatefulWidget {
+class ChatWidget extends StatefulWidget {
   final Task task;
   final TasksServices tasksServices;
-  const ChatPage({super.key, required this.task, required this.tasksServices});
+  const ChatWidget({super.key, required this.task, required this.tasksServices});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ChatWidget> createState() => _ChatWidgetState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatWidgetState extends State<ChatWidget> {
   List<types.Message> _messages = [];
   // final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
 
@@ -349,7 +349,7 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
         padding: const EdgeInsets.all(16.0),
         // height: MediaQuery.of(context).size.width * .08,
         // width: MediaQuery.of(context).size.width * .57
-        // width: innerWidth,
+        // width: innerPaddingWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
         ),
