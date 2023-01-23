@@ -4,6 +4,7 @@ import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:throttling/throttling.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
@@ -28,6 +29,9 @@ class DialogButtonSetOnFirstPage extends StatefulWidget {
 }
 
 class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
+
+  late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 1700));
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
@@ -128,6 +132,45 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
+              },
+            ),
+
+          if (task.taskState == "review" &&
+              (fromPage == 'performer' || tasksServices.hardhatDebug == true))
+            TaskDialogButton(
+              inactive: false,
+              buttonName: 'Check merge',
+              buttonColorRequired: Colors.lightBlue.shade600,
+              callback: () {
+                interface.statusText = const TextSpan(
+                    text: 'Checking ...',
+                    style: TextStyle( fontWeight: FontWeight.bold, color: Colors.green)
+                );
+                tasksServices.myNotifyListeners();
+                debounceNotifyListener.debounce(() {
+                  interface.statusText = const TextSpan(
+                      text: 'Open',
+                      style: TextStyle( fontWeight: FontWeight.bold, color: Colors.black)
+                  );
+                  tasksServices.myNotifyListeners();
+                });
+                // setState(() {
+                //   task.justLoaded = false;
+                // });
+                // tasksServices.taskStateChange(
+                //     task.taskAddress, task.participant, 'review', task.nanoId,
+                //     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                // Navigator.pop(context);
+                // interface.emptyTaskMessage();
+                // RouteInformation routeInfo =
+                // const RouteInformation(location: '/performer');
+                // Beamer.of(context).updateRouteInformation(routeInfo);
+                // showDialog(
+                //     context: context,
+                //     builder: (context) => WalletAction(
+                //       nanoId: task.nanoId,
+                //       taskName: 'taskStateChange',
+                //     ));
               },
             ),
 

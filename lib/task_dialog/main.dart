@@ -652,7 +652,7 @@ class _DialogPagesState extends State<DialogPages> {
                 ),
               ),
             ),
-          if (interface.dialogCurrentState['pages'].containsKey('empty')) Center(),
+          if (interface.dialogCurrentState['pages'].containsKey('empty')) const Center(),
           if (interface.dialogCurrentState['pages'].containsKey('main'))
             MainTaskPage(
               innerWidth: innerWidth,

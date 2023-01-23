@@ -72,6 +72,12 @@ class InterfaceServices extends ChangeNotifier {
   // ***********  create_job_widget ************ ////
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
 
+  // ***********  Pull request status  *********** //
+
+  late TextSpan statusText = const TextSpan(
+      text: 'Not created',
+      style: TextStyle( fontWeight: FontWeight.bold)
+  );
 
   // ***********  tags  ************ ////
 

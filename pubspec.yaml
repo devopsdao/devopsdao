@@ -82,6 +82,7 @@ dependencies:
   filter_list:
     path: ./lib/widgets/filter_list-1.0.2
 
+
 dependency_overrides:
   font_awesome_flutter: ^10.1.0
 
