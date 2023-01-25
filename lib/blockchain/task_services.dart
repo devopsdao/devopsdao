@@ -1825,21 +1825,21 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    // if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'axelar') {
-    //   txn = await axelarFacet.taskParticipateAxelar(contractAddress, message, replyTo, credentials: creds, transaction: transaction);
-    // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'hyperlane') {
-    //   txn = await hyperlaneFacet.taskParticipateHyperlane(contractAddress, message, replyTo,
-    //       credentials: creds, transaction: transaction);
-    // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'layerzero') {
-    //   txn = await layerzeroFacet.taskParticipateLayerzero(contractAddress, message, replyTo,
-    //       credentials: creds, transaction: transaction);
-    // } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'wormhole') {
-    //   txn =
-    //       await wormholeFacet.taskParticipateWormhole(contractAddress, message, replyTo, credentials: creds, transaction: transaction);
-    // } else {
-    //   txn = await taskContract.taskParticipate(message, replyTo, credentials: creds, transaction: transaction);
-    // }
-    txn = await taskContract.taskParticipate(message, replyTo, credentials: creds, transaction: transaction);
+    if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'axelar') {
+      txn = await axelarFacet.taskParticipateAxelar(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'hyperlane') {
+      txn = await hyperlaneFacet.taskParticipateHyperlane(senderAddress, contractAddress, message, replyTo,
+          credentials: creds, transaction: transaction);
+    } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'layerzero') {
+      txn = await layerzeroFacet.taskParticipateLayerzero(senderAddress, contractAddress, message, replyTo,
+          credentials: creds, transaction: transaction);
+    } else if ((chainId != 1287 || chainId != 31337) && interchainSelected == 'wormhole') {
+      txn =
+          await wormholeFacet.taskParticipateWormhole(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    } else {
+      txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+    }
+    // txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -1885,7 +1885,7 @@ class TasksServices extends ChangeNotifier {
     // } else {
     //   txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
+    txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -1943,7 +1943,8 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score,
     //       credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score, credentials: creds, transaction: transaction);
+    txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -1990,7 +1991,7 @@ class TasksServices extends ChangeNotifier {
     // } else {
     //   txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
+    txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -2031,7 +2032,7 @@ class TasksServices extends ChangeNotifier {
     // } else {
     //   txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
+    txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -2090,6 +2091,71 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
+  Future<List> balanceOfBatchName(List<EthereumAddress> addresses, List<String> names) async {
+    List balanceList = await tokenFacet.balanceOfBatchName(addresses, names);
+    return balanceList;
+  }
+
+  Future<List> totalSupplyOfBatchName(List<String> names) async {
+    List totalSupply = await tokenFacet.totalSupplyOfBatchName(names);
+    return totalSupply;
+  }
+
+  Future<List> uriOfBatchName(List<String> names) async {
+    List totalSupply = await tokenFacet.uriOfBatchName(names);
+    return totalSupply;
+  }
+
+  Future<String> createNft(String uri, String name, bool isNF) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String tx = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
+    return tx;
+  }
+
+  Future<String> mintFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<String> mintNonFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
+    return txn;
+  }
   // Future<void> checkTokenBalance(EthereumAddress address, int tokenType) async {
   //   TokenContract tokenContract = TokenContract(address: contractAddress, client: _web3client, chainId: chainId);
   // }
