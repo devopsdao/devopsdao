@@ -59,6 +59,7 @@ class _TopUpPageState extends State<TopUpPage> {
     messageControllerForTopup!.text = interface.taskTopupMessage;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         // height: widget.screenHeightSizeNoKeyboard,
         // height: widget.screenHeightSize,

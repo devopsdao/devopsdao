@@ -140,8 +140,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
 
     final double screenHeightSize = widget.screenHeightSize;
 
-    final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-
     return Scaffold(
       // resizeToAvoidBottomInset: false,
         body: Container(
