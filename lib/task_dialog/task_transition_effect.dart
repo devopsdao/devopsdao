@@ -7,7 +7,7 @@ import 'package:webthree/credentials.dart';
 
 import '../blockchain/task_services.dart';
 import '../widgets/data_loading_dialog.dart';
-import '../widgets/task_item.dart';
+import '../task_item/task_item.dart';
 import 'main.dart';
 import 'shimmer.dart';
 

@@ -156,7 +156,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1020,8 +1020,8 @@ class TasksServices extends ChangeNotifier {
 
       String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[1]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
