@@ -416,6 +416,29 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_to",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_quantities",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "mintFungibleByName",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_type",
         "type": "uint256"
@@ -427,6 +450,24 @@
       }
     ],
     "name": "mintNonFungible",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_to",
+        "type": "address[]"
+      }
+    ],
+    "name": "mintNonFungibleByName",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
