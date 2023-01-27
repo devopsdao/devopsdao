@@ -6,7 +6,10 @@ class Task {
   final String taskType;
   final String title;
   final String description;
-  final String symbol;
+  final List<dynamic> tags;
+  final List<dynamic> tagsNFT;
+  final List<dynamic> symbols;
+  final List<dynamic> amounts;
   final String taskState;
   final String auditState;
   final int rating;
@@ -30,7 +33,10 @@ class Task {
     required this.taskType,
     required this.title,
     required this.description,
-    required this.symbol,
+    required this.tags,
+    required this.tagsNFT,
+    required this.symbols,
+    required this.amounts,
     required this.taskState,
     required this.auditState,
     required this.rating,
@@ -50,14 +56,21 @@ class Task {
   });
 }
 
-class TaskData {
-  final String nanoId;
-  final String taskType;
-  final String title;
-  final String description;
-  final List<String> symbols;
-  final List<int> amounts;
+// class TaskData extends MapBase<String, TaskData> {
+//   final String nanoId;
+//   final String taskType;
+//   final String title;
+//   final String description;
+//   final List<String> symbols;
+//   final List<int> amounts;
 
-  TaskData(
-      {required this.nanoId, required this.taskType, required this.title, required this.description, required this.symbols, required this.amounts});
-}
+//   final Map<String, TaskData> _map = HashMap.identity();
+
+//   TaskData operator [](Object key) => _map[key];
+//   void operator []=(String key, TaskData value) => _map[key] = value;
+//   void clear() => _map.clear();
+//   Iterable<String> get keys => _map.keys;
+//   TaskData remove(Object key) => _map.remove(key);
+//   TaskData(
+//       {required this.nanoId, required this.taskType, required this.title, required this.description, required this.symbols, required this.amounts});
+// }
