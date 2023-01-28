@@ -58,7 +58,6 @@ class TaskDialogFuture extends StatefulWidget {
 }
 
 class _TaskDialogFutureState extends State<TaskDialogFuture> {
-
   String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
@@ -87,7 +86,10 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
               taskType: 'task[2]',
               title: 'Loading...',
               description: 'Loading...',
-              symbol: 'none',
+              tags: [],
+              tagsNFT: [],
+              symbols: [],
+              amounts: [],
               taskState: 'empty',
               auditState: '',
               rating: 0,
@@ -224,16 +226,15 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
         final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
         final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
         final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-        return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+        return Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             height: statusBarHeight,
           ),
           TaskDialogHeader(
             maxStaticDialogWidth: maxStaticDialogWidth,
             task: task,
-            fromPage: fromPage,),
+            fromPage: fromPage,
+          ),
           SizedBox(
             height: screenHeightSize - statusBarHeight,
             // width: constraints.maxWidth * .8,
@@ -242,14 +243,14 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
 
             child: widget.isLoading == false
                 ? TaskDialogPages(
-              task: task,
-              fromPage: widget.fromPage,
-              screenHeightSize: screenHeightSize,
-              screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
-            )
+                    task: task,
+                    fromPage: widget.fromPage,
+                    screenHeightSize: screenHeightSize,
+                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
+                  )
                 : ShimmeredTaskPages(
-              task: task,
-            ),
+                    task: task,
+                  ),
           ),
         ]);
       }),
