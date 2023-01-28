@@ -33,6 +33,7 @@ class _NavBarPageState extends State<NavBarPage> {
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
       '/auditor': const HomePageWidget(),
+      '/accounts': const HomePageWidget(),
       // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
@@ -94,14 +95,14 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Audit',
           tooltip: '',
         ),
-        // BottomNavigationBarItem(
-        //   icon: FaIcon(
-        //     FontAwesomeIcons.wallet,
-        //     size: 24,
-        //   ),
-        //   label: 'Wallet',
-        //   tooltip: '',
-        // ),
+        BottomNavigationBarItem(
+          icon: FaIcon(
+            FontAwesomeIcons.peopleGroup,
+            size: 24,
+          ),
+          label: 'Accounts',
+          tooltip: '',
+        ),
       ],
     );
   }

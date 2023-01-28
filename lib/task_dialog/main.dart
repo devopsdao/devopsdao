@@ -71,7 +71,6 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
   @override
   Widget build(BuildContext context) {
     late Task task;
-    var interface = context.read<InterfaceServices>();
     var tasksServices = context.read<TasksServices>();
 
     EthereumAddress? taskAddress = widget.taskAddress;

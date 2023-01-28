@@ -49,6 +49,12 @@ void createBeamerDelegate() {
                 initialPage: '/auditor',
               ),
             ),
+        '/accounts': (context, state, data) => const Scaffold(
+          body: AccountsPage(),
+          bottomNavigationBar: NavBarPage(
+            initialPage: '/accounts',
+          ),
+        ),
         '/tasks/:taskAddress': (context, state, data) {
           EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
@@ -82,6 +88,15 @@ void createBeamerDelegate() {
             body: AuditorPageWidget(taskAddress: taskAddress),
             bottomNavigationBar: const NavBarPage(
               initialPage: '/auditor',
+            ),
+          );
+        },
+        '/accounts/:taskAddress': (context, state, data) {
+          EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
+          return Scaffold(
+            body: AuditorPageWidget(taskAddress: taskAddress),
+            bottomNavigationBar: const NavBarPage(
+              initialPage: '/accounts',
             ),
           );
         },
