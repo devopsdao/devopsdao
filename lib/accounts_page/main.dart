@@ -213,55 +213,9 @@ class _AccountsPageState extends State<AccountsPage> {
                               control: true,
                               page: 'accounts'
                             );
-
-
-                            // bool isMarkedForDelete = deleteItems.where((i) {
-                            //       // print('model: ${model.selectedTagsList.indexOf(e)}');
-                            //       // print('i: ${i}');
-                            //       return i == model.selectedTagsList.indexOf(e).toString();
-                            //
-                            //     }).isNotEmpty;
-                            // print(isMarkedForDelete); print(deleteItems);
-                            // return AnimatedContainer(
-                            //   key: ObjectKey(e),
-                            //   duration: const Duration(milliseconds: 350),
-                            //   width: isMarkedForDelete ? 0 : 100,
-                            //   child: AnimatedOpacity(
-                            //     duration: const Duration(milliseconds: 350),
-                            //     opacity: isMarkedForDelete ? 0 : 1,
-                            //     child: Chip(
-                            //       label: Text(e.tag!),
-                            //       onDeleted: () {
-                            //       if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
-                            //     },),
-                            //
-                            //
-                            //
-                            //   ),
-                            // );
                           }).toList());
                       }
                     ),
-
-                    // TabBar(
-                    //   labelColor: Colors.white,с
-                    //   labelStyle: FlutterFlowTheme.of(context).bodyText1,
-                    //   indicatorColor: Color(0xFF47CBE4),
-                    //   indicatorWeight: 3,
-                    //   tabs: [
-                    //     Tab(
-                    //       text: 'New offers',
-                    //     ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //   ],
-                    // ),
-
-
                     Expanded(
                         child: TabBarView(
                           children: [
@@ -279,40 +233,7 @@ class _AccountsPageState extends State<AccountsPage> {
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                      child:  ClickOnAccount(fromPage: 'tasks', index: index,)
-
-                                      // InkWell(
-                                      //     onTap: () {
-                                      //       // print('tap');
-                                      //
-                                      //       setState(() {
-                                      //         // Toggle light when tapped.
-                                      //       });
-                                      //       // final taskAddress =
-                                      //       //     tasksServices
-                                      //       //         .filterResults.values
-                                      //       //         .toList()[index]
-                                      //       //         .taskAddress;
-                                      //       // context.popToNamed(
-                                      //       //     '/tasks/$taskAddress');
-                                      //       // print(objList);
-                                      //       showDialog(
-                                      //           context: context,
-                                      //           builder: (context) => TaskInformationDialog(
-                                      //               fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
-                                      //       final String taskAddress =
-                                      //           tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                                      //       RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
-                                      //       Beamer.of(context).updateRouteInformation(routeInfo);
-                                      //       // showDialog(
-                                      //       //     context: context,
-                                      //       //     builder: (context) =>
-                                      //       //         TaskDialogBeamer(index: index));
-                                      //     },
-                                      //     child: TaskItem(
-                                      //       fromPage: 'tasks',
-                                      //       object: tasksServices.filterResults.values.toList()[index],
-                                      //     )),
+                                      child:  ClickOnAccount(fromPage: 'accounts', index: index,)
                                     );
                                   },
                                 ),

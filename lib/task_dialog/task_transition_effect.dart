@@ -10,8 +10,6 @@ import '../widgets/account_item.dart';
 import '../widgets/data_loading_dialog.dart';
 import '../task_item/task_item.dart';
 import 'main.dart';
-import 'shimmer.dart';
-
 
 
 class ClickOnTask extends StatelessWidget {
@@ -99,10 +97,7 @@ class ClickOnAccount extends StatelessWidget {
       openElevation: 0,
       closedColor: Colors.white,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
-        return AccountItem(
-          fromPage: fromPage,
-          object: tasksServices.filterResults.values.toList()[index],
-        );
+        return const AccountItem();
       },
     );
   }
