@@ -1,7 +1,7 @@
 // import 'dart:ffi';
 
 import 'package:beamer/beamer.dart';
-import 'package:devopsdao/auditor_page/auditor_page_widget.dart';
+import 'package:devopsdao/pages/auditor_page.dart';
 import 'package:webthree/webthree.dart';
 import 'authenticator.dart';
 // import '../../screens.dart';

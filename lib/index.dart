@@ -1,8 +1,8 @@
 // Export pages
-export 'home_page/home_page_widget.dart' show HomePageWidget;
+export 'pages/home_page.dart' show HomePageWidget;
 export 'create_job/create_job_widget.dart' show CreateJobWidget;
-export 'tasks_page/tasks_page_widget.dart' show TasksPageWidget;
-export 'customer_page/customer_page_widget.dart' show CustomerPageWidget;
-export 'performer_page/performer_page_widget.dart' show PerformerPageWidget;
-export 'accounts_page/main.dart' show AccountsPage;
-// export 'wallet/main.dart' show WalletPageTop;
+export 'pages/tasks_page.dart' show TasksPageWidget;
+export 'pages/customer_page.dart' show CustomerPageWidget;
+export 'pages/performer_page.dart' show PerformerPageWidget;
+export 'pages/accounts_page.dart' show AccountsPage;
+// export 'wallet/accounts_page.dart' show WalletPageTop;

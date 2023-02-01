@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../chat/main.dart';
+import '../widgets/chat/main.dart';
 
-// Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, chat)
+// Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class TaskDialogPages extends StatefulWidget {
   // final String buttonName;
@@ -132,7 +132,7 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
           if (interface.dialogCurrentState['pages'].containsKey('select'))
             SelectionPage(screenHeightSize: widget.screenHeightSize, innerPaddingWidth: innerPaddingWidth, task: task),
 
-          if (interface.dialogCurrentState['pages'].containsKey('chat'))
+          if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
             ChatPage(
               task: task,
               innerPaddingWidth: innerPaddingWidth)

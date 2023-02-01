@@ -83,7 +83,7 @@ class _TaskItemState extends State<TaskItem> {
             height: 80,
             child: InkWell(
               child: const Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: EdgeInsets.only(left: 10.0),
                 child: Icon(
                   Icons.delete_forever,
                   color: Colors.deepOrange,
@@ -93,7 +93,7 @@ class _TaskItemState extends State<TaskItem> {
               onTap: () {
                 setState(() {
                   showDialog(context: context, builder: (context) =>
-                      DeleteItemAlert(who: widget.fromPage, task: task));
+                      DeleteItemAlert(task: task));
                 });
               },
             ),

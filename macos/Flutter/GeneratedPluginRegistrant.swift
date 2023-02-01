@@ -8,9 +8,9 @@ import Foundation
 import connectivity_plus
 import flutter_secure_storage_macos
 import package_info_plus
-import path_provider_foundation
+import path_provider_macos
 import rive_common
-import shared_preferences_foundation
+import shared_preferences_macos
 import sqflite
 import url_launcher_macos
 

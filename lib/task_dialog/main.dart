@@ -1,46 +1,18 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:badges/badges.dart';
 import 'package:devopsdao/task_dialog/pages.dart';
-import 'package:devopsdao/task_dialog/pages/1_main.dart';
-import 'package:devopsdao/task_dialog/pages/3_selection.dart';
-import 'package:devopsdao/task_dialog/task_transition_effect.dart';
-import 'package:devopsdao/task_dialog/widget/participants_list.dart';
-import 'package:devopsdao/task_dialog/widget/request_audit_alert.dart';
-import 'package:devopsdao/widgets/payment.dart';
-import 'package:devopsdao/widgets/select_menu.dart';
-import 'package:devopsdao/task_dialog/buttons.dart';
 import 'package:devopsdao/task_dialog/states.dart';
-import 'package:devopsdao/widgets/wallet_action.dart';
-import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:devopsdao/task_dialog/widget/rate_widget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:horizontal_blocked_scroll_physics/horizontal_blocked_scroll_physics.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../chat/main.dart';
-
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+// import '../widgets/chat/accounts_page.dart';
 
 import 'header.dart';
 import 'shimmer.dart';
 
-import 'package:beamer/beamer.dart';
-
-import 'package:flutter/services.dart';
-
-import '../widgets/data_loading_dialog.dart';
-
-import 'dart:ui' as ui;
-
-// Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, chat)
+// Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class TaskDialogFuture extends StatefulWidget {
   final String fromPage;

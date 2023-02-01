@@ -8,7 +8,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../blockchain/task.dart';
+import '../../blockchain/task.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));

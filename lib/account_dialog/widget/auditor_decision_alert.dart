@@ -7,33 +7,25 @@ import '../../blockchain/task.dart';
 import '../../blockchain/task_services.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../widgets/wallet_action.dart';
-import '../blockchain/accounts.dart';
 
-class DeleteItemAlert extends StatefulWidget {
-  final Task? task;
-  final Account? account;
-  const DeleteItemAlert(
+class AuditorDecision extends StatefulWidget {
+  final Task task;
+  const AuditorDecision(
       {Key? key,
-        this.task,
-        this.account,
+        required this.task
       })
       : super(key: key);
 
   @override
-  _DeleteItemAlertState createState() => _DeleteItemAlertState();
+  _AuditorDecisionState createState() => _AuditorDecisionState();
 }
 
-class _DeleteItemAlertState extends State<DeleteItemAlert> {
+class _AuditorDecisionState extends State<AuditorDecision> {
   late String warningText;
   late String title;
-  late String link;
-  late String who;
-  late String? nanoId;
-
 
   TextEditingController? messageController;
 
-  @override
   void initState() {
     super.initState();
     messageController = TextEditingController();
@@ -50,22 +42,10 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    if (widget.task != null) {
-      final Task? object = widget.task;
-      warningText = 'Task "${object?.title}" will be deleted';
-      title = 'Are you sure you want to delete this Task?';
-      who = 'task';
-    } else if (widget.account != null) {
-      final Account? object = widget.account;
-      warningText = 'Account "${object?.nickName}" will be banned';
-      title = 'Are you sure you want to ban this account?';
-      who = 'account';
-    }
+    final Task task = widget.task;
 
-
-
-
-    link = 'https://docs.dodao.dev/audit_process.html#customer';
+    title = 'Auditor\'s decision';
+    warningText = 'Please choose in whose favor your decision is:';
 
 
     return Dialog(
@@ -100,7 +80,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
               Container(
                 padding: const EdgeInsets.all(10.0),
                 child: const Icon(
-                  Icons.delete_forever_outlined,
+                  Icons.rate_review_outlined,
                   color: Colors.black45,
                   size: 110,
                 ),
@@ -164,7 +144,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       width: 1.0,
                     ),
                   ),
-                  labelText: 'Few words about your decision',
+                  labelText: interface.dialogCurrentState['labelMessage'],
                   labelStyle: const TextStyle(
                       fontSize: 17.0, color: Colors.black54),
                   hintText: '[Enter your message here..]',
@@ -190,7 +170,24 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                     child: InkWell(
                       onTap: () {
                         Navigator.pop(context);
+                        Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
+                        setState(() {
+                          task.justLoaded = false;
+                        });
+                        tasksServices.taskAuditDecision(
+                            task.taskAddress, 'customer', task.nanoId,
+                            message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+
+                        interface.emptyTaskMessage();
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskAuditDecision',
+                            ));
+
+
                       },
                       child: Container(
                         margin: const EdgeInsets.all(0.0),
@@ -200,16 +197,16 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         // width: halfWidth,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                              width: 0.5,
-                              color: Colors.black54//                   <--- border width here
+                          gradient: const LinearGradient(
+                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
+                            stops: [0, 0.6, 1],
                           ),
                         ),
                         child: const Text(
-                          'Close',
+                          'Customer',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -224,18 +221,21 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
-                        // Navigator.pop(interface.mainDialogContext);
+                        Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
-
-                        // tasksServices.taskStateChange(
-                        //     task.taskAddress, task.participant, 'audit', task.nanoId,
-                        //     message: messageController!.text.isEmpty ? null : messageController!.text);
-                        // showDialog(
-                        //     context: context,
-                        //     builder: (context) => WalletAction(
-                        //       nanoId: who == 'task' ? nanoId : null,
-                        //       taskName: 'taskStateChange',
-                        //     ));
+                        setState(() {
+                          task.justLoaded = false;
+                        });
+                        tasksServices.taskAuditDecision(
+                            task.taskAddress, 'performer', task.nanoId,
+                            message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                        interface.emptyTaskMessage();
+                        showDialog(
+                            context: context,
+                            builder: (context) => WalletAction(
+                              nanoId: task.nanoId,
+                              taskName: 'taskAuditDecision',
+                            ));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(0.0),
@@ -244,12 +244,12 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           gradient: const LinearGradient(
-                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
-                            stops: [0, 0.6, 1],
+                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange,   Colors.purpleAccent,],
+                            stops: [0, 0.2, 0.5, 1],
                           ),
                         ),
                         child: const Text(
-                          'Confirm',
+                          'Performer',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,

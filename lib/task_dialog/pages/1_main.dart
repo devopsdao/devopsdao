@@ -161,7 +161,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   // const SizedBox(
                                   //   width: ,
                                   // ),
-                                  if (interface.dialogCurrentState['pages'].containsKey('chat'))
+                                  if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
                                     Container(
                                       width: 54,
                                       padding: const EdgeInsets.all(4.0),
@@ -171,7 +171,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         color: Colors.lightBlue.shade600,
                                         child: InkWell(
                                           onTap: () {
-                                            interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['chat'] ?? 99,
+                                            interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
                                                 duration: const Duration(milliseconds: 400), curve: Curves.ease);
                                           },
                                           child: Container(
@@ -721,7 +721,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
                                     GestureDetector(
                                       onTap: () async {
-                                        Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on chat page in Task dialog')).then((_) {
+                                        Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog')).then((_) {
                                           Flushbar(
                                               icon: const Icon(
                                                 Icons.copy,
@@ -751,7 +751,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                 )
                                               ),
                                               TextSpan(
-                                                text: '#NNX-06 Fix glitches on chat page in Task dialog',
+                                                text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog',
                                                 style: TextStyle( fontWeight: FontWeight.bold)
                                               ),
                                             ])),

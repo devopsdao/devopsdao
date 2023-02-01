@@ -26,6 +26,7 @@ import 'abi/LayerzeroFacet.g.dart';
 import 'abi/WormholeFacet.g.dart';
 // import 'abi/Wormhole.g.dart';
 import 'abi/IERC20.g.dart';
+import 'accounts.dart';
 import 'task.dart';
 import "package:universal_html/html.dart" hide Platform;
 import 'package:webthree/browser.dart'
@@ -173,6 +174,21 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasksCustomerSelection = {};
   Map<String, Task> tasksCustomerProgress = {};
   Map<String, Task> tasksCustomerComplete = {};
+
+  Map<String, Account> accountsTemp = {
+    '1' : Account(nickName: 'Als',
+        about: 'about',
+        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        rating: 5),
+    '2' : Account(nickName: 'MyNameIsC',
+        about: 'about super puper MyNameIsC',
+        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
+        rating: 12),
+    '3' : Account(nickName: 'Huh',
+        about: 'super HUH',
+        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'),
+        rating: 342),
+  };
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 

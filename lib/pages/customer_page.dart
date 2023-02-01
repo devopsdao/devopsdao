@@ -444,7 +444,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
       //           const Expanded(
       //             child: Center(),
       //           ),
-      //         if (page == 'description' || page == 'chat' || page == 'select')
+      //         if (page == 'description' || page == 'widgets.chat' || page == 'select')
       //           const Expanded(
       //             child: Icon(
       //               Icons.arrow_back,

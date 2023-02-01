@@ -131,7 +131,7 @@ class _TagsPageState extends State<TagsPage> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           interface.dialogPagesController.animateToPage(
-                              interface.dialogCurrentState['pages']['chat'] ?? 99,
+                              interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
                               duration: const Duration(milliseconds: 600),
                               curve: Curves.ease);
                         },

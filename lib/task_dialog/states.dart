@@ -70,7 +70,7 @@ Map<String, dynamic> dialogStates = {
       'topup': 0,
       'main': 1,
       'description' : 2,
-      'chat' : 3,
+      'widgets.chat' : 3,
     },
   },
   'customer-progress' : {
@@ -83,7 +83,7 @@ Map<String, dynamic> dialogStates = {
       'topup': 0,
       'main': 1,
       'description' : 2,
-      'chat' : 3,
+      'widgets.chat' : 3,
     },
   },
 
@@ -97,7 +97,7 @@ Map<String, dynamic> dialogStates = {
       'topup': 0,
       'main': 1,
       'description' : 2,
-      'chat' : 3,
+      'widgets.chat' : 3,
     },
   },
   'customer-completed' : {
@@ -109,7 +109,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'customer-canceled' : {
@@ -121,7 +121,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'customer-audit-requested' : {
@@ -137,7 +137,7 @@ Map<String, dynamic> dialogStates = {
       'main': 1,
       'description' : 2,
       'select' : 3,
-      'chat' : 4,
+      'widgets.chat' : 4,
     },
   },
   'customer-audit-performing' : {
@@ -150,7 +150,7 @@ Map<String, dynamic> dialogStates = {
       'topup': 0,
       'main': 1,
       'description' : 2,
-      'chat' : 3,
+      'widgets.chat' : 3,
     },
   },
   // 'customer-audit-finished' : {
@@ -188,7 +188,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'performer-progress' : {
@@ -200,7 +200,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'performer-review' : {
@@ -212,7 +212,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'performer-completed' : {
@@ -224,7 +224,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'performer-canceled' : {
@@ -236,7 +236,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'performer-audit-requested' : {
@@ -251,7 +251,7 @@ Map<String, dynamic> dialogStates = {
       'main': 0,
       'description' : 1,
       'select' : 2,
-      'chat' : 3,
+      'widgets.chat' : 3,
     },
   },
   'performer-audit-performing' : {
@@ -263,7 +263,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   // 'performer-audit-finished' : {
@@ -290,7 +290,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'auditor-applied' : {
@@ -302,7 +302,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'auditor-performing' : {
@@ -314,7 +314,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
   'auditor-finished' : {
@@ -326,7 +326,7 @@ Map<String, dynamic> dialogStates = {
     'pages' : {
       'main': 0,
       'description' : 1,
-      'chat' : 2,
+      'widgets.chat' : 2,
     },
   },
 };

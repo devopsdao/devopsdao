@@ -38,11 +38,11 @@ class InterfaceServices extends ChangeNotifier {
 
   //  ************ Wallet **************//
   late int pageWalletViewNumber = 0;
-  // PageView Controller for wallet/main.dart
+  // PageView Controller for wallet/accounts_page.dart
   late PageController controller = PageController(initialPage: 0);
 
   //  ************ task_dialog **************//
-  // PageView Controller for main.dart
+  // PageView Controller for accounts_page.dart
   late PageController dialogPagesController = PageController(initialPage: 1);
   late int dialogPageNum = 0; //initial starts from 1 page
   late Map<String, dynamic> dialogCurrentState;
@@ -53,7 +53,7 @@ class InterfaceServices extends ChangeNotifier {
   final double tileHeight = 34;
   final double heightForInfo = 140;
 
-  // Input text on main.dart
+  // Input text on accounts_page.dart
   late String taskMessage = '';
   late String taskTopupMessage = '';
   Future emptyTaskMessage() async {
@@ -69,7 +69,7 @@ class InterfaceServices extends ChangeNotifier {
 
   late String whichWalletButtonPressed = '';
 
-  // wallet/main.dart controller for tabs
+  // wallet/accounts_page.dart controller for tabs
   // late TabController walletTabController = TabController(length: 2, vsync: );
 
   // ***********  create_job_widget ************ ////

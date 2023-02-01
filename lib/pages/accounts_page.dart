@@ -1,19 +1,15 @@
 import 'package:provider/provider.dart';
 
+import '../account_dialog/account_transition_effect.dart';
 import '../blockchain/interface.dart';
-import '../create_job/create_job_call_button.dart';
 import '../task_dialog/beamer.dart';
-import '../task_dialog/task_transition_effect.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '/blockchain/task_services.dart';
-import '/widgets/loading.dart';
-import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
-import 'package:animations/animations.dart';
 
 class AccountsPage extends StatefulWidget {
   final EthereumAddress? taskAddress;
@@ -47,10 +43,13 @@ class _AccountsPageState extends State<AccountsPage> {
 
   List<String> deleteItems = [];
 
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+
+
 
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
@@ -72,10 +71,6 @@ class _AccountsPageState extends State<AccountsPage> {
         });
       });
     }
-
-
-
-    List objList = tasksServices.filterResults.values.toList();
 
 
     // if (widget.index != null) {
@@ -229,7 +224,7 @@ class _AccountsPageState extends State<AccountsPage> {
                                 child: ListView.builder(
                                   padding: EdgeInsets.zero,
                                   scrollDirection: Axis.vertical,
-                                  itemCount: tasksServices.filterResults.values.toList().length,
+                                  itemCount: tasksServices.accountsTemp.values.toList().length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),

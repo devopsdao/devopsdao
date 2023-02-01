@@ -18,7 +18,7 @@
         //     "name": "Flutter Web Project",
         //     "type": "dart",
         //     "request": "launch",
-        //     "program": "lib/main.dart",
+        //     "program": "lib/accounts_page.dart",
         //     "args": [
         //         "-d",
         //         "chrome"

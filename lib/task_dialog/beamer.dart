@@ -23,7 +23,7 @@ import 'package:webthree/credentials.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
-import '../chat/main.dart';
+import '../widgets/chat/main.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
