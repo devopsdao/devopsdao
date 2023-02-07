@@ -9,6 +9,7 @@ import '../../blockchain/task_services.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/payment.dart';
+import '../../widgets/tags/wrapped_chip.dart';
 import '../../widgets/wallet_action.dart';
 import '../widget/dialog_button_widget.dart';
 
@@ -81,7 +82,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                 borderRadius: BorderRadius.circular(interface.borderRadius),
                 child: GestureDetector(
                   onTap: () {
-                    // interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
+                    // interface.accountsDialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
                     //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
                   },
                   child: Container(
@@ -132,45 +133,22 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                       color: Colors.lightBlue.shade600,
                                       child: InkWell(
                                         onTap: () {
-                                          // interface.dialogPagesController.animateToPage(
-                                          //     interface.dialogCurrentState['pages']['description'] ?? 99,
-                                          //     duration: const Duration(milliseconds: 400),
-                                          //     curve: Curves.ease);
+                                          interface.accountsDialogPagesController.animateToPage(
+                                              1,
+                                              duration: const Duration(milliseconds: 400),
+                                              curve: Curves.ease);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(6.0),
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(6),
                                           ),
-                                          child: Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
+                                          child: Icon(Icons.arrow_forward_ios_rounded, size: 22, color: Colors.white),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  // const SizedBox(
-                                  //   width: ,
-                                  // ),
-                                  Container(
-                                    width: 54,
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      elevation: 9,
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.lightBlue.shade600,
-                                      child: InkWell(
-                                        onTap: () {
 
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(6.0),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          child: Icon(Icons.chat_outlined, size: 22, color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -207,77 +185,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
                 ),
               ),
 
-
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
-                  child: Container(
-                      width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(interface.borderRadius),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.topLeft,
-                            padding: const EdgeInsets.all(8.0),
-                            child: RichText(
-                                text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                  TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                ])),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: const []),
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-
-              // ********* Audit Completed part ************ //
-
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
-                    ),
-                    child: ListBody(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.all(2.0),
-                              child: const Icon(Icons.new_releases,
-                                  size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: RichText(
-                                  text:
-                                  TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                    TextSpan(
-                                        text: 'Thank you for your contribution. This Task completed. You have earned: ',
-                                        style: TextStyle(
-                                          height: 1,
-                                        )),
-                                  ])),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
 
               // ************ Show prices and topup part ******** //
               // if (!FocusScope.of(context).hasFocus)
@@ -316,53 +223,88 @@ class _AccountMainPageState extends State<AccountMainPage> {
                 ),
               ),
 
-              // ********* Text Input ************ //
-
+              // ************ TAGS *********** //
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
                   elevation: 10,
                   borderRadius: BorderRadius.circular(interface.borderRadius),
                   child: Container(
-                    // constraints: const BoxConstraints(maxHeight: 500),
                     padding: const EdgeInsets.all(8.0),
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(interface.borderRadius),
                     ),
-                    child: TextFormField(
-                      controller: messageForStateController,
-                      // onChanged: (_) => EasyDebounce.debounce(
-                      //   'messageForStateController',
-                      //   Duration(milliseconds: 2000),
-                      //   () => setState(() {}),
-                      // ),
-                      autofocus: false,
-                      obscureText: false,
-                      onTapOutside: (test) {
-                        FocusScope.of(context).unfocus();
-                        interface.taskMessage = messageForStateController!.text;
-                      },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RichText(
+                            text: const TextSpan(
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87),
+                                children: <TextSpan>[
+                                  TextSpan(text: 'NFT collection:' ),
+                              ]
+                            )
+                          ),
+                        ),
+                        LayoutBuilder(
+                            builder: (context, constraints) {
+                              final double width = constraints.maxWidth - 66;
+                              return Row(
+                                children: <Widget>[
+                                  Consumer<InterfaceServices>(
+                                      builder: (context, model, child) {
+                                        if (model.tempTagsList.isNotEmpty) {
+                                          return SizedBox(
+                                            width: width,
+                                            child: Wrap(
+                                                alignment: WrapAlignment.start,
+                                                direction: Axis.horizontal,
+                                                children: model.tempTagsList.map((e) {
+                                                  return WrappedChip(
+                                                      key: ValueKey(e),
+                                                      theme: 'white',
+                                                      nft: e.nft ?? false,
+                                                      name: e.tag!,
+                                                      control: true,
+                                                      page: 'create'
+                                                  );
+                                                }).toList()),
+                                          );
+                                        } else {
+                                          return Row(
+                                            children: <Widget>[
+                                              // Container(
+                                              //   padding: const EdgeInsets.all(2.0),
+                                              //   child: const Icon(Icons.new_releases,
+                                              //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                              // ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: RichText(
+                                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                                      TextSpan(
+                                                          text: 'Empty :(',
+                                                          style: TextStyle(
+                                                            height: 1,
+                                                          )),
+                                                    ])),
+                                              ),
+                                            ],
+                                          );
+                                        }
 
-                      decoration: const InputDecoration(
-                        labelText: 'interface.dialogCurrentState[]',
-                        labelStyle: TextStyle(fontSize: 17.0, color: Colors.black54),
-                        hintText: '[Enter your message here..]',
-                        hintStyle: TextStyle(fontSize: 14.0, color: Colors.black54),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide.none,
+                                      }
+                                  ),
+                                ],
+                              );
+                            }
                         ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: Colors.black87,
-                        lineHeight: null,
-                      ),
-                      minLines: 1,
-                      maxLines: 3,
+                      ],
                     ),
                   ),
                 ),

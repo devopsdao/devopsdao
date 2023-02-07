@@ -8,6 +8,8 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../blockchain/accounts.dart';
+import '../../blockchain/empty_classes.dart';
 import '../../blockchain/task.dart';
 
 // void main() {
@@ -25,8 +27,14 @@ import '../../blockchain/task.dart';
 
 class ChatWidget extends StatefulWidget {
   final Task task;
+  final Account account;
   final TasksServices tasksServices;
-  const ChatWidget({super.key, required this.task, required this.tasksServices});
+  const ChatWidget({
+    super.key,
+    required this.task,
+    required this.account,
+    required this.tasksServices
+  });
 
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
@@ -47,6 +55,8 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+
+
     if (tasksServices.publicAddress != null) {
       logged = true;
     }

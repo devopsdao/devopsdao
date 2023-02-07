@@ -1,3 +1,4 @@
+import 'package:devopsdao/blockchain/empty_classes.dart';
 import 'package:devopsdao/task_dialog/pages.dart';
 import 'package:devopsdao/task_dialog/states.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:webthree/credentials.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
+import '../blockchain/empty_classes.dart';
 // import '../widgets/chat/accounts_page.dart';
 
 import 'header.dart';
@@ -43,6 +45,7 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
   Widget build(BuildContext context) {
     late Task task;
     var tasksServices = context.read<TasksServices>();
+    var emptyClasses = context.read<EmptyClasses>();
 
     EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Task>(
@@ -50,35 +53,17 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             task = snapshot.data!;
-            return TaskDialogSkeleton(fromPage: widget.fromPage, task: task, isLoading: false);
+            return TaskDialogSkeleton(
+                fromPage: widget.fromPage,
+                task: task,
+                isLoading: false
+            );
           }
-          task = Task(
-              nanoId: '111',
-              createTime: DateTime.now(),
-              taskType: 'task[2]',
-              title: 'Loading...',
-              description: 'Loading...',
-              tags: [],
-              tagsNFT: [],
-              symbols: [],
-              amounts: [],
-              taskState: 'empty',
-              auditState: '',
-              rating: 0,
-              contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              participants: [],
-              funders: [],
-              auditors: [],
-              messages: [],
-              taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              justLoaded: true,
-              contractValue: 0,
-              contractValueToken: 0,
-              transport: '');
-          return TaskDialogSkeleton(fromPage: widget.fromPage, task: task, isLoading: true);
+          return TaskDialogSkeleton(
+              fromPage: widget.fromPage,
+              task: emptyClasses.loadingTask,
+              isLoading: true
+          );
         });
   }
 }
@@ -116,8 +101,6 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
     final task = widget.task;
 
     String fromPage = widget.fromPage;
-
-    final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
 
     if (widget.fromPage == 'customer') {
       backgroundPicture = "assets/images/cross.png";
@@ -203,7 +186,6 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
             height: statusBarHeight,
           ),
           TaskDialogHeader(
-            maxStaticDialogWidth: maxStaticDialogWidth,
             task: task,
             fromPage: fromPage,
           ),
@@ -211,7 +193,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
             height: screenHeightSize - statusBarHeight,
             // width: constraints.maxWidth * .8,
             // height: 550,
-            width: maxStaticDialogWidth,
+            width: interface.maxStaticDialogWidth,
 
             child: widget.isLoading == false
                 ? TaskDialogPages(

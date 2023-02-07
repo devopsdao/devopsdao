@@ -91,7 +91,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 child: GestureDetector(
                   onTap: () {
-                    // interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
+                    // interface.accountsDialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
                     //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
                     // tasksServices.myNotifyListeners();
                   },
@@ -143,7 +143,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                                       color: Colors.lightBlue.shade600,
                                       child: InkWell(
                                         onTap: () {
-                                          // interface.dialogPagesController.animateToPage(
+                                          // interface.accountsDialogPagesController.animateToPage(
                                               // interface.dialogCurrentState['pages']['description'] ?? 99,
                                               // duration: const Duration(milliseconds: 400),
                                               // curve: Curves.ease);

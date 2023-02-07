@@ -1,3 +1,4 @@
+import 'package:devopsdao/blockchain/empty_classes.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => TasksServices()),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
+        ChangeNotifierProvider(create: (context) => EmptyClasses()),
       ],
       child: MyApp(),
     ),

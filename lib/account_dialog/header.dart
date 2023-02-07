@@ -10,13 +10,11 @@ import 'package:flutter/services.dart';
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class DialogHeader extends StatefulWidget {
-  final double maxStaticDialogWidth;
   final Account account;
   final String fromPage;
 
   const DialogHeader({
     Key? key,
-    required this.maxStaticDialogWidth,
     required this.account,
     required this.fromPage
   }) : super(key: key);
@@ -29,19 +27,18 @@ class _DialogHeaderState extends State<DialogHeader> {
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    final double maxStaticDialogWidth = widget.maxStaticDialogWidth;
     final Account account = widget.account;
 
     return Container(
       padding: const EdgeInsets.all(20),
-      width: maxStaticDialogWidth,
+      width: interface.maxStaticDialogWidth,
       child: Row(
         children: [
           SizedBox(
             width: 30,
             child: InkWell(
               onTap: () {
-                interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['main'],
+                interface.accountsDialogPagesController.animateToPage(0,
                   duration: const Duration(milliseconds: 400), curve: Curves.ease);
               },
               borderRadius: BorderRadius.circular(16),
@@ -49,7 +46,64 @@ class _DialogHeaderState extends State<DialogHeader> {
                 padding: const EdgeInsets.all(0.0),
                 height: 30,
                 width: 30,
-                child: Container()
+                child: LayoutBuilder(
+                    builder: (BuildContext, context) {
+                  return Row(
+                    children: <Widget>[
+                      // if (interface.accountsDialogPageNum ==)
+                      //   const Expanded(
+                      //     child: Icon(
+                      //       Icons.arrow_forward,
+                      //       size: 30,
+                      //     ),
+                      //   ),
+                      if (interface.accountsDialogPageNum == 0)
+                        const Expanded(
+                          child: Center(),
+                        ),
+                      if (interface.accountsDialogPageNum > 0)
+                        const Expanded(
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 30,
+                          ),
+                        ),
+                    ],
+                  );
+                })
+                
+                //
+                //
+                // Consumer<InterfaceServices>(
+                //   builder: (context, model, child) {
+                //     late Map<String, int> mapPages = model.dialogCurrentState['pages'];
+                //     late String page = mapPages.entries.firstWhere((element) => element.value == model.dialogPageNum, orElse: () {
+                //       return const MapEntry('main', 0);
+                //     }).key;
+                //     return Row(
+                //       children: <Widget>[
+                //         if (page == 'topup')
+                //           const Expanded(
+                //             child: Icon(
+                //               Icons.arrow_forward,
+                //               size: 30,
+                //             ),
+                //           ),
+                //         if (page.toString() == 'main')
+                //           const Expanded(
+                //             child: Center(),
+                //           ),
+                //         if (page == 'description' || page == 'widgets.chat' || page == 'select')
+                //           const Expanded(
+                //             child: Icon(
+                //               Icons.arrow_back,
+                //               size: 30,
+                //             ),
+                //           ),
+                //       ],
+                //     );
+                //   },
+                // ),
               ),
             ),
           ),
@@ -108,7 +162,7 @@ class _DialogHeaderState extends State<DialogHeader> {
           const Spacer(),
           InkWell(
             onTap: () {
-              // interface.dialogPageNum = interface.dialogCurrentState['pages']['main']; // reset page to *main*
+              interface.accountsDialogPageNum = 0; // reset page to *0*
               // interface.selectedUser = {}; // reset
               Navigator.pop(context);
               // interface.emptyTaskMessage();

@@ -397,7 +397,7 @@ class TasksServices extends ChangeNotifier {
     if (platform == 'web') {}
 
     initComplete = true;
-    testTaskCreation();
+    // testTaskCreation();
   }
 
   late ContractAbi _abiCode;
@@ -969,7 +969,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   // late dynamic credentials;
-  late dynamic accounts;
+  late dynamic hardhatAccounts;
   double? ethBalance = 0;
   double? ethBalanceToken = 0;
   double? pendingBalance = 0;
@@ -1037,10 +1037,10 @@ class TasksServices extends ChangeNotifier {
       Random random = Random();
       int randomNum = random.nextInt(2);
 
-      String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
-      accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+      String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
+      hardhatAccounts = jsonDecode(hardhatAccountsFile);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1673,8 +1673,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1704,8 +1704,8 @@ class TasksServices extends ChangeNotifier {
       var creds;
       var senderAddress;
       if (hardhatDebug == true) {
-        creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-        senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+        creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+        senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       } else {
         creds = credentials;
         senderAddress = publicAddress;
@@ -1800,8 +1800,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1850,8 +1850,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1894,8 +1894,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[2]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[2]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[2]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[2]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1948,8 +1948,8 @@ class TasksServices extends ChangeNotifier {
         creds = credentials;
         senderAddress = publicAddress;
       } else if (state == 'progress' || state == 'review') {
-        creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-        senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+        creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+        senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       } else {
         creds = credentials;
         senderAddress = publicAddress;
@@ -2001,8 +2001,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2046,8 +2046,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2090,8 +2090,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2144,8 +2144,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2161,8 +2161,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2178,8 +2178,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2284,8 +2284,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;

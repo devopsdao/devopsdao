@@ -41,10 +41,22 @@ class InterfaceServices extends ChangeNotifier {
   // PageView Controller for wallet/accounts_page.dart
   late PageController controller = PageController(initialPage: 0);
 
+  //  ************ accounts_dialog **************//
+  late PageController accountsDialogPagesController = PageController(initialPage: 0);
+  late int accountsDialogPageNum = 0;
+  Future updateAccountsDialogPageNum(number) async {
+    accountsDialogPageNum = number;
+    notifyListeners();
+  }
+
   //  ************ task_dialog **************//
   // PageView Controller for accounts_page.dart
   late PageController dialogPagesController = PageController(initialPage: 1);
   late int dialogPageNum = 0; //initial starts from 1 page
+  Future updateDialogPageNum(number) async {
+    dialogPageNum = number;
+    notifyListeners();
+  }
   late Map<String, dynamic> dialogCurrentState;
 
   // selected Performer or Auditor in participants_list.dart:
@@ -83,7 +95,20 @@ class InterfaceServices extends ChangeNotifier {
   );
 
   // ***********  tags  ************ ////
-
+  late List<SimpleTags> tempTagsList = [
+    SimpleTags(tag: "Dart", icon: "", nft: true),
+    SimpleTags(tag: "Flutter", icon: "", nft: true),
+    SimpleTags(tag: "Solidity", icon: "", nft: true),
+    SimpleTags(tag: "Diamond", icon: "", nft: true),
+    SimpleTags(tag: "Web3", icon: "", nft: true),
+  ];
+  late List<SimpleTags> tempTagsListForTask = [
+    SimpleTags(tag: "Dart", icon: "", nft: true),
+    SimpleTags(tag: "Solidity", icon: ""),
+    SimpleTags(tag: "Flutter", icon: "", nft: true),
+    SimpleTags(tag: "Diamond", icon: ""),
+    SimpleTags(tag: "Web3", icon: ""),
+  ];
   late List<SimpleTags> auditorTagsList = [];
   late List<SimpleTags> tasksTagsList = [];
   late List<SimpleTags> customerTagsList = [];
@@ -125,11 +150,6 @@ class InterfaceServices extends ChangeNotifier {
   final double maxStaticDialogWidth = 600;
   final double maxStaticInternalDialogWidth = 480;
   final double maxStaticGlobalWidth = 1000;
-
-  Future updateDialogPageNum(number) async {
-    dialogPageNum = number;
-    notifyListeners();
-  }
 }
 
 

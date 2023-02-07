@@ -59,7 +59,7 @@ class _AccountCvPageState extends State<AccountCvPage> {
                   borderRadius: BorderRadius.circular(interface.borderRadius),
                   child: GestureDetector(
                       onTap: () {
-                        // interface.dialogPagesController.animateToPage(
+                        // interface.accountsDialogPagesController.animateToPage(
                         //     interface.dialogPages['chat'] == null ? interface.dialogPages['select']! : interface.dialogPages['chat']!,
                         //     duration: const Duration(milliseconds: 300),
                         //     curve: Curves.ease);

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
+import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/chat/main.dart';
 
-class ChatPage extends StatelessWidget {
+class AccountsChatPage extends StatelessWidget {
   final double innerPaddingWidth;
-  final Task task;
+  final Account account;
 
 
-  const ChatPage(
+  const AccountsChatPage(
       {Key? key,
         required this.innerPaddingWidth,
-        required this.task,
+        required this.account,
       })
       : super(key: key);
+
 
 
   @override
@@ -44,10 +46,9 @@ class ChatPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(interface.borderRadius),
                     ),
                     child: ChatWidget(
-                      task: task, account:
-                      emptyClasses.emptyAccount,
-                      tasksServices: tasksServices
-                    )),
+                        account: account,
+                        task: emptyClasses.emptyTask,
+                        tasksServices: tasksServices)),
               )),
         ));
   }

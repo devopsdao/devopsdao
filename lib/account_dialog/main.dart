@@ -94,11 +94,7 @@ class _AccountSkeletonState extends State<AccountSkeleton> {
     // var tasksServices = context.read<TasksServices>();
 
     final account = widget.object;
-
     String fromPage = widget.fromPage;
-
-    final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
-
     backgroundPicture = "assets/images/cyrcle.png";
 
     return Container(
@@ -117,7 +113,6 @@ class _AccountSkeletonState extends State<AccountSkeleton> {
             height: statusBarHeight,
           ),
           DialogHeader(
-            maxStaticDialogWidth: maxStaticDialogWidth,
             account: account,
             fromPage: fromPage,
           ),
@@ -125,7 +120,7 @@ class _AccountSkeletonState extends State<AccountSkeleton> {
             height: screenHeightSize - statusBarHeight,
             // width: constraints.maxWidth * .8,
             // height: 550,
-            width: maxStaticDialogWidth,
+            width: interface.maxStaticDialogWidth,
 
             child: widget.isLoading == false
                 ? AccountPages(
@@ -162,12 +157,7 @@ class ShimmeredPages extends StatelessWidget {
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerPaddingWidth = dialogConstraints.maxWidth - 50;
 
-      return PageView(
-        scrollDirection: Axis.horizontal,
-        controller: interface.dialogPagesController,
-        onPageChanged: (number) {
-          Provider.of<InterfaceServices>(context, listen: false).updateDialogPageNum(number);
-        },
+      return Column(
         children: <Widget>[
           if (interface.dialogCurrentState['pages'].containsKey('main'))
             ConstrainedBox(

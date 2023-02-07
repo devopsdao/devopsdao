@@ -61,12 +61,7 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerPaddingWidth = dialogConstraints.maxWidth - 50;
 
-      return PageView(
-        scrollDirection: Axis.horizontal,
-        controller: interface.dialogPagesController,
-        onPageChanged: (number) {
-          Provider.of<InterfaceServices>(context, listen: false).updateDialogPageNum(number);
-        },
+      return Column(
         children: <Widget>[
           if (interface.dialogCurrentState['pages'].containsKey('main'))
             ConstrainedBox(

@@ -119,7 +119,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                 decoration: InputDecoration(
                   // suffixIcon: interface.dialogCurrentState['pages']['chat'] != null ? IconButton(
                   //   onPressed: () {
-                  //     interface.dialogPagesController.animateToPage(
+                  //     interface.accountsDialogPagesController.animateToPage(
                   //         interface.dialogCurrentState['pages']['chat'] ?? 99,
                   //         duration: const Duration(milliseconds: 600),
                   //         curve: Curves.ease);
