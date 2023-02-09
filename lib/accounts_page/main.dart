@@ -1,96 +1,40 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
-import '../create_job/create_job_as_page.dart';
 import '../create_job/create_job_call_button.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
-import '../task_dialog/shimmer.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
-import '../widgets/tags/tags.dart';
 import '/blockchain/task_services.dart';
-import '/create_job/create_job_widget.dart';
 import '/widgets/loading.dart';
-import '../task_dialog/main.dart';
-import '../task_item/task_item.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 
-import 'package:beamer/beamer.dart';
-
 import 'package:webthree/credentials.dart';
 import 'package:animations/animations.dart';
 
-// class ExchangeFilterWidget extends ChangeNotifier {
-//   List<Task> filterResults = [];
-//
-//   void _runFilter(String enteredKeyword, _allTasks) {
-//
-//     filterResults.clear();
-//     // filterResults = _allTasks.toList();
-//     if (enteredKeyword.isEmpty) {
-//       // if the search field is empty or only contains white-space, we'll display all tasks
-//       filterResults = _allTasks.toList();
-//       // print(filterResults);
-//
-//     } else {
-//       for (int i = 0; i<_allTasks.length ; i++) {
-//         if(_allTasks.elementAt(i).title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-//           print('${_allTasks.elementAt(i).title}');
-//           filterResults.add(_allTasks.elementAt(i));
-//           // notifyListeners();
-//         }
-//       }
-//     }
-//     // Refresh the UI
-//     notifyListeners();
-//   }
-// }
-
-class TasksPageWidget extends StatefulWidget {
+class AccountsPage extends StatefulWidget {
   final EthereumAddress? taskAddress;
-  const TasksPageWidget({Key? key, this.taskAddress}) : super(key: key);
+  const AccountsPage({Key? key, this.taskAddress}) : super(key: key);
 
   @override
-  _TasksPageWidgetState createState() => _TasksPageWidgetState();
+  _AccountsPageState createState() => _AccountsPageState();
 }
 
-class _TasksPageWidgetState extends State<TasksPageWidget> {
-  // String _searchKeyword = '';
+class _AccountsPageState extends State<AccountsPage> {
   final _searchKeywordController = TextEditingController();
-  final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  // final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
-  // _changeField() {
-  //   setState(() =>_searchKeyword = _searchKeywordController.text);
-  // }
-
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    // _searchKeywordController.text = '';
-    // _searchKeywordController.addListener(() {_changeField();});
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
+        showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'accounts'));
       });
     }
   }
@@ -152,7 +96,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Job Exchange',
+                  'Accounts',
                   style: FlutterFlowTheme.of(context).title2.override(
                         fontFamily: 'Poppins',
                         color: Colors.white,
@@ -164,33 +108,16 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           ],
         ),
         actions: const [
-          LoadButtonIndicator(),
-          // Row(
-          //   mainAxisSize: MainAxisSize.max,
-          //   children: [
-          //     Padding(
-          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-          //       child: Icon(
-          //         Icons.settings_outlined,
-          //         color: FlutterFlowTheme.of(context).primaryBtnText,
-          //         size: 24,
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          // LoadButtonIndicator(),
         ],
         centerTitle: false,
         elevation: 2,
       ),
       backgroundColor: const Color(0xFF1E2429),
 
-      floatingActionButton: isFloatButtonVisible
-          ? const CreateCallButton() : null,
-
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -212,9 +139,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             initialIndex: 0,
             child: LayoutBuilder(
                 builder: (context, constraints) {
-              // print('max:  ${constraints.maxHeight}');
-              // print('max * : ${constraints.maxHeight * .65}');
-              // print(constraints.minWidth);
                 return Column(
                   children: [
                     Row(
@@ -279,7 +203,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                           children: model.tasksTagsList.map((e) {
 
                             return WrappedChip(
-
                               key: ValueKey(e),
                               theme: 'black',
                               nft: e.nft ?? false,
@@ -288,11 +211,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                               //   model.removeTag(i.tag);
                               // },
                               control: true,
-                              page: 'tasks'
-                              // onDeleted: () {
-                              //   //
-                              //   if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
-                              // },
+                              page: 'accounts'
                             );
 
 
@@ -342,67 +261,66 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                     //   ],
                     // ),
 
-                    tasksServices.isLoading
-                        ? const LoadIndicator()
-                        : Expanded(
-                            child: TabBarView(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                  child: RefreshIndicator(
-                                    onRefresh: () async {
-                                      tasksServices.isLoadingBackground = true;
-                                      tasksServices.fetchTasks();
-                                    },
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: tasksServices.filterResults.values.toList().length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                          child:  ClickOnTask(fromPage: 'tasks', index: index,)
 
-                                          // InkWell(
-                                          //     onTap: () {
-                                          //       // print('tap');
-                                          //
-                                          //       setState(() {
-                                          //         // Toggle light when tapped.
-                                          //       });
-                                          //       // final taskAddress =
-                                          //       //     tasksServices
-                                          //       //         .filterResults.values
-                                          //       //         .toList()[index]
-                                          //       //         .taskAddress;
-                                          //       // context.popToNamed(
-                                          //       //     '/tasks/$taskAddress');
-                                          //       // print(objList);
-                                          //       showDialog(
-                                          //           context: context,
-                                          //           builder: (context) => TaskInformationDialog(
-                                          //               fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
-                                          //       final String taskAddress =
-                                          //           tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                                          //       RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
-                                          //       Beamer.of(context).updateRouteInformation(routeInfo);
-                                          //       // showDialog(
-                                          //       //     context: context,
-                                          //       //     builder: (context) =>
-                                          //       //         TaskDialogBeamer(index: index));
-                                          //     },
-                                          //     child: TaskItem(
-                                          //       fromPage: 'tasks',
-                                          //       object: tasksServices.filterResults.values.toList()[index],
-                                          //     )),
-                                        );
-                                      },
-                                    ),
-                                  ),
+                    Expanded(
+                        child: TabBarView(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                              child: RefreshIndicator(
+                                onRefresh: () async {
+                                  tasksServices.isLoadingBackground = true;
+                                  tasksServices.fetchTasks();
+                                },
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: tasksServices.filterResults.values.toList().length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                      child:  ClickOnAccount(fromPage: 'tasks', index: index,)
+
+                                      // InkWell(
+                                      //     onTap: () {
+                                      //       // print('tap');
+                                      //
+                                      //       setState(() {
+                                      //         // Toggle light when tapped.
+                                      //       });
+                                      //       // final taskAddress =
+                                      //       //     tasksServices
+                                      //       //         .filterResults.values
+                                      //       //         .toList()[index]
+                                      //       //         .taskAddress;
+                                      //       // context.popToNamed(
+                                      //       //     '/tasks/$taskAddress');
+                                      //       // print(objList);
+                                      //       showDialog(
+                                      //           context: context,
+                                      //           builder: (context) => TaskInformationDialog(
+                                      //               fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
+                                      //       final String taskAddress =
+                                      //           tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                                      //       RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
+                                      //       Beamer.of(context).updateRouteInformation(routeInfo);
+                                      //       // showDialog(
+                                      //       //     context: context,
+                                      //       //     builder: (context) =>
+                                      //       //         TaskDialogBeamer(index: index));
+                                      //     },
+                                      //     child: TaskItem(
+                                      //       fromPage: 'tasks',
+                                      //       object: tasksServices.filterResults.values.toList()[index],
+                                      //     )),
+                                    );
+                                  },
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
+                      ),
                   ],
                 );
               }

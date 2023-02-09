@@ -11,7 +11,7 @@ import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
-import '../widgets/task_item.dart';
+import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';

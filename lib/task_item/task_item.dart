@@ -6,6 +6,7 @@ import '../blockchain/task.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
+import 'delete_item_alert.dart';
 
 class TaskItem extends StatefulWidget {
   // final int taskCount;
@@ -27,6 +28,9 @@ class _TaskItemState extends State<TaskItem> {
   bool enableRatingButton = false;
   double ratingScore = 0;
   int taskCount = 0;
+
+  final bool isAdministrator = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +77,33 @@ class _TaskItemState extends State<TaskItem> {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
+          if (true)
+          SizedBox(
+            width: 50,
+            height: 80,
+            child: InkWell(
+              child: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Icon(
+                  Icons.delete_forever,
+                  color: Colors.deepOrange,
+                  size: 30,
+                ),
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog(context: context, builder: (context) =>
+                      DeleteItemAlert(who: widget.fromPage, task: task));
+                });
+              },
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 8, 8),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 8, 8),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,

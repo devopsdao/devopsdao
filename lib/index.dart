@@ -4,4 +4,5 @@ export 'create_job/create_job_widget.dart' show CreateJobWidget;
 export 'tasks_page/tasks_page_widget.dart' show TasksPageWidget;
 export 'customer_page/customer_page_widget.dart' show CustomerPageWidget;
 export 'performer_page/performer_page_widget.dart' show PerformerPageWidget;
+export 'accounts_page/main.dart' show AccountsPage;
 // export 'wallet/main.dart' show WalletPageTop;

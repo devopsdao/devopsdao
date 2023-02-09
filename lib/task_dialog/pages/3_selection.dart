@@ -209,146 +209,148 @@ class _SelectionPageState extends State<SelectionPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.only(top: 5.0),
-        width: innerPaddingWidth,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: interface.maxStaticInternalDialogWidth,
-            maxHeight: widget.screenHeightSize,
-            // minHeight: widget.screenHeightSize
-          ),
-          child: Column(
-            children: [
-              Builder(
-                builder: (context) {
-                  final bool walletSelected = interface.selectedUser['address'] != null ? true : false;
-                  late double layoutHeight =
-                      widget.screenHeightSize - MediaQuery.of(context).viewPadding.top - 100; // minus mobile statusbar
-                  // Set height for INFO panel if address selected:
-                  if (walletSelected) {
-                    heightForInfo = interface.heightForInfo;
-                  }
-                  // Set height for address LIST when address selected:
-                  late double heightLeft = layoutHeight - heightForInfo;
-                  // If address LIST empty set default height:
-                  if (task.participants.isEmpty) {
-                    layoutHeight = 90;
-                  }
-                  // Collect entire height for all addresses:
-                  final double heightOfAllParticipant = interface.tileHeight * task.participants.length;
-                  // If address LIST doesn't take up the entire height set height for those addresses:
-                  if (layoutHeight > heightOfAllParticipant && task.participants.isNotEmpty) {
-                    layoutHeight = heightOfAllParticipant + 42;
-                    heightLeft = layoutHeight;
-                  }
-                  //
-                  // print('heightOfAllParticipant: $heightOfAllParticipant');
-                  // print('layoutHeight: $layoutHeight');
-                  // print('task.participants.length: ${task.participants.length}');
+      body: Center(
+        child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.only(top: 5.0),
+          width: innerPaddingWidth,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: interface.maxStaticInternalDialogWidth,
+              maxHeight: widget.screenHeightSize,
+              // minHeight: widget.screenHeightSize
+            ),
+            child: Column(
+              children: [
+                Builder(
+                  builder: (context) {
+                    final bool walletSelected = interface.selectedUser['address'] != null ? true : false;
+                    late double layoutHeight =
+                        widget.screenHeightSize - MediaQuery.of(context).viewPadding.top - 100; // minus mobile statusbar
+                    // Set height for INFO panel if address selected:
+                    if (walletSelected) {
+                      heightForInfo = interface.heightForInfo;
+                    }
+                    // Set height for address LIST when address selected:
+                    late double heightLeft = layoutHeight - heightForInfo;
+                    // If address LIST empty set default height:
+                    if (task.participants.isEmpty) {
+                      layoutHeight = 90;
+                    }
+                    // Collect entire height for all addresses:
+                    final double heightOfAllParticipant = interface.tileHeight * task.participants.length;
+                    // If address LIST doesn't take up the entire height set height for those addresses:
+                    if (layoutHeight > heightOfAllParticipant && task.participants.isNotEmpty) {
+                      layoutHeight = heightOfAllParticipant + 42;
+                      heightLeft = layoutHeight;
+                    }
+                    //
+                    // print('heightOfAllParticipant: $heightOfAllParticipant');
+                    // print('layoutHeight: $layoutHeight');
+                    // print('task.participants.length: ${task.participants.length}');
 
-                  return Column(
-                    children: <Widget>[
-                      Builder(
-                        builder: (context) {
-                          // print('ofset' + selectionScrollController!.offset.toString());
+                    return Column(
+                      children: <Widget>[
+                        Builder(
+                          builder: (context) {
+                            // print('ofset' + selectionScrollController!.offset.toString());
 
-                          return AnimatedContainer(
+                            return AnimatedContainer(
+                              // color: Colors.amber,
+                              duration:  const Duration(milliseconds: 300),
+                              height: walletSelected ? heightLeft : layoutHeight,
+                              curve: Curves.fastOutSlowIn,
+                              child: contractorList,
+                            );
+                          }
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 14.0)),
+                        // if(interface.selectedUser['address'] != null)
+                          AnimatedContainer(
                             // color: Colors.amber,
-                            duration:  const Duration(milliseconds: 300),
-                            height: walletSelected ? heightLeft : layoutHeight,
-                            curve: Curves.fastOutSlowIn,
-                            child: contractorList,
-                          );
-                        }
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 14.0)),
-                      // if(interface.selectedUser['address'] != null)
-                        AnimatedContainer(
-                          // color: Colors.amber,
-                          duration:  const Duration(milliseconds: 50),
-                          height: walletSelected ? heightForInfo : 0,
-                          width: walletSelected ? widget.innerPaddingWidth : 0,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child:  ExpandInformation(
-                              expand: walletSelected,
-                              child: Material(
-                                elevation: 10,
-                                borderRadius: BorderRadius.circular(interface.borderRadius),
-                                child: Container(
-                                  height: heightForInfo,
-                                  padding: const EdgeInsets.all(14),
-                                  child: contractorInfo,
+                            duration:  const Duration(milliseconds: 50),
+                            height: walletSelected ? heightForInfo : 0,
+                            width: walletSelected ? widget.innerPaddingWidth : 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child:  ExpandInformation(
+                                expand: walletSelected,
+                                child: Material(
+                                  elevation: 10,
+                                  borderRadius: BorderRadius.circular(interface.borderRadius),
+                                  child: Container(
+                                    height: heightForInfo,
+                                    padding: const EdgeInsets.all(14),
+                                    child: contractorInfo,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        // AnimatedSize(
-                        //   curve: Curves.easeIn,
-                        //   duration: const Duration(milliseconds: 1500),
-                        //   child: SizedBox(
-                        //     height: interface.selectedUser['address'] != null ? heightForInfo : 0,
-                        //     child: contractorInfo
-                        //   )
-                        // )
-                      ),
-                    ],
-                  );
-                }
-              ),
-              const Spacer(),
-              // Container(
-              //   padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-              //   width: innerPaddingWidth + 8,
-              //   child: Row(
-              //     // direction: Axis.horizontal,
-              //     // crossAxisAlignment: WrapCrossAlignment.start,
-              //     children: [
-              //       TaskDialogButton(
-              //         // padding: 8.0,
-              //         inactive: interface.selectedUser['address'] == null ? true : false,
-              //         buttonName: interface.dialogCurrentState['selectButtonName'] ?? 'null: no name',
-              //         buttonColorRequired: Colors.lightBlue.shade600,
-              //         callback: () {
-              //           setState(() {
-              //             task.justLoaded = false;
-              //           });
-              //           late String status;
-              //           if (interface.dialogCurrentState['name'] == 'customer-new') {
-              //             status = 'agreed';
-              //           } else if (
-              //             interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
-              //             interface.dialogCurrentState['name'] == 'customer-audit-requested'
-              //           ) {
-              //             status = 'audit';
-              //           }
-              //           tasksServices.taskStateChange(task.taskAddress,
-              //               EthereumAddress.fromHex(interface.selectedUser['address']!), status, task.nanoId);
-              //           interface.selectedUser = {}; // reset
-              //           Navigator.pop(context);
-              //           interface.emptyTaskMessage();
-              //           RouteInformation routeInfo =
-              //             const RouteInformation(location: '/customer');
-              //           Beamer.of(context).updateRouteInformation(routeInfo);
-              //
-              //           showDialog(
-              //             context: context,
-              //             builder: (context) => WalletAction(
-              //               nanoId: task.nanoId,
-              //               taskName: 'taskStateChange',
-              //             )
-              //           );
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              const SizedBox(
-                height: 65,
-              )
-            ],
+                          // AnimatedSize(
+                          //   curve: Curves.easeIn,
+                          //   duration: const Duration(milliseconds: 1500),
+                          //   child: SizedBox(
+                          //     height: interface.selectedUser['address'] != null ? heightForInfo : 0,
+                          //     child: contractorInfo
+                          //   )
+                          // )
+                        ),
+                      ],
+                    );
+                  }
+                ),
+                const Spacer(),
+                // Container(
+                //   padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
+                //   width: innerPaddingWidth + 8,
+                //   child: Row(
+                //     // direction: Axis.horizontal,
+                //     // crossAxisAlignment: WrapCrossAlignment.start,
+                //     children: [
+                //       TaskDialogButton(
+                //         // padding: 8.0,
+                //         inactive: interface.selectedUser['address'] == null ? true : false,
+                //         buttonName: interface.dialogCurrentState['selectButtonName'] ?? 'null: no name',
+                //         buttonColorRequired: Colors.lightBlue.shade600,
+                //         callback: () {
+                //           setState(() {
+                //             task.justLoaded = false;
+                //           });
+                //           late String status;
+                //           if (interface.dialogCurrentState['name'] == 'customer-new') {
+                //             status = 'agreed';
+                //           } else if (
+                //             interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
+                //             interface.dialogCurrentState['name'] == 'customer-audit-requested'
+                //           ) {
+                //             status = 'audit';
+                //           }
+                //           tasksServices.taskStateChange(task.taskAddress,
+                //               EthereumAddress.fromHex(interface.selectedUser['address']!), status, task.nanoId);
+                //           interface.selectedUser = {}; // reset
+                //           Navigator.pop(context);
+                //           interface.emptyTaskMessage();
+                //           RouteInformation routeInfo =
+                //             const RouteInformation(location: '/customer');
+                //           Beamer.of(context).updateRouteInformation(routeInfo);
+                //
+                //           showDialog(
+                //             context: context,
+                //             builder: (context) => WalletAction(
+                //               nanoId: task.nanoId,
+                //               taskName: 'taskStateChange',
+                //             )
+                //           );
+                //         },
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                const SizedBox(
+                  height: 65,
+                )
+              ],
+            ),
           ),
         ),
       ),
