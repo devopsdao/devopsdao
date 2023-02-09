@@ -38,6 +38,55 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "accountAddresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "getAccountData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "accountOwner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "customerTaskCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "performerTaskCount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Account[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAccounts",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getTaskContracts",
     "outputs": [
