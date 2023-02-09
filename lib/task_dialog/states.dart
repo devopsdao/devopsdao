@@ -1,11 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 
-class DialogProcess extends ChangeNotifier {
-
-}
-
-
 Map<String, dynamic> dialogStates = {
   // ******* TASKS NEW ********* //
   'empty' : {

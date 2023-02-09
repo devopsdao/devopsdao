@@ -8,9 +8,10 @@ import 'package:webthree/credentials.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task.dart';
 import '../../blockchain/task_services.dart';
-import '../../flutter_flow/flutter_flow_theme.dart';
+import '../../flutter_flow/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/select_menu.dart';
+import '../../widgets/tags/tags.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 import '../buttons.dart';
 
@@ -639,54 +640,44 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         LayoutBuilder(
                             builder: (context, constraints) {
                               final double width = constraints.maxWidth - 66;
-                              return Row(
-                                children: <Widget>[
-                                  Consumer<InterfaceServices>(
-                                      builder: (context, model, child) {
-                                        if (model.tempTagsListForTask.isNotEmpty) {
-                                          return SizedBox(
-                                            width: width,
-                                            child: Wrap(
-                                                alignment: WrapAlignment.start,
-                                                direction: Axis.horizontal,
-                                                children: model.tempTagsListForTask.map((e) {
-                                                  return WrappedChip(
-                                                      key: ValueKey(e),
-                                                      theme: 'white',
-                                                      nft: e.nft ?? false,
-                                                      name: e.tag!,
-                                                      control: true,
-                                                      page: 'create'
-                                                  );
-                                                }).toList()),
-                                          );
-                                        } else {
-                                          return Row(
-                                            children: <Widget>[
-                                              // Container(
-                                              //   padding: const EdgeInsets.all(2.0),
-                                              //   child: const Icon(Icons.new_releases,
-                                              //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                              // ),
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RichText(
-                                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                                      TextSpan(
-                                                          text: 'No any Tags or NFT tags attached',
-                                                          style: TextStyle(
-                                                            height: 1,
-                                                          )),
-                                                    ])),
-                                              ),
-                                            ],
-                                          );
-                                        }
+                              List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
 
-                                      }
-                                  ),
-                                ],
-                              );
+                              if (tags.isNotEmpty) {
+                                return SizedBox(
+                                  width: width,
+                                  child: Wrap(
+                                      alignment: WrapAlignment.start,
+                                      direction: Axis.horizontal,
+                                      children: tags.map((e) {
+                                        return WrappedChip(
+                                          interactive: false,
+                                          key: ValueKey(e),
+                                          theme: 'white',
+                                          nft: e.nft ?? false,
+                                          name: e.tag!,
+                                          control: false,
+                                          page: 'create'
+                                        );
+                                      }).toList()),
+                                );
+                              } else {
+                                return Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RichText(
+                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                            TextSpan(
+                                                text: 'No Tags or NFT tags attached',
+                                                style: TextStyle(
+                                                  height: 1,
+                                                )),
+                                          ])),
+                                    ),
+                                  ],
+                                );
+                              }
+
                             }
                         ),
                       ],

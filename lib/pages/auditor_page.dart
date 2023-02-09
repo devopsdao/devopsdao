@@ -10,7 +10,7 @@ import '../widgets/loading.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 
@@ -300,6 +300,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                               direction: Axis.horizontal,
                               children: model.auditorTagsList.map((e) {
                                 return WrappedChip(
+                                    interactive: true,
                                     key: ValueKey(e),
                                     theme: 'black',
                                     nft: e.nft ?? false,

@@ -6,7 +6,7 @@ import '../../blockchain/accounts.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task.dart';
 import '../../blockchain/task_services.dart';
-import '../../flutter_flow/flutter_flow_theme.dart';
+import '../../flutter_flow/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/payment.dart';
 import '../../widgets/tags/wrapped_chip.dart';
@@ -266,6 +266,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                                 direction: Axis.horizontal,
                                                 children: model.tempTagsList.map((e) {
                                                   return WrappedChip(
+                                                      interactive: true,
                                                       key: ValueKey(e),
                                                       theme: 'white',
                                                       nft: e.nft ?? false,

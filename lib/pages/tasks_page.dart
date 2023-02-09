@@ -15,7 +15,7 @@ import '/widgets/loading.dart';
 import '../task_dialog/main.dart';
 import '../task_item/task_item.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
@@ -279,7 +279,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                           children: model.tasksTagsList.map((e) {
 
                             return WrappedChip(
-
+                              interactive: true,
                               key: ValueKey(e),
                               theme: 'black',
                               nft: e.nft ?? false,

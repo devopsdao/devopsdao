@@ -110,7 +110,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       backgroundPicture = "assets/images/cross.png";
     }
 
-    if (task.taskState == 'empty') {
+    if (task.taskState == 'empty' || task.taskState == 'loading') {
       interface.dialogCurrentState = dialogStates['empty'];
     } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
       interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task_services.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);

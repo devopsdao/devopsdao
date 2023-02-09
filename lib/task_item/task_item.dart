@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../blockchain/task.dart';
 
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
+import '../widgets/tags/tags.dart';
+import '../widgets/tags/wrapped_chip.dart';
 import 'delete_item_alert.dart';
 
 class TaskItem extends StatefulWidget {
@@ -151,11 +153,45 @@ class _TaskItemState extends State<TaskItem> {
                   Row(
                     children: [
                       Expanded(
+                          child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final double width = constraints.maxWidth - 66;
+                                List<SimpleTags> tags = task.tags.map((name) =>
+                                    SimpleTags(tag: name)).toList();
+
+                                return SizedBox(
+                                  width: width,
+                                  child: Wrap(
+                                      alignment: WrapAlignment.start,
+                                      direction: Axis.horizontal,
+                                      children: tags.map((e) {
+                                        return WrappedChip(
+                                            interactive: false,
+                                            key: ValueKey(e),
+                                            theme: 'small-white',
+                                            nft: e.nft ?? false,
+                                            name: e.tag!,
+                                            control: false,
+                                            page: 'create'
+                                        );
+                                      }).toList()),
+                                );
+                              }
+                          )
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
                         flex: 7,
                         child: Text(
                           DateFormat('MM/dd/yyyy, hh:mm a')
                               .format(task.createTime),
-                          style: FlutterFlowTheme.of(context).bodyText2,
+                          style: const TextStyle(
+                            // fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -201,6 +237,7 @@ class _TaskItemState extends State<TaskItem> {
                         ),
                     ],
                   ),
+
                 ],
               ),
             ),

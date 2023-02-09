@@ -14,12 +14,14 @@ class WrappedChip extends StatefulWidget {
   final String name;
   final VoidCallback? callback;
   final bool control;
+  final bool interactive;
   final VoidCallback? onDeleted;
   final String page;
   const WrappedChip({Key? key,
     required this.theme,
     required this.nft,
     required this.name,
+    required this.interactive,
     this.callback,
     required this.control,
     this.onDeleted, required this.page
@@ -45,22 +47,6 @@ late bool initDone = false;
     curve: Curves.easeInOutBack,
   );
 
-  // void _runExpandCheck() {
-  //   if(scaleout) {
-  //     _controller.forward();
-  //   }
-  //   else {
-  //     _controller.reverse();
-  //   }
-  // }
-  //
-  // @override
-  // void didUpdateWidget(WrappedChip oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   _runExpandCheck();
-  // }
-
-
   @override
   void initState() {
     super.initState();
@@ -72,15 +58,8 @@ late bool initDone = false;
 
   @override
   void dispose() {
-    // Provider.of<InterfaceServices>(context, listen: false);
-    // var interface = context.watch<InterfaceServices>();
-    // interface.removeTag(widget.name);
-    // print('wow');
     _controller.dispose();
-
-
     super.dispose();
-
   }
 
   // TagsValueController tags = TagsValueController([]);
@@ -91,24 +70,37 @@ late bool initDone = false;
     final bool nft = widget.nft;
     final String name = widget.name;
     final VoidCallback? callback = widget.callback;
+    final bool interactive = widget.interactive;
 
-    late Color textColor;
-    late Color borderColor;
-    late Color bodyColor;
-    late Color nftColor;
+    // black BIG is default:
+
+    late Color textColor = Colors.grey[300]!;
+    late Color borderColor = Colors.grey[900]!;
+    late Color bodyColor = Colors.grey[800]!;
+    late Color nftColor = Colors.deepOrange;
+
+    late double iconSize = 17;
+    late double fontSize = 14;
+    late EdgeInsets containerPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 6);
+    late EdgeInsets containerMargin = const EdgeInsets.symmetric(horizontal: 4, vertical: 4);
+    late EdgeInsets spanPadding = const EdgeInsets.only(right: 8.0);
 
 
-
-    if (theme == 'black') {
-      textColor = Colors.grey[300]!;
-      borderColor = Colors.grey[900]!;
-      bodyColor = Colors.grey[800]!;
-      nftColor = Colors.deepOrange;
-    } else if (theme == 'white') {
+    if (theme == 'white') {
       textColor = Colors.black;
       borderColor = Colors.grey[400]!;
       bodyColor = Colors.transparent;
       nftColor = Colors.deepOrange;
+    } else if (theme == 'small-white') {
+      textColor = Colors.black;
+      borderColor = Colors.grey[400]!;
+      bodyColor = Colors.transparent;
+      nftColor = Colors.deepOrange;
+      iconSize = 10;
+      fontSize = 11;
+      containerPadding = const EdgeInsets.symmetric(horizontal: 5, vertical: 3);
+      containerMargin = const EdgeInsets.symmetric(horizontal: 2, vertical: 4);
+      spanPadding = const EdgeInsets.only(right: 4.0);
     }
 
 
@@ -132,8 +124,8 @@ late bool initDone = false;
       child: ScaleTransition(
         scale: _animation,
         child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            padding: containerPadding,
+            margin: containerMargin,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(
                 Radius.circular(8.0),
@@ -143,7 +135,7 @@ late bool initDone = false;
                   color: borderColor,
                   width: 1
               ),
-              color: bodyColor!,
+              color: bodyColor,
             ),
 
             child: RichText(
@@ -152,24 +144,26 @@ late bool initDone = false;
                   if (nft == true)
                     WidgetSpan(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
+                        padding: spanPadding,
                         child: Icon(
                             Icons.star,
-                            size: 17,
+                            size: iconSize,
                             color:nftColor
                         ),
                       ),
                     ),
                   TextSpan(
-                      text: '${name}',
+                      text: name,
                       style: TextStyle(
                         color: textColor,
+                        fontSize: fontSize
                       )
                   ),
+                  if (interactive)
                   WidgetSpan(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Icon(Icons.clear_rounded, size: 17, color: textColor, ),
+                      padding: spanPadding,
+                      child: Icon(Icons.clear_rounded, size: iconSize, color: textColor, ),
                     ),
                   ),
                 ],

@@ -6,7 +6,7 @@ import '../task_dialog/beamer.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '/blockchain/task_services.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
@@ -198,6 +198,7 @@ class _AccountsPageState extends State<AccountsPage> {
                           children: model.tasksTagsList.map((e) {
 
                             return WrappedChip(
+                              interactive: true,
                               key: ValueKey(e),
                               theme: 'black',
                               nft: e.nft ?? false,

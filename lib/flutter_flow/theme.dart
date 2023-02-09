@@ -117,51 +117,51 @@ class ThemeTypography extends Typography {
 
   final FlutterFlowTheme theme;
 
-  String get title1Family => 'Poppins';
+  String get title1Family => 'Inter';
   TextStyle get title1 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 24,
       );
-  String get title2Family => 'Poppins';
+  String get title2Family => 'Inter';
   TextStyle get title2 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 22,
       );
-  String get title3Family => 'Poppins';
+  String get title3Family => 'Inter';
   TextStyle get title3 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 20,
       );
-  String get subtitle1Family => 'Poppins';
+  String get subtitle1Family => 'Inter';
   TextStyle get subtitle1 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 18,
       );
-  String get subtitle2Family => 'Poppins';
+  String get subtitle2Family => 'Inter';
   TextStyle get subtitle2 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 16,
       );
-  String get bodyText1Family => 'Poppins';
+  String get bodyText1Family => 'Inter';
   TextStyle get bodyText1 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.primaryText,
         fontWeight: FontWeight.w600,
         fontSize: 14,
       );
-  String get bodyText2Family => 'Poppins';
+  String get bodyText2Family => 'Inter';
   TextStyle get bodyText2 => GoogleFonts.getFont(
-        'Poppins',
+        'Inter',
         color: theme.secondaryText,
         fontWeight: FontWeight.w600,
         fontSize: 14,

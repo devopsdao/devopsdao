@@ -8,7 +8,7 @@ import '../widgets/my_tools.dart';
 import '../widgets/payment.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/wallet_action.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
 // import 'package:markdown_editable_textinput/format_markdown.dart';
@@ -327,6 +327,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                   direction: Axis.horizontal,
                                                   children: model.createTagsList.map((e) {
                                                     return WrappedChip(
+                                                      interactive: true,
                                                       key: ValueKey(e),
                                                       theme: 'white',
                                                       nft: e.nft ?? false,
@@ -569,12 +570,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
               final nanoId = customAlphabet(
                 '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
                 12);
+              final List<String> tags = interface.createTagsList.map((tags) => tags.tag == null ? 'null :(' : tags.tag!).toList();
               tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
                 // valueController!.text,
                 interface.tokensEntered,
-                nanoId);
+                nanoId,
+                tags);
               Navigator.pop(context);
               showDialog(
                 context: context,

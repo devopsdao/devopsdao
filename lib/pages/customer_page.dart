@@ -13,7 +13,7 @@ import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
@@ -317,6 +317,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                     direction: Axis.horizontal,
                                     children: model.customerTagsList.map((e) {
                                       return WrappedChip(
+                                          interactive: true,
                                           key: ValueKey(e),
                                           theme: 'black',
                                           nft: e.nft ?? false,

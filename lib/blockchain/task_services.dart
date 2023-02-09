@@ -1691,7 +1691,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(String title, String description, double price, String nanoId) async {
+  Future<void> createTaskContract(String title, String description, double price, String nanoId, List<String> tags) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -1714,7 +1714,7 @@ class TasksServices extends ChangeNotifier {
         from: senderAddress,
       );
 
-      List<String> tags = [];
+      // List<String> tags = [];
       List<String> symbols = [taskTokenSymbol];
       List<BigInt> amounts = [BigInt.from(0)];
       // late TaskData taskData =

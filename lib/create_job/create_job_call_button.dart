@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:devopsdao/widgets/tags/tags.dart';
 import 'package:flutter/material.dart';
 
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 import 'create_job_as_page.dart';
 
 

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../blockchain/accounts.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import '../flutter_flow/theme.dart';
 import '../task_item/delete_item_alert.dart';
 
 class AccountItem extends StatefulWidget {

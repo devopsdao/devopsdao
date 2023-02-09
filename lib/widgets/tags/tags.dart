@@ -4,7 +4,7 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../../blockchain/interface.dart';
 import '../../blockchain/task_services.dart';
-import '../../flutter_flow/flutter_flow_theme.dart';
+import '../../flutter_flow/theme.dart';
 import 'wrapped_chip.dart';
 
 class TagsPage extends StatefulWidget {
@@ -248,6 +248,7 @@ class _TagsPageState extends State<TagsPage> {
                     choiceChipBuilderSelected: (context, item, isSelected) {
                       return WrappedChip(
                         // key: ValueKey(simpleTagsList.indexOf(item)),
+                        interactive: true,
                         theme: 'white',
                         nft: item.nft ?? false,
                         name: item.tag,
