@@ -4,7 +4,7 @@
 import 'package:webthree/webthree.dart' as _i1;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"TaskCreated","type":"event"},{"inputs":[{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addTaskToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getTaskContracts","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_taskState","type":"string"}],"name":"getTaskContractsByState","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"contractOwner","type":"address"}],"name":"getTaskContractsCustomer","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"participant","type":"address"}],"name":"getTaskContractsPerformer","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"taskAddress","type":"address"}],"name":"removeTaskFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
+  '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"TaskCreated","type":"event"},{"inputs":[{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addTaskToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"accountAddresses","type":"address[]"}],"name":"getAccountData","outputs":[{"components":[{"internalType":"address","name":"accountOwner","type":"address"},{"internalType":"uint256","name":"customerTaskCount","type":"uint256"},{"internalType":"uint256","name":"performerTaskCount","type":"uint256"}],"internalType":"struct Account[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccounts","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getTaskContracts","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_taskState","type":"string"}],"name":"getTaskContractsByState","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"contractOwner","type":"address"}],"name":"getTaskContractsCustomer","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"participant","type":"address"}],"name":"getTaskContractsPerformer","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"taskAddress","type":"address"}],"name":"removeTaskFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
   'TaskDataFacet',
 );
 
@@ -44,11 +44,50 @@ class TaskDataFacet extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<List<_i1.EthereumAddress>> getTaskContracts({
+  Future<List<dynamic>> getAccountData(
+    List<_i1.EthereumAddress> accountAddresses, {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
     final function = self.abi.functions[1];
+    assert(checkSignature(function, 'b597f75b'));
+    final params = [accountAddresses];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as List<dynamic>).cast<dynamic>();
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<List<_i1.EthereumAddress>> getAccounts({
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[2];
+    assert(checkSignature(function, '8a48ac03'));
+    final params = [];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as List<dynamic>).cast<_i1.EthereumAddress>();
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<List<_i1.EthereumAddress>> getTaskContracts({
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[3];
     assert(checkSignature(function, 'bbd63456'));
     final params = [];
     final response = await read(
@@ -68,7 +107,7 @@ class TaskDataFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[2];
+    final function = self.abi.functions[4];
     assert(checkSignature(function, 'cd8ac8df'));
     final params = [_taskState];
     final response = await read(
@@ -88,7 +127,7 @@ class TaskDataFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[3];
+    final function = self.abi.functions[5];
     assert(checkSignature(function, 'edd2f344'));
     final params = [contractOwner];
     final response = await read(
@@ -108,7 +147,7 @@ class TaskDataFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[4];
+    final function = self.abi.functions[6];
     assert(checkSignature(function, 'eb82e900'));
     final params = [participant];
     final response = await read(
@@ -128,7 +167,7 @@ class TaskDataFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[5];
+    final function = self.abi.functions[7];
     assert(checkSignature(function, '4f56bf4b'));
     final params = [taskAddress];
     return write(

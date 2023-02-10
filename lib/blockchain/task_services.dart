@@ -19,6 +19,7 @@ import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
 import 'abi/TokenFacet.g.dart';
+import 'abi/TokenDataFacet.g.dart';
 import 'abi/TaskContract.g.dart';
 import 'abi/AxelarFacet.g.dart';
 import 'abi/HyperlaneFacet.g.dart';
@@ -176,18 +177,14 @@ class TasksServices extends ChangeNotifier {
   Map<String, Task> tasksCustomerComplete = {};
 
   Map<String, Account> accountsTemp = {
-    '1' : Account(nickName: 'Als',
-        about: 'about',
-        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-        rating: 5),
-    '2' : Account(nickName: 'MyNameIsC',
+    '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
+    '2': Account(
+        nickName: 'MyNameIsC',
         about: 'about super puper MyNameIsC',
         walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
         rating: 12),
-    '3' : Account(nickName: 'Huh',
-        about: 'super HUH',
-        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'),
-        rating: 342),
+    '3': Account(
+        nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
   };
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
@@ -981,6 +978,7 @@ class TasksServices extends ChangeNotifier {
   late TaskCreateFacet taskCreateFacet;
   late TaskDataFacet taskDataFacet;
   late TokenFacet tokenFacet;
+  late TokenDataFacet tokenDataFacet;
   late AxelarFacet axelarFacet;
   late HyperlaneFacet hyperlaneFacet;
   late LayerzeroFacet layerzeroFacet;
@@ -1082,6 +1080,7 @@ class TasksServices extends ChangeNotifier {
     taskCreateFacet = TaskCreateFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     taskDataFacet = TaskDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    tokenDataFacet = TokenDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     //templorary fix:
     if (hardhatLive == false) {
       axelarFacet = AxelarFacet(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
@@ -2126,17 +2125,17 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List> balanceOfBatchName(List<EthereumAddress> addresses, List<String> names) async {
-    List balanceList = await tokenFacet.balanceOfBatchName(addresses, names);
+    List balanceList = await tokenDataFacet.balanceOfBatchName(addresses, names);
     return balanceList;
   }
 
   Future<List> totalSupplyOfBatchName(List<String> names) async {
-    List totalSupply = await tokenFacet.totalSupplyOfBatchName(names);
+    List totalSupply = await tokenDataFacet.totalSupplyOfBatchName(names);
     return totalSupply;
   }
 
   Future<List> uriOfBatchName(List<String> names) async {
-    List totalSupply = await tokenFacet.uriOfBatchName(names);
+    List totalSupply = await tokenDataFacet.uriOfBatchName(names);
     return totalSupply;
   }
 
@@ -2144,8 +2143,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2161,8 +2160,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2178,8 +2177,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2188,6 +2187,40 @@ class TasksServices extends ChangeNotifier {
       from: senderAddress,
     );
     String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<String> safeTransferFrom(EthereumAddress to, BigInt id, BigInt amount, Uint8List data) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.safeTransferFrom(senderAddress, to, id, amount, data, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<String> safeBatchTransferFrom(EthereumAddress to, List<BigInt> ids, List<BigInt> amounts, Uint8List data) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.safeBatchTransferFrom(senderAddress, to, ids, amounts, data, credentials: creds, transaction: transaction);
     return txn;
   }
   // Future<void> checkTokenBalance(EthereumAddress address, int tokenType) async {
