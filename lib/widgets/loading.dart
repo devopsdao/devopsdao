@@ -101,7 +101,7 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
         //             fontWeight: FontWeight.bold, color: Colors.white),
         //       ),
         //     ),
-        //     badgeColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+        //     badgeColor: DodaoTheme.of(context).maximumBlueGreen,
         //     animationDuration: const Duration(milliseconds: 300),
         //     animationType: BadgeAnimationType.scale,
         //     shape: BadgeShape.circle,

@@ -297,8 +297,8 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                      fontFamily: 'Poppins',
+                    style: DodaoTheme.of(context).bodyText1.override(
+                      fontFamily: 'Inter',
                       color: textColor,
                       lineHeight: 1,
                     ),
@@ -355,8 +355,8 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                      fontFamily: 'Poppins',
+                    style: DodaoTheme.of(context).bodyText1.override(
+                      fontFamily: 'Inter',
                       color: textColor,
                       lineHeight: 1,
                     ),

@@ -72,7 +72,7 @@ class _AccountItemState extends State<AccountItem> {
                         flex: 7,
                         child: Text(
                           account.walletAddress.toString(),
-                          style: FlutterFlowTheme.of(context).subtitle1,
+                          style: DodaoTheme.of(context).subtitle1,
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -85,7 +85,7 @@ class _AccountItemState extends State<AccountItem> {
                       Expanded(
                         child: Text(
                           account.nickName,
-                          style: FlutterFlowTheme.of(context).bodyText2,
+                          style: DodaoTheme.of(context).bodyText2,
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -101,7 +101,7 @@ class _AccountItemState extends State<AccountItem> {
                           account.about,
                           // DateFormat('MM/dd/yyyy, hh:mm a')
                           //     .format(task.createTime),
-                          style: FlutterFlowTheme.of(context).bodyText2,
+                          style: DodaoTheme.of(context).bodyText2,
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,

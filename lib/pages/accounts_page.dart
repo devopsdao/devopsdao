@@ -92,8 +92,8 @@ class _AccountsPageState extends State<AccountsPage> {
               children: [
                 Text(
                   'Accounts',
-                  style: FlutterFlowTheme.of(context).title2.override(
-                        fontFamily: 'Poppins',
+                  style: DodaoTheme.of(context).title2.override(
+                        fontFamily: 'Inter',
                         color: Colors.white,
                         fontSize: 22,
                       ),
@@ -180,8 +180,8 @@ class _AccountsPageState extends State<AccountsPage> {
                                 ),
                               ),
                             ),
-                            style: FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Poppins',
+                            style: DodaoTheme.of(context).bodyText1.override(
+                                  fontFamily: 'Inter',
                                   color: Colors.white,
                                   lineHeight: 2,
                                 ),

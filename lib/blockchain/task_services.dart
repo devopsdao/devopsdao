@@ -158,7 +158,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -213,6 +213,11 @@ class TasksServices extends ChangeNotifier {
   String walletConnectSessionUri = '';
   var walletConnectSession;
   // bool walletConnectActionApproved = false;
+  late Map<String, dynamic> roleNfts = {
+    'auditor' : 0,
+    'governor' : 0
+  };
+
   var eth;
   String lastTxn = '';
 
@@ -1107,6 +1112,16 @@ class TasksServices extends ChangeNotifier {
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+
+      final List roleNftsBalance = await balanceOfBatchName([publicAddress!], roleNfts.keys.toList());
+      late int keyId = 0;
+
+      roleNfts = roleNfts.map((key, value) {
+        late MapEntry<String, dynamic> mapEnt = MapEntry(key, roleNftsBalance[keyId]);
+        keyId++;
+        return mapEnt;
+      });
+
       notifyListeners();
     }
   }

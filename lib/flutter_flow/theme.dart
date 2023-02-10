@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const kThemeModeKey = '__theme_mode__';
 SharedPreferences? _prefs;
 
-abstract class FlutterFlowTheme {
+abstract class DodaoTheme {
   static Future initialize() async =>
       _prefs = await SharedPreferences.getInstance();
   static ThemeMode get themeMode {
@@ -24,7 +24,7 @@ abstract class FlutterFlowTheme {
       ? _prefs?.remove(kThemeModeKey)
       : _prefs?.setBool(kThemeModeKey, mode == ThemeMode.dark);
 
-  static FlutterFlowTheme of(BuildContext context) =>
+  static DodaoTheme of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark
           ? DarkModeTheme()
           : LightModeTheme();
@@ -66,11 +66,13 @@ abstract class FlutterFlowTheme {
   TextStyle get bodyText1 => typography.bodyText1;
   String get bodyText2Family => typography.bodyText2Family;
   TextStyle get bodyText2 => typography.bodyText2;
+  String get bodyText3Family => typography.bodyText3Family;
+  TextStyle get bodyText3 => typography.bodyText3;
 
   Typography get typography => ThemeTypography(this);
 }
 
-class LightModeTheme extends FlutterFlowTheme {
+class LightModeTheme extends DodaoTheme {
   late Color primaryColor = const Color(0xFF4B39EF);
   late Color secondaryColor = const Color(0xFF39D2C0);
   late Color tertiaryColor = const Color(0xFFEE8B60);
@@ -110,12 +112,14 @@ abstract class Typography {
   TextStyle get bodyText1;
   String get bodyText2Family;
   TextStyle get bodyText2;
+  String get bodyText3Family;
+  TextStyle get bodyText3;
 }
 
 class ThemeTypography extends Typography {
   ThemeTypography(this.theme);
 
-  final FlutterFlowTheme theme;
+  final DodaoTheme theme;
 
   String get title1Family => 'Inter';
   TextStyle get title1 => GoogleFonts.getFont(
@@ -166,9 +170,16 @@ class ThemeTypography extends Typography {
         fontWeight: FontWeight.w600,
         fontSize: 14,
       );
+  String get bodyText3Family => 'Inter';
+  TextStyle get bodyText3 => GoogleFonts.getFont(
+    'Inter',
+    color: theme.secondaryText,
+    fontWeight: FontWeight.w400,
+    fontSize: 13,
+  );
 }
 
-class DarkModeTheme extends FlutterFlowTheme {
+class DarkModeTheme extends DodaoTheme {
   late Color primaryColor = const Color(0xFF4B39EF);
   late Color secondaryColor = const Color(0xFF39D2C0);
   late Color tertiaryColor = const Color(0xFFEE8B60);

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
@@ -14,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:devopsdao/blockchain/task_services.dart';
 
 import '../wallet/main.dart';
+import '../widgets/tags/tags.dart';
+import '../widgets/tags/wrapped_chip.dart';
 
 class HomePageWidget extends StatefulWidget {
   // final String displayUri;
@@ -147,9 +150,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Text(
-              'Devopsdao',
-              style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: 'Poppins',
+              'Dodao',
+              style: DodaoTheme.of(context).title2.override(
+                fontFamily: 'Inter',
                 color: Colors.white,
                 fontSize: 22,
               ),
@@ -280,26 +283,37 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 children: [
                   tasksServices.isLoading
                       ? const LoadIndicator()
-                      : Image.asset(
-                    'assets/images/logo.png',
-                    width: 163,
-                    height: 140,
-                    fit: BoxFit.fitHeight,
+                      :
+
+                  // SvgPicture.asset(
+                  //
+                  //
+                  //   'assets/images/LColor_optimized.svg',
+                  //   width: 200,
+                  //   height: 250,
+                  // ),
+
+                  Image.asset(
+                    'assets/images/LColor.png',
+                    width: 280,
+                    height: 280,
+                    filterQuality: FilterQuality.medium,
+                    // fit: BoxFit.fitHeight,
                   ),
                   // .animated([animationsMap['imageOnPageLoadAnimation']!]),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 16),
-                    child: Text(
-                      'Welcome to Devopsdao',
-                      style: FlutterFlowTheme.of(context).title1.override(
-                        fontFamily: 'Lexend Deca',
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // .animated([animationsMap['textOnPageLoadAnimation']!]),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 16),
+                  //   child: Text(
+                  //     'Welcome to Dodao',
+                  //     style: DodaoTheme.of(context).title1.override(
+                  //       fontFamily: 'Inter',
+                  //       color: Colors.white,
+                  //       fontSize: 28,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  //   // .animated([animationsMap['textOnPageLoadAnimation']!]),
+                  // ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -327,7 +341,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Inter',
                                   )
                               ),
                               Text(
@@ -336,7 +350,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     height: 1.6,
                                     color: Colors.white,
                                     fontSize: 20,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Inter',
                                   )
                               ),
                               Text(
@@ -345,7 +359,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     height: 1,
                                     color: Colors.white,
                                     fontSize: 20,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Inter',
                                   )
                               ),
                             ],
@@ -376,7 +390,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
-                                  fontFamily: 'Poppins',
+                                  fontFamily: 'Inter',
                                 )
                               ),
                               Text(
@@ -385,7 +399,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     height: 1.6,
                                     color: Colors.white,
                                     fontSize: 20,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Inter',
                                   )
                               ),
                               Text(
@@ -394,7 +408,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     height: 1,
                                     color: Colors.white,
                                     fontSize: 20,
-                                    fontFamily: 'Poppins',
+                                    fontFamily: 'Inter',
                                   )
                               ),
                             ],
@@ -414,43 +428,75 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       ),
                       child: Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Wallet address',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: 'Poppins',
-                                )
-                            ),
-                            if (tasksServices.publicAddress != null)
-                              SelectableText(
-                                '${tasksServices.publicAddress}',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText2
-                                    .override(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 11,
-                                  color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final double width = constraints.maxWidth - 66;
+                            List<SimpleTags> tags = [];
+
+                            if (tasksServices.roleNfts['auditor'] > 0) {
+                              tags.add(SimpleTags(tag: "Auditor", icon: ""));
+                            }
+                            if (tasksServices.roleNfts['governor'] > 0) {
+                              tags.add(SimpleTags(tag: "Governor", icon: ""));
+                            }
+                            tags.add(SimpleTags(tag: "Get more...", icon: ""));
+
+                            return Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Your Nft\'s:',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter',
+                                    )
                                 ),
-                              )
-                            else
-                              Text(
-                                'Not Connected',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyText2
-                                    .override(
-                                  fontFamily: 'Poppins',
-                                  color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
+                                SizedBox(
+                                  width: width,
+                                  child: Wrap(
+                                      alignment: WrapAlignment.start,
+                                      direction: Axis.horizontal,
+                                      children: tags.map((e) {
+                                        return WrappedChip(
+                                            interactive: false,
+                                            key: ValueKey(e),
+                                            theme: 'black',
+                                            nft: e.nft ?? false,
+                                            name: e.tag!,
+                                            control: false,
+                                            page: 'create'
+                                        );
+                                      }).toList()),
                                 ),
-                              ),
-                          ],
+
+                                  // SelectableText(
+                                  //   '${tasksServices.publicAddress}',
+                                  //   style: DodaoTheme.of(context)
+                                  //       .bodyText2
+                                  //       .override(
+                                  //     fontFamily: 'Inter',
+                                  //     fontSize: 11,
+                                  //     color:
+                                  //     DodaoTheme.of(context).primaryBtnText,
+                                  //   ),
+                                  // )
+
+                                  // Text(
+                                  //   'Not Connected',
+                                  //   style: DodaoTheme.of(context)
+                                  //       .bodyText2
+                                  //       .override(
+                                  //     fontFamily: 'Inter',
+                                  //     color:
+                                  //     DodaoTheme.of(context).primaryBtnText,
+                                  //   ),
+                                  // ),
+                              ],
+                            );
+                          }
                         ),
                       ),
                     ),
@@ -476,41 +522,41 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
-                                  fontFamily: 'Poppins',
+                                  fontFamily: 'Inter',
                                 )
                             ),
                             if (tasksServices.publicAddress == null)
                               Text(
                                 'Not Connected',
-                                style: FlutterFlowTheme.of(context)
+                                style: DodaoTheme.of(context)
                                     .bodyText2
                                     .override(
-                                  fontFamily: 'Poppins',
+                                  fontFamily: 'Inter',
                                   color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
+                                  DodaoTheme.of(context).primaryBtnText,
                                 ),
                               )
                             else if (tasksServices.scoredTaskCount == 0)
                               Text(
                                 'No completed evaluated tasks',
-                                style: FlutterFlowTheme.of(context)
+                                style: DodaoTheme.of(context)
                                     .bodyText2
                                     .override(
-                                  fontFamily: 'Poppins',
+                                  fontFamily: 'Inter',
                                   color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
+                                  DodaoTheme.of(context).primaryBtnText,
                                 ),
                               )
                             else
                               SelectableText(
                                 '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
-                                style: FlutterFlowTheme.of(context)
+                                style: DodaoTheme.of(context)
                                     .bodyText2
                                     .override(
-                                  fontFamily: 'Poppins',
+                                  fontFamily: 'Inter',
                                   fontSize: 11,
                                   color:
-                                  FlutterFlowTheme.of(context).primaryBtnText,
+                                  DodaoTheme.of(context).primaryBtnText,
                                 ),
                               )
                           ],

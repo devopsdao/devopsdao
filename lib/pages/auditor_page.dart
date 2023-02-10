@@ -122,8 +122,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
               children: [
                 Text(
                   'Auditor',
-                  style: FlutterFlowTheme.of(context).title2.override(
-                        fontFamily: 'Poppins',
+                  style: DodaoTheme.of(context).title2.override(
+                        fontFamily: 'Inter',
                         color: Colors.white,
                         fontSize: 22,
                       ),
@@ -149,7 +149,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       //             ),
       //           );
       //         },
-      //         backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+      //         backgroundColor: DodaoTheme.of(context).maximumBlueGreen,
       //         elevation: 8,
       //         child: Icon(
       //           Icons.add,
@@ -187,7 +187,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                   children: [
                     TabBar(
                       labelColor: Colors.white,
-                      labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                      labelStyle: DodaoTheme.of(context).bodyText1,
                       indicatorColor: const Color(0xFF47CBE4),
                       indicatorWeight: 3,
                       onTap: (index) {
@@ -283,8 +283,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                                 ),
                               ),
                             ),
-                            style: FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Poppins',
+                            style: DodaoTheme.of(context).bodyText1.override(
+                                  fontFamily: 'Inter',
                                   color: Colors.white,
                                   lineHeight: 2,
                                 ),
