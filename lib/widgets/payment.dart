@@ -142,8 +142,8 @@ class _PaymentState extends State<Payment> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: FlutterFlowTheme.of(context).bodyText1.override(
-                              fontFamily: 'Poppins',
+                            style: DodaoTheme.of(context).bodyText1.override(
+                              fontFamily: 'Inter',
                               color: setBlackAndWhite,
                               lineHeight: 2,
                             ),

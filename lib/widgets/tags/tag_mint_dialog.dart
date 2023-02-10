@@ -7,29 +7,23 @@ import '../../blockchain/task.dart';
 import '../../blockchain/task_services.dart';
 import '../../flutter_flow/theme.dart';
 import '../../widgets/wallet_action.dart';
-import '../blockchain/accounts.dart';
 
-class DeleteItemAlert extends StatefulWidget {
-  final Task? task;
-  final Account? account;
-  const DeleteItemAlert(
+class TagMintDialog extends StatefulWidget {
+  final String tagName;
+  const TagMintDialog(
       {Key? key,
-        this.task,
-        this.account,
+        required this.tagName,
       })
       : super(key: key);
 
   @override
-  _DeleteItemAlertState createState() => _DeleteItemAlertState();
+  _TagMintDialogState createState() => _TagMintDialogState();
 }
 
-class _DeleteItemAlertState extends State<DeleteItemAlert> {
+class _TagMintDialogState extends State<TagMintDialog> {
   late String warningText;
   late String title;
   late String link;
-  late String who;
-  late String? nanoId;
-
 
   TextEditingController? messageController;
 
@@ -50,22 +44,8 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    if (widget.task != null) {
-      final Task? object = widget.task;
-      warningText = 'Task "${object?.title}" will be deleted';
-      title = 'Are you sure you want to delete this Task?';
-      who = 'task';
-    } else if (widget.account != null) {
-      final Account? object = widget.account;
-      warningText = 'Account "${object?.nickName}" will be banned';
-      title = 'Are you sure you want to ban this account?';
-      who = 'account';
-    }
 
-
-
-
-    link = 'https://docs.dodao.dev/audit_process.html#customer';
+    title = 'Do you want to mint \"${widget.tagName}\" tag?';
 
 
     return Dialog(
@@ -79,28 +59,31 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                      // style: DefaultTextStyle
-                      //     .of(context)
-                      //     .style
-                      //     .apply(fontSizeFactor: 1.1),
-                      children: <TextSpan>[
-                        TextSpan(
-                          style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
-                          text: title,
-                        ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                        // style: DefaultTextStyle
+                        //     .of(context)
+                        //     .style
+                        //     .apply(fontSizeFactor: 1.1),
+                        children: <TextSpan>[
+                          TextSpan(
+                            style: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                            text: title,
+                          ),
 
-                      ])
+                        ])
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(10.0),
                 child: const Icon(
-                  Icons.delete_forever_outlined,
+                  Icons.tag_rounded,
                   color: Colors.black45,
                   size: 110,
                 ),
@@ -108,81 +91,17 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
               RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      style: DefaultTextStyle
-                          .of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.1),
-                      children: <TextSpan>[
+                      style: DodaoTheme.of(context).bodyText2,
+                      children: const <TextSpan>[
                         TextSpan(
 
-                          text: warningText,
+                          text: 'If you want choose another tag name to Mint go to tag management page',
                         ),
 
                       ])
               ),
-              const Spacer(),
 
-              TextFormField(
-                controller: messageController,
-                // onChanged: (_) => EasyDebounce.debounce(
-                //   'messageForStateController',
-                //   Duration(milliseconds: 2000),
-                //   () => setState(() {}),
-                // ),
-                autofocus: false,
-                obscureText: false,
-                onTapOutside: (test) {
-                  FocusScope.of(context).unfocus();
-                  interface.taskMessage = messageController!.text;
-                },
 
-                decoration: InputDecoration(
-                  // suffixIcon: interface.dialogCurrentState['pages']['chat'] != null ? IconButton(
-                  //   onPressed: () {
-                  //     interface.dialogPagesController.animateToPage(
-                  //         interface.dialogCurrentState['pages']['chat'] ?? 99,
-                  //         duration: const Duration(milliseconds: 600),
-                  //         curve: Curves.ease);
-                  //   },
-                  //   icon: const Icon(Icons.chat),
-                  //   highlightColor: Colors.grey,
-                  //   hoverColor: Colors.transparent,
-                  //   color: Colors.blueAccent,
-                  //   // splashColor: Colors.black,
-                  // ) : null,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(
-                      color: Colors.black45,
-                      width: 1.0,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(
-                      color: Colors.black45,
-                      width: 1.0,
-                    ),
-                  ),
-                  labelText: 'Few words about your decision',
-                  labelStyle: const TextStyle(
-                      fontSize: 17.0, color: Colors.black54),
-                  hintText: '[Enter your message here..]',
-                  hintStyle: const TextStyle(
-                      fontSize: 14.0, color: Colors.black54),
-                  // focusedBorder: const UnderlineInputBorder(
-                  //   borderSide: BorderSide.none,
-                  // ),
-
-                ),
-                style: DodaoTheme.of(context).bodyText1.override(
-                  fontFamily: 'Inter',
-                  color: Colors.black87,
-                  lineHeight: null,
-                ),
-                minLines: 2,
-                maxLines: 3,
-              ),
               const Spacer(),
               Row(
                 children: [
@@ -190,7 +109,6 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                     child: InkWell(
                       onTap: () {
                         Navigator.pop(context);
-                        interface.emptyTaskMessage();
                       },
                       child: Container(
                         margin: const EdgeInsets.all(0.0),
@@ -224,8 +142,6 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
-                        // Navigator.pop(interface.mainDialogContext);
-                        interface.emptyTaskMessage();
 
                         // tasksServices.taskStateChange(
                         //     task.taskAddress, task.participant, 'audit', task.nanoId,
@@ -233,7 +149,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         // showDialog(
                         //     context: context,
                         //     builder: (context) => WalletAction(
-                        //       nanoId: who == 'task' ? nanoId : null,
+                        //       nanoId: task.nanoId,
                         //       taskName: 'taskStateChange',
                         //     ));
                       },
@@ -249,7 +165,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                           ),
                         ),
                         child: const Text(
-                          'Confirm',
+                          'Mint',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,

@@ -30,7 +30,7 @@ class CreateCallButton extends StatelessWidget {
       ),
       openElevation: 0,
       openColor: Colors.white,
-      closedColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+      closedColor: DodaoTheme.of(context).maximumBlueGreen,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return SizedBox(
           height: 56.0,

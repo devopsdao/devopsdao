@@ -166,8 +166,8 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                   // ),
 
                 ),
-                style: FlutterFlowTheme.of(context).bodyText1.override(
-                  fontFamily: 'Poppins',
+                style: DodaoTheme.of(context).bodyText1.override(
+                  fontFamily: 'Inter',
                   color: Colors.black87,
                   lineHeight: null,
                 ),

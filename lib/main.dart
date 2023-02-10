@@ -16,7 +16,7 @@ import 'package:beamer/beamer.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await FlutterFlowTheme.initialize();
+  await DodaoTheme.initialize();
 
   createAuthenticator();
   createBeamerDelegate();
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
 
   void setLocale(Locale value) => setState(() => _locale = value);
   void setThemeMode(ThemeMode mode) => setState(() {
-        FlutterFlowTheme.saveThemeMode(mode);
+        DodaoTheme.saveThemeMode(mode);
       });
 
   // final beamerRouter = MaterialApp.router(

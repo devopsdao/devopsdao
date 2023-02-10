@@ -743,8 +743,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Poppins',
+                        style: DodaoTheme.of(context).bodyText1.override(
+                          fontFamily: 'Inter',
                           color: Colors.black87,
                           lineHeight: null,
                         ),
@@ -920,8 +920,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     //       splashColor: Colors.black,
                                     //     ),
                                     //   ),
-                                    //   style: FlutterFlowTheme.of(context).bodyText1.override(
-                                    //     fontFamily: 'Poppins',
+                                    //   style: DodaoTheme.of(context).bodyText1.override(
+                                    //     fontFamily: 'Inter',
                                     //     color: Colors.black54,
                                     //     lineHeight: 1,
                                     //   ),

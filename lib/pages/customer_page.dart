@@ -142,8 +142,8 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                 children: [
                   Text(
                     'Customer',
-                    style: FlutterFlowTheme.of(context).title2.override(
-                          fontFamily: 'Poppins',
+                    style: DodaoTheme.of(context).title2.override(
+                          fontFamily: 'Inter',
                           color: Colors.white,
                           fontSize: 22,
                         ),
@@ -169,7 +169,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
         //       ),
         //     );
         //   },
-        //   backgroundColor: FlutterFlowTheme.of(context).maximumBlueGreen,
+        //   backgroundColor: DodaoTheme.of(context).maximumBlueGreen,
         //   elevation: 8,
         //   child: Icon(
         //     Icons.add,
@@ -215,7 +215,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                         children: [
                           TabBar(
                             labelColor: Colors.white,
-                            labelStyle: FlutterFlowTheme.of(context).bodyText1,
+                            labelStyle: DodaoTheme.of(context).bodyText1,
                             indicatorColor: const Color(0xFF47CBE4),
                             indicatorWeight: 3,
                             // isScrollable: true,
@@ -300,8 +300,8 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                       ),
                                     ),
                                   ),
-                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                        fontFamily: 'Poppins',
+                                  style: DodaoTheme.of(context).bodyText1.override(
+                                        fontFamily: 'Inter',
                                         color: Colors.white,
                                         lineHeight: 2,
                                       ),

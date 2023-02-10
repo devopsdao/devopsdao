@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class _BadgeTabState extends State<BadgeTab> {
           // Expanded(
           //   flex: 1,
           //   child:
-          Badge(
+          Badges.Badge(
             badgeContent: Container(
               width: 9,
               height: 11,

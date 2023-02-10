@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -116,7 +116,7 @@ class _TaskItemState extends State<TaskItem> {
                         flex: 7,
                         child: Text(
                           task.title,
-                          style: FlutterFlowTheme.of(context).subtitle1,
+                          style: DodaoTheme.of(context).subtitle1,
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -128,7 +128,7 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             task.taskState,
-                            style: FlutterFlowTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -142,7 +142,7 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(
                         child: Text(
                           task.description,
-                          style: FlutterFlowTheme.of(context).bodyText2,
+                          style: DodaoTheme.of(context).bodyText2,
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -203,7 +203,7 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             '${task.contractValue} DEV',
-                            style: FlutterFlowTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -215,7 +215,7 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             '${task.contractValueToken} aUSDC',
-                            style: FlutterFlowTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -228,7 +228,7 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             'Has no money',
-                            style: FlutterFlowTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -252,7 +252,7 @@ class _TaskItemState extends State<TaskItem> {
                   (widget.fromPage == 'tasks' && taskCount != 0)))
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-              child: Badge(
+              child: Badges.Badge(
                 // position: BadgePosition.topEnd(top: 10, end: 10),
                 badgeContent: Container(
                   width: 17,
@@ -275,8 +275,8 @@ class _TaskItemState extends State<TaskItem> {
                   }
                 }()),
                 animationDuration: const Duration(milliseconds: 300),
-                animationType: BadgeAnimationType.scale,
-                shape: BadgeShape.circle,
+                animationType: Badges.BadgeAnimationType.scale,
+                shape: Badges.BadgeShape.circle,
                 borderRadius: BorderRadius.circular(5),
                 // child: Icon(Icons.settings),
               ),

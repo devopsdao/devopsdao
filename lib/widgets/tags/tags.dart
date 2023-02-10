@@ -164,8 +164,8 @@ class _TagsPageState extends State<TagsPage> {
                       // ),
 
                     ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                      fontFamily: 'Poppins',
+                    style: DodaoTheme.of(context).bodyText1.override(
+                      fontFamily: 'Inter',
                     ),
                     minLines: 1,
                     maxLines: 1,
@@ -185,8 +185,8 @@ class _TagsPageState extends State<TagsPage> {
                           color: Colors.black54,
                           fontWeight: FontWeight.bold,
                         ),
-                        searchFieldTextStyle: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Poppins',
+                        searchFieldTextStyle: DodaoTheme.of(context).bodyText1.override(
+                          fontFamily: 'Inter',
 
                         ),
                         searchFieldBackgroundColor: Colors.white,
