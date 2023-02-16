@@ -5,7 +5,7 @@ import 'package:webthree/webthree.dart' as _i1;
 import 'dart:typed_data' as _i2;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"ids","type":"uint256[]"},{"indexed":false,"internalType":"uint256[]","name":"values","type":"uint256[]"}],"name":"TransferBatch","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"TransferSingle","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"value","type":"string"},{"indexed":true,"internalType":"uint256","name":"id","type":"uint256"}],"name":"URI","type":"event"},{"inputs":[{"internalType":"address","name":"account_","type":"address"},{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accounts_","type":"address[]"},{"internalType":"uint256[]","name":"ids_","type":"uint256[]"}],"name":"balanceOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accounts_","type":"address[]"},{"internalType":"string[]","name":"names_","type":"string[]"}],"name":"balanceOfBatchName","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accounts_","type":"address[]"},{"internalType":"uint256[]","name":"ids_","type":"uint256[]"}],"name":"balanceOfBatchNfType","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account_","type":"address"},{"internalType":"string","name":"name_","type":"string"}],"name":"balanceOfName","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account_","type":"address"},{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"balanceOfNfType","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"},{"internalType":"string","name":"_name","type":"string"},{"internalType":"bool","name":"_isNF","type":"bool"}],"name":"create","outputs":[{"internalType":"uint256","name":"_type","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"exists","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"name_","type":"string"}],"name":"existsName","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"existsNfType","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_name","type":"string"}],"name":"getTokenId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account_","type":"address"},{"internalType":"address","name":"operator_","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"address[]","name":"_to","type":"address[]"},{"internalType":"uint256[]","name":"_quantities","type":"uint256[]"}],"name":"mintFungible","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"address[]","name":"_to","type":"address[]"},{"internalType":"uint256[]","name":"_quantities","type":"uint256[]"}],"name":"mintFungibleByName","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_type","type":"uint256"},{"internalType":"address[]","name":"_to","type":"address[]"}],"name":"mintNonFungible","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"address[]","name":"_to","type":"address[]"}],"name":"mintNonFungibleByName","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"address","name":"from","type":"address"},{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"onERC1155Received","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from_","type":"address"},{"internalType":"address","name":"to_","type":"address"},{"internalType":"uint256[]","name":"ids_","type":"uint256[]"},{"internalType":"uint256[]","name":"amounts_","type":"uint256[]"},{"internalType":"bytes","name":"data_","type":"bytes"}],"name":"safeBatchTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from_","type":"address"},{"internalType":"address","name":"to_","type":"address"},{"internalType":"uint256","name":"id_","type":"uint256"},{"internalType":"uint256","name":"amount_","type":"uint256"},{"internalType":"bytes","name":"data_","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator_","type":"address"},{"internalType":"bool","name":"approved_","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"},{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"setURI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"},{"internalType":"string","name":"_name","type":"string"}],"name":"setURIOfName","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"_ids","type":"uint256[]"}],"name":"totalSupplyOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string[]","name":"_names","type":"string[]"}],"name":"totalSupplyOfBatchName","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"_ids","type":"uint256[]"}],"name":"totalSupplyOfBatchNfType","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"name_","type":"string"}],"name":"totalSupplyOfName","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"totalSupplyOfNfType","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"uri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"ids_","type":"uint256[]"}],"name":"uriOfBatch","outputs":[{"internalType":"string[]","name":"","type":"string[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string[]","name":"names_","type":"string[]"}],"name":"uriOfBatchName","outputs":[{"internalType":"string[]","name":"","type":"string[]"}],"stateMutability":"view","type":"function"}]',
+  '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"ids","type":"uint256[]"},{"indexed":false,"internalType":"uint256[]","name":"values","type":"uint256[]"}],"name":"TransferBatch","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"TransferSingle","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"value","type":"string"},{"indexed":true,"internalType":"uint256","name":"id","type":"uint256"}],"name":"URI","type":"event"},{"inputs":[{"internalType":"address","name":"account_","type":"address"},{"internalType":"uint256","name":"id_","type":"uint256"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accounts_","type":"address[]"},{"internalType":"uint256[]","name":"ids_","type":"uint256[]"}],"name":"balanceOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"},{"internalType":"string","name":"_name","type":"string"},{"internalType":"bool","name":"_isNF","type":"bool"}],"name":"create","outputs":[{"internalType":"uint256","name":"_type","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account_","type":"address"},{"internalType":"address","name":"operator_","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"address[]","name":"_to","type":"address[]"},{"internalType":"uint256[]","name":"_quantities","type":"uint256[]"}],"name":"mintFungible","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"address[]","name":"_to","type":"address[]"},{"internalType":"uint256[]","name":"_quantities","type":"uint256[]"}],"name":"mintFungibleByName","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_type","type":"uint256"},{"internalType":"address[]","name":"_to","type":"address[]"}],"name":"mintNonFungible","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"address[]","name":"_to","type":"address[]"}],"name":"mintNonFungibleByName","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"address","name":"from","type":"address"},{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"onERC1155Received","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from_","type":"address"},{"internalType":"address","name":"to_","type":"address"},{"internalType":"uint256[]","name":"ids_","type":"uint256[]"},{"internalType":"uint256[]","name":"amounts_","type":"uint256[]"},{"internalType":"bytes","name":"data_","type":"bytes"}],"name":"safeBatchTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from_","type":"address"},{"internalType":"address","name":"to_","type":"address"},{"internalType":"uint256","name":"id_","type":"uint256"},{"internalType":"uint256","name":"amount_","type":"uint256"},{"internalType":"bytes","name":"data_","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator_","type":"address"},{"internalType":"bool","name":"approved_","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"},{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"setURI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"},{"internalType":"string","name":"_name","type":"string"}],"name":"setURIOfName","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"}]',
   'TokenFacet',
 );
 
@@ -71,102 +71,6 @@ class TokenFacet extends _i1.GeneratedContract {
     return (response[0] as List<dynamic>).cast<BigInt>();
   }
 
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<BigInt>> balanceOfBatchName(
-    List<_i1.EthereumAddress> accounts_,
-    List<String> names_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[2];
-    assert(checkSignature(function, '80b20931'));
-    final params = [
-      accounts_,
-      names_,
-    ];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<BigInt>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<BigInt>> balanceOfBatchNfType(
-    List<_i1.EthereumAddress> accounts_,
-    List<BigInt> ids_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[3];
-    assert(checkSignature(function, '9cd86c08'));
-    final params = [
-      accounts_,
-      ids_,
-    ];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<BigInt>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> balanceOfName(
-    _i1.EthereumAddress account_,
-    String name_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[4];
-    assert(checkSignature(function, 'cb086f9d'));
-    final params = [
-      account_,
-      name_,
-    ];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as BigInt);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> balanceOfNfType(
-    _i1.EthereumAddress account_,
-    BigInt id_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[5];
-    assert(checkSignature(function, '9fd71bde'));
-    final params = [
-      account_,
-      id_,
-    ];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as BigInt);
-  }
-
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
@@ -177,7 +81,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[6];
+    final function = self.abi.functions[2];
     assert(checkSignature(function, '63892068'));
     final params = [
       _uri,
@@ -195,93 +99,13 @@ class TokenFacet extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<bool> exists(
-    BigInt id_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[7];
-    assert(checkSignature(function, '4f558e79'));
-    final params = [id_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as bool);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<bool> existsName(
-    String name_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[8];
-    assert(checkSignature(function, 'a1e26093'));
-    final params = [name_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as bool);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<bool> existsNfType(
-    BigInt id_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[9];
-    assert(checkSignature(function, '8ac7b7a5'));
-    final params = [id_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as bool);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> getTokenId(
-    String _name, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[10];
-    assert(checkSignature(function, '1e7663bc'));
-    final params = [_name];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as BigInt);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
   Future<bool> isApprovedForAll(
     _i1.EthereumAddress account_,
     _i1.EthereumAddress operator_, {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[11];
+    final function = self.abi.functions[3];
     assert(checkSignature(function, 'e985e9c5'));
     final params = [
       account_,
@@ -306,7 +130,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[12];
+    final function = self.abi.functions[4];
     assert(checkSignature(function, '78b27221'));
     final params = [
       _id,
@@ -331,7 +155,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[13];
+    final function = self.abi.functions[5];
     assert(checkSignature(function, '3b04ddc4'));
     final params = [
       _name,
@@ -355,7 +179,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[14];
+    final function = self.abi.functions[6];
     assert(checkSignature(function, 'f9419088'));
     final params = [
       _type,
@@ -378,7 +202,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[15];
+    final function = self.abi.functions[7];
     assert(checkSignature(function, '4ac6acb6'));
     final params = [
       _name,
@@ -399,7 +223,7 @@ class TokenFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[16];
+    final function = self.abi.functions[8];
     assert(checkSignature(function, '06fdde03'));
     final params = [];
     final response = await read(
@@ -423,7 +247,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[17];
+    final function = self.abi.functions[9];
     assert(checkSignature(function, 'f23a6e61'));
     final params = [
       operator,
@@ -452,7 +276,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[18];
+    final function = self.abi.functions[10];
     assert(checkSignature(function, '2eb2c2d6'));
     final params = [
       from_,
@@ -481,7 +305,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[19];
+    final function = self.abi.functions[11];
     assert(checkSignature(function, 'f242432a'));
     final params = [
       from_,
@@ -507,7 +331,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[20];
+    final function = self.abi.functions[12];
     assert(checkSignature(function, 'a22cb465'));
     final params = [
       operator_,
@@ -530,7 +354,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[21];
+    final function = self.abi.functions[13];
     assert(checkSignature(function, '67db3b8f'));
     final params = [
       _uri,
@@ -553,7 +377,7 @@ class TokenFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[22];
+    final function = self.abi.functions[14];
     assert(checkSignature(function, '8217b83a'));
     final params = [
       _uri,
@@ -574,7 +398,7 @@ class TokenFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[23];
+    final function = self.abi.functions[15];
     assert(checkSignature(function, '95d89b41'));
     final params = [];
     final response = await read(
@@ -584,186 +408,6 @@ class TokenFacet extends _i1.GeneratedContract {
       atBlock,
     );
     return (response[0] as String);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> totalSupply(
-    BigInt id_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[24];
-    assert(checkSignature(function, 'bd85b039'));
-    final params = [id_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as BigInt);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<BigInt>> totalSupplyOfBatch(
-    List<BigInt> _ids, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[25];
-    assert(checkSignature(function, '88ff3907'));
-    final params = [_ids];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<BigInt>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<BigInt>> totalSupplyOfBatchName(
-    List<String> _names, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[26];
-    assert(checkSignature(function, '9af793fb'));
-    final params = [_names];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<BigInt>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<BigInt>> totalSupplyOfBatchNfType(
-    List<BigInt> _ids, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[27];
-    assert(checkSignature(function, '27040961'));
-    final params = [_ids];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<BigInt>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> totalSupplyOfName(
-    String name_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[28];
-    assert(checkSignature(function, '8d938412'));
-    final params = [name_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as BigInt);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<BigInt> totalSupplyOfNfType(
-    BigInt id_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[29];
-    assert(checkSignature(function, '0fd38d11'));
-    final params = [id_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as BigInt);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<String> uri(
-    BigInt id_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[30];
-    assert(checkSignature(function, '0e89341c'));
-    final params = [id_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as String);
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<String>> uriOfBatch(
-    List<BigInt> ids_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[31];
-    assert(checkSignature(function, '748937f6'));
-    final params = [ids_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<String>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<String>> uriOfBatchName(
-    List<String> names_, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[32];
-    assert(checkSignature(function, '8a31d522'));
-    final params = [names_];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<String>();
   }
 
   /// Returns a live stream of all ApprovalForAll events emitted by this contract.
