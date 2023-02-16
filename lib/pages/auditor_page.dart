@@ -372,7 +372,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
             return Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
               child:
-              ClickOnTask(fromPage: 'auditor', index: index,)
+              TaskTransition(fromPage: 'auditor', index: index,)
 
               // InkWell(
               //   onTap: () {

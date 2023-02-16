@@ -347,12 +347,12 @@ class _TagsPageState extends State<TagsPage> {
 }
 
 class SimpleTags {
-  final String? tag;
+  final String tag;
   final String? icon;
   final bool? nft;
   final String? id;
   final bool? isInitial;
-  SimpleTags({this.tag, this.icon, this.nft, this.id, this.isInitial});
+  SimpleTags({required this.tag, this.icon, this.nft, this.id, this.isInitial});
 }
 
 List<SimpleTags> simpleTagsList = [
@@ -405,4 +405,8 @@ List<SimpleTags> simpleTagsList = [
   SimpleTags(tag: "Moonbase Alpha", icon: ""),
 
 ];
+
+final Map<String, SimpleTags> simpleTagsMap = {
+  for (var e in simpleTagsList) e.tag : e
+};
 

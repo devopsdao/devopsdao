@@ -361,7 +361,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                          child:  ClickOnTask(fromPage: 'tasks', index: index,)
+                                          child:  TaskTransition(fromPage: 'tasks', index: index,)
 
                                           // InkWell(
                                           //     onTap: () {

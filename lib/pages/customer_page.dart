@@ -475,7 +475,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                    child: ClickOnTask(fromPage: 'customer', index: index,)
+                    child: TaskTransition(fromPage: 'customer', index: index,)
 
                     // InkWell(
                     //     onTap: () {

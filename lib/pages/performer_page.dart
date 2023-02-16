@@ -358,7 +358,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-              child: ClickOnTask(fromPage: 'performer', index: index,)
+              child: TaskTransition(fromPage: 'performer', index: index,)
 
 
               // InkWell(

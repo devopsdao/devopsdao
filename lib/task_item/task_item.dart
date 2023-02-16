@@ -1,9 +1,11 @@
 import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../blockchain/task.dart';
 
+import '../blockchain/task_services.dart';
 import '../flutter_flow/theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../widgets/tags/tags.dart';
@@ -31,12 +33,9 @@ class _TaskItemState extends State<TaskItem> {
   double ratingScore = 0;
   int taskCount = 0;
 
-  final bool isAdministrator = false;
-
-
   @override
   Widget build(BuildContext context) {
-    // var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     // var interface = context.watch<InterfaceServices>();
     task = widget.object;
 
@@ -79,7 +78,7 @@ class _TaskItemState extends State<TaskItem> {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          if (true)
+          if (tasksServices.roleNfts['governor'] > 0)
           SizedBox(
             width: 50,
             height: 80,
@@ -170,7 +169,7 @@ class _TaskItemState extends State<TaskItem> {
                                             key: ValueKey(e),
                                             theme: 'small-white',
                                             nft: e.nft ?? false,
-                                            name: e.tag!,
+                                            name: e.tag,
                                             control: false,
                                             page: 'create'
                                         );

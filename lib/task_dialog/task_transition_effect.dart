@@ -14,10 +14,10 @@ import '../task_item/task_item.dart';
 import 'main.dart';
 
 
-class ClickOnTask extends StatelessWidget {
+class TaskTransition extends StatelessWidget {
   final String fromPage;
   final int index;
-  const ClickOnTask({Key? key,
+  const TaskTransition({Key? key,
     required this.fromPage,
     required this.index
   }) : super(key: key);

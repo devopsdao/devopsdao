@@ -158,7 +158,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1114,6 +1114,7 @@ class TasksServices extends ChangeNotifier {
       ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
       final List roleNftsBalance = await balanceOfBatchName([publicAddress!], roleNfts.keys.toList());
+      print(roleNftsBalance);
       late int keyId = 0;
 
       roleNfts = roleNfts.map((key, value) {
@@ -1201,7 +1202,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList) async {
     filterResults.clear();
     print(enteredKeyword);
-    searchKeyword = enteredKeyword;
+    // searchKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
