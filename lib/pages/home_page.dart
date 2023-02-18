@@ -261,6 +261,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 begin: AlignmentDirectional(1, -1),
                 end: AlignmentDirectional(-1, 1),
               ),
+              image: DecorationImage(
+                image: SvgProvider.Svg('assets/images/background-from-png-small.svg'),
+              ),
+              // ),
               // image: DecorationImage(
               //   image: AssetImage("assets/images/background_shape_tiles_small.png"),
               //   // fit: BoxFit.cover,
@@ -297,6 +301,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 filterQuality: FilterQuality.medium,
                                 // fit: BoxFit.fitHeight,
                               ),
+                        // SvgPicture.asset(
+                        //   'assets/images/LColor-from-png2.svg',
+                        //   width: 280,
+                        //   height: 280,
+                        // ),
                         // SvgPicture.asset(
                         //   'assets/images/LColor-from-png2.svg',
                         //   width: 280,
