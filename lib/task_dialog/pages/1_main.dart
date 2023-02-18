@@ -27,26 +27,21 @@ class MainTaskPage extends StatefulWidget {
   final double borderRadius;
   final String fromPage;
 
-
-  const MainTaskPage(
-      {Key? key,
-        required this.innerPaddingWidth,
-        required this.task,
-        required this.borderRadius,
-        required this.fromPage,
-      })
-      : super(key: key);
+  const MainTaskPage({
+    Key? key,
+    required this.innerPaddingWidth,
+    required this.task,
+    required this.borderRadius,
+    required this.fromPage,
+  }) : super(key: key);
 
   @override
   _MainTaskPageState createState() => _MainTaskPageState();
 }
 
 class _MainTaskPageState extends State<MainTaskPage> {
-
   TextEditingController? pullRequestController;
   TextEditingController? messageForStateController;
-
-
 
   @override
   void initState() {
@@ -71,7 +66,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
     final String fromPage = widget.fromPage;
-
 
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
@@ -145,10 +139,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       color: Colors.lightBlue.shade600,
                                       child: InkWell(
                                         onTap: () {
-                                          interface.dialogPagesController.animateToPage(
-                                              interface.dialogCurrentState['pages']['description'] ?? 99,
-                                              duration: const Duration(milliseconds: 400),
-                                              curve: Curves.ease);
+                                          interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description'] ?? 99,
+                                              duration: const Duration(milliseconds: 400), curve: Curves.ease);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(6.0),
@@ -204,16 +196,16 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   ),
                                   child: RichText(
                                       text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'Read more ',
-                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
-                                          ),
-                                          const WidgetSpan(
-                                            child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                          ),
-                                        ],
-                                      ))),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Read more ',
+                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
+                                      ),
+                                      const WidgetSpan(
+                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                      ),
+                                    ],
+                                  ))),
                           ],
                         ),
                       );
@@ -332,8 +324,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: RichText(
                                   text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                    TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  ])),
+                                TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                              ])),
                             ),
                             Container(
                               padding: const EdgeInsets.all(1.0),
@@ -373,8 +365,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
                   interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
                   tasksServices.hardhatDebug == true)
-              // if (task.auditInitiator == tasksServices.publicAddress &&
-              //     interface.dialogCurrentState['pages'].containsKey('select'))
+                // if (task.auditInitiator == tasksServices.publicAddress &&
+                //     interface.dialogCurrentState['pages'].containsKey('select'))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -398,16 +390,15 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                   flex: 2,
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    const Text('Warning, this contract on Audit state!',
-                                        style: TextStyle(height: 1.1, fontWeight: FontWeight.bold)),
+                                    const Text('Warning, this contract on Audit state!', style: TextStyle(height: 1.1, fontWeight: FontWeight.bold)),
                                     if (task.auditInitiator == tasksServices.publicAddress &&
                                         interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
                                           'There '
-                                              '${task.auditors.length == 1 ? 'is' : 'are'} '
-                                              '${task.auditors.length.toString()} auditor'
-                                              '${task.auditors.length == 1 ? '' : 's'}'
-                                              ' waiting for your decision',
+                                          '${task.auditors.length == 1 ? 'is' : 'are'} '
+                                          '${task.auditors.length.toString()} auditor'
+                                          '${task.auditors.length == 1 ? '' : 's'}'
+                                          ' waiting for your decision',
                                           style: const TextStyle(
                                             height: 1.1,
                                           )),
@@ -424,8 +415,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             // backgroundColor: Colors.black12
                                           )),
                                   ])),
-                              if (task.auditInitiator == tasksServices.publicAddress &&
-                                  interface.dialogCurrentState['pages'].containsKey('select'))
+                              if (task.auditInitiator == tasksServices.publicAddress && interface.dialogCurrentState['pages'].containsKey('select'))
                                 TaskDialogButton(
                                   padding: 6.0,
                                   inactive: false,
@@ -446,9 +436,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ********* Participant choose part ************ //
               if (interface.dialogCurrentState['name'] == 'customer-new' || tasksServices.hardhatDebug == true)
-              // if (task.taskState == "new" &&
-              //     task.participants.isNotEmpty &&
-              //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                // if (task.taskState == "new" &&
+                //     task.participants.isNotEmpty &&
+                //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -473,16 +463,16 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 flex: 2,
                                 child: RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                      TextSpan(
-                                          text: 'There '
-                                              '${task.participants.length == 1 ? 'is' : 'are'} '
-                                              '${task.participants.length.toString()} participant'
-                                              '${task.participants.length == 1 ? '' : 's'}'
-                                              ' waiting for your decision',
-                                          style: const TextStyle(
-                                            height: 1,
-                                          )),
-                                    ])),
+                                  TextSpan(
+                                      text: 'There '
+                                          '${task.participants.length == 1 ? 'is' : 'are'} '
+                                          '${task.participants.length.toString()} participant'
+                                          '${task.participants.length == 1 ? '' : 's'}'
+                                          ' waiting for your decision',
+                                      style: const TextStyle(
+                                        height: 1,
+                                      )),
+                                ])),
                               ),
                               TaskDialogButton(
                                 padding: 6.0,
@@ -504,9 +494,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ********* Audit Completed part ************ //
               if (interface.dialogCurrentState['name'] == 'auditor-finished' || tasksServices.hardhatDebug == true)
-              // if (task.taskState == "new" &&
-              //     task.participants.isNotEmpty &&
-              //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
+                // if (task.taskState == "new" &&
+                //     task.participants.isNotEmpty &&
+                //     (fromPage == 'customer' || tasksServices.hardhatDebug == true))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -530,14 +520,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                 flex: 2,
                                 child: RichText(
-                                    text:
-                                    TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                      TextSpan(
-                                          text: 'Thank you for your contribution. This Task completed. You have earned: ',
-                                          style: TextStyle(
-                                            height: 1,
-                                          )),
-                                    ])),
+                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                  TextSpan(
+                                      text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                      style: TextStyle(
+                                        height: 1,
+                                      )),
+                                ])),
                               ),
                             ],
                           ),
@@ -568,12 +557,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               children: <Widget>[
                                 RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                      TextSpan(
-                                          text: '${task.contractValue} DEV \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                      TextSpan(
-                                          text: '${task.contractValueToken} aUSDC',
-                                          style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                    ])),
+                                  TextSpan(
+                                      text: '${task.tokenValues[0]} DEV \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                  TextSpan(text: '${task.tokenValues[0]} aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                ])),
                               ],
                             )),
                         const Spacer(),
@@ -608,7 +595,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //       interface.dialogCurrentState['mainButtonName'] == 'In favor of' ||
               //       interface.dialogCurrentState['mainButtonName'] == 'Sign Review'))
 
-
               // ************ TAGS *********** //
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
@@ -627,58 +613,42 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RichText(
-                              text: const TextSpan(
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87),
-                                  children: <TextSpan>[
-                                    TextSpan(text: 'Tags and NFT attached:' ),
-                                  ]
-                              )
-                          ),
+                              text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87), children: <TextSpan>[
+                            TextSpan(text: 'Tags and NFT attached:'),
+                          ])),
                         ),
-                        LayoutBuilder(
-                            builder: (context, constraints) {
-                              final double width = constraints.maxWidth - 66;
-                              List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
+                        LayoutBuilder(builder: (context, constraints) {
+                          final double width = constraints.maxWidth - 66;
+                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
 
-                              if (tags.isNotEmpty) {
-                                return SizedBox(
-                                  width: width,
-                                  child: Wrap(
-                                      alignment: WrapAlignment.start,
-                                      direction: Axis.horizontal,
-                                      children: tags.map((e) {
-                                        return WrappedChip(
-                                          interactive: false,
-                                          key: ValueKey(e),
-                                          theme: 'white',
-                                          item: e,
-                                          delete: false,
-                                          page: 'create'
-                                        );
-                                      }).toList()),
-                                );
-                              } else {
-                                return Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: RichText(
-                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                            TextSpan(
-                                                text: 'No Tags or NFT tags attached',
-                                                style: TextStyle(
-                                                  height: 1,
-                                                )),
-                                          ])),
-                                    ),
-                                  ],
-                                );
-                              }
-
-                            }
-                        ),
+                          if (tags.isNotEmpty) {
+                            return SizedBox(
+                              width: width,
+                              child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  direction: Axis.horizontal,
+                                  children: tags.map((e) {
+                                    return WrappedChip(interactive: false, key: ValueKey(e), theme: 'white', item: e, delete: false, page: 'create');
+                                  }).toList()),
+                            );
+                          } else {
+                            return Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: RichText(
+                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                    TextSpan(
+                                        text: 'No Tags or NFT tags attached',
+                                        style: TextStyle(
+                                          height: 1,
+                                        )),
+                                  ])),
+                                ),
+                              ],
+                            );
+                          }
+                        }),
                       ],
                     ),
                   ),
@@ -743,10 +713,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           ),
                         ),
                         style: DodaoTheme.of(context).bodyText1.override(
-                          fontFamily: 'Inter',
-                          color: Colors.black87,
-                          lineHeight: null,
-                        ),
+                              fontFamily: 'Inter',
+                              color: Colors.black87,
+                              lineHeight: null,
+                            ),
                         minLines: 1,
                         maxLines: 3,
                       ),
@@ -754,54 +724,50 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   ),
                 ),
 
-
               // ********* GitHub pull/request Input ************ //
-              if ( interface.dialogCurrentState['name'] == 'performer-progress' ||
+              if (interface.dialogCurrentState['name'] == 'performer-progress' ||
                   interface.dialogCurrentState['name'] == 'performer-review' ||
                   tasksServices.hardhatDebug == true)
                 Container(
-                  padding:  const EdgeInsets.only(top: 14.0),
+                  padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                       elevation: 10,
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          // maxWidth: maxStaticInternalDialogWidth,
-                        ),
+                            // maxWidth: maxStaticInternalDialogWidth,
+                            ),
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
                           decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
+                            borderRadius: BorderRadius.circular(widget.borderRadius),
                           ),
-                          child:  LayoutBuilder(
-                              builder: (context, constraints) {
-                                return Column(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 8),
-                                      alignment: Alignment.topLeft,
-                                      child: const Text('Create a pull request with a following name: '),
-                                    ),
-                                    // Container(
-                                    //   padding: const EdgeInsets.all(5.0),
-                                    //   alignment: Alignment.topLeft,
-                                    //   child: Column(
-                                    //     children: [
-                                    //       const Text(
-                                    //         '#NNX-06 Fix glitches on chat page in Task dialog',
-                                    //         style: TextStyle(fontWeight: FontWeight.bold),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // ),
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            return Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('Create a pull request with a following name: '),
+                                ),
+                                // Container(
+                                //   padding: const EdgeInsets.all(5.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: Column(
+                                //     children: [
+                                //       const Text(
+                                //         '#NNX-06 Fix glitches on chat page in Task dialog',
+                                //         style: TextStyle(fontWeight: FontWeight.bold),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
 
-
-                                    GestureDetector(
-                                      onTap: () async {
-                                        Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog')).then((_) {
-                                          Flushbar(
+                                GestureDetector(
+                                  onTap: () async {
+                                    Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog')).then((_) {
+                                      Flushbar(
                                               icon: const Icon(
                                                 Icons.copy,
                                                 size: 20,
@@ -811,282 +777,262 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               duration: const Duration(seconds: 2),
                                               backgroundColor: Colors.blueAccent,
                                               shouldIconPulse: false)
-                                              .show(context);
-                                        });
+                                          .show(context);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    alignment: Alignment.topLeft,
+                                    child: RichText(
+                                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const [
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          Icons.copy,
+                                          size: 16,
+                                          color: Colors.black26,
+                                        ),
+                                      )),
+                                      TextSpan(
+                                          text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog',
+                                          style: TextStyle(fontWeight: FontWeight.bold)),
+                                    ])),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('In customer repository: '),
+                                ),
+
+                                Builder(builder: (context) {
+                                  final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
+                                  return Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    alignment: Alignment.topLeft,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        if (!await launchUrl(
+                                          toLaunch,
+                                          mode: LaunchMode.externalApplication,
+                                        )) {
+                                          throw 'Could not launch $toLaunch';
+                                        }
                                       },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        alignment: Alignment.topLeft,
-                                        child: RichText(
-                                            text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const [
-                                              WidgetSpan(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(right: 5.0),
-                                                  child: Icon(
-                                                    Icons.copy,
-                                                    size: 16,
-                                                    color: Colors.black26,
-                                                  ),
-                                                )
-                                              ),
-                                              TextSpan(
-                                                text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog',
-                                                style: TextStyle( fontWeight: FontWeight.bold)
-                                              ),
-                                            ])),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 8),
-                                      alignment: Alignment.topLeft,
-                                      child: const Text('In customer repository: '),
-                                    ),
-
-                                    Builder(
-                                      builder: (context) {
-                                        final Uri toLaunch =
-                                        Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
-                                        return Container(
-                                          padding: const EdgeInsets.all(8.0),
-                                          alignment: Alignment.topLeft,
-                                          child: GestureDetector(
-                                            onTap:  () async {
-                                              if (!await launchUrl(
-                                                toLaunch,
-                                                mode: LaunchMode.externalApplication,
-                                              )) {
-                                                throw 'Could not launch $toLaunch';
-                                              }
-                                            },
-                                            child: RichText(
-                                                text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                                children: [
-                                                  const WidgetSpan(
-                                                      child: Padding(
-                                                        padding: EdgeInsets.only(right: 5.0),
-                                                        child: Icon(
-                                                          Icons.link,
-                                                          size: 16,
-                                                          color: Colors.black26,
-                                                        ),
-                                                      )
-                                                  ),
-
-                                                  TextSpan(
-                                                      text: toLaunch.toString(),
-                                                      style: const TextStyle( fontWeight: FontWeight.bold)
-                                                  ),
-                                                ])),
+                                      child: RichText(
+                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
+                                        const WidgetSpan(
+                                            child: Padding(
+                                          padding: EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.link,
+                                            size: 16,
+                                            color: Colors.black26,
                                           ),
-                                        );
-                                      }
+                                        )),
+                                        TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      ])),
                                     ),
+                                  );
+                                }),
 
-
-                                    // TextFormField(
-                                    //   controller: pullRequestController,
-                                    //   autofocus: true,
-                                    //   obscureText: false,
-                                    //   onTapOutside: (test) {
-                                    //     FocusScope.of(context).unfocus();
-                                    //   },
-                                    //
-                                    //   decoration: InputDecoration(
-                                    //     labelText: 'Create a pull request with a following name:',
-                                    //     labelStyle:
-                                    //     const TextStyle(fontSize: 17.0, color: Colors.black54),
-                                    //     // hintText: '[Job description...]',
-                                    //     hintStyle:
-                                    //     const TextStyle(fontSize: 14.0, color: Colors.black54),
-                                    //     focusedBorder: const UnderlineInputBorder(
-                                    //       borderSide: BorderSide.none,
-                                    //     ),
-                                    //     enabledBorder: const UnderlineInputBorder(
-                                    //       borderSide: BorderSide.none,
-                                    //     ),
-                                    //     suffixIcon: IconButton(
-                                    //       onPressed: () async {
-                                    //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                    //         setState(() {
-                                    //           pullRequestController!.text = '${clipboardData?.text}';
-                                    //         });
-                                    //       },
-                                    //       icon: const Icon(Icons.content_paste_outlined),
-                                    //       padding: const EdgeInsets.only(right: 12.0),
-                                    //       highlightColor: Colors.grey,
-                                    //       hoverColor: Colors.transparent,
-                                    //       color: Colors.blueAccent,
-                                    //       splashColor: Colors.black,
-                                    //     ),
-                                    //   ),
-                                    //   style: DodaoTheme.of(context).bodyText1.override(
-                                    //     fontFamily: 'Inter',
-                                    //     color: Colors.black54,
-                                    //     lineHeight: 1,
-                                    //   ),
-                                    //   minLines: 1,
-                                    //   maxLines: 1,
-                                    //   keyboardType: TextInputType.multiline,
-                                    //   onChanged:  (text) {
-                                    //
-                                    //     // debounceNotifyListener.debounce(() {
-                                    //     //   tasksServices.myNotifyListeners();
-                                    //     // });
-                                    //   },
-                                    // ),
-
-                                  ],
-                                );
-                              }
-                          ),
+                                // TextFormField(
+                                //   controller: pullRequestController,
+                                //   autofocus: true,
+                                //   obscureText: false,
+                                //   onTapOutside: (test) {
+                                //     FocusScope.of(context).unfocus();
+                                //   },
+                                //
+                                //   decoration: InputDecoration(
+                                //     labelText: 'Create a pull request with a following name:',
+                                //     labelStyle:
+                                //     const TextStyle(fontSize: 17.0, color: Colors.black54),
+                                //     // hintText: '[Job description...]',
+                                //     hintStyle:
+                                //     const TextStyle(fontSize: 14.0, color: Colors.black54),
+                                //     focusedBorder: const UnderlineInputBorder(
+                                //       borderSide: BorderSide.none,
+                                //     ),
+                                //     enabledBorder: const UnderlineInputBorder(
+                                //       borderSide: BorderSide.none,
+                                //     ),
+                                //     suffixIcon: IconButton(
+                                //       onPressed: () async {
+                                //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                //         setState(() {
+                                //           pullRequestController!.text = '${clipboardData?.text}';
+                                //         });
+                                //       },
+                                //       icon: const Icon(Icons.content_paste_outlined),
+                                //       padding: const EdgeInsets.only(right: 12.0),
+                                //       highlightColor: Colors.grey,
+                                //       hoverColor: Colors.transparent,
+                                //       color: Colors.blueAccent,
+                                //       splashColor: Colors.black,
+                                //     ),
+                                //   ),
+                                //   style: DodaoTheme.of(context).bodyText1.override(
+                                //     fontFamily: 'Inter',
+                                //     color: Colors.black54,
+                                //     lineHeight: 1,
+                                //   ),
+                                //   minLines: 1,
+                                //   maxLines: 1,
+                                //   keyboardType: TextInputType.multiline,
+                                //   onChanged:  (text) {
+                                //
+                                //     // debounceNotifyListener.debounce(() {
+                                //     //   tasksServices.myNotifyListeners();
+                                //     // });
+                                //   },
+                                // ),
+                              ],
+                            );
+                          }),
                         ),
-                      )
-                  ),
+                      )),
                 ),
 
               // ********* GitHub pull/request Input ************ //
-              if ( interface.dialogCurrentState['name'] == 'performer-review' ||
-                  tasksServices.hardhatDebug == true)
+              if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
                 Container(
-                  padding:  const EdgeInsets.only(top: 14.0),
+                  padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                       elevation: 10,
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          // maxWidth: maxStaticInternalDialogWidth,
-                        ),
+                            // maxWidth: maxStaticInternalDialogWidth,
+                            ),
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
                           decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(widget.borderRadius),
+                            borderRadius: BorderRadius.circular(widget.borderRadius),
                           ),
-                          child:  LayoutBuilder(
-                              builder: (context, constraints) {
-                                return Column(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 8),
-                                      alignment: Alignment.topLeft,
-                                      child: const Text('Pull request status:'),
-                                    ),
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            return Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('Pull request status:'),
+                                ),
 
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      alignment: Alignment.topLeft,
-                                      child: RichText(
-                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children:  [
-                                            const WidgetSpan(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(right: 5.0),
-                                                  child: Icon(
-                                                    Icons.api,
-                                                    size: 16,
-                                                    color: Colors.black26,
-                                                  ),
-                                                )
-                                            ),
-                                            interface.statusText
-                                          ])),
-                                    ),
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  alignment: Alignment.topLeft,
+                                  child: RichText(
+                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
+                                    const WidgetSpan(
+                                        child: Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.api,
+                                        size: 16,
+                                        color: Colors.black26,
+                                      ),
+                                    )),
+                                    interface.statusText
+                                  ])),
+                                ),
 
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 8),
-                                      alignment: Alignment.topLeft,
-                                      child: const Text(
-                                          '* Please wait until your pull request is merged in to '
-                                          'the repository or till customer manually accepts Task completion:',
-                                      style: TextStyle(fontSize: 10),),
-                                    ),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text(
+                                    '* Please wait until your pull request is merged in to '
+                                    'the repository or till customer manually accepts Task completion:',
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                ),
 
-                                    // Container(
-                                    //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                    //   alignment: Alignment.topLeft,
-                                    //   child: RichText(
-                                    //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                    //           children: const [
-                                    //             WidgetSpan(
-                                    //                 child: Padding(
-                                    //                   padding: EdgeInsets.only(right: 5.0),
-                                    //                   child: Icon(
-                                    //                     Icons.api,
-                                    //                     size: 16,
-                                    //                     color: Colors.black26,
-                                    //                   ),
-                                    //                 )
-                                    //             ),
-                                    //
-                                    //             TextSpan(
-                                    //                 text: 'Open',
-                                    //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                    //             ),
-                                    //           ])),
-                                    // ),
-                                    // Container(
-                                    //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                    //   alignment: Alignment.topLeft,
-                                    //   child: RichText(
-                                    //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                    //           children: const [
-                                    //             WidgetSpan(
-                                    //                 child: Padding(
-                                    //                   padding: EdgeInsets.only(right: 5.0),
-                                    //                   child: Icon(
-                                    //                     Icons.api,
-                                    //                     size: 16,
-                                    //                     color: Colors.black26,
-                                    //                   ),
-                                    //                 )
-                                    //             ),
-                                    //
-                                    //             TextSpan(
-                                    //                 text: 'Closed (merged)',
-                                    //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                    //             ),
-                                    //           ])),
-                                    // ),
-                                    // Container(
-                                    //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                    //   alignment: Alignment.topLeft,
-                                    //   child: RichText(
-                                    //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                    //           children: const [
-                                    //             WidgetSpan(
-                                    //                 child: Padding(
-                                    //                   padding: EdgeInsets.only(right: 5.0),
-                                    //                   child: Icon(
-                                    //                     Icons.api,
-                                    //                     size: 16,
-                                    //                     color: Colors.black26,
-                                    //                   ),
-                                    //                 )
-                                    //             ),
-                                    //
-                                    //             TextSpan(
-                                    //                 text: 'Closed (rejected)',
-                                    //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                    //             ),
-                                    //           ])),
-                                    // )
-                                  ],
-                                );
-                              }
-                          ),
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                //           children: const [
+                                //             WidgetSpan(
+                                //                 child: Padding(
+                                //                   padding: EdgeInsets.only(right: 5.0),
+                                //                   child: Icon(
+                                //                     Icons.api,
+                                //                     size: 16,
+                                //                     color: Colors.black26,
+                                //                   ),
+                                //                 )
+                                //             ),
+                                //
+                                //             TextSpan(
+                                //                 text: 'Open',
+                                //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                //             ),
+                                //           ])),
+                                // ),
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                //           children: const [
+                                //             WidgetSpan(
+                                //                 child: Padding(
+                                //                   padding: EdgeInsets.only(right: 5.0),
+                                //                   child: Icon(
+                                //                     Icons.api,
+                                //                     size: 16,
+                                //                     color: Colors.black26,
+                                //                   ),
+                                //                 )
+                                //             ),
+                                //
+                                //             TextSpan(
+                                //                 text: 'Closed (merged)',
+                                //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                //             ),
+                                //           ])),
+                                // ),
+                                // Container(
+                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                //           children: const [
+                                //             WidgetSpan(
+                                //                 child: Padding(
+                                //                   padding: EdgeInsets.only(right: 5.0),
+                                //                   child: Icon(
+                                //                     Icons.api,
+                                //                     size: 16,
+                                //                     color: Colors.black26,
+                                //                   ),
+                                //                 )
+                                //             ),
+                                //
+                                //             TextSpan(
+                                //                 text: 'Closed (rejected)',
+                                //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                //             ),
+                                //           ])),
+                                // )
+                              ],
+                            );
+                          }),
                         ),
-                      )
-                  ),
+                      )),
                 ),
 
               // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
-              if ((task.contractValue != 0 || task.contractValueToken != 0) &&
+              if ((task.tokenValues[0] != 0 || task.tokenValues[0] != 0) &&
                   (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
-              // if (task.taskState == 'completed' &&
-              //     (fromPage == 'performer' ||
-              //         tasksServices.hardhatDebug == true) &&
-              //     (task.contractValue != 0 || task.contractValueToken != 0))
+                // if (task.taskState == 'completed' &&
+                //     (fromPage == 'performer' ||
+                //         tasksServices.hardhatDebug == true) &&
+                //     (task.contractValue != 0 || task.contractValueToken != 0))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -1147,12 +1093,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
           ),
         ),
       ),
-      floatingActionButtonAnimator:  NoScalingAnimation(),
+      floatingActionButtonAnimator: NoScalingAnimation(),
       floatingActionButton: Padding(
-        // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
-        padding: const EdgeInsets.only(right: 13, left: 46),
-        child: SetsOfFabButtons(task: task, fromPage: fromPage, )
-      ),
+          // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
+          padding: const EdgeInsets.only(right: 13, left: 46),
+          child: SetsOfFabButtons(
+            task: task,
+            fromPage: fromPage,
+          )),
     );
   }
 }

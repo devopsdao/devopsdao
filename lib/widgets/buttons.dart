@@ -22,11 +22,10 @@ class _WithdrawButtonState extends State<WithdrawButton> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     // print(tasksServices.destinationChain);
-    if (widget.object.contractValue != 0) {
+    if (widget.object.tokenValues[0] != 0) {
       _buttonState = true;
-    } else if (widget.object.contractValueToken != 0) {
-      if (widget.object.contractValueToken > tasksServices.transferFee ||
-          tasksServices.destinationChain == 'Moonbase') {
+    } else if (widget.object.tokenValues[0] != 0) {
+      if (widget.object.tokenValues[0] > tasksServices.transferFee || tasksServices.destinationChain == 'Moonbase') {
         _buttonState = true;
       } else {
         _buttonState = false;
@@ -34,17 +33,13 @@ class _WithdrawButtonState extends State<WithdrawButton> {
     }
 
     return TextButton(
-        style: TextButton.styleFrom(
-            primary: Colors.white,
-            disabledBackgroundColor: Colors.white10,
-            backgroundColor: Colors.green),
+        style: TextButton.styleFrom(primary: Colors.white, disabledBackgroundColor: Colors.white10, backgroundColor: Colors.green),
         onPressed: _buttonState
             ? () {
                 setState(() {
                   widget.object.justLoaded = false;
                 });
-                tasksServices.withdrawToChain(
-                    widget.object.taskAddress, widget.object.nanoId);
+                tasksServices.withdrawToChain(widget.object.taskAddress, widget.object.nanoId);
                 Navigator.pop(context);
 
                 showDialog(

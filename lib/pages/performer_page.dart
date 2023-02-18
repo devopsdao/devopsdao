@@ -168,159 +168,150 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
           child: DefaultTabController(
             length: 3,
             initialIndex: tabIndex,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Column(
-                  children: [
-                    TabBar(
-                      labelColor: Colors.white,
-                      labelStyle: DodaoTheme.of(context).bodyText1,
-                      indicatorColor: const Color(0xFF47CBE4),
-                      indicatorWeight: 3,
-                      // isScrollable: true,
-                      onTap: (index) {
-                        _searchKeywordController.clear();
-                        tabIndex = index;
-                        // print(index);
-                        if (index == 0) {
-                          tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
-                        } else if (index == 1) {
-                          tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
-                        } else if (index == 2) {
-                          tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
-                        }
-
-                      },
-                      tabs: [
-                        Tab(
-                          // icon: const FaIcon(
-                          //   FontAwesomeIcons.smileBeam,
-                          // ),
-                          child: BadgeTab(
-                            taskCount: tasksServices.tasksPerformerParticipate.length,
-                            tabText: 'Applied',
-                          ),
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Column(
+                children: [
+                  TabBar(
+                    labelColor: Colors.white,
+                    labelStyle: DodaoTheme.of(context).bodyText1,
+                    indicatorColor: const Color(0xFF47CBE4),
+                    indicatorWeight: 3,
+                    // isScrollable: true,
+                    onTap: (index) {
+                      _searchKeywordController.clear();
+                      tabIndex = index;
+                      // print(index);
+                      if (index == 0) {
+                        tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
+                      } else if (index == 1) {
+                        tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
+                      } else if (index == 2) {
+                        tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
+                      }
+                    },
+                    tabs: [
+                      Tab(
+                        // icon: const FaIcon(
+                        //   FontAwesomeIcons.smileBeam,
+                        // ),
+                        child: BadgeTab(
+                          taskCount: tasksServices.tasksPerformerParticipate.length,
+                          tabText: 'Applied',
                         ),
-                        Tab(
-                          // icon: const Icon(
-                          //   Icons.card_travel_outlined,
-                          // ),
-                          child: BadgeTab(
-                            taskCount: tasksServices.tasksPerformerProgress.length,
-                            tabText: 'Working',
-                          ),
+                      ),
+                      Tab(
+                        // icon: const Icon(
+                        //   Icons.card_travel_outlined,
+                        // ),
+                        child: BadgeTab(
+                          taskCount: tasksServices.tasksPerformerProgress.length,
+                          tabText: 'Working',
                         ),
-                        Tab(
-                          // icon: const Icon(
-                          //   Icons.done_outline,
-                          // ),
-                          child: BadgeTab(
-                            taskCount: tasksServices.tasksPerformerComplete.length,
-                            tabText: 'Complete',
-                          ),
+                      ),
+                      Tab(
+                        // icon: const Icon(
+                        //   Icons.done_outline,
+                        // ),
+                        child: BadgeTab(
+                          taskCount: tasksServices.tasksPerformerComplete.length,
+                          tabText: 'Complete',
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: constraints.minWidth - 70,
-                          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                          // decoration: const BoxDecoration(
-                          //   // color: Colors.white70,
-                          //   // borderRadius: BorderRadius.circular(8),
-                          // ),
-                          child: TextField(
-                            controller: _searchKeywordController,
-                            onChanged: (searchKeyword) {
-                              print(tabIndex);
-                              if (tabIndex == 0) {
-                                tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
-                              } else if (tabIndex == 1) {
-                                tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
-                              } else if (tabIndex == 2) {
-                                tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
-                              }
-                            },
-                            decoration: const InputDecoration(
-                              hintText: '[Find task by Title...]',
-                              hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                              labelText: 'Search',
-                              suffixIcon: Icon(
-                                Icons.search,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: constraints.minWidth - 70,
+                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        // decoration: const BoxDecoration(
+                        //   // color: Colors.white70,
+                        //   // borderRadius: BorderRadius.circular(8),
+                        // ),
+                        child: TextField(
+                          controller: _searchKeywordController,
+                          onChanged: (searchKeyword) {
+                            print(tabIndex);
+                            if (tabIndex == 0) {
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
+                            } else if (tabIndex == 1) {
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
+                            } else if (tabIndex == 2) {
+                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '[Find task by Title...]',
+                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                            labelText: 'Search',
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
                                 color: Colors.white,
+                                width: 1,
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  lineHeight: 2,
-                                ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                          ),
+                          style: DodaoTheme.of(context).bodyText1.override(
+                                fontFamily: 'Inter',
+                                color: Colors.white,
+                                lineHeight: 2,
+                              ),
+                        ),
+                      ),
+                      const TagCallButton(
+                        page: 'performer',
+                      ),
+                    ],
+                  ),
+                  Consumer<SearchServices>(builder: (context, model, child) {
+                    return Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.horizontal,
+                        children: model.performerTagsList.entries.map((e) {
+                          return WrappedChip(
+                              interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'performer');
+                        }).toList());
+                  }),
+                  tasksServices.isLoading
+                      ? const LoadIndicator()
+                      : const Expanded(
+                          child: TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
+                            children: [
+                              MyPerformerTabWidget(
+                                tabName: 'applied',
+                              ),
+                              MyPerformerTabWidget(
+                                tabName: 'working',
+                              ),
+                              MyPerformerTabWidget(
+                                tabName: 'complete',
+                              ),
+                            ],
                           ),
                         ),
-                        const TagCallButton(page: 'performer',),
-                      ],
-                    ),
-                    Consumer<SearchServices>(
-                        builder: (context, model, child) {
-                          return Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: model.performerTagsList.entries.map((e) {
-                                return WrappedChip(
-                                    interactive: true,
-                                    key: ValueKey(e.value),
-                                    theme: 'black',
-                                    item: e.value,
-                                    delete: true,
-                                    page: 'performer'
-                                );
-                              }).toList());
-                        }
-                    ),
-                    tasksServices.isLoading
-                        ? const LoadIndicator()
-                        : const Expanded(
-                            child: TabBarView(
-                              physics: NeverScrollableScrollPhysics(),
-                              children: [
-                                MyPerformerTabWidget(
-                                  tabName: 'applied',
-                                ),
-                                MyPerformerTabWidget(
-                                  tabName: 'working',
-                                ),
-                                MyPerformerTabWidget(
-                                  tabName: 'complete',
-                                ),
-                              ],
-                            ),
-                          ),
-                  ],
-                );
-              }
-            ),
+                ],
+              );
+            }),
           ),
         ),
       ),
@@ -350,7 +341,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
       child: RefreshIndicator(
         onRefresh: () async {
           tasksServices.isLoadingBackground = true;
-          tasksServices.fetchTasks();
+          tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
         },
         child: ListView.builder(
           padding: EdgeInsets.zero,
@@ -358,25 +349,27 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
           itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-              child: TaskTransition(fromPage: 'performer', index: index,)
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                child: TaskTransition(
+                  fromPage: 'performer',
+                  index: index,
+                )
 
-
-              // InkWell(
-              //     onTap: () {
-              //       showDialog(
-              //           context: context,
-              //           builder: (context) =>
-              //               TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-              //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-              //       RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
-              //       Beamer.of(context).updateRouteInformation(routeInfo);
-              //     },
-              //     child: TaskItem(
-              //       fromPage: 'performer',
-              //       object: objList[index],
-              //     )),
-            );
+                // InkWell(
+                //     onTap: () {
+                //       showDialog(
+                //           context: context,
+                //           builder: (context) =>
+                //               TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+                //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                //       RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
+                //       Beamer.of(context).updateRouteInformation(routeInfo);
+                //     },
+                //     child: TaskItem(
+                //       fromPage: 'performer',
+                //       object: objList[index],
+                //     )),
+                );
           },
         ),
       ),

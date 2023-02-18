@@ -136,7 +136,7 @@
   },
   {
     "inputs": [],
-    "name": "getTaskInfo",
+    "name": "getTaskData",
     "outputs": [
       {
         "components": [
