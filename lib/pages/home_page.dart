@@ -455,7 +455,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           direction: Axis.horizontal,
                                           children: tags.map((e) {
                                             return WrappedChip(
-                                                interactive: false, key: ValueKey(e), theme: 'black', item: e, delete: false, page: 'create');
+                                                interactive: false, key: ValueKey(e), theme: 'black', item: e, delete: false, page: 'home', );
                                           }).toList()),
                                     ),
 

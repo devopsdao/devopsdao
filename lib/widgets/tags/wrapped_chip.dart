@@ -102,10 +102,7 @@ late bool initDone = false;
 
 
 
-    late bool getMore = false;
-    if (item.tag == 'Get more...') {
-      getMore = true;
-    }
+
 
     // Colors (black BIG is default):
     late Color textColor = Colors.grey[300]!;
@@ -161,6 +158,11 @@ late bool initDone = false;
 
     // tag width
     late double tagWidth = textSize.width + 22;
+    late bool getMore = false;
+    if (item.tag == 'Get more...') {
+      getMore = true;
+      tagWidth += 22;
+    }
     if (item.selected && widget.delete) {
       tagWidth += 22;
     }
