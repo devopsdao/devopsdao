@@ -7,6 +7,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/tags/main.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
@@ -294,13 +295,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                       ),
                     ],
                   ),
-                  Consumer<InterfaceServices>(builder: (context, model, child) {
+                  Consumer<TagsServices>(builder: (context, model, child) {
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
-                        children: model.auditorTagsList.map((e) {
-                          return WrappedChip(
-                              interactive: true, key: ValueKey(e), theme: 'black', nft: e.nft ?? false, name: e.tag!, control: true, page: 'auditor');
+                        children: model.auditorTagsList.entries.map((e) {
+                          return WrappedChip(interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'auditor');
                         }).toList());
                   }),
                   tasksServices.isLoading
@@ -353,7 +353,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
       child: RefreshIndicator(
         onRefresh: () async {
           tasksServices.isLoadingBackground = true;
-          tasksServices.fetchTasksPerformer(tasksServices.publicAddress!); //@todo must switch to auditor
+          tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
         },
         child: ListView.builder(
           padding: EdgeInsets.zero,
@@ -362,7 +362,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
           itemBuilder: (context, index) {
             return Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                child: ClickOnTask(
+                child: TaskTransition(
                   fromPage: 'auditor',
                   index: index,
                 )

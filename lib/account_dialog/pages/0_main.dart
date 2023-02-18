@@ -269,9 +269,8 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                                       interactive: true,
                                                       key: ValueKey(e),
                                                       theme: 'white',
-                                                      nft: e.nft ?? false,
-                                                      name: e.tag!,
-                                                      control: true,
+                                                      item: e,
+                                                      delete: true,
                                                       page: 'create'
                                                   );
                                                 }).toList()),

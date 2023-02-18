@@ -18,3 +18,12 @@ class NoScalingAnimation extends FloatingActionButtonAnimator {
     return Tween<double>(begin: 1.0, end: 1.0).animate(parent);
   }
 }
+
+Size calcTextSize(String text, TextStyle style) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: TextDirection.ltr,
+    textScaleFactor: WidgetsBinding.instance.window.textScaleFactor,
+  )..layout();
+  return textPainter.size;
+}

@@ -261,10 +261,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 begin: AlignmentDirectional(1, -1),
                 end: AlignmentDirectional(-1, 1),
               ),
-              image: DecorationImage(
-                image: SvgProvider.Svg('assets/images/background-from-png-small.svg'),
-              ),
-              // ),
               // image: DecorationImage(
               //   image: AssetImage("assets/images/background_shape_tiles_small.png"),
               //   // fit: BoxFit.cover,
@@ -284,7 +280,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       children: [
                         tasksServices.isLoading
                             ? const LoadIndicator()
-                            : Image.asset(
+                            :
+
+                            // SvgPicture.asset(
+                            //
+                            //
+                            //   'assets/images/LColor_optimized.svg',
+                            //   width: 200,
+                            //   height: 250,
+                            // ),
+
+                            Image.asset(
                                 'assets/images/LColor.png',
                                 width: 280,
                                 height: 280,
@@ -296,16 +302,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           width: 200,
                           height: 250,
                         ),
-                        // SvgPicture.asset(
-                        //   'assets/images/background-from-png-small.svg',
-                        //   // width: 200,
-                        //   // height: 250,
-                        // ),
-                        // ScalableImage.fromSIBytes(bytes)
-                        // ScalableImage.fromSvgAsset(rootBundle.load('assets/images/LColor_optimized.svg')),
-                        // ScalableImageWidget(si: tasksServices.backgroundSVG),
-                        // ScalableImageWidget(si: ScalableImage.fromSvgString(awaitrootBundle.load('assets/images/LColor_optimized.svg'))),
-                        // ScalableImageWidget.fromSISource(si: ScalableImageSource.fromSvg('assets/images/wallpaper.svg'))),
                         // .animated([animationsMap['imageOnPageLoadAnimation']!]),
                         // Padding(
                         //   padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 16),
@@ -450,13 +446,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           direction: Axis.horizontal,
                                           children: tags.map((e) {
                                             return WrappedChip(
-                                                interactive: false,
-                                                key: ValueKey(e),
-                                                theme: 'black',
-                                                nft: e.nft ?? false,
-                                                name: e.tag!,
-                                                control: false,
-                                                page: 'create');
+                                                interactive: false, key: ValueKey(e), theme: 'black', item: e, delete: false, page: 'create');
                                           }).toList()),
                                     ),
 

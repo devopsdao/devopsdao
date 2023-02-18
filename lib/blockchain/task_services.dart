@@ -1132,7 +1132,7 @@ class TasksServices extends ChangeNotifier {
       ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
       // final List roleNftsBalance = await balanceOfBatchName([publicAddress!], roleNfts.keys.toList());
-      // late int keyId = 0;
+      // print(roleNftsBalance);
 
       // roleNfts = roleNfts.map((key, value) {
       //   late MapEntry<String, dynamic> mapEnt = MapEntry(key, roleNftsBalance[keyId]);
@@ -1219,7 +1219,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList) async {
     filterResults.clear();
     print(enteredKeyword);
-    searchKeyword = enteredKeyword;
+    // searchKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
       filterResults = Map.from(taskList);
     } else {

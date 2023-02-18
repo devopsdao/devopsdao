@@ -27,19 +27,19 @@ class _TagsPageState extends State<TagsPage> {
   Widget build(BuildContext context) {
     var interface = context.read<InterfaceServices>();
     // var tasksServices = context.read<TasksServices>();
-    if (widget.page == 'audit') {
-      selectedListData = interface.auditorTagsList;
-    } else if (widget.page == 'tasks') {
-      selectedListData = interface.tasksTagsList;
-    } else if (widget.page == 'customer') {
-      selectedListData = interface.customerTagsList;
-    } else if (widget.page == 'performer') {
-      selectedListData = interface.performerTagsList;
-    } else if (widget.page == 'create') {
-      selectedListData = interface.createTagsList;
-    } else {
-      selectedListData = [];
-    }
+    // if (widget.page == 'audit') {
+    //   selectedListData = interface.auditorTagsList;
+    // } else if (widget.page == 'tasks') {
+    //   selectedListData = interface.tasksTagsList;
+    // } else if (widget.page == 'customer') {
+    //   selectedListData = interface.customerTagsList;
+    // } else if (widget.page == 'performer') {
+    //   selectedListData = interface.performerTagsList;
+    // } else if (widget.page == 'create') {
+    //   selectedListData = interface.createTagsList;
+    // } else {
+    //   selectedListData = [];
+    // }
     final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
     const double myPadding = 8.0;
 
@@ -127,7 +127,7 @@ class _TagsPageState extends State<TagsPage> {
                     },
 
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.add),
+                      prefixIcon: const Icon(Icons.add),
                       suffixIcon: IconButton(
                         onPressed: () {
                           interface.dialogPagesController.animateToPage(
@@ -196,7 +196,7 @@ class _TagsPageState extends State<TagsPage> {
                         searchFieldInputBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0)
                         ),
-                        boxShadow: [BoxShadow(color: Colors.brown)],
+                        boxShadow: [const BoxShadow(color: Colors.brown)],
                         searchFieldBorderRadius: 10,
                         searchFieldLabelText: 'Or find existed one',
                         searchFieldHintText: '[Enter tag name here..]',
@@ -241,7 +241,7 @@ class _TagsPageState extends State<TagsPage> {
                       ),
                     ),
                     controlButtons: const [
-                      // ControlButtonType.All,
+                      ControlButtonType.All,
                       ControlButtonType.Reset,
 
                     ],
@@ -250,9 +250,8 @@ class _TagsPageState extends State<TagsPage> {
                         // key: ValueKey(simpleTagsList.indexOf(item)),
                         interactive: true,
                         theme: 'white',
-                        nft: item.nft ?? false,
-                        name: item.tag,
-                        control: false,
+                        item: item,
+                          delete: false,
                         page: widget.page
                       );
 
@@ -347,12 +346,12 @@ class _TagsPageState extends State<TagsPage> {
 }
 
 class SimpleTags {
-  final String? tag;
+  final String tag;
   final String? icon;
   final bool? nft;
   final String? id;
-  final bool? isInitial;
-  SimpleTags({this.tag, this.icon, this.nft, this.id, this.isInitial});
+  late bool selected;
+  SimpleTags({required this.tag, this.icon, this.nft, this.id, this.selected = false});
 }
 
 List<SimpleTags> simpleTagsList = [
@@ -405,4 +404,8 @@ List<SimpleTags> simpleTagsList = [
   SimpleTags(tag: "Moonbase Alpha", icon: ""),
 
 ];
+
+final Map<String, SimpleTags> simpleTagsMap = {
+  for (var e in simpleTagsList) e.tag : e
+};
 

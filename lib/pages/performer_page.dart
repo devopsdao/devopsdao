@@ -7,6 +7,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/tags/main.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/theme.dart';
@@ -275,24 +276,18 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                               ),
                         ),
                       ),
-                      TagCallButton(
+                      const TagCallButton(
                         page: 'performer',
                       ),
                     ],
                   ),
-                  Consumer<InterfaceServices>(builder: (context, model, child) {
+                  Consumer<TagsServices>(builder: (context, model, child) {
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
-                        children: model.performerTagsList.map((e) {
+                        children: model.performerTagsList.entries.map((e) {
                           return WrappedChip(
-                              interactive: true,
-                              key: ValueKey(e),
-                              theme: 'black',
-                              nft: e.nft ?? false,
-                              name: e.tag!,
-                              control: true,
-                              page: 'performer');
+                              interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'performer');
                         }).toList());
                   }),
                   tasksServices.isLoading
@@ -354,7 +349,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
           itemBuilder: (context, index) {
             return Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                child: ClickOnTask(
+                child: TaskTransition(
                   fromPage: 'performer',
                   index: index,
                 )

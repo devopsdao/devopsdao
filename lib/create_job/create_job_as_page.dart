@@ -330,9 +330,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                       interactive: true,
                                                       key: ValueKey(e),
                                                       theme: 'white',
-                                                      nft: e.nft ?? false,
-                                                      name: e.tag!,
-                                                      control: true,
+                                                      item: e,
+                                                      delete: true,
                                                       page: 'create'
                                                     );
                                                   }).toList()),
@@ -570,7 +569,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
               final nanoId = customAlphabet(
                 '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
                 12);
-              final List<String> tags = interface.createTagsList.map((tags) => tags.tag == null ? 'null :(' : tags.tag!).toList();
+              final List<String> tags = interface.createTagsList.map((tags) => tags.tag == null ? 'null :(' : tags.tag).toList();
               tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,

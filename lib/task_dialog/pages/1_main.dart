@@ -628,14 +628,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   alignment: WrapAlignment.start,
                                   direction: Axis.horizontal,
                                   children: tags.map((e) {
-                                    return WrappedChip(
-                                        interactive: false,
-                                        key: ValueKey(e),
-                                        theme: 'white',
-                                        nft: e.nft ?? false,
-                                        name: e.tag!,
-                                        control: false,
-                                        page: 'create');
+                                    return WrappedChip(interactive: false, key: ValueKey(e), theme: 'white', item: e, delete: false, page: 'create');
                                   }).toList()),
                             );
                           } else {
