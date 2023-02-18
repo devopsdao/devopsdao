@@ -297,11 +297,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 filterQuality: FilterQuality.medium,
                                 // fit: BoxFit.fitHeight,
                               ),
-                        SvgPicture.asset(
-                          'assets/images/LColor-from-png2.svg',
-                          width: 200,
-                          height: 250,
-                        ),
+                        // SvgPicture.asset(
+                        //   'assets/images/LColor-from-png2.svg',
+                        //   width: 280,
+                        //   height: 280,
+                        // ),
                         // .animated([animationsMap['imageOnPageLoadAnimation']!]),
                         // Padding(
                         //   padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 16),
