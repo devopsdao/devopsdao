@@ -7,6 +7,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/tags/main.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/theme.dart';
@@ -277,22 +278,21 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                                 ),
                           ),
                         ),
-                        TagCallButton(page: 'performer',),
+                        const TagCallButton(page: 'performer',),
                       ],
                     ),
-                    Consumer<InterfaceServices>(
+                    Consumer<TagsServices>(
                         builder: (context, model, child) {
                           return Wrap(
                               alignment: WrapAlignment.start,
                               direction: Axis.horizontal,
-                              children: model.performerTagsList.map((e) {
+                              children: model.performerTagsList.entries.map((e) {
                                 return WrappedChip(
                                     interactive: true,
-                                    key: ValueKey(e),
+                                    key: ValueKey(e.value),
                                     theme: 'black',
-                                    nft: e.nft ?? false,
-                                    name: e.tag!,
-                                    control: true,
+                                    item: e.value,
+                                    delete: true,
                                     page: 'performer'
                                 );
                               }).toList());

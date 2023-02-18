@@ -464,9 +464,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             interactive: false,
                                             key: ValueKey(e),
                                             theme: 'black',
-                                            nft: e.nft ?? false,
-                                            name: e.tag!,
-                                            control: false,
+                                            item: e,
+                                            delete: false,
                                             page: 'create'
                                         );
                                       }).toList()),

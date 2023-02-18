@@ -653,9 +653,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           interactive: false,
                                           key: ValueKey(e),
                                           theme: 'white',
-                                          nft: e.nft ?? false,
-                                          name: e.tag!,
-                                          control: false,
+                                          item: e,
+                                          delete: false,
                                           page: 'create'
                                         );
                                       }).toList()),

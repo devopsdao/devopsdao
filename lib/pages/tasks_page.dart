@@ -6,6 +6,7 @@ import '../create_job/create_job_call_button.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../task_dialog/shimmer.dart';
+import '../widgets/tags/main.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
@@ -271,55 +272,21 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         const TagCallButton(page: 'tasks',),
                       ],
                     ),
-                    Consumer<InterfaceServices>(
+                    Consumer<TagsServices>(
                       builder: (context, model, child) {
                         return Wrap(
                           alignment: WrapAlignment.start,
                           direction: Axis.horizontal,
-                          children: model.tasksTagsList.map((e) {
+                          children: model.tasksTagsList.entries.map((e) {
 
                             return WrappedChip(
                               interactive: true,
-                              key: ValueKey(e),
+                              key: ValueKey(e.value),
                               theme: 'black',
-                              nft: e.nft ?? false,
-                              name: e.tag!,
-                              // callback: () {
-                              //   model.removeTag(i.tag);
-                              // },
-                              control: true,
+                              item: e.value,
+                              delete: true,
                               page: 'tasks'
-                              // onDeleted: () {
-                              //   //
-                              //   if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
-                              // },
                             );
-
-
-                            // bool isMarkedForDelete = deleteItems.where((i) {
-                            //       // print('model: ${model.selectedTagsList.indexOf(e)}');
-                            //       // print('i: ${i}');
-                            //       return i == model.selectedTagsList.indexOf(e).toString();
-                            //
-                            //     }).isNotEmpty;
-                            // print(isMarkedForDelete); print(deleteItems);
-                            // return AnimatedContainer(
-                            //   key: ObjectKey(e),
-                            //   duration: const Duration(milliseconds: 350),
-                            //   width: isMarkedForDelete ? 0 : 100,
-                            //   child: AnimatedOpacity(
-                            //     duration: const Duration(milliseconds: 350),
-                            //     opacity: isMarkedForDelete ? 0 : 1,
-                            //     child: Chip(
-                            //       label: Text(e.tag!),
-                            //       onDeleted: () {
-                            //       if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
-                            //     },),
-                            //
-                            //
-                            //
-                            //   ),
-                            // );
                           }).toList());
                       }
                     ),

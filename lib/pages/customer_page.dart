@@ -9,6 +9,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/tags/main.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
 import '../task_item/task_item.dart';
@@ -310,19 +311,18 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                               TagCallButton(page: 'customer',),
                             ],
                           ),
-                          Consumer<InterfaceServices>(
+                          Consumer<TagsServices>(
                               builder: (context, model, child) {
                                 return Wrap(
                                     alignment: WrapAlignment.start,
                                     direction: Axis.horizontal,
-                                    children: model.customerTagsList.map((e) {
+                                    children: model.customerTagsList.entries.map((e) {
                                       return WrappedChip(
                                           interactive: true,
-                                          key: ValueKey(e),
+                                          key: ValueKey(e.value),
                                           theme: 'black',
-                                          nft: e.nft ?? false,
-                                          name: e.tag!,
-                                          control: true,
+                                          item: e.value,
+                                          delete: true,
                                           page: 'customer'
                                       );
                                     }).toList());

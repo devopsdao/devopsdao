@@ -42,6 +42,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
+
     final Task task = widget.task;
 
     title = 'Auditor\'s decision';

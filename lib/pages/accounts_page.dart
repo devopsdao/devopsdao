@@ -201,12 +201,11 @@ class _AccountsPageState extends State<AccountsPage> {
                               interactive: true,
                               key: ValueKey(e),
                               theme: 'black',
-                              nft: e.nft ?? false,
-                              name: e.tag!,
+                                item: e,
                               // callback: () {
                               //   model.removeTag(i.tag);
                               // },
-                              control: true,
+                                delete: true,
                               page: 'accounts'
                             );
                           }).toList());
