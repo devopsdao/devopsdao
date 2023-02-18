@@ -9,6 +9,8 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 
 import '../flutter_flow/theme.dart';
 
+import 'package:webthree/webthree.dart';
+
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
 
@@ -33,32 +35,27 @@ class _LoadIndicator extends State<LoadIndicator> {
               child: Column(
                 children: [
                   RichText(
-                    text: TextSpan(
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .apply(fontSizeFactor: 1.0),
-                        children: <TextSpan>[
-                      TextSpan(
-                          text:
-                            'Collecting Tasks from blockchain: '
-                                '$taskLoadedState of '
-                                '${tasksServices.totalTaskLen}',
-                          style: const TextStyle(
-                            height: 2,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
-                      // TextSpan(
-                      //   text: '10 of 21',
-                      //   style: TextStyle(
-                      //     height: 2,
-                      //     fontWeight: FontWeight.bold,
-                      //     color: Colors.white,
-                      //     fontSize: 17,
-                      //   )
-                      // ),
-                    ])),
+                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                    TextSpan(
+                        text: 'Collecting Tasks from blockchain: '
+                            '$taskLoadedState of '
+                            '${tasksServices.totalTaskLen}',
+                        style: const TextStyle(
+                          height: 2,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16,
+                        )),
+                    // TextSpan(
+                    //   text: '10 of 21',
+                    //   style: TextStyle(
+                    //     height: 2,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Colors.white,
+                    //     fontSize: 17,
+                    //   )
+                    // ),
+                  ])),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 25, 0, 0),
                     child: LoadingAnimationWidget.threeRotatingDots(
@@ -120,11 +117,11 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
               : const Icon(
                   Icons.refresh,
                   color: Colors.white,
-                  size:30,
+                  size: 30,
                 ),
           onPressed: () async {
             tasksServices.isLoadingBackground = true;
-            tasksServices.fetchTasks();
+            tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
           },
         ),
       ],

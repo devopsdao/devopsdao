@@ -116,8 +116,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       isFloatButtonVisible = true;
     }
 
-
-
     void deleteItem(String id) async {
       setState(() {
         deleteItems.add(id);
@@ -129,10 +127,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       });
     }
 
-
-
     List objList = tasksServices.filterResults.values.toList();
-
 
     // if (widget.index != null) {
     //   showDialog(
@@ -183,10 +178,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         elevation: 2,
       ),
       backgroundColor: const Color(0xFF1E2429),
-
-      floatingActionButton: isFloatButtonVisible
-          ? const CreateCallButton() : null,
-
+      floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -210,75 +202,74 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           child: DefaultTabController(
             length: 1,
             initialIndex: 0,
-            child: LayoutBuilder(
-                builder: (context, constraints) {
+            child: LayoutBuilder(builder: (context, constraints) {
               // print('max:  ${constraints.maxHeight}');
               // print('max * : ${constraints.maxHeight * .65}');
               // print(constraints.minWidth);
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: constraints.minWidth - 70,
-                          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                          decoration: const BoxDecoration(
-                              // color: Colors.white70,
-                              // borderRadius: BorderRadius.circular(8),
-                              ),
-                          child: TextField(
-                            controller: _searchKeywordController,
-                            onChanged: (searchKeyword) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
-                            },
-                            decoration: const InputDecoration(
-                              hintText: '[Find task by Title...]',
-                              hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                              labelText: 'Search',
-                              suffixIcon: Icon(
-                                Icons.search,
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: constraints.minWidth - 70,
+                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        decoration: const BoxDecoration(
+                            // color: Colors.white70,
+                            // borderRadius: BorderRadius.circular(8),
+                            ),
+                        child: TextField(
+                          controller: _searchKeywordController,
+                          onChanged: (searchKeyword) {
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '[Find task by Title...]',
+                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                            labelText: 'Search',
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
                                 color: Colors.white,
+                                width: 1,
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  lineHeight: 2,
-                                ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
                           ),
+                          style: DodaoTheme.of(context).bodyText1.override(
+                                fontFamily: 'Inter',
+                                color: Colors.white,
+                                lineHeight: 2,
+                              ),
                         ),
-                        const TagCallButton(page: 'tasks',),
-                      ],
-                    ),
-                    Consumer<InterfaceServices>(
-                      builder: (context, model, child) {
-                        return Wrap(
-                          alignment: WrapAlignment.start,
-                          direction: Axis.horizontal,
-                          children: model.tasksTagsList.map((e) {
-
-                            return WrappedChip(
+                      ),
+                      const TagCallButton(
+                        page: 'tasks',
+                      ),
+                    ],
+                  ),
+                  Consumer<InterfaceServices>(builder: (context, model, child) {
+                    return Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.horizontal,
+                        children: model.tasksTagsList.map((e) {
+                          return WrappedChip(
                               interactive: true,
                               key: ValueKey(e),
                               theme: 'black',
@@ -293,75 +284,76 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                               //   //
                               //   if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
                               // },
-                            );
+                              );
 
+                          // bool isMarkedForDelete = deleteItems.where((i) {
+                          //       // print('model: ${model.selectedTagsList.indexOf(e)}');
+                          //       // print('i: ${i}');
+                          //       return i == model.selectedTagsList.indexOf(e).toString();
+                          //
+                          //     }).isNotEmpty;
+                          // print(isMarkedForDelete); print(deleteItems);
+                          // return AnimatedContainer(
+                          //   key: ObjectKey(e),
+                          //   duration: const Duration(milliseconds: 350),
+                          //   width: isMarkedForDelete ? 0 : 100,
+                          //   child: AnimatedOpacity(
+                          //     duration: const Duration(milliseconds: 350),
+                          //     opacity: isMarkedForDelete ? 0 : 1,
+                          //     child: Chip(
+                          //       label: Text(e.tag!),
+                          //       onDeleted: () {
+                          //       if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
+                          //     },),
+                          //
+                          //
+                          //
+                          //   ),
+                          // );
+                        }).toList());
+                  }),
 
-                            // bool isMarkedForDelete = deleteItems.where((i) {
-                            //       // print('model: ${model.selectedTagsList.indexOf(e)}');
-                            //       // print('i: ${i}');
-                            //       return i == model.selectedTagsList.indexOf(e).toString();
-                            //
-                            //     }).isNotEmpty;
-                            // print(isMarkedForDelete); print(deleteItems);
-                            // return AnimatedContainer(
-                            //   key: ObjectKey(e),
-                            //   duration: const Duration(milliseconds: 350),
-                            //   width: isMarkedForDelete ? 0 : 100,
-                            //   child: AnimatedOpacity(
-                            //     duration: const Duration(milliseconds: 350),
-                            //     opacity: isMarkedForDelete ? 0 : 1,
-                            //     child: Chip(
-                            //       label: Text(e.tag!),
-                            //       onDeleted: () {
-                            //       if(!isMarkedForDelete) deleteItem(model.selectedTagsList.indexOf(e).toString() ?? "");
-                            //     },),
-                            //
-                            //
-                            //
-                            //   ),
-                            // );
-                          }).toList());
-                      }
-                    ),
+                  // TabBar(
+                  //   labelColor: Colors.white,с
+                  //   labelStyle: DodaoTheme.of(context).bodyText1,
+                  //   indicatorColor: Color(0xFF47CBE4),
+                  //   indicatorWeight: 3,
+                  //   tabs: [
+                  //     Tab(
+                  //       text: 'New offers',
+                  //     ),
+                  //     // Tab(
+                  //     //   text: 'Reserved tab',
+                  //     // ),
+                  //     // Tab(
+                  //     //   text: 'Reserved tab',
+                  //     // ),
+                  //   ],
+                  // ),
 
-                    // TabBar(
-                    //   labelColor: Colors.white,с
-                    //   labelStyle: DodaoTheme.of(context).bodyText1,
-                    //   indicatorColor: Color(0xFF47CBE4),
-                    //   indicatorWeight: 3,
-                    //   tabs: [
-                    //     Tab(
-                    //       text: 'New offers',
-                    //     ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //     // Tab(
-                    //     //   text: 'Reserved tab',
-                    //     // ),
-                    //   ],
-                    // ),
-
-                    tasksServices.isLoading
-                        ? const LoadIndicator()
-                        : Expanded(
-                            child: TabBarView(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                  child: RefreshIndicator(
-                                    onRefresh: () async {
-                                      tasksServices.isLoadingBackground = true;
-                                      tasksServices.fetchTasks();
-                                    },
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: tasksServices.filterResults.values.toList().length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
+                  tasksServices.isLoading
+                      ? const LoadIndicator()
+                      : Expanded(
+                          child: TabBarView(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                                child: RefreshIndicator(
+                                  onRefresh: () async {
+                                    tasksServices.isLoadingBackground = true;
+                                    tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+                                  },
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: tasksServices.filterResults.values.toList().length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
                                           padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                          child:  ClickOnTask(fromPage: 'tasks', index: index,)
+                                          child: ClickOnTask(
+                                            fromPage: 'tasks',
+                                            index: index,
+                                          )
 
                                           // InkWell(
                                           //     onTap: () {
@@ -395,18 +387,17 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                           //       fromPage: 'tasks',
                                           //       object: tasksServices.filterResults.values.toList()[index],
                                           //     )),
-                                        );
-                                      },
-                                    ),
+                                          );
+                                    },
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                  ],
-                );
-              }
-            ),
+                        ),
+                ],
+              );
+            }),
           ),
         ),
       ),

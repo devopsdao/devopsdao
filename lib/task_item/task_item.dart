@@ -33,7 +33,6 @@ class _TaskItemState extends State<TaskItem> {
 
   final bool isAdministrator = false;
 
-
   @override
   Widget build(BuildContext context) {
     // var tasksServices = context.watch<TasksServices>();
@@ -80,26 +79,25 @@ class _TaskItemState extends State<TaskItem> {
         mainAxisSize: MainAxisSize.max,
         children: [
           if (true)
-          SizedBox(
-            width: 50,
-            height: 80,
-            child: InkWell(
-              child: const Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Icon(
-                  Icons.delete_forever,
-                  color: Colors.deepOrange,
-                  size: 30,
+            SizedBox(
+              width: 50,
+              height: 80,
+              child: InkWell(
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Icon(
+                    Icons.delete_forever,
+                    color: Colors.deepOrange,
+                    size: 30,
+                  ),
                 ),
+                onTap: () {
+                  setState(() {
+                    showDialog(context: context, builder: (context) => DeleteItemAlert(task: task));
+                  });
+                },
               ),
-              onTap: () {
-                setState(() {
-                  showDialog(context: context, builder: (context) =>
-                      DeleteItemAlert(task: task));
-                });
-              },
             ),
-          ),
           const SizedBox(
             width: 10,
           ),
@@ -152,33 +150,27 @@ class _TaskItemState extends State<TaskItem> {
                   ),
                   Row(
                     children: [
-                      Expanded(
-                          child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                final double width = constraints.maxWidth - 66;
-                                List<SimpleTags> tags = task.tags.map((name) =>
-                                    SimpleTags(tag: name)).toList();
+                      Expanded(child: LayoutBuilder(builder: (context, constraints) {
+                        final double width = constraints.maxWidth - 66;
+                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
 
-                                return SizedBox(
-                                  width: width,
-                                  child: Wrap(
-                                      alignment: WrapAlignment.start,
-                                      direction: Axis.horizontal,
-                                      children: tags.map((e) {
-                                        return WrappedChip(
-                                            interactive: false,
-                                            key: ValueKey(e),
-                                            theme: 'small-white',
-                                            nft: e.nft ?? false,
-                                            name: e.tag!,
-                                            control: false,
-                                            page: 'create'
-                                        );
-                                      }).toList()),
-                                );
-                              }
-                          )
-                      )
+                        return SizedBox(
+                          width: width,
+                          child: Wrap(
+                              alignment: WrapAlignment.start,
+                              direction: Axis.horizontal,
+                              children: tags.map((e) {
+                                return WrappedChip(
+                                    interactive: false,
+                                    key: ValueKey(e),
+                                    theme: 'small-white',
+                                    nft: e.nft ?? false,
+                                    name: e.tag!,
+                                    control: false,
+                                    page: 'create');
+                              }).toList()),
+                        );
+                      }))
                     ],
                   ),
                   Row(
@@ -186,8 +178,7 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(
                         flex: 7,
                         child: Text(
-                          DateFormat('MM/dd/yyyy, hh:mm a')
-                              .format(task.createTime),
+                          DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
                           style: const TextStyle(
                             // fontWeight: FontWeight.w600,
                             fontSize: 14,
@@ -198,11 +189,11 @@ class _TaskItemState extends State<TaskItem> {
                         ),
                       ),
                       // Spacer(),
-                      if (task.contractValue != 0)
+                      if (task.tokenValues[0] != 0)
                         Expanded(
                           flex: 3,
                           child: Text(
-                            '${task.contractValue} DEV',
+                            '${task.tokenValues[0]} DEV',
                             style: DodaoTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
@@ -210,11 +201,11 @@ class _TaskItemState extends State<TaskItem> {
                             textAlign: TextAlign.end,
                           ),
                         ),
-                      if (task.contractValueToken != 0)
+                      if (task.tokenValues[0] != 0)
                         Expanded(
                           flex: 3,
                           child: Text(
-                            '${task.contractValueToken} aUSDC',
+                            '${task.tokenValues[0]} aUSDC',
                             style: DodaoTheme.of(context).bodyText2,
                             softWrap: false,
                             overflow: TextOverflow.fade,
@@ -222,8 +213,7 @@ class _TaskItemState extends State<TaskItem> {
                             textAlign: TextAlign.end,
                           ),
                         ),
-                      if (task.contractValue == 0 &&
-                          task.contractValueToken == 0)
+                      if (task.tokenValues[0] == 0 && task.tokenValues[0] == 0)
                         Expanded(
                           flex: 3,
                           child: Text(
@@ -237,7 +227,6 @@ class _TaskItemState extends State<TaskItem> {
                         ),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -258,15 +247,12 @@ class _TaskItemState extends State<TaskItem> {
                   width: 17,
                   height: 17,
                   alignment: Alignment.center,
-                  child: Text(taskCount.toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(taskCount.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 badgeColor: (() {
                   if (task.taskState == "new") {
                     return Colors.redAccent;
-                  } else if (task.taskState == "audit" &&
-                      widget.fromPage != "auditor") {
+                  } else if (task.taskState == "audit" && widget.fromPage != "auditor") {
                     return Colors.blueGrey;
                   } else if (widget.fromPage == "auditor") {
                     return Colors.green;

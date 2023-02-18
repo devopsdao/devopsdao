@@ -7,32 +7,31 @@ import 'accounts.dart';
 
 class EmptyClasses extends ChangeNotifier {
   final loadingTask = Task(
-    nanoId: '111',
-    createTime: DateTime.now(),
-    taskType: 'task[2]',
-    title: 'Loading...',
-    description: 'Error: loading task',
-    tags: [],
-    tagsNFT: [],
-    symbols: [],
-    amounts: [],
-    taskState: 'loading',
-    auditState: '',
-    rating: 0,
-    contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    participants: [],
-    funders: [],
-    auditors: [],
-    messages: [],
-    taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    justLoaded: true,
-    contractValue: 0,
-    contractValueToken: 0,
-    transport: ''
-  );
+      nanoId: '111',
+      createTime: DateTime.now(),
+      taskType: 'task[2]',
+      title: 'Loading...',
+      description: 'Error: loading task',
+      tags: [],
+      tagsNFT: [],
+      symbols: [],
+      amounts: [],
+      taskState: 'loading',
+      auditState: '',
+      rating: 0,
+      contractOwner: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      participant: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      auditInitiator: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      auditor: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      participants: [],
+      funders: [],
+      auditors: [],
+      messages: [],
+      taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      justLoaded: true,
+      tokenNames: [],
+      tokenValues: [],
+      transport: '');
 
   final emptyTask = Task(
       nanoId: '111',
@@ -57,22 +56,19 @@ class EmptyClasses extends ChangeNotifier {
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
       justLoaded: true,
-      contractValue: 0,
-      contractValueToken: 0,
-      transport: ''
-  );
+      tokenNames: [],
+      tokenValues: [],
+      transport: '');
 
   final loadingAccount = Account(
       rating: 0,
       nickName: 'Loading...',
       about: 'Error: loading account',
-      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')
-  );
+      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
 
   final emptyAccount = Account(
       rating: 0,
       nickName: 'Empty',
       about: 'Error: empty account',
-      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')
-  );
+      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
 }

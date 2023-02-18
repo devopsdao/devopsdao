@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../task_dialog/states.dart';
 import '../widgets/tags/tags.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:jovial_svg/jovial_svg.dart';
+
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
 
@@ -57,6 +60,7 @@ class InterfaceServices extends ChangeNotifier {
     dialogPageNum = number;
     notifyListeners();
   }
+
   late Map<String, dynamic> dialogCurrentState;
 
   // selected Performer or Auditor in participants_list.dart:
@@ -89,10 +93,7 @@ class InterfaceServices extends ChangeNotifier {
 
   // ***********  Pull request status  *********** //
 
-  late TextSpan statusText = const TextSpan(
-      text: 'Not created',
-      style: TextStyle( fontWeight: FontWeight.bold)
-  );
+  late TextSpan statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
 
   // ***********  tags  ************ ////
   late List<SimpleTags> tempTagsList = [
@@ -128,6 +129,7 @@ class InterfaceServices extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   Future removeTag(tagName, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList.removeWhere((item) => item.tag == tagName);

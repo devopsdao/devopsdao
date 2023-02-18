@@ -43,13 +43,10 @@ class _AccountsPageState extends State<AccountsPage> {
 
   List<String> deleteItems = [];
 
-
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-
-
 
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
@@ -58,8 +55,6 @@ class _AccountsPageState extends State<AccountsPage> {
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
     }
-
-
 
     void deleteItem(String id) async {
       setState(() {
@@ -71,7 +66,6 @@ class _AccountsPageState extends State<AccountsPage> {
         });
       });
     }
-
 
     // if (widget.index != null) {
     //   showDialog(
@@ -109,7 +103,6 @@ class _AccountsPageState extends State<AccountsPage> {
         elevation: 2,
       ),
       backgroundColor: const Color(0xFF1E2429),
-
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -132,72 +125,71 @@ class _AccountsPageState extends State<AccountsPage> {
           child: DefaultTabController(
             length: 1,
             initialIndex: 0,
-            child: LayoutBuilder(
-                builder: (context, constraints) {
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: constraints.minWidth - 70,
-                          padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                          decoration: const BoxDecoration(
-                              // color: Colors.white70,
-                              // borderRadius: BorderRadius.circular(8),
-                              ),
-                          child: TextField(
-                            controller: _searchKeywordController,
-                            onChanged: (searchKeyword) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
-                            },
-                            decoration: const InputDecoration(
-                              hintText: '[Find task by Title...]',
-                              hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                              labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                              labelText: 'Search',
-                              suffixIcon: Icon(
-                                Icons.search,
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: constraints.minWidth - 70,
+                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        decoration: const BoxDecoration(
+                            // color: Colors.white70,
+                            // borderRadius: BorderRadius.circular(8),
+                            ),
+                        child: TextField(
+                          controller: _searchKeywordController,
+                          onChanged: (searchKeyword) {
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '[Find task by Title...]',
+                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                            labelText: 'Search',
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
                                 color: Colors.white,
+                                width: 1,
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4.0),
-                                  topRight: Radius.circular(4.0),
-                                ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                  lineHeight: 2,
-                                ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
                           ),
+                          style: DodaoTheme.of(context).bodyText1.override(
+                                fontFamily: 'Inter',
+                                color: Colors.white,
+                                lineHeight: 2,
+                              ),
                         ),
-                        const TagCallButton(page: 'tasks',),
-                      ],
-                    ),
-                    Consumer<InterfaceServices>(
-                      builder: (context, model, child) {
-                        return Wrap(
-                          alignment: WrapAlignment.start,
-                          direction: Axis.horizontal,
-                          children: model.tasksTagsList.map((e) {
-
-                            return WrappedChip(
+                      ),
+                      const TagCallButton(
+                        page: 'tasks',
+                      ),
+                    ],
+                  ),
+                  Consumer<InterfaceServices>(builder: (context, model, child) {
+                    return Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.horizontal,
+                        children: model.tasksTagsList.map((e) {
+                          return WrappedChip(
                               interactive: true,
                               key: ValueKey(e),
                               theme: 'black',
@@ -207,41 +199,41 @@ class _AccountsPageState extends State<AccountsPage> {
                               //   model.removeTag(i.tag);
                               // },
                               control: true,
-                              page: 'accounts'
-                            );
-                          }).toList());
-                      }
-                    ),
-                    Expanded(
-                        child: TabBarView(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                              child: RefreshIndicator(
-                                onRefresh: () async {
-                                  tasksServices.isLoadingBackground = true;
-                                  tasksServices.fetchTasks();
-                                },
-                                child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: tasksServices.accountsTemp.values.toList().length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                      child:  ClickOnAccount(fromPage: 'accounts', index: index,)
-                                    );
-                                  },
-                                ),
-                              ),
+                              page: 'accounts');
+                        }).toList());
+                  }),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              tasksServices.isLoadingBackground = true;
+                              List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+                              tasksServices.fetchTasksBatch(taskList);
+                            },
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              scrollDirection: Axis.vertical,
+                              itemCount: tasksServices.accountsTemp.values.toList().length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                    child: ClickOnAccount(
+                                      fromPage: 'accounts',
+                                      index: index,
+                                    ));
+                              },
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                  ],
-                );
-              }
-            ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
           ),
         ),
       ),

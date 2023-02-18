@@ -7,14 +7,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 
-const List<String> selectNetwork = <String>[
-  'Moonbase',
-  'Ethereum',
-  'Binance',
-  'Fantom',
-  'Avalanche',
-  'Polygon'
-];
+const List<String> selectNetwork = <String>['Moonbase', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];
 
 // const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
 const List<String> selectToken = <String>['DEV', 'aUSDC'];
@@ -39,9 +32,9 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
     // bool showMenu;
     String valueName = '';
 
-    if (widget.object.contractValue != 0.0) {
+    if (widget.object.tokenValues[0] != 0.0) {
       valueName = 'ETH';
-    } else if (widget.object.contractValueToken != 0.0) {
+    } else if (widget.object.tokenValues[0] != 0.0) {
       valueName = 'aUSDC';
     }
 
@@ -79,18 +72,14 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                 dropdownValue = value;
                 // tasksServices.getGasPrice('Moonbeam', value,
                 //     tokenSymbol: dropdownValue);
-                if (widget.object.contractValue > 0) {
+                if (widget.object.tokenValues[0] > 0) {
                   assetName = 'ETH';
-                  asset = widget.object.contractValue;
-                } else if (widget.object.contractValueToken > 0 &&
-                    dropdownValue != 'Moonbase') {
+                  asset = widget.object.tokenValues[0];
+                } else if (widget.object.tokenValues[0] > 0 && dropdownValue != 'Moonbase') {
                   assetName = 'uausdc';
-                  asset = widget.object.contractValueToken;
+                  asset = widget.object.tokenValues[0];
                   tasksServices.getTransferFee(
-                      sourceChainName: 'moonbeam',
-                      destinationChainName: value.toLowerCase(),
-                      assetDenom: assetName,
-                      amountInDenom: 100000);
+                      sourceChainName: 'moonbeam', destinationChainName: value.toLowerCase(), assetDenom: assetName, amountInDenom: 100000);
                 }
               });
             },
@@ -103,28 +92,16 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
           ),
         if (valueName == 'aUSDC')
           RichText(
-              text: TextSpan(
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 0.9),
-                  children: <TextSpan>[
-                if (dropdownValue != 'Moonbase')
-                  TextSpan(
-                      text:
-                          'Transfer fee from Moonbase via Axelar to $dropdownValue is: ${tasksServices.transferFee}',
-                      style: const TextStyle(
-                          height: 1.8, fontWeight: FontWeight.bold)),
-                if (widget.object.contractValueToken <
-                        tasksServices.transferFee &&
-                    dropdownValue != 'Moonbase')
-                  const TextSpan(
-                      text:
-                          '\nFunds stored in the contract are less \nthan Axelar transaction fee: ',
-                      style: TextStyle(
-                          height: 1.8,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.redAccent)),
-              ])),
+              text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.9), children: <TextSpan>[
+            if (dropdownValue != 'Moonbase')
+              TextSpan(
+                  text: 'Transfer fee from Moonbase via Axelar to $dropdownValue is: ${tasksServices.transferFee}',
+                  style: const TextStyle(height: 1.8, fontWeight: FontWeight.bold)),
+            if (widget.object.tokenValues[0] < tasksServices.transferFee && dropdownValue != 'Moonbase')
+              const TextSpan(
+                  text: '\nFunds stored in the contract are less \nthan Axelar transaction fee: ',
+                  style: TextStyle(height: 1.8, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+          ])),
       ],
     );
   }
@@ -149,15 +126,9 @@ class _SelectTokenMenuState extends State<SelectTokenMenu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-            text: TextSpan(
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 1.3, color: Colors.white),
-                children: const <TextSpan>[
-              TextSpan(
-                  text: 'Select Token: ',
-                  style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-            ])),
+            text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.3, color: Colors.white), children: const <TextSpan>[
+          TextSpan(text: 'Select Token: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+        ])),
         DropdownButton<String>(
           isExpanded: true,
           value: dropdownValue,

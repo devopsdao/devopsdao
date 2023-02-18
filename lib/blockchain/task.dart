@@ -22,8 +22,8 @@ class Task {
   final List<dynamic> auditors;
   final List<dynamic> messages;
   final EthereumAddress taskAddress;
-  final double contractValue;
-  final double contractValueToken;
+  final List<String> tokenNames;
+  final List<dynamic> tokenValues;
   late bool justLoaded;
   final String transport;
 
@@ -49,8 +49,8 @@ class Task {
     required this.auditors,
     required this.messages,
     required this.taskAddress,
-    required this.contractValue,
-    required this.contractValueToken,
+    required this.tokenNames,
+    required this.tokenValues,
     required this.justLoaded,
     required this.transport,
   });

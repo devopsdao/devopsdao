@@ -17,7 +17,6 @@ import '../flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
-
 import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
@@ -67,6 +66,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       });
     }
   }
+
   final _searchKeywordController = TextEditingController();
 
   @override
@@ -209,190 +209,187 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                   //     // print(controller.index);
                   //   }
                   // });
-                  return LayoutBuilder(
-                      builder: (context, constraints) {
-                      return Column(
-                        children: [
-                          TabBar(
-                            labelColor: Colors.white,
-                            labelStyle: DodaoTheme.of(context).bodyText1,
-                            indicatorColor: const Color(0xFF47CBE4),
-                            indicatorWeight: 3,
-                            // isScrollable: true,
-                            onTap: (index) {
-                              _searchKeywordController.clear();
-                              tabIndex = index;
-                              // print(index);
-                              changeTab(index, 0.0); //temp disable
-                              // if (index == 0) {
-                              //   tasksServices.resetFilter(
-                              //       tasksServices.tasksCustomerSelection);
-                              // } else if (index == 1) {
-                              //   tasksServices.resetFilter(
-                              //       tasksServices.tasksCustomerProgress);
-                              // } else if (index == 2) {
-                              //   tasksServices.resetFilter(
-                              //       tasksServices.tasksCustomerComplete);
-                              // }
-                            },
-                            tabs: [
-                              Tab(
-                                child: BadgeTab(
-                                  taskCount: tasksServices.tasksCustomerSelection.length,
-                                  tabText: 'Selection',
-                                ),
+                  return LayoutBuilder(builder: (context, constraints) {
+                    return Column(
+                      children: [
+                        TabBar(
+                          labelColor: Colors.white,
+                          labelStyle: DodaoTheme.of(context).bodyText1,
+                          indicatorColor: const Color(0xFF47CBE4),
+                          indicatorWeight: 3,
+                          // isScrollable: true,
+                          onTap: (index) {
+                            _searchKeywordController.clear();
+                            tabIndex = index;
+                            // print(index);
+                            changeTab(index, 0.0); //temp disable
+                            // if (index == 0) {
+                            //   tasksServices.resetFilter(
+                            //       tasksServices.tasksCustomerSelection);
+                            // } else if (index == 1) {
+                            //   tasksServices.resetFilter(
+                            //       tasksServices.tasksCustomerProgress);
+                            // } else if (index == 2) {
+                            //   tasksServices.resetFilter(
+                            //       tasksServices.tasksCustomerComplete);
+                            // }
+                          },
+                          tabs: [
+                            Tab(
+                              child: BadgeTab(
+                                taskCount: tasksServices.tasksCustomerSelection.length,
+                                tabText: 'Selection',
                               ),
-                              Tab(
-                                child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
-                              ),
-                              Tab(
-                                child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Complete'),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: constraints.minWidth - 70,
-                                padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                                // decoration: const BoxDecoration(
-                                //   // color: Colors.white70,
-                                //   // borderRadius: BorderRadius.circular(8),
-                                // ),
-                                child: TextField(
-                                  controller: _searchKeywordController,
-                                  onChanged: (searchKeyword) {
-                                    if (tabIndex == 0) {
-                                      tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerSelection);
-                                    } else if (tabIndex == 1) {
-                                      tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerProgress);
-                                    } else if (tabIndex == 2) {
-                                      tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerComplete);
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                    hintText: '[Find task by Title...]',
-                                    hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                                    labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                                    labelText: 'Search',
-                                    suffixIcon: Icon(
-                                      Icons.search,
+                            ),
+                            Tab(
+                              child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
+                            ),
+                            Tab(
+                              child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Complete'),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: constraints.minWidth - 70,
+                              padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                              // decoration: const BoxDecoration(
+                              //   // color: Colors.white70,
+                              //   // borderRadius: BorderRadius.circular(8),
+                              // ),
+                              child: TextField(
+                                controller: _searchKeywordController,
+                                onChanged: (searchKeyword) {
+                                  if (tabIndex == 0) {
+                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerSelection);
+                                  } else if (tabIndex == 1) {
+                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerProgress);
+                                  } else if (tabIndex == 2) {
+                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerComplete);
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: '[Find task by Title...]',
+                                  hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                                  labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                                  labelText: 'Search',
+                                  suffixIcon: Icon(
+                                    Icons.search,
+                                    color: Colors.white,
+                                  ),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
                                       color: Colors.white,
+                                      width: 1,
                                     ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
                                     ),
                                   ),
-                                  style: DodaoTheme.of(context).bodyText1.override(
-                                        fontFamily: 'Inter',
-                                        color: Colors.white,
-                                        lineHeight: 2,
-                                      ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                ),
+                                style: DodaoTheme.of(context).bodyText1.override(
+                                      fontFamily: 'Inter',
+                                      color: Colors.white,
+                                      lineHeight: 2,
+                                    ),
+                              ),
+                            ),
+                            TagCallButton(
+                              page: 'customer',
+                            ),
+                          ],
+                        ),
+                        Consumer<InterfaceServices>(builder: (context, model, child) {
+                          return Wrap(
+                              alignment: WrapAlignment.start,
+                              direction: Axis.horizontal,
+                              children: model.customerTagsList.map((e) {
+                                return WrappedChip(
+                                    interactive: true,
+                                    key: ValueKey(e),
+                                    theme: 'black',
+                                    nft: e.nft ?? false,
+                                    name: e.tag!,
+                                    control: true,
+                                    page: 'customer');
+                              }).toList());
+                        }),
+                        tasksServices.isLoading
+                            ? const LoadIndicator()
+                            : Expanded(
+                                child: NotificationListener(
+                                  onNotification: (scrollNotification) {
+                                    // changeTab(tabIndex);
+                                    // late int index = 0;
+                                    if (scrollNotification is ScrollUpdateNotification) {
+                                      late double tabWidth = MediaQuery.of(context).size.width;
+                                      late double metrics = scrollNotification.metrics.pixels;
+                                      // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
+                                      // setState(() {
+                                      //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
+                                      //     print('first');
+                                      //     debounceChangeTab0.throttle(() {
+                                      //       changeTab(0, metrics);
+                                      //     });
+                                      //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
+                                      //           (metrics < tabWidth + (tabWidth / 5)) &&
+                                      //           prevMetrics < metrics) ||
+                                      //       (metrics > tabWidth &&
+                                      //           metrics < tabWidth * 2 - (tabWidth / 5) &&
+                                      //           tabIndex == 2 &&
+                                      //           prevMetrics > metrics)) {
+                                      //     print('second');
+                                      //     debounceChangeTab1.throttle(() {
+                                      //       changeTab(1, metrics);
+                                      //     });
+                                      //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
+                                      //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
+                                      //     print('third');
+                                      //     debounceChangeTab2.throttle(() {
+                                      //       changeTab(2, metrics);
+                                      //     });
+                                      //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
+                                      //     print('forth');
+                                      //     debounceChangeTab3.throttle(() {
+                                      //       changeTab(3, metrics);
+                                      //     });
+                                      //   }
+                                      // });
+                                      // print(tabIndex);
+                                    }
+                                    return false;
+                                  },
+                                  child: const TabBarView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    children: [
+                                      mySubmitterTabWidget(
+                                        tabName: 'selection',
+                                      ), //new
+                                      mySubmitterTabWidget(
+                                        tabName: 'progress',
+                                      ), //agreed
+                                      mySubmitterTabWidget(
+                                        tabName: 'complete',
+                                      ), //completed & canceled
+                                    ],
+                                  ),
                                 ),
                               ),
-                              TagCallButton(page: 'customer',),
-                            ],
-                          ),
-                          Consumer<InterfaceServices>(
-                              builder: (context, model, child) {
-                                return Wrap(
-                                    alignment: WrapAlignment.start,
-                                    direction: Axis.horizontal,
-                                    children: model.customerTagsList.map((e) {
-                                      return WrappedChip(
-                                          interactive: true,
-                                          key: ValueKey(e),
-                                          theme: 'black',
-                                          nft: e.nft ?? false,
-                                          name: e.tag!,
-                                          control: true,
-                                          page: 'customer'
-                                      );
-                                    }).toList());
-                              }
-                          ),
-                          tasksServices.isLoading
-                              ? const LoadIndicator()
-                              : Expanded(
-                                  child: NotificationListener(
-                                    onNotification: (scrollNotification) {
-                                      // changeTab(tabIndex);
-                                      // late int index = 0;
-                                      if (scrollNotification is ScrollUpdateNotification) {
-                                        late double tabWidth = MediaQuery.of(context).size.width;
-                                        late double metrics = scrollNotification.metrics.pixels;
-                                        // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
-                                        // setState(() {
-                                        //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
-                                        //     print('first');
-                                        //     debounceChangeTab0.throttle(() {
-                                        //       changeTab(0, metrics);
-                                        //     });
-                                        //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
-                                        //           (metrics < tabWidth + (tabWidth / 5)) &&
-                                        //           prevMetrics < metrics) ||
-                                        //       (metrics > tabWidth &&
-                                        //           metrics < tabWidth * 2 - (tabWidth / 5) &&
-                                        //           tabIndex == 2 &&
-                                        //           prevMetrics > metrics)) {
-                                        //     print('second');
-                                        //     debounceChangeTab1.throttle(() {
-                                        //       changeTab(1, metrics);
-                                        //     });
-                                        //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
-                                        //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
-                                        //     print('third');
-                                        //     debounceChangeTab2.throttle(() {
-                                        //       changeTab(2, metrics);
-                                        //     });
-                                        //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
-                                        //     print('forth');
-                                        //     debounceChangeTab3.throttle(() {
-                                        //       changeTab(3, metrics);
-                                        //     });
-                                        //   }
-                                        // });
-                                        // print(tabIndex);
-                                      }
-                                      return false;
-                                    },
-                                    child: const TabBarView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      children: [
-                                        mySubmitterTabWidget(
-                                          tabName: 'selection',
-                                        ), //new
-                                        mySubmitterTabWidget(
-                                          tabName: 'progress',
-                                        ), //agreed
-                                        mySubmitterTabWidget(
-                                          tabName: 'complete',
-                                        ), //completed & canceled
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                        ],
-                      );
-                    }
-                  );
+                      ],
+                    );
+                  });
                 })),
           ),
         )
@@ -424,86 +421,88 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
     // TODO: implement build
     return
 
-      // Selector<InterfaceServices, int>(
-      //   selector: (_, model) {
-      //     return model.dialogPageNum;
-      //   },
-      //   builder: (context, dialogPageNum, child) {
-      //     late String page = interface.dialogCurrentState['pages'].entries
-      //         .firstWhere((element) => element.value == dialogPageNum)
-      //         .key;
-      //     return Row(
-      //       children: <Widget>[
-      //         if (page == 'topup')
-      //           const Expanded(
-      //             child: Icon(
-      //               Icons.arrow_forward,
-      //               size: 30,
-      //             ),
-      //           ),
-      //         if (page.toString() == 'main')
-      //           const Expanded(
-      //             child: Center(),
-      //           ),
-      //         if (page == 'description' || page == 'widgets.chat' || page == 'select')
-      //           const Expanded(
-      //             child: Icon(
-      //               Icons.arrow_back,
-      //               size: 30,
-      //             ),
-      //           ),
-      //       ],
-      //     );
-      //   },
-      // ),
+        // Selector<InterfaceServices, int>(
+        //   selector: (_, model) {
+        //     return model.dialogPageNum;
+        //   },
+        //   builder: (context, dialogPageNum, child) {
+        //     late String page = interface.dialogCurrentState['pages'].entries
+        //         .firstWhere((element) => element.value == dialogPageNum)
+        //         .key;
+        //     return Row(
+        //       children: <Widget>[
+        //         if (page == 'topup')
+        //           const Expanded(
+        //             child: Icon(
+        //               Icons.arrow_forward,
+        //               size: 30,
+        //             ),
+        //           ),
+        //         if (page.toString() == 'main')
+        //           const Expanded(
+        //             child: Center(),
+        //           ),
+        //         if (page == 'description' || page == 'widgets.chat' || page == 'select')
+        //           const Expanded(
+        //             child: Icon(
+        //               Icons.arrow_back,
+        //               size: 30,
+        //             ),
+        //           ),
+        //       ],
+        //     );
+        //   },
+        // ),
 
-      Selector<TasksServices, Map<String, Task>>(
-          selector: (_, model) => model.filterResults,
-          builder: (_, filter, __) {
-          List objList = filter.values.toList();
-          return Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-            child: RefreshIndicator(
-              onRefresh: () async {
-                tasksServices.isLoadingBackground = true;
-                tasksServices.fetchTasks();
-              },
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.vertical,
-                itemCount: objList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                    child: ClickOnTask(fromPage: 'customer', index: index,)
+        Selector<TasksServices, Map<String, Task>>(
+            selector: (_, model) => model.filterResults,
+            builder: (_, filter, __) {
+              List objList = filter.values.toList();
+              return Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      tasksServices.isLoadingBackground = true;
+                      tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
+                    },
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.vertical,
+                      itemCount: objList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                            child: ClickOnTask(
+                              fromPage: 'customer',
+                              index: index,
+                            )
 
-                    // InkWell(
-                    //     onTap: () {
-                    //       // setState(() {
-                    //       //   // Toggle light when tapped.
-                    //       // });
-                    //
-                    //       if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
-                    //         showDialog(
-                    //             context: context,
-                    //             builder: (context) =>
-                    //                 TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                    //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                    //         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
-                    //         Beamer.of(context).updateRouteInformation(routeInfo);
-                    //         // context.popToNamed('/customer/$taskAddress');
-                    //         // context.beamToNamed('/customer/$taskAddress');
-                    //       }
-                    //     },
-                    //     child: TaskItem(
-                    //       fromPage: 'customer',
-                    //       object: objList[index],
-                    //     )),
-                  );
-                },
-              ),
-            ));
-        }
-      );
+                            // InkWell(
+                            //     onTap: () {
+                            //       // setState(() {
+                            //       //   // Toggle light when tapped.
+                            //       // });
+                            //
+                            //       if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
+                            //         showDialog(
+                            //             context: context,
+                            //             builder: (context) =>
+                            //                 TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+                            //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                            //         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
+                            //         Beamer.of(context).updateRouteInformation(routeInfo);
+                            //         // context.popToNamed('/customer/$taskAddress');
+                            //         // context.beamToNamed('/customer/$taskAddress');
+                            //       }
+                            //     },
+                            //     child: TaskItem(
+                            //       fromPage: 'customer',
+                            //       object: objList[index],
+                            //     )),
+                            );
+                      },
+                    ),
+                  ));
+            });
   }
 }
