@@ -155,15 +155,15 @@ class _TaskItemState extends State<TaskItem> {
                           child: LayoutBuilder(
                               builder: (context, constraints) {
                                 final double width = constraints.maxWidth - 66;
-                                // List<SimpleTags> tags = task.tags.map((name) =>
-                                //     SimpleTags(tag: name)).toList();
+                                List<SimpleTags> tags = task.tags.map((name) =>
+                                    SimpleTags(tag: name)).toList();
 
                                 return SizedBox(
                                   width: width,
                                   child: Wrap(
                                       alignment: WrapAlignment.start,
                                       direction: Axis.horizontal,
-                                      children: task.tags.map((e) {
+                                      children: tags.map((e) {
                                         return WrappedChip(
                                             interactive: false,
                                             key: ValueKey(e),

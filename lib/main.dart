@@ -1,5 +1,6 @@
 import 'package:devopsdao/blockchain/empty_classes.dart';
 import 'package:devopsdao/widgets/tags/main.dart';
+import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -32,7 +33,13 @@ void main() async {
         ChangeNotifierProvider(create: (context) => TasksServices()),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
-        ChangeNotifierProvider(create: (context) => TagsServices()),
+        ChangeNotifierProvider(create: (context) => SearchServices()),
+        ChangeNotifierProxyProvider<TasksServices, SearchServices>(
+          create: (_) => SearchServices(),
+          update: (_, tasksServices, searchServices) {
+            return searchServices!..filterResults = tasksServices.filterResults;
+          },
+        )
       ],
       child: MyApp(),
     ),

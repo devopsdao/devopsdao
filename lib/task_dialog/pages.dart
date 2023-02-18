@@ -55,7 +55,7 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    var tasksServices = context.watch<TasksServices>();
+    // var tasksServices = context.watch<TasksServices>();
 
 
     Task task = widget.task;
