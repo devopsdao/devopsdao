@@ -162,7 +162,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1131,8 +1131,9 @@ class TasksServices extends ChangeNotifier {
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
-      // final List roleNftsBalance = await balanceOfBatchName([publicAddress!], roleNfts.keys.toList());
-      // print(roleNftsBalance);
+      final List<EthereumAddress> shared = List.filled(roleNfts.keys.toList().length, publicAddress!);
+      final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
+      print(roleNftsBalance);
 
       // roleNfts = roleNfts.map((key, value) {
       //   late MapEntry<String, dynamic> mapEnt = MapEntry(key, roleNftsBalance[keyId]);
