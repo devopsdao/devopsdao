@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 // import 'dart:js';
 import 'dart:math';
@@ -1135,11 +1136,14 @@ class TasksServices extends ChangeNotifier {
       final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
       print(roleNftsBalance);
 
-      // roleNfts = roleNfts.map((key, value) {
-      //   late MapEntry<String, dynamic> mapEnt = MapEntry(key, roleNftsBalance[keyId]);
-      //   keyId++;
-      //   return mapEnt;
-      // });
+      int keyId = 0;
+      roleNfts = roleNfts.map((key, value) {
+        print(keyId);
+        int newBalance = roleNftsBalance[keyId].toInt();
+        late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
+        keyId++;
+        return mapEnt;
+      });
 
       notifyListeners();
     }
