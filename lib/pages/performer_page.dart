@@ -8,6 +8,7 @@ import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/main.dart';
+import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/theme.dart';
@@ -281,7 +282,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                       ),
                     ],
                   ),
-                  Consumer<TagsServices>(builder: (context, model, child) {
+                  Consumer<SearchServices>(builder: (context, model, child) {
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,

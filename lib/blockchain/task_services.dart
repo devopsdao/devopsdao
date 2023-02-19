@@ -163,7 +163,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<String, Task> tasks = {};
   Map<String, Task> filterResults = {};
   Map<String, Task> tasksNew = {};
@@ -1221,7 +1221,8 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList) async {
+  Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList,
+      {List<String>? tagsList}) async {
     filterResults.clear();
     print(enteredKeyword);
     // searchKeyword = enteredKeyword;
@@ -1230,7 +1231,12 @@ class TasksServices extends ChangeNotifier {
     } else {
       for (String taskAddress in taskList.keys) {
         if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-          filterResults[taskAddress] = taskList[taskAddress]!;
+          if (taskList.isNotEmpty && taskList[taskAddress]!.tags.isNotEmpty ) {
+
+
+          } else {
+            filterResults[taskAddress] = taskList[taskAddress]!;
+          }
         }
       }
     }

@@ -7,6 +7,7 @@ import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../task_dialog/shimmer.dart';
 import '../widgets/tags/main.dart';
+import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '../widgets/tags/tags.dart';
@@ -23,32 +24,6 @@ import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
 import 'package:animations/animations.dart';
-
-// class ExchangeFilterWidget extends ChangeNotifier {
-//   List<Task> filterResults = [];
-//
-//   void _runFilter(String enteredKeyword, _allTasks) {
-//
-//     filterResults.clear();
-//     // filterResults = _allTasks.toList();
-//     if (enteredKeyword.isEmpty) {
-//       // if the search field is empty or only contains white-space, we'll display all tasks
-//       filterResults = _allTasks.toList();
-//       // print(filterResults);
-//
-//     } else {
-//       for (int i = 0; i<_allTasks.length ; i++) {
-//         if(_allTasks.elementAt(i).title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-//           print('${_allTasks.elementAt(i).title}');
-//           filterResults.add(_allTasks.elementAt(i));
-//           // notifyListeners();
-//         }
-//       }
-//     }
-//     // Refresh the UI
-//     notifyListeners();
-//   }
-// }
 
 class TasksPageWidget extends StatefulWidget {
   final EthereumAddress? taskAddress;
@@ -128,13 +103,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       });
     }
 
-    List objList = tasksServices.filterResults.values.toList();
-
-    // if (widget.index != null) {
-    //   showDialog(
-    //       context: context,
-    //       builder: (context) => TaskDialogBeamer(index: widget.index!));
-    // }
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -265,7 +233,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       ),
                     ],
                   ),
-                  Consumer<TagsServices>(builder: (context, model, child) {
+                  Consumer<SearchServices>(builder: (context, model, child) {
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
@@ -314,41 +282,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                           child: TaskTransition(
                                             fromPage: 'tasks',
                                             index: index,
-                                          )
-
-                                          // InkWell(
-                                          //     onTap: () {
-                                          //       // print('tap');
-                                          //
-                                          //       setState(() {
-                                          //         // Toggle light when tapped.
-                                          //       });
-                                          //       // final taskAddress =
-                                          //       //     tasksServices
-                                          //       //         .filterResults.values
-                                          //       //         .toList()[index]
-                                          //       //         .taskAddress;
-                                          //       // context.popToNamed(
-                                          //       //     '/tasks/$taskAddress');
-                                          //       // print(objList);
-                                          //       showDialog(
-                                          //           context: context,
-                                          //           builder: (context) => TaskInformationDialog(
-                                          //               fromPage: 'tasks', taskAddress: objList[index].taskAddress, shimmerEnabled: true));
-                                          //       final String taskAddress =
-                                          //           tasksServices.filterResults.values.toList()[index].taskAddress.toString();
-                                          //       RouteInformation routeInfo = RouteInformation(location: '/tasks/$taskAddress');
-                                          //       Beamer.of(context).updateRouteInformation(routeInfo);
-                                          //       // showDialog(
-                                          //       //     context: context,
-                                          //       //     builder: (context) =>
-                                          //       //         TaskDialogBeamer(index: index));
-                                          //     },
-                                          //     child: TaskItem(
-                                          //       fromPage: 'tasks',
-                                          //       object: tasksServices.filterResults.values.toList()[index],
-                                          //     )),
-                                          );
+                                          ));
                                     },
                                   ),
                                 ),

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
 import 'package:devopsdao/widgets/tags/tags.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ late bool initDone = false;
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    var tagsServices = context.watch<TagsServices>();
+    var searchServices = context.watch<SearchServices>();
     final String theme = widget.theme;
     final SimpleTags item = widget.item;
     final VoidCallback? callback = widget.callback;
@@ -101,10 +102,7 @@ late bool initDone = false;
 
 
 
-    late bool getMore = false;
-    if (item.tag == 'Get more...') {
-      getMore = true;
-    }
+
 
     // Colors (black BIG is default):
     late Color textColor = Colors.grey[300]!;
@@ -160,6 +158,11 @@ late bool initDone = false;
 
     // tag width
     late double tagWidth = textSize.width + 22;
+    late bool getMore = false;
+    if (item.tag == 'Get more...') {
+      getMore = true;
+      tagWidth += 22;
+    }
     if (item.selected && widget.delete) {
       tagWidth += 22;
     }
@@ -249,15 +252,15 @@ late bool initDone = false;
                           widget.onDeleted?.call();
                           Future.delayed(
                               const Duration(milliseconds: 750), () {
-                            tagsServices.removeTag(item.tag, page: widget.page, );
+                            searchServices.removeTag(item.tag, page: widget.page, );
                           });
                         } else {
-                          for (String key in tagsServices.tagsFilterResults.keys) {
-                            if (tagsServices.tagsFilterResults[key]?.tag.toLowerCase() ==
+                          for (String key in searchServices.tagsFilterResults.keys) {
+                            if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
                                 item.tag.toLowerCase()) {
-                              tagsServices.tagsFilterResults[key]!.selected ?
-                              tagsServices.tagsFilterResults[key]!.selected = false :
-                              tagsServices.tagsFilterResults[key]!.selected = true;
+                              searchServices.tagsFilterResults[key]!.selected ?
+                              searchServices.tagsFilterResults[key]!.selected = false :
+                              searchServices.tagsFilterResults[key]!.selected = true;
                             }
                           }
                         }
@@ -297,15 +300,15 @@ late bool initDone = false;
                               widget.onDeleted?.call();
                               Future.delayed(
                                   const Duration(milliseconds: 750), () {
-                                tagsServices.removeTag(item.tag, page: widget.page, );
+                                searchServices.removeTag(item.tag, page: widget.page, );
                               });
                             } else {
-                              for (String key in tagsServices.tagsFilterResults.keys) {
-                                if (tagsServices.tagsFilterResults[key]?.tag.toLowerCase() ==
+                              for (String key in searchServices.tagsFilterResults.keys) {
+                                if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
                                     item.tag.toLowerCase()) {
-                                  tagsServices.tagsFilterResults[key]!.selected ?
-                                  tagsServices.tagsFilterResults[key]!.selected = false :
-                                  tagsServices.tagsFilterResults[key]!.selected = true;
+                                  searchServices.tagsFilterResults[key]!.selected ?
+                                  searchServices.tagsFilterResults[key]!.selected = false :
+                                  searchServices.tagsFilterResults[key]!.selected = true;
                                 }
                               }
                             }
