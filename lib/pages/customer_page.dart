@@ -450,7 +450,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
         //   },
         // ),
 
-        Selector<TasksServices, Map<String, Task>>(
+        Selector<TasksServices, Map<EthereumAddress, Task>>(
             selector: (_, model) => model.filterResults,
             builder: (_, filter, __) {
               List objList = filter.values.toList();
@@ -484,7 +484,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             //             context: context,
                             //             builder: (context) =>
                             //                 TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                            //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                            //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
                             //         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
                             //         Beamer.of(context).updateRouteInformation(routeInfo);
                             //         // context.popToNamed('/customer/$taskAddress');

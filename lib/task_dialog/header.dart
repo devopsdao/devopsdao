@@ -13,11 +13,7 @@ class TaskDialogHeader extends StatefulWidget {
   final Task task;
   final String fromPage;
 
-  const TaskDialogHeader({
-    Key? key,
-    required this.task,
-    required this.fromPage
-  }) : super(key: key);
+  const TaskDialogHeader({Key? key, required this.task, required this.fromPage}) : super(key: key);
 
   @override
   _TaskDialogHeaderState createState() => _TaskDialogHeaderState();
@@ -38,8 +34,8 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
             width: 30,
             child: InkWell(
               onTap: () {
-                interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['main'],
-                  duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                interface.dialogPagesController
+                    .animateToPage(interface.dialogCurrentState['pages']['main'], duration: const Duration(milliseconds: 400), curve: Curves.ease);
               },
               borderRadius: BorderRadius.circular(16),
               child: Container(
@@ -96,13 +92,13 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                           children: [
                             const WidgetSpan(
                                 child: Padding(
-                                  padding: EdgeInsets.only(right: 5.0),
-                                  child: Icon(
-                                    Icons.copy,
-                                    size: 20,
-                                    color: Colors.black26,
-                                  ),
-                                )),
+                              padding: EdgeInsets.only(right: 5.0),
+                              child: Icon(
+                                Icons.copy,
+                                size: 20,
+                                color: Colors.black26,
+                              ),
+                            )),
                             TextSpan(
                               text: task.title,
                               style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),
@@ -114,19 +110,17 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                   ],
                 ),
                 onTap: () async {
-                  Clipboard.setData(
-                      ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress.toString()}'))
-                      .then((_) {
+                  Clipboard.setData(ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress}')).then((_) {
                     Flushbar(
-                        icon: const Icon(
-                          Icons.copy,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        message: 'Task URL copied to your clipboard!',
-                        duration: const Duration(seconds: 2),
-                        backgroundColor: Colors.blueAccent,
-                        shouldIconPulse: false)
+                            icon: const Icon(
+                              Icons.copy,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            message: 'Task URL copied to your clipboard!',
+                            duration: const Duration(seconds: 2),
+                            backgroundColor: Colors.blueAccent,
+                            shouldIconPulse: false)
                         .show(context);
                   });
                 },
@@ -141,10 +135,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
               RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');
               Beamer.of(context).updateRouteInformation(routeInfo);
 
-              interface.statusText = const TextSpan(
-                  text: 'Not created',
-                  style: TextStyle( fontWeight: FontWeight.bold)
-              );
+              interface.statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
             },
             borderRadius: BorderRadius.circular(16),
             child: Container(

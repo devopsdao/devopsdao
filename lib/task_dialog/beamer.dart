@@ -39,7 +39,6 @@ import '../widgets/data_loading_dialog.dart';
 
 import 'dart:ui' as ui;
 
-
 class TaskDialogBeamer extends StatefulWidget {
   final String fromPage;
   final EthereumAddress? taskAddress;
@@ -58,19 +57,16 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
 
   @override
   Widget build(BuildContext context) {
-
     final String taskAddressString = widget.taskAddress.toString();
     RouteInformation routeInfo = RouteInformation(location: '/$widget.fromPage/$taskAddressString');
     Beamer.of(context).updateRouteInformation(routeInfo);
     return Scaffold(
         body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-          alignment: Alignment.center,
-          child: TaskDialogFuture(
-              fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: true),
-        )
-    );
+      width: double.infinity,
+      height: double.infinity,
+      // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+      alignment: Alignment.center,
+      child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: true),
+    ));
   }
 }

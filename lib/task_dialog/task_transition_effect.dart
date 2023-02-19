@@ -1,4 +1,3 @@
-
 import 'package:animations/animations.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
@@ -13,16 +12,10 @@ import '../widgets/data_loading_dialog.dart';
 import '../task_item/task_item.dart';
 import 'main.dart';
 
-
 class TaskTransition extends StatelessWidget {
   final String fromPage;
   final int index;
-  const TaskTransition({Key? key,
-    required this.fromPage,
-    required this.index
-  }) : super(key: key);
-
-
+  const TaskTransition({Key? key, required this.fromPage, required this.index}) : super(key: key);
 
   final ContainerTransitionType _transitionType2 = ContainerTransitionType.fadeThrough;
 
@@ -35,8 +28,7 @@ class TaskTransition extends StatelessWidget {
     return OpenContainer(
       transitionType: _transitionType2,
       openBuilder: (BuildContext context, VoidCallback _) {
-        final String taskAddress =
-        tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+        final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
         Beamer.of(context).updateRouteInformation(routeInfo);
         return TaskDialogFuture(
@@ -64,12 +56,7 @@ class TaskTransition extends StatelessWidget {
 class LoadTaskByLink extends StatelessWidget {
   final String fromPage;
   final EthereumAddress? taskAddress;
-  const LoadTaskByLink({Key? key,
-    required this.fromPage,
-    required this.taskAddress
-  }) : super(key: key);
-
-
+  const LoadTaskByLink({Key? key, required this.fromPage, required this.taskAddress}) : super(key: key);
 
   final ContainerTransitionType _transitionType2 = ContainerTransitionType.fadeThrough;
 
@@ -85,8 +72,7 @@ class LoadTaskByLink extends StatelessWidget {
         final String taskAddressString = taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
         Beamer.of(context).updateRouteInformation(routeInfo);
-        return TaskDialogFuture(
-            fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true);
+        return TaskDialogFuture(fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true);
       },
       transitionDuration: const Duration(milliseconds: 400),
       closedElevation: 0,
@@ -103,4 +89,3 @@ class LoadTaskByLink extends StatelessWidget {
     );
   }
 }
-

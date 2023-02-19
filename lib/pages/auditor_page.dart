@@ -340,7 +340,7 @@ class PendingTabWidget extends StatefulWidget {
 
 class _PendingTabWidgetState extends State<PendingTabWidget> {
   late bool justLoaded = true;
-  // late Map<String, Task> obj;
+  // late Map<EthereumAddress, Task> obj;
 
   @override
   Widget build(BuildContext context) {
@@ -397,7 +397,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                 //             shimmerEnabled: false,
                 //           );
                 //         });
-                //     final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                //     final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
                 //     RouteInformation routeInfo = RouteInformation(location: '/auditor/$taskAddress');
                 //     Beamer.of(context).updateRouteInformation(routeInfo);
                 //   },

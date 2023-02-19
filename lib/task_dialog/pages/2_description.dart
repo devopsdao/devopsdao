@@ -17,23 +17,19 @@ class DescriptionPage extends StatefulWidget {
   final String fromPage;
   final Task task;
 
-
-  const DescriptionPage(
-      {Key? key,
-        required this.screenHeightSizeNoKeyboard,
-        required this.innerPaddingWidth,
-        required this.task,
-        required this.fromPage,
-      })
-      : super(key: key);
+  const DescriptionPage({
+    Key? key,
+    required this.screenHeightSizeNoKeyboard,
+    required this.innerPaddingWidth,
+    required this.task,
+    required this.fromPage,
+  }) : super(key: key);
 
   @override
   _DescriptionPageState createState() => _DescriptionPageState();
 }
 
 class _DescriptionPageState extends State<DescriptionPage> {
-
-
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -80,13 +76,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                   child: Container(
                                       padding: const EdgeInsets.all(6),
                                       child: RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                  text: task.description,
-                                                )
-                                              ])))),
+                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                                        TextSpan(
+                                          text: task.description,
+                                        )
+                                      ])))),
                             ),
                           ),
                           // const Spacer(),
@@ -94,11 +88,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                             padding: const EdgeInsets.all(6),
                             child: RichText(
                                 text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                  TextSpan(
-                                      text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                ])),
+                              const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                              TextSpan(
+                                  text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
+                                  style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                            ])),
                           ),
                         ],
                       ))),
@@ -123,133 +117,129 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: task.contractOwner.toString())).then((_) {
                                       Flushbar(
-                                          icon: const Icon(
-                                            Icons.copy,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                          message: '${task.contractOwner.toString()} copied to your clipboard!',
-                                          duration: const Duration(seconds: 2),
-                                          backgroundColor: Colors.blueAccent,
-                                          shouldIconPulse: false)
+                                              icon: const Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              message: '${task.contractOwner.toString()} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: Colors.blueAccent,
+                                              shouldIconPulse: false)
                                           .show(context);
                                     });
                                   },
                                   child: RichText(
                                       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                        const WidgetSpan(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.copy,
-                                                size: 16,
-                                                color: Colors.black26,
-                                              ),
-                                            )),
-                                        const TextSpan(text: 'Contract owner: \n', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
-                                        TextSpan(
-                                            text: task.contractOwner.toString(),
-                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                      ])),
+                                    const WidgetSpan(
+                                        child: Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.copy,
+                                        size: 16,
+                                        color: Colors.black26,
+                                      ),
+                                    )),
+                                    const TextSpan(text: 'Contract owner: \n', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
+                                    TextSpan(
+                                        text: task.contractOwner.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                  ])),
                                 ),
                                 GestureDetector(
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: task.taskAddress.toString())).then((_) {
                                       Flushbar(
-                                          icon: const Icon(
-                                            Icons.copy,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                          message: '${task.taskAddress.toString()} copied to your clipboard!',
-                                          duration: const Duration(seconds: 2),
-                                          backgroundColor: Colors.blueAccent,
-                                          shouldIconPulse: false)
+                                              icon: const Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                              message: '${task.taskAddress} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: Colors.blueAccent,
+                                              shouldIconPulse: false)
                                           .show(context);
                                     });
                                   },
                                   child: RichText(
                                       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                        const WidgetSpan(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.copy,
-                                                size: 16,
-                                                color: Colors.black26,
-                                              ),
-                                            )),
-                                        const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                        TextSpan(
-                                            text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                      ])),
+                                    const WidgetSpan(
+                                        child: Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.copy,
+                                        size: 16,
+                                        color: Colors.black26,
+                                      ),
+                                    )),
+                                    const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                    TextSpan(text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                  ])),
                                 ),
                                 if (task.participant != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                   GestureDetector(
                                     onTap: () async {
                                       Clipboard.setData(ClipboardData(text: task.participant.toString())).then((_) {
                                         Flushbar(
-                                            icon: const Icon(
-                                              Icons.copy,
-                                              size: 20,
-                                              color: Colors.white,
-                                            ),
-                                            message: '${task.participant.toString()} copied to your clipboard!',
-                                            duration: const Duration(seconds: 2),
-                                            backgroundColor: Colors.blueAccent,
-                                            shouldIconPulse: false)
+                                                icon: const Icon(
+                                                  Icons.copy,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                                message: '${task.participant.toString()} copied to your clipboard!',
+                                                duration: const Duration(seconds: 2),
+                                                backgroundColor: Colors.blueAccent,
+                                                shouldIconPulse: false)
                                             .show(context);
                                       });
                                     },
                                     child: RichText(
                                         text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                          const WidgetSpan(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(right: 5.0),
-                                                child: Icon(
-                                                  Icons.copy,
-                                                  size: 16,
-                                                  color: Colors.black26,
-                                                ),
-                                              )),
-                                          const TextSpan(text: 'Performer: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: task.participant.toString(),
-                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                        ])),
+                                      const WidgetSpan(
+                                          child: Padding(
+                                        padding: EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          Icons.copy,
+                                          size: 16,
+                                          color: Colors.black26,
+                                        ),
+                                      )),
+                                      const TextSpan(text: 'Performer: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text: task.participant.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                    ])),
                                   ),
                                 if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                   GestureDetector(
                                     onTap: () async {
                                       Clipboard.setData(ClipboardData(text: task.auditor.toString())).then((_) {
                                         Flushbar(
-                                            icon: const Icon(
-                                              Icons.copy,
-                                              size: 20,
-                                              color: Colors.white,
-                                            ),
-                                            message: '${task.auditor.toString()} copied to your clipboard!',
-                                            duration: const Duration(seconds: 2),
-                                            backgroundColor: Colors.blueAccent,
-                                            shouldIconPulse: false)
+                                                icon: const Icon(
+                                                  Icons.copy,
+                                                  size: 20,
+                                                  color: Colors.white,
+                                                ),
+                                                message: '${task.auditor.toString()} copied to your clipboard!',
+                                                duration: const Duration(seconds: 2),
+                                                backgroundColor: Colors.blueAccent,
+                                                shouldIconPulse: false)
                                             .show(context);
                                       });
                                     },
                                     child: RichText(
                                         text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                          const WidgetSpan(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(right: 5.0),
-                                                child: Icon(
-                                                  Icons.copy,
-                                                  size: 16,
-                                                  color: Colors.black26,
-                                                ),
-                                              )),
-                                          const TextSpan(text: 'Auditor selected: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                          TextSpan(
-                                              text: task.auditor.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                                        ])),
+                                      const WidgetSpan(
+                                          child: Padding(
+                                        padding: EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          Icons.copy,
+                                          size: 16,
+                                          color: Colors.black26,
+                                        ),
+                                      )),
+                                      const TextSpan(text: 'Auditor selected: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                      TextSpan(text: task.auditor.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                    ])),
                                   ),
                                 // RichText(
                                 //   text: TextSpan(
