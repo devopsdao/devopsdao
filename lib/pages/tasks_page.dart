@@ -189,7 +189,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                            tasksServices.runFilter(tasksServices.tasksNew, enteredKeyword: searchKeyword);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',

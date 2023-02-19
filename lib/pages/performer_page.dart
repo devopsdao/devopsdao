@@ -233,11 +233,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
+                              tasksServices.runFilter(tasksServices.tasksPerformerParticipate, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
+                              tasksServices.runFilter(tasksServices.tasksPerformerProgress, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
+                              tasksServices.runFilter(tasksServices.tasksPerformerComplete, enteredKeyword: searchKeyword);
                             }
                           },
                           decoration: const InputDecoration(

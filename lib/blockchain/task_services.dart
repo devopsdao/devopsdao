@@ -1221,21 +1221,51 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> runFilter(String enteredKeyword, Map<EthereumAddress, Task> taskList, {List<String>? tagsList}) async {
+  Future<void> runFilter(Map<EthereumAddress, Task> taskList, {String? enteredKeyword, List<String>? tagsList}) async {
+    enteredKeyword ??= '';
+    tagsList ??= [];
     filterResults.clear();
     print(enteredKeyword);
     // searchKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty) {
+    if (enteredKeyword.isEmpty && tagsList.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
-      for (EthereumAddress taskAddress in taskList.keys) {
-        if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-          if (taskList.isNotEmpty && taskList[taskAddress]!.tags.isNotEmpty) {
-          } else {
-            filterResults[taskAddress] = taskList[taskAddress]!;
-          }
-        }
+      // for (EthereumAddress taskAddress in taskList.keys) {
+      //   if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
+      //     if (taskList.isNotEmpty && taskList[taskAddress]!.tags.isNotEmpty) {
+      //     } else {
+      //       filterResults[taskAddress] = taskList[taskAddress]!;
+      //     }
+      //   }
+      // }
+
+      final filterResultsTitle = Map.from(taskList)..removeWhere((taskAddress, task) => !task.title.contains(enteredKeyword));
+      final filterResultsDescription = Map.from(taskList)..removeWhere((taskAddress, task) => !task.description.contains(enteredKeyword));
+      late Map<EthereumAddress, Task> filterResultsTaskAddress = {};
+      late Map<EthereumAddress, Task> filterResultsContractOwner = {};
+      late Map<EthereumAddress, Task> filterResultsPerformer = {};
+      late Map<EthereumAddress, Task> filterResultsAuditor = {};
+      if (enteredKeyword.length > 41 && enteredKeyword.length <= 43) {
+        filterResultsTaskAddress = Map.from(taskList)..removeWhere((taskAddress, task) => !task.taskAddress.toString().contains(enteredKeyword!));
+        filterResultsContractOwner = Map.from(taskList)..removeWhere((taskAddress, task) => !task.contractOwner.toString().contains(enteredKeyword!));
+        filterResultsPerformer = Map.from(taskList)..removeWhere((taskAddress, task) => !task.performer.toString().contains(enteredKeyword!));
+        filterResultsAuditor = Map.from(taskList)..removeWhere((taskAddress, task) => !task.auditor.toString().contains(enteredKeyword!));
       }
+
+      // final filterResultsTags = Map.from(taskList)..removeWhere((taskAddress, task) => task.tags.toSet.intersection(tagsList!.toSet().length == 0));
+      // final filterResultsTagsNFT = Map.from(taskList)
+      //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
+
+      filterResults = {
+        ...filterResultsTitle,
+        ...filterResultsDescription,
+        ...filterResultsTaskAddress,
+        ...filterResultsContractOwner,
+        ...filterResultsPerformer,
+        ...filterResultsAuditor,
+        // ...filterResultsTags,
+        // ...filterResultsTagsNFT
+      };
     }
     // Refresh the UI
     notifyListeners();
@@ -1280,7 +1310,7 @@ class TasksServices extends ChangeNotifier {
           auditState: task[10],
           rating: task[11].toInt(),
           contractOwner: task[12],
-          participant: task[13],
+          performer: task[13],
           auditInitiator: task[14],
           auditor: task[15],
           participants: task[16],
@@ -1302,6 +1332,21 @@ class TasksServices extends ChangeNotifier {
   Future<Map<EthereumAddress, Task>> getTasksData(List<EthereumAddress> taskAddresses) async {
     Map<EthereumAddress, Task> tasks = {};
     final rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
+    late List createTimeList = [];
+    late List taskTypeList = [];
+    late List tagsList = [];
+    late List tagsNFTList = [];
+    late List taskStateList = [];
+    late List auditStateList = [];
+    late List ratingList = [];
+    late List contractOwnerList = [];
+    late List performerList = [];
+    late List participantsList = [];
+    late List fundersList = [];
+    late List auditorList = [];
+    late List auditorsList = [];
+    late List tokenNamesList = [];
+    late List tokenValuesList = [];
     late int i = 0;
     for (final task in rawTasksList) {
       // print('Task loaded: ${task.title}');
@@ -1320,7 +1365,7 @@ class TasksServices extends ChangeNotifier {
           auditState: task[0][10],
           rating: task[0][11].toInt(),
           contractOwner: task[0][12],
-          participant: task[0][13],
+          performer: task[0][13],
           auditInitiator: task[0][14],
           auditor: task[0][15],
           participants: task[0][16],
@@ -1336,6 +1381,22 @@ class TasksServices extends ChangeNotifier {
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
       tasks[taskAddresses[i]] = taskObject;
       i++;
+
+      // createTimeList.add(taskObject.createTime);
+      // taskTypeList.add(taskObject.taskType);
+      // tagsList.addAll([for (var list in taskObject.tags) ...list]);
+      // tagsNFTList.addAll([for (var list in taskObject.tagsNFT) ...list]);
+      // taskStateList.add(taskObject.taskState);
+      // auditStateList.add(taskObject.auditState);
+      // ratingList.add(taskObject.rating);
+      // contractOwnerList.add(taskObject.contractOwner);
+      // performerList.add(taskObject.performer);
+      // participantsList.addAll([for (var list in taskObject.participants) ...list]);
+      // fundersList.addAll([for (var list in taskObject.funders) ...list]);
+      // auditorList.add(taskObject.auditor);
+      // auditorsList.addAll([for (var list in taskObject.auditors) ...list]);
+      // tokenNamesList.add(taskObject.tokenNames);
+      // tokenValuesList.add(taskObject.tokenValues);
     }
 
     return tasks;
@@ -1354,7 +1415,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> refreshTask(Task task) async {
     // Who participate in the TASK:
-    if (task.participant == publicAddress) {
+    if (task.performer == publicAddress) {
       // Calculate Pending among:
       if ((task.tokenValues[0] != 0 || task.tokenValues[0] != 0)) {
         if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
@@ -1390,7 +1451,7 @@ class TasksServices extends ChangeNotifier {
         (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "audit")) {
       if (task.contractOwner == publicAddress) {
         tasksCustomerProgress[task.taskAddress] = task;
-      } else if (task.participant == publicAddress) {
+      } else if (task.performer == publicAddress) {
         tasksPerformerProgress[task.taskAddress] = task;
       }
       if (hardhatDebug == true) {
@@ -1432,7 +1493,7 @@ class TasksServices extends ChangeNotifier {
     if (task.taskState != "" && (task.taskState == "completed" || task.taskState == "canceled")) {
       if (task.contractOwner == publicAddress) {
         tasksCustomerComplete[task.taskAddress] = task;
-      } else if (task.participant == publicAddress) {
+      } else if (task.performer == publicAddress) {
         tasksPerformerComplete[task.taskAddress] = task;
       }
       if (hardhatDebug == true) {
@@ -1820,8 +1881,13 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List> getAccountsList() async {
-    List accountsList = await taskDataFacet.getAccountsList();
+  Future<void> getAccountsData() async {
+    // List<EthereumAddress> accountsList = await getAccountsList();
+    // final differenceSet1 = characters1.difference(characters2);
+  }
+
+  Future<List<EthereumAddress>> getAccountsList() async {
+    List<EthereumAddress> accountsList = await taskDataFacet.getAccountsList();
     return accountsList;
   }
 

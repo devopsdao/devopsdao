@@ -264,11 +264,11 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                 controller: _searchKeywordController,
                                 onChanged: (searchKeyword) {
                                   if (tabIndex == 0) {
-                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerSelection);
+                                    tasksServices.runFilter(tasksServices.tasksCustomerSelection, enteredKeyword: searchKeyword);
                                   } else if (tabIndex == 1) {
-                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerProgress);
+                                    tasksServices.runFilter(tasksServices.tasksCustomerProgress, enteredKeyword: searchKeyword);
                                   } else if (tabIndex == 2) {
-                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerComplete);
+                                    tasksServices.runFilter(tasksServices.tasksCustomerComplete, enteredKeyword: searchKeyword);
                                   }
                                 },
                                 decoration: const InputDecoration(

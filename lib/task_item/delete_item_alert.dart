@@ -12,12 +12,11 @@ import '../blockchain/accounts.dart';
 class DeleteItemAlert extends StatefulWidget {
   final Task? task;
   final Account? account;
-  const DeleteItemAlert(
-      {Key? key,
-        this.task,
-        this.account,
-      })
-      : super(key: key);
+  const DeleteItemAlert({
+    Key? key,
+    this.task,
+    this.account,
+  }) : super(key: key);
 
   @override
   _DeleteItemAlertState createState() => _DeleteItemAlertState();
@@ -29,7 +28,6 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
   late String link;
   late String who;
   late String? nanoId;
-
 
   TextEditingController? messageController;
 
@@ -62,19 +60,13 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
       who = 'account';
     }
 
-
-
-
     link = 'https://docs.dodao.dev/audit_process.html#customer';
 
-
     return Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: SizedBox(
         height: 440,
         width: 350,
-
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -88,15 +80,10 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       //     .apply(fontSizeFactor: 1.1),
                       children: <TextSpan>[
                         TextSpan(
-                          style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
                           text: title,
                         ),
-
-                      ])
-              ),
+                      ])),
               Container(
                 padding: const EdgeInsets.all(10.0),
                 child: const Icon(
@@ -107,21 +94,12 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
               ),
               RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(
-                      style: DefaultTextStyle
-                          .of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.1),
-                      children: <TextSpan>[
-                        TextSpan(
-
-                          text: warningText,
-                        ),
-
-                      ])
-              ),
+                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.1), children: <TextSpan>[
+                    TextSpan(
+                      text: warningText,
+                    ),
+                  ])),
               const Spacer(),
-
               TextFormField(
                 controller: messageController,
                 // onChanged: (_) => EasyDebounce.debounce(
@@ -165,21 +143,18 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                     ),
                   ),
                   labelText: 'Few words about your decision',
-                  labelStyle: const TextStyle(
-                      fontSize: 17.0, color: Colors.black54),
+                  labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
                   hintText: '[Enter your message here..]',
-                  hintStyle: const TextStyle(
-                      fontSize: 14.0, color: Colors.black54),
+                  hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
                   // focusedBorder: const UnderlineInputBorder(
                   //   borderSide: BorderSide.none,
                   // ),
-
                 ),
                 style: DodaoTheme.of(context).bodyText1.override(
-                  fontFamily: 'Inter',
-                  color: Colors.black87,
-                  lineHeight: null,
-                ),
+                      fontFamily: 'Inter',
+                      color: Colors.black87,
+                      lineHeight: null,
+                    ),
                 minLines: 2,
                 maxLines: 3,
               ),
@@ -200,10 +175,8 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         // width: halfWidth,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                              width: 0.5,
-                              color: Colors.black54//                   <--- border width here
-                          ),
+                          border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
+                              ),
                         ),
                         child: const Text(
                           'Close',
@@ -217,10 +190,11 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16,),
+                  const SizedBox(
+                    width: 16,
+                  ),
                   Expanded(
                     child: InkWell(
-
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
@@ -228,7 +202,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         interface.emptyTaskMessage();
 
                         // tasksServices.taskStateChange(
-                        //     task.taskAddress, task.participant, 'audit', task.nanoId,
+                        //     task.taskAddress, task.performer, 'audit', task.nanoId,
                         //     message: messageController!.text.isEmpty ? null : messageController!.text);
                         // showDialog(
                         //     context: context,

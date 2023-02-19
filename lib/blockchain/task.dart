@@ -14,7 +14,7 @@ class Task {
   final String auditState;
   final int rating;
   final EthereumAddress contractOwner;
-  final EthereumAddress participant;
+  final EthereumAddress performer;
   final EthereumAddress auditInitiator;
   final EthereumAddress auditor;
   final List<dynamic> participants;
@@ -41,7 +41,7 @@ class Task {
     required this.auditState,
     required this.rating,
     required this.contractOwner,
-    required this.participant,
+    required this.performer,
     required this.auditInitiator,
     required this.auditor,
     required this.participants,

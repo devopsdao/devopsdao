@@ -176,17 +176,17 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                     TextSpan(text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
                                   ])),
                                 ),
-                                if (task.participant != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
+                                if (task.performer != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                   GestureDetector(
                                     onTap: () async {
-                                      Clipboard.setData(ClipboardData(text: task.participant.toString())).then((_) {
+                                      Clipboard.setData(ClipboardData(text: task.performer.toString())).then((_) {
                                         Flushbar(
                                                 icon: const Icon(
                                                   Icons.copy,
                                                   size: 20,
                                                   color: Colors.white,
                                                 ),
-                                                message: '${task.participant.toString()} copied to your clipboard!',
+                                                message: '${task.performer.toString()} copied to your clipboard!',
                                                 duration: const Duration(seconds: 2),
                                                 backgroundColor: Colors.blueAccent,
                                                 shouldIconPulse: false)
@@ -205,8 +205,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                         ),
                                       )),
                                       const TextSpan(text: 'Performer: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text: task.participant.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                      TextSpan(text: task.performer.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
                                     ])),
                                   ),
                                 if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))

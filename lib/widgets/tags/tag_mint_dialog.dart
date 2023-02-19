@@ -10,11 +10,10 @@ import '../../widgets/wallet_action.dart';
 
 class TagMintDialog extends StatefulWidget {
   final String tagName;
-  const TagMintDialog(
-      {Key? key,
-        required this.tagName,
-      })
-      : super(key: key);
+  const TagMintDialog({
+    Key? key,
+    required this.tagName,
+  }) : super(key: key);
 
   @override
   _TagMintDialogState createState() => _TagMintDialogState();
@@ -44,17 +43,13 @@ class _TagMintDialogState extends State<TagMintDialog> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-
     title = 'Do you want to mint \"${widget.tagName}\" tag?';
 
-
     return Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: SizedBox(
         height: 440,
         width: 350,
-
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -70,15 +65,10 @@ class _TagMintDialogState extends State<TagMintDialog> {
                         //     .apply(fontSizeFactor: 1.1),
                         children: <TextSpan>[
                           TextSpan(
-                            style: const TextStyle(
-                                color: Colors.black87,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
                             text: title,
                           ),
-
-                        ])
-                ),
+                        ])),
               ),
               Container(
                 padding: const EdgeInsets.all(10.0),
@@ -90,18 +80,11 @@ class _TagMintDialogState extends State<TagMintDialog> {
               ),
               RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(
-                      style: DodaoTheme.of(context).bodyText2,
-                      children: const <TextSpan>[
-                        TextSpan(
-
-                          text: 'If you want choose another tag name to Mint go to tag management page',
-                        ),
-
-                      ])
-              ),
-
-
+                  text: TextSpan(style: DodaoTheme.of(context).bodyText2, children: const <TextSpan>[
+                    TextSpan(
+                      text: 'If you want choose another tag name to Mint go to tag management page',
+                    ),
+                  ])),
               const Spacer(),
               Row(
                 children: [
@@ -118,10 +101,8 @@ class _TagMintDialogState extends State<TagMintDialog> {
                         // width: halfWidth,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                              width: 0.5,
-                              color: Colors.black54//                   <--- border width here
-                          ),
+                          border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
+                              ),
                         ),
                         child: const Text(
                           'Close',
@@ -135,16 +116,17 @@ class _TagMintDialogState extends State<TagMintDialog> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16,),
+                  const SizedBox(
+                    width: 16,
+                  ),
                   Expanded(
                     child: InkWell(
-
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
 
                         // tasksServices.taskStateChange(
-                        //     task.taskAddress, task.participant, 'audit', task.nanoId,
+                        //     task.taskAddress, task.performer, 'audit', task.nanoId,
                         //     message: messageController!.text.isEmpty ? null : messageController!.text);
                         // showDialog(
                         //     context: context,
