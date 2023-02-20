@@ -37,6 +37,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  Map<String, SimpleTags> localTasksTagsList = {};
 
   // _changeField() {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
@@ -62,8 +63,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   @override
   void initState() {
     super.initState();
-    // _searchKeywordController.text = '';
-    // _searchKeywordController.addListener(() {_changeField();});
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
@@ -189,7 +188,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew);
+                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew, localTasksTagsList);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -234,6 +233,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                     ],
                   ),
                   Consumer<SearchServices>(builder: (context, model, child) {
+                    localTasksTagsList = model.tasksTagsList;
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
