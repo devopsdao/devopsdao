@@ -12,7 +12,7 @@ import '../widgets/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_call_button.dart';
-import '../widgets/tags/tags.dart';
+import '../widgets/tags/tags_old.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/theme.dart';
@@ -36,6 +36,7 @@ class CustomerPageWidget extends StatefulWidget {
 class _CustomerPageWidgetState extends State<CustomerPageWidget>
 // with TickerProviderStateMixin
 {
+  List<String> localTagsList = [];
   final animationsMap = {
     'containerOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -264,11 +265,11 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                 controller: _searchKeywordController,
                                 onChanged: (searchKeyword) {
                                   if (tabIndex == 0) {
-                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerSelection);
+                                    tasksServices.runFilter(tasksServices.tasksCustomerSelection, enteredKeyword: searchKeyword, tagsList: localTagsList);
                                   } else if (tabIndex == 1) {
-                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerProgress);
+                                    tasksServices.runFilter(tasksServices.tasksCustomerProgress, enteredKeyword: searchKeyword, tagsList: localTagsList);
                                   } else if (tabIndex == 2) {
-                                    tasksServices.runFilter(searchKeyword, tasksServices.tasksCustomerComplete);
+                                    tasksServices.runFilter(tasksServices.tasksCustomerComplete, enteredKeyword: searchKeyword, tagsList: localTagsList);
                                   }
                                 },
                                 decoration: const InputDecoration(
@@ -308,12 +309,22 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                     ),
                               ),
                             ),
-                            TagCallButton(
+                            const TagCallButton(
                               page: 'customer',
                             ),
                           ],
                         ),
                         Consumer<SearchServices>(builder: (context, model, child) {
+                          localTagsList = model.customerTagsList.entries.map((e) => e.value.tag).toList();
+                          // if (model.ready) {
+                          //   tasksServices.runFilter(
+                          //     tasksServices.tasksNew,
+                          //     enteredKeyword: _searchKeywordController.text,
+                          //     tagsList: localTagsList
+                          //   );
+                          //   model.ready = false;
+                          // }
+
                           return Wrap(
                               alignment: WrapAlignment.start,
                               direction: Axis.horizontal,
@@ -450,7 +461,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
         //   },
         // ),
 
-        Selector<TasksServices, Map<String, Task>>(
+        Selector<TasksServices, Map<EthereumAddress, Task>>(
             selector: (_, model) => model.filterResults,
             builder: (_, filter, __) {
               List objList = filter.values.toList();
@@ -484,7 +495,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             //             context: context,
                             //             builder: (context) =>
                             //                 TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                            //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                            //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
                             //         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
                             //         Beamer.of(context).updateRouteInformation(routeInfo);
                             //         // context.popToNamed('/customer/$taskAddress');

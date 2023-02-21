@@ -1,3 +1,4 @@
+import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
@@ -130,6 +131,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var searchServices = context.watch<SearchServices>();
     var interface = context.watch<InterfaceServices>();
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
 
@@ -317,7 +319,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                   final double width = constraints.maxWidth - 66;
                                   return Row(
                                     children: <Widget>[
-                                      Consumer<InterfaceServices>(
+                                      Consumer<SearchServices>(
                                           builder: (context, model, child) {
                                             if (model.createTagsList.isNotEmpty) {
                                               return SizedBox(
@@ -325,12 +327,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                 child: Wrap(
                                                   alignment: WrapAlignment.start,
                                                   direction: Axis.horizontal,
-                                                  children: model.createTagsList.map((e) {
+                                                  children: model.createTagsList.entries.map((e) {
                                                     return WrappedChip(
                                                       interactive: true,
-                                                      key: ValueKey(e),
+                                                      key: ValueKey(e.value),
                                                       theme: 'white',
-                                                      item: e,
+                                                      item: e.value,
                                                       delete: true,
                                                       page: 'create'
                                                     );
@@ -347,7 +349,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                   RichText(
                                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
                                                       TextSpan(
-                                                        text: 'Add relevant tags and NFT tags',
+                                                        text: 'Add relevant tags and NFT\'s',
                                                         style: TextStyle(
                                                           height: 1,
                                                         )),
@@ -569,7 +571,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
               final nanoId = customAlphabet(
                 '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
                 12);
-              final List<String> tags = interface.createTagsList.map((tags) => tags.tag == null ? 'null :(' : tags.tag).toList();
+              final List<String> tags = searchServices.createTagsList.entries.map((tags) => tags.value.tag).toList();
               tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,

@@ -245,13 +245,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditPending);
+                              tasksServices.runFilter(tasksServices.tasksAuditPending, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditApplied);
+                              tasksServices.runFilter(tasksServices.tasksAuditApplied, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditWorkingOn);
+                              tasksServices.runFilter(tasksServices.tasksAuditWorkingOn, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 3) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksAuditComplete);
+                              tasksServices.runFilter(tasksServices.tasksAuditComplete, enteredKeyword: searchKeyword);
                             }
                           },
                           decoration: const InputDecoration(
@@ -340,7 +340,7 @@ class PendingTabWidget extends StatefulWidget {
 
 class _PendingTabWidgetState extends State<PendingTabWidget> {
   late bool justLoaded = true;
-  // late Map<String, Task> obj;
+  // late Map<EthereumAddress, Task> obj;
 
   @override
   Widget build(BuildContext context) {
@@ -397,7 +397,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                 //             shimmerEnabled: false,
                 //           );
                 //         });
-                //     final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                //     final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
                 //     RouteInformation routeInfo = RouteInformation(location: '/auditor/$taskAddress');
                 //     Beamer.of(context).updateRouteInformation(routeInfo);
                 //   },

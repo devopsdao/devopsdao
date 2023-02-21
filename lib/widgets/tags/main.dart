@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:devopsdao/widgets/tags/search_services.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
+import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:devopsdao/widgets/tags/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
@@ -282,6 +282,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                   }
                 }).toList();
                 searchServices.updateTagList(map, page: widget.page);
+                // searchServices.ready = true;
                 Navigator.pop(context);
               },
             ),

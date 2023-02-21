@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
+import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 

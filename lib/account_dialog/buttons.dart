@@ -85,7 +85,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress, task.participant, 'progress', task.nanoId,
+                tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 interface.emptyTaskMessage();
@@ -109,7 +109,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress, task.participant, 'review', task.nanoId,
+                tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 Navigator.pop(context);
                 interface.emptyTaskMessage();
@@ -140,7 +140,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 //   task.justLoaded = false;
                 // });
                 // tasksServices.taskStateChange(
-                //     task.taskAddress, task.participant, 'review', task.nanoId,
+                //     task.taskAddress, task.performer, 'review', task.nanoId,
                 //     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 // Navigator.pop(context);
                 // interface.emptyTaskMessage();
@@ -232,7 +232,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 setState(() {
                   task.justLoaded = false;
                 });
-                tasksServices.taskStateChange(task.taskAddress, task.participant, 'completed', task.nanoId,
+                tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                 // context.beamToNamed('/customer');
                 Navigator.pop(context);

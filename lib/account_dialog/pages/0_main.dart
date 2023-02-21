@@ -9,6 +9,7 @@ import '../../blockchain/task_services.dart';
 import '../../flutter_flow/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/payment.dart';
+import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 import '../../widgets/wallet_action.dart';
 import '../widget/dialog_button_widget.dart';
@@ -256,26 +257,26 @@ class _AccountMainPageState extends State<AccountMainPage> {
                               final double width = constraints.maxWidth - 66;
                               return Row(
                                 children: <Widget>[
-                                  Consumer<InterfaceServices>(
+                                  Consumer<SearchServices>(
                                       builder: (context, model, child) {
-                                        if (model.tempTagsList.isNotEmpty) {
-                                          return SizedBox(
-                                            width: width,
-                                            child: Wrap(
-                                                alignment: WrapAlignment.start,
-                                                direction: Axis.horizontal,
-                                                children: model.tempTagsList.map((e) {
-                                                  return WrappedChip(
-                                                      interactive: true,
-                                                      key: ValueKey(e),
-                                                      theme: 'white',
-                                                      item: e,
-                                                      delete: true,
-                                                      page: 'create'
-                                                  );
-                                                }).toList()),
-                                          );
-                                        } else {
+                                        // if (model.tempTagsList.isNotEmpty) {
+                                        //   return SizedBox(
+                                        //     width: width,
+                                        //     child: Wrap(
+                                        //         alignment: WrapAlignment.start,
+                                        //         direction: Axis.horizontal,
+                                        //         children: model.tempTagsList.map((e) {
+                                        //           return WrappedChip(
+                                        //               interactive: true,
+                                        //               key: ValueKey(e),
+                                        //               theme: 'white',
+                                        //               item: e,
+                                        //               delete: true,
+                                        //               page: 'create'
+                                        //           );
+                                        //         }).toList()),
+                                        //   );
+                                        // } else {
                                           return Row(
                                             children: <Widget>[
                                               // Container(
@@ -296,7 +297,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                               ),
                                             ],
                                           );
-                                        }
+                                        // }
 
                                       }
                                   ),

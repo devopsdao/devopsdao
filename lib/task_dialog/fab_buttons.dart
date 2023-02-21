@@ -69,7 +69,7 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
           callback: () {
             task.justLoaded = false;
-            tasksServices.taskStateChange(task.taskAddress, task.participant, 'progress', task.nanoId,
+            tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -93,7 +93,7 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
           callback: () {
             task.justLoaded = false;
-            tasksServices.taskStateChange(task.taskAddress, task.participant, 'review', task.nanoId,
+            tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -155,7 +155,7 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
           callback: () {
             task.justLoaded = false;
-            tasksServices.taskStateChange(task.taskAddress, task.participant, 'completed', task.nanoId,
+            tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             // context.beamToNamed('/customer');
             Navigator.pop(context);

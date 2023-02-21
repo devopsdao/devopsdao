@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
-import '../create_job/create_job_as_page.dart';
+import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
@@ -10,9 +10,9 @@ import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
-import '../widgets/tags/tags.dart';
+import '../widgets/tags/tags_old.dart';
 import '/blockchain/task_services.dart';
-import '/create_job/create_job_widget.dart';
+import '/create_job/create_job.dart.old';
 import '/widgets/loading.dart';
 import '../task_dialog/main.dart';
 import '../task_item/task_item.dart';
@@ -36,8 +36,8 @@ class TasksPageWidget extends StatefulWidget {
 class _TasksPageWidgetState extends State<TasksPageWidget> {
   // String _searchKeyword = '';
   final _searchKeywordController = TextEditingController();
-  final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
-  Map<String, SimpleTags> localTasksTagsList = {};
+  // final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  List<String> localTagsList = [];
 
   // _changeField() {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
@@ -188,7 +188,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(searchKeyword, tasksServices.tasksNew, localTasksTagsList);
+                            tasksServices.runFilter(tasksServices.tasksNew, enteredKeyword: searchKeyword, tagsList: localTagsList);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -233,12 +233,23 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                     ],
                   ),
                   Consumer<SearchServices>(builder: (context, model, child) {
-                    localTasksTagsList = model.tasksTagsList;
+                    localTagsList = model.tasksTagsList.entries.map((e) => e.value.tag).toList();
+                    // tasksServices.runFilter(
+                    //     tasksServices.tasksNew,
+                    //     enteredKeyword: _searchKeywordController.text,
+                    //     tagsList: localTagsList);
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
                         children: model.tasksTagsList.entries.map((e) {
-                          return WrappedChip(interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'tasks');
+                          return WrappedChip(
+                            interactive: true,
+                            key: ValueKey(e.value),
+                            theme: 'black',
+                            item: e.value,
+                            delete: true,
+                            page: 'tasks'
+                          );
                         }).toList());
                   }),
 

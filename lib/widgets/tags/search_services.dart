@@ -1,11 +1,11 @@
-
 import 'package:devopsdao/blockchain/task.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
+import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'package:webthree/webthree.dart';
 
 class SearchServices extends ChangeNotifier {
   Map<String, SimpleTags> tagsFilterResults = {...simpleTagsMap};
-
 
   Map<String, SimpleTags> auditorTagsList = {};
   Map<String, SimpleTags> tasksTagsList = {};
@@ -13,12 +13,15 @@ class SearchServices extends ChangeNotifier {
   Map<String, SimpleTags> performerTagsList = {};
   Map<String, SimpleTags> createTagsList = {};
 
-  Map<String, Task> filterResults = {};
+  Map<EthereumAddress, Task> filterResults = {};
 
-  // set filterResults(Map<String, Task> filterResults) {}
+  // set filterResults(Map<EthereumAddress, Task> filterResults) {}
+
+  // experimental future. ready allow to run taskService.runFilter
+  // late bool ready = false;
+
 
   Future updateTagList(list, {required String page}) async {
-
     if (page == 'auditor') {
       auditorTagsList = list;
     } else if (page == 'tasks') {
@@ -32,6 +35,7 @@ class SearchServices extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   Future removeTag(tagName, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList.removeWhere((key, value) => value.tag == tagName);
@@ -54,9 +58,7 @@ class SearchServices extends ChangeNotifier {
     tagsFilterResults.clear();
     searchTagKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
-      tagsFilterResults = Map.from(
-          tagsList
-      );
+      tagsFilterResults = Map.from(tagsList);
       // tagsFilterResults = Map.fromEntries(
       //     tagsList.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1)
       // );
@@ -66,7 +68,7 @@ class SearchServices extends ChangeNotifier {
         if (tagsList[key]!.selected) {
           tagsFilterResults[key] = tagsList[key]!;
         }
-        if (tagsList[key]!.tag.toLowerCase().contains(enteredKeyword.toLowerCase()) ) {
+        if (tagsList[key]!.tag.toLowerCase().contains(enteredKeyword.toLowerCase())) {
           tagsFilterResults[key] = tagsList[key]!;
         }
       }
@@ -80,9 +82,7 @@ class SearchServices extends ChangeNotifier {
         }
       }
     }
-    tagsFilterResults = Map.fromEntries(
-        tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1)
-    );
+    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
     notifyListeners();
   }
 
@@ -94,9 +94,7 @@ class SearchServices extends ChangeNotifier {
       }
     }
     newTag = false;
-    tagsFilterResults = Map.fromEntries(
-        tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1)
-    );
+    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
     notifyListeners();
   }
 
@@ -106,7 +104,7 @@ class SearchServices extends ChangeNotifier {
   }
 
   //
-  // Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList,
+  // Future<void> runFilter(String enteredKeyword, Map<EthereumAddress, Task> taskList,
   //     {List<String>? tagsList}) async {
   //   filterResults.clear();
   //   print(enteredKeyword);
@@ -129,10 +127,8 @@ class SearchServices extends ChangeNotifier {
   //   notifyListeners();
   // }
   //
-  // Future<void> resetFilter(Map<String, Task> taskList) async {
+  // Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
   //   filterResults.clear();
   //   filterResults = Map.from(taskList);
   // }
 }
-
-

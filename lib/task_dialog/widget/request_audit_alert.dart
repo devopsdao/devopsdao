@@ -11,12 +11,7 @@ import '../../widgets/wallet_action.dart';
 class RequestAuditDialog extends StatefulWidget {
   final String who;
   final Task task;
-  const RequestAuditDialog(
-      {Key? key,
-        required this.who,
-        required this.task
-      })
-      : super(key: key);
+  const RequestAuditDialog({Key? key, required this.who, required this.task}) : super(key: key);
 
   @override
   _RequestAuditDialogState createState() => _RequestAuditDialogState();
@@ -58,14 +53,11 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
       link = 'https://docs.dodao.dev/audit_process.html#performer';
     }
 
-
     return Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: SizedBox(
         height: 440,
         width: 350,
-
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -79,15 +71,10 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                       //     .apply(fontSizeFactor: 1.1),
                       children: <TextSpan>[
                         TextSpan(
-                          style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
                           text: title,
                         ),
-
-                      ])
-              ),
+                      ])),
               Container(
                 padding: const EdgeInsets.all(10.0),
                 child: const Icon(
@@ -98,21 +85,12 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
               ),
               RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(
-                      style: DefaultTextStyle
-                          .of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.1),
-                      children: <TextSpan>[
-                        TextSpan(
-
-                          text: warningText,
-                        ),
-
-                      ])
-              ),
+                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.1), children: <TextSpan>[
+                    TextSpan(
+                      text: warningText,
+                    ),
+                  ])),
               const Spacer(),
-
               TextFormField(
                 controller: messageController,
                 // onChanged: (_) => EasyDebounce.debounce(
@@ -156,21 +134,18 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                     ),
                   ),
                   labelText: interface.dialogCurrentState['secondLabelMessage'],
-                  labelStyle: const TextStyle(
-                      fontSize: 17.0, color: Colors.black54),
+                  labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
                   hintText: '[Enter your message here..]',
-                  hintStyle: const TextStyle(
-                      fontSize: 14.0, color: Colors.black54),
+                  hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
                   // focusedBorder: const UnderlineInputBorder(
                   //   borderSide: BorderSide.none,
                   // ),
-
                 ),
                 style: DodaoTheme.of(context).bodyText1.override(
-                  fontFamily: 'Inter',
-                  color: Colors.black87,
-                  lineHeight: null,
-                ),
+                      fontFamily: 'Inter',
+                      color: Colors.black87,
+                      lineHeight: null,
+                    ),
                 minLines: 2,
                 maxLines: 3,
               ),
@@ -191,10 +166,8 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         // width: halfWidth,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                              width: 0.5,
-                              color: Colors.black54//                   <--- border width here
-                          ),
+                          border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
+                              ),
                         ),
                         child: const Text(
                           'Close',
@@ -208,10 +181,11 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16,),
+                  const SizedBox(
+                    width: 16,
+                  ),
                   Expanded(
                     child: InkWell(
-
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
@@ -221,15 +195,14 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         setState(() {
                           task.justLoaded = false;
                         });
-                        tasksServices.taskStateChange(
-                            task.taskAddress, task.participant, 'audit', task.nanoId,
+                        tasksServices.taskStateChange(task.taskAddress, task.performer, 'audit', task.nanoId,
                             message: messageController!.text.isEmpty ? null : messageController!.text);
                         showDialog(
                             context: context,
                             builder: (context) => WalletAction(
-                              nanoId: task.nanoId,
-                              taskName: 'taskStateChange',
-                            ));
+                                  nanoId: task.nanoId,
+                                  taskName: 'taskStateChange',
+                                ));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(0.0),

@@ -233,11 +233,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerParticipate);
+                              tasksServices.runFilter(tasksServices.tasksPerformerParticipate, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerProgress);
+                              tasksServices.runFilter(tasksServices.tasksPerformerProgress, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(searchKeyword, tasksServices.tasksPerformerComplete);
+                              tasksServices.runFilter(tasksServices.tasksPerformerComplete, enteredKeyword: searchKeyword);
                             }
                           },
                           decoration: const InputDecoration(
@@ -361,7 +361,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                 //           context: context,
                 //           builder: (context) =>
                 //               TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+                //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
                 //       RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
                 //       Beamer.of(context).updateRouteInformation(routeInfo);
                 //     },
