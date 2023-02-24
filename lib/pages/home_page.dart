@@ -105,16 +105,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     //     vsync: this, duration: const Duration(milliseconds: 450));
   }
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  // final TextEditingController valueController = TextEditingController();
-
   @override
   void dispose() {
     super.dispose();
-    titleController.dispose();
-    descriptionController.dispose();
-    // valueController.dispose();
   }
 
   @override

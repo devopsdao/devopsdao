@@ -1057,8 +1057,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1221,13 +1221,26 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> runFilter(Map<EthereumAddress, Task> taskList, {String? enteredKeyword, List<String>? tagsList}) async {
-    enteredKeyword ??= '';
-    tagsList ??= [];
+  List<String> _tagsList = [];
+  List<String> get tagsList => _tagsList;
+  set tagsList(List<String> value) {
+    if (value != tagsList) {
+      _tagsList = value;
+      runFilter();
+    }
+  }
+
+  late Map<EthereumAddress, Task> lastTaskList = {};
+  late String lastEnteredKeyword = '';
+
+  Future<void> runFilter({Map<EthereumAddress, Task>? taskList, String? enteredKeyword}) async {
+    enteredKeyword??= lastEnteredKeyword;
+    taskList ??= lastTaskList;
+    // tagsList ??= [];
     filterResults.clear();
     print(enteredKeyword);
     // searchKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty && tagsList.isEmpty) {
+    if (enteredKeyword.isEmpty && _tagsList.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
       // for (EthereumAddress taskAddress in taskList.keys) {
@@ -1251,12 +1264,7 @@ class TasksServices extends ChangeNotifier {
         filterResultsPerformer = Map.from(taskList)..removeWhere((taskAddress, task) => !task.performer.toString().contains(enteredKeyword!));
         filterResultsAuditor = Map.from(taskList)..removeWhere((taskAddress, task) => !task.auditor.toString().contains(enteredKeyword!));
       }
-
-      // final filterResultsTags = Map.from(taskList)..removeWhere((taskAddress, task) => task.tags.toSet.intersection(tagsList!.toSet().length == 0));
-      // final filterResultsTagsNFT = Map.from(taskList)
-      //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
-
-      filterResults = {
+      Map<EthereumAddress, Task> filterResultsSearch = {
         ...filterResultsTitle,
         ...filterResultsDescription,
         ...filterResultsTaskAddress,
@@ -1266,14 +1274,28 @@ class TasksServices extends ChangeNotifier {
         // ...filterResultsTags,
         // ...filterResultsTagsNFT
       };
+
+      // filtering by TAGS:
+
+
+      filterResults = Map.from(filterResultsSearch)..removeWhere((taskAddress, task) =>
+          task.tags.toSet().intersection(_tagsList.toSet()).length == 0
+      );
+      print(filterResultsSearch);
+      // final filterResultsTagsNFT = Map.from(taskList)
+      //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
+
+
     }
     // Refresh the UI
     notifyListeners();
   }
 
+
   Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
     filterResults.clear();
     filterResults = Map.from(taskList);
+    lastTaskList = taskList;
   }
 
   // late bool loopRunning = false;
@@ -1926,6 +1948,7 @@ class TasksServices extends ChangeNotifier {
   //   int totalBatches = (taskList.length / batchSize).floor();
   //   int batchItemCount = 0;
   //   tasksLoaded = 0;
+
 
   //   for (var i = 0; i < taskList.length; i++) {
   //     try {

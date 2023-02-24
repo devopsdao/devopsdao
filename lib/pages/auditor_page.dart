@@ -84,6 +84,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    var searchServices = context.read<SearchServices>();
 
     Map tabs = {
       "requested": 0,
@@ -97,7 +98,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       tabIndex = tabs[task!.auditState];
     }
 
-    if (_searchKeywordController.text.isEmpty) {
+    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksAuditPending);
       } else if (tabIndex == 1) {
@@ -107,6 +108,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       } else if (tabIndex == 3) {
         tasksServices.resetFilter(tasksServices.tasksAuditComplete);
       }
+      searchServices.forbidSearchKeywordClear = false;
     }
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {}
 
@@ -245,13 +247,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(tasksServices.tasksAuditPending, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditPending, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(tasksServices.tasksAuditApplied, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(tasksServices.tasksAuditWorkingOn, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 3) {
-                              tasksServices.runFilter(tasksServices.tasksAuditComplete, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete, enteredKeyword: searchKeyword);
                             }
                           },
                           decoration: const InputDecoration(

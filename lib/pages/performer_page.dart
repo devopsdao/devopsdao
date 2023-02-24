@@ -80,6 +80,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    var searchServices = context.read<SearchServices>();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
@@ -91,7 +92,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       }
     }
 
-    if (_searchKeywordController.text.isEmpty) {
+    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
       } else if (tabIndex == 1) {
@@ -99,6 +100,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       } else if (tabIndex == 2) {
         tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
       }
+      searchServices.forbidSearchKeywordClear = false;
     }
 
     return Scaffold(
@@ -233,11 +235,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                           onChanged: (searchKeyword) {
                             print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(tasksServices.tasksPerformerParticipate, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(tasksServices.tasksPerformerProgress, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(tasksServices.tasksPerformerComplete, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete, enteredKeyword: searchKeyword);
                             }
                           },
                           decoration: const InputDecoration(

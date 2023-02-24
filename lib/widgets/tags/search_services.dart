@@ -13,28 +13,23 @@ class SearchServices extends ChangeNotifier {
   Map<String, SimpleTags> performerTagsList = {};
   Map<String, SimpleTags> createTagsList = {};
 
-  Map<EthereumAddress, Task> filterResults = {};
+  List<String> tagsListToPass = [];
+
+  // Map<EthereumAddress, Task> _filterResults = {};
+  // Map<EthereumAddress, Task> get filterResults => _filterResults;
+  // set filterResults(Map<EthereumAddress, Task> value) {
+  //   if (value != filterResults) {
+  //     _filterResults = value;
+  //     notifyListeners();
+  //     print(_filterResults);
+  //   }
+  // }
 
   // set filterResults(Map<EthereumAddress, Task> filterResults) {}
 
   // experimental future. ready allow to run taskService.runFilter
-  // late bool ready = false;
 
-
-  Future updateTagList(list, {required String page}) async {
-    if (page == 'auditor') {
-      auditorTagsList = list;
-    } else if (page == 'tasks') {
-      tasksTagsList = list;
-    } else if (page == 'customer') {
-      customerTagsList = list;
-    } else if (page == 'performer') {
-      performerTagsList = list;
-    } else if (page == 'create') {
-      createTagsList = list;
-    }
-    notifyListeners();
-  }
+  late bool forbidSearchKeywordClear = false;
 
   Future removeTag(tagName, {required String page}) async {
     if (page == 'auditor') {
@@ -48,6 +43,31 @@ class SearchServices extends ChangeNotifier {
     } else if (page == 'create') {
       createTagsList.removeWhere((key, value) => value.tag == tagName);
     }
+    // always remove from main filter list:
+    tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
+    updateTagList(page: page);
+  }
+
+  Future updateTagList({required String page}) async {
+    late Map<String, SimpleTags> list = {};
+    tagsFilterResults.entries.map((e) {
+      if(e.value.selected) {
+        list[e.value.tag] = e.value;
+      }
+    }).toList();
+
+    if (page == 'auditor') {
+      auditorTagsList = list;
+    } else if (page == 'tasks') {
+      tasksTagsList = list;
+    } else if (page == 'customer') {
+      customerTagsList = list;
+    } else if (page == 'performer') {
+      performerTagsList = list;
+    } else if (page == 'create') {
+      createTagsList = list;
+    }
+    tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();
   }
 

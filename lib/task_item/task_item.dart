@@ -166,7 +166,7 @@ class _TaskItemState extends State<TaskItem> {
                                 theme: 'small-white',
                                 item: e,
                                 delete: false,
-                                page: 'create'
+                                page: 'items'
                               );
                             }).toList()
                           ),

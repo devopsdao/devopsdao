@@ -87,6 +87,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    var searchServices = context.read<SearchServices>();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
@@ -116,8 +117,9 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       // }
     }
 
-    if (_searchKeywordController.text.isEmpty) {
+    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
       changeTab(tabIndex, 0.0); //temp disable
+      searchServices.forbidSearchKeywordClear = false;
       // if (tabIndex == 0) {
       //   tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
       // } else if (tabIndex == 1) {
@@ -126,10 +128,6 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       //   tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
       // }
     }
-    // late Throttling debounceChangeTab0 = Throttling(duration: const Duration(milliseconds: 2000));
-    // late Throttling debounceChangeTab1 = Throttling(duration: const Duration(milliseconds: 2000));
-    // late Throttling debounceChangeTab2 = Throttling(duration: const Duration(milliseconds: 2000));
-    // late Throttling debounceChangeTab3 = Throttling(duration: const Duration(milliseconds: 2000));
 
     return Scaffold(
         key: scaffoldKey,
@@ -265,11 +263,11 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                 controller: _searchKeywordController,
                                 onChanged: (searchKeyword) {
                                   if (tabIndex == 0) {
-                                    tasksServices.runFilter(tasksServices.tasksCustomerSelection, enteredKeyword: searchKeyword, tagsList: localTagsList);
+                                    tasksServices.runFilter(taskList: tasksServices.tasksCustomerSelection, enteredKeyword: searchKeyword);
                                   } else if (tabIndex == 1) {
-                                    tasksServices.runFilter(tasksServices.tasksCustomerProgress, enteredKeyword: searchKeyword, tagsList: localTagsList);
+                                    tasksServices.runFilter(taskList: tasksServices.tasksCustomerProgress, enteredKeyword: searchKeyword);
                                   } else if (tabIndex == 2) {
-                                    tasksServices.runFilter(tasksServices.tasksCustomerComplete, enteredKeyword: searchKeyword, tagsList: localTagsList);
+                                    tasksServices.runFilter(taskList: tasksServices.tasksCustomerComplete, enteredKeyword: searchKeyword);
                                   }
                                 },
                                 decoration: const InputDecoration(
@@ -315,7 +313,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                           ],
                         ),
                         Consumer<SearchServices>(builder: (context, model, child) {
-                          localTagsList = model.customerTagsList.entries.map((e) => e.value.tag).toList();
+                          // localTagsList = model.customerTagsList.entries.map((e) => e.value.tag).toList();
                           // if (model.ready) {
                           //   tasksServices.runFilter(
                           //     tasksServices.tasksNew,
@@ -326,12 +324,18 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                           // }
 
                           return Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: model.customerTagsList.entries.map((e) {
-                                return WrappedChip(
-                                    interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'customer');
-                              }).toList());
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.customerTagsList.entries.map((e) {
+                              return WrappedChip(
+                                interactive: true,
+                                key: ValueKey(e.value),
+                                theme: 'black',
+                                item: e.value,
+                                delete: true,
+                                page: 'customer'
+                              );
+                            }).toList());
                         }),
                         tasksServices.isLoading
                             ? const LoadIndicator()

@@ -141,7 +141,7 @@ class _AccountsPageState extends State<AccountsPage> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(tasksServices.tasksNew, enteredKeyword: searchKeyword);
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',

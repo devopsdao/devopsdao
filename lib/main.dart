@@ -39,7 +39,13 @@ void main() async {
         //   update: (_, tasksServices, searchServices) {
         //     return searchServices!..filterResults = tasksServices.filterResults;
         //   },
-        // )
+        // ),
+        ChangeNotifierProxyProvider<SearchServices, TasksServices>(
+          create: (_) => TasksServices(),
+          update: (_, searchServices, tasksServices) {
+            return tasksServices!..tagsList = searchServices.tagsListToPass;
+          },
+        )
       ],
       child: MyApp(),
     ),

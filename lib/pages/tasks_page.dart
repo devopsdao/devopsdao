@@ -82,11 +82,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    var searchServices = context.read<SearchServices>();
 
     bool isFloatButtonVisible = false;
-    if (_searchKeywordController.text.isEmpty) {
+    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
       tasksServices.resetFilter(tasksServices.tasksNew);
+      searchServices.forbidSearchKeywordClear = false;
     }
+
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
     }
@@ -188,7 +191,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(tasksServices.tasksNew, enteredKeyword: searchKeyword, tagsList: localTagsList);
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
