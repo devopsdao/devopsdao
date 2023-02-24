@@ -11,6 +11,8 @@ import 'package:js/js.dart' if (dart.library.io) 'package:webthree/src/browser/j
 
 import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/browser/js_util_stub.dart' if (dart.library.js) 'package:js/js_util.dart';
 
+import 'package:week_of_year/week_of_year.dart';
+
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:throttling/throttling.dart';
@@ -179,6 +181,22 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerSelection = {};
   Map<EthereumAddress, Task> tasksCustomerProgress = {};
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
+
+  Map<String, int> statsCreateTimeListCounts = {};
+  Map<String, int> statsTaskTypeListCounts = {};
+  Map<String, int> statsTagsListCounts = {};
+  Map<String, int> statsTagsNFTListCounts = {};
+  Map<String, int> statsTaskStateListCounts = {};
+  Map<String, int> statsAuditStateListCounts = {};
+  Map<String, int> statsRatingListCounts = {};
+  Map<String, int> statsContractOwnerListCounts = {};
+  Map<String, int> statsPerformerListCounts = {};
+  Map<String, int> statsParticipantsListCounts = {};
+  Map<String, int> statsFundersListCounts = {};
+  Map<String, int> statsAuditorListCounts = {};
+  Map<String, int> statsAuditorsListCounts = {};
+  Map<String, int> statsTokenNamesListCounts = {};
+  Map<String, int> statsTokenValuesListCounts = {};
 
   Map<String, Account> accountsTemp = {
     '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
@@ -1332,21 +1350,6 @@ class TasksServices extends ChangeNotifier {
   Future<Map<EthereumAddress, Task>> getTasksData(List<EthereumAddress> taskAddresses) async {
     Map<EthereumAddress, Task> tasks = {};
     final rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
-    late List createTimeList = [];
-    late List taskTypeList = [];
-    late List tagsList = [];
-    late List tagsNFTList = [];
-    late List taskStateList = [];
-    late List auditStateList = [];
-    late List ratingList = [];
-    late List contractOwnerList = [];
-    late List performerList = [];
-    late List participantsList = [];
-    late List fundersList = [];
-    late List auditorList = [];
-    late List auditorsList = [];
-    late List tokenNamesList = [];
-    late List tokenValuesList = [];
     late int i = 0;
     for (final task in rawTasksList) {
       // print('Task loaded: ${task.title}');
@@ -1381,25 +1384,134 @@ class TasksServices extends ChangeNotifier {
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
       tasks[taskAddresses[i]] = taskObject;
       i++;
-
-      // createTimeList.add(taskObject.createTime);
-      // taskTypeList.add(taskObject.taskType);
-      // tagsList.addAll([for (var list in taskObject.tags) ...list]);
-      // tagsNFTList.addAll([for (var list in taskObject.tagsNFT) ...list]);
-      // taskStateList.add(taskObject.taskState);
-      // auditStateList.add(taskObject.auditState);
-      // ratingList.add(taskObject.rating);
-      // contractOwnerList.add(taskObject.contractOwner);
-      // performerList.add(taskObject.performer);
-      // participantsList.addAll([for (var list in taskObject.participants) ...list]);
-      // fundersList.addAll([for (var list in taskObject.funders) ...list]);
-      // auditorList.add(taskObject.auditor);
-      // auditorsList.addAll([for (var list in taskObject.auditors) ...list]);
-      // tokenNamesList.add(taskObject.tokenNames);
-      // tokenValuesList.add(taskObject.tokenValues);
     }
 
     return tasks;
+  }
+
+  Future<Map<String, Map<EthereumAddress, Task>>> getTasksDateMap(Map<EthereumAddress, Task> tasks) async {
+    late Map<String, Map<EthereumAddress, Task>> tasksDateMap = {};
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final taskContract in tasks.keys) {
+      String taskDate = DateFormat('yyyy-MM-dd').format(tasks[taskContract]!.createTime);
+      tasksDateMap[taskDate]![taskContract] = tasks[taskContract]!;
+    }
+
+    return tasksDateMap;
+  }
+
+  Future<Map<String, Map<EthereumAddress, Task>>> getTasksWeekMap(Map<EthereumAddress, Task> tasks) async {
+    late Map<String, Map<EthereumAddress, Task>> tasksDateMap = {};
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final taskContract in tasks.keys) {
+      String taskDateWeek = tasks[taskContract]!.createTime.weekOfYear.toString();
+      tasksDateMap[taskDateWeek]![taskContract] = tasks[taskContract]!;
+    }
+
+    return tasksDateMap;
+  }
+
+  Future<Map<String, Map<EthereumAddress, Task>>> getTasksMonthMap(Map<EthereumAddress, Task> tasks) async {
+    late Map<String, Map<EthereumAddress, Task>> tasksDateMap = {};
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final taskContract in tasks.keys) {
+      String taskDateMonth = DateFormat('yyyy-MM').format(tasks[taskContract]!.createTime);
+      tasksDateMap[taskDateMonth]![taskContract] = tasks[taskContract]!;
+    }
+
+    return tasksDateMap;
+  }
+
+  Future<Map<String, Map<String, int>>> getTasksStats(Map<EthereumAddress, Task> tasks) async {
+    late List createTimeList = [];
+    late List taskTypeList = [];
+    late List tagsList = [];
+    late List tagsNFTList = [];
+    late List taskStateList = [];
+    late List auditStateList = [];
+    late List ratingList = [];
+    late List contractOwnerList = [];
+    late List performerList = [];
+    late List participantsList = [];
+    late List fundersList = [];
+    late List auditorList = [];
+    late List auditorsList = [];
+    late List tokenNamesList = [];
+    late List tokenValuesList = [];
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final task in tasks.values) {
+      String taskDate = DateFormat('yyyy-MM-dd').format(task.createTime);
+      // taskStatsLists[taskDate]!.add(task);
+      createTimeList.add(taskDate);
+      taskTypeList.add(task.taskType);
+      tagsList.addAll(task.tags);
+      tagsNFTList.addAll(task.tagsNFT);
+      taskStateList.add(task.taskState);
+      auditStateList.add(task.auditState);
+      ratingList.add(task.rating);
+      contractOwnerList.add(task.contractOwner);
+      performerList.add(task.performer);
+      participantsList.addAll(task.participants);
+      fundersList.addAll(task.funders);
+      auditorList.add(task.auditor);
+      auditorsList.addAll(task.auditors);
+      tokenNamesList.add(task.tokenNames);
+      tokenValuesList.add(task.tokenValues);
+    }
+
+    // tagsList.map((e) {
+    //   return statsTagsListCounts.containsKey(e) ? statsTagsListCounts[e]++ : statsTagsListCounts[e] = 1;
+    // });
+
+    // print(statsTagsListCounts);
+
+    Map<String, Map<String, int>> stats = {};
+
+    stats['statsCreateTimeListCounts'] = countOccurences(createTimeList);
+    stats['statsTaskTypeListCounts'] = countOccurences(taskTypeList);
+    stats['statsTagsListCounts'] = countOccurences(tagsList);
+    stats['statsTagsNFTListCounts'] = countOccurences(tagsNFTList);
+    stats['statsTaskStateListCounts'] = countOccurences(taskStateList);
+    stats['statsAuditStateListCounts'] = countOccurences(auditStateList);
+    stats['statsRatingListCounts'] = countOccurences(ratingList);
+    stats['statsContractOwnerListCounts'] = countOccurences(contractOwnerList);
+    stats['statsPerformerListCounts'] = countOccurences(performerList);
+    stats['statsParticipantsListCounts'] = countOccurences(participantsList);
+    stats['statsFundersListCounts'] = countOccurences(fundersList);
+    stats['statsAuditorListCounts'] = countOccurences(auditorList);
+    stats['statsAuditorsListCounts'] = countOccurences(auditorsList);
+    stats['statsTokenNamesListCounts'] = countOccurences(tokenNamesList);
+    stats['statsTokenValuesListCounts'] = countOccurences(tokenValuesList);
+    return stats;
+  }
+
+  countOccurences(list) {
+    Map<String, int> map = {};
+    for (var i in list) {
+      if (!map.containsKey(i)) {
+        map[i.toString()] = 1;
+      } else {
+        map[i] = map[i]! + 1;
+      }
+    }
+    return map;
+  }
+
+  countOccurencesDate(List<DateTime> list) {
+    Map<String, int> map = {};
+    for (var i in list) {
+      final String date = DateFormat('yyyy-MM-dd').format(i);
+      if (!map.containsKey(i)) {
+        map[date.toString()] = 1;
+      } else {
+        map[date] = map[date]! + 1;
+      }
+    }
+    return map;
   }
 
   Future<Task> loadOneTask(taskAddress) async {
@@ -1774,6 +1886,28 @@ class TasksServices extends ChangeNotifier {
 
     for (Task task in tasks.values) {
       await refreshTask(task);
+    }
+
+    Map<String, Map<String, int>> totalStats = await getTasksStats(tasks);
+    print(statsTagsListCounts);
+
+    Map<String, Map<EthereumAddress, Task>> tasksDateMap = await getTasksDateMap(tasks);
+    Map<String, Map<EthereumAddress, Task>> tasksWeekMap = await getTasksWeekMap(tasks);
+    Map<String, Map<EthereumAddress, Task>> tasksMonthMap = await getTasksMonthMap(tasks);
+
+    late Map<String, Map<String, Map<String, int>>> dailyStats = {};
+    for (String taskDate in tasksDateMap.keys) {
+      dailyStats[taskDate] = await getTasksStats(tasksDateMap[taskDate]!);
+    }
+
+    late Map<String, Map<String, Map<String, int>>> weeklyStats = {};
+    for (String taskDate in tasksDateMap.keys) {
+      weeklyStats[taskDate] = await getTasksStats(tasksWeekMap[taskDate]!);
+    }
+
+    late Map<String, Map<String, Map<String, int>>> monthlyStats = {};
+    for (String taskDate in tasksDateMap.keys) {
+      monthlyStats[taskDate] = await getTasksStats(tasksMonthMap[taskDate]!);
     }
 
     // Final Score Calculation

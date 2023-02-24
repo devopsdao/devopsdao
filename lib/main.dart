@@ -26,6 +26,7 @@ void main() async {
   // beamerDelegate.beamToNamed('/tasks/1');
 
   // runApp(MyApp());
+  var taskServices = TasksServices();
 
   runApp(
     MultiProvider(
