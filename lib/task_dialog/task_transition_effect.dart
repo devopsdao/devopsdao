@@ -6,6 +6,7 @@ import 'package:webthree/credentials.dart';
 
 import '../account_dialog/main.dart';
 import '../blockchain/accounts.dart';
+import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../widgets/account_item.dart';
 import '../widgets/data_loading_dialog.dart';
@@ -23,16 +24,18 @@ class TaskTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     // final String fromPage = fromPage;
     // final int index = index;
-
     var tasksServices = context.watch<TasksServices>();
+
+    final Task task = tasksServices.filterResults.values.toList()[index];
+
     return OpenContainer(
       transitionType: _transitionType2,
       openBuilder: (BuildContext context, VoidCallback _) {
-        final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress.toString();
+        final String taskAddress = task.taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
         Beamer.of(context).updateRouteInformation(routeInfo);
         return TaskDialogFuture(
-            fromPage: fromPage, taskAddress: tasksServices.filterResults.values.toList()[index].taskAddress, shimmerEnabled: true);
+            fromPage: fromPage, taskAddress: task.taskAddress, shimmerEnabled: true);
       },
       transitionDuration: const Duration(milliseconds: 400),
       closedElevation: 0,
@@ -46,7 +49,7 @@ class TaskTransition extends StatelessWidget {
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return TaskItem(
           fromPage: fromPage,
-          object: tasksServices.filterResults.values.toList()[index],
+          object: task,
         );
       },
     );

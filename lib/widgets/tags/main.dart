@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:devopsdao/widgets/tags/search_services.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
+import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:devopsdao/widgets/tags/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
@@ -44,7 +44,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
   Widget build(BuildContext context) {
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
-    // var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
     if (widget.page == 'audit') {
       tagsLocalList = searchServices.auditorTagsList;
     } else if (widget.page == 'tasks') {
@@ -242,7 +242,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 theme: 'white',
                                 item: e.value,
                                 delete: false,
-                                page: widget.page,
+                                page: 'selection',
                                 animation: false,
                                 mint: true,
                               );
@@ -275,14 +275,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
               callback: () {
-                late Map<String, SimpleTags> map = {};
-                searchServices.tagsFilterResults.entries.map((e) {
-                  if(e.value.selected) {
-                    map[e.value.tag] = e.value;
-                  }
-                }).toList();
-                searchServices.updateTagList(map, page: widget.page);
+                searchServices.updateTagList(page: widget.page);
+                searchServices.forbidSearchKeywordClear = true;
+                // searchServices.ready = true;
                 Navigator.pop(context);
+                // setState(() {});
               },
             ),
           ),

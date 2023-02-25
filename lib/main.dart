@@ -35,10 +35,16 @@ void main() async {
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
-        ChangeNotifierProxyProvider<TasksServices, SearchServices>(
-          create: (_) => SearchServices(),
-          update: (_, tasksServices, searchServices) {
-            return searchServices!..filterResults = tasksServices.filterResults;
+        // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
+        //   create: (_) => SearchServices(),
+        //   update: (_, tasksServices, searchServices) {
+        //     return searchServices!..filterResults = tasksServices.filterResults;
+        //   },
+        // ),
+        ChangeNotifierProxyProvider<SearchServices, TasksServices>(
+          create: (_) => TasksServices(),
+          update: (_, searchServices, tasksServices) {
+            return tasksServices!..tagsList = searchServices.tagsListToPass;
           },
         )
       ],

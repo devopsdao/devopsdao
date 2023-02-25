@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../task_dialog/states.dart';
-import '../widgets/tags/tags.dart';
+import '../widgets/tags/tags_old.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:jovial_svg/jovial_svg.dart';
 
@@ -11,7 +11,7 @@ import 'package:jovial_svg/jovial_svg.dart';
 // import 'abi/IERC20.g.dart';
 
 class InterfaceServices extends ChangeNotifier {
-  // Payments goes here (create_job_widget.dart -> payment.dart):
+  // Payments goes here (create_job.dart.old -> payment.dart):
   late double tokensEntered = 0.0;
 
   // ************* Transport Images ****** //
@@ -96,54 +96,54 @@ class InterfaceServices extends ChangeNotifier {
   late TextSpan statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
 
   // ***********  tags  ************ ////
-  late List<SimpleTags> tempTagsList = [
-    SimpleTags(tag: "Dart", icon: "", nft: true),
-    SimpleTags(tag: "Flutter", icon: "", nft: true),
-    SimpleTags(tag: "Solidity", icon: "", nft: true),
-    SimpleTags(tag: "Diamond", icon: "", nft: true),
-    SimpleTags(tag: "Web3", icon: "", nft: true),
-  ];
-  late List<SimpleTags> tempTagsListForTask = [
-    SimpleTags(tag: "Dart", icon: "", nft: true),
-    SimpleTags(tag: "Solidity", icon: ""),
-    SimpleTags(tag: "Flutter", icon: "", nft: true),
-    SimpleTags(tag: "Diamond", icon: ""),
-    SimpleTags(tag: "Web3", icon: ""),
-  ];
-  late List<SimpleTags> auditorTagsList = [];
-  late List<SimpleTags> tasksTagsList = [];
-  late List<SimpleTags> customerTagsList = [];
-  late List<SimpleTags> performerTagsList = [];
-  late List<SimpleTags> createTagsList = [];
-  Future updateTagList(list, {required String page}) async {
-    if (page == 'auditor') {
-      auditorTagsList = list;
-    } else if (page == 'tasks') {
-      tasksTagsList = list;
-    } else if (page == 'customer') {
-      customerTagsList = list;
-    } else if (page == 'performer') {
-      performerTagsList = list;
-    } else if (page == 'create') {
-      createTagsList = list;
-    }
-    notifyListeners();
-  }
-
-  Future removeTag(tagName, {required String page}) async {
-    if (page == 'auditor') {
-      auditorTagsList.removeWhere((item) => item.tag == tagName);
-    } else if (page == 'tasks') {
-      tasksTagsList.removeWhere((item) => item.tag == tagName);
-    } else if (page == 'customer') {
-      customerTagsList.removeWhere((item) => item.tag == tagName);
-    } else if (page == 'performer') {
-      performerTagsList.removeWhere((item) => item.tag == tagName);
-    } else if (page == 'create') {
-      createTagsList.removeWhere((item) => item.tag == tagName);
-    }
-    notifyListeners();
-  }
+  // late List<SimpleTags> tempTagsList = [
+  //   SimpleTags(tag: "Dart", icon: "", nft: true),
+  //   SimpleTags(tag: "Flutter", icon: "", nft: true),
+  //   SimpleTags(tag: "Solidity", icon: "", nft: true),
+  //   SimpleTags(tag: "Diamond", icon: "", nft: true),
+  //   SimpleTags(tag: "Web3", icon: "", nft: true),
+  // ];
+  // late List<SimpleTags> tempTagsListForTask = [
+  //   SimpleTags(tag: "Dart", icon: "", nft: true),
+  //   SimpleTags(tag: "Solidity", icon: ""),
+  //   SimpleTags(tag: "Flutter", icon: "", nft: true),
+  //   SimpleTags(tag: "Diamond", icon: ""),
+  //   SimpleTags(tag: "Web3", icon: ""),
+  // ];
+  // late List<SimpleTags> auditorTagsList = [];
+  // late List<SimpleTags> tasksTagsList = [];
+  // late List<SimpleTags> customerTagsList = [];
+  // late List<SimpleTags> performerTagsList = [];
+  // late List<SimpleTags> createTagsList = [];
+  // Future updateTagList(list, {required String page}) async {
+  //   if (page == 'auditor') {
+  //     auditorTagsList = list;
+  //   } else if (page == 'tasks') {
+  //     tasksTagsList = list;
+  //   } else if (page == 'customer') {
+  //     customerTagsList = list;
+  //   } else if (page == 'performer') {
+  //     performerTagsList = list;
+  //   } else if (page == 'create') {
+  //     createTagsList = list;
+  //   }
+  //   notifyListeners();
+  // }
+  //
+  // Future removeTag(tagName, {required String page}) async {
+  //   if (page == 'auditor') {
+  //     auditorTagsList.removeWhere((item) => item.tag == tagName);
+  //   } else if (page == 'tasks') {
+  //     tasksTagsList.removeWhere((item) => item.tag == tagName);
+  //   } else if (page == 'customer') {
+  //     customerTagsList.removeWhere((item) => item.tag == tagName);
+  //   } else if (page == 'performer') {
+  //     performerTagsList.removeWhere((item) => item.tag == tagName);
+  //   } else if (page == 'create') {
+  //     createTagsList.removeWhere((item) => item.tag == tagName);
+  //   }
+  //   notifyListeners();
+  // }
 
   // ****** SETTINGS ******** //
   // border radius:

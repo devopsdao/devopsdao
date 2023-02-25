@@ -8,7 +8,7 @@ import '../blockchain/task.dart';
 import '../blockchain/task_services.dart';
 import '../flutter_flow/theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
-import '../widgets/tags/tags.dart';
+import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import 'delete_item_alert.dart';
 
@@ -157,12 +157,19 @@ class _TaskItemState extends State<TaskItem> {
                         return SizedBox(
                           width: width,
                           child: Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: tags.map((e) {
-                                return WrappedChip(
-                                    interactive: false, key: ValueKey(e), theme: 'small-white', item: e, delete: false, page: 'create');
-                              }).toList()),
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: tags.map((e) {
+                              return WrappedChip(
+                                interactive: false,
+                                key: ValueKey(e),
+                                theme: 'small-white',
+                                item: e,
+                                delete: false,
+                                page: 'items'
+                              );
+                            }).toList()
+                          ),
                         );
                       }))
                     ],

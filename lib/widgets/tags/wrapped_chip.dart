@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
+import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
@@ -179,6 +179,38 @@ late bool initDone = false;
     //
     // }
 
+    onTapGesture() {
+      setState(() {
+        if (widget.delete) {
+          _controller.reverse();
+          widget.onDeleted?.call();
+          Future.delayed(
+              const Duration(milliseconds: 750), () {
+            searchServices.removeTag(item.tag, page: widget.page, );
+          });
+          // searchServices.updateTagList(page: widget.page);
+        } else if(widget.page == 'selection') {
+          for (String key in searchServices.tagsFilterResults.keys) {
+            if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
+                item.tag.toLowerCase()) {
+              searchServices.tagsFilterResults[key]!.selected ?
+              searchServices.tagsFilterResults[key]!.selected = false :
+              searchServices.tagsFilterResults[key]!.selected = true;
+            }
+          }
+        }
+      });
+      // if (item.selected) {
+      //   _expandEffectController.forward();
+      //   Future.delayed(
+      //       const Duration(milliseconds: 350), () {
+      //
+      //   });
+      // } else {
+      //   _expandEffectController.reverse();
+      // }
+    }
+
 
     return ScaleTransition(
       scale: _animation,
@@ -244,37 +276,9 @@ late bool initDone = false;
                     ),
                   ),
 
+                  // Gesture for TEXT field
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (widget.delete) {
-                          _controller.reverse();
-                          widget.onDeleted?.call();
-                          Future.delayed(
-                              const Duration(milliseconds: 750), () {
-                            searchServices.removeTag(item.tag, page: widget.page, );
-                          });
-                        } else {
-                          for (String key in searchServices.tagsFilterResults.keys) {
-                            if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
-                                item.tag.toLowerCase()) {
-                              searchServices.tagsFilterResults[key]!.selected ?
-                              searchServices.tagsFilterResults[key]!.selected = false :
-                              searchServices.tagsFilterResults[key]!.selected = true;
-                            }
-                          }
-                        }
-                      });
-                      // if (item.selected) {
-                      //   _expandEffectController.forward();
-                      //   Future.delayed(
-                      //       const Duration(milliseconds: 350), () {
-                      //
-                      //   });
-                      // } else {
-                      //   _expandEffectController.reverse();
-                      // }
-                    },
+                    onTap: onTapGesture,
                     child: Text(
                       item.tag,
                       style: DodaoTheme.of(context).bodyText3.override(
@@ -286,43 +290,14 @@ late bool initDone = false;
                     ),
                   ),
 
-
+                  // Close button
                   Flexible(
                     child: AnimatedOpacity(
                       duration: const Duration(milliseconds:  400),
                       opacity: item.selected ? 1.0 : 0.0,
                       curve: Curves.easeInQuad,
                       child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (widget.delete) {
-                              _controller.reverse();
-                              widget.onDeleted?.call();
-                              Future.delayed(
-                                  const Duration(milliseconds: 750), () {
-                                searchServices.removeTag(item.tag, page: widget.page, );
-                              });
-                            } else {
-                              for (String key in searchServices.tagsFilterResults.keys) {
-                                if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
-                                    item.tag.toLowerCase()) {
-                                  searchServices.tagsFilterResults[key]!.selected ?
-                                  searchServices.tagsFilterResults[key]!.selected = false :
-                                  searchServices.tagsFilterResults[key]!.selected = true;
-                                }
-                              }
-                            }
-                          });
-                          // if (item.selected) {
-                          //   _expandEffectController.forward();
-                          //   Future.delayed(
-                          //       const Duration(milliseconds: 350), () {
-                          //
-                          //   });
-                          // } else {
-                          //   _expandEffectController.reverse();
-                          // }
-                        },
+                        onTap: onTapGesture,
                         child: Padding(
                           padding: item.selected ? leftSpanPadding :const EdgeInsets.only(left: 0),
                           child: Icon(Icons.clear_rounded, size: item.selected ? iconSize : 0, color: textColor),

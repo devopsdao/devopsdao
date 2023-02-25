@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:devopsdao/widgets/tags/tags.dart';
+import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart';
@@ -74,7 +74,7 @@ class TagCallButton extends StatelessWidget {
           openBuilder: (BuildContext context, VoidCallback _) {
             return Container(
                 color: Colors.white,
-                child: TagsPage(page: page)
+                child: MainTagsPage(page: page)
             );
           },
           closedElevation: 0,

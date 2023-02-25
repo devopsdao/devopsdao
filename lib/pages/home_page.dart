@@ -5,9 +5,9 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
-import '../create_job/create_job_as_page.dart';
+import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
-import '../create_job/create_job_widget.dart';
+import '../create_job/create_job.dart.old';
 import '../widgets/loading.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:devopsdao/blockchain/task_services.dart';
 
 import '../wallet/main.dart';
-import '../widgets/tags/tags.dart';
+import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -105,16 +105,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     //     vsync: this, duration: const Duration(milliseconds: 450));
   }
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  // final TextEditingController valueController = TextEditingController();
-
   @override
   void dispose() {
     super.dispose();
-    titleController.dispose();
-    descriptionController.dispose();
-    // valueController.dispose();
   }
 
   @override

@@ -11,7 +11,7 @@ import '../../blockchain/task_services.dart';
 import '../../flutter_flow/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/select_menu.dart';
-import '../../widgets/tags/tags.dart';
+import '../../widgets/tags/tags_old.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 import '../buttons.dart';
 

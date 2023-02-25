@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../account_dialog/account_transition_effect.dart';
 import '../blockchain/interface.dart';
 import '../task_dialog/beamer.dart';
+import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_call_button.dart';
 import '/blockchain/task_services.dart';
@@ -140,7 +141,7 @@ class _AccountsPageState extends State<AccountsPage> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(tasksServices.tasksNew, enteredKeyword: searchKeyword);
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword);
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -184,16 +185,16 @@ class _AccountsPageState extends State<AccountsPage> {
                       ),
                     ],
                   ),
-                  Consumer<InterfaceServices>(builder: (context, model, child) {
+                  Consumer<SearchServices>(builder: (context, model, child) {
                     return Wrap(
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
-                        children: model.tasksTagsList.map((e) {
+                        children: model.tasksTagsList.entries.map((e) {
                           return WrappedChip(
                               interactive: true,
-                              key: ValueKey(e),
+                              key: ValueKey(e.value),
                               theme: 'black',
-                              item: e,
+                              item: e.value,
                               // callback: () {
                               //   model.removeTag(i.tag);
                               // },
