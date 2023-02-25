@@ -226,12 +226,50 @@
   {
     "inputs": [
       {
+        "internalType": "address[]",
+        "name": "contractOwners",
+        "type": "address[]"
+      }
+    ],
+    "name": "getTaskContractsCustomers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "participant",
         "type": "address"
       }
     ],
     "name": "getTaskContractsPerformer",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "participants",
+        "type": "address[]"
+      }
+    ],
+    "name": "getTaskContractsPerformers",
     "outputs": [
       {
         "internalType": "address[]",

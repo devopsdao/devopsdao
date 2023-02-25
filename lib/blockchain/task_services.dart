@@ -182,6 +182,8 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerProgress = {};
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
+  Map<String, Account> accountsData = {};
+
   Map<String, int> statsCreateTimeListCounts = {};
   Map<String, int> statsTaskTypeListCounts = {};
   Map<String, int> statsTagsListCounts = {};
@@ -198,16 +200,16 @@ class TasksServices extends ChangeNotifier {
   Map<String, int> statsTokenNamesListCounts = {};
   Map<String, int> statsTokenValuesListCounts = {};
 
-  Map<String, Account> accountsTemp = {
-    '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
-    '2': Account(
-        nickName: 'MyNameIsC',
-        about: 'about super puper MyNameIsC',
-        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
-        rating: 12),
-    '3': Account(
-        nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
-  };
+  // Map<String, Account> accountsTemp = {
+  //   '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
+  //   '2': Account(
+  //       nickName: 'MyNameIsC',
+  //       about: 'about super puper MyNameIsC',
+  //       walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
+  //       rating: 12),
+  //   '3': Account(
+  //       nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
+  // };
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
@@ -1095,6 +1097,8 @@ class TasksServices extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 200));
     await monitorEvents();
 
+    accountsData = await getAccountsData();
+
     // fees = await _web3client.getGasInEIP1559();
     // print(fees);
     // print("maxFeePerGas: ${fees['medium'].maxFeePerGas}");
@@ -1395,6 +1399,9 @@ class TasksServices extends ChangeNotifier {
 
     for (final taskContract in tasks.keys) {
       String taskDate = DateFormat('yyyy-MM-dd').format(tasks[taskContract]!.createTime);
+      if (tasksDateMap[taskDate] == null) {
+        tasksDateMap[taskDate] = {};
+      }
       tasksDateMap[taskDate]![taskContract] = tasks[taskContract]!;
     }
 
@@ -1407,6 +1414,9 @@ class TasksServices extends ChangeNotifier {
 
     for (final taskContract in tasks.keys) {
       String taskDateWeek = tasks[taskContract]!.createTime.weekOfYear.toString();
+      if (tasksDateMap[taskDateWeek] == null) {
+        tasksDateMap[taskDateWeek] = {};
+      }
       tasksDateMap[taskDateWeek]![taskContract] = tasks[taskContract]!;
     }
 
@@ -1419,6 +1429,9 @@ class TasksServices extends ChangeNotifier {
 
     for (final taskContract in tasks.keys) {
       String taskDateMonth = DateFormat('yyyy-MM').format(tasks[taskContract]!.createTime);
+      if (tasksDateMap[taskDateMonth] == null) {
+        tasksDateMap[taskDateMonth] = {};
+      }
       tasksDateMap[taskDateMonth]![taskContract] = tasks[taskContract]!;
     }
 
@@ -1901,13 +1914,13 @@ class TasksServices extends ChangeNotifier {
     }
 
     late Map<String, Map<String, Map<String, int>>> weeklyStats = {};
-    for (String taskDate in tasksDateMap.keys) {
-      weeklyStats[taskDate] = await getTasksStats(tasksWeekMap[taskDate]!);
+    for (String taskDateWeek in tasksWeekMap.keys) {
+      weeklyStats[taskDateWeek] = await getTasksStats(tasksWeekMap[taskDateWeek]!);
     }
 
     late Map<String, Map<String, Map<String, int>>> monthlyStats = {};
-    for (String taskDate in tasksDateMap.keys) {
-      monthlyStats[taskDate] = await getTasksStats(tasksMonthMap[taskDate]!);
+    for (String taskDateMonth in tasksMonthMap.keys) {
+      monthlyStats[taskDateMonth] = await getTasksStats(tasksMonthMap[taskDateMonth]!);
     }
 
     // Final Score Calculation
@@ -2015,9 +2028,23 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAccountsData() async {
-    // List<EthereumAddress> accountsList = await getAccountsList();
-    // final differenceSet1 = characters1.difference(characters2);
+  Future<Map<String, Account>> getAccountsData() async {
+    List<EthereumAddress> accountsList = await getAccountsList();
+    List accountsDataList = await taskDataFacet.getAccountsData(accountsList);
+
+    Map<String, Account> accountsData = {};
+    for (final accountData in accountsDataList) {
+      accountsData[accountData[0].toString()] = Account(
+          nickName: 'asdf',
+          about: 'asdf',
+          walletAddress: accountData[0],
+          customerTasks: accountData[1].cast<EthereumAddress>(),
+          participantTasks: accountData[2].cast<EthereumAddress>(),
+          auditParticipantTasks: accountData[3].cast<EthereumAddress>(),
+          customerRating: accountData[4].cast<int>(),
+          performerRating: accountData[5].cast<int>());
+    }
+    return accountsData;
   }
 
   Future<List<EthereumAddress>> getAccountsList() async {
@@ -2031,6 +2058,18 @@ class TasksServices extends ChangeNotifier {
     return taskListReversed;
   }
 
+  Future<List> getTaskListCustomers(List<EthereumAddress> publicAddresses) async {
+    List taskList = await taskDataFacet.getTaskContractsCustomers(publicAddresses);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListPerformers(List<EthereumAddress> publicAddresses) async {
+    List taskList = await taskDataFacet.getTaskContractsPerformers(publicAddresses);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
   Future<List> getTaskListCustomer(EthereumAddress publicAddress) async {
     List taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
     List taskListReversed = List.from(taskList.reversed);
@@ -2038,7 +2077,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List> getTaskListPerformer(EthereumAddress publicAddress) async {
-    List taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
+    List taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
     List taskListReversed = List.from(taskList.reversed);
     return taskListReversed;
   }
