@@ -1077,8 +1077,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1256,7 +1256,7 @@ class TasksServices extends ChangeNotifier {
   late String lastEnteredKeyword = '';
 
   Future<void> runFilter({Map<EthereumAddress, Task>? taskList, String? enteredKeyword}) async {
-    enteredKeyword??= lastEnteredKeyword;
+    enteredKeyword ??= lastEnteredKeyword;
     taskList ??= lastTaskList;
     // tagsList ??= [];
     filterResults.clear();
@@ -1299,20 +1299,15 @@ class TasksServices extends ChangeNotifier {
 
       // filtering by TAGS:
 
-
-      filterResults = Map.from(filterResultsSearch)..removeWhere((taskAddress, task) =>
-          task.tags.toSet().intersection(_tagsList.toSet()).length == 0
-      );
+      filterResults = Map.from(filterResultsSearch)
+        ..removeWhere((taskAddress, task) => task.tags.toSet().intersection(_tagsList.toSet()).length == 0);
       print(filterResultsSearch);
       // final filterResultsTagsNFT = Map.from(taskList)
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
-
-
     }
     // Refresh the UI
     notifyListeners();
   }
-
 
   Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
     filterResults.clear();
@@ -2057,14 +2052,14 @@ class TasksServices extends ChangeNotifier {
     Map<String, Account> accountsData = {};
     for (final accountData in accountsDataList) {
       accountsData[accountData[0].toString()] = Account(
-          nickName: 'asdf',
-          about: 'asdf',
           walletAddress: accountData[0],
-          customerTasks: accountData[1].cast<EthereumAddress>(),
-          participantTasks: accountData[2].cast<EthereumAddress>(),
-          auditParticipantTasks: accountData[3].cast<EthereumAddress>(),
-          customerRating: accountData[4].cast<int>(),
-          performerRating: accountData[5].cast<int>());
+          nickName: accountData[1].toString(),
+          about: accountData[2].toString(),
+          customerTasks: accountData[3].cast<EthereumAddress>(),
+          participantTasks: accountData[4].cast<EthereumAddress>(),
+          auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
+          customerRating: accountData[6].cast<int>(),
+          performerRating: accountData[7].cast<int>());
     }
     return accountsData;
   }
@@ -2121,7 +2116,6 @@ class TasksServices extends ChangeNotifier {
   //   int totalBatches = (taskList.length / batchSize).floor();
   //   int batchItemCount = 0;
   //   tasksLoaded = 0;
-
 
   //   for (var i = 0; i < taskList.length; i++) {
   //     try {

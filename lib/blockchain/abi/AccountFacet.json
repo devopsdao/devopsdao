@@ -30,6 +30,16 @@
         "internalType": "address",
         "name": "_sender",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "nickname",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "about",
+        "type": "string"
       }
     ],
     "name": "addAccountData",
@@ -79,9 +89,55 @@
         "internalType": "address",
         "name": "taskAddress",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rating",
+        "type": "uint256"
+      }
+    ],
+    "name": "addCustomerRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
     "name": "addParticipantTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rating",
+        "type": "uint256"
+      }
+    ],
+    "name": "addPerformerRating",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

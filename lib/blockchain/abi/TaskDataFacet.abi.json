@@ -55,6 +55,16 @@
             "type": "address"
           },
           {
+            "internalType": "string",
+            "name": "nickname",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "about",
+            "type": "string"
+          },
+          {
             "internalType": "address[]",
             "name": "ownerTasks",
             "type": "address[]"
