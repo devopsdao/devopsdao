@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
-import '../../blockchain/task.dart';
+import '../../blockchain/classes.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));

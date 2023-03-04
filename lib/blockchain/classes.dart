@@ -56,6 +56,26 @@ class Task {
   });
 }
 
+class SimpleTags {
+  final String tag;
+  final String? icon;
+  final bool? nft;
+  final String? id;
+  late bool selected;
+  SimpleTags({required this.tag, this.icon, this.nft, this.id, this.selected = false});
+}
+
+class NftTagsBunch {
+  late bool selected;
+  final List<SimpleTags> bunch;
+  NftTagsBunch({this.selected = false, required this.bunch});
+}
+
+class TagsCompare {
+  late String state;
+  TagsCompare({required this.state});
+}
+
 // class TaskData extends MapBase<String, TaskData> {
 //   final String nanoId;
 //   final String taskType;

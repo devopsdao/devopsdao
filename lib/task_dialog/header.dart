@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/services.dart';
 

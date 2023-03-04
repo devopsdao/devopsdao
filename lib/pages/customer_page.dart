@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
@@ -11,7 +11,7 @@ import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
-import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tag_open_container.dart';
 import '../widgets/tags/tags_old.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
@@ -328,12 +328,13 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                             direction: Axis.horizontal,
                             children: model.customerTagsList.entries.map((e) {
                               return WrappedChip(
-                                interactive: true,
                                 key: ValueKey(e.value),
                                 theme: 'black',
                                 item: e.value,
                                 delete: true,
-                                page: 'customer'
+                                page: 'customer',
+                                name: e.key,
+                                selected: e.value.selected,
                               );
                             }).toList());
                         }),

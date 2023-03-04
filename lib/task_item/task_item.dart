@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 
 import '../blockchain/task_services.dart';
 import '../flutter_flow/theme.dart';
@@ -161,12 +161,13 @@ class _TaskItemState extends State<TaskItem> {
                             direction: Axis.horizontal,
                             children: tags.map((e) {
                               return WrappedChip(
-                                interactive: false,
                                 key: ValueKey(e),
                                 theme: 'small-white',
                                 item: e,
                                 delete: false,
-                                page: 'items'
+                                page: 'items',
+                                  name: e.tag,
+                                  selected: e.selected,
                               );
                             }).toList()
                           ),

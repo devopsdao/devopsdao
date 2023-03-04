@@ -5,7 +5,7 @@ import '../blockchain/interface.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
-import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tag_open_container.dart';
 import '/blockchain/task_services.dart';
 import '/flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
@@ -191,7 +191,6 @@ class _AccountsPageState extends State<AccountsPage> {
                         direction: Axis.horizontal,
                         children: model.tasksTagsList.entries.map((e) {
                           return WrappedChip(
-                              interactive: true,
                               key: ValueKey(e.value),
                               theme: 'black',
                               item: e.value,
@@ -199,7 +198,9 @@ class _AccountsPageState extends State<AccountsPage> {
                               //   model.removeTag(i.tag);
                               // },
                               delete: true,
-                              page: 'accounts');
+                              page: 'accounts',
+                            name: e.key,
+                            selected: e.value.selected,);
                         }).toList());
                   }),
                   Expanded(

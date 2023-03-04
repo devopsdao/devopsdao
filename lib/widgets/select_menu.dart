@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 
 const List<String> selectNetwork = <String>['Moonbase', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];

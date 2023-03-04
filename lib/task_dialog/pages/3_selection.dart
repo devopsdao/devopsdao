@@ -8,7 +8,7 @@ import 'package:devopsdao/task_dialog/states.dart';
 import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
-import '../../blockchain/task.dart';
+import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/wallet_action.dart';

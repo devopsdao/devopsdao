@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../blockchain/task.dart';
+import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import 'dart:ui' as ui;
 

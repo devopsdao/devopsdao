@@ -34,7 +34,7 @@ import 'abi/WormholeFacet.g.dart';
 // import 'abi/Wormhole.g.dart';
 import 'abi/IERC20.g.dart';
 import 'accounts.dart';
-import 'task.dart';
+import 'classes.dart';
 import "package:universal_html/html.dart" hide Platform;
 import 'package:webthree/browser.dart'
     if (dart.library.io) 'package:webthree/src/browser/dart_wrappers_stub.dart'

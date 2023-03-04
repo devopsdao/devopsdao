@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../blockchain/task.dart';
+import '../../blockchain/classes.dart';
 
 import 'package:rive/rive.dart';
 

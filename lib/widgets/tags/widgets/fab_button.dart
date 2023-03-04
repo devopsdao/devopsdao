@@ -3,6 +3,8 @@ import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../blockchain/classes.dart';
+
 class TagsFAB extends StatefulWidget {
   final String buttonName;
   final Color buttonColorRequired;

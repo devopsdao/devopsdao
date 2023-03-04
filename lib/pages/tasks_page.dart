@@ -9,7 +9,7 @@ import '../task_dialog/shimmer.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
-import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tag_open_container.dart';
 import '../widgets/tags/tags_old.dart';
 import '/blockchain/task_services.dart';
 import '/create_job/create_job.dart.old';
@@ -246,12 +246,13 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         direction: Axis.horizontal,
                         children: model.tasksTagsList.entries.map((e) {
                           return WrappedChip(
-                            interactive: true,
                             key: ValueKey(e.value),
                             theme: 'black',
                             item: e.value,
                             delete: true,
-                            page: 'tasks'
+                            page: 'tasks',
+                            name: e.key,
+                            selected: e.value.selected,
                           );
                         }).toList());
                   }),

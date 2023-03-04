@@ -1,5 +1,5 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
-import 'package:devopsdao/blockchain/task.dart';
+import 'package:devopsdao/blockchain/classes.dart';
 import 'package:devopsdao/widgets/wallet_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
