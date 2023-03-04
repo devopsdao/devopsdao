@@ -24,6 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
+import 'abi/AccountFacet.g.dart';
 import 'abi/TokenFacet.g.dart';
 import 'abi/TokenDataFacet.g.dart';
 import 'abi/TaskContract.g.dart';
@@ -1015,6 +1016,7 @@ class TasksServices extends ChangeNotifier {
 
   late TaskCreateFacet taskCreateFacet;
   late TaskDataFacet taskDataFacet;
+  late AccountFacet accountFacet;
   late TokenFacet tokenFacet;
   late TokenDataFacet tokenDataFacet;
   late AxelarFacet axelarFacet;
@@ -1097,7 +1099,8 @@ class TasksServices extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 200));
     await monitorEvents();
 
-    accountsData = await getAccountsData();
+    List<EthereumAddress> accountsList = await getAccountsList();
+    accountsData = await getAccountsData(accountsList);
 
     // fees = await _web3client.getGasInEIP1559();
     // print(fees);
@@ -1126,6 +1129,7 @@ class TasksServices extends ChangeNotifier {
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
     taskCreateFacet = TaskCreateFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     taskDataFacet = TaskDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    accountFacet = AccountFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenDataFacet = TokenDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     //templorary fix:
@@ -2045,9 +2049,8 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Map<String, Account>> getAccountsData() async {
-    List<EthereumAddress> accountsList = await getAccountsList();
-    List accountsDataList = await taskDataFacet.getAccountsData(accountsList);
+  Future<Map<String, Account>> getAccountsData(List<EthereumAddress> accountsList) async {
+    List accountsDataList = await accountFacet.getAccountsData(accountsList);
 
     Map<String, Account> accountsData = {};
     for (final accountData in accountsDataList) {
@@ -2065,7 +2068,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List<EthereumAddress>> getAccountsList() async {
-    List<EthereumAddress> accountsList = await taskDataFacet.getAccountsList();
+    List<EthereumAddress> accountsList = await accountFacet.getAccountsList();
     return accountsList;
   }
 
