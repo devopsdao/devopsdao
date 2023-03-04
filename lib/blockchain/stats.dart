@@ -1,16 +1,16 @@
 import 'package:webthree/webthree.dart';
 
-class Account {
+class Stats {
   final String nickName;
   final String about;
   final EthereumAddress walletAddress;
   final List<EthereumAddress> customerTasks;
   final List<EthereumAddress> participantTasks;
   final List<EthereumAddress> auditParticipantTasks;
-  final List<int> customerRating;
-  final List<int> performerRating;
+  final int customerRating;
+  final int performerRating;
 
-  Account(
+  Stats(
       {required this.nickName,
       required this.about,
       required this.walletAddress,

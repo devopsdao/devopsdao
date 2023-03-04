@@ -38,141 +38,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "accountAddresses",
-        "type": "address[]"
-      }
-    ],
-    "name": "getAccountsData",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "accountOwner",
-            "type": "address"
-          },
-          {
-            "internalType": "address[]",
-            "name": "ownerTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "participantTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "auditParticipantTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "customerRatings",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "performerRatings",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "customerTaskCount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "performerTaskCount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Account[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "accountAddresses",
-        "type": "address[]"
-      }
-    ],
-    "name": "getAccountsDataDyn",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "accountOwner",
-            "type": "address"
-          },
-          {
-            "internalType": "address[]",
-            "name": "ownerTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "participantTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "auditParticipantTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "customerRatings",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "performerRatings",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "customerTaskCount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "performerTaskCount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Account[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAccountsList",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "getTaskContracts",
     "outputs": [
@@ -226,12 +91,50 @@
   {
     "inputs": [
       {
+        "internalType": "address[]",
+        "name": "contractOwners",
+        "type": "address[]"
+      }
+    ],
+    "name": "getTaskContractsCustomers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "participant",
         "type": "address"
       }
     ],
     "name": "getTaskContractsPerformer",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "participants",
+        "type": "address[]"
+      }
+    ],
+    "name": "getTaskContractsPerformers",
     "outputs": [
       {
         "internalType": "address[]",

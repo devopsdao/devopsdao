@@ -47,19 +47,22 @@ class _AccountFutureState extends State<AccountFuture> {
     return FutureBuilder<Account>(
         // future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Account> snapshot) {
-          // if (snapshot.connectionState == ConnectionState.done) {
-          if (true) {
-            account = tasksServices.accountsTemp['2']!;
-            return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: false);
-          }
-          account = Account(
-              nickName: 'Loading ...',
-              about: 'Loading ...',
-              walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-              rating: 5
-              );
-          return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
-        });
+      // if (snapshot.connectionState == ConnectionState.done) {
+      // if (true) {
+      //   account = tasksServices.accountsData['2']!;
+      //   return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: false);
+      // }
+      account = Account(
+          nickName: 'Loading ...',
+          about: 'Loading ...',
+          walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+          customerTasks: [],
+          participantTasks: [],
+          auditParticipantTasks: [],
+          customerRating: [0],
+          performerRating: [0]);
+      return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
+    });
   }
 }
 
@@ -139,7 +142,6 @@ class _AccountSkeletonState extends State<AccountSkeleton> {
   }
 }
 
-
 class ShimmeredPages extends StatelessWidget {
   final Account object;
 
@@ -197,30 +199,23 @@ class ShimmeredPages extends StatelessWidget {
   }
 }
 
-
-
 class AccountBeamer extends StatelessWidget {
   final String fromPage;
   final EthereumAddress? taskAddress;
   const AccountBeamer({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-
     final String taskAddressString = taskAddress.toString();
     RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
     Beamer.of(context).updateRouteInformation(routeInfo);
     return Scaffold(
         body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-          alignment: Alignment.center,
-          child: AccountFuture(
-              fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true),
-        )
-    );
+      width: double.infinity,
+      height: double.infinity,
+      // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+      alignment: Alignment.center,
+      child: AccountFuture(fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true),
+    ));
   }
 }

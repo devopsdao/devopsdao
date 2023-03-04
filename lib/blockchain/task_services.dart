@@ -24,6 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
+import 'abi/AccountFacet.g.dart';
 import 'abi/TokenFacet.g.dart';
 import 'abi/TokenDataFacet.g.dart';
 import 'abi/TaskContract.g.dart';
@@ -182,6 +183,8 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerProgress = {};
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
+  Map<String, Account> accountsData = {};
+
   Map<String, int> statsCreateTimeListCounts = {};
   Map<String, int> statsTaskTypeListCounts = {};
   Map<String, int> statsTagsListCounts = {};
@@ -198,16 +201,16 @@ class TasksServices extends ChangeNotifier {
   Map<String, int> statsTokenNamesListCounts = {};
   Map<String, int> statsTokenValuesListCounts = {};
 
-  Map<String, Account> accountsTemp = {
-    '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
-    '2': Account(
-        nickName: 'MyNameIsC',
-        about: 'about super puper MyNameIsC',
-        walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
-        rating: 12),
-    '3': Account(
-        nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
-  };
+  // Map<String, Account> accountsTemp = {
+  //   '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
+  //   '2': Account(
+  //       nickName: 'MyNameIsC',
+  //       about: 'about super puper MyNameIsC',
+  //       walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
+  //       rating: 12),
+  //   '3': Account(
+  //       nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
+  // };
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
 
@@ -1013,6 +1016,7 @@ class TasksServices extends ChangeNotifier {
 
   late TaskCreateFacet taskCreateFacet;
   late TaskDataFacet taskDataFacet;
+  late AccountFacet accountFacet;
   late TokenFacet tokenFacet;
   late TokenDataFacet tokenDataFacet;
   late AxelarFacet axelarFacet;
@@ -1075,8 +1079,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1094,6 +1098,9 @@ class TasksServices extends ChangeNotifier {
     await myBalance();
     await Future.delayed(const Duration(milliseconds: 200));
     await monitorEvents();
+
+    List<EthereumAddress> accountsList = await getAccountsList();
+    accountsData = await getAccountsData(accountsList);
 
     // fees = await _web3client.getGasInEIP1559();
     // print(fees);
@@ -1122,6 +1129,7 @@ class TasksServices extends ChangeNotifier {
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
     taskCreateFacet = TaskCreateFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     taskDataFacet = TaskDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    accountFacet = AccountFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     tokenDataFacet = TokenDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     //templorary fix:
@@ -1252,7 +1260,7 @@ class TasksServices extends ChangeNotifier {
   late String lastEnteredKeyword = '';
 
   Future<void> runFilter({Map<EthereumAddress, Task>? taskList, String? enteredKeyword}) async {
-    enteredKeyword??= lastEnteredKeyword;
+    enteredKeyword ??= lastEnteredKeyword;
     taskList ??= lastTaskList;
     // tagsList ??= [];
     filterResults.clear();
@@ -1295,20 +1303,15 @@ class TasksServices extends ChangeNotifier {
 
       // filtering by TAGS:
 
-
-      filterResults = Map.from(filterResultsSearch)..removeWhere((taskAddress, task) =>
-          task.tags.toSet().intersection(_tagsList.toSet()).length == 0
-      );
+      filterResults = Map.from(filterResultsSearch)
+        ..removeWhere((taskAddress, task) => task.tags.toSet().intersection(_tagsList.toSet()).length == 0);
       print(filterResultsSearch);
       // final filterResultsTagsNFT = Map.from(taskList)
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
-
-
     }
     // Refresh the UI
     notifyListeners();
   }
-
 
   Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
     filterResults.clear();
@@ -1417,6 +1420,9 @@ class TasksServices extends ChangeNotifier {
 
     for (final taskContract in tasks.keys) {
       String taskDate = DateFormat('yyyy-MM-dd').format(tasks[taskContract]!.createTime);
+      if (tasksDateMap[taskDate] == null) {
+        tasksDateMap[taskDate] = {};
+      }
       tasksDateMap[taskDate]![taskContract] = tasks[taskContract]!;
     }
 
@@ -1429,6 +1435,9 @@ class TasksServices extends ChangeNotifier {
 
     for (final taskContract in tasks.keys) {
       String taskDateWeek = tasks[taskContract]!.createTime.weekOfYear.toString();
+      if (tasksDateMap[taskDateWeek] == null) {
+        tasksDateMap[taskDateWeek] = {};
+      }
       tasksDateMap[taskDateWeek]![taskContract] = tasks[taskContract]!;
     }
 
@@ -1441,6 +1450,9 @@ class TasksServices extends ChangeNotifier {
 
     for (final taskContract in tasks.keys) {
       String taskDateMonth = DateFormat('yyyy-MM').format(tasks[taskContract]!.createTime);
+      if (tasksDateMap[taskDateMonth] == null) {
+        tasksDateMap[taskDateMonth] = {};
+      }
       tasksDateMap[taskDateMonth]![taskContract] = tasks[taskContract]!;
     }
 
@@ -1923,13 +1935,13 @@ class TasksServices extends ChangeNotifier {
     }
 
     late Map<String, Map<String, Map<String, int>>> weeklyStats = {};
-    for (String taskDate in tasksDateMap.keys) {
-      weeklyStats[taskDate] = await getTasksStats(tasksWeekMap[taskDate]!);
+    for (String taskDateWeek in tasksWeekMap.keys) {
+      weeklyStats[taskDateWeek] = await getTasksStats(tasksWeekMap[taskDateWeek]!);
     }
 
     late Map<String, Map<String, Map<String, int>>> monthlyStats = {};
-    for (String taskDate in tasksDateMap.keys) {
-      monthlyStats[taskDate] = await getTasksStats(tasksMonthMap[taskDate]!);
+    for (String taskDateMonth in tasksMonthMap.keys) {
+      monthlyStats[taskDateMonth] = await getTasksStats(tasksMonthMap[taskDateMonth]!);
     }
 
     // Final Score Calculation
@@ -2037,19 +2049,44 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAccountsData() async {
-    // List<EthereumAddress> accountsList = await getAccountsList();
-    // final differenceSet1 = characters1.difference(characters2);
+  Future<Map<String, Account>> getAccountsData(List<EthereumAddress> accountsList) async {
+    List accountsDataList = await accountFacet.getAccountsData(accountsList);
+
+    Map<String, Account> accountsData = {};
+    for (final accountData in accountsDataList) {
+      accountsData[accountData[0].toString()] = Account(
+          walletAddress: accountData[0],
+          nickName: accountData[1].toString(),
+          about: accountData[2].toString(),
+          customerTasks: accountData[3].cast<EthereumAddress>(),
+          participantTasks: accountData[4].cast<EthereumAddress>(),
+          auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
+          customerRating: accountData[6].cast<int>(),
+          performerRating: accountData[7].cast<int>());
+    }
+    return accountsData;
   }
 
   Future<List<EthereumAddress>> getAccountsList() async {
-    List<EthereumAddress> accountsList = await taskDataFacet.getAccountsList();
+    List<EthereumAddress> accountsList = await accountFacet.getAccountsList();
     return accountsList;
   }
 
   Future<List<EthereumAddress>> getTaskListFull() async {
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContracts();
     List<EthereumAddress> taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListCustomers(List<EthereumAddress> publicAddresses) async {
+    List taskList = await taskDataFacet.getTaskContractsCustomers(publicAddresses);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListPerformers(List<EthereumAddress> publicAddresses) async {
+    List taskList = await taskDataFacet.getTaskContractsPerformers(publicAddresses);
+    List taskListReversed = List.from(taskList.reversed);
     return taskListReversed;
   }
 
@@ -2060,7 +2097,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List> getTaskListPerformer(EthereumAddress publicAddress) async {
-    List taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
+    List taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
     List taskListReversed = List.from(taskList.reversed);
     return taskListReversed;
   }
@@ -2082,7 +2119,6 @@ class TasksServices extends ChangeNotifier {
   //   int totalBatches = (taskList.length / batchSize).floor();
   //   int batchItemCount = 0;
   //   tasksLoaded = 0;
-
 
   //   for (var i = 0; i < taskList.length; i++) {
   //     try {

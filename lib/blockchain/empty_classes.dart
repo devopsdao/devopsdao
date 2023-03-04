@@ -61,14 +61,22 @@ class EmptyClasses extends ChangeNotifier {
       transport: '');
 
   final loadingAccount = Account(
-      rating: 0,
       nickName: 'Loading...',
       about: 'Error: loading account',
-      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      customerTasks: [],
+      participantTasks: [],
+      auditParticipantTasks: [],
+      customerRating: [0],
+      performerRating: [0]);
 
   final emptyAccount = Account(
-      rating: 0,
       nickName: 'Empty',
       about: 'Error: empty account',
-      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      customerTasks: [],
+      participantTasks: [],
+      auditParticipantTasks: [],
+      customerRating: [0],
+      performerRating: [0]);
 }

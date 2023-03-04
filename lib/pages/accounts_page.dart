@@ -217,7 +217,7 @@ class _AccountsPageState extends State<AccountsPage> {
                             child: ListView.builder(
                               padding: EdgeInsets.zero,
                               scrollDirection: Axis.vertical,
-                              itemCount: tasksServices.accountsTemp.values.toList().length,
+                              itemCount: tasksServices.accountsData.values.toList().length,
                               itemBuilder: (context, index) {
                                 return Padding(
                                     padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
