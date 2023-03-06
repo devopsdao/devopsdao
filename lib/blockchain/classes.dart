@@ -59,10 +59,11 @@ class Task {
 class SimpleTags {
   final String tag;
   final String? icon;
-  final bool? nft;
+  late bool nft;
   final String? id;
   late bool selected;
-  SimpleTags({required this.tag, this.icon, this.nft, this.id, this.selected = false});
+  late String feature;
+  SimpleTags({required this.tag, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple'});
 }
 
 class NftTagsBunch {

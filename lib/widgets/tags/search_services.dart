@@ -37,7 +37,7 @@ class SearchServices extends ChangeNotifier {
   // experimental future. ready allow to run taskService.runFilter
   late bool forbidSearchKeywordClear = false;
 
-  Future removeTag(tagName, {required String page}) async {
+  Future removeTagOnTasksPages(tagName, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList.removeWhere((key, value) => value.tag == tagName);
     } else if (page == 'tasks') {
@@ -51,10 +51,10 @@ class SearchServices extends ChangeNotifier {
     }
     // always remove from main filter list:
     tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
-    updateTagList(page: page);
+    updateTagListOnTasksPages(page: page);
   }
 
-  Future updateTagList({required String page}) async {
+  Future updateTagListOnTasksPages({required String page}) async {
     late Map<String, SimpleTags> list = {};
     tagsFilterResults.entries.map((e) {
       if(e.value.selected) {
@@ -83,7 +83,8 @@ class SearchServices extends ChangeNotifier {
   // this flag 'newTag' gives ability to add new Tag to List:
   late bool newTag = false;
 
-  Future<void> tagsFilter(String enteredKeyword, Map<String, SimpleTags> tagsList) async {
+  // Search in TAGS list
+  Future<void> tagsSearchFilter(String enteredKeyword, Map<String, SimpleTags> tagsList) async {
     tagsFilterResults.clear();
     searchTagKeyword = enteredKeyword;
     if (enteredKeyword.isEmpty) {
@@ -115,7 +116,7 @@ class SearchServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> tagsUpdate(Map<String, SimpleTags> tagsList) async {
+  Future<void> tagsAddAndUpdate(Map<String, SimpleTags> tagsList) async {
     tagsFilterResults.clear();
     for (String key in tagsList.keys) {
       if (tagsList[key]!.selected) {
@@ -132,7 +133,7 @@ class SearchServices extends ChangeNotifier {
     tagsFilterResults = Map.from(tagsList);
   }
 
-  Future<void> tagSelection({required String typeSelection, required String tagName}) async {
+  Future<void> tagSelection({required String typeSelection, required String tagName, required bool unselectAll}) async {
     if (typeSelection == 'selection') {
       for (String key in tagsFilterResults.keys) {
         if (tagsFilterResults[key]?.tag.toLowerCase() ==
@@ -144,12 +145,16 @@ class SearchServices extends ChangeNotifier {
           }
         }
       }
-    } else if (typeSelection == 'treasury') {
+    } else if (typeSelection == 'mint') {
       for (String key in tagsFilterResults.keys) {
         if (tagsFilterResults[key]?.tag.toLowerCase() ==
             tagName.toLowerCase()) {
-          tagsFilterResults[key]!.selected = true;
-        } else {
+          if (tagsFilterResults[key]!.selected ) {
+            tagsFilterResults[key]!.selected = false;
+          } else {
+            tagsFilterResults[key]!.selected = true;
+          }
+        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll)  {
           tagsFilterResults[key]!.selected = false;
         }
       }
@@ -193,12 +198,12 @@ class SearchServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> nftSelection({required String tagName}) async {
+  Future<void> nftSelection({required String tagName, required bool unselectAll}) async {
 
     for (String key in nftFilterResults.keys) {
       if (key.toLowerCase() == tagName.toLowerCase()) {
         nftFilterResults[key]!.selected = true;
-      } else {
+      } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
         nftFilterResults[key]!.selected = false;
       }
     }

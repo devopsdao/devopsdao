@@ -78,7 +78,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
     //   });
     // });
 
-    searchServices.resetTagsFilter(simpleTagsMap);
+    // searchServices.resetTagsFilter(simpleTagsMap);
 
     for (var prop1 in searchServices.tagsFilterResults.values) {
       searchServices.tagsFilterResults[prop1.tag]!.selected = false;
@@ -146,6 +146,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
+                          searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
                           Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -175,7 +176,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         return TextFormField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            model.tagsFilter(searchKeyword, simpleTagsMap);
+                            model.tagsSearchFilter(searchKeyword, simpleTagsMap);
                           },
                           autofocus: true,
                           obscureText: false,
@@ -191,7 +192,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 // NEW TAG
                                 simpleTagsMap[_searchKeywordController.text] =
                                     SimpleTags(tag: _searchKeywordController.text, icon: "", selected: true);
-                                model.tagsUpdate(simpleTagsMap);
+                                model.tagsAddAndUpdate(simpleTagsMap);
                               },
                               icon: const Icon(Icons.add_box),
                               padding: const EdgeInsets.only(right: 12.0),
@@ -314,7 +315,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
               callback: () {
-                searchServices.updateTagList(page: widget.page);
+                searchServices.updateTagListOnTasksPages(page: widget.page);
                 searchServices.forbidSearchKeywordClear = true;
                 // searchServices.ready = true;
                 Navigator.pop(context);

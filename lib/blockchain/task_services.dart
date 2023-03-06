@@ -1079,8 +1079,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1236,7 +1236,6 @@ class TasksServices extends ChangeNotifier {
         transactionStatuses[nanoId]![taskAction]!['status'] = 'minted';
         transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
         notifyListeners();
-        print('tell me has it mined');
         // thr.debounce(() {
         //   fetchTasks();
         // });

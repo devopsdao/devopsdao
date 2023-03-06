@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-import '../flutter_flow/theme.dart';
-import 'main.dart';
+import '../../flutter_flow/theme.dart';
+import '../main.dart';
 
 
 

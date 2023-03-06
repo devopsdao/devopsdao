@@ -11,7 +11,7 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../flutter_flow/theme.dart';
-import '../../tags_manager/manager_open_container.dart';
+import '../../tags_manager/widgets/manager_open_container.dart';
 import '../../tags_manager/manager_services.dart';
 import '../my_tools.dart';
 import 'main.dart';
@@ -120,7 +120,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
     late String icon = 'none';
     late int numOfNFTs = 0;
-    if (widget.item.nft ?? false) {  icon = 'nft'; }
+    if (widget.item.nft && widget.page != 'mint') {  icon = 'nft'; }
     else if (widget.mint) { icon = 'extra_icon'; }
 
     if (widget.page == 'treasury') {
@@ -148,7 +148,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       borderColor = Colors.grey[850]!;
       bodyColor = Colors.grey[850]!;
       nftColor = Colors.deepOrange;
-      nftMintColor = Colors.grey[600]!;
+      nftMintColor = Colors.white;
 
       textColorSelected = Colors.white;
       borderColorSelected = Colors.orange[900]!;
@@ -254,11 +254,12 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
     void onTapGesture() {
       setState(() {
+        FocusManager.instance.primaryFocus?.unfocus();
         if (widget.delete) {
           scaleEffectController.reverse();
           Future.delayed(
               const Duration(milliseconds: 550), () {
-            searchServices.removeTag(widget.name, page: widget.page, );
+            searchServices.removeTagOnTasksPages(widget.name, page: widget.page, );
           });
         } else if(widget.page == 'selection') {
           // if (widget.selected) {
@@ -275,19 +276,17 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           //     searchServices.tagsFilterResults[key]!.selected = true;
           //   }
           // }
-          searchServices.tagSelection(typeSelection: widget.page, tagName: widget.name);
+          searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.name);
         } else if(widget.page == 'treasury') {
+          searchServices.nftSelection(unselectAll: false, tagName: widget.name);
           if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
-            searchServices.nftSelection(tagName: widget.name);
             managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.name]!);
-            // if (item.selected) {
-            //   setState(() {
-            //     item.selected = false;
-            //   });
-            // } else {
-            //
-            // }
+          } else {
+            searchServices.nftSelection(unselectAll: true, tagName: '', );
+            managerServices.clearTreasuryNft();
           }
+        } else if (widget.page == 'mint') {
+          searchServices.tagSelection( unselectAll: false, tagName: widget.name, typeSelection: 'mint');
         }
       });
     }
@@ -346,7 +345,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                       ),
                     ),
                   ),
-                  if (icon != 'nft' || numOfNFTs > 1)
+                  if (widget.page == 'treasury' && numOfNFTs > 1)
                     Flexible(
                       flex: 10,
                       child: Padding(
@@ -448,13 +447,6 @@ class WrappedChipSmall extends StatelessWidget {
     late Color nftColor = Colors.deepOrange;
     late Color nftMintColor = Colors.grey[600]!;
 
-    // sizes of Tags (black BIG is default):
-    late double iconSize = 17;
-    late double fontSize = 14;
-    late EdgeInsets containerPadding = const EdgeInsets.symmetric(horizontal: 6, vertical: 6);
-    late EdgeInsets containerMargin = const EdgeInsets.symmetric(horizontal: 4, vertical: 4);
-    late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 4.0);
-    late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 4.0);
 
     if (theme == 'small-white') {
       textColor = Colors.black;
@@ -463,14 +455,12 @@ class WrappedChipSmall extends StatelessWidget {
       nftColor = Colors.deepOrange;
     }
 
-    if (theme == 'small-black') {
-      iconSize = 10;
-      fontSize = 11;
-      containerPadding = const EdgeInsets.symmetric(horizontal: 5, vertical: 3);
-      containerMargin = const EdgeInsets.symmetric(horizontal: 2, vertical: 2);
-      rightSpanPadding = const EdgeInsets.only(right: 2.0);
-      leftSpanPadding = const EdgeInsets.only(left: 2.0);
-    }
+    late double iconSize = 10;
+    late double fontSize = 11;
+    late EdgeInsets containerPadding = const EdgeInsets.symmetric(horizontal: 5, vertical: 3);
+    late EdgeInsets containerMargin = const EdgeInsets.symmetric(horizontal: 2, vertical: 2);
+    late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 2.0);
+    late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 2.0);
 
     var textSize = calcTextSize(item.tag, DodaoTheme.of(context).bodyText3.override(
       fontFamily: 'Inter',

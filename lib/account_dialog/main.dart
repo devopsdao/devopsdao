@@ -161,7 +161,7 @@ class ShimmeredPages extends StatelessWidget {
 
       return Column(
         children: <Widget>[
-          if (interface.dialogCurrentState['pages'].containsKey('main'))
+          // if (interface.dialogCurrentState['pages'].containsKey('main'))
             ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: maxStaticInternalDialogWidth,

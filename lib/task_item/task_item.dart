@@ -160,14 +160,11 @@ class _TaskItemState extends State<TaskItem> {
                             alignment: WrapAlignment.start,
                             direction: Axis.horizontal,
                             children: tags.map((e) {
-                              return WrappedChip(
+                              return WrappedChipSmall(
                                 key: ValueKey(e),
                                 theme: 'small-white',
                                 item: e,
-                                delete: false,
                                 page: 'items',
-                                  name: e.tag,
-                                  selected: e.selected,
                               );
                             }).toList()
                           ),

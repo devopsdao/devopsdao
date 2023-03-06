@@ -3,7 +3,11 @@ import '../blockchain/classes.dart';
 List<SimpleTags> nftTagsList = [
   SimpleTags(tag: "Javascript", icon: "", nft: true),
   SimpleTags(tag: "Dart", icon: "", nft: true),
+
   SimpleTags(tag: "Flutter", icon: "", nft: true),
+  SimpleTags(tag: "Flutter", icon: "", nft: true,feature: 'Some special things goes here'),
+  SimpleTags(tag: "Flutter", icon: "", nft: true, feature: 'Wow feature'),
+  SimpleTags(tag: "Flutter", icon: "", nft: true, feature: 'Extra feature'),
   SimpleTags(tag: "Node.js", icon: "", nft: true),
 
   SimpleTags(tag: "MongoDb", icon: "", nft: true),
@@ -32,6 +36,12 @@ List<SimpleTags> nftTagsList = [
   SimpleTags(tag: "item Alpha 6", icon: "", nft: true),
   SimpleTags(tag: "item Alpha 7", icon: "", nft: true),
 
+  SimpleTags(tag: "Javascript 2", icon: "", nft: true),
+  SimpleTags(tag: "Dart 2", icon: "", nft: true),
+  SimpleTags(tag: "Flutter 2", icon: "", nft: true),
+  SimpleTags(tag: "item Alpha 7", icon: "", nft: true),
+
+  SimpleTags(tag: "Javascript 2", icon: "", nft: true),
   SimpleTags(tag: "Javascript 2", icon: "", nft: true),
   SimpleTags(tag: "Dart 2", icon: "", nft: true),
   SimpleTags(tag: "Flutter 2", icon: "", nft: true),

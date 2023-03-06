@@ -22,11 +22,11 @@ class _LoadIndicator extends State<LoadIndicator> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var taskLoadedState;
+    var taskLoadedState = tasksServices.tasksLoaded;
 
-    setState(() {
-      taskLoadedState = tasksServices.tasksLoaded;
-    });
+    // setState(() {
+    //   taskLoadedState =
+    // });
     return Center(
       child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
