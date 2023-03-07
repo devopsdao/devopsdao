@@ -1187,7 +1187,7 @@ class TasksServices extends ChangeNotifier {
 
       late BigInt weiBalanceToken = BigInt.from(0);
       if (hardhatDebug == false && hardhatLive == false) {
-        weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
+        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
