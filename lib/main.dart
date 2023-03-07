@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
           color: Colors.black,
         ),
 
-        // primaryColor: const Color(0xff31d493),
+        primaryColor: const Color(0xff31d493),
         // cardColor: Colors.black,
         // textTheme: const TextTheme(
         //     bodyText1: TextStyle(fontSize: 20, color: Colors.white)),
@@ -132,7 +132,8 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(brightness: Brightness.dark, splashFactory: NoSplash.splashFactory),
       // Theme mode settings:
       // themeMode: _themeMode,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.light
+      ,
       // home: displaySplashImage
       //     ? Container(
       //         color: Colors.black,

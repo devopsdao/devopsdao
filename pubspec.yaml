@@ -53,9 +53,11 @@ dependencies:
   font_awesome_flutter: ^10.1.0
   g_json: ^4.1.0
   google_fonts: ^4.0.0
+  gradient_borders: ^1.0.0
   horizontal_blocked_scroll_physics: ^4.0.1
   html: ^0.15.0
   http: ^0.13.4
+  image_picker: ^0.8.6+4
   internet_connection_checker: ^1.0.0+1
   intl: ^0.17.0
   jovial_svg: ^1.1.9

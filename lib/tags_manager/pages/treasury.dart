@@ -60,9 +60,9 @@ class _TreasuryWidget extends State<TreasuryWidget> {
         builder: (context, model, child) {
           late double secondPartHeight = 0.0;
           late bool splitScreen = false;
-          final int nftCount = model.treasuryNftInfoSelected.bunch.length;
-          final String collectionName = model.treasuryNftInfoSelected.bunch.first.tag;
-          if (model.treasuryNftInfoSelected.bunch.first.tag != 'empty') {
+          final int nftCount = model.treasuryNftsInfoSelected.bunch.length;
+          final String collectionName = model.treasuryNftsInfoSelected.bunch.first.tag;
+          if (model.treasuryNftsInfoSelected.bunch.first.tag != 'empty') {
             splitScreen = true;
           }
           secondPartHeight = 300;
@@ -145,7 +145,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             radius: 35,
                             containedInkWell: false  ,
                             onTap: () {
-                              model.clearTreasuryNft();
+                              model.clearSelectedInManager();
                             },
                             child: const Icon(
                               Icons.arrow_downward,
@@ -172,7 +172,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                         itemBuilder: (BuildContext context, int index) {
                           return PageViewTreasuryItem(
                             index: index,
-                            item: model.treasuryNftInfoSelected.bunch[index],
+                            item: model.treasuryNftsInfoSelected.bunch[index],
                             frameHeight: secondPartHeight,
                           );
                         },

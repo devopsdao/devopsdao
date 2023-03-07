@@ -41,11 +41,11 @@ class TaskTransition extends StatelessWidget {
       closedElevation: 0,
       closedShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+          Radius.circular(14.0),
         ),
       ),
       openElevation: 0,
-      closedColor: Colors.white,
+      closedColor: Colors.transparent,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return TaskItem(
           fromPage: fromPage,

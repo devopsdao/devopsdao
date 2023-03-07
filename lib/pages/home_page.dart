@@ -157,39 +157,42 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           ),
           actions: [
             Center(
-              child: Container(
-                // width: 150,
-                height: 30,
-                padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  // width: 150,
+                  height: 30,
+                  padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
 
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: const LinearGradient(
-                    colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
-                    stops: [0.1, 0.5, 1],
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: const LinearGradient(
+                      colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+                      stops: [0.1, 0.5, 1],
+                    ),
                   ),
+                  child: InkWell(
+                      highlightColor: Colors.white,
+                      onTap: () async {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const WalletPageTop(),
+                        );
+                      },
+                      child: tasksServices.walletConnected
+                          ? Text(
+                              '${tasksServices.publicAddress.toString().substring(0, 5)}'
+                              '...'
+                              '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                            )
+                          : const Text(
+                              'Connect wallet',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16, color: Colors.white),
+                            )),
                 ),
-                child: InkWell(
-                    highlightColor: Colors.white,
-                    onTap: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const WalletPageTop(),
-                      );
-                    },
-                    child: tasksServices.walletConnected
-                        ? Text(
-                            '${tasksServices.publicAddress.toString().substring(0, 5)}'
-                            '...'
-                            '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 16, color: Colors.white),
-                          )
-                        : const Text(
-                            'Connect wallet',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          )),
               ),
             ),
             // FlutterFlowIconButton(
@@ -210,7 +213,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             //     );
             //   },
             // ),
-            const LoadButtonIndicator(),
+            // const LoadButtonIndicator(),
 
             if (!tasksServices.isDeviceConnected)
               Row(
@@ -243,27 +246,29 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         backgroundColor: const Color(0xFF1E2429),
         floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
         body: Container(
-            width: double.infinity,
-            height: double.infinity,
+            // width: double.infinity,
+            // height: double.infinity,
             // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
             alignment: Alignment.center,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                // colors: [Colors.black, Colors.black, Colors.black],
-                colors: [Colors.black, Colors.black, Colors.black],
-                stops: [0, 0.5, 1],
-                begin: AlignmentDirectional(1, -1),
-                end: AlignmentDirectional(-1, 1),
-              ),
-              image: DecorationImage(
-                image: SvgProvider.Svg('assets/images/background-from-png-small.svg'),
-              ),
+              // gradient: LinearGradient(
+              //   // colors: [Colors.black, Colors.black, Colors.black],
+              //   colors: [Colors.black, Colors.black, Colors.green],
+              //   stops: [0, 0.5, 1],
+              //   begin: AlignmentDirectional(1, -1),
+              //   end: AlignmentDirectional(-1, 1),
               // ),
+              color: Colors.black,
               // image: DecorationImage(
-              //   image: AssetImage("assets/images/background_shape_tiles_small.png"),
-              //   // fit: BoxFit.cover,
-              //   repeat: ImageRepeat.repeat,
+              //     image: SvgProvider.Svg('assets/images/background-from-png.svg'),
+              //     fit: BoxFit.fitHeight,
               // ),
+              image: DecorationImage(
+                image: AssetImage("assets/images/background.png", ),
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+
+              ),
             ),
             child: SingleChildScrollView(
               child: Container(

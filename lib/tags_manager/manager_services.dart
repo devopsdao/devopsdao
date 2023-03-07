@@ -4,14 +4,20 @@ import 'package:flutter/cupertino.dart';
 
 
 class ManagerServices extends ChangeNotifier {
-  late NftTagsBunch treasuryNftInfoSelected = NftTagsBunch(bunch: [SimpleTags(tag: 'empty')]);
+  late NftTagsBunch treasuryNftsInfoSelected = NftTagsBunch(bunch: [SimpleTags(tag: 'empty')]);
+  late SimpleTags mintNftTagSelected = SimpleTags(tag: 'empty');
 
   Future<void> updateTreasuryNft(NftTagsBunch nft) async {
-    treasuryNftInfoSelected = nft;
+    treasuryNftsInfoSelected = nft;
     notifyListeners();
   }
-  Future<void> clearTreasuryNft() async {
-    treasuryNftInfoSelected = NftTagsBunch(bunch: [SimpleTags(tag: 'empty')]);
+  Future<void> updateMintNft(SimpleTags collection) async {
+    mintNftTagSelected = collection;
+    notifyListeners();
+  }
+  Future<void> clearSelectedInManager() async {
+    treasuryNftsInfoSelected = NftTagsBunch(bunch: [SimpleTags(tag: 'empty')]);
+    mintNftTagSelected = SimpleTags(tag: 'empty');
     notifyListeners();
   }
 }

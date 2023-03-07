@@ -559,7 +559,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
                                   TextSpan(
                                       text: '${task.tokenValues[0]} DEV \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                  TextSpan(text: '${task.tokenValues[0]} aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                  TextSpan(text: '${task.tokenValues[0]} aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0, color: Colors.black87))
                                 ])),
                               ],
                             )),

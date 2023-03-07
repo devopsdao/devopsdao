@@ -137,7 +137,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
           ],
         ),
         actions: const [
-          LoadButtonIndicator(),
+          // LoadButtonIndicator(),
         ],
         centerTitle: false,
         elevation: 2,
@@ -174,11 +174,11 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          // image: DecorationImage(
-          //   image: AssetImage("assets/images/background.png"),
-          //   // fit: BoxFit.cover,
-          //   repeat: ImageRepeat.repeat,
-          // ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+          ),
         ),
         child: SizedBox(
           width: interface.maxStaticGlobalWidth,

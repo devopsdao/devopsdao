@@ -180,7 +180,7 @@ class ThemeTypography extends Typography {
 }
 
 class DarkModeTheme extends DodaoTheme {
-  late Color primaryColor = const Color(0xFF4B39EF);
+  late Color primaryColor = const Color(0xFF000000);
   late Color secondaryColor = const Color(0xFF39D2C0);
   late Color tertiaryColor = const Color(0xFFEE8B60);
   late Color alternate = const Color(0xFFFF5963);
