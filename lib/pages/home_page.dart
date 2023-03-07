@@ -184,8 +184,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               '${tasksServices.publicAddress.toString().substring(0, 5)}'
                               '...'
                               '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              // textAlign: TextAlign.center,
+                              // style: const TextStyle(fontSize: 16, color: Colors.white),
                             )
                           : const Text(
                               'Connect wallet',
