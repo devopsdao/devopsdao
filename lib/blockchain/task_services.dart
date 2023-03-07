@@ -517,7 +517,7 @@ class TasksServices extends ChangeNotifier {
           await fetchTasksBatch(taskList);
 
           myBalance();
-          isLoading = true;
+          // isLoading = true;
         }();
         notifyListeners();
       });
@@ -1817,7 +1817,7 @@ class TasksServices extends ChangeNotifier {
   // }
 
   Future<void> monitorTasks(List<EthereumAddress> taskList) async {
-    isLoadingBackground = true;
+    // isLoadingBackground = true;
 
     List<List<Future<void>>> monitorBatches = [];
 
@@ -1848,10 +1848,10 @@ class TasksServices extends ChangeNotifier {
     }
 
     try {
-      print('will monitor tasks in ${totalBatches}');
+      print('will monitor tasks in ${totalBatches} batches');
       for (var batchId = 0; batchId < totalBatches; batchId++) {
         await Future.wait<void>(monitorBatches[batchId]);
-        print('monitoring ${batchId + 1}| total: $totalBatches');
+        print('monitoring ${batchId + 1} batch| total: $totalBatches batches');
         await Future.delayed(const Duration(milliseconds: 200));
       }
     } on GetTaskException {}
@@ -1903,7 +1903,7 @@ class TasksServices extends ChangeNotifier {
           'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests');
       for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
         await Future.wait<void>(downloadBatches[batchId]);
-        print('downloaded ${batchId + 1} | total: ${downloadBatches.length}');
+        print('downloaded ${batchId + 1} batch | total: ${downloadBatches.length} batches');
         await Future.delayed(const Duration(milliseconds: 200));
         tasksLoaded += downloadBatchSize * requestBatchSize;
         notifyListeners();
