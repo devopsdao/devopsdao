@@ -12,6 +12,24 @@
         "type": "address"
       }
     ],
+    "name": "addAuditParticipantTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
     "name": "addParticipantTask",
     "outputs": [],
     "stateMutability": "nonpayable",
