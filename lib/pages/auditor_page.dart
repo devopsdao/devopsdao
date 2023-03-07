@@ -9,7 +9,7 @@ import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
-import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tag_open_container.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/theme.dart';
@@ -245,7 +245,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            print(tabIndex);
+                            // print(tabIndex);
                             if (tabIndex == 0) {
                               tasksServices.runFilter(taskList: tasksServices.tasksAuditPending, enteredKeyword: searchKeyword);
                             } else if (tabIndex == 1) {
@@ -303,7 +303,15 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                         alignment: WrapAlignment.start,
                         direction: Axis.horizontal,
                         children: model.auditorTagsList.entries.map((e) {
-                          return WrappedChip(interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'auditor');
+                          return WrappedChip(
+                              key: ValueKey(e.value),
+                              theme: 'black',
+                              item: e.value,
+                              delete: true,
+                              page: 'auditor',
+                            name: e.key,
+                            selected: e.value.selected,
+                          );
                         }).toList());
                   }),
                   tasksServices.isLoading

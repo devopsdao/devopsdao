@@ -7,7 +7,7 @@ import 'package:webthree/credentials.dart';
 
 import '../blockchain/accounts.dart';
 import '../blockchain/interface.dart';
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import 'header.dart';
 
@@ -161,7 +161,7 @@ class ShimmeredPages extends StatelessWidget {
 
       return Column(
         children: <Widget>[
-          if (interface.dialogCurrentState['pages'].containsKey('main'))
+          // if (interface.dialogCurrentState['pages'].containsKey('main'))
             ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: maxStaticInternalDialogWidth,

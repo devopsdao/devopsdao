@@ -1,4 +1,5 @@
 import 'package:devopsdao/blockchain/empty_classes.dart';
+import 'package:devopsdao/tags_manager/manager_services.dart';
 import 'package:devopsdao/widgets/tags/main.dart';
 import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
+        ChangeNotifierProvider(create: (context) => ManagerServices()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {

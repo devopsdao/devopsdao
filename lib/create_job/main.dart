@@ -7,7 +7,7 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../widgets/my_tools.dart';
 import '../widgets/payment.dart';
-import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tag_open_container.dart';
 import '../widgets/wallet_action.dart';
 import '../flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
@@ -320,45 +320,45 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                   return Row(
                                     children: <Widget>[
                                       Consumer<SearchServices>(
-                                          builder: (context, model, child) {
-                                            if (model.createTagsList.isNotEmpty) {
-                                              return SizedBox(
-                                                width: width,
-                                                child: Wrap(
-                                                  alignment: WrapAlignment.start,
-                                                  direction: Axis.horizontal,
-                                                  children: model.createTagsList.entries.map((e) {
-                                                    return WrappedChip(
-                                                      interactive: true,
-                                                      key: ValueKey(e.value),
-                                                      theme: 'white',
-                                                      item: e.value,
-                                                      delete: true,
-                                                      page: 'create'
-                                                    );
-                                                  }).toList()),
-                                              );
-                                            } else {
-                                              return Row(
-                                                children: <Widget>[
-                                                  // Container(
-                                                  //   padding: const EdgeInsets.all(2.0),
-                                                  //   child: const Icon(Icons.new_releases,
-                                                  //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                                  // ),
-                                                  RichText(
-                                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                                      TextSpan(
-                                                        text: 'Add relevant tags and NFT\'s',
-                                                        style: TextStyle(
-                                                          height: 1,
-                                                        )),
-                                                    ])),
-                                                ],
-                                              );
-                                            }
-
+                                        builder: (context, model, child) {
+                                          if (model.createTagsList.isNotEmpty) {
+                                            return SizedBox(
+                                              width: width,
+                                              child: Wrap(
+                                                alignment: WrapAlignment.start,
+                                                direction: Axis.horizontal,
+                                                children: model.createTagsList.entries.map((e) {
+                                                  return WrappedChip(
+                                                    key: ValueKey(e.value),
+                                                    theme: 'white',
+                                                    item: e.value,
+                                                    delete: true,
+                                                    page: 'create',
+                                                    name: e.key,
+                                                    selected: e.value.selected,
+                                                  );
+                                                }).toList()),
+                                            );
+                                          } else {
+                                            return Row(
+                                              children: <Widget>[
+                                                // Container(
+                                                //   padding: const EdgeInsets.all(2.0),
+                                                //   child: const Icon(Icons.new_releases,
+                                                //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                                // ),
+                                                RichText(
+                                                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                                    TextSpan(
+                                                      text: 'Add relevant tags and NFT\'s',
+                                                      style: TextStyle(
+                                                        height: 1,
+                                                      )),
+                                                  ])),
+                                              ],
+                                            );
                                           }
+                                        }
                                       ),
                                       const Spacer(),
                                       const Padding(

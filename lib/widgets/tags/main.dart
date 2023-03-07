@@ -8,6 +8,7 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../../account_dialog/widget/dialog_button_widget.dart';
 import '../../blockchain/interface.dart';
+import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../flutter_flow/theme.dart';
 import '../my_tools.dart';
@@ -25,6 +26,7 @@ class MainTagsPage extends StatefulWidget {
 class _MainTagsPageState extends State<MainTagsPage> {
   // late List<SimpleTags> selectedTagsListLocal = [];
   // TagsValueController tags = TagsValueController([]);
+
   late Map<String, SimpleTags> tagsLocalList;
   @override
   void initState() {
@@ -45,6 +47,9 @@ class _MainTagsPageState extends State<MainTagsPage> {
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var tasksServices = context.read<TasksServices>();
+
+    late Map<String, TagsCompare> tagsCompare = {};
+
     if (widget.page == 'audit') {
       tagsLocalList = searchServices.auditorTagsList;
     } else if (widget.page == 'tasks') {
@@ -72,6 +77,8 @@ class _MainTagsPageState extends State<MainTagsPage> {
     //     }
     //   });
     // });
+
+    // searchServices.resetTagsFilter(simpleTagsMap);
 
     for (var prop1 in searchServices.tagsFilterResults.values) {
       searchServices.tagsFilterResults[prop1.tag]!.selected = false;
@@ -139,6 +146,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                       const Spacer(),
                       InkWell(
                         onTap: () {
+                          searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
                           Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -168,7 +176,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         return TextFormField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            model.tagsFilter(searchKeyword, simpleTagsMap);
+                            model.tagsSearchFilter(searchKeyword, simpleTagsMap);
                           },
                           autofocus: true,
                           obscureText: false,
@@ -184,7 +192,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 // NEW TAG
                                 simpleTagsMap[_searchKeywordController.text] =
                                     SimpleTags(tag: _searchKeywordController.text, icon: "", selected: true);
-                                model.tagsUpdate(simpleTagsMap);
+                                model.tagsAddAndUpdate(simpleTagsMap);
                               },
                               icon: const Icon(Icons.add_box),
                               padding: const EdgeInsets.only(right: 12.0),
@@ -236,15 +244,47 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             alignment: WrapAlignment.start,
                             direction: Axis.horizontal,
                             children: model.tagsFilterResults.entries.map((e) {
+
+                              if(!tagsCompare.containsKey(e.value.tag)){
+                                if (e.value.selected) {
+                                  tagsCompare[e.value.tag] = TagsCompare(state: 'remain',);
+                                } else {
+                                  tagsCompare[e.value.tag] = TagsCompare(state: 'none',);
+                                }
+                              } else if (tagsCompare.containsKey(e.value.tag)) {
+                                if (e.value.selected) {
+                                  if (tagsCompare[e.value.tag]!.state == 'start') {
+                                    tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'remain',));
+                                  }
+                                  if (tagsCompare[e.value.tag]!.state == 'none') {
+                                    tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
+                                  }
+                                  if (tagsCompare[e.value.tag]!.state == 'end') {
+                                    tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
+                                  }
+                                } else {
+                                  if (tagsCompare[e.value.tag]!.state == 'end') {
+                                    tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'none',));
+                                  }
+                                  if (tagsCompare[e.value.tag]!.state == 'start') {
+                                    tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
+                                  }
+                                  if (tagsCompare[e.value.tag]!.state == 'remain') {
+                                    tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
+                                  }
+                                }
+                              }
                               return WrappedChip(
-                                interactive: false,
                                 key: ValueKey(e),
                                 theme: 'white',
                                 item: e.value,
                                 delete: false,
                                 page: 'selection',
-                                animation: false,
+                                startScale: false,
                                 mint: true,
+                                expandAnimation: tagsCompare[e.value.tag]!.state,
+                                name: e.key,
+                                selected: e.value.selected,
                               );
                             }).toList());
                       }
@@ -275,7 +315,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
               callback: () {
-                searchServices.updateTagList(page: widget.page);
+                searchServices.updateTagListOnTasksPages(page: widget.page);
                 searchServices.forbidSearchKeywordClear = true;
                 // searchServices.ready = true;
                 Navigator.pop(context);

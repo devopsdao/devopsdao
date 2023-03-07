@@ -9,7 +9,7 @@ import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
-import '../widgets/tags/tag_call_button.dart';
+import '../widgets/tags/tag_open_container.dart';
 import '../task_item/task_item.dart';
 import '../flutter_flow/theme.dart';
 import 'package:flutter/material.dart';
@@ -290,7 +290,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         direction: Axis.horizontal,
                         children: model.performerTagsList.entries.map((e) {
                           return WrappedChip(
-                              interactive: true, key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'performer');
+                              key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'performer',
+                            name: e.key,
+                            selected: e.value.selected,);
                         }).toList());
                   }),
                   tasksServices.isLoading

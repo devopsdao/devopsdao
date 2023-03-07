@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../../blockchain/interface.dart';
+import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../flutter_flow/theme.dart';
 import 'wrapped_chip.dart';
@@ -248,7 +249,6 @@ import 'wrapped_chip.dart';
 //                     choiceChipBuilderSelected: (context, item, isSelected) {
 //                       return WrappedChip(
 //                         // key: ValueKey(simpleTagsList.indexOf(item)),
-//                         interactive: true,
 //                         theme: 'white',
 //                         item: item,
 //                           delete: false,
@@ -344,15 +344,6 @@ import 'wrapped_chip.dart';
 //     );
 //   }
 // }
-
-class SimpleTags {
-  final String tag;
-  final String? icon;
-  final bool? nft;
-  final String? id;
-  late bool selected;
-  SimpleTags({required this.tag, this.icon, this.nft, this.id, this.selected = false});
-}
 
 List<SimpleTags> simpleTagsList = [
   SimpleTags(tag: "C++", icon: ""),

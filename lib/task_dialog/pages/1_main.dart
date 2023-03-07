@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
-import '../../blockchain/task.dart';
+import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../flutter_flow/theme.dart';
 import '../../widgets/my_tools.dart';
@@ -628,7 +628,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   alignment: WrapAlignment.start,
                                   direction: Axis.horizontal,
                                   children: tags.map((e) {
-                                    return WrappedChip(interactive: false, key: ValueKey(e), theme: 'white', item: e, delete: false, page: 'create');
+                                    return WrappedChip(
+                                        key: ValueKey(e), theme: 'white', item: e, delete: false, page: 'create',
+                                      name: e.tag,
+                                      selected: e.selected,);
                                   }).toList()),
                             );
                           } else {

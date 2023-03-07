@@ -3,7 +3,7 @@ import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/interface.dart';
-import '../../blockchain/task.dart';
+import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/chat/main.dart';
 

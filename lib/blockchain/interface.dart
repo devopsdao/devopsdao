@@ -145,6 +145,14 @@ class InterfaceServices extends ChangeNotifier {
   //   notifyListeners();
   // }
 
+  // **** manager treasury pageCount (to avoid screen freezing on animation)
+  late int treasuryPageCount = 1;
+  Future treasuryPageCountUpdate(number) async {
+    treasuryPageCount = number;
+    notifyListeners();
+  }
+
+
   // ****** SETTINGS ******** //
   // border radius:
   final double borderRadius = 8.0;

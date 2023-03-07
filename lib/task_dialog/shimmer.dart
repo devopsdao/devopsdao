@@ -21,7 +21,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:webthree/credentials.dart';
 
 import '../blockchain/interface.dart';
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../widgets/chat/main.dart';
 

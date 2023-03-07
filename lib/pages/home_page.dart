@@ -5,6 +5,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
+import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../create_job/create_job.dart.old';
@@ -436,20 +437,27 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text('Your Nft\'s:',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                        )),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                      )),
                                     SizedBox(
                                       width: width,
                                       child: Wrap(
-                                          alignment: WrapAlignment.start,
-                                          direction: Axis.horizontal,
-                                          children: tags.map((e) {
-                                            return WrappedChip(
-                                                interactive: false, key: ValueKey(e), theme: 'black', item: e, delete: false, page: 'home', );
-                                          }).toList()),
+                                        alignment: WrapAlignment.start,
+                                        direction: Axis.horizontal,
+                                        children: tags.map((e) {
+                                          return WrappedChip(
+                                            key: ValueKey(e),
+                                            theme: 'black',
+                                            item: e,
+                                            delete: false,
+                                            page: 'home',
+                                            name: e.tag,
+                                            selected: e.selected,);
+                                        }).toList()
+                                      ),
                                     ),
 
                                     // SelectableText(

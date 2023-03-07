@@ -6,7 +6,7 @@ import 'package:webthree/credentials.dart';
 
 import '../account_dialog/main.dart';
 import '../blockchain/accounts.dart';
-import '../blockchain/task.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../widgets/account_item.dart';
 import '../widgets/data_loading_dialog.dart';

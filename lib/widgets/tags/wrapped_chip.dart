@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:animations/animations.dart';
 import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
@@ -6,7 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../../blockchain/interface.dart';
+import '../../blockchain/classes.dart';
 import '../../flutter_flow/theme.dart';
+import '../../tags_manager/widgets/manager_open_container.dart';
+import '../../tags_manager/manager_services.dart';
 import '../my_tools.dart';
 import 'main.dart';
 
@@ -15,24 +21,24 @@ import 'main.dart';
 class WrappedChip extends StatefulWidget {
   // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
   final String theme;
+  final String name;
+  final bool selected;
   final SimpleTags item;
-  final VoidCallback? callback;
   final bool delete;
-  final bool interactive;
-  final VoidCallback? onDeleted;
   final String page;
-  final bool animation;
+  final bool startScale;
   final bool mint;
+  final String expandAnimation;
   const WrappedChip({Key? key,
     required this.theme,
+    required this.name,
+    required this.selected,
     required this.item,
-    required this.interactive,
-    this.callback,
     required this.delete,
-    this.onDeleted,
     required this.page,
-    this.animation = false,
-    this.mint = false
+    this.startScale = false,
+    this.mint = false,
+    this.expandAnimation = 'none',
   }) : super(key: key);
 
   @override
@@ -40,80 +46,118 @@ class WrappedChip extends StatefulWidget {
 }
 
 class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin {
-late bool initDone = false;
+  late Color textColor;
+  late Color borderColor;
+  late Color bodyColor;
+  late Color nftColor;
+  late Color nftMintColor;
 
-  late final AnimationController _controller = AnimationController(
-      duration:  const Duration(
-          milliseconds: 450
-      ),
-      vsync: this,
-      value: 1.0,
-      lowerBound: 0.0,
-      upperBound: 1.0
+  late Color textColorSelected;
+  late Color borderColorSelected;
+  late Color bodyColorSelected;
+  late Color nftColorSelected;
+  late Color nftMintColorSelected;
+
+  late final AnimationController scaleEffectController;
+  late final AnimationController expandEffectController;
+  late Tween<double> chipSizeTween;
+  late Animation<double> animationSize;
+  late Tween<Color?> chipColorTween;
+  late Tween<Color?> textColorTween;
+  late Tween<Color?> borderColorTween;
+  late Animation<Color?> animationTextColor;
+  late Animation<Color?> animationColor;
+  late Animation<Color?> animationBorderColor;
+  late Tween<double> opacityTween;
+  late Animation<double> animationOpacity;
+
+  late  Animation<double> scaleEffect = CurvedAnimation(
+    parent: scaleEffectController,
+    curve: Curves.easeOutQuart,
   );
-  late final AnimationController _expandEffectController = AnimationController(
-      duration:  const Duration(
-          milliseconds:  450
-      ),
-      vsync: this,
-      value: 0.0,
-      lowerBound: 0.0,
-      upperBound: 1.0
+  late Animation<double> expandEffect = CurvedAnimation(
+    parent: expandEffectController,
+    curve: Curves.easeInOutQuart,
   );
-  late final Animation<double> _animation = CurvedAnimation(
-    parent: _controller,
-    curve: Curves.easeInCirc,
-  );
-  late final Animation<double> _expandEffect = CurvedAnimation(
-    parent: _expandEffectController,
-    curve: Curves.easeInCirc,
-  );
+
 
   @override
   void initState() {
     super.initState();
-    if (widget.animation) {
-      _controller.forward();
+    scaleEffectController = AnimationController(
+      vsync: this,
+      value: 1.0,
+      duration: const Duration(milliseconds: 550),
+    );
+    expandEffectController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    if (widget.expandAnimation == 'end') {
+      expandEffectController.forward();
+    } else if (widget.expandAnimation == 'start') {
+      expandEffectController.forward();
     }
-    if (widget.item.selected) {
-      _expandEffectController.forward();
+
+    if (widget.startScale) {
+      scaleEffectController.forward();
     }
-    // _runExpandCheck();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _expandEffectController.dispose();
+    scaleEffectController.dispose();
+    expandEffectController.dispose();
     super.dispose();
   }
 
-  // TagsValueController tags = TagsValueController([]);
+
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
-    var searchServices = context.watch<SearchServices>();
-    final String theme = widget.theme;
-    final SimpleTags item = widget.item;
-    final VoidCallback? callback = widget.callback;
-    late bool interactive = widget.interactive;
+    var searchServices = context.read<SearchServices>();
+    var managerServices = context.read<ManagerServices>();
 
-    final nft = widget.item.nft ?? false;
+    late String icon = 'none';
+    late int numOfNFTs = 0;
+    if (widget.item.nft && widget.page != 'mint') {  icon = 'nft'; }
+    else if (widget.mint) { icon = 'extra_icon'; }
 
+    if (widget.page == 'treasury') {
+      if (searchServices.nftFilterResults[widget.name] != null) {
+        if (searchServices.nftFilterResults[widget.name]!.bunch.length > 1) {
+          numOfNFTs = searchServices.nftFilterResults[widget.name]!.bunch.length;
+        }
+      }
+    }
 
+    if (widget.theme == 'white') {
+      textColor = Colors.black;
+      borderColor = Colors.grey[400]!;
+      bodyColor = Colors.white;
+      nftColor = Colors.deepOrange;
+      nftMintColor = Colors.white;
 
+      textColorSelected = Colors.white;
+      borderColorSelected = Colors.orangeAccent;
+      bodyColorSelected = Colors.orangeAccent;
+      nftColorSelected = Colors.white;
+      nftMintColorSelected = Colors.white;
+    } else if (widget.theme == 'black') {
+      textColor = Colors.grey[300]!;
+      borderColor = Colors.grey[850]!;
+      bodyColor = Colors.grey[850]!;
+      nftColor = Colors.deepOrange;
+      nftMintColor = Colors.white;
 
+      textColorSelected = Colors.white;
+      borderColorSelected = Colors.orange[900]!;
+      bodyColorSelected = Colors.orange[900]!;
+      nftColorSelected = Colors.white;
+      nftMintColorSelected = Colors.white;
+    }
 
-    // Colors (black BIG is default):
-    late Color textColor = Colors.grey[300]!;
-    late Color borderColor = Colors.grey[900]!;
-    late Color bodyColor = Colors.grey[800]!;
-    late Color nftColor = Colors.deepOrange;
-    late Color nftMintColor = Colors.grey[600]!;
-
-
-
-    // sizes of Tags (black BIG is default):
+    // sizes
     late double iconSize = 17;
     late double fontSize = 14;
     late EdgeInsets containerPadding = const EdgeInsets.symmetric(horizontal: 6, vertical: 6);
@@ -121,104 +165,139 @@ late bool initDone = false;
     late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 4.0);
     late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 4.0);
 
-
-
-    if (theme == 'white' || theme == 'small-white') {
-      textColor = Colors.black;
-      borderColor = Colors.grey[400]!;
-      bodyColor = Colors.transparent;
-      nftColor = Colors.deepOrange;
-      // Colors for selected items:
-
-      if (item.selected) {
-        interactive = true;
-        textColor = Colors.white;
-        borderColor = Colors.orangeAccent;
-        bodyColor = Colors.orangeAccent;
-        nftColor = Colors.white;
-        nftMintColor = Colors.white;
-      }
-    }
-
-    if (theme == 'small-white' || theme == 'small-black') {
-      iconSize = 10;
-      fontSize = 11;
-      containerPadding = const EdgeInsets.symmetric(horizontal: 5, vertical: 3);
-      containerMargin = const EdgeInsets.symmetric(horizontal: 2, vertical: 2);
-      rightSpanPadding = const EdgeInsets.only(right: 2.0);
-      leftSpanPadding = const EdgeInsets.only(left: 2.0);
-    }
-
-    var textSize = calcTextSize(item.tag, DodaoTheme.of(context).bodyText3.override(
+    var textSize = calcTextSize(widget.name, DodaoTheme.of(context).bodyText3.override(
       fontFamily: 'Inter',
       color: textColor,
       fontWeight: FontWeight.w400,
       fontSize: fontSize,
-    ),);
+    ));
 
-    // tag width
-    late double tagWidth = textSize.width + 22;
+    late double tagWidthInit = textSize.width + 22;
+    late double expandExtra = 12;
     late bool getMore = false;
-    if (item.tag == 'Get more...') {
-      getMore = true;
-      tagWidth += 22;
-    }
-    if (item.selected && widget.delete) {
-      tagWidth += 22;
-    }
-    if (widget.mint && item.selected) {
-      tagWidth += 42;
-    }
-    if (nft && !item.selected) {
-      tagWidth += 22;
-    }
-    if (nft && widget.delete) {
-      tagWidth += 22;
-    }
-    // if () {
-    //
-    // }
+    late Color colorBodyBegin = bodyColor;
+    late Color colorBodyEnd = bodyColor;
+    late Color colorTextBegin = textColor;
+    late Color colorTextEnd = textColor;
+    late Color colorBorderBegin = borderColor;
+    late Color colorBorderEnd = borderColor;
+    late double opacityBegin = 0.0;
+    late double opacityEnd = 1.0;
 
-    onTapGesture() {
+    if (icon == 'extra_icon') { expandExtra += 22; }
+    if (icon == 'nft') { tagWidthInit += 22; }
+
+    if (widget.name == 'Get more...') {
+      getMore = true;
+      tagWidthInit += 22;
+    }
+
+    if (widget.selected && (widget.expandAnimation == 'remain' )) {
+      textColor = textColorSelected;
+      borderColor = borderColorSelected;
+      bodyColor = bodyColorSelected;
+      nftColor = nftColorSelected;
+      nftMintColor = nftMintColorSelected;
+    }
+
+    if (widget.expandAnimation == 'start') {
+      nftColor = nftColorSelected;
+      colorBodyBegin = bodyColor;
+      colorBodyEnd = bodyColorSelected;
+      colorTextBegin = textColor;
+      colorTextEnd = textColorSelected;
+      colorBorderBegin = borderColor;
+      colorBorderEnd = borderColorSelected;
+
+    } else if (widget.expandAnimation == 'end') {
+      tagWidthInit += 12;
+      expandExtra = -12;
+      if (icon == 'extra_icon') {
+        tagWidthInit += 22;
+        expandExtra = -34;
+      }
+      colorBodyBegin = bodyColorSelected;
+      colorBodyEnd = bodyColor;
+      colorTextBegin = textColorSelected;
+      colorTextEnd = textColor;
+      colorBorderBegin = borderColorSelected;
+      colorBorderEnd = borderColor ;
+      opacityBegin = 1.0;
+      opacityEnd = 0.0;
+
+    } else if (widget.expandAnimation == 'remain') {
+      if (icon == 'extra_icon') { tagWidthInit += 22; }
+      tagWidthInit += 12;
+      opacityBegin = 1.0;
+      opacityEnd = 0.0;
+
+    }
+    // print('expandAnimation: ${widget.expandAnimation} ${widget.name} tagWidthInit: ${tagWidthInit - (textSize.width + 22)} expandExtra: $expandExtra' );
+
+
+
+    chipSizeTween = Tween(begin: tagWidthInit, end: tagWidthInit + expandExtra);
+    animationSize = chipSizeTween.animate(expandEffect);
+
+    opacityTween = Tween(begin: opacityBegin, end: opacityEnd);
+    animationOpacity = opacityTween.animate(expandEffect);
+
+    chipColorTween = ColorTween(begin: colorBodyBegin, end: colorBodyEnd);
+    animationColor = chipColorTween.animate(expandEffect);
+
+    textColorTween = ColorTween(begin: colorTextBegin, end: colorTextEnd);
+    animationTextColor = textColorTween.animate(expandEffect);
+
+    borderColorTween = ColorTween(begin: colorBorderBegin, end: colorBorderEnd);
+    animationBorderColor = borderColorTween.animate(expandEffect);
+
+
+    void onTapGesture() {
       setState(() {
+        FocusManager.instance.primaryFocus?.unfocus();
         if (widget.delete) {
-          _controller.reverse();
-          widget.onDeleted?.call();
+          scaleEffectController.reverse();
           Future.delayed(
-              const Duration(milliseconds: 750), () {
-            searchServices.removeTag(item.tag, page: widget.page, );
+              const Duration(milliseconds: 550), () {
+            searchServices.removeTagOnTasksPages(widget.name, page: widget.page, );
           });
-          // searchServices.updateTagList(page: widget.page);
         } else if(widget.page == 'selection') {
-          for (String key in searchServices.tagsFilterResults.keys) {
-            if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
-                item.tag.toLowerCase()) {
-              searchServices.tagsFilterResults[key]!.selected ?
-              searchServices.tagsFilterResults[key]!.selected = false :
-              searchServices.tagsFilterResults[key]!.selected = true;
-            }
+          // if (widget.selected) {
+          //   expandEffectController.reverse();
+          //   print('reversed');
+          // } else {
+          //   expandEffectController.forward();
+          // }
+          // for (String key in searchServices.tagsFilterResults.keys) {
+          //   if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
+          //       widget.name.toLowerCase()) {
+          //     searchServices.tagsFilterResults[key]!.selected ?
+          //     searchServices.tagsFilterResults[key]!.selected = false :
+          //     searchServices.tagsFilterResults[key]!.selected = true;
+          //   }
+          // }
+          searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.name);
+        } else if(widget.page == 'treasury') {
+          searchServices.nftSelection(unselectAll: false, tagName: widget.name);
+          if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
+            managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.name]!);
+          } else {
+            searchServices.nftSelection(unselectAll: true, tagName: '', );
+            managerServices.clearTreasuryNft();
           }
+        } else if (widget.page == 'mint') {
+          searchServices.tagSelection( unselectAll: false, tagName: widget.name, typeSelection: 'mint');
         }
       });
-      // if (item.selected) {
-      //   _expandEffectController.forward();
-      //   Future.delayed(
-      //       const Duration(milliseconds: 350), () {
-      //
-      //   });
-      // } else {
-      //   _expandEffectController.reverse();
-      // }
     }
 
-
     return ScaleTransition(
-      scale: _animation,
-      child: AnimatedContainer(
-        width: tagWidth,
-        curve: Curves.fastOutSlowIn,
-        duration: const Duration(milliseconds:  350),
-        child: Container(
+      scale: scaleEffect,
+      child: AnimatedBuilder(
+        animation: animationSize,
+        builder: (context, child) {
+          return Container(
+            width: animationSize.value,
             padding: containerPadding,
             margin: containerMargin,
             decoration: BoxDecoration(
@@ -226,44 +305,35 @@ late bool initDone = false;
                 Radius.circular(8.0),
               ),
               border: Border.all(
-                  color: borderColor,
+                  color: animationBorderColor.value!,
                   width: 1
               ),
-              color: bodyColor,
+              color: animationColor.value,
             ),
             child: Row(
                 children: [
-                  if (widget.mint && !nft)
+                  if (icon == 'extra_icon')
                     Flexible(
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds:  400),
-                        opacity: item.selected ? 1.0 : 0.0,
-                        curve: Curves.easeInQuad,
+                      child: Opacity(
+                        opacity: animationOpacity.value,
                         child: GestureDetector(
                           onTap: () {
                             showDialog(context: context, builder: (context) {
-                              return TagMintDialog(tagName: item.tag);
+                              return TagMintDialog(tagName: widget.name);
                             });
                           },
-                          child: AnimatedContainer(
-                            width: item.selected ? iconSize + 4 : 0,
-                            // height: item.selected ? 100.0 : 200.0,
-                            // color: bodyColor,
-                            curve: Curves.fastOutSlowIn,
-                            duration: const Duration(milliseconds:  350),
-                            child: Padding(
-                              padding: rightSpanPadding,
-                              child: Icon(
-                                  Icons.tag_rounded,
-                                  size: item.selected ? iconSize : 0,
-                                  color: nftMintColor
-                              ),
+                          child: Padding(
+                            padding: rightSpanPadding,
+                            child: Icon(
+                                Icons.tag_rounded,
+                                size: iconSize,
+                                color: nftMintColor
                             ),
                           ),
                         ),
                       ),
                     ),
-                  if (nft)
+                  if (icon == 'nft' && numOfNFTs < 1)
                   Flexible(
                     flex: 10,
                     child: Padding(
@@ -275,51 +345,170 @@ late bool initDone = false;
                       ),
                     ),
                   ),
-
+                  if (widget.page == 'treasury' && numOfNFTs > 1)
+                    Flexible(
+                      flex: 10,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 5.0, left: 3.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: nftColor,
+                              border: Border.all(
+                                color: nftColor,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(12))
+                          ),
+                          width: 15,
+                          height: 15,
+                          // color: nftColor,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              numOfNFTs.toString(),
+                              style: DodaoTheme.of(context).bodyText3.override(
+                                fontFamily: 'Inter',
+                                color: animationColor.value,
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontSize - 4,
+                              ),
+                            ),
+                          ),
+                        )
+                      ),
+                    ),
                   // Gesture for TEXT field
+                  if (!getMore)
                   GestureDetector(
                     onTap: onTapGesture,
                     child: Text(
-                      item.tag,
+                      widget.name,
                       style: DodaoTheme.of(context).bodyText3.override(
                         fontFamily: 'Inter',
-                        color: textColor,
+                        color: animationTextColor.value,
                         fontWeight: FontWeight.w400,
                         fontSize: fontSize,
                       ),
                     ),
                   ),
 
-                  // Close button
+                  // Close button (will be not visible if item.selected false)
                   Flexible(
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds:  400),
-                      opacity: item.selected ? 1.0 : 0.0,
-                      curve: Curves.easeInQuad,
+                    child: Opacity(
+                      opacity: animationOpacity.value,
                       child: GestureDetector(
                         onTap: onTapGesture,
                         child: Padding(
-                          padding: item.selected ? leftSpanPadding :const EdgeInsets.only(left: 0),
-                          child: Icon(Icons.clear_rounded, size: item.selected ? iconSize : 0, color: textColor),
+                          padding: leftSpanPadding,
+                          child: Icon(
+                              Icons.clear_rounded,
+                              size: iconSize,
+                              color: textColorSelected
+                          ),
                         ),
                       ),
                     ),
                   ),
                   if (getMore)
-                    Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-
-                      },
-                      child: Padding(
-                        padding: leftSpanPadding,
-                        child: Icon(Icons.more_outlined, size: iconSize, color: textColor),
-                      ),
-                    ),
+                  GetMore(
+                    leftSpanPadding: leftSpanPadding,
+                    iconSize: iconSize,
+                    textColor: textColor, fontSize: fontSize,
                   ),
                 ],
               ),
+          );
+        }
+      ),
+    );
+  }
+}
+
+
+
+
+
+class WrappedChipSmall extends StatelessWidget {
+  // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
+  final String theme;
+  final SimpleTags item;
+  final String page;
+  const WrappedChipSmall({Key? key,
+    required this.theme,
+    required this.item,
+    required this.page,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Colors (black BIG is default):
+    late Color textColor = Colors.grey[300]!;
+    late Color borderColor = Colors.grey[850]!;
+    late Color bodyColor = Colors.grey[850]!;
+    late Color nftColor = Colors.deepOrange;
+    late Color nftMintColor = Colors.grey[600]!;
+
+
+    if (theme == 'small-white') {
+      textColor = Colors.black;
+      borderColor = Colors.grey[400]!;
+      bodyColor = Colors.transparent;
+      nftColor = Colors.deepOrange;
+    }
+
+    late double iconSize = 10;
+    late double fontSize = 11;
+    late EdgeInsets containerPadding = const EdgeInsets.symmetric(horizontal: 5, vertical: 3);
+    late EdgeInsets containerMargin = const EdgeInsets.symmetric(horizontal: 2, vertical: 2);
+    late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 2.0);
+    late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 2.0);
+
+    var textSize = calcTextSize(item.tag, DodaoTheme.of(context).bodyText3.override(
+      fontFamily: 'Inter',
+      color: textColor,
+      fontWeight: FontWeight.w400,
+      fontSize: fontSize,
+    ),);
+
+    // tag width
+    late double tagWidthInit = textSize.width + 22;
+
+    return Container(
+      width: tagWidthInit,
+      padding: containerPadding,
+      margin: containerMargin,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        border: Border.all(
+            color: borderColor,
+            width: 1
+        ),
+        color: bodyColor,
+      ),
+      child: Row(
+        children: [
+          // if (nft)
+          Flexible(
+            flex: 10,
+            child: Padding(
+              padding: rightSpanPadding,
+              child: Icon(
+                  Icons.star,
+                  size: iconSize,
+                  color:nftColor
+              ),
             ),
+          ),
+
+          // Close button (will be not visible if item.selected false)
+          Flexible(
+            child: Padding(
+              padding: item.selected ? leftSpanPadding :const EdgeInsets.only(left: 0),
+              child: Icon(Icons.clear_rounded, size: item.selected ? iconSize : 0, color: textColor),
+            ),
+          ),
+        ],
       ),
     );
   }
