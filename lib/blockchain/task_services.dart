@@ -123,8 +123,8 @@ class JSrawRequestAddChainParams {
   //   'chainId': '0x507',
   //   'chainName': 'Moonbase alpha',
   //   'nativeCurrency': <String, dynamic>{
-  //     'name': 'DEV',
-  //     'symbol': 'DEV',
+  //     'name': 'FTM',
+  //     'symbol': 'FTM',
   //     'decimals': 18,
   //   },
   //   'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -816,8 +816,8 @@ class TasksServices extends ChangeNotifier {
         'chainId': '0x507',
         'chainName': 'Moonbase alpha',
         'nativeCurrency': <String, dynamic>{
-          'name': 'DEV',
-          'symbol': 'DEV',
+          'name': 'FTM',
+          'symbol': 'FTM',
           'decimals': 18,
         },
         'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -1589,8 +1589,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Task> loadOneTask(taskAddress) async {
-    if (tasks.containsKey(taskAddress.toString())) {
-      return tasks[taskAddress.toString()]!;
+    if (tasks.containsKey(taskAddress)) {
+      return tasks[taskAddress]!;
     } else {
       Task task = await getTaskData(taskAddress);
       tasks[taskAddress] = task;

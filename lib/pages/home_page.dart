@@ -264,10 +264,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               //     fit: BoxFit.fitHeight,
               // ),
               image: DecorationImage(
-                image: AssetImage("assets/images/background.png", ),
+                image: AssetImage(
+                  "assets/images/background.png",
+                ),
                 fit: BoxFit.cover,
                 filterQuality: FilterQuality.medium,
-
               ),
             ),
             child: SingleChildScrollView(
@@ -351,7 +352,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.ethBalance} DEV',
+                                    Text('${tasksServices.ethBalance} FTM',
                                         style: const TextStyle(
                                           height: 1.6,
                                           color: Colors.white,
@@ -393,7 +394,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.pendingBalance} DEV',
+                                    Text('${tasksServices.pendingBalance} FTM',
                                         style: const TextStyle(
                                           height: 1.6,
                                           color: Colors.white,
@@ -442,27 +443,27 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text('Your Nft\'s:',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                      )),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter',
+                                        )),
                                     SizedBox(
                                       width: width,
                                       child: Wrap(
-                                        alignment: WrapAlignment.start,
-                                        direction: Axis.horizontal,
-                                        children: tags.map((e) {
-                                          return WrappedChip(
-                                            key: ValueKey(e),
-                                            theme: 'black',
-                                            item: e,
-                                            delete: false,
-                                            page: 'home',
-                                            name: e.tag,
-                                            selected: e.selected,);
-                                        }).toList()
-                                      ),
+                                          alignment: WrapAlignment.start,
+                                          direction: Axis.horizontal,
+                                          children: tags.map((e) {
+                                            return WrappedChip(
+                                              key: ValueKey(e),
+                                              theme: 'black',
+                                              item: e,
+                                              delete: false,
+                                              page: 'home',
+                                              name: e.tag,
+                                              selected: e.selected,
+                                            );
+                                          }).toList()),
                                     ),
 
                                     // SelectableText(
@@ -546,7 +547,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ),
                         ),
                         Text(
-                            'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
+                            tasksServices.browserPlatform ??
+                                'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
                             style: const TextStyle(
                               height: 2,
                               fontWeight: FontWeight.bold,

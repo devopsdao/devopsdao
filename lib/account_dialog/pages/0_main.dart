@@ -22,15 +22,13 @@ class AccountMainPage extends StatefulWidget {
   final double screenHeightSize;
   final Account account;
 
-
-  const AccountMainPage(
-      {Key? key,
-        required this.screenHeightSizeNoKeyboard,
-        required this.innerPaddingWidth,
-        required this.screenHeightSize,
-        required this.account,
-      })
-      : super(key: key);
+  const AccountMainPage({
+    Key? key,
+    required this.screenHeightSizeNoKeyboard,
+    required this.innerPaddingWidth,
+    required this.screenHeightSize,
+    required this.account,
+  }) : super(key: key);
 
   @override
   _AccountMainPageState createState() => _AccountMainPageState();
@@ -50,7 +48,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
     messageForStateController!.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +121,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                         // padding: const EdgeInsets.all(3),
                                         child: RichText(maxLines: 5, text: text)),
                                   ),
-
                                   Container(
                                     width: 54,
                                     padding: const EdgeInsets.all(4.0),
@@ -134,10 +130,8 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                       color: Colors.lightBlue.shade600,
                                       child: InkWell(
                                         onTap: () {
-                                          interface.accountsDialogPagesController.animateToPage(
-                                              1,
-                                              duration: const Duration(milliseconds: 400),
-                                              curve: Curves.ease);
+                                          interface.accountsDialogPagesController
+                                              .animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.ease);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(6.0),
@@ -149,7 +143,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                       ),
                                     ),
                                   ),
-
                                 ],
                               ),
                             ),
@@ -168,16 +161,16 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                   ),
                                   child: RichText(
                                       text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'Read more ',
-                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
-                                          ),
-                                          const WidgetSpan(
-                                            child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                          ),
-                                        ],
-                                      ))),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Read more ',
+                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
+                                      ),
+                                      const WidgetSpan(
+                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                      ),
+                                    ],
+                                  ))),
                           ],
                         ),
                       );
@@ -185,7 +178,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
                   ),
                 ),
               ),
-
 
               // ************ Show prices and topup part ******** //
               // if (!FocusScope.of(context).hasFocus)
@@ -208,16 +200,12 @@ class _AccountMainPageState extends State<AccountMainPage> {
                               children: <Widget>[
                                 RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                      TextSpan(
-                                          text: '?? DEV \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                      TextSpan(
-                                          text: '?? aUSDC',
-                                          style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                    ])),
+                                  TextSpan(text: '?? FTM \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                  TextSpan(text: '?? aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                ])),
                               ],
                             )),
                         const Spacer(),
-
                       ],
                     ),
                   ),
@@ -242,68 +230,59 @@ class _AccountMainPageState extends State<AccountMainPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RichText(
-                            text: const TextSpan(
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                                children: <TextSpan>[
-                                  TextSpan(text: 'NFT collection:' ),
-                              ]
-                            )
-                          ),
+                              text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87), children: <TextSpan>[
+                            TextSpan(text: 'NFT collection:'),
+                          ])),
                         ),
-                        LayoutBuilder(
-                            builder: (context, constraints) {
-                              final double width = constraints.maxWidth - 66;
-                              return Row(
-                                children: <Widget>[
-                                  Consumer<SearchServices>(
-                                      builder: (context, model, child) {
-                                        // if (model.tempTagsList.isNotEmpty) {
-                                        //   return SizedBox(
-                                        //     width: width,
-                                        //     child: Wrap(
-                                        //         alignment: WrapAlignment.start,
-                                        //         direction: Axis.horizontal,
-                                        //         children: model.tempTagsList.map((e) {
-                                        //           return WrappedChip(
-                                        //               key: ValueKey(e),
-                                        //               theme: 'white',
-                                        //               item: e,
-                                        //               delete: true,
-                                        //               page: 'create'
-                                        //           );
-                                        //         }).toList()),
-                                        //   );
-                                        // } else {
-                                          return Row(
-                                            children: <Widget>[
-                                              // Container(
-                                              //   padding: const EdgeInsets.all(2.0),
-                                              //   child: const Icon(Icons.new_releases,
-                                              //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                              // ),
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: RichText(
-                                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                                      TextSpan(
-                                                          text: 'Empty :(',
-                                                          style: TextStyle(
-                                                            height: 1,
-                                                          )),
-                                                    ])),
-                                              ),
-                                            ],
-                                          );
-                                        // }
-
-                                      }
-                                  ),
-                                ],
-                              );
-                            }
-                        ),
+                        LayoutBuilder(builder: (context, constraints) {
+                          final double width = constraints.maxWidth - 66;
+                          return Row(
+                            children: <Widget>[
+                              Consumer<SearchServices>(builder: (context, model, child) {
+                                // if (model.tempTagsList.isNotEmpty) {
+                                //   return SizedBox(
+                                //     width: width,
+                                //     child: Wrap(
+                                //         alignment: WrapAlignment.start,
+                                //         direction: Axis.horizontal,
+                                //         children: model.tempTagsList.map((e) {
+                                //           return WrappedChip(
+                                //               key: ValueKey(e),
+                                //               theme: 'white',
+                                //               item: e,
+                                //               delete: true,
+                                //               page: 'create'
+                                //           );
+                                //         }).toList()),
+                                //   );
+                                // } else {
+                                return Row(
+                                  children: <Widget>[
+                                    // Container(
+                                    //   padding: const EdgeInsets.all(2.0),
+                                    //   child: const Icon(Icons.new_releases,
+                                    //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                    // ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RichText(
+                                          text: TextSpan(
+                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                              children: const <TextSpan>[
+                                            TextSpan(
+                                                text: 'Empty :(',
+                                                style: TextStyle(
+                                                  height: 1,
+                                                )),
+                                          ])),
+                                    ),
+                                  ],
+                                );
+                                // }
+                              }),
+                            ],
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -313,7 +292,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
           ),
         ),
       ),
-      floatingActionButtonAnimator:  NoScalingAnimation(),
+      floatingActionButtonAnimator: NoScalingAnimation(),
       floatingActionButton: Padding(
         // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.only(right: 13, left: 46),

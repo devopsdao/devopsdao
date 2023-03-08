@@ -8,12 +8,13 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../flutter_flow/theme.dart';
 
-const List<String> selectToken = <String>['DEV', 'aUSDC'];
+const List<String> selectToken = <String>['FTM', 'aUSDC'];
 
 class Payment extends StatefulWidget {
   final String purpose;
   final double innerPaddingWidth;
-  const Payment({Key? key,
+  const Payment({
+    Key? key,
     required this.purpose,
     required this.innerPaddingWidth,
   }) : super(key: key);
@@ -32,9 +33,6 @@ class _PaymentState extends State<Payment> {
   double devLowPrice = 0.0;
   late double minPrice;
   late double maxPrice;
-
-
-
 
   late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 200));
 
@@ -56,12 +54,10 @@ class _PaymentState extends State<Payment> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-
-
     late double borderRadius = interface.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
-      dropdownValue = 'DEV';
+      dropdownValue = 'FTM';
       minPrice = devLowPrice;
       maxPrice = devHighPrice;
     } else {
@@ -85,7 +81,6 @@ class _PaymentState extends State<Payment> {
 
     return Column(
       children: [
-
         Material(
             elevation: 10,
             borderRadius: BorderRadius.circular(borderRadius),
@@ -103,13 +98,11 @@ class _PaymentState extends State<Payment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-
                           // padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                           // height: widget.topConstraints.maxHeight - 200,
                           width: innerPaddingWidth,
                           decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(borderRadius),
+                            borderRadius: BorderRadius.circular(borderRadius),
                           ),
                           child: TextFormField(
                             controller: valueController,
@@ -119,7 +112,6 @@ class _PaymentState extends State<Payment> {
                             ],
                             autofocus: false,
                             obscureText: false,
-
                             decoration: InputDecoration(
                               labelText: 'Value:',
                               labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
@@ -143,21 +135,21 @@ class _PaymentState extends State<Payment> {
                               ),
                             ),
                             style: DodaoTheme.of(context).bodyText1.override(
-                              fontFamily: 'Inter',
-                              color: setBlackAndWhite,
-                              lineHeight: 2,
-                            ),
+                                  fontFamily: 'Inter',
+                                  color: setBlackAndWhite,
+                                  lineHeight: 2,
+                                ),
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onEditingComplete: () {
                               final dropdown = RegExp(dropdownValue);
-                              if(!dropdown.hasMatch(valueController!.text)) {
+                              if (!dropdown.hasMatch(valueController!.text)) {
                                 valueController!.text = '${valueController!.text} $dropdownValue';
                               }
                             },
                             onTapOutside: (unknown) {
                               final dropdown = RegExp(dropdownValue);
-                              if(!dropdown.hasMatch(valueController!.text)) {
+                              if (!dropdown.hasMatch(valueController!.text)) {
                                 valueController!.text = '${valueController!.text} $dropdownValue';
                               }
                               FocusScope.of(context).unfocus();
@@ -174,7 +166,6 @@ class _PaymentState extends State<Payment> {
                             },
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                           child: SliderTheme(
@@ -195,12 +186,10 @@ class _PaymentState extends State<Payment> {
                                   _currentPriceValue = value;
                                   valueController!.text = '$value $dropdownValue';
                                   interface.tokensEntered = value;
-
                                 });
                                 debounceNotifyListener.debounce(() {
                                   tasksServices.myNotifyListeners();
                                 });
-
                               },
                             ),
                           ),
@@ -213,7 +202,6 @@ class _PaymentState extends State<Payment> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
-
                         children: [
                           // RichText(
                           //     text: TextSpan(
@@ -238,17 +226,16 @@ class _PaymentState extends State<Payment> {
                               height: 2,
                               color: setBlackAndWhite,
                             ),
-
                             onChanged: (String? value) {
                               // This is called when the user selects an item.
-                              if (value == 'DEV') {
+                              if (value == 'FTM') {
                                 tasksServices.taskTokenSymbol = 'ETH';
                               } else {
                                 tasksServices.taskTokenSymbol = value!;
                               }
-                              if (value == 'DEV') {
+                              if (value == 'FTM') {
                                 interface.tokensEntered = 0.0;
-                                valueController!.text = '0.0 DEV';
+                                valueController!.text = '0.0 FTM';
                                 _currentPriceValue = 0.0;
                                 minPrice = devLowPrice;
                                 maxPrice = devHighPrice;
@@ -261,9 +248,7 @@ class _PaymentState extends State<Payment> {
                               }
                               setState(() {
                                 dropdownValue = value!;
-
                               });
-
                             },
                             items: selectToken.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
@@ -278,8 +263,7 @@ class _PaymentState extends State<Payment> {
                   )
                 ],
               ),
-            )
-        ),
+            )),
         // if(widget.purpose == 'topup')
         //
       ],
