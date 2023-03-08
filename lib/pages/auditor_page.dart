@@ -98,7 +98,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       tabIndex = tabs[task!.auditState];
     }
 
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+    if (_searchKeywordController.text.isEmpty ) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksAuditPending);
       } else if (tabIndex == 1) {

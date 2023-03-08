@@ -85,7 +85,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var searchServices = context.read<SearchServices>();
 
     bool isFloatButtonVisible = false;
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+    if (_searchKeywordController.text.isEmpty ) {
       tasksServices.resetFilter(tasksServices.tasksNew);
       searchServices.forbidSearchKeywordClear = false;
     }

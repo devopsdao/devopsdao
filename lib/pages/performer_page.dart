@@ -92,7 +92,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       }
     }
 
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+    if (_searchKeywordController.text.isEmpty ) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
       } else if (tabIndex == 1) {

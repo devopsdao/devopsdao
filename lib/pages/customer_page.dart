@@ -118,8 +118,8 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       // print('saved index changed to: $index');
       // }
     }
-
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+//&& !searchServices.forbidSearchKeywordClear
+    if (_searchKeywordController.text.isEmpty ) {
       changeTab(tabIndex, 0.0); //temp disable
       searchServices.forbidSearchKeywordClear = false;
       // if (tabIndex == 0) {
