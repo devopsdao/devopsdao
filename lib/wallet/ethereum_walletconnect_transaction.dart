@@ -39,8 +39,7 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
       );
     } catch (e) {
       print(e.toString());
-      if (e.toString() ==
-          'JSON-RPC error -32000: User rejected the transaction') {
+      if (e.toString() == 'JSON-RPC error -32000: User rejected the transaction') {
         hash = 'rejected';
       }
     }
@@ -49,8 +48,7 @@ class WalletConnectEthereumCredentials extends CustomTransactionSender {
   }
 
   @override
-  Future<MsgSignature> signToSignature(Uint8List payload,
-      {int? chainId, bool isEIP1559 = false}) {
+  Future<MsgSignature> signToSignature(Uint8List payload, {int? chainId, bool isEIP1559 = false}) {
     // TODO: implement signToSignature
     throw UnimplementedError();
   }
@@ -122,9 +120,7 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
         name: 'Devopsdao',
         description: 'Devopsdao WalletConnect',
         url: 'https://devopsdao.com',
-        icons: [
-          'https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'
-        ],
+        icons: ['https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'],
       ),
     );
     provider = EthereumWalletConnectProvider(connector);
@@ -155,8 +151,7 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
     // session = await sessionStorage.getSession();
     // // this.session = session;
     // this.publicAddress = EthereumAddress.fromHex(session!.accounts[0]);
-    final session =
-        connector.connect(chainId: 1287, onDisplayUri: onDisplayUri);
+    final session = connector.connect(chainId: 1287, onDisplayUri: onDisplayUri);
 
     return session;
   }
@@ -178,8 +173,7 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
     final params = <String, dynamic>{
       'chainId': chainId,
     };
-    final response = await connector.sendCustomRequest(
-        method: 'wallet_switchEthereumChain', params: [params]);
+    final response = await connector.sendCustomRequest(method: 'wallet_switchEthereumChain', params: [params]);
     print(response);
 
     // return session;
@@ -190,8 +184,8 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
       'chainId': '0x507',
       'chainName': 'Moonbase alpha',
       'nativeCurrency': <String, dynamic>{
-        'name': 'DEV',
-        'symbol': 'DEV',
+        'name': 'FTM',
+        'symbol': 'FTM',
         'decimals': 18,
       },
       'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -199,8 +193,7 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
       'iconUrls': [''],
     };
 
-    final response = await connector
-        .sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
+    final response = await connector.sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
     print(response);
 
     // return session;
@@ -210,8 +203,7 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
     // final params = <String, dynamic>{
     //   'chainId': '0x507',
     // };
-    final response =
-        await connector.sendCustomRequest(method: 'eth_chainId', params: []);
+    final response = await connector.sendCustomRequest(method: 'eth_chainId', params: []);
     print(response);
     return int.parse(response);
 
@@ -226,9 +218,7 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
       to: sender,
       from: sender,
       gasPrice: EtherAmount.inWei(BigInt.one),
-      maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1)
-          .getValueInUnit(EtherUnit.gwei)
-          .toInt(),
+      maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1).getValueInUnit(EtherUnit.gwei).toInt(),
       value: EtherAmount.fromUnitAndValue(EtherUnit.finney, 1),
     );
 

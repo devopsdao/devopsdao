@@ -9,8 +9,8 @@ import '../blockchain/task_services.dart';
 
 const List<String> selectNetwork = <String>['Moonbase', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];
 
-// const List<String> selectToken = <String>['ETH', 'WETH', 'WDEV', 'aUSDC'];
-const List<String> selectToken = <String>['DEV', 'aUSDC'];
+// const List<String> selectToken = <String>['ETH', 'WETH', 'WFTM', 'aUSDC'];
+const List<String> selectToken = <String>['FTM', 'aUSDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
   final Task object;

@@ -123,8 +123,8 @@ class JSrawRequestAddChainParams {
   //   'chainId': '0x507',
   //   'chainName': 'Moonbase alpha',
   //   'nativeCurrency': <String, dynamic>{
-  //     'name': 'DEV',
-  //     'symbol': 'DEV',
+  //     'name': 'FTM',
+  //     'symbol': 'FTM',
   //     'decimals': 18,
   //   },
   //   'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -816,8 +816,8 @@ class TasksServices extends ChangeNotifier {
         'chainId': '0x507',
         'chainName': 'Moonbase alpha',
         'nativeCurrency': <String, dynamic>{
-          'name': 'DEV',
-          'symbol': 'DEV',
+          'name': 'FTM',
+          'symbol': 'FTM',
           'decimals': 18,
         },
         'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -1411,6 +1411,12 @@ class TasksServices extends ChangeNotifier {
     final rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
     late int i = 0;
     for (final task in rawTasksList) {
+      List<double> tokenValues = [];
+      for (final tokenValueRaw in task[2]) {
+        final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
+        final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+        tokenValues.add(ethBalanceToken);
+      }
       // print('Task loaded: ${task.title}');
       var taskObject = Task(
           // nanoId: task[0],
@@ -1437,7 +1443,7 @@ class TasksServices extends ChangeNotifier {
           taskAddress: taskAddresses[i],
           justLoaded: true,
           tokenNames: task[1].cast<String>(),
-          tokenValues: task[2],
+          tokenValues: tokenValues,
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1583,8 +1589,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Task> loadOneTask(taskAddress) async {
-    if (tasks.containsKey(taskAddress.toString())) {
-      return tasks[taskAddress.toString()]!;
+    if (tasks.containsKey(taskAddress)) {
+      return tasks[taskAddress]!;
     } else {
       Task task = await getTaskData(taskAddress);
       tasks[taskAddress] = task;

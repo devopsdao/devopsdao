@@ -25,26 +25,21 @@ class AccountCloseUpPage extends StatefulWidget {
   final double borderRadius;
   final String fromPage;
 
-
-  const AccountCloseUpPage(
-      {Key? key,
-        required this.innerPaddingWidth,
-        required this.account,
-        required this.borderRadius,
-        required this.fromPage,
-      })
-      : super(key: key);
+  const AccountCloseUpPage({
+    Key? key,
+    required this.innerPaddingWidth,
+    required this.account,
+    required this.borderRadius,
+    required this.fromPage,
+  }) : super(key: key);
 
   @override
   _AccountCloseUpPageState createState() => _AccountCloseUpPageState();
 }
 
 class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
-
   TextEditingController? pullRequestController;
   TextEditingController? messageForStateController;
-
-
 
   @override
   void initState() {
@@ -69,7 +64,6 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Account account = widget.account;
     final String fromPage = widget.fromPage;
-
 
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
@@ -133,7 +127,6 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                                         // padding: const EdgeInsets.all(3),
                                         child: RichText(maxLines: 5, text: text)),
                                   ),
-
                                   Container(
                                     width: 54,
                                     padding: const EdgeInsets.all(4.0),
@@ -144,9 +137,9 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                                       child: InkWell(
                                         onTap: () {
                                           // interface.accountsDialogPagesController.animateToPage(
-                                              // interface.dialogCurrentState['pages']['description'] ?? 99,
-                                              // duration: const Duration(milliseconds: 400),
-                                              // curve: Curves.ease);
+                                          // interface.dialogCurrentState['pages']['description'] ?? 99,
+                                          // duration: const Duration(milliseconds: 400),
+                                          // curve: Curves.ease);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.all(6.0),
@@ -158,7 +151,6 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                                       ),
                                     ),
                                   ),
-
                                 ],
                               ),
                             ),
@@ -177,16 +169,16 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                                   ),
                                   child: RichText(
                                       text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'Read more ',
-                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
-                                          ),
-                                          const WidgetSpan(
-                                            child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                          ),
-                                        ],
-                                      ))),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Read more ',
+                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
+                                      ),
+                                      const WidgetSpan(
+                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                      ),
+                                    ],
+                                  ))),
                           ],
                         ),
                       );
@@ -211,8 +203,8 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: RichText(
                                 text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                  TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                ])),
+                              TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                            ])),
                           ),
                           Container(
                             padding: const EdgeInsets.all(1.0),
@@ -246,14 +238,13 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                             Expanded(
                               flex: 2,
                               child: RichText(
-                                  text:
-                                  TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                    TextSpan(
-                                        text: 'Thank you for your contribution. This Task completed. You have earned: ',
-                                        style: TextStyle(
-                                          height: 1,
-                                        )),
-                                  ])),
+                                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                TextSpan(
+                                    text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                    style: TextStyle(
+                                      height: 1,
+                                    )),
+                              ])),
                             ),
                           ],
                         ),
@@ -284,12 +275,9 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                               children: <Widget>[
                                 RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                      TextSpan(
-                                          text: '?? DEV \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                      TextSpan(
-                                          text: '?? aUSDC',
-                                          style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                    ])),
+                                  TextSpan(text: '?? FTM \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                  TextSpan(text: '?? aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                ])),
                               ],
                             )),
                         const Spacer(),
@@ -299,9 +287,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                             inactive: false,
                             buttonName: 'Topup',
                             buttonColorRequired: Colors.lightBlue.shade600,
-                            callback: () {
-
-                            },
+                            callback: () {},
                           ),
                       ],
                     ),
@@ -349,17 +335,16 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                         ),
                       ),
                       style: DodaoTheme.of(context).bodyText1.override(
-                        fontFamily: 'Inter',
-                        color: Colors.black87,
-                        lineHeight: null,
-                      ),
+                            fontFamily: 'Inter',
+                            color: Colors.black87,
+                            lineHeight: null,
+                          ),
                       minLines: 1,
                       maxLines: 3,
                     ),
                   ),
                 ),
               ),
-
             ],
           ),
         ),
