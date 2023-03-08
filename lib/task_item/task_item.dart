@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import '../blockchain/classes.dart';
 
@@ -45,27 +46,103 @@ class _TaskItemState extends State<TaskItem> {
       taskCount = task.auditors.length;
     }
 
+    late LinearGradient gradient;
+    late GradientBoxBorder gradientBorder;
+
+    if (task.taskState == "agreed" || task.taskState == "new") {
+      gradient = const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0, 1],
+          colors: [
+            Color(0xFFFFC344),
+            Color(0xFFFF8911),
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFFFF8911), Color(0xFFF51179)]),
+        width: 3,
+      );
+    } else if (task.taskState == "review") {
+      gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.green.shade800,
+            Colors.yellow.shade600,
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFFFFC344), Color(0xFFFF8911)]),
+        width: 4,
+      );
+    } else if (task.taskState == "progress") {
+      gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.green.shade800,
+            Colors.yellow.shade600,
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFE817D7)]),
+        width: 4,
+      );
+    } else if (task.taskState == "canceled") {
+      gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.green.shade800,
+            Colors.yellow.shade600,
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFFE817D7), Color(0xFF6F1494)]),
+        width: 4,
+      );
+    } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
+      gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.green.shade800,
+            Colors.yellow.shade600,
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFF6F1494), Color(0xFF17A3F5)]),
+        width: 4,
+      );
+    } else if (task.taskState == "audit" && widget.fromPage == 'auditor') {
+      gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.green.shade800,
+            Colors.yellow.shade600,
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFF17A3F5), Color(0xFFF51179)]),
+        width: 4,
+      );
+    } else {
+      gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.green.shade800,
+            Colors.yellow.shade600,
+          ]);
+      gradientBorder = const GradientBoxBorder(
+        gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFFF8911)]),
+        width: 4,
+      );
+    }
+
     return Container(
       // width: double.infinity,
       // height: 86,
       decoration: BoxDecoration(
-        color: (() {
-          if (task.taskState == "agreed" || task.taskState == "new") {
-            return Colors.white;
-          } else if (task.taskState == "review") {
-            return Colors.lightGreen.shade300;
-          } else if (task.taskState == "progress") {
-            return Colors.lightBlueAccent;
-          } else if (task.taskState == "canceled") {
-            return Colors.orange;
-          } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
-            return Colors.orangeAccent;
-          } else if (task.taskState == "audit" && widget.fromPage == 'auditor') {
-            return Colors.white;
-          } else {
-            return Colors.white;
-          }
-        }()),
+        border: gradientBorder,
+        color: Colors.transparent,
+        // gradient: gradient,
         // boxShadow: const [
         //   BoxShadow(
         //     blurRadius: 5,
@@ -73,7 +150,7 @@ class _TaskItemState extends State<TaskItem> {
         //     offset: Offset(0, 2),
         //   )
         // ],
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -114,7 +191,10 @@ class _TaskItemState extends State<TaskItem> {
                         flex: 7,
                         child: Text(
                           task.title,
-                          style: DodaoTheme.of(context).subtitle1,
+                          style: DodaoTheme.of(context).subtitle1.override(
+                              fontFamily: 'Inter',
+                              color: Colors.grey[300]
+                          ),
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -126,7 +206,10 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             task.taskState,
-                            style: DodaoTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2.override(
+                                fontFamily: 'Inter',
+                                color: Colors.grey[300]
+                            ),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -140,7 +223,10 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(
                         child: Text(
                           task.description,
-                          style: DodaoTheme.of(context).bodyText2,
+                          style: DodaoTheme.of(context).bodyText2.override(
+                              fontFamily: 'Inter',
+                              color: Colors.grey[300]
+                          ),
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -162,7 +248,7 @@ class _TaskItemState extends State<TaskItem> {
                             children: tags.map((e) {
                               return WrappedChipSmall(
                                 key: ValueKey(e),
-                                theme: 'small-white',
+                                theme: 'small-black',
                                 item: e,
                                 page: 'items',
                               );
@@ -181,6 +267,7 @@ class _TaskItemState extends State<TaskItem> {
                           style: const TextStyle(
                             // fontWeight: FontWeight.w600,
                             fontSize: 14,
+                            color: Colors.white
                           ),
                           softWrap: false,
                           overflow: TextOverflow.fade,
@@ -193,7 +280,10 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             '${task.tokenValues[0]} DEV',
-                            style: DodaoTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2.override(
+                                fontFamily: 'Inter',
+                                color: Colors.grey[300]
+                            ),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -205,7 +295,10 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             '${task.tokenValues[0]} aUSDC',
-                            style: DodaoTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2.override(
+                                fontFamily: 'Inter',
+                                color: Colors.grey[300]
+                            ),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -217,7 +310,10 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             'Has no money',
-                            style: DodaoTheme.of(context).bodyText2,
+                            style: DodaoTheme.of(context).bodyText2.override(
+                                fontFamily: 'Inter',
+                                color: Colors.grey[300]
+                            ),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -262,7 +358,7 @@ class _TaskItemState extends State<TaskItem> {
                 animationDuration: const Duration(milliseconds: 300),
                 animationType: Badges.BadgeAnimationType.scale,
                 shape: Badges.BadgeShape.circle,
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(14),
                 // child: Icon(Icons.settings),
               ),
             ),

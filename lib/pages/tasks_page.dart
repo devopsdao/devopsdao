@@ -85,7 +85,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var searchServices = context.read<SearchServices>();
 
     bool isFloatButtonVisible = false;
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+    if (_searchKeywordController.text.isEmpty ) {
       tasksServices.resetFilter(tasksServices.tasksNew);
       searchServices.forbidSearchKeywordClear = false;
     }
@@ -130,7 +130,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           ],
         ),
         actions: const [
-          LoadButtonIndicator(),
+          // LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
@@ -162,11 +162,11 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          // image: DecorationImage(
-          //   image: AssetImage("assets/images/background.png"),
-          //   // fit: BoxFit.cover,
-          //   repeat: ImageRepeat.repeat,
-          // ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+          ),
         ),
         child: SizedBox(
           width: interface.maxStaticGlobalWidth,

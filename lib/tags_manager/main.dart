@@ -87,7 +87,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
             onPressed: () {
               searchServices.resetNFTFilter(nftTagsMap);
               searchServices.nftSelection(unselectAll: true, tagName: '', );
-              managerServices.clearTreasuryNft();
+              managerServices.clearSelectedInManager();
               Navigator.of(context).pop(null);
             },
           ),
@@ -123,7 +123,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
                   onTap: (index) {
                     searchServices.resetNFTFilter(nftTagsMap);
                     searchServices.nftSelection(unselectAll: true, tagName: '');
-                    managerServices.clearTreasuryNft();
+                    managerServices.clearSelectedInManager();
                   },
                   tabs: const [
                     Tab(

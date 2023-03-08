@@ -23,6 +23,8 @@ import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
 
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
+
 class CustomerPageWidget extends StatefulWidget {
   // static final beamLocation = BeamPage(key: ValueKey('Home'), child: CustomerPageWidget());
   // static final path = '/';
@@ -116,8 +118,8 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       // print('saved index changed to: $index');
       // }
     }
-
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+//&& !searchServices.forbidSearchKeywordClear
+    if (_searchKeywordController.text.isEmpty ) {
       changeTab(tabIndex, 0.0); //temp disable
       searchServices.forbidSearchKeywordClear = false;
       // if (tabIndex == 0) {
@@ -155,7 +157,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           ),
           actions: const [
             // SearchButton(),
-            LoadButtonIndicator(),
+            // LoadButtonIndicator(),
           ],
           centerTitle: false,
           elevation: 2,
@@ -183,7 +185,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           height: double.infinity,
           // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
+          decoration:  const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.black, Colors.black, Colors.black],
               stops: [0, 0.5, 1],
@@ -191,10 +193,14 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
               end: AlignmentDirectional(-1, 1),
             ),
             // image: DecorationImage(
-            //   image: AssetImage("assets/images/background.png"),
-            //   // fit: BoxFit.cover,
-            //   repeat: ImageRepeat.repeat,
+            //   image: SvgProvider.Svg('assets/images/background-from-png.svg'),
+            //   fit: BoxFit.fitHeight,
             // ),
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.png"),
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.medium,
+            ),
           ),
           child: SizedBox(
             width: interface.maxStaticGlobalWidth,

@@ -92,7 +92,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       }
     }
 
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
+    if (_searchKeywordController.text.isEmpty ) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
       } else if (tabIndex == 1) {
@@ -128,7 +128,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
           ],
         ),
         actions: const [
-          LoadButtonIndicator(),
+          // LoadButtonIndicator(),
           // Row(
           //   mainAxisSize: MainAxisSize.max,
           //   children: [
@@ -159,11 +159,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
             begin: AlignmentDirectional(1, -1),
             end: AlignmentDirectional(-1, 1),
           ),
-          // image: DecorationImage(
-          //   image: AssetImage("assets/images/background.png"),
-          //   // fit: BoxFit.cover,
-          //   repeat: ImageRepeat.repeat,
-          // ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+          ),
         ),
         child: SizedBox(
           width: interface.maxStaticGlobalWidth,

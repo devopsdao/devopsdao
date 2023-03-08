@@ -283,10 +283,16 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
             managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.name]!);
           } else {
             searchServices.nftSelection(unselectAll: true, tagName: '', );
-            managerServices.clearTreasuryNft();
+            managerServices.clearSelectedInManager();
           }
         } else if (widget.page == 'mint') {
           searchServices.tagSelection( unselectAll: false, tagName: widget.name, typeSelection: 'mint');
+          if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
+            managerServices.updateMintNft(searchServices.tagsFilterResults[widget.name]!);
+          } else {
+            searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', );
+            managerServices.clearSelectedInManager();
+          }
         }
       });
     }
@@ -470,10 +476,14 @@ class WrappedChipSmall extends StatelessWidget {
     ),);
 
     // tag width
-    late double tagWidthInit = textSize.width + 22;
+    late double tagWidth = textSize.width + 22;
+    late double tagWidthFull = tagWidth;
+    if (item.nft) {
+      tagWidthFull += 15;
+    }
 
     return Container(
-      width: tagWidthInit,
+      width: tagWidthFull,
       padding: containerPadding,
       margin: containerMargin,
       decoration: BoxDecoration(
@@ -488,9 +498,9 @@ class WrappedChipSmall extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // if (nft)
+          if (item.nft)
           Flexible(
-            flex: 10,
+            flex: 3,
             child: Padding(
               padding: rightSpanPadding,
               child: Icon(
@@ -501,13 +511,23 @@ class WrappedChipSmall extends StatelessWidget {
             ),
           ),
 
-          // Close button (will be not visible if item.selected false)
           Flexible(
-            child: Padding(
-              padding: item.selected ? leftSpanPadding :const EdgeInsets.only(left: 0),
-              child: Icon(Icons.clear_rounded, size: item.selected ? iconSize : 0, color: textColor),
+            flex: 7,
+            child: Container(
+              width: tagWidth,
+              alignment: Alignment.center,
+              child: Text(
+                item.tag,
+                style: DodaoTheme.of(context).bodyText3.override(
+                  fontFamily: 'Inter',
+                  color: textColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: fontSize,
+                ),
+              ),
             ),
           ),
+
         ],
       ),
     );
