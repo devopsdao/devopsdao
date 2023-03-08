@@ -57,7 +57,7 @@ dependencies:
   http: ^0.13.4
   image_picker: ^0.8.6+4
   internet_connection_checker: ^1.0.0+1
-  intl: ^0.17.0
+  intl: ^0.18.0
   jovial_svg: ^1.1.9
   js: ^0.6.4
   json_path: ^0.4.2
@@ -88,6 +88,7 @@ dependencies:
 dependency_overrides:
   font_awesome_flutter: ^10.1.0
   js: ^0.6.4
+  intl: ^0.18.0
   # flutter_svg: ^2.0.0+1
 
 dev_dependencies:

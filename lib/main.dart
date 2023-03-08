@@ -105,7 +105,7 @@ class _MyAppState extends State<MyApp> {
       routeInformationParser: BeamerParser(),
       backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
       debugShowCheckedModeBanner: false,
-      title: 'devopsdao',
+      title: 'dodao.dev',
       localizationsDelegates: const [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,

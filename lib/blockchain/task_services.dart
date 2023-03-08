@@ -2,7 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'dart:io';
 // import 'dart:js';
 import 'dart:math';
@@ -166,7 +166,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -1243,7 +1243,8 @@ class TasksServices extends ChangeNotifier {
     final subscription = taskContract.taskUpdatedEvents().listen((event) async {
       print('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
-        tasks[event.contractAdr] = await getTaskData(event.contractAdr);
+        final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
+        tasks[event.contractAdr] = tasksTemp[event.contractAdr]!;
         await refreshTask(tasks[event.contractAdr]!);
         print('refreshed task: ${tasks[event.contractAdr]!.title}');
         await myBalance();
@@ -1592,10 +1593,10 @@ class TasksServices extends ChangeNotifier {
     if (tasks.containsKey(taskAddress)) {
       return tasks[taskAddress]!;
     } else {
-      Task task = await getTaskData(taskAddress);
-      tasks[taskAddress] = task;
-      refreshTask(task);
-      return task;
+      final Map<EthereumAddress, Task> tasksTemp = await getTasksData(taskAddress);
+      tasks[taskAddress] = tasksTemp[taskAddress]!;
+      refreshTask(tasks[taskAddress]!);
+      return tasks[taskAddress]!;
     }
   }
 

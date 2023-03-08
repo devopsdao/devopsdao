@@ -117,9 +117,9 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
       session: session,
       sessionStorage: sessionStorage,
       clientMeta: const PeerMeta(
-        name: 'Devopsdao',
-        description: 'Devopsdao WalletConnect',
-        url: 'https://devopsdao.com',
+        name: 'Dodao',
+        description: 'Dodao WalletConnect',
+        url: 'https://dodao.dev',
         icons: ['https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media'],
       ),
     );
