@@ -38,8 +38,6 @@ dependencies:
   cupertino_icons: ^1.0.0
   easy_debounce: ^2.0.2+1
   eth_sig_util: ^0.0.9
-  filter_list:
-    path: ./lib/widgets/filter_list-1.0.2
   flutter:
     sdk: flutter
   flutter_chat_ui: ^1.6.5
