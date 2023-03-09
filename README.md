@@ -1,11 +1,18 @@
-# devopsdao
+# Dodao
 
-What it does
+Dodao.dev dApp is built as an uniform platform to bring all software development processes to blockchain. It will be used as work marketplace for developers and art creators. Dodao.devusers currently have three roles:
 
-Devopsdao app is built as a uniform platform to bring all software development processes to blockchain. It will be used as work marketplace for developers and art creators. Devopsdao user currently have two roles: customer and performer, and on a later stage an auditor role will be introduced to settle disputes. Customer is able to create Task contract with ETH and aUSDC tokens as a reward. Once Performers apply for a Task, Customer is able to select the Performer for Task implementation. After the Task is implemented the Performer applies for a Customer review. Currently all negotiations are performed off-chain via Customer selected method. When Customer is happy with the work done, he signs the review and the Performer will be able to withdraw the tokens to his preferred blockchain supported by Axelar (Moonbase, Ethereum, Binance, Fantom, Avalanche, Polygon).
-How we built it
+   - customer
+   - performer
+   - auditor
 
-Devopsdao app is built on Flutter 2 powered by Dart language. Framework optimized for fast native apps on any platform: iOS, Android, Desktop Linux Windows and MacOS, Web. Devopsdao is a early bird blockchain project based on Flutter 2, taking the advantage to be presented on major platforms. Devopsdao smart contracts are compiled with truffle and depend on Axelar GMP SDK for cross-chain interoperability. Devopsdao web app is served from Arweave decentralized cloud.
+Customer is able to create Task contract with DEV and USDC tokens as a reward. Once Performers apply for a Task, Customer is able to select the Performer for Task implementation. After the Task is implemented the Performer applies for a Customer review. Currently all negotiations are performed off-chain via Customer selected method (such as Telegram or Discord for example). When Customer is happy with the work done, he signs the review and the Performer will be able to withdraw the tokens. If any dispute occurs an Auditor can be invited to review the task and settle it.
+
+## Tech
+
+Tech: Dart, Flutter, Fantom, Arweave, Axelar, Hyperlane, Wormhole, LayerZero, Witnet, Solidity, Walletconnect, Ethereum EIP-2535 Diamonds, EIP-1155 multi token contracts.
+
+Devopsdao dApp is built on Flutter 3 powered by Dart language. Framework optimized for fast native apps on any platform. Devopsdao is a early bird blockchain project based on Flutter, taking the advantage to be presented on major platforms. Devopsdao EIP-2539 based smart contract Diamonds are compiled with hardhat and depend on Axelar GMP SDK for cross-chain interoperability. Devopsdao web app is served from Arweave decentralized cloud. Ongoing integration with Web APIs(like Github) via Witnet. Implemented Axelar, Hyperlane, Layerzero and Wormhole smart contacts as Diamond facets to enable cross-chain features. devopsdao dApp is deployed on Fantom and is available via Axelar GMP from Axelar supported blockchains. It is also available via Hyperlane, Wormhole and LayerZero bridges. For Web3 interaction we support our own WebThree library.
 ## Getting Started
 
 Feel free to for and build it with
@@ -39,14 +46,14 @@ dart run build_runner build
 ### Getting started continued:
 
 You can find smart contract code at
-- [Devopsdao solidity smart contract](https://github.com/devopsdao)
+- [Dodao.dev solidity smart contract](https://github.com/devopsdao)
 
-Devopsdao project depends on multiple awesome libraries, one of which is maintained by Devopsdao:
+Dodao.dev project depends on multiple awesome libraries, one of which is maintained by Dodao.dev:
 
 
 - [WebThree: a web3 library for dart](https://pub.dev/webthree)
 
 
 For further information about the project please visit
-[Devopsdao website](https://devopsdao.com)
-and [Devopsdao web dapp](https://dodao.dev).
+[Dodao.dev website](https://devopsdao.com)
+and [Dodao.dev web dapp](https://dodao.dev).
