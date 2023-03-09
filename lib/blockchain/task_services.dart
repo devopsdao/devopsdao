@@ -2,24 +2,40 @@
 
 import 'dart:async';
 import 'dart:convert';
+// import 'dart:ffi';
 import 'dart:io';
 // import 'dart:js';
 import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:js/js.dart' if (dart.library.io) 'package:webthree/src/browser/js_stub.dart' if (dart.library.js) 'package:js/js.dart';
 
 import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/browser/js_util_stub.dart' if (dart.library.js) 'package:js/js_util.dart';
+
+import 'package:week_of_year/week_of_year.dart';
 
 import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:throttling/throttling.dart';
 
+import 'package:jovial_svg/jovial_svg.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
-import 'abi/TasksFacet.g.dart';
+import 'abi/TaskCreateFacet.g.dart';
+import 'abi/TaskDataFacet.g.dart';
+import 'abi/AccountFacet.g.dart';
+import 'abi/TokenFacet.g.dart';
+import 'abi/TokenDataFacet.g.dart';
 import 'abi/TaskContract.g.dart';
+import 'abi/AxelarFacet.g.dart';
+import 'abi/HyperlaneFacet.g.dart';
+import 'abi/LayerzeroFacet.g.dart';
+import 'abi/WormholeFacet.g.dart';
+// import 'abi/Wormhole.g.dart';
 import 'abi/IERC20.g.dart';
-import 'task.dart';
+import 'accounts.dart';
+import 'classes.dart';
 import "package:universal_html/html.dart" hide Platform;
 import 'package:webthree/browser.dart'
     if (dart.library.io) 'package:webthree/src/browser/dart_wrappers_stub.dart'
@@ -107,8 +123,8 @@ class JSrawRequestAddChainParams {
   //   'chainId': '0x507',
   //   'chainName': 'Moonbase alpha',
   //   'nativeCurrency': <String, dynamic>{
-  //     'name': 'DEV',
-  //     'symbol': 'DEV',
+  //     'name': 'FTM',
+  //     'symbol': 'FTM',
   //     'decimals': 18,
   //   },
   //   'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -150,23 +166,59 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  Map<String, Task> tasks = {};
-  Map<String, Task> filterResults = {};
-  Map<String, Task> tasksNew = {};
-  Map<String, Task> tasksAuditPending = {};
-  Map<String, Task> tasksAuditApplied = {};
-  Map<String, Task> tasksAuditWorkingOn = {};
-  Map<String, Task> tasksAuditComplete = {};
+  bool hardhatLive = true;
+  Map<EthereumAddress, Task> tasks = {};
+  Map<EthereumAddress, Task> filterResults = {};
+  Map<EthereumAddress, Task> tasksNew = {};
+  Map<EthereumAddress, Task> tasksAuditPending = {};
+  Map<EthereumAddress, Task> tasksAuditApplied = {};
+  Map<EthereumAddress, Task> tasksAuditWorkingOn = {};
+  Map<EthereumAddress, Task> tasksAuditComplete = {};
 
-  Map<String, Task> tasksPerformerParticipate = {};
-  Map<String, Task> tasksPerformerProgress = {};
-  Map<String, Task> tasksPerformerComplete = {};
+  Map<EthereumAddress, Task> tasksPerformerParticipate = {};
+  Map<EthereumAddress, Task> tasksPerformerProgress = {};
+  Map<EthereumAddress, Task> tasksPerformerComplete = {};
 
-  Map<String, Task> tasksCustomerSelection = {};
-  Map<String, Task> tasksCustomerProgress = {};
-  Map<String, Task> tasksCustomerComplete = {};
+  Map<EthereumAddress, Task> tasksCustomerSelection = {};
+  Map<EthereumAddress, Task> tasksCustomerProgress = {};
+  Map<EthereumAddress, Task> tasksCustomerComplete = {};
+
+  Map<String, Account> accountsData = {};
+
+  Map<String, int> statsCreateTimeListCounts = {};
+  Map<String, int> statsTaskTypeListCounts = {};
+  Map<String, int> statsTagsListCounts = {};
+  Map<String, int> statsTagsNFTListCounts = {};
+  Map<String, int> statsTaskStateListCounts = {};
+  Map<String, int> statsAuditStateListCounts = {};
+  Map<String, int> statsRatingListCounts = {};
+  Map<String, int> statsContractOwnerListCounts = {};
+  Map<String, int> statsPerformerListCounts = {};
+  Map<String, int> statsParticipantsListCounts = {};
+  Map<String, int> statsFundersListCounts = {};
+  Map<String, int> statsAuditorListCounts = {};
+  Map<String, int> statsAuditorsListCounts = {};
+  Map<String, int> statsTokenNamesListCounts = {};
+  Map<String, int> statsTokenValuesListCounts = {};
+
+  // Map<String, Account> accountsTemp = {
+  //   '1': Account(nickName: 'Als', about: 'about', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), rating: 5),
+  //   '2': Account(
+  //       nickName: 'MyNameIsC',
+  //       about: 'about super puper MyNameIsC',
+  //       walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000222'),
+  //       rating: 12),
+  //   '3': Account(
+  //       nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
+  // };
 
   Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
+
+  bool transportEnabled = true;
+  String transportUsed = '';
+  String interchainSelected = 'axelar';
+  EthereumAddress transportAxelarAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
+  EthereumAddress transportHyperlaneAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
 
   var credentials;
   EthereumAddress? publicAddress;
@@ -183,6 +235,8 @@ class TasksServices extends ChangeNotifier {
   String walletConnectSessionUri = '';
   var walletConnectSession;
   // bool walletConnectActionApproved = false;
+  late Map<String, dynamic> roleNfts = {'auditor': 0, 'governor': 0};
+
   var eth;
   String lastTxn = '';
 
@@ -197,11 +251,33 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrl;
   late String _wsUrl;
 
+  late String _rpcUrlMoonbeam;
+  late String _wsUrlMoonbeam;
+
+  late String _rpcUrlMatic;
+  late String _wsUrlMatic;
+
+  late String _rpcUrlGoerli;
+  late String _wsUrlGoerli;
+
+  late String _rpcUrlFantom;
+  late String _wsUrlFantom;
+
   int chainId = 0;
+  int defaultChainId = 0;
+  int chainIdAxelar = 80001;
+  int chainIdHyperlane = 80001;
+  int chainIdLayerzero = 80001;
+  int chainIdWormhole = 80001;
+
   bool isLoading = true;
   bool isLoadingBackground = false;
 
   late Web3Client _web3client;
+  late Web3Client _web3clientAxelar;
+  late Web3Client _web3clientHyperlane;
+  late Web3Client _web3clientLayerzero;
+  late Web3Client _web3clientWormhole;
 
   bool isDeviceConnected = false;
 
@@ -237,14 +313,41 @@ class TasksServices extends ChangeNotifier {
       mmAvailable = true;
     }
 
-    if (hardhatDebug == true) {
+    if (hardhatDebug == true || hardhatLive == true) {
       chainId = 31337;
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 1287;
-      _rpcUrl = 'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
-      _wsUrl = 'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
+      chainId = 4002;
+      defaultChainId = 4002;
+
+      if (defaultChainId == 1287) {
+        _rpcUrl = 'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
+        _wsUrl = 'wss://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
+      } else if (defaultChainId == 4002) {
+        _rpcUrl = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+        _wsUrl = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      }
+
+      // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      // _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+      // _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
+      // _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
+
+      _rpcUrlMoonbeam = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrlMoonbeam = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+      _rpcUrlMatic = 'https://matic-mumbai.chainstacklabs.com';
+      _wsUrlMatic = 'wss://ws-matic-mumbai.chainstacklabs.com';
+
+      _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
+      _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
+
+      _rpcUrlFantom = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
+      // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
     }
     isDeviceConnected = false;
 
@@ -252,7 +355,7 @@ class TasksServices extends ChangeNotifier {
       final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
         if (result != ConnectivityResult.none) {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
+          // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
         }
       });
     }
@@ -274,6 +377,58 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
+    // templorary fix:
+    if (hardhatLive == false) {
+      _web3clientAxelar = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      _web3clientHyperlane = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      _web3clientLayerzero = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      _web3clientWormhole = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+    }
+
     await startup();
     // await getABI();
     // await getDeployedContract();
@@ -281,6 +436,7 @@ class TasksServices extends ChangeNotifier {
     if (platform == 'web') {}
 
     initComplete = true;
+    // testTaskCreation();
   }
 
   late ContractAbi _abiCode;
@@ -288,22 +444,35 @@ class TasksServices extends ChangeNotifier {
   late num totalTaskLen = 0;
   int tasksLoaded = 0;
   late EthereumAddress _contractAddress;
+  late EthereumAddress _contractAddressAxelar;
+  late EthereumAddress _contractAddressHyperlane;
+  late EthereumAddress _contractAddressLayerzero;
+  late EthereumAddress _contractAddressWormhole;
   EthereumAddress zeroAddress = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
-  Future<void> getABI() async {
-    // String abiFile =
-    //     await rootBundle.loadString('lib/blockchain/abi/TasksFacet.json');
+  // Future<void> getABI() async {
+  //   // String abiFile =
+  //   //     await rootBundle.loadString('lib/blockchain/abi/TasksFacet.json');
 
-    // var jsonABI = jsonDecode(abiFile);
-    // _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI), 'TasksFacet');
+  //   // var jsonABI = jsonDecode(abiFile);
+  //   // _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI), 'TasksFacet');
 
-    String addressesFile = await rootBundle.loadString('lib/blockchain/abi/addresses.json');
-    var addresses = jsonDecode(addressesFile);
-    _contractAddress = EthereumAddress.fromHex(addresses["Diamond"]);
-  }
+  //   String addressesFile = await rootBundle.loadString('lib/blockchain/abi/addresses.json');
+  //   var addresses = jsonDecode(addressesFile);
+  //   _contractAddress = EthereumAddress.fromHex(addresses["Diamond"]);
+
+  //   String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
+  //   var addressesAxelar = jsonDecode(addressesFileAxelar);
+  //   _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar["Diamond"]);
+
+  //   String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
+  //   var addressesHyperlane = jsonDecode(addressesFileHyperlane);
+  //   _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane["Diamond"]);
+  // }
 
   bool validChainID = false;
   bool validChainIDWC = false;
   bool validChainIDMM = false;
+  bool closeWalletDialog = false;
 
   Future<void> connectWalletWC(bool refresh) async {
     print('async');
@@ -321,11 +490,16 @@ class TasksServices extends ChangeNotifier {
         walletConnectState = TransactionState.connected;
         walletConnected = true;
         walletConnectedWC = true;
+        closeWalletDialog = true;
         () async {
           if (hardhatDebug == false) {
             credentials = await wallectConnectTransaction?.getCredentials();
             chainId = session.chainId;
-            if (chainId == 1287) {
+            if (chainId == defaultChainId ||
+                chainId == chainIdAxelar ||
+                chainId == chainIdHyperlane ||
+                chainId == chainIdLayerzero ||
+                chainId == chainIdWormhole) {
               validChainID = true;
               validChainIDWC = true;
             } else {
@@ -339,10 +513,11 @@ class TasksServices extends ChangeNotifier {
             chainId = 31337;
             validChainID = true;
           }
-          fetchTasks();
+          List<EthereumAddress> taskList = await getTaskListFull();
+          await fetchTasksBatch(taskList);
 
           myBalance();
-          isLoading = true;
+          // isLoading = true;
         }();
         notifyListeners();
       });
@@ -356,7 +531,7 @@ class TasksServices extends ChangeNotifier {
           // notifyListeners();
         }
       });
-      connector.on('disconnect', (session) {
+      connector.on('disconnect', (session) async {
         print(session);
         walletConnectState = TransactionState.disconnected;
         walletConnected = false;
@@ -371,8 +546,10 @@ class TasksServices extends ChangeNotifier {
         pendingBalanceToken = 0;
         walletConnectUri = '';
         walletConnectSessionUri = '';
-        fetchTasks();
-        connectWalletWC(true);
+        List<EthereumAddress> taskList = await getTaskListFull();
+        await fetchTasksBatch(taskList);
+
+        await connectWalletWC(true);
         notifyListeners();
       });
       final SessionStatus? session = await wallectConnectTransaction?.connect(
@@ -426,6 +603,7 @@ class TasksServices extends ChangeNotifier {
         publicAddress = publicAddressMM;
         walletConnected = true;
         walletConnectedMM = true;
+        closeWalletDialog = true;
         late final chainIdHex;
         try {
           chainIdHex = await eth.rawRequest('eth_chainId');
@@ -438,7 +616,11 @@ class TasksServices extends ChangeNotifier {
         if (chainIdHex != null) {
           chainId = int.parse(chainIdHex);
         }
-        if (chainId == 1287) {
+        if (chainId == defaultChainId ||
+            chainId == chainIdAxelar ||
+            chainId == chainIdHyperlane ||
+            chainId == chainIdLayerzero ||
+            chainId == chainIdWormhole) {
           validChainID = true;
           validChainIDMM = true;
         } else {
@@ -448,7 +630,9 @@ class TasksServices extends ChangeNotifier {
           await switchNetworkMM();
         }
         if (walletConnected && walletConnectedMM && validChainID) {
-          fetchTasks();
+          // fetchTasksByState("new");
+          List<EthereumAddress> taskList = await getTaskListFull();
+          await fetchTasksBatch(taskList);
 
           myBalance();
           notifyListeners();
@@ -481,7 +665,7 @@ class TasksServices extends ChangeNotifier {
       //       publicAddress = credentials.address;
       //       final chainIdHex = await eth.rawRequest('eth_chainId');
       //       int chainId = int.parse(chainIdHex);
-      //       if (chainId == 1287) {
+      //       if (chainId == defaultChainId) {
       //         validChainID = true;
       //       } else {
       //         validChainID = false;
@@ -545,11 +729,16 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == defaultChainId ||
+          chainId == chainIdAxelar ||
+          chainId == chainIdHyperlane ||
+          chainId == chainIdLayerzero ||
+          chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDMM = true;
         publicAddress = publicAddressMM;
-        fetchTasks();
+        List<EthereumAddress> taskList = await getTaskListFull();
+        await fetchTasksBatch(taskList);
         myBalance();
       } else {
         validChainID = false;
@@ -594,11 +783,16 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == defaultChainId ||
+          chainId == chainIdAxelar ||
+          chainId == chainIdHyperlane ||
+          chainId == chainIdLayerzero ||
+          chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDWC = true;
         publicAddress = publicAddressWC;
-        fetchTasks();
+        List<EthereumAddress> taskList = await getTaskListFull();
+        await fetchTasksBatch(taskList);
         myBalance();
       } else {
         validChainID = false;
@@ -622,8 +816,8 @@ class TasksServices extends ChangeNotifier {
         'chainId': '0x507',
         'chainName': 'Moonbase alpha',
         'nativeCurrency': <String, dynamic>{
-          'name': 'DEV',
-          'symbol': 'DEV',
+          'name': 'FTM',
+          'symbol': 'FTM',
           'decimals': 18,
         },
         'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
@@ -661,11 +855,16 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == defaultChainId ||
+          chainId == chainIdAxelar ||
+          chainId == chainIdHyperlane ||
+          chainId == chainIdLayerzero ||
+          chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDMM = true;
         publicAddress = publicAddressMM;
-        fetchTasks();
+        List<EthereumAddress> taskList = await getTaskListFull();
+        await fetchTasksBatch(taskList);
         myBalance();
       } else {
         validChainID = false;
@@ -706,11 +905,16 @@ class TasksServices extends ChangeNotifier {
       if (chainIdHex != null) {
         chainId = int.parse(chainIdHex);
       }
-      if (chainId == 1287) {
+      if (chainId == defaultChainId ||
+          chainId == chainIdAxelar ||
+          chainId == chainIdHyperlane ||
+          chainId == chainIdLayerzero ||
+          chainId == chainIdWormhole) {
         validChainID = true;
         validChainIDWC = true;
         publicAddress = publicAddressWC;
-        fetchTasks();
+        List<EthereumAddress> taskList = await getTaskListFull();
+        await fetchTasksBatch(taskList);
         myBalance();
       } else {
         validChainID = false;
@@ -731,7 +935,8 @@ class TasksServices extends ChangeNotifier {
     ethBalanceToken = 0;
     pendingBalance = 0;
     pendingBalanceToken = 0;
-    fetchTasks();
+    List<EthereumAddress> taskList = await getTaskListFull();
+    await fetchTasksBatch(taskList);
     notifyListeners();
   }
 
@@ -749,7 +954,8 @@ class TasksServices extends ChangeNotifier {
     pendingBalanceToken = 0;
     walletConnectUri = '';
     walletConnectSessionUri = '';
-    fetchTasks();
+    List<EthereumAddress> taskList = await getTaskListFull();
+    await fetchTasksBatch(taskList);
     connectWalletWC(true);
     notifyListeners();
   }
@@ -820,8 +1026,21 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<BigInt> getAuditorNFTBalance(EthereumAddress address, String symbol, {BlockNum? atBlock}) async {
+    var response;
+    try {
+      response = await tokenFacet.balanceOf(publicAddress!, BigInt.from(1));
+    } catch (e) {
+      print(e);
+    } finally {
+      return response;
+    }
+  }
+
+  late dynamic backgroundSVG;
+
   // late dynamic credentials;
-  late dynamic accounts;
+  late dynamic hardhatAccounts;
   double? ethBalance = 0;
   double? ethBalanceToken = 0;
   double? pendingBalance = 0;
@@ -830,7 +1049,15 @@ class TasksServices extends ChangeNotifier {
   int scoredTaskCount = 0;
   double myScore = 0.0;
 
-  late TasksFacet tasksFacet;
+  late TaskCreateFacet taskCreateFacet;
+  late TaskDataFacet taskDataFacet;
+  late AccountFacet accountFacet;
+  late TokenFacet tokenFacet;
+  late TokenDataFacet tokenDataFacet;
+  late AxelarFacet axelarFacet;
+  late HyperlaneFacet hyperlaneFacet;
+  late LayerzeroFacet layerzeroFacet;
+  late WormholeFacet wormholeFacet;
   // late TaskContract taskContract;
 
   late DeployedContract _deployedContract;
@@ -857,15 +1084,38 @@ class TasksServices extends ChangeNotifier {
     buildNumber = packageInfo.buildNumber;
     print('version $version-$buildNumber');
 
+    backgroundSVG = await ScalableImage.fromSvgAsset(rootBundle, 'assets/images/red_cat_logo.svg');
+
     String addressesFile = await rootBundle.loadString('lib/blockchain/abi/addresses.json');
     var addresses = jsonDecode(addressesFile);
     _contractAddress = EthereumAddress.fromHex(addresses['contracts'][chainId.toString()]["Diamond"]);
 
-    if (hardhatDebug == true) {
-      String accountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
-      accounts = jsonDecode(accountsFile);
-      credentials = EthPrivateKey.fromHex(accounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(accounts[0]["address"]);
+    if (hardhatLive == false) {
+      String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
+      var addressesAxelar = jsonDecode(addressesFileAxelar);
+      _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar['contracts'][chainIdAxelar.toString()]["Diamond"]);
+
+      String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
+      var addressesHyperlane = jsonDecode(addressesFileHyperlane);
+      _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane['contracts'][chainIdHyperlane.toString()]["Diamond"]);
+
+      String addressesFileLayerzero = await rootBundle.loadString('lib/blockchain/abi/layerzero-addresses.json');
+      var addressesLayerzero = jsonDecode(addressesFileLayerzero);
+      _contractAddressLayerzero = EthereumAddress.fromHex(addressesLayerzero['contracts'][chainIdLayerzero.toString()]["Diamond"]);
+
+      String addressesFileWormhole = await rootBundle.loadString('lib/blockchain/abi/wormhole-addresses.json');
+      var addressesWormhole = jsonDecode(addressesFileWormhole);
+      _contractAddressWormhole = EthereumAddress.fromHex(addressesWormhole['contracts'][chainIdWormhole.toString()]["Diamond"]);
+    }
+
+    if (hardhatDebug == true || hardhatLive == true) {
+      Random random = Random();
+      int randomNum = random.nextInt(2);
+
+      String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
+      hardhatAccounts = jsonDecode(hardhatAccountsFile);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -873,10 +1123,19 @@ class TasksServices extends ChangeNotifier {
     thr = Debouncing(duration: const Duration(seconds: 10));
     await connectContracts();
     // thr.debounce(() {
-    fetchTasks();
+    // fetchTasksByState("new");
+    List<EthereumAddress> taskList = await getTaskListFull();
+    await fetchTasksBatch(taskList); // to fix enable fetchTasks
+    await Future.delayed(const Duration(milliseconds: 200));
+    await monitorTasks(taskList);
+    await Future.delayed(const Duration(milliseconds: 200));
     // });
     await myBalance();
+    await Future.delayed(const Duration(milliseconds: 200));
     await monitorEvents();
+
+    List<EthereumAddress> accountsList = await getAccountsList();
+    accountsData = await getAccountsData(accountsList);
 
     // fees = await _web3client.getGasInEIP1559();
     // print(fees);
@@ -900,9 +1159,22 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> connectContracts() async {
     EthereumAddress tokenContractAddress = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+    EthereumAddress tokenContractAddressGoerli = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
 
     ierc20 = IERC20(address: tokenContractAddress, client: _web3client, chainId: chainId);
-    tasksFacet = TasksFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    taskCreateFacet = TaskCreateFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    taskDataFacet = TaskDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    accountFacet = AccountFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    tokenFacet = TokenFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    tokenDataFacet = TokenDataFacet(address: _contractAddress, client: _web3client, chainId: chainId);
+    //templorary fix:
+    if (hardhatLive == false) {
+      axelarFacet = AxelarFacet(address: _contractAddressAxelar, client: _web3clientAxelar, chainId: chainIdAxelar);
+      hyperlaneFacet = HyperlaneFacet(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
+      layerzeroFacet = LayerzeroFacet(address: _contractAddressLayerzero, client: _web3clientLayerzero, chainId: chainIdLayerzero);
+      wormholeFacet = WormholeFacet(address: _contractAddressWormhole, client: _web3clientWormhole, chainId: chainIdWormhole);
+    }
+    // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: _web3client, chainId: chainId);
   }
 
   Future<void> myBalance() async {
@@ -914,29 +1186,43 @@ class TasksServices extends ChangeNotifier {
       ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
 
       late BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false) {
-        weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
+      if (hardhatDebug == false && hardhatLive == false) {
+        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
       }
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
       ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+
+      final List<EthereumAddress> shared = List.filled(roleNfts.keys.toList().length, publicAddress!);
+      final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
+      print(roleNftsBalance);
+
+      int keyId = 0;
+      roleNfts = roleNfts.map((key, value) {
+        // print(keyId);
+        int newBalance = roleNftsBalance[keyId].toInt();
+        late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
+        keyId++;
+        return mapEnt;
+      });
+
       notifyListeners();
     }
   }
 
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
-    final subscription = tasksFacet.taskCreatedEvents().listen((event) async {
-      print('received event ${event.contractAdr} index ${event.message} index ${event.timestamp}');
+    final subscription = taskCreateFacet.taskCreatedEvents().listen((event) async {
+      print('monitorEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
-        tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
-        await refreshTask(tasks[event.contractAdr.toString()]!);
-        print('refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
-        await myBalance();
+        // tasks[event.contractAdr] = await getTaskData(event.contractAdr);
+        // await refreshTask(tasks[event.contractAdr]!);
+        // print('refreshed task: ${tasks[event.contractAdr]!.title}');
+        // await myBalance();
         await monitorTaskEvents(event.contractAdr);
         notifyListeners();
       } on GetTaskException {
-        print('could not get task ${event.contractAdr.toString()} from blockchain');
+        print('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
         print(e);
       }
@@ -955,15 +1241,16 @@ class TasksServices extends ChangeNotifier {
     // listen for the Transfer event when it's emitted by the contract
     TaskContract taskContract = TaskContract(address: taskAddress, client: _web3client, chainId: chainId);
     final subscription = taskContract.taskUpdatedEvents().listen((event) async {
-      print('received event ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
+      print('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
-        tasks[event.contractAdr.toString()] = await getTask(event.contractAdr);
-        await refreshTask(tasks[event.contractAdr.toString()]!);
-        print('refreshed task: ${tasks[event.contractAdr.toString()]!.taskState}');
+        final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
+        tasks[event.contractAdr] = tasksTemp[event.contractAdr]!;
+        await refreshTask(tasks[event.contractAdr]!);
+        print('refreshed task: ${tasks[event.contractAdr]!.title}');
         await myBalance();
         notifyListeners();
       } on GetTaskException {
-        print('could not get task ${event.contractAdr.toString()} from blockchain');
+        print('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
         print(e);
       }
@@ -985,7 +1272,6 @@ class TasksServices extends ChangeNotifier {
         transactionStatuses[nanoId]![taskAction]!['status'] = 'minted';
         transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
         notifyListeners();
-        print('tell me has it mined');
         // thr.debounce(() {
         //   fetchTasks();
         // });
@@ -996,82 +1282,334 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> runFilter(String enteredKeyword, Map<String, Task> taskList) async {
+  List<String> _tagsList = [];
+  List<String> get tagsList => _tagsList;
+  set tagsList(List<String> value) {
+    if (value != tagsList) {
+      _tagsList = value;
+      runFilter();
+    }
+  }
+
+  late Map<EthereumAddress, Task> lastTaskList = {};
+  late String lastEnteredKeyword = '';
+
+  Future<void> runFilter({Map<EthereumAddress, Task>? taskList, String? enteredKeyword}) async {
+    enteredKeyword ??= lastEnteredKeyword;
+    taskList ??= lastTaskList;
+    // tagsList ??= [];
     filterResults.clear();
     print(enteredKeyword);
-    searchKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty) {
+    // searchKeyword = enteredKeyword;
+    if (enteredKeyword.isEmpty && _tagsList.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
-      for (String taskAddress in taskList.keys) {
-        if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-          filterResults[taskAddress] = taskList[taskAddress]!;
-        }
+      // for (EthereumAddress taskAddress in taskList.keys) {
+      //   if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
+      //     if (taskList.isNotEmpty && taskList[taskAddress]!.tags.isNotEmpty) {
+      //     } else {
+      //       filterResults[taskAddress] = taskList[taskAddress]!;
+      //     }
+      //   }
+      // }
+
+      final filterResultsTitle = Map.from(taskList)..removeWhere((taskAddress, task) => !task.title.contains(enteredKeyword));
+      final filterResultsDescription = Map.from(taskList)..removeWhere((taskAddress, task) => !task.description.contains(enteredKeyword));
+      late Map<EthereumAddress, Task> filterResultsTaskAddress = {};
+      late Map<EthereumAddress, Task> filterResultsContractOwner = {};
+      late Map<EthereumAddress, Task> filterResultsPerformer = {};
+      late Map<EthereumAddress, Task> filterResultsAuditor = {};
+      if (enteredKeyword.length > 41 && enteredKeyword.length <= 43) {
+        filterResultsTaskAddress = Map.from(taskList)..removeWhere((taskAddress, task) => !task.taskAddress.toString().contains(enteredKeyword!));
+        filterResultsContractOwner = Map.from(taskList)..removeWhere((taskAddress, task) => !task.contractOwner.toString().contains(enteredKeyword!));
+        filterResultsPerformer = Map.from(taskList)..removeWhere((taskAddress, task) => !task.performer.toString().contains(enteredKeyword!));
+        filterResultsAuditor = Map.from(taskList)..removeWhere((taskAddress, task) => !task.auditor.toString().contains(enteredKeyword!));
       }
+      Map<EthereumAddress, Task> filterResultsSearch = {
+        ...filterResultsTitle,
+        ...filterResultsDescription,
+        ...filterResultsTaskAddress,
+        ...filterResultsContractOwner,
+        ...filterResultsPerformer,
+        ...filterResultsAuditor,
+        // ...filterResultsTags,
+        // ...filterResultsTagsNFT
+      };
+
+      // filtering by TAGS:
+
+      filterResults = Map.from(filterResultsSearch)
+        ..removeWhere((taskAddress, task) => task.tags.toSet().intersection(_tagsList.toSet()).length == 0);
+      print(filterResultsSearch);
+      // final filterResultsTagsNFT = Map.from(taskList)
+      //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
     }
     // Refresh the UI
     notifyListeners();
   }
 
-  Future<void> resetFilter(Map<String, Task> taskList) async {
+  Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
     filterResults.clear();
     filterResults = Map.from(taskList);
+    lastTaskList = taskList;
   }
 
-  late bool loopRunning = false;
-  late bool stopLoopRunning = false;
+  // late bool loopRunning = false;
+  // late bool stopLoopRunning = false;
 
-  Future<Task> getTask(taskAddress) async {
+  Future<Task> getTaskData(taskAddress) async {
     TaskContract taskContract = TaskContract(address: taskAddress, client: _web3client, chainId: chainId);
-    var task = await taskContract.getTaskInfo();
+    var task = await taskContract.getTaskData();
     if (task != null) {
-      final BigInt weiBalance = await taskContract.getBalance();
-      final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+      // final BigInt weiBalance = await taskContract.getBalance();
+      // final BigInt weiBalance = BigInt.from(0);
+      // final double ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+      final double ethBalancePrecise = 0;
       BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false) {
-        weiBalanceToken = await web3GetBalanceToken(taskAddress, 'aUSDC');
+      if (hardhatDebug == false && hardhatLive == false) {
+        // weiBalanceToken = await web3GetBalanceToken(taskAddress, 'aUSDC');
       }
-      final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
+      final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 18);
       final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
 
-      print(task);
+      // print('Task loaded: ${task.title}');
       var taskObject = Task(
-        // nanoId: task[0],
-        nanoId: task[1].toString(),
-        createTime: DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
-        taskType: task[2],
-        title: task[3],
-        description: task[4],
-        symbol: task[5],
-        taskState: task[6],
-        auditState: task[7],
-        rating: task[8].toInt(),
-        contractOwner: task[9],
-        participant: task[10],
-        auditInitiator: task[11],
-        auditor: task[12],
-        participants: task[13],
-        funders: task[14],
-        auditors: task[15],
-        messages: task[16],
-        taskAddress: taskAddress,
-        justLoaded: true,
-        contractValue: ethBalancePrecise,
-        contractValueToken: ethBalanceToken,
-      );
+          // nanoId: task[0],
+          nanoId: task[1].toString(),
+          createTime: DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
+          taskType: task[2],
+          title: task[3],
+          description: task[4],
+          tags: task[5],
+          tagsNFT: task[6],
+          symbols: task[7],
+          amounts: task[8],
+          taskState: task[9],
+          auditState: task[10],
+          rating: task[11].toInt(),
+          contractOwner: task[12],
+          performer: task[13],
+          auditInitiator: task[14],
+          auditor: task[15],
+          participants: task[16],
+          funders: task[17],
+          auditors: task[18],
+          messages: task[19],
+          taskAddress: taskAddress,
+          justLoaded: true,
+          tokenNames: ['ETH'],
+          tokenValues: [ethBalancePrecise],
+
+          // temporary solution. in the future "transport" String name will come directly from the block:
+          transport: (task[9] == transportAxelarAdr || task[9] == transportHyperlaneAdr) ? task[9] : '');
       return taskObject;
     }
     throw (GetTaskException);
   }
 
+  Future<Map<EthereumAddress, Task>> getTasksData(List<EthereumAddress> taskAddresses) async {
+    Map<EthereumAddress, Task> tasks = {};
+    final rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
+    late int i = 0;
+    for (final task in rawTasksList) {
+      List<double> tokenValues = [];
+      for (final tokenValueRaw in task[2]) {
+        final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
+        final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+        tokenValues.add(ethBalanceToken);
+      }
+      // print('Task loaded: ${task.title}');
+      var taskObject = Task(
+          // nanoId: task[0],
+          nanoId: task[0][1].toString(),
+          createTime: DateTime.fromMillisecondsSinceEpoch(task[0][1].toInt() * 1000),
+          taskType: task[0][2],
+          title: task[0][3],
+          description: task[0][4],
+          tags: task[0][5],
+          tagsNFT: task[0][6],
+          symbols: task[0][7],
+          amounts: task[0][8],
+          taskState: task[0][9],
+          auditState: task[0][10],
+          rating: task[0][11].toInt(),
+          contractOwner: task[0][12],
+          performer: task[0][13],
+          auditInitiator: task[0][14],
+          auditor: task[0][15],
+          participants: task[0][16],
+          funders: task[0][17],
+          auditors: task[0][18],
+          messages: task[0][19],
+          taskAddress: taskAddresses[i],
+          justLoaded: true,
+          tokenNames: task[1].cast<String>(),
+          tokenValues: tokenValues,
+
+          // temporary solution. in the future "transport" String name will come directly from the block:
+          transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
+      tasks[taskAddresses[i]] = taskObject;
+      i++;
+    }
+
+    return tasks;
+  }
+
+  Future<Map<String, Map<EthereumAddress, Task>>> getTasksDateMap(Map<EthereumAddress, Task> tasks) async {
+    late Map<String, Map<EthereumAddress, Task>> tasksDateMap = {};
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final taskContract in tasks.keys) {
+      String taskDate = DateFormat('yyyy-MM-dd').format(tasks[taskContract]!.createTime);
+      if (tasksDateMap[taskDate] == null) {
+        tasksDateMap[taskDate] = {};
+      }
+      tasksDateMap[taskDate]![taskContract] = tasks[taskContract]!;
+    }
+
+    return tasksDateMap;
+  }
+
+  Future<Map<String, Map<EthereumAddress, Task>>> getTasksWeekMap(Map<EthereumAddress, Task> tasks) async {
+    late Map<String, Map<EthereumAddress, Task>> tasksDateMap = {};
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final taskContract in tasks.keys) {
+      String taskDateWeek = tasks[taskContract]!.createTime.weekOfYear.toString();
+      if (tasksDateMap[taskDateWeek] == null) {
+        tasksDateMap[taskDateWeek] = {};
+      }
+      tasksDateMap[taskDateWeek]![taskContract] = tasks[taskContract]!;
+    }
+
+    return tasksDateMap;
+  }
+
+  Future<Map<String, Map<EthereumAddress, Task>>> getTasksMonthMap(Map<EthereumAddress, Task> tasks) async {
+    late Map<String, Map<EthereumAddress, Task>> tasksDateMap = {};
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final taskContract in tasks.keys) {
+      String taskDateMonth = DateFormat('yyyy-MM').format(tasks[taskContract]!.createTime);
+      if (tasksDateMap[taskDateMonth] == null) {
+        tasksDateMap[taskDateMonth] = {};
+      }
+      tasksDateMap[taskDateMonth]![taskContract] = tasks[taskContract]!;
+    }
+
+    return tasksDateMap;
+  }
+
+  Future<Map<String, Map<String, int>>> getTasksStats(Map<EthereumAddress, Task> tasks) async {
+    late List createTimeList = [];
+    late List taskTypeList = [];
+    late List tagsList = [];
+    late List tagsNFTList = [];
+    late List taskStateList = [];
+    late List auditStateList = [];
+    late List ratingList = [];
+    late List contractOwnerList = [];
+    late List performerList = [];
+    late List participantsList = [];
+    late List fundersList = [];
+    late List auditorList = [];
+    late List auditorsList = [];
+    late List tokenNamesList = [];
+    late List tokenValuesList = [];
+    // Map<String, List<Task>> taskStatsLists = {};
+
+    for (final task in tasks.values) {
+      String taskDate = DateFormat('yyyy-MM-dd').format(task.createTime);
+      // taskStatsLists[taskDate]!.add(task);
+      createTimeList.add(taskDate);
+      taskTypeList.add(task.taskType);
+      tagsList.addAll(task.tags);
+      tagsNFTList.addAll(task.tagsNFT);
+      taskStateList.add(task.taskState);
+      auditStateList.add(task.auditState);
+      ratingList.add(task.rating);
+      contractOwnerList.add(task.contractOwner);
+      performerList.add(task.performer);
+      participantsList.addAll(task.participants);
+      fundersList.addAll(task.funders);
+      auditorList.add(task.auditor);
+      auditorsList.addAll(task.auditors);
+      tokenNamesList.add(task.tokenNames);
+      tokenValuesList.add(task.tokenValues);
+    }
+
+    // tagsList.map((e) {
+    //   return statsTagsListCounts.containsKey(e) ? statsTagsListCounts[e]++ : statsTagsListCounts[e] = 1;
+    // });
+
+    // print(statsTagsListCounts);
+
+    Map<String, Map<String, int>> stats = {};
+
+    stats['statsCreateTimeListCounts'] = countOccurences(createTimeList);
+    stats['statsTaskTypeListCounts'] = countOccurences(taskTypeList);
+    stats['statsTagsListCounts'] = countOccurences(tagsList);
+    stats['statsTagsNFTListCounts'] = countOccurences(tagsNFTList);
+    stats['statsTaskStateListCounts'] = countOccurences(taskStateList);
+    stats['statsAuditStateListCounts'] = countOccurences(auditStateList);
+    stats['statsRatingListCounts'] = countOccurences(ratingList);
+    stats['statsContractOwnerListCounts'] = countOccurences(contractOwnerList);
+    stats['statsPerformerListCounts'] = countOccurences(performerList);
+    stats['statsParticipantsListCounts'] = countOccurences(participantsList);
+    stats['statsFundersListCounts'] = countOccurences(fundersList);
+    stats['statsAuditorListCounts'] = countOccurences(auditorList);
+    stats['statsAuditorsListCounts'] = countOccurences(auditorsList);
+    stats['statsTokenNamesListCounts'] = countOccurences(tokenNamesList);
+    stats['statsTokenValuesListCounts'] = countOccurences(tokenValuesList);
+    return stats;
+  }
+
+  countOccurences(list) {
+    Map<String, int> map = {};
+    for (var i in list) {
+      if (!map.containsKey(i)) {
+        map[i.toString()] = 1;
+      } else {
+        map[i] = map[i]! + 1;
+      }
+    }
+    return map;
+  }
+
+  countOccurencesDate(List<DateTime> list) {
+    Map<String, int> map = {};
+    for (var i in list) {
+      final String date = DateFormat('yyyy-MM-dd').format(i);
+      if (!map.containsKey(i)) {
+        map[date.toString()] = 1;
+      } else {
+        map[date] = map[date]! + 1;
+      }
+    }
+    return map;
+  }
+
+  Future<Task> loadOneTask(taskAddress) async {
+    if (tasks.containsKey(taskAddress)) {
+      return tasks[taskAddress]!;
+    } else {
+      final Map<EthereumAddress, Task> tasksTemp = await getTasksData(taskAddress);
+      tasks[taskAddress] = tasksTemp[taskAddress]!;
+      refreshTask(tasks[taskAddress]!);
+      return tasks[taskAddress]!;
+    }
+  }
+
   Future<void> refreshTask(Task task) async {
     // Who participate in the TASK:
-    if (task.participant == publicAddress) {
+    if (task.performer == publicAddress) {
       // Calculate Pending among:
-      if ((task.contractValue != 0 || task.contractValueToken != 0)) {
+      if ((task.tokenValues[0] != 0 || task.tokenValues[0] != 0)) {
         if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
-          pendingBalance = pendingBalance! + task.contractValue;
-          pendingBalanceToken = pendingBalanceToken! + task.contractValueToken;
+          final double ethBalancePreciseToken = task.tokenValues[0].toDouble() / pow(10, 18);
+          final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+          pendingBalance = pendingBalance! + ethBalanceToken;
+          pendingBalanceToken = pendingBalanceToken! + 0;
         }
       }
       // add all scored Task for calculation:
@@ -1081,43 +1619,43 @@ class TasksServices extends ChangeNotifier {
       }
     }
 
-    // if (tasksAuditPending[task.taskAddress.toString()] != null) {
-    tasksNew.remove(task.taskAddress.toString());
-    filterResults.remove(task.taskAddress.toString());
-    tasksAuditPending.remove(task.taskAddress.toString());
-    tasksAuditApplied.remove(task.taskAddress.toString());
-    tasksAuditWorkingOn.remove(task.taskAddress.toString());
-    tasksAuditComplete.remove(task.taskAddress.toString());
+    // if (tasksAuditPending[task.taskAddress] != null) {
+    tasksNew.remove(task.taskAddress);
+    filterResults.remove(task.taskAddress);
+    tasksAuditPending.remove(task.taskAddress);
+    tasksAuditApplied.remove(task.taskAddress);
+    tasksAuditWorkingOn.remove(task.taskAddress);
+    tasksAuditComplete.remove(task.taskAddress);
 
-    tasksCustomerSelection.remove(task.taskAddress.toString());
-    tasksCustomerProgress.remove(task.taskAddress.toString());
-    tasksCustomerComplete.remove(task.taskAddress.toString());
+    tasksCustomerSelection.remove(task.taskAddress);
+    tasksCustomerProgress.remove(task.taskAddress);
+    tasksCustomerComplete.remove(task.taskAddress);
 
-    tasksPerformerParticipate.remove(task.taskAddress.toString());
-    tasksPerformerProgress.remove(task.taskAddress.toString());
-    tasksPerformerComplete.remove(task.taskAddress.toString());
+    tasksPerformerParticipate.remove(task.taskAddress);
+    tasksPerformerProgress.remove(task.taskAddress);
+    tasksPerformerComplete.remove(task.taskAddress);
     // }
 
     if (task.taskState != "" &&
         (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "audit")) {
       if (task.contractOwner == publicAddress) {
-        tasksCustomerProgress[task.taskAddress.toString()] = task;
-      } else if (task.participant == publicAddress) {
-        tasksPerformerProgress[task.taskAddress.toString()] = task;
+        tasksCustomerProgress[task.taskAddress] = task;
+      } else if (task.performer == publicAddress) {
+        tasksPerformerProgress[task.taskAddress] = task;
       }
       if (hardhatDebug == true) {
-        tasksPerformerProgress[task.taskAddress.toString()] = task;
+        tasksPerformerProgress[task.taskAddress] = task;
       }
     }
 
     // New TASKs for all users:
     if (task.taskState != "" && task.taskState == "new") {
       if (hardhatDebug == true) {
-        tasksNew[task.taskAddress.toString()] = task;
-        filterResults[task.taskAddress.toString()] = task;
+        tasksNew[task.taskAddress] = task;
+        filterResults[task.taskAddress] = task;
       }
       if (task.contractOwner == publicAddress) {
-        tasksCustomerSelection[task.taskAddress.toString()] = task;
+        tasksCustomerSelection[task.taskAddress] = task;
       } else if (task.participants.isNotEmpty) {
         var taskExist = false;
         for (var p = 0; p < task.participants.length; p++) {
@@ -1126,16 +1664,16 @@ class TasksServices extends ChangeNotifier {
           }
         }
         if (taskExist) {
-          tasksPerformerParticipate[task.taskAddress.toString()] = task;
+          tasksPerformerParticipate[task.taskAddress] = task;
         } else {
-          tasksNew[task.taskAddress.toString()] = task;
-          filterResults[task.taskAddress.toString()] = task;
+          tasksNew[task.taskAddress] = task;
+          filterResults[task.taskAddress] = task;
           // tasksNew.add(task);
           // filterResults.add(task);
         }
       } else {
-        tasksNew[task.taskAddress.toString()] = task;
-        filterResults[task.taskAddress.toString()] = task;
+        tasksNew[task.taskAddress] = task;
+        filterResults[task.taskAddress] = task;
         // tasksNew.add(task);
         // filterResults.add(task);
       }
@@ -1143,18 +1681,18 @@ class TasksServices extends ChangeNotifier {
 
     if (task.taskState != "" && (task.taskState == "completed" || task.taskState == "canceled")) {
       if (task.contractOwner == publicAddress) {
-        tasksCustomerComplete[task.taskAddress.toString()] = task;
-      } else if (task.participant == publicAddress) {
-        tasksPerformerComplete[task.taskAddress.toString()] = task;
+        tasksCustomerComplete[task.taskAddress] = task;
+      } else if (task.performer == publicAddress) {
+        tasksPerformerComplete[task.taskAddress] = task;
       }
       if (hardhatDebug == true) {
-        tasksPerformerComplete[task.taskAddress.toString()] = task;
+        tasksPerformerComplete[task.taskAddress] = task;
       }
     }
 
     // **** AUDIT ****
     // For auditors:
-    if (task.taskState == "audit") {
+    if (task.taskState == "audit" || task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')) {
       // Auditor side:
       if (task.auditState == "requested") {
         if (task.auditors.isNotEmpty) {
@@ -1165,113 +1703,501 @@ class TasksServices extends ChangeNotifier {
             }
           }
           if (contrExist) {
-            tasksAuditApplied[task.taskAddress.toString()] = task;
+            tasksAuditApplied[task.taskAddress] = task;
           } else {
-            tasksAuditPending[task.taskAddress.toString()] = task;
+            tasksAuditPending[task.taskAddress] = task;
           }
         } else {
-          tasksAuditPending[task.taskAddress.toString()] = task;
+          tasksAuditPending[task.taskAddress] = task;
         }
       }
 
       if (task.auditor == publicAddress) {
         if (task.auditState == "performing") {
-          tasksAuditWorkingOn[task.taskAddress.toString()] = task;
+          tasksAuditWorkingOn[task.taskAddress] = task;
         } else if (task.auditState == "complete" || task.auditState == "finished") {
-          tasksAuditComplete[task.taskAddress.toString()] = task;
+          tasksAuditComplete[task.taskAddress] = task;
         }
       }
+
       if (hardhatDebug == true) {
-        tasksAuditApplied[task.taskAddress.toString()] = task;
+        tasksAuditApplied[task.taskAddress] = task;
       }
     }
   }
 
-  Future<void> fetchTasks() async {
-    isLoadingBackground = true;
-    List totalTaskList = await tasksFacet.getTaskContracts();
-    List totalTaskListReversed = List.from(totalTaskList.reversed);
-    totalTaskLen = totalTaskList.length;
-    notifyListeners();
+  // Future<void> fetchTasks(List<EthereumAddress> taskList) async {
+  //   isLoadingBackground = true;
+  //   notifyListeners();
 
+  //   tasks.clear();
+
+  //   List<List<Future<void>>> downloadBatches = [];
+  //   List<List<Future<void>>> monitorBatches = [];
+
+  //   List<Future<void>> downloaders = [];
+  //   List<Future<void>> monitors = [];
+  //   int batchSize = 10;
+  //   int totalBatches = (taskList.length / batchSize).ceil();
+  //   int batchItemCount = 0;
+  //   tasksLoaded = 0;
+
+  //   for (var i = 0; i < taskList.length; i++) {
+  //     try {
+  //       downloaders.add(getTaskData(taskList[i]).then((result) => tasks[taskList[i].toString()] = result));
+  //       monitors.add(getTaskData(taskList[i]).then((result) => tasks[taskList[i].toString()] = result));
+  //       batchItemCount++;
+  //       // print('batchItemCount: ${batchItemCount}');
+  //       if (batchItemCount == batchSize) {
+  //         downloadBatches.add([...downloaders]);
+  //         monitorBatches.add([...monitors]);
+  //         downloaders.clear();
+  //         monitors.clear();
+  //         batchItemCount = 0;
+  //       }
+  //     } on GetTaskException {
+  //       print('could not get task ${taskList[i]} from blockchain');
+  //     }
+  //   }
+  //   if (batchItemCount > 0) {
+  //     downloadBatches.add([...downloaders]);
+  //     monitorBatches.add([...monitors]);
+  //     downloaders.clear();
+  //     monitors.clear();
+  //     batchItemCount = 0;
+  //   }
+
+  //   try {
+  //     for (var batchId = 0; batchId < totalBatches; batchId++) {
+  //       await Future.wait<void>(downloadBatches[batchId]);
+  //       print('downloaded $batchId | total: $totalBatches');
+  //       await Future.delayed(const Duration(milliseconds: 200));
+  //       tasksLoaded += batchSize;
+  //       notifyListeners();
+  //     }
+  //   } on GetTaskException {
+  //     print('EXEPTI9ON');
+  //   }
+
+  //   filterResults.clear();
+  //   tasksNew.clear();
+
+  //   tasksAuditPending.clear();
+  //   tasksAuditApplied.clear();
+  //   tasksAuditWorkingOn.clear();
+  //   tasksAuditComplete.clear();
+
+  //   tasksCustomerSelection.clear();
+  //   tasksCustomerProgress.clear();
+  //   tasksCustomerComplete.clear();
+
+  //   tasksPerformerParticipate.clear();
+  //   tasksPerformerProgress.clear();
+  //   tasksPerformerComplete.clear();
+
+  //   pendingBalance = 0;
+  //   pendingBalanceToken = 0;
+  //   score = 0;
+  //   scoredTaskCount = 0;
+
+  //   for (Task task in tasks.values) {
+  //     await refreshTask(task);
+  //   }
+
+  //   // Final Score Calculation
+  //   if (score != 0) {
+  //     myScore = score / scoredTaskCount;
+  //   }
+
+  //   isLoading = false;
+  //   isLoadingBackground = false;
+  //   await myBalance();
+  //   notifyListeners();
+  //   // runFilter(searchKeyword); // reset search bar
+  //   try {
+  //     for (var batchId = 0; batchId < totalBatches; batchId++) {
+  //       await Future.wait<void>(monitorBatches[batchId]);
+  //       print('monitoring $batchId');
+  //       await Future.delayed(const Duration(milliseconds: 200));
+
+  //       // await Future.wait<void>(monitors[batchId]);
+  //     }
+  //   } on GetTaskException {}
+  // }
+
+  Future<void> monitorTasks(List<EthereumAddress> taskList) async {
+    // isLoadingBackground = true;
+
+    List<List<Future<void>>> monitorBatches = [];
+
+    List<Future<void>> monitors = [];
+    int batchSize = 10;
+    int totalBatches = (taskList.length / batchSize).ceil();
+    int batchItemCount = 0;
+    tasksLoaded = 0;
+
+    for (var i = 0; i < taskList.length; i++) {
+      try {
+        monitors.add(monitorTaskEvents(taskList[i]));
+        batchItemCount++;
+        // print('batchItemCount: ${batchItemCount}');
+        if (batchItemCount == batchSize) {
+          monitorBatches.add([...monitors]);
+          monitors.clear();
+          batchItemCount = 0;
+        }
+      } on GetTaskException {
+        print('could not get task ${taskList[i]} from blockchain');
+      }
+    }
+    if (batchItemCount > 0) {
+      monitorBatches.add([...monitors]);
+      monitors.clear();
+      batchItemCount = 0;
+    }
+
+    try {
+      print('will monitor tasks in ${totalBatches} batches');
+      for (var batchId = 0; batchId < totalBatches; batchId++) {
+        await Future.wait<void>(monitorBatches[batchId]);
+        print('monitoring ${batchId + 1} batch| total: $totalBatches batches');
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+    } on GetTaskException {}
+  }
+
+  Future<Map<EthereumAddress, Task>> getTasksBatch(List<EthereumAddress> taskList) async {
+    List<List<Future<void>>> downloadBatches = [];
+    List<List<Future<void>>> monitorBatches = [];
+
+    List<Future<void>> downloaders = [];
+    List<Future<void>> monitors = [];
+
+    int requestBatchSize = 10;
+    int downloadBatchSize = 10;
+    // int totalBatches = (totalTaskListReversed.length / batchSize).ceil();
+    int batchItemCount = 0;
+    tasksLoaded = 0;
+
+    final batches = taskList.slices(requestBatchSize).toList();
+    final batchesResults = [];
+
+    for (var i = 0; i < batches.length; i++) {
+      try {
+        downloaders.add(getTasksData(batches[i].toList().cast<EthereumAddress>()).then((result) => batchesResults.add(result)));
+        // monitors.add(getTasksData(batches[i].toList().cast<EthereumAddress>()).then((result) => batchesResults.add(result)));
+        batchItemCount++;
+        // print('batchItemCount: ${batchItemCount}');
+        if (batchItemCount == downloadBatchSize) {
+          downloadBatches.add([...downloaders]);
+          // monitorBatches.add([...monitors]);
+          downloaders.clear();
+          monitors.clear();
+          batchItemCount = 0;
+        }
+      } on GetTaskException {
+        print('could not get task ${taskList[i]} from blockchain');
+      }
+    }
+    if (batchItemCount > 0) {
+      downloadBatches.add([...downloaders]);
+      // monitorBatches.add([...monitors]);
+      downloaders.clear();
+      // monitors.clear();
+      batchItemCount = 0;
+    }
+
+    try {
+      print(
+          'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests');
+      for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
+        await Future.wait<void>(downloadBatches[batchId]);
+        print('downloaded ${batchId + 1} batch | total: ${downloadBatches.length} batches');
+        await Future.delayed(const Duration(milliseconds: 200));
+        tasksLoaded += downloadBatchSize * requestBatchSize;
+        notifyListeners();
+      }
+    } on GetTaskException {
+      print('EXEPTI9ON');
+    }
+
+    //combine all batches of tasks to one map
+    tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
+    return tasks;
+  }
+
+  Future<void> refreshTasksForAccount(EthereumAddress address) async {
+    await fetchTasksByState('new');
+    await fetchTasksCustomer(address);
+    await fetchTasksPerformer(address);
+  }
+
+  Future<void> fetchTasksBatch(List<EthereumAddress> taskList) async {
+    isLoadingBackground = true;
     tasks.clear();
 
-    if (loopRunning) {
-      stopLoopRunning = true;
+    // getTaskData(totalTaskListReversed[i]);
+
+    filterResults.clear();
+    tasksNew.clear();
+
+    tasksAuditPending.clear();
+    tasksAuditApplied.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
+
+    tasksCustomerSelection.clear();
+    tasksCustomerProgress.clear();
+    tasksCustomerComplete.clear();
+
+    tasksPerformerParticipate.clear();
+    tasksPerformerProgress.clear();
+    tasksPerformerComplete.clear();
+
+    pendingBalance = 0;
+    pendingBalanceToken = 0;
+    score = 0;
+    scoredTaskCount = 0;
+
+    tasks = await getTasksBatch(taskList);
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
     }
 
-    if (loopRunning == false) {
-      loopRunning = true;
-      for (var i = 0; i < totalTaskListReversed.length; i++) {
-        if (stopLoopRunning) {
-          tasks.clear();
-          stopLoopRunning = false;
-          loopRunning = false;
-          fetchTasks();
-          break;
-        }
-        try {
-          tasks[totalTaskListReversed[i].toString()] = await getTask(totalTaskListReversed[i]);
-          tasksLoaded++;
-          notifyListeners();
-          await monitorTaskEvents(totalTaskListReversed[i]);
-        } on GetTaskException {
-          print('could not get task ${totalTaskListReversed[i]} from blockchain');
-        }
-      }
+    Map<String, Map<String, int>> totalStats = await getTasksStats(tasks);
+    print(statsTagsListCounts);
 
-      tasksLoaded = 0;
+    Map<String, Map<EthereumAddress, Task>> tasksDateMap = await getTasksDateMap(tasks);
+    Map<String, Map<EthereumAddress, Task>> tasksWeekMap = await getTasksWeekMap(tasks);
+    Map<String, Map<EthereumAddress, Task>> tasksMonthMap = await getTasksMonthMap(tasks);
 
-      if (loopRunning) {
-        filterResults.clear();
-        tasksNew.clear();
-
-        tasksAuditPending.clear();
-        tasksAuditApplied.clear();
-        tasksAuditWorkingOn.clear();
-        tasksAuditComplete.clear();
-
-        tasksCustomerSelection.clear();
-        tasksCustomerProgress.clear();
-        tasksCustomerComplete.clear();
-
-        tasksPerformerParticipate.clear();
-        tasksPerformerProgress.clear();
-        tasksPerformerComplete.clear();
-
-        pendingBalance = 0;
-        pendingBalanceToken = 0;
-        score = 0;
-        scoredTaskCount = 0;
-
-        for (Task task in tasks.values) {
-          // print(task);
-          // for (var k = 0; k < tasks.length; k++) {
-          // final task = tasks[k];
-          await refreshTask(task);
-        }
-
-        // Final Score Calculation
-        if (score != 0) {
-          myScore = score / scoredTaskCount;
-        }
-
-        isLoading = false;
-        isLoadingBackground = false;
-        await myBalance();
-        notifyListeners();
-        // runFilter(searchKeyword); // reset search bar
-      }
-      loopRunning = false;
+    late Map<String, Map<String, Map<String, int>>> dailyStats = {};
+    for (String taskDate in tasksDateMap.keys) {
+      dailyStats[taskDate] = await getTasksStats(tasksDateMap[taskDate]!);
     }
+
+    late Map<String, Map<String, Map<String, int>>> weeklyStats = {};
+    for (String taskDateWeek in tasksWeekMap.keys) {
+      weeklyStats[taskDateWeek] = await getTasksStats(tasksWeekMap[taskDateWeek]!);
+    }
+
+    late Map<String, Map<String, Map<String, int>>> monthlyStats = {};
+    for (String taskDateMonth in tasksMonthMap.keys) {
+      monthlyStats[taskDateMonth] = await getTasksStats(tasksMonthMap[taskDateMonth]!);
+    }
+
+    // Final Score Calculation
+    if (score != 0) {
+      myScore = score / scoredTaskCount;
+    }
+
+    isLoading = false;
+    isLoadingBackground = false;
+    await Future.delayed(const Duration(milliseconds: 200));
+    await myBalance();
+    notifyListeners();
   }
+
+  Future<void> fetchTasksByState(String state) async {
+    List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsByState(state);
+
+    filterResults.clear();
+
+    if (state == "new") {
+      tasksNew.clear();
+      tasksCustomerSelection.clear();
+      tasksPerformerParticipate.clear();
+    } else if (state == "agreed" || state == "progress" || state == "review") {
+      tasksCustomerProgress.clear();
+      tasksPerformerProgress.clear();
+    } else if (state == 'audit') {
+      tasksAuditPending.clear();
+      tasksAuditApplied.clear();
+      tasksAuditWorkingOn.clear();
+      tasksAuditComplete.clear();
+    } else if (state == "completed" || state == "canceled") {
+      tasksCustomerComplete.clear();
+      tasksPerformerComplete.clear();
+    }
+
+    Map<EthereumAddress, Task> tasks = await getTasksBatch(taskList.reversed.toList());
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    // isLoading = false;
+    // isLoadingBackground = false;
+    // await myBalance();
+    // notifyListeners();
+  }
+
+  Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
+    List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
+
+    filterResults.clear();
+
+    tasksAuditPending.clear();
+    tasksAuditApplied.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
+
+    tasksCustomerSelection.clear();
+    tasksCustomerProgress.clear();
+    tasksCustomerComplete.clear();
+
+    Map<EthereumAddress, Task> tasks = await getTasksBatch(taskList.reversed.toList());
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    isLoading = false;
+    isLoadingBackground = false;
+    await myBalance();
+    notifyListeners();
+  }
+
+  Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
+    List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
+
+    filterResults.clear();
+
+    tasksAuditPending.clear();
+    tasksAuditApplied.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
+
+    tasksPerformerParticipate.clear();
+    tasksPerformerProgress.clear();
+    tasksPerformerComplete.clear();
+
+    Map<EthereumAddress, Task> tasks = await getTasksBatch(taskList.reversed.toList());
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    isLoading = false;
+    isLoadingBackground = false;
+    await myBalance();
+    notifyListeners();
+  }
+
+  Future<Map<String, Account>> getAccountsData(List<EthereumAddress> accountsList) async {
+    List accountsDataList = await accountFacet.getAccountsData(accountsList);
+
+    Map<String, Account> accountsData = {};
+    for (final accountData in accountsDataList) {
+      accountsData[accountData[0].toString()] = Account(
+          walletAddress: accountData[0],
+          nickName: accountData[1].toString(),
+          about: accountData[2].toString(),
+          customerTasks: accountData[3].cast<EthereumAddress>(),
+          participantTasks: accountData[4].cast<EthereumAddress>(),
+          auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
+          customerRating: accountData[6].cast<int>(),
+          performerRating: accountData[7].cast<int>());
+    }
+    return accountsData;
+  }
+
+  Future<List<EthereumAddress>> getAccountsList() async {
+    List<EthereumAddress> accountsList = await accountFacet.getAccountsList();
+    return accountsList;
+  }
+
+  Future<List<EthereumAddress>> getTaskListFull() async {
+    List<EthereumAddress> taskList = await taskDataFacet.getTaskContracts();
+    List<EthereumAddress> taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListCustomers(List<EthereumAddress> publicAddresses) async {
+    List taskList = await taskDataFacet.getTaskContractsCustomers(publicAddresses);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListPerformers(List<EthereumAddress> publicAddresses) async {
+    List taskList = await taskDataFacet.getTaskContractsPerformers(publicAddresses);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListCustomer(EthereumAddress publicAddress) async {
+    List taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListPerformer(EthereumAddress publicAddress) async {
+    List taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  Future<List> getTaskListByState(String state) async {
+    List taskList = await taskDataFacet.getTaskContractsByState(state);
+    List taskListReversed = List.from(taskList.reversed);
+    return taskListReversed;
+  }
+
+  // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
+  //   Map<EthereumAddress, Task> tasks = {};
+  //   totalTaskLen = taskList.length;
+
+  //   List<List<Future<Task>>> downloadBatches = [];
+
+  //   List<Future<Task>> downloaders = [];
+  //   int batchSize = 10;
+  //   int totalBatches = (taskList.length / batchSize).floor();
+  //   int batchItemCount = 0;
+  //   tasksLoaded = 0;
+
+  //   for (var i = 0; i < taskList.length; i++) {
+  //     try {
+  //       // int currentBatchId = (i / batchSize).floor();
+  //       downloaders.add(getTaskData(taskList[i]).then((result) => tasks[taskList[i].toString()] = result));
+  //       batchItemCount++;
+  //       if (batchItemCount == batchSize) {
+  //         downloadBatches.add([...downloaders]);
+  //         downloaders.clear();
+  //         batchItemCount = 0;
+  //       }
+  //       tasksLoaded++;
+  //       notifyListeners();
+  //       // await monitorTaskEvents(totalTaskListReversed[i]);
+  //     } on GetTaskException {
+  //       print('could not get task ${taskList[i]} from blockchain');
+  //     }
+  //   }
+
+  //   try {
+  //     for (var batchId = 0; batchId < totalBatches; batchId++) {
+  //       await Future.wait<void>(downloadBatches[batchId]);
+  //       print('downloaded $batchId');
+  //       await Future.delayed(const Duration(milliseconds: 200));
+  //       // await Future.wait<void>(monitors[batchId]);
+  //     }
+  //   } on GetTaskException {}
+  //   return tasks;
+  // }
 
   Future<void> approveSpend(EthereumAddress _contractAddress, EthereumAddress publicAddress, String symbol, BigInt amount, String nanoId) async {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1288,7 +2214,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(String title, String description, double price, String nanoId) async {
+  Future<void> createTaskContract(String title, String description, double price, String nanoId, List<String> tags) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -1297,21 +2223,77 @@ class TasksServices extends ChangeNotifier {
       final BigInt priceInBigInt = BigInt.from(price * 1e6);
       late String txn;
       String taskType = 'public';
+
+      var creds;
+      var senderAddress;
+      if (hardhatDebug == true) {
+        creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+        senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      } else {
+        creds = credentials;
+        senderAddress = publicAddress;
+      }
+      final transaction = Transaction(
+        from: senderAddress,
+      );
+
+      // List<String> tags = [];
+      List<String> symbols = [taskTokenSymbol];
+      List<BigInt> amounts = [BigInt.from(0)];
+      // late TaskData taskData =
+      //     new TaskData(nanoId: nanoId, taskType: taskType, title: title, description: description, symbols: symbols, amounts: amounts);
+
+      Map<String, dynamic> taskData = {
+        "nanoId": nanoId,
+        "taskType": taskType,
+        "title": title,
+        "description": description,
+        "tags": tags,
+        "symbols": symbols,
+        "amounts": amounts
+      };
+
       if (taskTokenSymbol == 'ETH') {
         final transaction = Transaction(
-          from: publicAddress,
+          from: senderAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-            credentials: credentials, transaction: transaction);
+
+        // txn = await taskDataFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        //     credentials: creds, transaction: transaction);
+
+        if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+          txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+          txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+          txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+          txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else {
+          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+        }
       } else if (taskTokenSymbol == 'aUSDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);
         final transaction = Transaction(
-          from: publicAddress,
+          from: senderAddress,
           // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
-        txn = await tasksFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
-            credentials: credentials, transaction: transaction);
+
+        // txn = await taskCreateFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
+        //     credentials: creds, transaction: transaction);
+
+        if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+          txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+          txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+          txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+          txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else {
+          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+        }
         print(txn);
       }
       isLoading = false;
@@ -1326,18 +2308,34 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> addTokens(EthereumAddress addressToSend, double price, String nanoId) async {
+  Future<void> addTokens(EthereumAddress addressToSend, double price, String nanoId, {String? message}) async {
     print(price);
     transactionStatuses[nanoId] = {
       'addTokens': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'}
     };
+    message ??= 'Added $price $taskTokenSymbol to contract';
     late int priceInGwei = (price * 1000000000).toInt();
     final BigInt priceInBigInt = BigInt.from(price * 1e6);
     late String txn;
 
+    // message ??= 'Contract topped up for ${price.toString()} ';
+
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+
     if (taskTokenSymbol == 'ETH') {
       final transaction = Transaction(
-        from: publicAddress,
+        from: senderAddress,
         to: addressToSend,
         value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
       );
@@ -1346,9 +2344,12 @@ class TasksServices extends ChangeNotifier {
       print(txn);
     } else if (taskTokenSymbol == 'aUSDC') {
       final transaction = Transaction(
-        from: publicAddress,
+        from: senderAddress,
       );
-      txn = await ierc20.transfer(addressToSend, priceInBigInt, credentials: credentials, transaction: transaction);
+
+      /// todo: add messages to transfer function in contract
+      // txn = await ierc20.transfer(addressToSend, priceInBigInt, message, credentials: creds, transaction: transaction);
+      txn = await ierc20.transfer(addressToSend, priceInBigInt, credentials: creds, transaction: transaction);
     }
     isLoading = false;
     // isLoadingBackground = true;
@@ -1372,8 +2373,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1381,7 +2382,21 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    txn = await taskContract.taskParticipate(message, replyTo, credentials: creds, transaction: transaction);
+    if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+      txn = await axelarFacet.taskParticipateAxelar(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+      txn = await hyperlaneFacet.taskParticipateHyperlane(senderAddress, contractAddress, message, replyTo,
+          credentials: creds, transaction: transaction);
+    } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+      txn = await layerzeroFacet.taskParticipateLayerzero(senderAddress, contractAddress, message, replyTo,
+          credentials: creds, transaction: transaction);
+    } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+      txn =
+          await wormholeFacet.taskParticipateWormhole(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    } else {
+      txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+    }
+    // txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -1402,8 +2417,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[2]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[2]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[2]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1412,7 +2427,22 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
+    // if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+    //   txn = await axelarFacet.taskAuditParticipateAxelar(contractAddress, message, replyTo,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+    //   txn = await hyperlaneFacet.taskAuditParticipateHyperlane(contractAddress, message, replyTo,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+    //   txn = await layerzeroFacet.taskAuditParticipateLayerzero(contractAddress, message, replyTo,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+    //   txn = await wormholeFacet.taskAuditParticipateWormhole(contractAddress, message, replyTo,
+    //       credentials: creds, transaction: transaction);
+    // } else {
+    //   txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
+    // }
+    txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -1441,8 +2471,8 @@ class TasksServices extends ChangeNotifier {
         creds = credentials;
         senderAddress = publicAddress;
       } else if (state == 'progress' || state == 'review') {
-        creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-        senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+        creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+        senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       } else {
         creds = credentials;
         senderAddress = publicAddress;
@@ -1454,7 +2484,24 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score, credentials: creds, transaction: transaction);
+    // if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+    //   txn = await axelarFacet.taskStateChangeAxelar(contractAddress, participantAddress, state, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+    //   txn = await hyperlaneFacet.taskStateChangeHyperlane(contractAddress, participantAddress, state, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+    //   txn = await layerzeroFacet.taskStateChangeLayerzero(contractAddress, participantAddress, state, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+    //   txn = await wormholeFacet.taskStateChangeWormhole(contractAddress, participantAddress, state, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else {
+    //   txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // }
+    txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
+        credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -1477,8 +2524,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1486,7 +2533,22 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
+    // if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+    //   txn = await axelarFacet.taskAuditDecisionAxelar(contractAddress, favour, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+    //   txn = await hyperlaneFacet.taskAuditDecisionHyperlane(contractAddress, favour, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+    //   txn = await layerzeroFacet.taskAuditDecisionLayerzero(contractAddress, favour, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+    //   txn = await wormholeFacet.taskAuditDecisionWormhole(contractAddress, favour, message, replyTo, score,
+    //       credentials: creds, transaction: transaction);
+    // } else {
+    //   txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
+    // }
+    txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -1507,8 +2569,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1516,7 +2578,18 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
+    // if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'axelar') {
+    //   txn = await axelarFacet.sendMessageAxelar(contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'hyperlane') {
+    //   txn = await hyperlaneFacet.sendMessageHyperlane(contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'layerzero') {
+    //   txn = await layerzeroFacet.sendMessageLayerzero(contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    // } else if ((chainId != defaultChainId && chainId != 31337) && interchainSelected == 'wormhole') {
+    //   txn = await wormholeFacet.sendMessageWormhole(contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+    // } else {
+    //   txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
+    // }
+    txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -1540,8 +2613,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(accounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(accounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -1574,6 +2647,109 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
+
+  Future<List> balanceOfBatchName(List<EthereumAddress> addresses, List<String> names) async {
+    List balanceList = await tokenDataFacet.balanceOfBatchName(addresses, names);
+    return balanceList;
+  }
+
+  Future<List> totalSupplyOfBatchName(List<String> names) async {
+    List totalSupply = await tokenDataFacet.totalSupplyOfBatchName(names);
+    return totalSupply;
+  }
+
+  Future<List> uriOfBatchName(List<String> names) async {
+    List totalSupply = await tokenDataFacet.uriOfBatchName(names);
+    return totalSupply;
+  }
+
+  Future<String> createNft(String uri, String name, bool isNF) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String tx = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
+    return tx;
+  }
+
+  Future<String> mintFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<String> mintNonFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<String> safeTransferFrom(EthereumAddress to, BigInt id, BigInt amount, Uint8List data) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.safeTransferFrom(senderAddress, to, id, amount, data, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<String> safeBatchTransferFrom(EthereumAddress to, List<BigInt> ids, List<BigInt> amounts, Uint8List data) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+    String txn = await tokenFacet.safeBatchTransferFrom(senderAddress, to, ids, amounts, data, credentials: creds, transaction: transaction);
+    return txn;
+  }
+  // Future<void> checkTokenBalance(EthereumAddress address, int tokenType) async {
+  //   TokenContract tokenContract = TokenContract(address: contractAddress, client: _web3client, chainId: chainId);
+  // }
 
   double gasPriceValue = 0;
   Future<void> getGasPrice(sourceChain, destinationChain, {tokenAddress, tokenSymbol}) async {
@@ -1658,11 +2834,33 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
     );
-    var createContract = await tasksFacet.createTaskContract('testID', 'public', 'task title', 'task decription', 'ETH', BigInt.from(1),
-        credentials: credentials, transaction: transaction);
-    var taskContracts = await tasksFacet.getTaskContracts();
+    // var createContract = await tasksFacet.createTaskContract(
+    //     EthereumAddress.fromHex('0x0'), 'testID', 'public', 'task title', 'task decription', 'ETH', BigInt.from(1),
+    //     credentials: credentials, transaction: transaction);
+    // var taskContracts = await tasksFacet.getTaskContracts();
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
 
-    TaskContract taskContract = TaskContract(address: taskContracts[0], client: _web3client, chainId: chainId);
-    var taskInfo = await taskContract.getTaskInfo();
+    Map<String, dynamic> taskData = {
+      "nanoId": 'test',
+      "taskType": 'private',
+      "title": 'test job',
+      "description": 'test desc',
+      "tags": ['ETH'],
+      "symbols": ['ETH'],
+      "amounts": [BigInt.from(0)]
+    };
+
+    // var txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+
+    // TaskContract taskContract = TaskContract(address: taskContracts[0], client: _web3client, chainId: chainId);
+    // var taskInfo = await taskContract.getTaskInfo();
   }
 }

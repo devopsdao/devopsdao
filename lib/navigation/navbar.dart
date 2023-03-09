@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import '../blockchain/task_services.dart';
+import '../flutter_flow/theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../index.dart';
 
@@ -26,6 +28,7 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
+    var tasksServices = context.watch<TasksServices>();
     final tabs = {
       '/home': const HomePageWidget(),
       '/tasks': const HomePageWidget(),
@@ -33,7 +36,8 @@ class _NavBarPageState extends State<NavBarPage> {
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
       '/auditor': const HomePageWidget(),
-      // 'walletPage': MyWalletPage(title: 'WalletConnect'),
+      '/accounts': const HomePageWidget(),
+      // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPage);
@@ -49,12 +53,12 @@ class _NavBarPageState extends State<NavBarPage> {
       // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
       backgroundColor: Colors.black,
       selectedItemColor: Colors.white,
-      unselectedItemColor: FlutterFlowTheme.of(context).grayIcon,
+      unselectedItemColor: DodaoTheme.of(context).grayIcon,
       showSelectedLabels: true,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
+      items: <BottomNavigationBarItem>[
+        const BottomNavigationBarItem(
           icon: Icon(
             Icons.home_sharp,
             size: 24,
@@ -62,7 +66,7 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Home',
           tooltip: '',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(
             Icons.compare_arrows,
             size: 24,
@@ -70,7 +74,7 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Tasks',
           tooltip: '',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: FaIcon(
             FontAwesomeIcons.wpforms,
             size: 24,
@@ -78,7 +82,7 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Customer',
           tooltip: '',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: FaIcon(
             FontAwesomeIcons.pen,
             size: 24,
@@ -86,7 +90,8 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Performer',
           tooltip: '',
         ),
-        BottomNavigationBarItem(
+        if (tasksServices.roleNfts['auditor'] > 0)
+        const BottomNavigationBarItem(
           icon: FaIcon(
             FontAwesomeIcons.penRuler,
             size: 24,
@@ -94,14 +99,15 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Audit',
           tooltip: '',
         ),
-        // BottomNavigationBarItem(
-        //   icon: FaIcon(
-        //     FontAwesomeIcons.wallet,
-        //     size: 24,
-        //   ),
-        //   label: 'Wallet',
-        //   tooltip: '',
-        // ),
+        if(tasksServices.roleNfts['governor'] > 0)
+        const BottomNavigationBarItem(
+          icon: FaIcon(
+            FontAwesomeIcons.peopleGroup,
+            size: 24,
+          ),
+          label: 'Accounts',
+          tooltip: '',
+        ),
       ],
     );
   }
