@@ -6,7 +6,7 @@ import '../blockchain/task_services.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/badgetab.dart';
 import '../widgets/tags/search_services.dart';
-import '../flutter_flow/theme.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
@@ -58,7 +58,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
 
     return Scaffold(
       key: scaffoldKey,
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,

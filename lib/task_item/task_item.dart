@@ -1,14 +1,15 @@
 import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:provider/provider.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import '../blockchain/classes.dart';
 
 import '../blockchain/task_services.dart';
-import '../flutter_flow/theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '../config/flutter_flow_util.dart';
+import '../config/theme.dart';
+import '../config/flutter_flow_util.dart';
 import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import 'delete_item_alert.dart';
@@ -210,7 +211,7 @@ class _TaskItemState extends State<TaskItem> {
                     children: [
                       Expanded(child: LayoutBuilder(builder: (context, constraints) {
                         final double width = constraints.maxWidth - 66;
-                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
+                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, tag: name)).toList();
 
                         return SizedBox(
                           width: width,

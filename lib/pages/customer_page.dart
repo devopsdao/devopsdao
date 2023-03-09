@@ -14,8 +14,8 @@ import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../widgets/tags/tags_old.dart';
 import '../task_item/task_item.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/theme.dart';
+import '../config/flutter_flow_animations.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
@@ -119,7 +119,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       // }
     }
 //&& !searchServices.forbidSearchKeywordClear
-    if (_searchKeywordController.text.isEmpty ) {
+    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
       changeTab(tabIndex, 0.0); //temp disable
       searchServices.forbidSearchKeywordClear = false;
       // if (tabIndex == 0) {

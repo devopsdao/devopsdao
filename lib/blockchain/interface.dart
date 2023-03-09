@@ -97,18 +97,18 @@ class InterfaceServices extends ChangeNotifier {
 
   // ***********  tags  ************ ////
   // late List<SimpleTags> tempTagsList = [
-  //   SimpleTags(tag: "Dart", icon: "", nft: true),
-  //   SimpleTags(tag: "Flutter", icon: "", nft: true),
-  //   SimpleTags(tag: "Solidity", icon: "", nft: true),
-  //   SimpleTags(tag: "Diamond", icon: "", nft: true),
-  //   SimpleTags(tag: "Web3", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Solidity", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Diamond", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Web3", icon: "", nft: true),
   // ];
   // late List<SimpleTags> tempTagsListForTask = [
-  //   SimpleTags(tag: "Dart", icon: "", nft: true),
-  //   SimpleTags(tag: "Solidity", icon: ""),
-  //   SimpleTags(tag: "Flutter", icon: "", nft: true),
-  //   SimpleTags(tag: "Diamond", icon: ""),
-  //   SimpleTags(tag: "Web3", icon: ""),
+  //   SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Solidity", icon: ""),
+  //   SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
+  //   SimpleTags(collection: true, tag: "Diamond", icon: ""),
+  //   SimpleTags(collection: true, tag: "Web3", icon: ""),
   // ];
   // late List<SimpleTags> auditorTagsList = [];
   // late List<SimpleTags> tasksTagsList = [];

@@ -11,7 +11,7 @@ import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../task_item/task_item.dart';
-import '../flutter_flow/theme.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
@@ -92,7 +92,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       }
     }
 
-    if (_searchKeywordController.text.isEmpty ) {
+    if (_searchKeywordController.text.isEmpty) {
       if (tabIndex == 0) {
         tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
       } else if (tabIndex == 1) {

@@ -41,7 +41,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_chat_ui: ^1.6.5
-  flutter_keyboard_size: ^1.0.1
+#  flutter_keyboard_size: ^1.0.1
   flutter_localizations:
     sdk: flutter
   flutter_rating_bar: ^4.0.1

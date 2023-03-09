@@ -1,14 +1,14 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
-import '../../flutter_flow/theme.dart';
+import '../../config/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/select_menu.dart';
 import '../../widgets/tags/tags_old.dart';
@@ -621,7 +621,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         ),
                         LayoutBuilder(builder: (context, constraints) {
                           final double width = constraints.maxWidth - 66;
-                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
+                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, tag: name)).toList();
 
                           if (tags.isNotEmpty) {
                             return SizedBox(

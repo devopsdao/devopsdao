@@ -9,12 +9,19 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/tags/search_services.dart';
-import '../../flutter_flow/theme.dart';
+import '../../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 
 import '../manager_services.dart';
+import '../mint_item.dart';
 import '../nft_templorary.dart';
+
+enum Status {
+  done,
+  open,
+  await
+}
 
 class MintWidget extends StatefulWidget {
   const MintWidget({Key? key}) : super(key: key);
@@ -28,11 +35,9 @@ class _MintWidget extends State<MintWidget> {
   late Map<String, TagsCompare> tagsCompare = {};
   final Duration splitDuration = const Duration(milliseconds: 600);
   final Curve splitCurve = Curves.easeInOutQuart;
-  final double buttonWidth = 180;
+  final double buttonWidth = 140;
 
-  XFile? image;
 
-  final ImagePicker picker = ImagePicker();
 
 
   @override
@@ -42,6 +47,7 @@ class _MintWidget extends State<MintWidget> {
     //   var searchServices = Provider.of<SearchServices>(context, listen: false);
     //   searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
     // });
+
   }
   @override
   void dispose() {
@@ -49,60 +55,6 @@ class _MintWidget extends State<MintWidget> {
     super.dispose();
   }
 
-
-  Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
-
-    setState(() {
-      image = img;
-    });
-  }
-
-
-  void myAlert() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: Text('Please choose media to select'),
-            content: Container(
-              height: MediaQuery.of(context).size.height / 6,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    //if user click this button, user can upload image from gallery
-                    onPressed: () {
-                      Navigator.pop(context);
-                      getImage(ImageSource.gallery);
-                    },
-                    child: Row(
-                      children: const [
-                        Icon(Icons.image),
-                        Text('From Gallery'),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    //if user click this button. user can upload image from camera
-                    onPressed: () {
-                      Navigator.pop(context);
-                      getImage(ImageSource.camera);
-                    },
-                    child: Row(
-                      children: const [
-                        Icon(Icons.camera),
-                        Text('From Camera'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
 
 
 
@@ -112,293 +64,8 @@ class _MintWidget extends State<MintWidget> {
     var managerServices = context.read<ManagerServices>();
     // searchServices.resetTagsFilter(simpleTagsMap);
 
-    final Widget nftCreate = Consumer<ManagerServices>(
-        builder: (context, model, child) {
-          late double secondPartHeight = 0.0;
-          late bool splitScreen = false;
-          final String collectionName = model.mintNftTagSelected.tag;
-          if (model.mintNftTagSelected.tag != 'empty') {
-            splitScreen = true;
-          }
-          secondPartHeight = 290;
 
-          return AnimatedContainer(
-            duration: splitDuration,
-            height: splitScreen ? secondPartHeight : 0.0,
-            color: Colors.grey[900],
-            curve: splitCurve,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
 
-                  // Top:
-                  Material(
-                    type: MaterialType.transparency,
-                    elevation: 6.0,
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 18, left: 8, right: 8),
-                      child: Row(
-                        children: [
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                            child: Text(
-                              collectionName,
-                              style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          InkResponse(
-                            radius: 35,
-                            containedInkWell: false  ,
-                            onTap: () {
-                              model.clearSelectedInManager();
-                            },
-                            child: const Icon(
-                              Icons.arrow_downward,
-                              size: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  //Body:
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                      children: [
-                        Container(
-                          height: 160,
-                          // width: 160,
-                          alignment: Alignment.topLeft,
-                          padding: const EdgeInsets.all(4.0),
-
-                          decoration: BoxDecoration(
-                            border: const GradientBoxBorder(
-                              gradient: LinearGradient(colors: [Color(
-                                  0xFFD0D0D0), Color(0xFF6E6E6E)]),
-                              width: 4,
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: image != null
-                              ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.file(
-                                //to show image, you type like this.
-                                File(image!.path),
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                              ),
-                            ),
-                          )
-                              :  ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-
-                            child: Image.asset(
-                              'assets/images/logo.png',
-                              height: 150,
-                              filterQuality: FilterQuality.medium,
-                              isAntiAlias: true,
-                            ),
-                          ),
-                        ),
-
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            //Create:
-                            Row(
-                              children: [
-                                // Text(
-                                //   'Create collection: ',
-                                //   style: DodaoTheme.of(context).bodyText1.override(
-                                //       fontFamily: 'Inter',
-                                //       color: Colors.white
-                                //   ),
-                                // ),
-                                // const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Material(
-                                    elevation: 8,
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: Colors.lightBlue.shade600,
-                                    child: InkWell(
-                                      onTap: () {
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        width: buttonWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          'Create collection',
-                                          style: DodaoTheme.of(context).bodyText1.override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.white,
-                                            fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            //Upload:
-                            Row(
-                              children: [
-                                // Text(
-                                //   'Upload/Generate picture: ',
-                                //   style: DodaoTheme.of(context).bodyText1.override(
-                                //       fontFamily: 'Inter',
-                                //       color: Colors.white
-                                //   ),
-                                // ),
-                                // const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Material(
-                                    elevation: 8,
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: Colors.lightBlue.shade600,
-                                    child: InkWell(
-                                      onTap: () {
-                                        myAlert();
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        width: buttonWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          'Upload picture',
-                                          style: DodaoTheme.of(context).bodyText1.override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            //Mint nft:
-                            Row(
-                              children: [
-                                // Text(
-                                //   'Mint NFT: ',
-                                //   style: DodaoTheme.of(context).bodyText1.override(
-                                //       fontFamily: 'Inter',
-                                //       color: Colors.white
-                                //   ),
-                                // ),
-                                // const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Material(
-                                    elevation: 8,
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: Colors.lightBlue.shade600,
-                                    child: InkWell(
-                                      onTap: () {
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        width: buttonWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          'Mint',
-                                          style: DodaoTheme.of(context).bodyText1.override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            //Add features:
-                            Row(
-                              children: [
-                                // Text(
-                                //   'Add features: ',
-                                //   style: DodaoTheme.of(context).bodyText1.override(
-                                //       fontFamily: 'Inter',
-                                //       color: Colors.white
-                                //   ),
-                                // ),
-                                // const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Material(
-                                    elevation: 8,
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: Colors.lightBlue.shade600,
-                                    child: InkWell(
-                                      onTap: () {
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        width: buttonWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          'Add features',
-                                          style: DodaoTheme.of(context).bodyText1.override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-    );
 
     return LayoutBuilder(
         builder: (context, constraints) {
@@ -426,7 +93,7 @@ class _MintWidget extends State<MintWidget> {
                             onChanged: (searchKeyword) {
                               model.tagsSearchFilter(searchKeyword, simpleTagsMap);
                             },
-                            autofocus: true,
+                            autofocus: false,
                             obscureText: false,
                             // onTapOutside: (test) {
                             //   FocusScope.of(context).unfocus();
@@ -439,7 +106,7 @@ class _MintWidget extends State<MintWidget> {
                                 onPressed: () {
                                   // NEW TAG
                                   simpleTagsMap[_searchKeywordController.text] =
-                                      SimpleTags(tag: _searchKeywordController.text, icon: "", selected: true);
+                                      SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
                                   searchServices.tagSelection( unselectAll: true, tagName: '', typeSelection: 'mint');
                                   model.tagsAddAndUpdate(simpleTagsMap);
                                   managerServices.updateMintNft(searchServices.tagsFilterResults[_searchKeywordController.text]!);
@@ -570,13 +237,77 @@ class _MintWidget extends State<MintWidget> {
                               }
                           ),
                         ),
-                        nftCreate
+                        Consumer<ManagerServices>(
+                            builder: (context, model, child) {
+                            late double secondPartHeight = 0.0;
+                            late bool splitScreen = false;
+
+                            if (model.mintNftTagSelected.tag != 'empty') {
+                              splitScreen = true;
+                            }
+                            secondPartHeight = 350;
+
+                            return AnimatedContainer(
+                                duration: splitDuration,
+                                height: splitScreen ? secondPartHeight : 0.0,
+                                color: Colors.grey[900],
+                                curve: splitCurve,
+                                child: MintItem(item: model.mintNftTagSelected,)
+                            );
+                          }
+                        )
                       ]
                   ),
                 ],
               )
           );
         }
+    );
+  }
+}
+
+
+class MintButton extends StatelessWidget {
+  final String name;
+  final String state;
+  const MintButton({
+    Key? key,
+    required this.name,
+    required this.state,
+  }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    // var tasksServices = context.read<TasksServices>();
+
+    if (state == 'await') {
+
+    } else if (state == 'open') {
+
+    } else if (state == 'done') {
+
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            minimumSize: Size(155, 40),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+
+          // put the width and height you want
+        ),
+        onPressed: () {  },
+        child: Text(
+          name,
+          style: DodaoTheme.of(context).bodyText1.override(
+              fontFamily: 'Inter',
+              color: Colors.white,
+              fontWeight: FontWeight.w400
+          ),
+        ),
+      ),
     );
   }
 }

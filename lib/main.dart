@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'blockchain/interface.dart';
-import 'flutter_flow/theme.dart';
-import 'flutter_flow/internationalization.dart';
+import 'config/theme.dart';
+import 'config/internationalization.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
 
@@ -128,6 +128,17 @@ class _MyAppState extends State<MyApp> {
         // textTheme: const TextTheme(
         //     bodyText1: TextStyle(fontSize: 20, color: Colors.white)),
         // colorScheme: ColorScheme.light().copyWith(secondary: Colors.black),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(155, 40),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            disabledBackgroundColor: Colors.grey[800],
+            // textStyle: const TextStyle(
+            //     color: Colors.red,
+            //     fontWeight: FontWeight.w400
+            // )
+          ),
+        ),
       ),
       darkTheme: ThemeData(brightness: Brightness.dark, splashFactory: NoSplash.splashFactory),
       // Theme mode settings:

@@ -13,7 +13,7 @@ import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/brow
 
 import 'package:week_of_year/week_of_year.dart';
 
-import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
+import 'package:devopsdao/config/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:throttling/throttling.dart';
 
@@ -1339,7 +1339,7 @@ class TasksServices extends ChangeNotifier {
 
       filterResults = Map.from(filterResultsSearch)
         ..removeWhere((taskAddress, task) => task.tags.toSet().intersection(_tagsList.toSet()).length == 0);
-      print(filterResultsSearch);
+      // print(filterResultsSearch);
       // final filterResultsTagsNFT = Map.from(taskList)
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
     }

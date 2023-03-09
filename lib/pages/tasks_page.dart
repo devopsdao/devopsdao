@@ -16,8 +16,8 @@ import '/create_job/create_job.dart.old';
 import '/widgets/loading.dart';
 import '../task_dialog/main.dart';
 import '../task_item/task_item.dart';
-import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/theme.dart';
+import '/config/flutter_flow_animations.dart';
+import '/config/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:beamer/beamer.dart';
@@ -85,7 +85,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var searchServices = context.read<SearchServices>();
 
     bool isFloatButtonVisible = false;
-    if (_searchKeywordController.text.isEmpty ) {
+    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
       tasksServices.resetFilter(tasksServices.tasksNew);
       searchServices.forbidSearchKeywordClear = false;
     }

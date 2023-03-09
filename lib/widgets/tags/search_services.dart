@@ -13,7 +13,6 @@ class SearchServices extends ChangeNotifier {
 
   Map<String, NftTagsBunch> nftFilterResults = {...nftTagsMap};
 
-
   Map<String, SimpleTags> auditorTagsList = {};
   Map<String, SimpleTags> tasksTagsList = {};
   Map<String, SimpleTags> customerTagsList = {};
@@ -52,6 +51,7 @@ class SearchServices extends ChangeNotifier {
     // always remove from main filter list:
     tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
     updateTagListOnTasksPages(page: page);
+    print('removeTagOnTasksPages');
   }
 
   Future updateTagListOnTasksPages({required String page}) async {
@@ -77,6 +77,7 @@ class SearchServices extends ChangeNotifier {
     }
     tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();
+    print('updateTagListOnTasksPages');
   }
 
   late String searchTagKeyword = '';
@@ -112,8 +113,23 @@ class SearchServices extends ChangeNotifier {
         }
       }
     }
-    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
+    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
+    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
+    //   ..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) == 0 ?
+    //   (e2.value.selected ? 1 : -1) : e2.value.tag.compareTo(e1.value.tag)));
+    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) * (e2.value.selected ? -1 : 1)));
+    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
+      ..sort((e1, e2) {
+        if (e2.value.selected != e1.value.selected) {
+          return e2.value.selected ? 1 : -1;
+        } else {
+          return e1.value.tag.compareTo(e2.value.tag);
+        }
+      })
+    );
+
     notifyListeners();
+    print('tagsSearchFilter');
   }
 
   Future<void> tagsAddAndUpdate(Map<String, SimpleTags> tagsList) async {
@@ -124,8 +140,22 @@ class SearchServices extends ChangeNotifier {
       }
     }
     newTag = false;
-    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
+    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
+    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
+    //   ..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) == 0 ?
+    //   (e2.value.selected ? 1 : -1) : e2.value.tag.compareTo(e1.value.tag)));
+    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) * (e2.value.selected ? -1 : 1)));
+    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
+      ..sort((e1, e2) {
+        if (e2.value.selected != e1.value.selected) {
+          return e2.value.selected ? 1 : -1;
+        } else {
+          return e1.value.tag.compareTo(e2.value.tag);
+        }
+      })
+    );
     notifyListeners();
+    print('tagsAddAndUpdate');
   }
 
   Future<void> resetTagsFilter(Map<String, SimpleTags> tagsList) async {
@@ -160,6 +190,7 @@ class SearchServices extends ChangeNotifier {
       }
     }
     notifyListeners();
+    print('tagSelection');
   }
 
 
@@ -196,6 +227,7 @@ class SearchServices extends ChangeNotifier {
     }
     nftFilterResults = Map.fromEntries(nftFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
     notifyListeners();
+    print('tagsNFTFilter');
   }
 
   Future<void> nftSelection({required String tagName, required bool unselectAll}) async {
@@ -208,6 +240,7 @@ class SearchServices extends ChangeNotifier {
       }
     }
     notifyListeners();
+    print('nftSelection');
   }
 
   //

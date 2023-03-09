@@ -11,8 +11,8 @@ import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../task_item/task_item.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/theme.dart';
+import '../config/flutter_flow_animations.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 

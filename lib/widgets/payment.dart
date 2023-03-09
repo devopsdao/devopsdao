@@ -6,7 +6,7 @@ import 'package:throttling/throttling.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
-import '../flutter_flow/theme.dart';
+import '../config/theme.dart';
 
 const List<String> selectToken = <String>['FTM', 'aUSDC'];
 
