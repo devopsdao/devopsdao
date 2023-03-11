@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
+import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../tags_manager/widgets/manager_open_container.dart';
 import '../../tags_manager/manager_services.dart';
@@ -29,6 +30,7 @@ class WrappedChip extends StatefulWidget {
   final bool startScale;
   final bool mint;
   final String expandAnimation;
+  final int tabIndex;
   const WrappedChip({Key? key,
     required this.theme,
     required this.name,
@@ -39,6 +41,7 @@ class WrappedChip extends StatefulWidget {
     this.startScale = false,
     this.mint = false,
     this.expandAnimation = 'none',
+    this.tabIndex = 0,
   }) : super(key: key);
 
   @override
@@ -117,6 +120,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     var searchServices = context.read<SearchServices>();
     var managerServices = context.read<ManagerServices>();
+    var tasksServices = context.read<TasksServices>();
 
     late String icon = 'none';
     late int numOfNFTs = 0;
@@ -260,7 +264,48 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           Future.delayed(
               const Duration(milliseconds: 550), () {
             searchServices.removeTagOnTasksPages(widget.name, page: widget.page, );
+
+            if (widget.page == 'audit') {
+              if (widget.tabIndex == 0) {
+                tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+              } else if (widget.tabIndex == 1) {
+                tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+              } else if (widget.tabIndex == 2) {
+                tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+              } else if (widget.tabIndex == 3) {
+                tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+              }
+            } else if (widget.page == 'tasks') {
+              tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: '');
+            } else if (widget.page == 'customer') {
+              if (widget.tabIndex == 0) {
+                tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
+                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+              } else if (widget.tabIndex == 1) {
+                tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
+                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+              } else if (widget.tabIndex == 2) {
+                tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
+                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+              }
+            } else if (widget.page == 'performer') {
+              if (widget.tabIndex == 0) {
+                tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
+                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+              } else if (widget.tabIndex == 1) {
+                tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
+                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+              } else if (widget.tabIndex == 2) {
+                tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
+                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+              }
+            }
           });
+
         } else if(widget.page == 'selection') {
           // if (widget.selected) {
           //   expandEffectController.reverse();

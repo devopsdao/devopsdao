@@ -10,13 +10,19 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../../pages/performer_page.dart';
 import '../my_tools.dart';
 import 'wrapped_chip.dart';
 import 'package:flutter/services.dart';
 
 class MainTagsPage extends StatefulWidget {
-  const MainTagsPage({Key? key, required this.page}) : super(key: key);
   final String page;
+  final int tabIndex;
+
+  final PerformerPageWidget? performerPageWidget;
+
+  const MainTagsPage({Key? key, required this.page, required this.tabIndex, this.performerPageWidget}) : super(key: key);
+
 
   @override
   _MainTagsPageState createState() => _MainTagsPageState();
@@ -68,7 +74,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
   Widget build(BuildContext context) {
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
-    // var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
 
     late Map<String, TagsCompare> tagsCompare = {};
 
@@ -279,7 +285,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                   }
                                 }
                               }
-print('keyboard problem to fix');
                               return WrappedChip(
                                 key: ValueKey(e),
                                 theme: 'white',
@@ -322,10 +327,46 @@ print('keyboard problem to fix');
               widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
               callback: () {
                 searchServices.updateTagListOnTasksPages(page: widget.page);
-                searchServices.forbidSearchKeywordClear = true;
-                // searchServices.ready = true;
+                if (widget.page == 'audit') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  } else if (widget.tabIndex == 3) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  }
+                } else if (widget.page == 'tasks') {
+                  tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: '');
+                } else if (widget.page == 'customer') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                  }
+                } else if (widget.page == 'performer') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                  }
+                }
                 Navigator.pop(context);
-                // setState(() {});
               },
             ),
           ),

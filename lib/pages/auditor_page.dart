@@ -98,18 +98,25 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       tabIndex = tabs[task!.auditState];
     }
 
-    if (_searchKeywordController.text.isEmpty ) {
+    void resetFilters() async {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(tasksServices.tasksAuditPending);
+        tasksServices.resetFilter(taskList: tasksServices.tasksAuditPending,
+          tagsMap: searchServices.auditorTagsList, );
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(tasksServices.tasksAuditApplied);
+        tasksServices.resetFilter(taskList: tasksServices.tasksAuditApplied,
+          tagsMap: searchServices.auditorTagsList, );
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
+        tasksServices.resetFilter(taskList: tasksServices.tasksAuditWorkingOn,
+          tagsMap: searchServices.auditorTagsList, );
       } else if (tabIndex == 3) {
-        tasksServices.resetFilter(tasksServices.tasksAuditComplete);
+        tasksServices.resetFilter(taskList: tasksServices.tasksAuditComplete,
+          tagsMap: searchServices.auditorTagsList, );
       }
-      searchServices.forbidSearchKeywordClear = false;
     }
+    if (_searchKeywordController.text.isEmpty) {
+      resetFilters();
+    }
+
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {}
 
     return Scaffold(
@@ -196,15 +203,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                     onTap: (index) {
                       _searchKeywordController.clear();
                       tabIndex = index;
-                      if (index == 0) {
-                        tasksServices.resetFilter(tasksServices.tasksAuditPending);
-                      } else if (index == 1) {
-                        tasksServices.resetFilter(tasksServices.tasksAuditApplied);
-                      } else if (index == 2) {
-                        tasksServices.resetFilter(tasksServices.tasksAuditWorkingOn);
-                      } else if (index == 3) {
-                        tasksServices.resetFilter(tasksServices.tasksAuditComplete);
-                      }
+                      resetFilters();
                     },
                     tabs: [
                       Tab(
@@ -247,13 +246,29 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                           onChanged: (searchKeyword) {
                             // print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditPending, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                taskList: tasksServices.tasksAuditPending,
+                                enteredKeyword: searchKeyword,
+                                tagsMap: searchServices.auditorTagsList
+                              );
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                taskList: tasksServices.tasksAuditApplied,
+                                enteredKeyword: searchKeyword,
+                                tagsMap: searchServices.auditorTagsList
+                              );
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                taskList: tasksServices.tasksAuditWorkingOn,
+                                enteredKeyword: searchKeyword,
+                                tagsMap: searchServices.auditorTagsList
+                              );
                             } else if (tabIndex == 3) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                taskList: tasksServices.tasksAuditComplete,
+                                enteredKeyword: searchKeyword,
+                                tagsMap: searchServices.auditorTagsList
+                              );
                             }
                           },
                           decoration: const InputDecoration(
@@ -293,8 +308,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                               ),
                         ),
                       ),
-                      const TagCallButton(
+                      TagCallButton(
                         page: 'auditor',
+                        tabIndex: tabIndex,
                       ),
                     ],
                   ),
@@ -311,6 +327,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                               page: 'auditor',
                             name: e.key,
                             selected: e.value.selected,
+                            tabIndex: tabIndex,
                           );
                         }).toList());
                   }),

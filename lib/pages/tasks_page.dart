@@ -1,29 +1,19 @@
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
-import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
-import '../task_dialog/shimmer.dart';
-import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_open_container.dart';
-import '../widgets/tags/tags_old.dart';
 import '/blockchain/task_services.dart';
-import '/create_job/create_job.dart.old';
 import '/widgets/loading.dart';
-import '../task_dialog/main.dart';
-import '../task_item/task_item.dart';
 import '/config/flutter_flow_animations.dart';
 import '/config/theme.dart';
 import 'package:flutter/material.dart';
 
-import 'package:beamer/beamer.dart';
-
 import 'package:webthree/credentials.dart';
-import 'package:animations/animations.dart';
 
 class TasksPageWidget extends StatefulWidget {
   final EthereumAddress? taskAddress;
@@ -85,9 +75,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var searchServices = context.read<SearchServices>();
 
     bool isFloatButtonVisible = false;
-    if (_searchKeywordController.text.isEmpty && !searchServices.forbidSearchKeywordClear) {
-      tasksServices.resetFilter(tasksServices.tasksNew);
-      searchServices.forbidSearchKeywordClear = false;
+    if (_searchKeywordController.text.isEmpty) {
+      tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList);
     }
 
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
@@ -191,7 +180,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword);
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword,
+                                tagsMap: searchServices.tasksTagsList );
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -232,6 +222,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       ),
                       const TagCallButton(
                         page: 'tasks',
+                        tabIndex: 0,
                       ),
                     ],
                   ),
@@ -253,6 +244,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                             page: 'tasks',
                             name: e.key,
                             selected: e.value.selected,
+                            tabIndex: 0,
                           );
                         }).toList());
                   }),

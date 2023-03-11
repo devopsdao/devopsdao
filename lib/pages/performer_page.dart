@@ -60,11 +60,6 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
         }
       });
     }
-    // startPageLoadAnimations(
-    //   animationsMap.values
-    //       .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-    //   this,
-    // );
   }
 
   final _searchKeywordController = TextEditingController();
@@ -79,28 +74,32 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
-
       if (task != null) {
         tabIndex = tabs[task.taskState];
       }
     }
 
-    if (_searchKeywordController.text.isEmpty) {
+    void resetFilters() async {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
+        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerParticipate,
+            tagsMap: searchServices.performerTagsList);
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
+        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerProgress,
+            tagsMap: searchServices.performerTagsList);
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
+        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerComplete,
+            tagsMap: searchServices.performerTagsList);
       }
-      searchServices.forbidSearchKeywordClear = false;
+    }
+    if (_searchKeywordController.text.isEmpty) {
+      resetFilters();
     }
 
     return Scaffold(
@@ -182,14 +181,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                     onTap: (index) {
                       _searchKeywordController.clear();
                       tabIndex = index;
-                      // print(index);
-                      if (index == 0) {
-                        tasksServices.resetFilter(tasksServices.tasksPerformerParticipate);
-                      } else if (index == 1) {
-                        tasksServices.resetFilter(tasksServices.tasksPerformerProgress);
-                      } else if (index == 2) {
-                        tasksServices.resetFilter(tasksServices.tasksPerformerComplete);
-                      }
+                      resetFilters();
                     },
                     tabs: [
                       Tab(
@@ -233,13 +225,21 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            print(tabIndex);
                             if (tabIndex == 0) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                  taskList: tasksServices.tasksPerformerParticipate,
+                                  enteredKeyword: searchKeyword,
+                                  tagsMap: searchServices.performerTagsList );
                             } else if (tabIndex == 1) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                  taskList: tasksServices.tasksPerformerProgress,
+                                  enteredKeyword: searchKeyword,
+                                  tagsMap: searchServices.performerTagsList );
                             } else if (tabIndex == 2) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete, enteredKeyword: searchKeyword);
+                              tasksServices.runFilter(
+                                  taskList: tasksServices.tasksPerformerComplete,
+                                  enteredKeyword: searchKeyword,
+                                  tagsMap: searchServices.performerTagsList );
                             }
                           },
                           decoration: const InputDecoration(
@@ -279,8 +279,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                               ),
                         ),
                       ),
-                      const TagCallButton(
+                      TagCallButton(
                         page: 'performer',
+                        tabIndex: tabIndex,
                       ),
                     ],
                   ),
@@ -290,9 +291,15 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         direction: Axis.horizontal,
                         children: model.performerTagsList.entries.map((e) {
                           return WrappedChip(
-                              key: ValueKey(e.value), theme: 'black', item: e.value, delete: true, page: 'performer',
+                            key: ValueKey(e.value),
+                            theme: 'black',
+                            item: e.value,
+                            delete: true,
+                            page: 'performer',
                             name: e.key,
-                            selected: e.value.selected,);
+                            tabIndex: tabIndex,
+                            selected: e.value.selected,
+                          );
                         }).toList());
                   }),
                   tasksServices.isLoading

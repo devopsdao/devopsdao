@@ -363,7 +363,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                       const Spacer(),
                                       const Padding(
                                         padding: EdgeInsets.all(6.0),
-                                        child: TagCallButton(page: 'create',),
+                                        child: TagCallButton(
+                                          page: 'create',
+                                          tabIndex: 0,),
                                       ),
                                     ],
                                   );

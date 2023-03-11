@@ -43,12 +43,12 @@ void main() async {
         //     return searchServices!..filterResults = tasksServices.filterResults;
         //   },
         // ),
-        ChangeNotifierProxyProvider<SearchServices, TasksServices>(
-          create: (_) => TasksServices(),
-          update: (_, searchServices, tasksServices) {
-            return tasksServices!..tagsList = searchServices.tagsListToPass;
-          },
-        )
+        // ChangeNotifierProxyProvider<SearchServices, TasksServices>(
+        //   create: (_) => TasksServices(),
+        //   update: (_, searchServices, tasksServices) {
+        //     return tasksServices!..tagsList = searchServices.tagsListToPass;
+        //   },
+        // )
       ],
       child: MyApp(),
     ),

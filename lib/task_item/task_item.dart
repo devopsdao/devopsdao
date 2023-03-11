@@ -60,7 +60,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFFF8911), Color(0xFFF51179)]),
-        width: 3,
+        width: 2,
       );
     } else if (task.taskState == "review") {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -69,7 +69,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFFFC344), Color(0xFFFF8911)]),
-        width: 4,
+        width: 2,
       );
     } else if (task.taskState == "progress") {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -78,7 +78,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFE817D7)]),
-        width: 4,
+        width: 2,
       );
     } else if (task.taskState == "canceled") {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -87,7 +87,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFE817D7), Color(0xFF6F1494)]),
-        width: 4,
+        width: 2,
       );
     } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -96,16 +96,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFF6F1494), Color(0xFF17A3F5)]),
-        width: 4,
-      );
-    } else if (task.taskState == "audit" && widget.fromPage == 'auditor') {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFF17A3F5), Color(0xFFF51179)]),
-        width: 4,
+        width: 2,
       );
     } else {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -114,7 +105,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFFF8911)]),
-        width: 4,
+        width: 2,
       );
     }
 

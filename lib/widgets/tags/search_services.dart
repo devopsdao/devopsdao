@@ -51,7 +51,7 @@ class SearchServices extends ChangeNotifier {
     // always remove from main filter list:
     tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
     updateTagListOnTasksPages(page: page);
-    print('removeTagOnTasksPages');
+    // print('removeTagOnTasksPages');
   }
 
   Future updateTagListOnTasksPages({required String page}) async {
@@ -72,12 +72,10 @@ class SearchServices extends ChangeNotifier {
       performerTagsList = list;
     } else if (page == 'create') {
       createTagsList = list;
-    } else if (page == 'create') {
-      createTagsList = list;
     }
-    tagsListToPass = list.entries.map((e) => e.value.tag).toList();
+    // tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();
-    print('updateTagListOnTasksPages');
+    // print('updateTagListOnTasksPages');
   }
 
   late String searchTagKeyword = '';
