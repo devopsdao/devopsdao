@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 
-import '../flutter_flow/theme.dart';
+import '../config/theme.dart';
 import 'main.dart';
 
 

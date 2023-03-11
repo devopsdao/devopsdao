@@ -11,7 +11,7 @@ import '../../widgets/badgetab.dart';
 import '../../widgets/loading.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/tag_open_container.dart';
-import '../../flutter_flow/theme.dart';
+import '../../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 
@@ -212,7 +212,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                           onChanged: (searchKeyword) {
                             model.tagsNFTFilter(searchKeyword, nftTagsMap);
                           },
-                          autofocus: true,
+                          autofocus: false,
                           obscureText: false,
                           onTapOutside: (test) {
                             FocusScope.of(context).unfocus();
@@ -223,7 +223,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             //   onPressed: () {
                             //     // NEW TAG
                             //     nftTagsMap[_searchKeywordController.text] =
-                            //         SimpleTags(tag: _searchKeywordController.text, icon: "", selected: true);
+                            //         SimpleTags(collection: true, tag: _searchKeywordController.text, icon: "", selected: true);
                             //     model.tagsUpdate(nftTagsMap);
                             //   },
                             //   icon: const Icon(Icons.add_box),
@@ -330,11 +330,10 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                     //   }
                                     // }
                                   }
-                                  // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
                                   return WrappedChip(
                                       key: ValueKey(e),
                                       theme: 'black',
-                                      item: SimpleTags(tag: 'bunch', nft: true),
+                                      item: SimpleTags(collection: true, tag: 'bunch', nft: true),
                                       delete: false,
                                       page: 'treasury',
                                       startScale: false,

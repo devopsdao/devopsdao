@@ -9,7 +9,7 @@ import '../widgets/my_tools.dart';
 import '../widgets/payment.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../widgets/wallet_action.dart';
-import '../flutter_flow/theme.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
 // import 'package:markdown_editable_textinput/format_markdown.dart';
@@ -363,7 +363,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                       const Spacer(),
                                       const Padding(
                                         padding: EdgeInsets.all(6.0),
-                                        child: TagCallButton(page: 'create',),
+                                        child: TagCallButton(
+                                          page: 'create',
+                                          tabIndex: 0,),
                                       ),
                                     ],
                                   );

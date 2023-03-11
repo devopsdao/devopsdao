@@ -5,9 +5,9 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
+import '../config/flutter_flow_icon_button.dart';
 
-import '../flutter_flow/theme.dart';
+import '../config/theme.dart';
 
 import 'package:webthree/webthree.dart';
 

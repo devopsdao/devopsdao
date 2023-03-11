@@ -14,8 +14,8 @@ import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../widgets/tags/tags_old.dart';
 import '../task_item/task_item.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/theme.dart';
+import '../config/flutter_flow_animations.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
@@ -68,6 +68,12 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                   taskAddress: widget.taskAddress,
                   fromPage: 'customer',
                 ));
+        // var tasksServices = context.watch<TasksServices>();
+        // var searchServices = context.read<SearchServices>();
+        // tasksServices.resetFilter(
+        //     taskList: tasksServices.tasksCustomerSelection,
+        //     tagsMap: searchServices.customerTagsList
+        // );
       });
     }
   }
@@ -82,13 +88,12 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
 
   int tabIndex = 0;
   int savedIndex = 999;
-  bool firstLoad = true;
   double prevMetrics = 0;
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
@@ -100,37 +105,21 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
         tabIndex = tabs[task.taskState];
       }
     }
-    if (firstLoad) {
-      tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
-      firstLoad = false;
-    }
-    void changeTab(index, metrics) {
-      // if (tabIndex != index) {
-      if (index == 0) {
-        tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
-      } else if (index == 1) {
-        tasksServices.resetFilter(tasksServices.tasksCustomerProgress);
-      } else if (index == 2) {
-        tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
+    void resetFilters() async {
+      if (tabIndex == 0) {
+        tasksServices.resetFilter(taskList:tasksServices.tasksCustomerSelection,
+            tagsMap: searchServices.customerTagsList);
+      } else if (tabIndex == 1) {
+        tasksServices.resetFilter(taskList:tasksServices.tasksCustomerProgress,
+            tagsMap: searchServices.customerTagsList);
+      } else if (tabIndex == 2) {
+        tasksServices.resetFilter(taskList:tasksServices.tasksCustomerComplete,
+            tagsMap: searchServices.customerTagsList);
       }
-      tabIndex = index;
-      prevMetrics = metrics;
-      // print('saved index changed to: $index');
-      // }
     }
-//&& !searchServices.forbidSearchKeywordClear
-    if (_searchKeywordController.text.isEmpty ) {
-      changeTab(tabIndex, 0.0); //temp disable
-      searchServices.forbidSearchKeywordClear = false;
-      // if (tabIndex == 0) {
-      //   tasksServices.resetFilter(tasksServices.tasksCustomerSelection);
-      // } else if (tabIndex == 1) {
-      //   tasksServices.resetFilter(tasksServices.tasksCustomerProgress);
-      // } else if (tabIndex == 2) {
-      //   tasksServices.resetFilter(tasksServices.tasksCustomerComplete);
-      // }
+    if (_searchKeywordController.text.isEmpty) {
+      resetFilters();
     }
-
     return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
@@ -228,18 +217,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                           onTap: (index) {
                             _searchKeywordController.clear();
                             tabIndex = index;
-                            // print(index);
-                            changeTab(index, 0.0); //temp disable
-                            // if (index == 0) {
-                            //   tasksServices.resetFilter(
-                            //       tasksServices.tasksCustomerSelection);
-                            // } else if (index == 1) {
-                            //   tasksServices.resetFilter(
-                            //       tasksServices.tasksCustomerProgress);
-                            // } else if (index == 2) {
-                            //   tasksServices.resetFilter(
-                            //       tasksServices.tasksCustomerComplete);
-                            // }
+                            resetFilters();
                           },
                           tabs: [
                             Tab(
@@ -269,11 +247,20 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                 controller: _searchKeywordController,
                                 onChanged: (searchKeyword) {
                                   if (tabIndex == 0) {
-                                    tasksServices.runFilter(taskList: tasksServices.tasksCustomerSelection, enteredKeyword: searchKeyword);
+                                    tasksServices.runFilter(
+                                        taskList: tasksServices.tasksCustomerSelection,
+                                        enteredKeyword: searchKeyword,
+                                        tagsMap: searchServices.customerTagsList );
                                   } else if (tabIndex == 1) {
-                                    tasksServices.runFilter(taskList: tasksServices.tasksCustomerProgress, enteredKeyword: searchKeyword);
+                                    tasksServices.runFilter(
+                                        taskList: tasksServices.tasksCustomerProgress,
+                                        enteredKeyword: searchKeyword,
+                                        tagsMap: searchServices.customerTagsList );
                                   } else if (tabIndex == 2) {
-                                    tasksServices.runFilter(taskList: tasksServices.tasksCustomerComplete, enteredKeyword: searchKeyword);
+                                    tasksServices.runFilter(
+                                        taskList: tasksServices.tasksCustomerComplete,
+                                        enteredKeyword: searchKeyword,
+                                        tagsMap: searchServices.customerTagsList );
                                   }
                                 },
                                 decoration: const InputDecoration(
@@ -313,8 +300,9 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                     ),
                               ),
                             ),
-                            const TagCallButton(
+                            TagCallButton(
                               page: 'customer',
+                              tabIndex: tabIndex,
                             ),
                           ],
                         ),
@@ -341,6 +329,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                 page: 'customer',
                                 name: e.key,
                                 selected: e.value.selected,
+                                tabIndex: tabIndex,
                               );
                             }).toList());
                         }),

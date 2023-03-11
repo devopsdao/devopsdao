@@ -10,9 +10,9 @@ import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../create_job/create_job.dart.old';
 import '../widgets/loading.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/theme.dart';
+import '../config/flutter_flow_animations.dart';
+import '../config/flutter_flow_icon_button.dart';
+import '../config/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:devopsdao/blockchain/task_services.dart';
@@ -430,12 +430,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 List<SimpleTags> tags = [];
 
                                 if (tasksServices.roleNfts['auditor'] > 0) {
-                                  tags.add(SimpleTags(tag: "Auditor", icon: ""));
+                                  tags.add(SimpleTags(collection: true, tag: "Auditor", icon: ""));
                                 }
                                 if (tasksServices.roleNfts['governor'] > 0) {
-                                  tags.add(SimpleTags(tag: "Governor", icon: ""));
+                                  tags.add(SimpleTags(collection: true, tag: "Governor", icon: ""));
                                 }
-                                tags.add(SimpleTags(tag: "Get more...", icon: ""));
+                                tags.add(SimpleTags(collection: true, tag: "Get more...", icon: ""));
 
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,

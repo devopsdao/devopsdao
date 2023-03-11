@@ -13,7 +13,7 @@ import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/brow
 
 import 'package:week_of_year/week_of_year.dart';
 
-import 'package:devopsdao/flutter_flow/flutter_flow_util.dart';
+import 'package:devopsdao/config/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:throttling/throttling.dart';
 
@@ -166,7 +166,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -1282,26 +1282,31 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  List<String> _tagsList = [];
-  List<String> get tagsList => _tagsList;
-  set tagsList(List<String> value) {
-    if (value != tagsList) {
-      _tagsList = value;
-      runFilter();
-    }
-  }
+  // List<String> _tagsList = [];
+  // List<String> get tagsList => _tagsList;
+  // set tagsList(List<String> value) {
+  //   if (value != tagsList) {
+  //     _tagsList = value;
+  //     runFilter();
+  //   }
+  // }
 
-  late Map<EthereumAddress, Task> lastTaskList = {};
-  late String lastEnteredKeyword = '';
+  // late Map<EthereumAddress, Task> lastTaskList = {};
+  // late String lastEnteredKeyword = '';
 
-  Future<void> runFilter({Map<EthereumAddress, Task>? taskList, String? enteredKeyword}) async {
-    enteredKeyword ??= lastEnteredKeyword;
-    taskList ??= lastTaskList;
+  Future<void> runFilter(
+      {
+        required Map<EthereumAddress, Task> taskList,
+        required String enteredKeyword,
+        required Map<String, SimpleTags> tagsMap
+      }) async {
+    final List<String> tagsList = tagsMap.entries.map((e) => e.value.tag).toList();
+    // enteredKeyword ??= lastEnteredKeyword;
+    // taskList ??= lastTaskList;
     // tagsList ??= [];
     filterResults.clear();
-    print(enteredKeyword);
     // searchKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty && _tagsList.isEmpty) {
+    if (enteredKeyword.isEmpty && tagsList.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
       // for (EthereumAddress taskAddress in taskList.keys) {
@@ -1334,24 +1339,46 @@ class TasksServices extends ChangeNotifier {
         ...filterResultsAuditor,
         // ...filterResultsTags,
         // ...filterResultsTagsNFT
-      };
+
+    };
 
       // filtering by TAGS:
 
-      filterResults = Map.from(filterResultsSearch)
-        ..removeWhere((taskAddress, task) => task.tags.toSet().intersection(_tagsList.toSet()).length == 0);
-      print(filterResultsSearch);
+      // filterResults = Map.from(filterResultsSearch)
+      //   ..removeWhere((taskAddress, task) => task.tags.toSet().intersection(tagsList.toSet()).isNotEmpty);
+      // print(filterResultsSearch);
       // final filterResultsTagsNFT = Map.from(taskList)
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
+
+      if (tagsList.isNotEmpty) {
+        filterResults = Map.from(filterResultsSearch)
+          ..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
+      } else {
+        filterResults = Map.from(filterResultsSearch);
+      }
     }
     // Refresh the UI
     notifyListeners();
   }
 
-  Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
-    filterResults.clear();
-    filterResults = Map.from(taskList);
-    lastTaskList = taskList;
+  Future<void> resetFilter({
+    required Map<EthereumAddress, Task> taskList, 
+    required Map<String, SimpleTags> tagsMap
+  }) async {
+
+    final List<String> tagsList = tagsMap.entries.map((e) => e.value.tag).toList();
+
+      filterResults.clear();
+    //
+    // taskList = Map.fromEntries(
+    //     taskList.entries.where((entry) => tagsList.contains(entry.value.tag))
+    // );
+    if (tagsList.isNotEmpty) {
+      filterResults = Map.from(taskList)
+        ..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
+    } else {
+      filterResults = Map.from(taskList);
+    }
   }
 
   // late bool loopRunning = false;

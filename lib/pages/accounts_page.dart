@@ -7,7 +7,7 @@ import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '/blockchain/task_services.dart';
-import '/flutter_flow/theme.dart';
+import '/config/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
@@ -47,11 +47,11 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var interface = context.read<InterfaceServices>();
 
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
-      tasksServices.resetFilter(tasksServices.tasksNew);
+      tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: {});
     }
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
@@ -141,7 +141,11 @@ class _AccountsPageState extends State<AccountsPage> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword);
+                            // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.tag).toList();
+                            tasksServices.runFilter(
+                                taskList: tasksServices.tasksNew,
+                                enteredKeyword: searchKeyword,
+                                tagsMap: {});
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -182,6 +186,7 @@ class _AccountsPageState extends State<AccountsPage> {
                       ),
                       const TagCallButton(
                         page: 'tasks',
+                        tabIndex: 0,
                       ),
                     ],
                   ),

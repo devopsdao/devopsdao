@@ -1,40 +1,68 @@
 import 'dart:collection';
-
+import 'package:provider/provider.dart';
 import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:devopsdao/widgets/tags/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 
 import '../../account_dialog/widget/dialog_button_widget.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
-import '../../flutter_flow/theme.dart';
+import '../../config/theme.dart';
+import '../../pages/performer_page.dart';
 import '../my_tools.dart';
 import 'wrapped_chip.dart';
 import 'package:flutter/services.dart';
 
 class MainTagsPage extends StatefulWidget {
-  const MainTagsPage({Key? key, required this.page}) : super(key: key);
   final String page;
+  final int tabIndex;
+
+  final PerformerPageWidget? performerPageWidget;
+
+  const MainTagsPage({Key? key, required this.page, required this.tabIndex, this.performerPageWidget}) : super(key: key);
+
 
   @override
   _MainTagsPageState createState() => _MainTagsPageState();
 }
 
 class _MainTagsPageState extends State<MainTagsPage> {
-  // late List<SimpleTags> selectedTagsListLocal = [];
-  // TagsValueController tags = TagsValueController([]);
 
   late Map<String, SimpleTags> tagsLocalList;
+  final _searchKeywordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var searchServices = Provider.of<SearchServices>(context, listen: false);
+      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
+      if (widget.page == 'audit') {
+        tagsLocalList = searchServices.auditorTagsList;
+      } else if (widget.page == 'tasks') {
+        tagsLocalList = searchServices.tasksTagsList;
+      } else if (widget.page == 'customer') {
+        tagsLocalList = searchServices.customerTagsList;
+      } else if (widget.page == 'performer') {
+        tagsLocalList = searchServices.performerTagsList;
+      } else if (widget.page == 'create') {
+        tagsLocalList = searchServices.createTagsList;
+      } else {
+        tagsLocalList = {};
+      }
 
+      for (var prop1 in searchServices.tagsFilterResults.values) {
+        searchServices.tagsFilterResults[prop1.tag]!.selected = false;
+        for (var prop2 in tagsLocalList.values) {
+          if (prop1.tag == prop2.tag) {
+            searchServices.tagsFilterResults[prop1.tag]!.selected = true;
+          }
+        }
+      }
+    });
   }
-  final _searchKeywordController = TextEditingController();
-
 
   @override
   void dispose() {
@@ -50,19 +78,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
     late Map<String, TagsCompare> tagsCompare = {};
 
-    if (widget.page == 'audit') {
-      tagsLocalList = searchServices.auditorTagsList;
-    } else if (widget.page == 'tasks') {
-      tagsLocalList = searchServices.tasksTagsList;
-    } else if (widget.page == 'customer') {
-      tagsLocalList = searchServices.customerTagsList;
-    } else if (widget.page == 'performer') {
-      tagsLocalList = searchServices.performerTagsList;
-    } else if (widget.page == 'create') {
-      tagsLocalList = searchServices.createTagsList;
-    } else {
-      tagsLocalList = {};
-    }
 
 
     // searchServices.tagsFilterResults.forEach((key, value) {
@@ -80,14 +95,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
     // searchServices.resetTagsFilter(simpleTagsMap);
 
-    for (var prop1 in searchServices.tagsFilterResults.values) {
-      searchServices.tagsFilterResults[prop1.tag]!.selected = false;
-      for (var prop2 in tagsLocalList.values) {
-        if (prop1.tag == prop2.tag) {
-          searchServices.tagsFilterResults[prop1.tag]!.selected = true;
-        }
-      }
-    }
+
     // tagsLocalList.entries.where((element) {
     //   return element.value.selected == true;
     // });
@@ -147,6 +155,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                       InkWell(
                         onTap: () {
                           searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
+                          searchServices.forbidSearchKeywordClear = true;
                           Navigator.pop(context);
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -173,12 +182,13 @@ class _MainTagsPageState extends State<MainTagsPage> {
                     height: 70,
                     child: Consumer<SearchServices>(
                       builder: (context, model, child) {
+
                         return TextFormField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
                             model.tagsSearchFilter(searchKeyword, simpleTagsMap);
                           },
-                          autofocus: true,
+                          autofocus: false,
                           obscureText: false,
                           // onTapOutside: (test) {
                           //   FocusScope.of(context).unfocus();
@@ -191,7 +201,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                               onPressed: () {
                                 // NEW TAG
                                 simpleTagsMap[_searchKeywordController.text] =
-                                    SimpleTags(tag: _searchKeywordController.text, icon: "", selected: true);
+                                    SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
                                 model.tagsAddAndUpdate(simpleTagsMap);
                               },
                               icon: const Icon(Icons.add_box),
@@ -238,12 +248,13 @@ class _MainTagsPageState extends State<MainTagsPage> {
                   Container(
                     height: maxHeight - 10,
                     alignment: Alignment.topLeft,
-                    child: Consumer<SearchServices>(
-                      builder: (context, model, child) {
+                    child: Builder(
+                        builder: (context) {
+                        final searchProvider= Provider.of<SearchServices>(context, listen: true);
                         return Wrap(
                             alignment: WrapAlignment.start,
                             direction: Axis.horizontal,
-                            children: model.tagsFilterResults.entries.map((e) {
+                            children: searchProvider.tagsFilterResults.entries.map((e) {
 
                               if(!tagsCompare.containsKey(e.value.tag)){
                                 if (e.value.selected) {
@@ -316,10 +327,46 @@ class _MainTagsPageState extends State<MainTagsPage> {
               widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
               callback: () {
                 searchServices.updateTagListOnTasksPages(page: widget.page);
-                searchServices.forbidSearchKeywordClear = true;
-                // searchServices.ready = true;
+                if (widget.page == 'audit') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  } else if (widget.tabIndex == 3) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  }
+                } else if (widget.page == 'tasks') {
+                  tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: '');
+                } else if (widget.page == 'customer') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                  }
+                } else if (widget.page == 'performer') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                  }
+                }
                 Navigator.pop(context);
-                // setState(() {});
               },
             ),
           ),

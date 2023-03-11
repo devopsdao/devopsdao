@@ -1,14 +1,15 @@
 import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:provider/provider.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import '../blockchain/classes.dart';
 
 import '../blockchain/task_services.dart';
-import '../flutter_flow/theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '../config/flutter_flow_util.dart';
+import '../config/theme.dart';
+import '../config/flutter_flow_util.dart';
 import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import 'delete_item_alert.dart';
@@ -59,7 +60,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFFF8911), Color(0xFFF51179)]),
-        width: 3,
+        width: 2,
       );
     } else if (task.taskState == "review") {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -68,7 +69,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFFFC344), Color(0xFFFF8911)]),
-        width: 4,
+        width: 2,
       );
     } else if (task.taskState == "progress") {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -77,7 +78,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFE817D7)]),
-        width: 4,
+        width: 2,
       );
     } else if (task.taskState == "canceled") {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -86,7 +87,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFE817D7), Color(0xFF6F1494)]),
-        width: 4,
+        width: 2,
       );
     } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -95,16 +96,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFF6F1494), Color(0xFF17A3F5)]),
-        width: 4,
-      );
-    } else if (task.taskState == "audit" && widget.fromPage == 'auditor') {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFF17A3F5), Color(0xFFF51179)]),
-        width: 4,
+        width: 2,
       );
     } else {
       gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
@@ -113,7 +105,7 @@ class _TaskItemState extends State<TaskItem> {
       ]);
       gradientBorder = const GradientBoxBorder(
         gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFFF8911)]),
-        width: 4,
+        width: 2,
       );
     }
 
@@ -210,7 +202,7 @@ class _TaskItemState extends State<TaskItem> {
                     children: [
                       Expanded(child: LayoutBuilder(builder: (context, constraints) {
                         final double width = constraints.maxWidth - 66;
-                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(tag: name)).toList();
+                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, tag: name)).toList();
 
                         return SizedBox(
                           width: width,

@@ -7,8 +7,10 @@ import 'main.dart';
 
 
 class TagCallButton extends StatelessWidget {
-  const TagCallButton({Key? key, required this.page}) : super(key: key);
   final String page;
+  final int tabIndex;
+  const TagCallButton({Key? key, required this.page, required this.tabIndex}) : super(key: key);
+
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
@@ -24,7 +26,7 @@ class TagCallButton extends StatelessWidget {
         openBuilder: (BuildContext context, VoidCallback _) {
           return Container(
               color: Colors.white,
-              child: MainTagsPage(page: page)
+              child: MainTagsPage(page: page, tabIndex: tabIndex)
           );
           // return const _DetailsPage(
           //   includeMarkAsDoneButton: false,
@@ -74,7 +76,7 @@ class TagCallButton extends StatelessWidget {
           openBuilder: (BuildContext context, VoidCallback _) {
             return Container(
                 color: Colors.white,
-                child: MainTagsPage(page: page)
+                child: MainTagsPage(page: page, tabIndex: tabIndex,)
             );
           },
           closedElevation: 0,

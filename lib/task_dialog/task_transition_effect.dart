@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
+import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
 
 import '../account_dialog/main.dart';

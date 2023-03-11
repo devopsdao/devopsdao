@@ -63,7 +63,8 @@ class SimpleTags {
   final String? id;
   late bool selected;
   late String feature;
-  SimpleTags({required this.tag, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple'});
+  final bool collection;
+  SimpleTags({required this.tag, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
 }
 
 class NftTagsBunch {
