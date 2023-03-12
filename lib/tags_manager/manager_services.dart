@@ -1,7 +1,5 @@
-
-import 'package:devopsdao/blockchain/classes.dart';
+import 'package:dodao/blockchain/classes.dart';
 import 'package:flutter/cupertino.dart';
-
 
 class ManagerServices extends ChangeNotifier {
   late NftTagsBunch treasuryNftsInfoSelected = NftTagsBunch(bunch: [SimpleTags(collection: true, tag: 'empty')]);
@@ -11,10 +9,12 @@ class ManagerServices extends ChangeNotifier {
     treasuryNftsInfoSelected = nft;
     notifyListeners();
   }
+
   Future<void> updateMintNft(SimpleTags collection) async {
     mintNftTagSelected = collection;
     notifyListeners();
   }
+
   Future<void> clearSelectedInManager() async {
     treasuryNftsInfoSelected = NftTagsBunch(bunch: [SimpleTags(collection: true, tag: 'empty')]);
     mintNftTagSelected = SimpleTags(collection: true, tag: 'empty');

@@ -1,6 +1,6 @@
 import 'package:beamer/beamer.dart';
-import 'package:devopsdao/task_dialog/widget/auditor_decision_alert.dart';
-import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
+import 'package:dodao/task_dialog/widget/auditor_decision_alert.dart';
+import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,4 +1,4 @@
-import 'package:devopsdao/wallet/widgets/transport_selection.dart';
+import 'package:dodao/wallet/widgets/transport_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blockchain/interface.dart';
@@ -8,7 +8,7 @@ import 'walletconnect_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:provider/provider.dart';
-import 'package:devopsdao/blockchain/task_services.dart';
+import 'package:dodao/blockchain/task_services.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -30,8 +30,9 @@ enum TransactionState {
 }
 
 class WalletPageTop extends StatefulWidget {
-  const WalletPageTop({Key? key, }) : super(key: key);
-
+  const WalletPageTop({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _WalletPageTopState createState() => _WalletPageTopState();
@@ -398,40 +399,38 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               const Spacer(),
             ],
           ),
-
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (interface.whichWalletButtonPressed == 'metamask')
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 300),
-              firstChild: Container(
-                height: 130,
-                width: 130,
-                padding: const EdgeInsets.all(18.0),
-                child: SvgPicture.asset(
-                  'assets/images/metamask-icon2.svg',
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                firstChild: Container(
+                  height: 130,
+                  width: 130,
+                  padding: const EdgeInsets.all(18.0),
+                  child: SvgPicture.asset(
+                    'assets/images/metamask-icon2.svg',
+                  ),
                 ),
-              ),
-              secondChild: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: TransportSelection(
-                      screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
+                secondChild: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: innerPaddingWidth,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                      ),
+                      child: TransportSelection(
+                        screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
+                      ),
                     ),
                   ),
                 ),
+                crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
-              crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-            ),
-            if (tasksServices.walletConnectedMM)
-              const SizedBox(height: 20),
+            if (tasksServices.walletConnectedMM) const SizedBox(height: 20),
             if (tasksServices.walletConnectedMM)
               Center(
                 child: Material(
@@ -463,9 +462,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               ),
             const SizedBox(height: 20),
             if (interface.whichWalletButtonPressed == 'metamask')
-            const WalletConnectButton(
-              buttonFunction: 'metamask',
-            ),
+              const WalletConnectButton(
+                buttonFunction: 'metamask',
+              ),
             const SizedBox(height: 30),
           ]),
           Center(
@@ -640,16 +639,16 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 // crossAxisAlignment:
                                                 // CrossAxisAlignment.center,
                                                 children: [
-                                                  if(_displayUri.isNotEmpty)
-                                                  RichText(
-                                                      text: TextSpan(
-                                                          style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                                          children: const <TextSpan>[
-                                                        TextSpan(
-                                                            text: 'Scan QR code',
-                                                            style: TextStyle(
-                                                                height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
-                                                      ])),
+                                                  if (_displayUri.isNotEmpty)
+                                                    RichText(
+                                                        text: TextSpan(
+                                                            style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                                            children: const <TextSpan>[
+                                                          TextSpan(
+                                                              text: 'Scan QR code',
+                                                              style: TextStyle(
+                                                                  height: 3, fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black54)),
+                                                        ])),
                                                   const Spacer(),
                                                   if (_displayUri.isNotEmpty)
                                                     QrImage(

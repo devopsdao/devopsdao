@@ -1,5 +1,5 @@
 // import 'package:file_picker/file_picker.dart';
-import 'package:devopsdao/blockchain/task_services.dart';
+import 'package:dodao/blockchain/task_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -29,12 +29,7 @@ class ChatWidget extends StatefulWidget {
   final Task task;
   final Account account;
   final TasksServices tasksServices;
-  const ChatWidget({
-    super.key,
-    required this.task,
-    required this.account,
-    required this.tasksServices
-  });
+  const ChatWidget({super.key, required this.task, required this.account, required this.tasksServices});
 
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
@@ -56,34 +51,31 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
 
-
     if (tasksServices.publicAddress != null) {
       logged = true;
     }
 
     return Chat(
-        messages: _messages,
-        customBottomWidget: !logged ? const NotLoggedInput() : null,
-        // onAttachmentPressed: _handleAttachmentPressed,
-        // onMessageTap: _handleMessageTap,
-        // onPreviewDataFetched: _handlePreviewDataFetched,
-        onSendPressed: _handleSendPressed,
-        showUserAvatars: false,
-        showUserNames: true,
-        user: types.User(id: tasksServices.publicAddress.toString()),
-        inputOptions: const InputOptions(
-          sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-          // inputClearMode: InputClearMode
+      messages: _messages,
+      customBottomWidget: !logged ? const NotLoggedInput() : null,
+      // onAttachmentPressed: _handleAttachmentPressed,
+      // onMessageTap: _handleMessageTap,
+      // onPreviewDataFetched: _handlePreviewDataFetched,
+      onSendPressed: _handleSendPressed,
+      showUserAvatars: false,
+      showUserNames: true,
+      user: types.User(id: tasksServices.publicAddress.toString()),
+      inputOptions: const InputOptions(
+        sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
+        // inputClearMode: InputClearMode
+      ),
+      theme: const DefaultChatTheme(
+        inputBackgroundColor: Colors.black87,
+        inputBorderRadius: BorderRadius.all(
+          Radius.circular(10),
         ),
-        theme: const DefaultChatTheme(
-
-          inputBackgroundColor: Colors.black87,
-          inputBorderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-      );
-
+      ),
+    );
   }
 
   void _addMessage(types.Message message) {
@@ -242,8 +234,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
-    await widget.tasksServices.sendChatMessage(
-        widget.task.taskAddress, widget.task.nanoId, message.text);
+    await widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text);
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.task.messages[0][3].toString()),

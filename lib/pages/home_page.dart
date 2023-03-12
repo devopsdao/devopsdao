@@ -15,7 +15,7 @@ import '../config/flutter_flow_icon_button.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 
-import 'package:devopsdao/blockchain/task_services.dart';
+import 'package:dodao/blockchain/task_services.dart';
 
 import '../wallet/main.dart';
 import '../widgets/tags/tags_old.dart';

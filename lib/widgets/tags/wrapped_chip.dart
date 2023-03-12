@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:animations/animations.dart';
-import 'package:devopsdao/widgets/tags/search_services.dart';
-import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/search_services.dart';
+import 'package:dodao/widgets/tags/tag_mint_dialog.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +16,6 @@ import '../../tags_manager/widgets/manager_open_container.dart';
 import '../../tags_manager/manager_services.dart';
 import '../my_tools.dart';
 import 'main.dart';
-
-
 
 class WrappedChip extends StatefulWidget {
   // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
@@ -31,7 +29,8 @@ class WrappedChip extends StatefulWidget {
   final bool mint;
   final String expandAnimation;
   final int tabIndex;
-  const WrappedChip({Key? key,
+  const WrappedChip({
+    Key? key,
     required this.theme,
     required this.name,
     required this.selected,
@@ -74,7 +73,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
   late Tween<double> opacityTween;
   late Animation<double> animationOpacity;
 
-  late  Animation<double> scaleEffect = CurvedAnimation(
+  late Animation<double> scaleEffect = CurvedAnimation(
     parent: scaleEffectController,
     curve: Curves.easeOutQuart,
   );
@@ -82,7 +81,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     parent: expandEffectController,
     curve: Curves.easeInOutQuart,
   );
-
 
   @override
   void initState() {
@@ -115,7 +113,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var searchServices = context.read<SearchServices>();
@@ -124,8 +121,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
     late String icon = 'none';
     late int numOfNFTs = 0;
-    if (widget.item.nft && widget.page != 'mint') {  icon = 'nft'; }
-    else if (widget.mint) { icon = 'extra_icon'; }
+    if (widget.item.nft && widget.page != 'mint') {
+      icon = 'nft';
+    } else if (widget.mint) {
+      icon = 'extra_icon';
+    }
 
     if (widget.page == 'treasury') {
       if (searchServices.nftFilterResults[widget.name] != null) {
@@ -169,12 +169,14 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 4.0);
     late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 4.0);
 
-    var textSize = calcTextSize(widget.name, DodaoTheme.of(context).bodyText3.override(
-      fontFamily: 'Inter',
-      color: textColor,
-      fontWeight: FontWeight.w400,
-      fontSize: fontSize,
-    ));
+    var textSize = calcTextSize(
+        widget.name,
+        DodaoTheme.of(context).bodyText3.override(
+              fontFamily: 'Inter',
+              color: textColor,
+              fontWeight: FontWeight.w400,
+              fontSize: fontSize,
+            ));
 
     late double tagWidthInit = textSize.width + 22;
     late double expandExtra = 12;
@@ -188,15 +190,19 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late double opacityBegin = 0.0;
     late double opacityEnd = 1.0;
 
-    if (icon == 'extra_icon') { expandExtra += 22; }
-    if (icon == 'nft') { tagWidthInit += 22; }
+    if (icon == 'extra_icon') {
+      expandExtra += 22;
+    }
+    if (icon == 'nft') {
+      tagWidthInit += 22;
+    }
 
     if (widget.name == 'Get more...') {
       getMore = true;
       tagWidthInit += 22;
     }
 
-    if (widget.selected && (widget.expandAnimation == 'remain' )) {
+    if (widget.selected && (widget.expandAnimation == 'remain')) {
       textColor = textColorSelected;
       borderColor = borderColorSelected;
       bodyColor = bodyColorSelected;
@@ -212,7 +218,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       colorTextEnd = textColorSelected;
       colorBorderBegin = borderColor;
       colorBorderEnd = borderColorSelected;
-
     } else if (widget.expandAnimation == 'end') {
       tagWidthInit += 12;
       expandExtra = -12;
@@ -225,20 +230,18 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       colorTextBegin = textColorSelected;
       colorTextEnd = textColor;
       colorBorderBegin = borderColorSelected;
-      colorBorderEnd = borderColor ;
+      colorBorderEnd = borderColor;
       opacityBegin = 1.0;
       opacityEnd = 0.0;
-
     } else if (widget.expandAnimation == 'remain') {
-      if (icon == 'extra_icon') { tagWidthInit += 22; }
+      if (icon == 'extra_icon') {
+        tagWidthInit += 22;
+      }
       tagWidthInit += 12;
       opacityBegin = 1.0;
       opacityEnd = 0.0;
-
     }
     // print('expandAnimation: ${widget.expandAnimation} ${widget.name} tagWidthInit: ${tagWidthInit - (textSize.width + 22)} expandExtra: $expandExtra' );
-
-
 
     chipSizeTween = Tween(begin: tagWidthInit, end: tagWidthInit + expandExtra);
     animationSize = chipSizeTween.animate(expandEffect);
@@ -255,58 +258,67 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     borderColorTween = ColorTween(begin: colorBorderBegin, end: colorBorderEnd);
     animationBorderColor = borderColorTween.animate(expandEffect);
 
-
     void onTapGesture() {
       setState(() {
         FocusManager.instance.primaryFocus?.unfocus();
         if (widget.delete) {
           scaleEffectController.reverse();
-          Future.delayed(
-              const Duration(milliseconds: 550), () {
-            searchServices.removeTagOnTasksPages(widget.name, page: widget.page, );
+          Future.delayed(const Duration(milliseconds: 550), () {
+            searchServices.removeTagOnTasksPages(
+              widget.name,
+              page: widget.page,
+            );
 
             if (widget.page == 'audit') {
               if (widget.tabIndex == 0) {
-                tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                tasksServices.runFilter(
+                  taskList: tasksServices.tasksAuditPending,
+                  tagsMap: searchServices.auditorTagsList,
+                  enteredKeyword: '',
+                );
               } else if (widget.tabIndex == 1) {
-                tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                tasksServices.runFilter(
+                  taskList: tasksServices.tasksAuditApplied,
+                  tagsMap: searchServices.auditorTagsList,
+                  enteredKeyword: '',
+                );
               } else if (widget.tabIndex == 2) {
-                tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                tasksServices.runFilter(
+                  taskList: tasksServices.tasksAuditWorkingOn,
+                  tagsMap: searchServices.auditorTagsList,
+                  enteredKeyword: '',
+                );
               } else if (widget.tabIndex == 3) {
-                tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                tasksServices.runFilter(
+                  taskList: tasksServices.tasksAuditComplete,
+                  tagsMap: searchServices.auditorTagsList,
+                  enteredKeyword: '',
+                );
               }
             } else if (widget.page == 'tasks') {
               tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: '');
             } else if (widget.page == 'customer') {
               if (widget.tabIndex == 0) {
-                tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
-                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                tasksServices.runFilter(taskList: tasksServices.tasksCustomerSelection, tagsMap: searchServices.customerTagsList, enteredKeyword: '');
               } else if (widget.tabIndex == 1) {
-                tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
-                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                tasksServices.runFilter(taskList: tasksServices.tasksCustomerProgress, tagsMap: searchServices.customerTagsList, enteredKeyword: '');
               } else if (widget.tabIndex == 2) {
-                tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
-                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                tasksServices.runFilter(taskList: tasksServices.tasksCustomerComplete, tagsMap: searchServices.customerTagsList, enteredKeyword: '');
               }
             } else if (widget.page == 'performer') {
               if (widget.tabIndex == 0) {
-                tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                tasksServices.runFilter(
+                    taskList: tasksServices.tasksPerformerParticipate, tagsMap: searchServices.performerTagsList, enteredKeyword: '');
               } else if (widget.tabIndex == 1) {
-                tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                tasksServices.runFilter(
+                    taskList: tasksServices.tasksPerformerProgress, tagsMap: searchServices.performerTagsList, enteredKeyword: '');
               } else if (widget.tabIndex == 2) {
-                tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                tasksServices.runFilter(
+                    taskList: tasksServices.tasksPerformerComplete, tagsMap: searchServices.performerTagsList, enteredKeyword: '');
               }
             }
           });
-
-        } else if(widget.page == 'selection') {
+        } else if (widget.page == 'selection') {
           // if (widget.selected) {
           //   expandEffectController.reverse();
           //   print('reversed');
@@ -322,20 +334,27 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           //   }
           // }
           searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.name);
-        } else if(widget.page == 'treasury') {
+        } else if (widget.page == 'treasury') {
           searchServices.nftSelection(unselectAll: false, tagName: widget.name);
           if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
             managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.name]!);
           } else {
-            searchServices.nftSelection(unselectAll: true, tagName: '', );
+            searchServices.nftSelection(
+              unselectAll: true,
+              tagName: '',
+            );
             managerServices.clearSelectedInManager();
           }
         } else if (widget.page == 'mint') {
-          searchServices.tagSelection( unselectAll: false, tagName: widget.name, typeSelection: 'mint');
+          searchServices.tagSelection(unselectAll: false, tagName: widget.name, typeSelection: 'mint');
           if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
             managerServices.updateMintNft(searchServices.tagsFilterResults[widget.name]!);
           } else {
-            searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', );
+            searchServices.tagSelection(
+              unselectAll: true,
+              tagName: '',
+              typeSelection: 'mint',
+            );
             managerServices.clearSelectedInManager();
           }
         }
@@ -345,23 +364,20 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     return ScaleTransition(
       scale: scaleEffect,
       child: AnimatedBuilder(
-        animation: animationSize,
-        builder: (context, child) {
-          return Container(
-            width: animationSize.value,
-            padding: containerPadding,
-            margin: containerMargin,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(8.0),
+          animation: animationSize,
+          builder: (context, child) {
+            return Container(
+              width: animationSize.value,
+              padding: containerPadding,
+              margin: containerMargin,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                border: Border.all(color: animationBorderColor.value!, width: 1),
+                color: animationColor.value,
               ),
-              border: Border.all(
-                  color: animationBorderColor.value!,
-                  width: 1
-              ),
-              color: animationColor.value,
-            ),
-            child: Row(
+              child: Row(
                 children: [
                   if (icon == 'extra_icon')
                     Flexible(
@@ -369,78 +385,70 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         opacity: animationOpacity.value,
                         child: GestureDetector(
                           onTap: () {
-                            showDialog(context: context, builder: (context) {
-                              return TagMintDialog(tagName: widget.name);
-                            });
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return TagMintDialog(tagName: widget.name);
+                                });
                           },
                           child: Padding(
                             padding: rightSpanPadding,
-                            child: Icon(
-                                Icons.tag_rounded,
-                                size: iconSize,
-                                color: nftMintColor
-                            ),
+                            child: Icon(Icons.tag_rounded, size: iconSize, color: nftMintColor),
                           ),
                         ),
                       ),
                     ),
                   if (icon == 'nft' && numOfNFTs < 1)
-                  Flexible(
-                    flex: 10,
-                    child: Padding(
-                      padding: rightSpanPadding,
-                      child: Icon(
-                          Icons.star,
-                          size: iconSize,
-                          color:nftColor
+                    Flexible(
+                      flex: 10,
+                      child: Padding(
+                        padding: rightSpanPadding,
+                        child: Icon(Icons.star, size: iconSize, color: nftColor),
                       ),
                     ),
-                  ),
                   if (widget.page == 'treasury' && numOfNFTs > 1)
                     Flexible(
                       flex: 10,
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 5.0, left: 3.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: nftColor,
-                              border: Border.all(
+                          padding: const EdgeInsets.only(right: 5.0, left: 3.0),
+                          child: Container(
+                            decoration: BoxDecoration(
                                 color: nftColor,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(12))
-                          ),
-                          width: 15,
-                          height: 15,
-                          // color: nftColor,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              numOfNFTs.toString(),
-                              style: DodaoTheme.of(context).bodyText3.override(
-                                fontFamily: 'Inter',
-                                color: animationColor.value,
-                                fontWeight: FontWeight.bold,
-                                fontSize: fontSize - 4,
+                                border: Border.all(
+                                  color: nftColor,
+                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(12))),
+                            width: 15,
+                            height: 15,
+                            // color: nftColor,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                numOfNFTs.toString(),
+                                style: DodaoTheme.of(context).bodyText3.override(
+                                      fontFamily: 'Inter',
+                                      color: animationColor.value,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSize - 4,
+                                    ),
                               ),
                             ),
-                          ),
-                        )
-                      ),
+                          )),
                     ),
                   // Gesture for TEXT field
                   if (!getMore)
-                  GestureDetector(
-                    onTap: onTapGesture,
-                    child: Text(
-                      widget.name,
-                      style: DodaoTheme.of(context).bodyText3.override(
-                        fontFamily: 'Inter',
-                        color: animationTextColor.value,
-                        fontWeight: FontWeight.w400,
-                        fontSize: fontSize,
+                    GestureDetector(
+                      onTap: onTapGesture,
+                      child: Text(
+                        widget.name,
+                        style: DodaoTheme.of(context).bodyText3.override(
+                              fontFamily: 'Inter',
+                              color: animationTextColor.value,
+                              fontWeight: FontWeight.w400,
+                              fontSize: fontSize,
+                            ),
                       ),
                     ),
-                  ),
 
                   // Close button (will be not visible if item.selected false)
                   Flexible(
@@ -450,40 +458,33 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         onTap: onTapGesture,
                         child: Padding(
                           padding: leftSpanPadding,
-                          child: Icon(
-                              Icons.clear_rounded,
-                              size: iconSize,
-                              color: textColorSelected
-                          ),
+                          child: Icon(Icons.clear_rounded, size: iconSize, color: textColorSelected),
                         ),
                       ),
                     ),
                   ),
                   if (getMore)
-                  GetMore(
-                    leftSpanPadding: leftSpanPadding,
-                    iconSize: iconSize,
-                    textColor: textColor, fontSize: fontSize,
-                  ),
+                    GetMore(
+                      leftSpanPadding: leftSpanPadding,
+                      iconSize: iconSize,
+                      textColor: textColor,
+                      fontSize: fontSize,
+                    ),
                 ],
               ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 }
-
-
-
-
 
 class WrappedChipSmall extends StatelessWidget {
   // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
   final String theme;
   final SimpleTags item;
   final String page;
-  const WrappedChipSmall({Key? key,
+  const WrappedChipSmall({
+    Key? key,
     required this.theme,
     required this.item,
     required this.page,
@@ -497,7 +498,6 @@ class WrappedChipSmall extends StatelessWidget {
     late Color bodyColor = Colors.grey[850]!;
     late Color nftColor = Colors.deepOrange;
     late Color nftMintColor = Colors.grey[600]!;
-
 
     if (theme == 'small-white') {
       textColor = Colors.black;
@@ -513,12 +513,15 @@ class WrappedChipSmall extends StatelessWidget {
     late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 2.0);
     late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 2.0);
 
-    var textSize = calcTextSize(item.tag, DodaoTheme.of(context).bodyText3.override(
-      fontFamily: 'Inter',
-      color: textColor,
-      fontWeight: FontWeight.w400,
-      fontSize: fontSize,
-    ),);
+    var textSize = calcTextSize(
+      item.tag,
+      DodaoTheme.of(context).bodyText3.override(
+            fontFamily: 'Inter',
+            color: textColor,
+            fontWeight: FontWeight.w400,
+            fontSize: fontSize,
+          ),
+    );
 
     // tag width
     late double tagWidth = textSize.width + 22;
@@ -535,27 +538,19 @@ class WrappedChipSmall extends StatelessWidget {
         borderRadius: const BorderRadius.all(
           Radius.circular(8.0),
         ),
-        border: Border.all(
-            color: borderColor,
-            width: 1
-        ),
+        border: Border.all(color: borderColor, width: 1),
         color: bodyColor,
       ),
       child: Row(
         children: [
           if (item.nft)
-          Flexible(
-            flex: 3,
-            child: Padding(
-              padding: rightSpanPadding,
-              child: Icon(
-                  Icons.star,
-                  size: iconSize,
-                  color:nftColor
+            Flexible(
+              flex: 3,
+              child: Padding(
+                padding: rightSpanPadding,
+                child: Icon(Icons.star, size: iconSize, color: nftColor),
               ),
             ),
-          ),
-
           Flexible(
             flex: 7,
             child: Container(
@@ -564,18 +559,16 @@ class WrappedChipSmall extends StatelessWidget {
               child: Text(
                 item.tag,
                 style: DodaoTheme.of(context).bodyText3.override(
-                  fontFamily: 'Inter',
-                  color: textColor,
-                  fontWeight: FontWeight.w400,
-                  fontSize: fontSize,
-                ),
+                      fontFamily: 'Inter',
+                      color: textColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: fontSize,
+                    ),
               ),
             ),
           ),
-
         ],
       ),
     );
   }
 }
-

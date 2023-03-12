@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:devopsdao/task_dialog/states.dart';
+import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
+import 'package:dodao/task_dialog/states.dart';
 import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
@@ -19,24 +19,20 @@ class SelectionPage extends StatefulWidget {
   final double innerPaddingWidth;
   final Task task;
 
-
-  const SelectionPage(
-      {Key? key,
-        required this.screenHeightSize,
-        required this.innerPaddingWidth,
-        required this.task,
-      })
-      : super(key: key);
+  const SelectionPage({
+    Key? key,
+    required this.screenHeightSize,
+    required this.innerPaddingWidth,
+    required this.task,
+  }) : super(key: key);
 
   @override
   _SelectionPageState createState() => _SelectionPageState();
 }
 
 class _SelectionPageState extends State<SelectionPage> {
-
   ScrollController? selectionScrollController;
   // final selectionScrollController = ScrollController();
-
 
   @override
   void initState() {
@@ -49,7 +45,6 @@ class _SelectionPageState extends State<SelectionPage> {
     selectionScrollController!.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +69,9 @@ class _SelectionPageState extends State<SelectionPage> {
           children: [
             Container(
               decoration: const BoxDecoration(
-                color:  Color(0xFFF8F8F8),
+                color: Color(0xFFF8F8F8),
                 borderRadius: BorderRadius.all(
-                   Radius.circular(8.0),
+                  Radius.circular(8.0),
                   // topLeft: Radius.circular(8.0),
                 ),
                 // borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -87,46 +82,30 @@ class _SelectionPageState extends State<SelectionPage> {
                     padding: const EdgeInsets.all(10),
                     alignment: Alignment.topLeft,
                     child: RichText(
-                        text: TextSpan(
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .apply(fontSizeFactor: 1.0),
-                            children: const <TextSpan>[
-                              TextSpan(
-                                  text: 'Choose contractor: ',
-                                  style: TextStyle(
-                                      height: 1,
-                                      fontWeight: FontWeight.bold)),
-                            ])),
+                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                      TextSpan(text: 'Choose contractor: ', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
+                    ])),
                   ),
-                  if (task.participants.isEmpty &&
-                      interface.dialogCurrentState['name'] == 'customer-new')
+                  if (task.participants.isEmpty && interface.dialogCurrentState['name'] == 'customer-new')
                     RichText(
-                        text: TextSpan(
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .apply(fontSizeFactor: 1.0),
-                            children: const <TextSpan>[
-                              TextSpan(
-                                  text: 'Participants not applied to your Task yet. ',
-                                  style: TextStyle(
-                                    height: 2,)),
-                            ])),
-                  if (task.auditors.isEmpty && (
-                      interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
-                          interface.dialogCurrentState['name'] == 'performer-audit-requested'
-                  ))
+                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                      TextSpan(
+                          text: 'Participants not applied to your Task yet. ',
+                          style: TextStyle(
+                            height: 2,
+                          )),
+                    ])),
+                  if (task.auditors.isEmpty &&
+                      (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
+                          interface.dialogCurrentState['name'] == 'performer-audit-requested'))
                     RichText(
-                        text: TextSpan(
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .apply(fontSizeFactor: 1.0),
-                            children: const <TextSpan>[
-                              TextSpan(
-                                  text: 'Auditors not applied to your request yet. ',
-                                  style: TextStyle(
-                                    height: 2,)),
-                            ])),
+                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                      TextSpan(
+                          text: 'Auditors not applied to your request yet. ',
+                          style: TextStyle(
+                            height: 2,
+                          )),
+                    ])),
                 ],
               ),
             ),
@@ -140,7 +119,6 @@ class _SelectionPageState extends State<SelectionPage> {
       ),
     );
 
-
     final Widget contractorInfo = Column(
       children: [
         Row(
@@ -150,11 +128,7 @@ class _SelectionPageState extends State<SelectionPage> {
               width: 100,
               height: 100,
               decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/logo.png"),
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.bottomRight
-                ),
+                image: DecorationImage(image: AssetImage("assets/images/logo.png"), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
               ),
             ),
             Container(
@@ -164,46 +138,36 @@ class _SelectionPageState extends State<SelectionPage> {
               child: RichText(
                   maxLines: 10,
                   softWrap: true,
-                  text: TextSpan(
-                      style: DefaultTextStyle.of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.0),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '${interface.selectedUser['address']} \n \n',
-                            style: const TextStyle(
-                                height: 1,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold
-                                // backgroundColor: Colors.black12
+                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                    TextSpan(
+                        text: '${interface.selectedUser['address']} \n \n',
+                        style: const TextStyle(height: 1, fontSize: 12, fontWeight: FontWeight.bold
+                            // backgroundColor: Colors.black12
                             )),
-                        const TextSpan(
-                            text: 'Wallet nickname \n',
-                            style: TextStyle(
-                              height: 1,
-                            )),
-                        const TextSpan(
-                            text: 'Scores \n\n',
-                            style: TextStyle(
-                              height: 1,
-                            )),
-                        const TextSpan(
-                            text: 'And other information about this wallet',
-                            style: TextStyle(
-                              height: 1,
-                            )),
-
-                        const TextSpan(
-                            text: ' will goes here ',
-                            style: TextStyle(
-                              height: 1,
-                            )),
-                      ])),
-
+                    const TextSpan(
+                        text: 'Wallet nickname \n',
+                        style: TextStyle(
+                          height: 1,
+                        )),
+                    const TextSpan(
+                        text: 'Scores \n\n',
+                        style: TextStyle(
+                          height: 1,
+                        )),
+                    const TextSpan(
+                        text: 'And other information about this wallet',
+                        style: TextStyle(
+                          height: 1,
+                        )),
+                    const TextSpan(
+                        text: ' will goes here ',
+                        style: TextStyle(
+                          height: 1,
+                        )),
+                  ])),
             )
           ],
         ),
-
       ],
     );
 
@@ -222,83 +186,78 @@ class _SelectionPageState extends State<SelectionPage> {
             ),
             child: Column(
               children: [
-                Builder(
-                  builder: (context) {
-                    final bool walletSelected = interface.selectedUser['address'] != null ? true : false;
-                    late double layoutHeight =
-                        widget.screenHeightSize - MediaQuery.of(context).viewPadding.top - 100; // minus mobile statusbar
-                    // Set height for INFO panel if address selected:
-                    if (walletSelected) {
-                      heightForInfo = interface.heightForInfo;
-                    }
-                    // Set height for address LIST when address selected:
-                    late double heightLeft = layoutHeight - heightForInfo;
-                    // If address LIST empty set default height:
-                    if (task.participants.isEmpty) {
-                      layoutHeight = 90;
-                    }
-                    // Collect entire height for all addresses:
-                    final double heightOfAllParticipant = interface.tileHeight * task.participants.length;
-                    // If address LIST doesn't take up the entire height set height for those addresses:
-                    if (layoutHeight > heightOfAllParticipant && task.participants.isNotEmpty) {
-                      layoutHeight = heightOfAllParticipant + 42;
-                      heightLeft = layoutHeight;
-                    }
-                    //
-                    // print('heightOfAllParticipant: $heightOfAllParticipant');
-                    // print('layoutHeight: $layoutHeight');
-                    // print('task.participants.length: ${task.participants.length}');
+                Builder(builder: (context) {
+                  final bool walletSelected = interface.selectedUser['address'] != null ? true : false;
+                  late double layoutHeight = widget.screenHeightSize - MediaQuery.of(context).viewPadding.top - 100; // minus mobile statusbar
+                  // Set height for INFO panel if address selected:
+                  if (walletSelected) {
+                    heightForInfo = interface.heightForInfo;
+                  }
+                  // Set height for address LIST when address selected:
+                  late double heightLeft = layoutHeight - heightForInfo;
+                  // If address LIST empty set default height:
+                  if (task.participants.isEmpty) {
+                    layoutHeight = 90;
+                  }
+                  // Collect entire height for all addresses:
+                  final double heightOfAllParticipant = interface.tileHeight * task.participants.length;
+                  // If address LIST doesn't take up the entire height set height for those addresses:
+                  if (layoutHeight > heightOfAllParticipant && task.participants.isNotEmpty) {
+                    layoutHeight = heightOfAllParticipant + 42;
+                    heightLeft = layoutHeight;
+                  }
+                  //
+                  // print('heightOfAllParticipant: $heightOfAllParticipant');
+                  // print('layoutHeight: $layoutHeight');
+                  // print('task.participants.length: ${task.participants.length}');
 
-                    return Column(
-                      children: <Widget>[
-                        Builder(
-                          builder: (context) {
-                            // print('ofset' + selectionScrollController!.offset.toString());
+                  return Column(
+                    children: <Widget>[
+                      Builder(builder: (context) {
+                        // print('ofset' + selectionScrollController!.offset.toString());
 
-                            return AnimatedContainer(
-                              // color: Colors.amber,
-                              duration:  const Duration(milliseconds: 300),
-                              height: walletSelected ? heightLeft : layoutHeight,
-                              curve: Curves.fastOutSlowIn,
-                              child: contractorList,
-                            );
-                          }
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 14.0)),
-                        // if(interface.selectedUser['address'] != null)
-                          AnimatedContainer(
-                            // color: Colors.amber,
-                            duration:  const Duration(milliseconds: 50),
-                            height: walletSelected ? heightForInfo : 0,
-                            width: walletSelected ? widget.innerPaddingWidth : 0,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child:  ExpandInformation(
-                                expand: walletSelected,
-                                child: Material(
-                                  elevation: 10,
-                                  borderRadius: BorderRadius.circular(interface.borderRadius),
-                                  child: Container(
-                                    height: heightForInfo,
-                                    padding: const EdgeInsets.all(14),
-                                    child: contractorInfo,
-                                  ),
-                                ),
+                        return AnimatedContainer(
+                          // color: Colors.amber,
+                          duration: const Duration(milliseconds: 300),
+                          height: walletSelected ? heightLeft : layoutHeight,
+                          curve: Curves.fastOutSlowIn,
+                          child: contractorList,
+                        );
+                      }),
+                      const Padding(padding: EdgeInsets.only(top: 14.0)),
+                      // if(interface.selectedUser['address'] != null)
+                      AnimatedContainer(
+                        // color: Colors.amber,
+                        duration: const Duration(milliseconds: 50),
+                        height: walletSelected ? heightForInfo : 0,
+                        width: walletSelected ? widget.innerPaddingWidth : 0,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: ExpandInformation(
+                            expand: walletSelected,
+                            child: Material(
+                              elevation: 10,
+                              borderRadius: BorderRadius.circular(interface.borderRadius),
+                              child: Container(
+                                height: heightForInfo,
+                                padding: const EdgeInsets.all(14),
+                                child: contractorInfo,
                               ),
                             ),
-                          // AnimatedSize(
-                          //   curve: Curves.easeIn,
-                          //   duration: const Duration(milliseconds: 1500),
-                          //   child: SizedBox(
-                          //     height: interface.selectedUser['address'] != null ? heightForInfo : 0,
-                          //     child: contractorInfo
-                          //   )
-                          // )
+                          ),
                         ),
-                      ],
-                    );
-                  }
-                ),
+                        // AnimatedSize(
+                        //   curve: Curves.easeIn,
+                        //   duration: const Duration(milliseconds: 1500),
+                        //   child: SizedBox(
+                        //     height: interface.selectedUser['address'] != null ? heightForInfo : 0,
+                        //     child: contractorInfo
+                        //   )
+                        // )
+                      ),
+                    ],
+                  );
+                }),
                 const Spacer(),
                 // Container(
                 //   padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
@@ -354,7 +313,7 @@ class _SelectionPageState extends State<SelectionPage> {
           ),
         ),
       ),
-      floatingActionButtonAnimator:  NoScalingAnimation(),
+      floatingActionButtonAnimator: NoScalingAnimation(),
       floatingActionButton: Padding(
         // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.only(right: 13, left: 46),
@@ -371,36 +330,29 @@ class _SelectionPageState extends State<SelectionPage> {
             late String status;
             if (interface.dialogCurrentState['name'] == 'customer-new') {
               status = 'agreed';
-            } else if (
-            interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
-                interface.dialogCurrentState['name'] == 'customer-audit-requested'
-            ) {
+            } else if (interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
+                interface.dialogCurrentState['name'] == 'customer-audit-requested') {
               status = 'audit';
             }
-            tasksServices.taskStateChange(task.taskAddress,
-                EthereumAddress.fromHex(interface.selectedUser['address']!), status, task.nanoId);
+            tasksServices.taskStateChange(task.taskAddress, EthereumAddress.fromHex(interface.selectedUser['address']!), status, task.nanoId);
             interface.selectedUser = {}; // reset
             Navigator.pop(context);
             interface.emptyTaskMessage();
-            RouteInformation routeInfo =
-            const RouteInformation(location: '/customer');
+            RouteInformation routeInfo = const RouteInformation(location: '/customer');
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
                 context: context,
                 builder: (context) => WalletAction(
-                  nanoId: task.nanoId,
-                  taskName: 'taskStateChange',
-                )
-            );
+                      nanoId: task.nanoId,
+                      taskName: 'taskStateChange',
+                    ));
           },
         ),
       ),
     );
   }
 }
-
-
 
 class ExpandInformation extends StatefulWidget {
   final Widget child;
@@ -424,26 +376,22 @@ class _ExpandInformationState extends State<ExpandInformation> with SingleTicker
 
   void prepareAnimations() {
     expandController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 400),
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
       // value: 0.0,
     );
     animation = CurvedAnimation(
-
       parent: expandController,
       curve: Curves.easeInOutQuint,
     );
   }
 
   void _runExpandCheck() {
-    if(widget.expand) {
-      Future.delayed(
-          const Duration(milliseconds: 50),
-              () {
-            expandController.forward();
-          });
-    }
-    else {
+    if (widget.expand) {
+      Future.delayed(const Duration(milliseconds: 50), () {
+        expandController.forward();
+      });
+    } else {
       expandController.reverse();
     }
   }
@@ -465,10 +413,6 @@ class _ExpandInformationState extends State<ExpandInformation> with SingleTicker
     return ScaleTransition(
         // axisAlignment: 20.5,
         scale: animation,
-        child: widget.child
-    );
+        child: widget.child);
   }
 }
-
-
-

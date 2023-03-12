@@ -13,7 +13,7 @@ import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/brow
 
 import 'package:week_of_year/week_of_year.dart';
 
-import 'package:devopsdao/config/flutter_flow_util.dart';
+import 'package:dodao/config/flutter_flow_util.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:throttling/throttling.dart';
 
@@ -1295,11 +1295,7 @@ class TasksServices extends ChangeNotifier {
   // late String lastEnteredKeyword = '';
 
   Future<void> runFilter(
-      {
-        required Map<EthereumAddress, Task> taskList,
-        required String enteredKeyword,
-        required Map<String, SimpleTags> tagsMap
-      }) async {
+      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, SimpleTags> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.tag).toList();
     // enteredKeyword ??= lastEnteredKeyword;
     // taskList ??= lastTaskList;
@@ -1339,8 +1335,7 @@ class TasksServices extends ChangeNotifier {
         ...filterResultsAuditor,
         // ...filterResultsTags,
         // ...filterResultsTagsNFT
-
-    };
+      };
 
       // filtering by TAGS:
 
@@ -1351,8 +1346,7 @@ class TasksServices extends ChangeNotifier {
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
 
       if (tagsList.isNotEmpty) {
-        filterResults = Map.from(filterResultsSearch)
-          ..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
+        filterResults = Map.from(filterResultsSearch)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
       } else {
         filterResults = Map.from(filterResultsSearch);
       }
@@ -1361,21 +1355,16 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter({
-    required Map<EthereumAddress, Task> taskList, 
-    required Map<String, SimpleTags> tagsMap
-  }) async {
-
+  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, SimpleTags> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.tag).toList();
 
-      filterResults.clear();
+    filterResults.clear();
     //
     // taskList = Map.fromEntries(
     //     taskList.entries.where((entry) => tagsList.contains(entry.value.tag))
     // );
     if (tagsList.isNotEmpty) {
-      filterResults = Map.from(taskList)
-        ..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
+      filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
     } else {
       filterResults = Map.from(taskList);
     }

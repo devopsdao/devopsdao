@@ -1,8 +1,8 @@
-import 'package:devopsdao/task_dialog/pages/0_topup.dart';
-import 'package:devopsdao/task_dialog/pages/1_main.dart';
-import 'package:devopsdao/task_dialog/pages/3_selection.dart';
-import 'package:devopsdao/task_dialog/pages/2_description.dart';
-import 'package:devopsdao/task_dialog/pages/4_chat.dart';
+import 'package:dodao/task_dialog/pages/0_topup.dart';
+import 'package:dodao/task_dialog/pages/1_main.dart';
+import 'package:dodao/task_dialog/pages/3_selection.dart';
+import 'package:dodao/task_dialog/pages/2_description.dart';
+import 'package:dodao/task_dialog/pages/4_chat.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +56,6 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     // var tasksServices = context.watch<TasksServices>();
-
 
     Task task = widget.task;
     String fromPage = widget.fromPage;
@@ -113,9 +112,9 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
               screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
               screenHeightSize: widget.screenHeightSize,
               innerPaddingWidth: innerPaddingWidth,
-              task: task,),
-          if (interface.dialogCurrentState['pages'].containsKey('empty'))
-            const Center(),
+              task: task,
+            ),
+          if (interface.dialogCurrentState['pages'].containsKey('empty')) const Center(),
           if (interface.dialogCurrentState['pages'].containsKey('main'))
             MainTaskPage(
               innerPaddingWidth: innerPaddingWidth,
@@ -128,17 +127,14 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
               screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
               innerPaddingWidth: innerPaddingWidth,
               task: task,
-              fromPage: fromPage,),
+              fromPage: fromPage,
+            ),
           if (interface.dialogCurrentState['pages'].containsKey('select'))
             SelectionPage(screenHeightSize: widget.screenHeightSize, innerPaddingWidth: innerPaddingWidth, task: task),
 
-          if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
-            ChatPage(
-              task: task,
-              innerPaddingWidth: innerPaddingWidth)
+          if (interface.dialogCurrentState['pages'].containsKey('widgets.chat')) ChatPage(task: task, innerPaddingWidth: innerPaddingWidth)
         ],
       );
     });
   }
 }
-
