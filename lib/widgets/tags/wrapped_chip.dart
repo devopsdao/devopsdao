@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:animations/animations.dart';
-import 'package:devopsdao/widgets/tags/search_services.dart';
-import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
-import 'package:devopsdao/widgets/tags/tag_open_container.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/search_services.dart';
+import 'package:dodao/widgets/tags/tag_mint_dialog.dart';
+import 'package:dodao/widgets/tags/tag_open_container.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

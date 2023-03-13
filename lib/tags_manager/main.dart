@@ -1,4 +1,4 @@
-import 'package:devopsdao/tags_manager/pages/mint.dart';
+import 'package:dodao/tags_manager/pages/mint.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
@@ -24,10 +24,8 @@ class TagManagerPage extends StatefulWidget {
 }
 
 class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderStateMixin {
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _controller;
-
 
   @override
   void initState() {
@@ -44,8 +42,6 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
 
   int tabIndex = 0;
 
-
-
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
@@ -54,7 +50,6 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
     var managerServices = context.read<ManagerServices>();
 
     start();
-
 
     return Scaffold(
       key: scaffoldKey,
@@ -72,10 +67,10 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
                 Text(
                   'Tags Manager',
                   style: DodaoTheme.of(context).title2.override(
-                    fontFamily: 'Inter',
-                    color: Colors.white,
-                    fontSize: 22,
-                  ),
+                        fontFamily: 'Inter',
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
                 ),
               ],
             ),
@@ -86,7 +81,10 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
             icon: const Icon(Icons.close),
             onPressed: () {
               searchServices.resetNFTFilter(nftTagsMap);
-              searchServices.nftSelection(unselectAll: true, tagName: '', );
+              searchServices.nftSelection(
+                unselectAll: true,
+                tagName: '',
+              );
               managerServices.clearSelectedInManager();
               Navigator.of(context).pop(null);
             },
@@ -109,8 +107,8 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
           ),
         ),
         child: SizedBox(
-          width: interface.maxStaticGlobalWidth,
-          child: Column(
+            width: interface.maxStaticGlobalWidth,
+            child: Column(
               children: [
                 TabBar(
                   physics: const NeverScrollableScrollPhysics(),
@@ -139,15 +137,13 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
                     controller: _controller,
                     physics: const NeverScrollableScrollPhysics(),
                     children: const [
-                      MintWidget(
-                      ),
+                      MintWidget(),
                       TreasuryWidget(),
                     ],
                   ),
                 ),
               ],
-            )
-          ),
+            )),
       ),
     );
   }

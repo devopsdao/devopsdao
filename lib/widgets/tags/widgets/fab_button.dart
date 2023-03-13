@@ -1,5 +1,4 @@
-
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,21 +15,21 @@ class TagsFAB extends StatefulWidget {
   final double widthSize;
   const TagsFAB(
       {Key? key,
-        required this.buttonName,
-        required this.buttonColorRequired,
-        required this.callback,
-        required this.inactive,
-        required this.widthSize,
-        this.tags,
-        this.padding,
-        this.expand = false})
+      required this.buttonName,
+      required this.buttonColorRequired,
+      required this.callback,
+      required this.inactive,
+      required this.widthSize,
+      this.tags,
+      this.padding,
+      this.expand = false})
       : super(key: key);
 
   @override
   _TagsFABState createState() => _TagsFABState();
 }
 
-class _TagsFABState extends State<TagsFAB> with SingleTickerProviderStateMixin{
+class _TagsFABState extends State<TagsFAB> with SingleTickerProviderStateMixin {
   late Color buttonColor;
   late Color textColor = Colors.white;
   late bool _buttonState = true;
@@ -55,7 +54,6 @@ class _TagsFABState extends State<TagsFAB> with SingleTickerProviderStateMixin{
     late Widget child = FloatingActionButton.extended(
       onPressed: _buttonState ? widget.callback : null,
       backgroundColor: buttonColor,
-
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(17.0))),
       label: Text(
         widget.buttonName,
@@ -64,13 +62,11 @@ class _TagsFABState extends State<TagsFAB> with SingleTickerProviderStateMixin{
       ),
     );
 
-
     return AnimatedContainer(
       // color: Colors.amber,
-      duration:  const Duration(milliseconds: 500),
-      width:  widget.widthSize,
+      duration: const Duration(milliseconds: 500),
+      width: widget.widthSize,
       child: child,
     );
-
   }
 }

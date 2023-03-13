@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:devopsdao/blockchain/classes.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/blockchain/classes.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:webthree/webthree.dart';
@@ -57,7 +57,7 @@ class SearchServices extends ChangeNotifier {
   Future updateTagListOnTasksPages({required String page}) async {
     late Map<String, SimpleTags> list = {};
     tagsFilterResults.entries.map((e) {
-      if(e.value.selected) {
+      if (e.value.selected) {
         list[e.value.tag] = e.value;
       }
     }).toList();
@@ -123,8 +123,7 @@ class SearchServices extends ChangeNotifier {
         } else {
           return e1.value.tag.compareTo(e2.value.tag);
         }
-      })
-    );
+      }));
 
     notifyListeners();
     print('tagsSearchFilter');
@@ -150,8 +149,7 @@ class SearchServices extends ChangeNotifier {
         } else {
           return e1.value.tag.compareTo(e2.value.tag);
         }
-      })
-    );
+      }));
     notifyListeners();
     print('tagsAddAndUpdate');
   }
@@ -164,8 +162,7 @@ class SearchServices extends ChangeNotifier {
   Future<void> tagSelection({required String typeSelection, required String tagName, required bool unselectAll}) async {
     if (typeSelection == 'selection') {
       for (String key in tagsFilterResults.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() ==
-            tagName.toLowerCase()) {
+        if (tagsFilterResults[key]?.tag.toLowerCase() == tagName.toLowerCase()) {
           if (tagsFilterResults[key]!.selected) {
             tagsFilterResults[key]!.selected = false;
           } else {
@@ -175,14 +172,13 @@ class SearchServices extends ChangeNotifier {
       }
     } else if (typeSelection == 'mint') {
       for (String key in tagsFilterResults.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() ==
-            tagName.toLowerCase()) {
-          if (tagsFilterResults[key]!.selected ) {
+        if (tagsFilterResults[key]?.tag.toLowerCase() == tagName.toLowerCase()) {
+          if (tagsFilterResults[key]!.selected) {
             tagsFilterResults[key]!.selected = false;
           } else {
             tagsFilterResults[key]!.selected = true;
           }
-        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll)  {
+        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
           tagsFilterResults[key]!.selected = false;
         }
       }
@@ -190,12 +186,10 @@ class SearchServices extends ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future<void> resetNFTFilter(Map<String, NftTagsBunch>tagsList) async {
+  Future<void> resetNFTFilter(Map<String, NftTagsBunch> tagsList) async {
     nftFilterResults.clear();
     nftFilterResults = Map.from(tagsList);
   }
-
 
   Future<void> tagsNFTFilter(String enteredKeyword, Map<String, NftTagsBunch> tagsList) async {
     nftFilterResults.clear();
@@ -228,7 +222,6 @@ class SearchServices extends ChangeNotifier {
   }
 
   Future<void> nftSelection({required String tagName, required bool unselectAll}) async {
-
     for (String key in nftFilterResults.keys) {
       if (key.toLowerCase() == tagName.toLowerCase()) {
         nftFilterResults[key]!.selected = true;

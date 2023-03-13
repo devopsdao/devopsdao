@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:devopsdao/widgets/tags/main.dart';
+import 'package:dodao/widgets/tags/main.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/theme.dart';

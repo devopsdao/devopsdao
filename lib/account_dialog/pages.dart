@@ -1,7 +1,7 @@
-import 'package:devopsdao/account_dialog/pages/0_main.dart';
-import 'package:devopsdao/account_dialog/pages/2_chat.dart';
-import 'package:devopsdao/account_dialog/pages/temp_closeup.dart';
-import 'package:devopsdao/account_dialog/pages/1_cv.dart';
+import 'package:dodao/account_dialog/pages/0_main.dart';
+import 'package:dodao/account_dialog/pages/2_chat.dart';
+import 'package:dodao/account_dialog/pages/temp_closeup.dart';
+import 'package:dodao/account_dialog/pages/1_cv.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +29,6 @@ class AccountPages extends StatelessWidget {
     required this.screenHeightSizeNoKeyboard,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
@@ -56,14 +55,15 @@ class AccountPages extends StatelessWidget {
           //   fromPage: fromPage,
           // ),
           AccountsChatPage(
-            innerPaddingWidth: innerPaddingWidth, account: account,
+            innerPaddingWidth: innerPaddingWidth,
+            account: account,
           ),
           AccountCvPage(
             screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
             innerPaddingWidth: innerPaddingWidth,
             account: account,
-            fromPage: fromPage,),
-
+            fromPage: fromPage,
+          ),
 
           // if (interface.dialogCurrentState['pages'].containsKey('chat'))
           //   ChatPage(
@@ -74,4 +74,3 @@ class AccountPages extends StatelessWidget {
     });
   }
 }
-

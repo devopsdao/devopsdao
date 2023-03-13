@@ -1,7 +1,7 @@
 // import 'dart:ffi';
 
 import 'package:beamer/beamer.dart';
-import 'package:devopsdao/pages/auditor_page.dart';
+import 'package:dodao/pages/auditor_page.dart';
 import 'package:webthree/webthree.dart';
 import 'authenticator.dart';
 // import '../../screens.dart';
@@ -50,11 +50,11 @@ void createBeamerDelegate() {
               ),
             ),
         '/accounts': (context, state, data) => const Scaffold(
-          body: AccountsPage(),
-          bottomNavigationBar: NavBarPage(
-            initialPage: '/accounts',
-          ),
-        ),
+              body: AccountsPage(),
+              bottomNavigationBar: NavBarPage(
+                initialPage: '/accounts',
+              ),
+            ),
         '/tasks/:taskAddress': (context, state, data) {
           EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(

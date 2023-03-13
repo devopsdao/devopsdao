@@ -1,6 +1,6 @@
 // import 'package:js/js.dart';
 
-import 'package:devopsdao/blockchain/classes.dart';
+import 'package:dodao/blockchain/classes.dart';
 import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
 import 'accounts.dart';

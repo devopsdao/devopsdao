@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'package:provider/provider.dart';
-import 'package:devopsdao/widgets/tags/search_services.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
-import 'package:devopsdao/widgets/tags/widgets/fab_button.dart';
+import 'package:dodao/widgets/tags/search_services.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../account_dialog/widget/dialog_button_widget.dart';

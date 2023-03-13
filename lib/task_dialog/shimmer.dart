@@ -1,16 +1,16 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:badges/badges.dart';
-import 'package:devopsdao/task_dialog/pages.dart';
-import 'package:devopsdao/task_dialog/pages/3_selection.dart';
-import 'package:devopsdao/task_dialog/widget/participants_list.dart';
-import 'package:devopsdao/task_dialog/widget/request_audit_alert.dart';
-import 'package:devopsdao/widgets/payment.dart';
-import 'package:devopsdao/widgets/select_menu.dart';
-import 'package:devopsdao/task_dialog/buttons.dart';
-import 'package:devopsdao/task_dialog/states.dart';
-import 'package:devopsdao/widgets/wallet_action.dart';
-import 'package:devopsdao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:devopsdao/task_dialog/widget/rate_widget.dart';
+import 'package:dodao/task_dialog/pages.dart';
+import 'package:dodao/task_dialog/pages/3_selection.dart';
+import 'package:dodao/task_dialog/widget/participants_list.dart';
+import 'package:dodao/task_dialog/widget/request_audit_alert.dart';
+import 'package:dodao/widgets/payment.dart';
+import 'package:dodao/widgets/select_menu.dart';
+import 'package:dodao/task_dialog/buttons.dart';
+import 'package:dodao/task_dialog/states.dart';
+import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
+import 'package:dodao/task_dialog/widget/rate_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -37,7 +37,6 @@ import '../widgets/data_loading_dialog.dart';
 import 'dart:ui' as ui;
 
 import 'main.dart';
-
 
 class ShimmeredTaskPages extends StatefulWidget {
   final Task task;
