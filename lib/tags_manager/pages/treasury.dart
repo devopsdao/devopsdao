@@ -333,14 +333,12 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                   return WrappedChip(
                                       key: ValueKey(e),
                                       theme: 'black',
-                                      item: SimpleTags(collection: true, tag: 'bunch', nft: true),
-                                      delete: false,
+                                      item: e.value.bunch.first,
                                       page: 'treasury',
                                       startScale: false,
-                                      mint: false,
-                                      name: e.key,
                                       selected: e.value.selected,
-                                      expandAnimation: tagsCompare[e.key]!.state
+                                      animationCicle: tagsCompare[e.key]!.state,
+                                      wrapperRole: WrapperRole.treasure,
                                   );
                                 }).toList()
                             );

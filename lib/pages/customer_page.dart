@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
@@ -9,6 +10,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/search_filter_route.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_open_container.dart';
@@ -122,32 +124,72 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     }
     return Scaffold(
         key: scaffoldKey,
-        appBar: AppBar(
+        appBar: AppBarWithSearchSwitch(
           backgroundColor: Colors.black,
           automaticallyImplyLeading: false,
-          title: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Customer',
-                    style: DodaoTheme.of(context).title2.override(
-                          fontFamily: 'Inter',
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                  ),
-                ],
+          appBarBuilder: (context) {
+            return AppBar(
+              backgroundColor: Colors.black,
+              title: Text(
+                'Customer',
+                style: DodaoTheme.of(context).title2.override(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
               ),
-            ],
+              actions: [
+                // AppBarSearchButton(),
+                IconButton(
+                  onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
+                  icon: const Icon(Icons.search),
+                ),
+              ],
+            );
+          },
+          searchInputDecoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: '[Find task by Title...]',
+            hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+            suffixIcon: Icon(
+              Icons.tag,
+              color: Colors.grey[300],
+            ),
+
           ),
-          actions: const [
-            // SearchButton(),
-            // LoadButtonIndicator(),
-          ],
+
+          onChanged: (searchKeyword) {
+            // searchText.value = text;
+            if (tabIndex == 0) {
+              tasksServices.runFilter(
+                  taskList: tasksServices.tasksCustomerSelection,
+                  enteredKeyword: searchKeyword,
+                  tagsMap: searchServices.customerTagsList );
+            } else if (tabIndex == 1) {
+              tasksServices.runFilter(
+                  taskList: tasksServices.tasksCustomerProgress,
+                  enteredKeyword: searchKeyword,
+                  tagsMap: searchServices.customerTagsList );
+            } else if (tabIndex == 2) {
+              tasksServices.runFilter(
+                  taskList: tasksServices.tasksCustomerComplete,
+                  enteredKeyword: searchKeyword,
+                  tagsMap: searchServices.customerTagsList );
+            }
+          },
+          customTextEditingController: _searchKeywordController,
+          // actions: [
+          //   // IconButton(
+          //   //   onPressed: () {
+          //   //     showSearch(
+          //   //       context: context,
+          //   //       delegate: MainSearchDelegate(),
+          //   //     );
+          //   //   },
+          //   //   icon: const Icon(Icons.search)
+          //   // ),
+          //   // LoadButtonIndicator(),
+          // ],
           centerTitle: false,
           elevation: 2,
         ),
@@ -234,78 +276,72 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Container(
-                              width: constraints.minWidth - 70,
-                              padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                              // decoration: const BoxDecoration(
-                              //   // color: Colors.white70,
-                              //   // borderRadius: BorderRadius.circular(8),
-                              // ),
-                              child: TextField(
-                                controller: _searchKeywordController,
-                                onChanged: (searchKeyword) {
-                                  if (tabIndex == 0) {
-                                    tasksServices.runFilter(
-                                        taskList: tasksServices.tasksCustomerSelection,
-                                        enteredKeyword: searchKeyword,
-                                        tagsMap: searchServices.customerTagsList );
-                                  } else if (tabIndex == 1) {
-                                    tasksServices.runFilter(
-                                        taskList: tasksServices.tasksCustomerProgress,
-                                        enteredKeyword: searchKeyword,
-                                        tagsMap: searchServices.customerTagsList );
-                                  } else if (tabIndex == 2) {
-                                    tasksServices.runFilter(
-                                        taskList: tasksServices.tasksCustomerComplete,
-                                        enteredKeyword: searchKeyword,
-                                        tagsMap: searchServices.customerTagsList );
-                                  }
-                                },
-                                decoration: const InputDecoration(
-                                  hintText: '[Find task by Title...]',
-                                  hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                                  labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                                  labelText: 'Search',
-                                  suffixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(4.0),
-                                      topRight: Radius.circular(4.0),
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(4.0),
-                                      topRight: Radius.circular(4.0),
-                                    ),
-                                  ),
-                                ),
-                                style: DodaoTheme.of(context).bodyText1.override(
-                                      fontFamily: 'Inter',
-                                      color: Colors.white,
-                                      lineHeight: 2,
-                                    ),
-                              ),
-                            ),
-                            TagCallButton(
-                              page: 'customer',
-                              tabIndex: tabIndex,
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Container(
+                        //       width: constraints.minWidth - 70,
+                        //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                        //
+                        //       // child: TextField(
+                        //       //   controller: _searchKeywordController,
+                        //       //   onChanged: (searchKeyword) {
+                        //       //     if (tabIndex == 0) {
+                        //       //       tasksServices.runFilter(
+                        //       //           taskList: tasksServices.tasksCustomerSelection,
+                        //       //           enteredKeyword: searchKeyword,
+                        //       //           tagsMap: searchServices.customerTagsList );
+                        //       //     } else if (tabIndex == 1) {
+                        //       //       tasksServices.runFilter(
+                        //       //           taskList: tasksServices.tasksCustomerProgress,
+                        //       //           enteredKeyword: searchKeyword,
+                        //       //           tagsMap: searchServices.customerTagsList );
+                        //       //     } else if (tabIndex == 2) {
+                        //       //       tasksServices.runFilter(
+                        //       //           taskList: tasksServices.tasksCustomerComplete,
+                        //       //           enteredKeyword: searchKeyword,
+                        //       //           tagsMap: searchServices.customerTagsList );
+                        //       //     }
+                        //       //   },
+                        //       //   decoration: const InputDecoration(
+                        //       //     hintText: '[Find task by Title...]',
+                        //       //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                        //       //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                        //       //     labelText: 'Search',
+                        //       //     suffixIcon: Icon(
+                        //       //       Icons.search,
+                        //       //       color: Colors.white,
+                        //       //     ),
+                        //       //     enabledBorder: UnderlineInputBorder(
+                        //       //       borderSide: BorderSide(
+                        //       //         color: Colors.white,
+                        //       //         width: 1,
+                        //       //       ),
+                        //       //       borderRadius: BorderRadius.only(
+                        //       //         topLeft: Radius.circular(4.0),
+                        //       //         topRight: Radius.circular(4.0),
+                        //       //       ),
+                        //       //     ),
+                        //       //     focusedBorder: UnderlineInputBorder(
+                        //       //       borderSide: BorderSide(
+                        //       //         color: Colors.white,
+                        //       //         width: 1,
+                        //       //       ),
+                        //       //       borderRadius: BorderRadius.only(
+                        //       //         topLeft: Radius.circular(4.0),
+                        //       //         topRight: Radius.circular(4.0),
+                        //       //       ),
+                        //       //     ),
+                        //       //   ),
+                        //       //   style: DodaoTheme.of(context).bodyText1.override(
+                        //       //         fontFamily: 'Inter',
+                        //       //         color: Colors.white,
+                        //       //         lineHeight: 2,
+                        //       //       ),
+                        //       // ),
+                        //     ),
+                        //
+                        //   ],
+                        // ),
                         Consumer<SearchServices>(builder: (context, model, child) {
                           // localTagsList = model.customerTagsList.entries.map((e) => e.value.tag).toList();
                           // if (model.ready) {
@@ -317,21 +353,34 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                           //   model.ready = false;
                           // }
 
-                          return Wrap(
-                            alignment: WrapAlignment.start,
-                            direction: Axis.horizontal,
-                            children: model.customerTagsList.entries.map((e) {
-                              return WrappedChip(
-                                key: ValueKey(e.value),
-                                theme: 'black',
-                                item: e.value,
-                                delete: true,
-                                page: 'customer',
-                                name: e.key,
-                                selected: e.value.selected,
-                                tabIndex: tabIndex,
-                              );
-                            }).toList());
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
+                            child: Row(
+                              children: [
+                                WrappedChip(
+                                  theme: 'black',
+                                  item: SimpleTags(collection: false, tag: "#", icon: "", nft: false),
+                                  page: 'customer',
+                                  selected: false,
+                                  wrapperRole: WrapperRole.hash,
+                                ),
+                                Wrap(
+                                    alignment: WrapAlignment.start,
+                                    direction: Axis.horizontal,
+                                    children: model.customerTagsList.entries.map((e) {
+                                      return WrappedChip(
+                                        key: ValueKey(e.value),
+                                        theme: 'black',
+                                        item: e.value,
+                                        page: 'customer',
+                                        selected: e.value.selected,
+                                        tabIndex: tabIndex,
+                                        wrapperRole: WrapperRole.onPages,
+                                      );
+                                    }).toList()),
+                              ],
+                            ),
+                          );
                         }),
                         tasksServices.isLoading
                             ? const LoadIndicator()
@@ -481,7 +530,7 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
                             padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                             child: TaskTransition(
                               fromPage: 'customer',
-                              index: index,
+                              task: tasksServices.filterResults.values.toList()[index],
                             )
 
                             // InkWell(

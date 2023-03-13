@@ -224,13 +224,11 @@ class _MintWidget extends State<MintWidget> {
                                         key: ValueKey(e),
                                         theme: 'black',
                                         item: e.value,
-                                        delete: false,
                                         page: 'mint',
                                         startScale: false,
-                                        name: e.key,
-                                        mint: true,
-                                        expandAnimation: tagsCompare[e.value.tag]!.state,
+                                        animationCicle: tagsCompare[e.value.tag]!.state,
                                         selected: e.value.selected,
+                                        wrapperRole: WrapperRole.mint,
                                       );
                                     }).toList()
                                 );

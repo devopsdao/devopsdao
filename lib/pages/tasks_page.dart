@@ -1,5 +1,7 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../create_job/create_job_call_button.dart';
 import '../task_dialog/beamer.dart';
@@ -96,44 +98,59 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
+      appBar: AppBarWithSearchSwitch(
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
-        title: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Job Exchange',
-                  style: DodaoTheme.of(context).title2.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                ),
-              ],
+        appBarBuilder: (context) {
+          return AppBar(
+            backgroundColor: Colors.black,
+            title: Text(
+                'Job Exchange',
+              style: DodaoTheme.of(context).title2.override(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 20,
+              ),
             ),
-          ],
-        ),
-        actions: const [
-          // LoadButtonIndicator(),
-          // Row(
-          //   mainAxisSize: MainAxisSize.max,
-          //   children: [
-          //     Padding(
-          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-          //       child: Icon(
-          //         Icons.settings_outlined,
-          //         color: DodaoTheme.of(context).primaryBtnText,
-          //         size: 24,
-          //       ),
-          //     ),
-          //   ],
+            actions: [
+              // AppBarSearchButton(),
+              IconButton(
+                onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
+                icon: const Icon(Icons.search),
+              ),
+            ],
+          );
+        },
+        searchInputDecoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: 'Search',
+          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+          // suffixIcon: Icon(
+          //   Icons.tag,
+          //   color: Colors.grey[300],
           // ),
-        ],
+
+        ),
+
+        onChanged: (searchKeyword) {
+          tasksServices.runFilter(
+              taskList: tasksServices.tasksNew,
+              tagsMap: searchServices.tasksTagsList,
+              enteredKeyword: searchKeyword);
+        },
+        customTextEditingController: _searchKeywordController,
+        // actions: [
+        //   // IconButton(
+        //   //   onPressed: () {
+        //   //     showSearch(
+        //   //       context: context,
+        //   //       delegate: MainSearchDelegate(),
+        //   //     );
+        //   //   },
+        //   //   icon: const Icon(Icons.search)
+        //   // ),
+        //   // LoadButtonIndicator(),
+        // ],
         centerTitle: false,
         elevation: 2,
       ),
@@ -168,85 +185,98 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
               // print(constraints.minWidth);
               return Column(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: constraints.minWidth - 70,
-                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        decoration: const BoxDecoration(
-                            // color: Colors.white70,
-                            // borderRadius: BorderRadius.circular(8),
-                            ),
-                        child: TextField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword,
-                                tagsMap: searchServices.tasksTagsList );
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search',
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                          ),
-                          style: DodaoTheme.of(context).bodyText1.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                lineHeight: 2,
-                              ),
-                        ),
-                      ),
-                      const TagCallButton(
-                        page: 'tasks',
-                        tabIndex: 0,
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       width: constraints.minWidth - 70,
+                  //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  //       decoration: const BoxDecoration(
+                  //           // color: Colors.white70,
+                  //           // borderRadius: BorderRadius.circular(8),
+                  //           ),
+                  //       child: TextField(
+                  //         controller: _searchKeywordController,
+                  //         onChanged: (searchKeyword) {
+                  //           tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword,
+                  //               tagsMap: searchServices.tasksTagsList );
+                  //         },
+                  //         decoration: const InputDecoration(
+                  //           hintText: '[Find task by Title...]',
+                  //           hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                  //           labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                  //           labelText: 'Search',
+                  //           suffixIcon: Icon(
+                  //             Icons.search,
+                  //             color: Colors.white,
+                  //           ),
+                  //           enabledBorder: UnderlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.white,
+                  //               width: 1,
+                  //             ),
+                  //             borderRadius: BorderRadius.only(
+                  //               topLeft: Radius.circular(4.0),
+                  //               topRight: Radius.circular(4.0),
+                  //             ),
+                  //           ),
+                  //           focusedBorder: UnderlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.white,
+                  //               width: 1,
+                  //             ),
+                  //             borderRadius: BorderRadius.only(
+                  //               topLeft: Radius.circular(4.0),
+                  //               topRight: Radius.circular(4.0),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         style: DodaoTheme.of(context).bodyText1.override(
+                  //               fontFamily: 'Inter',
+                  //               color: Colors.white,
+                  //               lineHeight: 2,
+                  //             ),
+                  //       ),
+                  //     ),
+                  //     const TagCallButton(
+                  //       page: 'tasks',
+                  //       tabIndex: 0,
+                  //     ),
+                  //   ],
+                  // ),
                   Consumer<SearchServices>(builder: (context, model, child) {
                     localTagsList = model.tasksTagsList.entries.map((e) => e.value.tag).toList();
                     // tasksServices.runFilter(
                     //     tasksServices.tasksNew,
                     //     enteredKeyword: _searchKeywordController.text,
                     //     tagsList: localTagsList);
-                    return Wrap(
-                        alignment: WrapAlignment.start,
-                        direction: Axis.horizontal,
-                        children: model.tasksTagsList.entries.map((e) {
-                          return WrappedChip(
-                            key: ValueKey(e.value),
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                      child: Row(
+                        children: [
+                          WrappedChip(
                             theme: 'black',
-                            item: e.value,
-                            delete: true,
+                            item: SimpleTags(collection: false, tag: "#", icon: "", nft: false),
                             page: 'tasks',
-                            name: e.key,
-                            selected: e.value.selected,
-                            tabIndex: 0,
-                          );
-                        }).toList());
+                            selected: false,
+                            wrapperRole: WrapperRole.hash,
+                          ),
+                          Wrap(
+                              alignment: WrapAlignment.start,
+                              direction: Axis.horizontal,
+                              children: model.tasksTagsList.entries.map((e) {
+                                return WrappedChip(
+                                  key: ValueKey(e.value),
+                                  theme: 'black',
+                                  item: e.value,
+                                  page: 'tasks',
+                                  selected: e.value.selected,
+                                  tabIndex: 0,
+                                  wrapperRole: WrapperRole.onPages,
+                                );
+                              }).toList()),
+                        ],
+                      ),
+                    );
                   }),
 
                   // TabBar(
@@ -288,7 +318,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                           padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                                           child: TaskTransition(
                                             fromPage: 'tasks',
-                                            index: index,
+                                            task: tasksServices.filterResults.values.toList()[index],
                                           ));
                                     },
                                   ),

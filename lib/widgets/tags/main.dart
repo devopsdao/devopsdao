@@ -289,13 +289,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 key: ValueKey(e),
                                 theme: 'white',
                                 item: e.value,
-                                delete: false,
                                 page: 'selection',
                                 startScale: false,
-                                mint: true,
-                                expandAnimation: tagsCompare[e.value.tag]!.state,
-                                name: e.key,
+                                animationCicle: tagsCompare[e.value.tag]!.state,
                                 selected: e.value.selected,
+                                wrapperRole: WrapperRole.selectNew,
                               );
                             }).toList());
                       }

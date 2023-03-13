@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:devopsdao/widgets/tags/search_services.dart';
 import 'package:devopsdao/widgets/tags/tag_mint_dialog.dart';
+import 'package:devopsdao/widgets/tags/tag_open_container.dart';
 import 'package:devopsdao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,32 +16,36 @@ import '../../config/theme.dart';
 import '../../tags_manager/widgets/manager_open_container.dart';
 import '../../tags_manager/manager_services.dart';
 import '../my_tools.dart';
+import '../tags_on_page_open_container.dart';
 import 'main.dart';
 
-
+enum WrapperRole {
+  mint,
+  treasure,
+  getMore,
+  selectNew,
+  onPages,
+  hash,
+}
 
 class WrappedChip extends StatefulWidget {
   // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
   final String theme;
-  final String name;
   final bool selected;
   final SimpleTags item;
-  final bool delete;
   final String page;
   final bool startScale;
-  final bool mint;
-  final String expandAnimation;
+  final wrapperRole;
+  final String animationCicle;
   final int tabIndex;
   const WrappedChip({Key? key,
     required this.theme,
-    required this.name,
     required this.selected,
     required this.item,
-    required this.delete,
     required this.page,
     this.startScale = false,
-    this.mint = false,
-    this.expandAnimation = 'none',
+    required this.wrapperRole,
+    this.animationCicle = 'none',
     this.tabIndex = 0,
   }) : super(key: key);
 
@@ -97,9 +102,9 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       duration: const Duration(milliseconds: 700),
     );
 
-    if (widget.expandAnimation == 'end') {
+    if (widget.animationCicle == 'end') {
       expandEffectController.forward();
-    } else if (widget.expandAnimation == 'start') {
+    } else if (widget.animationCicle == 'start') {
       expandEffectController.forward();
     }
 
@@ -125,12 +130,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late String icon = 'none';
     late int numOfNFTs = 0;
     if (widget.item.nft && widget.page != 'mint') {  icon = 'nft'; }
-    else if (widget.mint) { icon = 'extra_icon'; }
 
     if (widget.page == 'treasury') {
-      if (searchServices.nftFilterResults[widget.name] != null) {
-        if (searchServices.nftFilterResults[widget.name]!.bunch.length > 1) {
-          numOfNFTs = searchServices.nftFilterResults[widget.name]!.bunch.length;
+      if (searchServices.nftFilterResults[widget.item.tag] != null) {
+        if (searchServices.nftFilterResults[widget.item.tag]!.bunch.length > 1) {
+          numOfNFTs = searchServices.nftFilterResults[widget.item.tag]!.bunch.length;
         }
       }
     }
@@ -169,16 +173,27 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 4.0);
     late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 4.0);
 
-    var textSize = calcTextSize(widget.name, DodaoTheme.of(context).bodyText3.override(
+    var textSize = calcTextSize(widget.item.tag, DodaoTheme.of(context).bodyText3.override(
       fontFamily: 'Inter',
       color: textColor,
       fontWeight: FontWeight.w400,
       fontSize: fontSize,
     ));
 
-    late double tagWidthInit = textSize.width + 22;
-    late double expandExtra = 12;
-    late bool getMore = false;
+
+    // // sizes for all states:
+    // late double sizeTreasure = 22;
+    // late double sizeTreasureExpanded = 44;
+    // late double sizeMint = 0;
+    // late double sizeMintExpanded = 22;
+    // late double sizeSelectNew = 0;
+    // late double sizeSelectNewExpanded = 44;
+    // if (widget.item.nft) {
+    //   sizeSelectNew += nftIconSize;
+    // }
+    // late double sizeGetMore = 22;
+    // late double sizeOnPages = 0;
+    // late double sizeHash = 0;
     late Color colorBodyBegin = bodyColor;
     late Color colorBodyEnd = bodyColor;
     late Color colorTextBegin = textColor;
@@ -188,23 +203,53 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late double opacityBegin = 0.0;
     late double opacityEnd = 1.0;
 
-    if (icon == 'extra_icon') { expandExtra += 22; }
-    if (icon == 'nft') { tagWidthInit += 22; }
+    final double tagWidthInit = textSize.width;
+    late double sizeRegular = tagWidthInit;
+    late double sizeExpanded = tagWidthInit;
+    late double sizeBegin = 0;
+    late double sizeEnd = 0;
 
-    if (widget.name == 'Get more...') {
-      getMore = true;
-      tagWidthInit += 22;
+    if (widget.wrapperRole == WrapperRole.treasure) {
+      sizeRegular += 42;
+      sizeExpanded += 58;
+    } else if (widget.wrapperRole == WrapperRole.mint) {
+      sizeRegular += 18;
+      sizeExpanded += 36;
+    } else if (widget.wrapperRole == WrapperRole.selectNew) {
+      sizeRegular += 18;
+
+      sizeExpanded += 36;
+      if (widget.item.nft) {
+        sizeRegular += 18;
+        sizeExpanded += 18;
+      }
+
+    } else if (widget.wrapperRole == WrapperRole.getMore) {
+      sizeRegular += 38;
+      sizeExpanded += 38;
+    } else if (widget.wrapperRole == WrapperRole.onPages) {
+      sizeRegular += 18;
+      sizeExpanded += 18;
+      if (widget.item.nft) {
+        sizeRegular += 18;
+        sizeExpanded += 18;
+      }
+    } else if (widget.wrapperRole == WrapperRole.hash) {
+      sizeRegular += 30;
+      sizeExpanded += 30;
     }
 
-    if (widget.selected && (widget.expandAnimation == 'remain' )) {
+    if (widget.selected && (widget.animationCicle == 'remain' )) {
       textColor = textColorSelected;
       borderColor = borderColorSelected;
       bodyColor = bodyColorSelected;
       nftColor = nftColorSelected;
       nftMintColor = nftMintColorSelected;
-    }
-
-    if (widget.expandAnimation == 'start') {
+      opacityBegin = 1.0;
+      opacityEnd = 0.0;
+      sizeBegin = sizeExpanded;
+      sizeEnd = sizeRegular;
+    } else if (widget.animationCicle == 'start') {
       nftColor = nftColorSelected;
       colorBodyBegin = bodyColor;
       colorBodyEnd = bodyColorSelected;
@@ -213,13 +258,20 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       colorBorderBegin = borderColor;
       colorBorderEnd = borderColorSelected;
 
-    } else if (widget.expandAnimation == 'end') {
-      tagWidthInit += 12;
-      expandExtra = -12;
-      if (icon == 'extra_icon') {
-        tagWidthInit += 22;
-        expandExtra = -34;
-      }
+      sizeBegin += sizeRegular;
+      sizeEnd += sizeExpanded;
+
+    } else if (widget.animationCicle == 'end') {
+      // tagWidthInit += 12;
+      // expandExtra = -12;
+      // if (icon == 'extra_icon') {
+      //   tagWidthInit += 22;
+      //   expandExtra = -34;
+      // }
+
+      sizeBegin += sizeExpanded;
+      sizeEnd += sizeRegular;
+
       colorBodyBegin = bodyColorSelected;
       colorBodyEnd = bodyColor;
       colorTextBegin = textColorSelected;
@@ -229,18 +281,27 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       opacityBegin = 1.0;
       opacityEnd = 0.0;
 
-    } else if (widget.expandAnimation == 'remain') {
-      if (icon == 'extra_icon') { tagWidthInit += 22; }
-      tagWidthInit += 12;
+    } else if (widget.animationCicle == 'remain') {
+      // if (icon == 'extra_icon') { tagWidthInit += 22; }
+      // tagWidthInit += 12;
+      sizeBegin += sizeRegular;
+      sizeEnd += sizeRegular;
+
       opacityBegin = 1.0;
       opacityEnd = 0.0;
 
+    } else if (widget.animationCicle == 'none') {
+      sizeBegin += sizeRegular;
+      sizeEnd += sizeExpanded;
+
     }
-    // print('expandAnimation: ${widget.expandAnimation} ${widget.name} tagWidthInit: ${tagWidthInit - (textSize.width + 22)} expandExtra: $expandExtra' );
+    // if (widget.item.tag == 'JAVA') {
+    //   print(textSize.width);
+    //   print('animationCicle: ${widget.animationCicle} ${widget.item.tag} sizeBegin: $sizeBegin sizeEnd: $sizeEnd widget.wrapperRole: ${widget.wrapperRole}' );
+    // }
 
 
-
-    chipSizeTween = Tween(begin: tagWidthInit, end: tagWidthInit + expandExtra);
+    chipSizeTween = Tween(begin: sizeBegin, end: sizeEnd);
     animationSize = chipSizeTween.animate(expandEffect);
 
     opacityTween = Tween(begin: opacityBegin, end: opacityEnd);
@@ -259,11 +320,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     void onTapGesture() {
       setState(() {
         FocusManager.instance.primaryFocus?.unfocus();
-        if (widget.delete) {
+        if (widget.wrapperRole == WrapperRole.onPages) {
           scaleEffectController.reverse();
           Future.delayed(
               const Duration(milliseconds: 550), () {
-            searchServices.removeTagOnTasksPages(widget.name, page: widget.page, );
+            searchServices.removeTagOnTasksPages(widget.item.tag, page: widget.page, );
 
             if (widget.page == 'audit') {
               if (widget.tabIndex == 0) {
@@ -279,8 +340,12 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                 tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
                   tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
               }
+
             } else if (widget.page == 'tasks') {
-              tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: '');
+              tasksServices.runFilter(
+                  taskList: tasksServices.tasksNew,
+                  tagsMap: searchServices.tasksTagsList,
+                  enteredKeyword: '');
             } else if (widget.page == 'customer') {
               if (widget.tabIndex == 0) {
                 tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
@@ -303,42 +368,51 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                 tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
                     tagsMap: searchServices.performerTagsList, enteredKeyword: '');
               }
+            } else if (widget.page == 'customer') {
+              if (widget.tabIndex == 0) {
+                tasksServices.runFilter(
+                    taskList: tasksServices.tasksCustomerSelection,
+                    enteredKeyword: '',
+                    tagsMap: searchServices.customerTagsList );
+              } else if (widget.tabIndex == 1) {
+                tasksServices.runFilter(
+                    taskList: tasksServices.tasksCustomerProgress,
+                    enteredKeyword: '',
+                    tagsMap: searchServices.customerTagsList );
+              } else if (widget.tabIndex == 2) {
+                tasksServices.runFilter(
+                    taskList: tasksServices.tasksCustomerComplete,
+                    enteredKeyword: '',
+                    tagsMap: searchServices.customerTagsList );
+              }
             }
           });
 
         } else if(widget.page == 'selection') {
-          // if (widget.selected) {
-          //   expandEffectController.reverse();
-          //   print('reversed');
-          // } else {
-          //   expandEffectController.forward();
-          // }
-          // for (String key in searchServices.tagsFilterResults.keys) {
-          //   if (searchServices.tagsFilterResults[key]?.tag.toLowerCase() ==
-          //       widget.name.toLowerCase()) {
-          //     searchServices.tagsFilterResults[key]!.selected ?
-          //     searchServices.tagsFilterResults[key]!.selected = false :
-          //     searchServices.tagsFilterResults[key]!.selected = true;
-          //   }
-          // }
-          searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.name);
+          searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.item.tag);
         } else if(widget.page == 'treasury') {
-          searchServices.nftSelection(unselectAll: false, tagName: widget.name);
-          if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
-            managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.name]!);
+          searchServices.nftSelection(unselectAll: false, tagName: widget.item.tag);
+          if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
+            managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.item.tag]!);
           } else {
             searchServices.nftSelection(unselectAll: true, tagName: '', );
             managerServices.clearSelectedInManager();
           }
         } else if (widget.page == 'mint') {
-          searchServices.tagSelection( unselectAll: false, tagName: widget.name, typeSelection: 'mint');
-          if (widget.expandAnimation != 'remain' && widget.expandAnimation != 'start') {
-            managerServices.updateMintNft(searchServices.tagsFilterResults[widget.name]!);
+          searchServices.tagSelection( unselectAll: false, tagName: widget.item.tag, typeSelection: 'mint');
+          if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
+            managerServices.updateMintNft(searchServices.tagsFilterResults[widget.item.tag]!);
           } else {
             searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', );
             managerServices.clearSelectedInManager();
           }
         }
+        // else if (widget.item.tag == ' #') {
+        //   TagCallButton(
+        //     page: widget.page,
+        //     tabIndex: widget.tabIndex,
+        //   );
+        // }
       });
     }
 
@@ -370,7 +444,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         child: GestureDetector(
                           onTap: () {
                             showDialog(context: context, builder: (context) {
-                              return TagMintDialog(tagName: widget.name);
+                              return TagMintDialog(tagName: widget.item.tag);
                             });
                           },
                           child: Padding(
@@ -427,12 +501,17 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         )
                       ),
                     ),
+
+
                   // Gesture for TEXT field
-                  if (!getMore)
+                  if (
+                        widget.wrapperRole != WrapperRole.getMore &&
+                        widget.wrapperRole != WrapperRole.hash
+                  )
                   GestureDetector(
                     onTap: onTapGesture,
                     child: Text(
-                      widget.name,
+                      widget.item.tag,
                       style: DodaoTheme.of(context).bodyText3.override(
                         fontFamily: 'Inter',
                         color: animationTextColor.value,
@@ -441,6 +520,20 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                       ),
                     ),
                   ),
+                  if (widget.wrapperRole == WrapperRole.getMore)
+                    GetMore(
+                      leftSpanPadding: leftSpanPadding,
+                      iconSize: iconSize,
+                      textColor: textColor, fontSize: fontSize,
+                    ),
+                  if (widget.wrapperRole == WrapperRole.hash)
+                    OpenAddTags(
+                      iconSize: iconSize,
+                      textColor: textColor,
+                      fontSize: fontSize,
+                      page: widget.page,
+                      tabIndex: widget.tabIndex,
+                    ),
 
                   // Close button (will be not visible if item.selected false)
                   Flexible(
@@ -458,12 +551,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         ),
                       ),
                     ),
-                  ),
-                  if (getMore)
-                  GetMore(
-                    leftSpanPadding: leftSpanPadding,
-                    iconSize: iconSize,
-                    textColor: textColor, fontSize: fontSize,
                   ),
                 ],
               ),

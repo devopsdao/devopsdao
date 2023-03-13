@@ -332,10 +332,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                     key: ValueKey(e.value),
                                                     theme: 'white',
                                                     item: e.value,
-                                                    delete: true,
                                                     page: 'create',
-                                                    name: e.key,
                                                     selected: e.value.selected,
+                                                    wrapperRole: WrapperRole.selectNew,
                                                   );
                                                 }).toList()),
                                             );

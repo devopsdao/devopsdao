@@ -458,10 +458,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               key: ValueKey(e),
                                               theme: 'black',
                                               item: e,
-                                              delete: false,
                                               page: 'home',
-                                              name: e.tag,
                                               selected: e.selected,
+                                              wrapperRole: WrapperRole.getMore,
+
                                             );
                                           }).toList()),
                                     ),

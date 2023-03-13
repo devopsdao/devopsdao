@@ -196,16 +196,12 @@ class _AccountsPageState extends State<AccountsPage> {
                         direction: Axis.horizontal,
                         children: model.tasksTagsList.entries.map((e) {
                           return WrappedChip(
-                              key: ValueKey(e.value),
-                              theme: 'black',
-                              item: e.value,
-                              // callback: () {
-                              //   model.removeTag(i.tag);
-                              // },
-                              delete: true,
-                              page: 'accounts',
-                            name: e.key,
-                            selected: e.value.selected,);
+                            key: ValueKey(e.value),
+                            theme: 'black',
+                            item: e.value,
+                            page: 'accounts',
+                            selected: e.value.selected,
+                            wrapperRole: WrapperRole.onPages,);
                         }).toList());
                   }),
                   Expanded(
