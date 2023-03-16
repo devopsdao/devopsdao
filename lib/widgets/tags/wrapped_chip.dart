@@ -66,6 +66,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
   late Color nftColorSelected;
   late Color nftMintColorSelected;
 
+  final LinearGradient addTagButton = const LinearGradient(
+    colors: [Color(0xffff9900),Colors.purpleAccent],
+    stops: [0.1, 1],
+  );
+
   late final AnimationController scaleEffectController;
   late final AnimationController expandEffectController;
   late Tween<double> chipSizeTween;
@@ -324,65 +329,65 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           scaleEffectController.reverse();
           Future.delayed(
               const Duration(milliseconds: 550), () {
-            searchServices.removeTagOnTasksPages(widget.item.tag, page: widget.page, );
+            searchServices.removeTagsOnPages(widget.item.tag, page: widget.page, );
 
             if (widget.page == 'audit') {
               if (widget.tabIndex == 0) {
                 tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
               } else if (widget.tabIndex == 1) {
                 tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
               } else if (widget.tabIndex == 2) {
                 tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
               } else if (widget.tabIndex == 3) {
                 tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-                  tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
               }
 
             } else if (widget.page == 'tasks') {
               tasksServices.runFilter(
                   taskList: tasksServices.tasksNew,
                   tagsMap: searchServices.tasksTagsList,
-                  enteredKeyword: '');
+                  enteredKeyword: searchServices.searchKeywordController.text);
             } else if (widget.page == 'customer') {
               if (widget.tabIndex == 0) {
                 tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
-                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                    tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
               } else if (widget.tabIndex == 1) {
                 tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
-                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                    tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
               } else if (widget.tabIndex == 2) {
                 tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
-                    tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                    tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
               }
             } else if (widget.page == 'performer') {
               if (widget.tabIndex == 0) {
                 tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                    tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
               } else if (widget.tabIndex == 1) {
                 tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                    tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
               } else if (widget.tabIndex == 2) {
                 tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                    tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                    tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
               }
             } else if (widget.page == 'customer') {
               if (widget.tabIndex == 0) {
                 tasksServices.runFilter(
                     taskList: tasksServices.tasksCustomerSelection,
-                    enteredKeyword: '',
+                    enteredKeyword: searchServices.searchKeywordController.text,
                     tagsMap: searchServices.customerTagsList );
               } else if (widget.tabIndex == 1) {
                 tasksServices.runFilter(
                     taskList: tasksServices.tasksCustomerProgress,
-                    enteredKeyword: '',
+                    enteredKeyword: searchServices.searchKeywordController.text,
                     tagsMap: searchServices.customerTagsList );
               } else if (widget.tabIndex == 2) {
                 tasksServices.runFilter(
                     taskList: tasksServices.tasksCustomerComplete,
-                    enteredKeyword: '',
+                    enteredKeyword: searchServices.searchKeywordController.text,
                     tagsMap: searchServices.customerTagsList );
               }
             }
@@ -421,96 +426,98 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       child: AnimatedBuilder(
         animation: animationSize,
         builder: (context, child) {
-          return Container(
-            width: animationSize.value,
-            padding: containerPadding,
-            margin: containerMargin,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(8.0),
+          return GestureDetector(
+            onTap: onTapGesture,
+
+            child: Container(
+              width: widget.wrapperRole == WrapperRole.hash ? 68 : animationSize.value,
+              padding: containerPadding,
+              margin: containerMargin,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10.0),
+                ),
+                border: Border.all(
+                    color: widget.wrapperRole == WrapperRole.hash ? Colors.black : animationBorderColor.value!,
+                    width: 1
+                ),
+                gradient: widget.wrapperRole == WrapperRole.hash ? addTagButton : null,
+                color: animationColor.value,
               ),
-              border: Border.all(
-                  color: animationBorderColor.value!,
-                  width: 1
-              ),
-              color: animationColor.value,
-            ),
-            child: Row(
-                children: [
-                  if (icon == 'extra_icon')
-                    Flexible(
-                      child: Opacity(
-                        opacity: animationOpacity.value,
-                        child: GestureDetector(
-                          onTap: () {
-                            showDialog(context: context, builder: (context) {
-                              return TagMintDialog(tagName: widget.item.tag);
-                            });
-                          },
-                          child: Padding(
-                            padding: rightSpanPadding,
-                            child: Icon(
-                                Icons.tag_rounded,
-                                size: iconSize,
-                                color: nftMintColor
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (icon == 'nft' && numOfNFTs < 1)
-                  Flexible(
-                    flex: 10,
-                    child: Padding(
-                      padding: rightSpanPadding,
-                      child: Icon(
-                          Icons.star,
-                          size: iconSize,
-                          color:nftColor
-                      ),
-                    ),
-                  ),
-                  if (widget.page == 'treasury' && numOfNFTs > 1)
+              child: Row(
+                  children: [
+                    // if (icon == 'extra_icon')
+                    //   Flexible(
+                    //     child: Opacity(
+                    //       opacity: animationOpacity.value,
+                    //       child: GestureDetector(
+                    //         onTap: () {
+                    //           showDialog(context: context, builder: (context) {
+                    //             return TagMintDialog(tagName: widget.item.tag);
+                    //           });
+                    //         },
+                    //         child: Padding(
+                    //           padding: rightSpanPadding,
+                    //           child: Icon(
+                    //               Icons.tag_rounded,
+                    //               size: iconSize,
+                    //               color: nftMintColor
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    if (icon == 'nft' && numOfNFTs < 1)
                     Flexible(
                       flex: 10,
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 5.0, left: 3.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: nftColor,
-                              border: Border.all(
-                                color: nftColor,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(12))
-                          ),
-                          width: 15,
-                          height: 15,
-                          // color: nftColor,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              numOfNFTs.toString(),
-                              style: DodaoTheme.of(context).bodyText3.override(
-                                fontFamily: 'Inter',
-                                color: animationColor.value,
-                                fontWeight: FontWeight.bold,
-                                fontSize: fontSize - 4,
-                              ),
-                            ),
-                          ),
-                        )
+                        padding: rightSpanPadding,
+                        child: Icon(
+                            Icons.star,
+                            size: iconSize,
+                            color:nftColor
+                        ),
                       ),
                     ),
+                    if (widget.page == 'treasury' && numOfNFTs > 1)
+                      Flexible(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5.0, left: 3.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: nftColor,
+                                border: Border.all(
+                                  color: nftColor,
+                                ),
+                                borderRadius: BorderRadius.all(Radius.circular(12))
+                            ),
+                            width: 15,
+                            height: 15,
+                            // color: nftColor,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                numOfNFTs.toString(),
+                                style: DodaoTheme.of(context).bodyText3.override(
+                                  fontFamily: 'Inter',
+                                  color: animationColor.value,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: fontSize - 4,
+                                ),
+                              ),
+                            ),
+                          )
+                        ),
+                      ),
 
 
-                  // Gesture for TEXT field
-                  if (
-                        widget.wrapperRole != WrapperRole.getMore &&
-                        widget.wrapperRole != WrapperRole.hash
-                  )
-                  GestureDetector(
-                    onTap: onTapGesture,
-                    child: Text(
+                    // Gesture for TEXT field
+                    if (
+                          widget.wrapperRole != WrapperRole.getMore &&
+                          widget.wrapperRole != WrapperRole.hash
+                    )
+                    Text(
                       widget.item.tag,
                       style: DodaoTheme.of(context).bodyText3.override(
                         fontFamily: 'Inter',
@@ -519,28 +526,25 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         fontSize: fontSize,
                       ),
                     ),
-                  ),
-                  if (widget.wrapperRole == WrapperRole.getMore)
-                    GetMore(
-                      leftSpanPadding: leftSpanPadding,
-                      iconSize: iconSize,
-                      textColor: textColor, fontSize: fontSize,
-                    ),
-                  if (widget.wrapperRole == WrapperRole.hash)
-                    OpenAddTags(
-                      iconSize: iconSize,
-                      textColor: textColor,
-                      fontSize: fontSize,
-                      page: widget.page,
-                      tabIndex: widget.tabIndex,
-                    ),
+                    if (widget.wrapperRole == WrapperRole.getMore)
+                      GetMore(
+                        leftSpanPadding: leftSpanPadding,
+                        iconSize: iconSize,
+                        textColor: textColor, fontSize: fontSize,
+                      ),
+                    if (widget.wrapperRole == WrapperRole.hash)
+                      OpenAddTags(
+                        iconSize: iconSize,
+                        textColor: textColor,
+                        fontSize: fontSize,
+                        page: widget.page,
+                        tabIndex: widget.tabIndex,
+                      ),
 
-                  // Close button (will be not visible if item.selected false)
-                  Flexible(
-                    child: Opacity(
-                      opacity: animationOpacity.value,
-                      child: GestureDetector(
-                        onTap: onTapGesture,
+                    // Close button (will be not visible if item.selected false)
+                    Flexible(
+                      child: Opacity(
+                        opacity: animationOpacity.value,
                         child: Padding(
                           padding: leftSpanPadding,
                           child: Icon(
@@ -551,19 +555,15 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+            ),
           );
         }
       ),
     );
   }
 }
-
-
-
-
 
 class WrappedChipSmall extends StatelessWidget {
   // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
@@ -659,7 +659,6 @@ class WrappedChipSmall extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
     );

@@ -26,8 +26,6 @@ class TasksPageWidget extends StatefulWidget {
 }
 
 class _TasksPageWidgetState extends State<TasksPageWidget> {
-  // String _searchKeyword = '';
-  final _searchKeywordController = TextEditingController();
   // final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
   List<String> localTagsList = [];
 
@@ -60,11 +58,16 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
       });
     }
+
+    // init customerTagsList to show tag '+' button:
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var searchServices = context.read<SearchServices>();
+      searchServices.updateTagListOnTasksPages(page: 'tasks', initial: true);
+    });
   }
 
   @override
   void dispose() {
-    _searchKeywordController.dispose();
     super.dispose();
   }
 
@@ -77,7 +80,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var searchServices = context.read<SearchServices>();
 
     bool isFloatButtonVisible = false;
-    if (_searchKeywordController.text.isEmpty) {
+    if (searchServices.searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList);
     }
 
@@ -138,7 +141,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
               tagsMap: searchServices.tasksTagsList,
               enteredKeyword: searchKeyword);
         },
-        customTextEditingController: _searchKeywordController,
+        customTextEditingController: searchServices.searchKeywordController,
         // actions: [
         //   // IconButton(
         //   //   onPressed: () {
@@ -251,30 +254,22 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                     //     tagsList: localTagsList);
                     return Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: Row(
-                        children: [
-                          WrappedChip(
-                            theme: 'black',
-                            item: SimpleTags(collection: false, tag: "#", icon: "", nft: false),
-                            page: 'tasks',
-                            selected: false,
-                            wrapperRole: WrapperRole.hash,
-                          ),
-                          Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: model.tasksTagsList.entries.map((e) {
-                                return WrappedChip(
-                                  key: ValueKey(e.value),
-                                  theme: 'black',
-                                  item: e.value,
-                                  page: 'tasks',
-                                  selected: e.value.selected,
-                                  tabIndex: 0,
-                                  wrapperRole: WrapperRole.onPages,
-                                );
-                              }).toList()),
-                        ],
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.tasksTagsList.entries.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e.value),
+                                theme: 'black',
+                                item: e.value,
+                                page: 'tasks',
+                                selected: e.value.selected,
+                                tabIndex: 0,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                              );
+                            }).toList()),
                       ),
                     );
                   }),

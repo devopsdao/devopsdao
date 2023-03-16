@@ -32,7 +32,6 @@ class AuditorPageWidget extends StatefulWidget {
 class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProviderStateMixin {
   // String _searchKeyword = '';
   int tabIndex = 0;
-  final _searchKeywordController = TextEditingController();
 
   // _changeField() {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
@@ -68,6 +67,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 ));
       });
     }
+
+    // init customerTagsList to show tag '+' button:
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var searchServices = context.read<SearchServices>();
+      searchServices.updateTagListOnTasksPages(page: 'auditor', initial: true);
+    });
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
     startPageLoadAnimations(
@@ -78,7 +83,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
   @override
   void dispose() {
-    _searchKeywordController.dispose();
     super.dispose();
   }
 
@@ -115,7 +119,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
           tagsMap: searchServices.auditorTagsList, );
       }
     }
-    if (_searchKeywordController.text.isEmpty) {
+    if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
 
@@ -172,7 +176,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
               tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
           }
         },
-        customTextEditingController: _searchKeywordController,
+        customTextEditingController: searchServices.searchKeywordController,
         // actions: [
         //   // IconButton(
         //   //   onPressed: () {
@@ -271,7 +275,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                     indicatorColor: const Color(0xFF47CBE4),
                     indicatorWeight: 3,
                     onTap: (index) {
-                      _searchKeywordController.clear();
+                      searchServices.searchKeywordController.clear();
                       tabIndex = index;
                       resetFilters();
                     },
@@ -387,30 +391,22 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                   Consumer<SearchServices>(builder: (context, model, child) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
-                      child: Row(
-                        children: [
-                          WrappedChip(
-                            theme: 'black',
-                            item: SimpleTags(collection: false, tag: "#", icon: "", nft: false),
-                            page: 'auditor',
-                            selected: false,
-                            wrapperRole: WrapperRole.hash,
-                          ),
-                          Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: model.auditorTagsList.entries.map((e) {
-                                return WrappedChip(
-                                    key: ValueKey(e.value),
-                                    theme: 'black',
-                                    item: e.value,
-                                    page: 'auditor',
-                                  selected: e.value.selected,
-                                  tabIndex: tabIndex,
-                                  wrapperRole: WrapperRole.onPages,
-                                );
-                              }).toList()),
-                        ],
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.auditorTagsList.entries.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e.value),
+                                theme: 'black',
+                                item: e.value,
+                                page: 'auditor',
+                                selected: e.value.selected,
+                                tabIndex: tabIndex,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                              );
+                            }).toList()),
                       ),
                     );
                   }),

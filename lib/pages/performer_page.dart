@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../navigation/appbar.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
@@ -62,12 +63,17 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
         }
       });
     }
+
+    // init customerTagsList to show tag '+' button:
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var searchServices = context.read<SearchServices>();
+      searchServices.updateTagListOnTasksPages(page: 'performer', initial: true);
+    });
+
   }
 
-  final _searchKeywordController = TextEditingController();
   @override
   void dispose() {
-    _searchKeywordController.dispose();
     super.dispose();
   }
 
@@ -78,6 +84,8 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
+
+    // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
@@ -100,73 +108,15 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
             tagsMap: searchServices.performerTagsList);
       }
     }
-    if (_searchKeywordController.text.isEmpty) {
+    if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBarWithSearchSwitch(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        appBarBuilder: (context) {
-          return AppBar(
-            backgroundColor: Colors.black,
-            title: Text(
-              'Performer',
-              style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
-            actions: [
-              // AppBarSearchButton(),
-              IconButton(
-                onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
-                icon: const Icon(Icons.search),
-              ),
-            ],
-          );
-        },
-        searchInputDecoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
-          // suffixIcon: Icon(
-          //   Icons.tag,
-          //   color: Colors.grey[300],
-          // ),
-
-        ),
-
-        onChanged: (searchKeyword) {
-          if (tabIndex == 0) {
-            tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
-          } else if (tabIndex == 1) {
-            tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
-          } else if (tabIndex == 2) {
-            tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
-          }
-        },
-        customTextEditingController: _searchKeywordController,
-        // actions: [
-        //   // IconButton(
-        //   //   onPressed: () {
-        //   //     showSearch(
-        //   //       context: context,
-        //   //       delegate: MainSearchDelegate(),
-        //   //     );
-        //   //   },
-        //   //   icon: const Icon(Icons.search)
-        //   // ),
-        //   // LoadButtonIndicator(),
-        // ],
-        centerTitle: false,
-        elevation: 2,
+      appBar: OurAppBar(
+        title: 'Performer',
+        tabIndex: tabIndex,
       ),
 
       //
@@ -246,7 +196,8 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                     indicatorWeight: 3,
                     // isScrollable: true,
                     onTap: (index) {
-                      _searchKeywordController.clear();
+                      // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
+                      searchServices.searchKeywordController.clear();
                       tabIndex = index;
                       resetFilters();
                     },
@@ -355,31 +306,22 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                   Consumer<SearchServices>(builder: (context, model, child) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
-                      child: Row(
-                        children: [
-                          WrappedChip(
-                            theme: 'black',
-                            item: SimpleTags(collection: false, tag: "#", icon: "", nft: false),
-                            page: 'performer',
-                            selected: false,
-                            wrapperRole: WrapperRole.hash,
-                          ),
-                          Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: model.performerTagsList.entries.map((e) {
-                                return WrappedChip(
-                                  key: ValueKey(e.value),
-                                  theme: 'black',
-                                  item: e.value,
-                                  page: 'performer',
-                                  tabIndex: tabIndex,
-
-                                  selected: e.value.selected,
-                                  wrapperRole: WrapperRole.onPages,
-                                );
-                              }).toList()),
-                        ],
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.performerTagsList.entries.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e.value),
+                                theme: 'black',
+                                item: e.value,
+                                page: 'performer',
+                                tabIndex: tabIndex,
+                                selected: e.value.selected,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                              );
+                            }).toList()),
                       ),
                     );
                   }),

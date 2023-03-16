@@ -44,13 +44,21 @@ class OpenAddTags extends StatelessWidget {
       openColor: Colors.transparent,
       closedColor: Colors.transparent,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
-        return Row(
-          children: const [
-            Padding(
-              padding: EdgeInsets.only(left: 4.0, right: 4.0),
-              child: Icon(Icons.add, color: Colors.white, size: 16,),
-            )
-          ],
+        return Padding(
+          padding: const EdgeInsets.only(left: 2.0, right: 2.0),
+          child: Row(
+            children: [
+              const Icon(Icons.add, color: Colors.white, size: 16,),
+              Text('tags',
+                  style: DodaoTheme.of(context).bodyText3.override(
+                    fontFamily: 'Inter',
+                    color: textColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: fontSize,
+                  )
+              )
+            ],
+          ),
         );
       }
     );
