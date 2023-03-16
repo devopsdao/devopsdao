@@ -1,7 +1,10 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../navigation/appbar.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
@@ -60,12 +63,17 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
         }
       });
     }
+
+    // init customerTagsList to show tag '+' button:
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var searchServices = context.read<SearchServices>();
+      searchServices.updateTagListOnTasksPages(page: 'performer', initial: true);
+    });
+
   }
 
-  final _searchKeywordController = TextEditingController();
   @override
   void dispose() {
-    _searchKeywordController.dispose();
     super.dispose();
   }
 
@@ -76,6 +84,8 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
+
+    // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
@@ -98,53 +108,60 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
             tagsMap: searchServices.performerTagsList);
       }
     }
-    if (_searchKeywordController.text.isEmpty) {
+    if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        title: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Performer',
-                  style: DodaoTheme.of(context).title2.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: const [
-          // LoadButtonIndicator(),
-          // Row(
-          //   mainAxisSize: MainAxisSize.max,
-          //   children: [
-          //     Padding(
-          //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
-          //       child: Icon(
-          //         Icons.settings_outlined,
-          //         color: DodaoTheme.of(context).primaryBtnText,
-          //         size: 24,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        ],
-        centerTitle: false,
-        elevation: 2,
+      appBar: OurAppBar(
+        title: 'Performer',
+        tabIndex: tabIndex,
       ),
+
+      //
+      //
+      // AppBar(
+      //   backgroundColor: Colors.black,
+      //   automaticallyImplyLeading: false,
+      //   title: Column(
+      //     mainAxisSize: MainAxisSize.max,
+      //     children: [
+      //       Row(
+      //         mainAxisSize: MainAxisSize.max,
+      //         mainAxisAlignment: MainAxisAlignment.start,
+      //         children: [
+      //           Text(
+      //             'Performer',
+      //             style: DodaoTheme.of(context).title2.override(
+      //                   fontFamily: 'Inter',
+      //                   color: Colors.white,
+      //                   fontSize: 22,
+      //                 ),
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   actions: const [
+      //     // LoadButtonIndicator(),
+      //     // Row(
+      //     //   mainAxisSize: MainAxisSize.max,
+      //     //   children: [
+      //     //     Padding(
+      //     //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
+      //     //       child: Icon(
+      //     //         Icons.settings_outlined,
+      //     //         color: DodaoTheme.of(context).primaryBtnText,
+      //     //         size: 24,
+      //     //       ),
+      //     //     ),
+      //     //   ],
+      //     // ),
+      //   ],
+      //   centerTitle: false,
+      //   elevation: 2,
+      // ),
       backgroundColor: const Color(0xFF1E2429),
       body: Container(
         width: double.infinity,
@@ -179,7 +196,8 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                     indicatorWeight: 3,
                     // isScrollable: true,
                     onTap: (index) {
-                      _searchKeywordController.clear();
+                      // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
+                      searchServices.searchKeywordController.clear();
                       tabIndex = index;
                       resetFilters();
                     },
@@ -213,94 +231,99 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        width: constraints.minWidth - 70,
-                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        // decoration: const BoxDecoration(
-                        //   // color: Colors.white70,
-                        //   // borderRadius: BorderRadius.circular(8),
-                        // ),
-                        child: TextField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            if (tabIndex == 0) {
-                              tasksServices.runFilter(
-                                  taskList: tasksServices.tasksPerformerParticipate,
-                                  enteredKeyword: searchKeyword,
-                                  tagsMap: searchServices.performerTagsList );
-                            } else if (tabIndex == 1) {
-                              tasksServices.runFilter(
-                                  taskList: tasksServices.tasksPerformerProgress,
-                                  enteredKeyword: searchKeyword,
-                                  tagsMap: searchServices.performerTagsList );
-                            } else if (tabIndex == 2) {
-                              tasksServices.runFilter(
-                                  taskList: tasksServices.tasksPerformerComplete,
-                                  enteredKeyword: searchKeyword,
-                                  tagsMap: searchServices.performerTagsList );
-                            }
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search',
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                          ),
-                          style: DodaoTheme.of(context).bodyText1.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                lineHeight: 2,
-                              ),
-                        ),
-                      ),
-                      TagCallButton(
-                        page: 'performer',
-                        tabIndex: tabIndex,
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       width: constraints.minWidth - 70,
+                  //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  //       // decoration: const BoxDecoration(
+                  //       //   // color: Colors.white70,
+                  //       //   // borderRadius: BorderRadius.circular(8),
+                  //       // ),
+                  //       child: TextField(
+                  //         controller: _searchKeywordController,
+                  //         onChanged: (searchKeyword) {
+                  //           if (tabIndex == 0) {
+                  //             tasksServices.runFilter(
+                  //                 taskList: tasksServices.tasksPerformerParticipate,
+                  //                 enteredKeyword: searchKeyword,
+                  //                 tagsMap: searchServices.performerTagsList );
+                  //           } else if (tabIndex == 1) {
+                  //             tasksServices.runFilter(
+                  //                 taskList: tasksServices.tasksPerformerProgress,
+                  //                 enteredKeyword: searchKeyword,
+                  //                 tagsMap: searchServices.performerTagsList );
+                  //           } else if (tabIndex == 2) {
+                  //             tasksServices.runFilter(
+                  //                 taskList: tasksServices.tasksPerformerComplete,
+                  //                 enteredKeyword: searchKeyword,
+                  //                 tagsMap: searchServices.performerTagsList );
+                  //           }
+                  //         },
+                  //         decoration: const InputDecoration(
+                  //           hintText: '[Find task by Title...]',
+                  //           hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                  //           labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                  //           labelText: 'Search',
+                  //           suffixIcon: Icon(
+                  //             Icons.search,
+                  //             color: Colors.white,
+                  //           ),
+                  //           enabledBorder: UnderlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.white,
+                  //               width: 1,
+                  //             ),
+                  //             borderRadius: BorderRadius.only(
+                  //               topLeft: Radius.circular(4.0),
+                  //               topRight: Radius.circular(4.0),
+                  //             ),
+                  //           ),
+                  //           focusedBorder: UnderlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.white,
+                  //               width: 1,
+                  //             ),
+                  //             borderRadius: BorderRadius.only(
+                  //               topLeft: Radius.circular(4.0),
+                  //               topRight: Radius.circular(4.0),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         style: DodaoTheme.of(context).bodyText1.override(
+                  //               fontFamily: 'Inter',
+                  //               color: Colors.white,
+                  //               lineHeight: 2,
+                  //             ),
+                  //       ),
+                  //     ),
+                  //     TagCallButton(
+                  //       page: 'performer',
+                  //       tabIndex: tabIndex,
+                  //     ),
+                  //   ],
+                  // ),
                   Consumer<SearchServices>(builder: (context, model, child) {
-                    return Wrap(
-                        alignment: WrapAlignment.start,
-                        direction: Axis.horizontal,
-                        children: model.performerTagsList.entries.map((e) {
-                          return WrappedChip(
-                            key: ValueKey(e.value),
-                            theme: 'black',
-                            item: e.value,
-                            delete: true,
-                            page: 'performer',
-                            name: e.key,
-                            tabIndex: tabIndex,
-                            selected: e.value.selected,
-                          );
-                        }).toList());
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.performerTagsList.entries.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e.value),
+                                theme: 'black',
+                                item: e.value,
+                                page: 'performer',
+                                tabIndex: tabIndex,
+                                selected: e.value.selected,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                              );
+                            }).toList()),
+                      ),
+                    );
                   }),
                   tasksServices.isLoading
                       ? const LoadIndicator()
@@ -363,7 +386,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: TaskTransition(
                   fromPage: 'performer',
-                  index: index,
+                  task: tasksServices.filterResults.values.toList()[index],
                 )
 
                 // InkWell(

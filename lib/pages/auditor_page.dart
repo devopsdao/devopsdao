@@ -1,5 +1,7 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../task_dialog/beamer.dart';
@@ -30,7 +32,6 @@ class AuditorPageWidget extends StatefulWidget {
 class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProviderStateMixin {
   // String _searchKeyword = '';
   int tabIndex = 0;
-  final _searchKeywordController = TextEditingController();
 
   // _changeField() {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
@@ -66,6 +67,12 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 ));
       });
     }
+
+    // init customerTagsList to show tag '+' button:
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var searchServices = context.read<SearchServices>();
+      searchServices.updateTagListOnTasksPages(page: 'auditor', initial: true);
+    });
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
     startPageLoadAnimations(
@@ -76,7 +83,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
   @override
   void dispose() {
-    _searchKeywordController.dispose();
     super.dispose();
   }
 
@@ -113,7 +119,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
           tagsMap: searchServices.auditorTagsList, );
       }
     }
-    if (_searchKeywordController.text.isEmpty) {
+    if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
 
@@ -121,34 +127,102 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
+      appBar: AppBarWithSearchSwitch(
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
-        title: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Auditor',
-                  style: DodaoTheme.of(context).title2.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                ),
-              ],
+        appBarBuilder: (context) {
+          return AppBar(
+            backgroundColor: Colors.black,
+            title: Text(
+              'Auditor',
+              style: DodaoTheme.of(context).title2.override(
+                fontFamily: 'Inter',
+                color: Colors.white,
+                fontSize: 20,
+              ),
             ),
-          ],
+            actions: [
+              // AppBarSearchButton(),
+              IconButton(
+                onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
+                icon: const Icon(Icons.search),
+              ),
+            ],
+          );
+        },
+        searchInputDecoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: 'Search',
+          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+          // suffixIcon: Icon(
+          //   Icons.tag,
+          //   color: Colors.grey[300],
+          // ),
+
         ),
-        actions: const [
-          // LoadButtonIndicator(),
-        ],
+
+        onChanged: (searchKeyword) {
+          if (tabIndex == 0) {
+            tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+          } else if (tabIndex == 1) {
+            tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+          } else if (tabIndex == 2) {
+            tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+          } else if (tabIndex == 3) {
+            tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+          }
+        },
+        customTextEditingController: searchServices.searchKeywordController,
+        // actions: [
+        //   // IconButton(
+        //   //   onPressed: () {
+        //   //     showSearch(
+        //   //       context: context,
+        //   //       delegate: MainSearchDelegate(),
+        //   //     );
+        //   //   },
+        //   //   icon: const Icon(Icons.search)
+        //   // ),
+        //   // LoadButtonIndicator(),
+        // ],
         centerTitle: false,
         elevation: 2,
       ),
+
+
+
+      // AppBar(
+      //   backgroundColor: Colors.black,
+      //   automaticallyImplyLeading: false,
+      //   title: Column(
+      //     mainAxisSize: MainAxisSize.max,
+      //     children: [
+      //       Row(
+      //         mainAxisSize: MainAxisSize.max,
+      //         mainAxisAlignment: MainAxisAlignment.start,
+      //         children: [
+      //           Text(
+      //             'Auditor',
+      //             style: DodaoTheme.of(context).title2.override(
+      //                   fontFamily: 'Inter',
+      //                   color: Colors.white,
+      //                   fontSize: 22,
+      //                 ),
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   actions: const [
+      //     // LoadButtonIndicator(),
+      //   ],
+      //   centerTitle: false,
+      //   elevation: 2,
+      // ),
       backgroundColor: const Color(0xFF1E2429),
       // floatingActionButton: _isFloatButtonVisible
       //     ? FloatingActionButton(
@@ -201,7 +275,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                     indicatorColor: const Color(0xFF47CBE4),
                     indicatorWeight: 3,
                     onTap: (index) {
-                      _searchKeywordController.clear();
+                      searchServices.searchKeywordController.clear();
                       tabIndex = index;
                       resetFilters();
                     },
@@ -232,104 +306,109 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        width: constraints.minWidth - 70,
-                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        // decoration: const BoxDecoration(
-                        //   // color: Colors.white70,
-                        //   // borderRadius: BorderRadius.circular(8),
-                        // ),
-                        child: TextField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            // print(tabIndex);
-                            if (tabIndex == 0) {
-                              tasksServices.runFilter(
-                                taskList: tasksServices.tasksAuditPending,
-                                enteredKeyword: searchKeyword,
-                                tagsMap: searchServices.auditorTagsList
-                              );
-                            } else if (tabIndex == 1) {
-                              tasksServices.runFilter(
-                                taskList: tasksServices.tasksAuditApplied,
-                                enteredKeyword: searchKeyword,
-                                tagsMap: searchServices.auditorTagsList
-                              );
-                            } else if (tabIndex == 2) {
-                              tasksServices.runFilter(
-                                taskList: tasksServices.tasksAuditWorkingOn,
-                                enteredKeyword: searchKeyword,
-                                tagsMap: searchServices.auditorTagsList
-                              );
-                            } else if (tabIndex == 3) {
-                              tasksServices.runFilter(
-                                taskList: tasksServices.tasksAuditComplete,
-                                enteredKeyword: searchKeyword,
-                                tagsMap: searchServices.auditorTagsList
-                              );
-                            }
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search',
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                          ),
-                          style: DodaoTheme.of(context).bodyText1.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                lineHeight: 2,
-                              ),
-                        ),
-                      ),
-                      TagCallButton(
-                        page: 'auditor',
-                        tabIndex: tabIndex,
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Container(
+                  //       width: constraints.minWidth - 70,
+                  //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  //       // decoration: const BoxDecoration(
+                  //       //   // color: Colors.white70,
+                  //       //   // borderRadius: BorderRadius.circular(8),
+                  //       // ),
+                  //       child: TextField(
+                  //         controller: _searchKeywordController,
+                  //         onChanged: (searchKeyword) {
+                  //           // print(tabIndex);
+                  //           if (tabIndex == 0) {
+                  //             tasksServices.runFilter(
+                  //               taskList: tasksServices.tasksAuditPending,
+                  //               enteredKeyword: searchKeyword,
+                  //               tagsMap: searchServices.auditorTagsList
+                  //             );
+                  //           } else if (tabIndex == 1) {
+                  //             tasksServices.runFilter(
+                  //               taskList: tasksServices.tasksAuditApplied,
+                  //               enteredKeyword: searchKeyword,
+                  //               tagsMap: searchServices.auditorTagsList
+                  //             );
+                  //           } else if (tabIndex == 2) {
+                  //             tasksServices.runFilter(
+                  //               taskList: tasksServices.tasksAuditWorkingOn,
+                  //               enteredKeyword: searchKeyword,
+                  //               tagsMap: searchServices.auditorTagsList
+                  //             );
+                  //           } else if (tabIndex == 3) {
+                  //             tasksServices.runFilter(
+                  //               taskList: tasksServices.tasksAuditComplete,
+                  //               enteredKeyword: searchKeyword,
+                  //               tagsMap: searchServices.auditorTagsList
+                  //             );
+                  //           }
+                  //         },
+                  //         decoration: const InputDecoration(
+                  //           hintText: '[Find task by Title...]',
+                  //           hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                  //           labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                  //           labelText: 'Search',
+                  //           suffixIcon: Icon(
+                  //             Icons.search,
+                  //             color: Colors.white,
+                  //           ),
+                  //           enabledBorder: UnderlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.white,
+                  //               width: 1,
+                  //             ),
+                  //             borderRadius: BorderRadius.only(
+                  //               topLeft: Radius.circular(4.0),
+                  //               topRight: Radius.circular(4.0),
+                  //             ),
+                  //           ),
+                  //           focusedBorder: UnderlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.white,
+                  //               width: 1,
+                  //             ),
+                  //             borderRadius: BorderRadius.only(
+                  //               topLeft: Radius.circular(4.0),
+                  //               topRight: Radius.circular(4.0),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         style: DodaoTheme.of(context).bodyText1.override(
+                  //               fontFamily: 'Inter',
+                  //               color: Colors.white,
+                  //               lineHeight: 2,
+                  //             ),
+                  //       ),
+                  //     ),
+                  //     TagCallButton(
+                  //       page: 'auditor',
+                  //       tabIndex: tabIndex,
+                  //     ),
+                  //   ],
+                  // ),
                   Consumer<SearchServices>(builder: (context, model, child) {
-                    return Wrap(
-                        alignment: WrapAlignment.start,
-                        direction: Axis.horizontal,
-                        children: model.auditorTagsList.entries.map((e) {
-                          return WrappedChip(
-                              key: ValueKey(e.value),
-                              theme: 'black',
-                              item: e.value,
-                              delete: true,
-                              page: 'auditor',
-                            name: e.key,
-                            selected: e.value.selected,
-                            tabIndex: tabIndex,
-                          );
-                        }).toList());
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.auditorTagsList.entries.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e.value),
+                                theme: 'black',
+                                item: e.value,
+                                page: 'auditor',
+                                selected: e.value.selected,
+                                tabIndex: tabIndex,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                              );
+                            }).toList()),
+                      ),
+                    );
                   }),
                   tasksServices.isLoading
                       ? const LoadIndicator()
@@ -392,7 +471,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: TaskTransition(
                   fromPage: 'auditor',
-                  index: index,
+                  task: tasksServices.filterResults.values.toList()[index],
                 )
 
                 // InkWell(

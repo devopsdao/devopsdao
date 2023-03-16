@@ -4,15 +4,17 @@ import 'package:dodao/blockchain/classes.dart';
 import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:webthree/webthree.dart';
-
 import '../../tags_manager/nft_templorary.dart';
 
 class SearchServices extends ChangeNotifier {
+  final searchKeywordController = TextEditingController();
+  //
+  late ValueNotifier<bool> searchBarStart = ValueNotifier(true);
+
+  SimpleTags defaultTagAddNew = SimpleTags(collection: false, tag: "#", icon: "", nft: false, selected: true);
+
   Map<String, SimpleTags> tagsFilterResults = {...simpleTagsMap};
-
   Map<String, NftTagsBunch> nftFilterResults = {...nftTagsMap};
-
   Map<String, SimpleTags> auditorTagsList = {};
   Map<String, SimpleTags> tasksTagsList = {};
   Map<String, SimpleTags> customerTagsList = {};
@@ -20,6 +22,12 @@ class SearchServices extends ChangeNotifier {
   Map<String, SimpleTags> createTagsList = {};
 
   List<String> tagsListToPass = [];
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _searchKeywordController.dispose();
+  // }
 
   // Map<EthereumAddress, Task> _filterResults = {};
   // Map<EthereumAddress, Task> get filterResults => _filterResults;
@@ -33,10 +41,10 @@ class SearchServices extends ChangeNotifier {
 
   // set filterResults(Map<EthereumAddress, Task> filterResults) {}
 
-  // experimental future. ready allow to run taskService.runFilter
+  // experimental future. ready allow to run taskService.runFilter. to be deleted/
   late bool forbidSearchKeywordClear = false;
 
-  Future removeTagOnTasksPages(tagName, {required String page}) async {
+  Future removeTagsOnPages(tagName, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList.removeWhere((key, value) => value.tag == tagName);
     } else if (page == 'tasks') {
@@ -49,13 +57,16 @@ class SearchServices extends ChangeNotifier {
       createTagsList.removeWhere((key, value) => value.tag == tagName);
     }
     // always remove from main filter list:
-    tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
-    updateTagListOnTasksPages(page: page);
-    // print('removeTagOnTasksPages');
+    // tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
+    tagsFilterResults[tagName]!.selected = false;
+    notifyListeners();
+    // updateTagListOnTasksPages(page: page, initial: false);
   }
 
-  Future updateTagListOnTasksPages({required String page}) async {
-    late Map<String, SimpleTags> list = {};
+  Future updateTagListOnTasksPages({required String page, required bool initial}) async {
+    late Map<String, SimpleTags> list = {
+      "#" : defaultTagAddNew
+    };
     tagsFilterResults.entries.map((e) {
       if (e.value.selected) {
         list[e.value.tag] = e.value;
@@ -63,19 +74,48 @@ class SearchServices extends ChangeNotifier {
     }).toList();
 
     if (page == 'auditor') {
-      auditorTagsList = list;
+      if (initial) {
+        if (auditorTagsList.isEmpty) {
+          auditorTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        auditorTagsList = list;
+      }
     } else if (page == 'tasks') {
-      tasksTagsList = list;
+      if (initial) {
+        if (tasksTagsList.isEmpty) {
+          tasksTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        tasksTagsList = list;
+      }
     } else if (page == 'customer') {
-      customerTagsList = list;
+      if (initial) {
+        if (customerTagsList.isEmpty) {
+          customerTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        customerTagsList = list;
+      }
     } else if (page == 'performer') {
-      performerTagsList = list;
+      if (initial) {
+        if (performerTagsList.isEmpty) {
+          performerTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        performerTagsList = list;
+      }
     } else if (page == 'create') {
-      createTagsList = list;
+      if (initial) {
+        if (createTagsList.isEmpty) {
+          createTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        createTagsList = list;
+      }
     }
     // tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();
-    // print('updateTagListOnTasksPages');
   }
 
   late String searchTagKeyword = '';
@@ -184,7 +224,6 @@ class SearchServices extends ChangeNotifier {
       }
     }
     notifyListeners();
-    print('tagSelection');
   }
 
   Future<void> resetNFTFilter(Map<String, NftTagsBunch> tagsList) async {

@@ -634,10 +634,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       key: ValueKey(e),
                                       theme: 'white',
                                       item: e,
-                                      delete: false,
                                       page: 'create',
-                                      name: e.tag,
                                       selected: e.selected,
+                                      wrapperRole: WrapperRole.selectNew,
                                     );
                                   }).toList()),
                             );

@@ -1302,7 +1302,7 @@ class TasksServices extends ChangeNotifier {
     // tagsList ??= [];
     filterResults.clear();
     // searchKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty && tagsList.isEmpty) {
+    if (enteredKeyword.isEmpty && (tagsList.length == 1 && tagsList.first == '#')) {
       filterResults = Map.from(taskList);
     } else {
       // for (EthereumAddress taskAddress in taskList.keys) {
@@ -1314,8 +1314,8 @@ class TasksServices extends ChangeNotifier {
       //   }
       // }
 
-      final filterResultsTitle = Map.from(taskList)..removeWhere((taskAddress, task) => !task.title.contains(enteredKeyword));
-      final filterResultsDescription = Map.from(taskList)..removeWhere((taskAddress, task) => !task.description.contains(enteredKeyword));
+      final filterResultsTitle = Map.from(taskList)..removeWhere((taskAddress, task) => !task.title.toLowerCase().contains(enteredKeyword.toLowerCase()));
+      final filterResultsDescription = Map.from(taskList)..removeWhere((taskAddress, task) => !task.description.toLowerCase().contains(enteredKeyword.toLowerCase()));
       late Map<EthereumAddress, Task> filterResultsTaskAddress = {};
       late Map<EthereumAddress, Task> filterResultsContractOwner = {};
       late Map<EthereumAddress, Task> filterResultsPerformer = {};
@@ -1345,7 +1345,7 @@ class TasksServices extends ChangeNotifier {
       // final filterResultsTagsNFT = Map.from(taskList)
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
 
-      if (tagsList.isNotEmpty) {
+      if (tagsList.isNotEmpty && (tagsList.length != 1 )) {
         filterResults = Map.from(filterResultsSearch)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
       } else {
         filterResults = Map.from(filterResultsSearch);
@@ -1363,7 +1363,7 @@ class TasksServices extends ChangeNotifier {
     // taskList = Map.fromEntries(
     //     taskList.entries.where((entry) => tagsList.contains(entry.value.tag))
     // );
-    if (tagsList.isNotEmpty) {
+    if (tagsList.isNotEmpty && (tagsList.length != 1 )) {
       filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
     } else {
       filterResults = Map.from(taskList);
