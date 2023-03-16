@@ -318,8 +318,8 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 4002;
-      defaultChainId = 4002;
+      chainId = 1287;
+      defaultChainId = 1287;
 
       if (defaultChainId == 1287) {
         _rpcUrl = 'https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81';
