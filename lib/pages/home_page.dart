@@ -179,7 +179,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           builder: (context) => const WalletPageTop(),
                         );
                       },
-                      child: tasksServices.walletConnected
+                      child: tasksServices.walletConnected && tasksServices.publicAddress != null
                           ? Text(
                               '${tasksServices.publicAddress.toString().substring(0, 5)}'
                               '...'
