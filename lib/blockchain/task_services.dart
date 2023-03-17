@@ -325,6 +325,17 @@ class TasksServices extends ChangeNotifier {
       chainId = 1287;
     }
 
+    isDeviceConnected = false;
+
+    if (platform != 'web') {
+      final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+        if (result != ConnectivityResult.none) {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
+        }
+      });
+    }
+
     await connectRPC(chainId);
 
     await startup();
@@ -371,16 +382,6 @@ class TasksServices extends ChangeNotifier {
     _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
-    isDeviceConnected = false;
-
-    if (platform != 'web') {
-      final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-        if (result != ConnectivityResult.none) {
-          isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
-        }
-      });
-    }
 
     if (wallectConnectTransaction == null) {
       wallectConnectTransaction = EthereumWallectConnectTransaction();
