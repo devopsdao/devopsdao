@@ -563,7 +563,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   ),),
                                 ]
                               ),
-                              onTap: () => launchUrl(Uri.parse('http://docs.dodao.com/'))
+                              onTap: () => launchUrl(Uri.parse('http://docs.dodao.dev/'))
                           )
                         ),
                         Text(
