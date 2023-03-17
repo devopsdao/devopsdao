@@ -548,16 +548,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.only(top: 7.0),
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 5),
                           alignment: Alignment.center,
                           child: InkWell(
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.link_sharp, color: Colors.white,size: 18,),
-                                  Text(' docs.dodao.com', style: DodaoTheme.of(context).bodyText3.override(
+                                  const Icon(Icons.library_books_outlined, color: Colors.white, size: 18,),
+                                  Text(' docs.dodao.dev', style: DodaoTheme.of(context).bodyText3.override(
                                       fontFamily: 'Inter',
-                                      color: Colors.grey[100]
+                                      color: Colors.grey[100],
+                                    fontSize: 15
+
                                   ),),
                                 ]
                               ),
