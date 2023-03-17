@@ -1132,8 +1132,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1213,7 +1213,40 @@ class TasksServices extends ChangeNotifier {
 
       final List<EthereumAddress> shared = List.filled(roleNfts.keys.toList().length, publicAddress!);
       final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
-      print(roleNftsBalance);
+      print('roleNftsBalance: $roleNftsBalance');
+
+      int keyId = 0;
+      roleNfts = roleNfts.map((key, value) {
+        // print(keyId);
+        int newBalance = roleNftsBalance[keyId].toInt();
+        late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
+        keyId++;
+        return mapEnt;
+      });
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> collectMyNfts(List<String> names) async {
+    if (publicAddress != null) {
+      final EtherAmount balance = await web3GetBalance(publicAddress!);
+      // final BigInt weiBalance = BigInt.from(0);
+      final BigInt weiBalance = balance.getInWei;
+      final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
+      ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+
+      late BigInt weiBalanceToken = BigInt.from(0);
+      if (hardhatDebug == false && hardhatLive == false) {
+        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
+      }
+
+      final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
+      ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+
+      final List<EthereumAddress> shared = List.filled(roleNfts.keys.toList().length, publicAddress!);
+      final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
+      print('roleNftsBalance: $roleNftsBalance');
 
       int keyId = 0;
       roleNfts = roleNfts.map((key, value) {
