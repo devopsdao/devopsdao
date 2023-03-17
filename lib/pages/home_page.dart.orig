@@ -461,8 +461,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               item: e,
                                               page: 'home',
                                               selected: e.selected,
+<<<<<<< HEAD
                                               wrapperRole: e.tag == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
 
+=======
+                                              wrapperRole: WrapperRole.getMore,
+>>>>>>> 5bf4e94d98e2f5f0b7116207468c92019ddabbe6
                                             );
                                           }).toList()),
                                     ),

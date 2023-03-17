@@ -8,7 +8,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 
-const List<String> selectToken = <String>['FTM', 'aUSDC'];
+const List<String> selectToken = <String>['DEV', 'aUSDC'];
 
 class Payment extends StatefulWidget {
   final String purpose;
@@ -57,7 +57,7 @@ class _PaymentState extends State<Payment> {
     late double borderRadius = interface.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
-      dropdownValue = 'FTM';
+      dropdownValue = tasksServices.chainTicker;
       minPrice = devLowPrice;
       maxPrice = devHighPrice;
     } else {
@@ -228,14 +228,14 @@ class _PaymentState extends State<Payment> {
                             ),
                             onChanged: (String? value) {
                               // This is called when the user selects an item.
-                              if (value == 'FTM') {
+                              if (value == 'ETH') {
                                 tasksServices.taskTokenSymbol = 'ETH';
                               } else {
                                 tasksServices.taskTokenSymbol = value!;
                               }
-                              if (value == 'FTM') {
+                              if (value == 'ETH') {
                                 interface.tokensEntered = 0.0;
-                                valueController!.text = '0.0 FTM';
+                                valueController!.text = '0.0 ${tasksServices.chainTicker}';
                                 _currentPriceValue = 0.0;
                                 minPrice = devLowPrice;
                                 maxPrice = devHighPrice;

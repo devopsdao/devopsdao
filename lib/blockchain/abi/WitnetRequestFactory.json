@@ -1,0 +1,1067 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract IWitnetBytecodes",
+        "name": "_registry",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_upgradable",
+        "type": "bool"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_versionTag",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "AlreadyUpgraded",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "NotCompliant",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "self",
+        "type": "address"
+      }
+    ],
+    "name": "NotUpgradable",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "OnlyOwner",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "by",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "self",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "clone",
+        "type": "address"
+      }
+    ],
+    "name": "Cloned",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "version",
+        "type": "uint8"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferStarted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "baseAddr",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "baseCodehash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "versionTag",
+        "type": "string"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "contract WitnetRequest",
+        "name": "request",
+        "type": "address"
+      }
+    ],
+    "name": "WitnetRequestBuilt",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitFee",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "sla",
+        "type": "tuple"
+      }
+    ],
+    "name": "WitnetRequestSettled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "contract WitnetRequestTemplate",
+        "name": "template",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "parameterized",
+        "type": "bool"
+      }
+    ],
+    "name": "WitnetRequestTemplateBuilt",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "contract WitnetRequest",
+        "name": "request",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "radHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[][]",
+        "name": "args",
+        "type": "string[][]"
+      }
+    ],
+    "name": "WitnetRequestTemplateSettled",
+    "type": "event"
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "fallback"
+  },
+  {
+    "inputs": [],
+    "name": "acceptOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "args",
+    "outputs": [
+      {
+        "internalType": "string[][]",
+        "name": "",
+        "type": "string[][]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "base",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_sources",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_aggregator",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_tally",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_resultDataMaxSize",
+        "type": "uint16"
+      }
+    ],
+    "name": "buildRequest",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequest",
+        "name": "_request",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_sources",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_aggregator",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_tally",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_resultDataMaxSize",
+        "type": "uint16"
+      }
+    ],
+    "name": "buildRequestTemplate",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequestTemplate",
+        "name": "_template",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "bytecode",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "class",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cloned",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "codehash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "curator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDataSources",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDataSourcesCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRadonAggregatorHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRadonSLA",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRadonTallyHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getResultDataMaxSize",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getResultDataType",
+    "outputs": [
+      {
+        "internalType": "enum WitnetV2.RadonDataTypes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_radHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string[][]",
+        "name": "_args",
+        "type": "string[][]"
+      }
+    ],
+    "name": "initializeWitnetRequest",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequest",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "_sources",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_aggregatorId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_tallyId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_resultDataMaxSize",
+        "type": "uint16"
+      }
+    ],
+    "name": "initializeWitnetRequestTemplate",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequestTemplate",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialized",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isUpgradable",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
+      }
+    ],
+    "name": "isUpgradableFrom",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "lookupDataSourceByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "argsCount",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum WitnetV2.DataRequestMethods",
+            "name": "method",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum WitnetV2.RadonDataTypes",
+            "name": "resultDataType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "body",
+            "type": "string"
+          },
+          {
+            "internalType": "string[2][]",
+            "name": "headers",
+            "type": "string[2][]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "script",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct WitnetV2.DataSource",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lookupRadonAggregator",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum WitnetV2.RadonReducerOpcodes",
+            "name": "opcode",
+            "type": "uint8"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum WitnetV2.RadonFilterOpcodes",
+                "name": "opcode",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "args",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct WitnetV2.RadonFilter[]",
+            "name": "filters",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "script",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonReducer",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lookupRadonTally",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum WitnetV2.RadonReducerOpcodes",
+            "name": "opcode",
+            "type": "uint8"
+          },
+          {
+            "components": [
+              {
+                "internalType": "enum WitnetV2.RadonFilterOpcodes",
+                "name": "opcode",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes",
+                "name": "args",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct WitnetV2.RadonFilter[]",
+            "name": "filters",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "script",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonReducer",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "_sla",
+        "type": "tuple"
+      }
+    ],
+    "name": "modifySLA",
+    "outputs": [
+      {
+        "internalType": "contract IWitnetRequest",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "parameterized",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pendingOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "radHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "registry",
+    "outputs": [
+      {
+        "internalType": "contract IWitnetBytecodes",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "self",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string[][]",
+        "name": "_args",
+        "type": "string[][]"
+      }
+    ],
+    "name": "settleArgs",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequest",
+        "name": "_request",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "slaHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "_interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "template",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequestTemplate",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "version",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
