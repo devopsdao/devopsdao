@@ -58,12 +58,19 @@ class SearchServices extends ChangeNotifier {
     }
     // always remove from main filter list:
     // tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
+    // after remove from actual list, we need to reset tagsFilterResults to false
     tagsFilterResults[tagName]!.selected = false;
     notifyListeners();
     // updateTagListOnTasksPages(page: page, initial: false);
   }
 
   Future updateTagListOnTasksPages({required String page, required bool initial}) async {
+    // we add default "defaultTagAddNew" button that is displayed on task pages.
+    // "Initial" means that we do not want to update the lists if they have not
+    // been changed. Since we have only one "tagsFilterResults", we must avoid
+    // re-recordings data from it. "Initial:true" is launched only from task
+    // pages, "Initial:false" - from the tag selection page.
+
     late Map<String, SimpleTags> list = {
       "#" : defaultTagAddNew
     };
@@ -166,7 +173,6 @@ class SearchServices extends ChangeNotifier {
       }));
 
     notifyListeners();
-    print('tagsSearchFilter');
   }
 
   Future<void> tagsAddAndUpdate(Map<String, SimpleTags> tagsList) async {
@@ -191,7 +197,6 @@ class SearchServices extends ChangeNotifier {
         }
       }));
     notifyListeners();
-    print('tagsAddAndUpdate');
   }
 
   Future<void> resetTagsFilter(Map<String, SimpleTags> tagsList) async {
@@ -258,7 +263,6 @@ class SearchServices extends ChangeNotifier {
     }
     nftFilterResults = Map.fromEntries(nftFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
     notifyListeners();
-    print('tagsNFTFilter');
   }
 
   Future<void> nftSelection({required String tagName, required bool unselectAll}) async {
@@ -270,7 +274,6 @@ class SearchServices extends ChangeNotifier {
       }
     }
     notifyListeners();
-    print('nftSelection');
   }
 
   //
@@ -301,4 +304,5 @@ class SearchServices extends ChangeNotifier {
   //   filterResults.clear();
   //   filterResults = Map.from(taskList);
   // }
+
 }

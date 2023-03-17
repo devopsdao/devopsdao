@@ -49,10 +49,10 @@ class OpenAddTags extends StatelessWidget {
           child: Row(
             children: [
               const Icon(Icons.add, color: Colors.white, size: 16,),
-              Text('tags',
+              Text('Tags',
                   style: DodaoTheme.of(context).bodyText3.override(
                     fontFamily: 'Inter',
-                    color: textColor,
+                    color: Colors.white,
                     fontWeight: FontWeight.w400,
                     fontSize: fontSize,
                   )

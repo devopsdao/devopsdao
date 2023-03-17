@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 // import 'package:jovial_svg/jovial_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
@@ -460,7 +461,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               item: e,
                                               page: 'home',
                                               selected: e.selected,
-                                              wrapperRole: WrapperRole.getMore,
+                                              wrapperRole: e.tag == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
 
                                             );
                                           }).toList()),
@@ -546,6 +547,23 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                           ),
                         ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          alignment: Alignment.center,
+                          child: InkWell(
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.link_sharp, color: Colors.white,size: 18,),
+                                  Text(' docs.dodao.com', style: DodaoTheme.of(context).bodyText3.override(
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[100]
+                                  ),),
+                                ]
+                              ),
+                              onTap: () => launchUrl(Uri.parse('http://docs.dodao.com/'))
+                          )
+                        ),
                         Text(
                             tasksServices.browserPlatform ??
                                 'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
@@ -555,6 +573,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               color: Colors.white,
                               fontSize: 11,
                             )),
+
                       ],
                     );
                   })),

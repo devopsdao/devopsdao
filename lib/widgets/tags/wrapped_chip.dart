@@ -25,6 +25,7 @@ enum WrapperRole {
   getMore,
   selectNew,
   onPages,
+  onStartPage,
   hash,
 }
 
@@ -232,7 +233,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     } else if (widget.wrapperRole == WrapperRole.getMore) {
       sizeRegular += 38;
       sizeExpanded += 38;
-    } else if (widget.wrapperRole == WrapperRole.onPages) {
+    } else if (widget.wrapperRole == WrapperRole.onPages || widget.wrapperRole == WrapperRole.onStartPage) {
       sizeRegular += 18;
       sizeExpanded += 18;
       if (widget.item.nft) {
