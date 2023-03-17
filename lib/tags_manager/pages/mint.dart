@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
@@ -62,10 +63,11 @@ class _MintWidget extends State<MintWidget> {
   Widget build(BuildContext context) {
     var searchServices = context.read<SearchServices>();
     var managerServices = context.read<ManagerServices>();
-    // searchServices.resetTagsFilter(simpleTagsMap);
+    var tasksServices = context.read<TasksServices>();
 
+    final List<String> tagNamesList = searchServices.tagsFilterResults.values.map((tag) => tag.tag).toList();
 
-
+    // final List roleNftsBalance = await tasksServices.balanceOfBatchName(addressList, tagNamesList);
 
     return LayoutBuilder(
         builder: (context, constraints) {
@@ -224,13 +226,11 @@ class _MintWidget extends State<MintWidget> {
                                         key: ValueKey(e),
                                         theme: 'black',
                                         item: e.value,
-                                        delete: false,
                                         page: 'mint',
                                         startScale: false,
-                                        name: e.key,
-                                        mint: true,
-                                        expandAnimation: tagsCompare[e.value.tag]!.state,
+                                        animationCicle: tagsCompare[e.value.tag]!.state,
                                         selected: e.value.selected,
+                                        wrapperRole: WrapperRole.mint,
                                       );
                                     }).toList()
                                 );

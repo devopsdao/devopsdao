@@ -15,8 +15,8 @@ import 'main.dart';
 
 class TaskTransition extends StatelessWidget {
   final String fromPage;
-  final int index;
-  const TaskTransition({Key? key, required this.fromPage, required this.index}) : super(key: key);
+  final Task task;
+  const TaskTransition({Key? key, required this.fromPage, required this.task}) : super(key: key);
 
   final ContainerTransitionType _transitionType2 = ContainerTransitionType.fadeThrough;
 
@@ -25,8 +25,8 @@ class TaskTransition extends StatelessWidget {
     // final String fromPage = fromPage;
     // final int index = index;
     var tasksServices = context.watch<TasksServices>();
+    // final Task task = tasksServices.filterResults.values.toList()[index];
 
-    final Task task = tasksServices.filterResults.values.toList()[index];
 
     return OpenContainer(
       transitionType: _transitionType2,

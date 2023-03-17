@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'package:provider/provider.dart';
-import 'package:devopsdao/widgets/tags/search_services.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
-import 'package:devopsdao/widgets/tags/widgets/fab_button.dart';
+import 'package:dodao/widgets/tags/search_services.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../account_dialog/widget/dialog_button_widget.dart';
@@ -39,6 +39,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
+      // searchServices.tagsSearchFilter('', simpleTagsMap);
       if (widget.page == 'audit') {
         tagsLocalList = searchServices.auditorTagsList;
       } else if (widget.page == 'tasks') {
@@ -289,13 +290,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 key: ValueKey(e),
                                 theme: 'white',
                                 item: e.value,
-                                delete: false,
                                 page: 'selection',
                                 startScale: false,
-                                mint: true,
-                                expandAnimation: tagsCompare[e.value.tag]!.state,
-                                name: e.key,
+                                animationCicle: tagsCompare[e.value.tag]!.state,
                                 selected: e.value.selected,
+                                wrapperRole: WrapperRole.selectNew,
                               );
                             }).toList());
                       }
@@ -326,44 +325,44 @@ class _MainTagsPageState extends State<MainTagsPage> {
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
               callback: () {
-                searchServices.updateTagListOnTasksPages(page: widget.page);
+                searchServices.updateTagListOnTasksPages(page: widget.page, initial: false);
                 if (widget.page == 'audit') {
                   if (widget.tabIndex == 0) {
                     tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
                   } else if (widget.tabIndex == 1) {
                     tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
                   } else if (widget.tabIndex == 2) {
                     tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
                   } else if (widget.tabIndex == 3) {
                     tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: '', );
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
                   }
                 } else if (widget.page == 'tasks') {
-                  tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: '');
+                  tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                 } else if (widget.page == 'customer') {
                   if (widget.tabIndex == 0) {
                     tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
-                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                   } else if (widget.tabIndex == 1) {
                     tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
-                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                   } else if (widget.tabIndex == 2) {
                     tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
-                        tagsMap: searchServices.customerTagsList, enteredKeyword: '');
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                   }
                 } else if (widget.page == 'performer') {
                   if (widget.tabIndex == 0) {
                     tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                   } else if (widget.tabIndex == 1) {
                     tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                   } else if (widget.tabIndex == 2) {
                     tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                        tagsMap: searchServices.performerTagsList, enteredKeyword: '');
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
                   }
                 }
                 Navigator.pop(context);

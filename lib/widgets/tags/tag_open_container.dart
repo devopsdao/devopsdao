@@ -1,33 +1,24 @@
 import 'package:animations/animations.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart';
-
-
 
 class TagCallButton extends StatelessWidget {
   final String page;
   final int tabIndex;
   const TagCallButton({Key? key, required this.page, required this.tabIndex}) : super(key: key);
 
-
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   @override
   Widget build(BuildContext context) {
-
     if (page != 'create') {
-
-
       return OpenContainer(
         transitionDuration: const Duration(milliseconds: 300),
         transitionType: _transitionType,
         openBuilder: (BuildContext context, VoidCallback _) {
-          return Container(
-              color: Colors.white,
-              child: MainTagsPage(page: page, tabIndex: tabIndex)
-          );
+          return Container(color: Colors.white, child: MainTagsPage(page: page, tabIndex: tabIndex));
           // return const _DetailsPage(
           //   includeMarkAsDoneButton: false,
           // );
@@ -64,54 +55,49 @@ class TagCallButton extends StatelessWidget {
         },
       );
     } else {
-
-
       return Material(
-        elevation: 9,
-        borderRadius: BorderRadius.circular(6),
-        color: Colors.lightBlue.shade600,
-        child: OpenContainer(
-          transitionDuration: const Duration(milliseconds: 500),
-          transitionType: _transitionType,
-          openBuilder: (BuildContext context, VoidCallback _) {
-            return Container(
-                color: Colors.white,
-                child: MainTagsPage(page: page, tabIndex: tabIndex,)
-            );
-          },
-          closedElevation: 0,
-          closedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(6.0),
-            ),
-          ),
-          openElevation: 2,
-          openColor: Colors.white,
-
-          closedColor: Colors.lightBlue.shade600,
-          closedBuilder: (BuildContext context, VoidCallback openContainer) {
-            return InkWell(
-              // onTap: _buttonState ? widget.callback : null,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                // height: 40.0,
-
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: const Text(
-                  'Tags',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 17, color: Colors.white),
-                ),
+          elevation: 9,
+          borderRadius: BorderRadius.circular(6),
+          color: Colors.lightBlue.shade600,
+          child: OpenContainer(
+            transitionDuration: const Duration(milliseconds: 500),
+            transitionType: _transitionType,
+            openBuilder: (BuildContext context, VoidCallback _) {
+              return Container(
+                  color: Colors.white,
+                  child: MainTagsPage(
+                    page: page,
+                    tabIndex: tabIndex,
+                  ));
+            },
+            closedElevation: 0,
+            closedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(6.0),
               ),
-            );
-          },
-        )
-      );
+            ),
+            openElevation: 2,
+            openColor: Colors.white,
+            closedColor: Colors.lightBlue.shade600,
+            closedBuilder: (BuildContext context, VoidCallback openContainer) {
+              return InkWell(
+                // onTap: _buttonState ? widget.callback : null,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  // height: 40.0,
+
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    'Tags',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 17, color: Colors.white),
+                  ),
+                ),
+              );
+            },
+          ));
     }
   }
 }
-
-
-

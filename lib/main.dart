@@ -1,7 +1,7 @@
-import 'package:devopsdao/blockchain/empty_classes.dart';
-import 'package:devopsdao/tags_manager/manager_services.dart';
-import 'package:devopsdao/widgets/tags/main.dart';
-import 'package:devopsdao/widgets/tags/search_services.dart';
+import 'package:dodao/blockchain/empty_classes.dart';
+import 'package:dodao/tags_manager/manager_services.dart';
+import 'package:dodao/widgets/tags/main.dart';
+import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'blockchain/interface.dart';
 import 'config/theme.dart';
 import 'config/internationalization.dart';
 
-import 'package:devopsdao/blockchain/task_services.dart';
+import 'package:dodao/blockchain/task_services.dart';
 
 import 'navigation/authenticator.dart';
 import 'navigation/beamer_delegate.dart';
@@ -143,8 +143,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData(brightness: Brightness.dark, splashFactory: NoSplash.splashFactory),
       // Theme mode settings:
       // themeMode: _themeMode,
-      themeMode: ThemeMode.light
-      ,
+      themeMode: ThemeMode.light,
       // home: displaySplashImage
       //     ? Container(
       //         color: Colors.black,

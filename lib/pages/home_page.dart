@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 // import 'package:jovial_svg/jovial_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
@@ -15,7 +16,7 @@ import '../config/flutter_flow_icon_button.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 
-import 'package:devopsdao/blockchain/task_services.dart';
+import 'package:dodao/blockchain/task_services.dart';
 
 import '../wallet/main.dart';
 import '../widgets/tags/tags_old.dart';
@@ -179,7 +180,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           builder: (context) => const WalletPageTop(),
                         );
                       },
-                      child: tasksServices.walletConnected
+                      child: tasksServices.walletConnected && tasksServices.publicAddress != null
                           ? Text(
                               '${tasksServices.publicAddress.toString().substring(0, 5)}'
                               '...'
@@ -352,7 +353,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.ethBalance} FTM',
+                                    Text('${tasksServices.ethBalance} ${tasksServices.chainTicker}',
                                         style: const TextStyle(
                                           height: 1.6,
                                           color: Colors.white,
@@ -394,7 +395,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.pendingBalance} FTM',
+                                    Text('${tasksServices.pendingBalance} ${tasksServices.chainTicker}',
                                         style: const TextStyle(
                                           height: 1.6,
                                           color: Colors.white,
@@ -458,10 +459,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               key: ValueKey(e),
                                               theme: 'black',
                                               item: e,
-                                              delete: false,
                                               page: 'home',
-                                              name: e.tag,
                                               selected: e.selected,
+                                              wrapperRole: e.tag == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
+
                                             );
                                           }).toList()),
                                     ),
@@ -546,6 +547,25 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                           ),
                         ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 13.0, bottom: 6),
+                          alignment: Alignment.center,
+                          child: InkWell(
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.library_books_outlined, color: Colors.white, size: 18,),
+                                  Text(' docs.dodao.dev', style: DodaoTheme.of(context).bodyText3.override(
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[100],
+                                    fontSize: 14
+
+                                  ),),
+                                ]
+                              ),
+                              onTap: () => launchUrl(Uri.parse('http://docs.dodao.dev/'))
+                          )
+                        ),
                         Text(
                             tasksServices.browserPlatform ??
                                 'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
@@ -553,8 +573,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               height: 2,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 11,
+                              fontSize: 10,
                             )),
+
                       ],
                     );
                   })),

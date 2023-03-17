@@ -1,6 +1,6 @@
-import 'package:devopsdao/blockchain/empty_classes.dart';
-import 'package:devopsdao/task_dialog/pages.dart';
-import 'package:devopsdao/task_dialog/states.dart';
+import 'package:dodao/blockchain/empty_classes.dart';
+import 'package:dodao/task_dialog/pages.dart';
+import 'package:dodao/task_dialog/states.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
@@ -53,17 +53,9 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             task = snapshot.data!;
-            return TaskDialogSkeleton(
-                fromPage: widget.fromPage,
-                task: task,
-                isLoading: false
-            );
+            return TaskDialogSkeleton(fromPage: widget.fromPage, task: task, isLoading: false);
           }
-          return TaskDialogSkeleton(
-              fromPage: widget.fromPage,
-              task: emptyClasses.loadingTask,
-              isLoading: true
-          );
+          return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
         });
   }
 }

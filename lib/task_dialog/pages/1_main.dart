@@ -558,7 +558,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
                                   TextSpan(
-                                      text: '${task.tokenValues[0]} FTM \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                      text: '${task.tokenValues[0]} ${tasksServices.chainTicker} \n',
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
                                   TextSpan(
                                       text: '${task.tokenValues[0]} aUSDC',
                                       style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0, color: Colors.black87))
@@ -634,10 +635,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       key: ValueKey(e),
                                       theme: 'white',
                                       item: e,
-                                      delete: false,
                                       page: 'create',
-                                      name: e.tag,
                                       selected: e.selected,
+                                      wrapperRole: WrapperRole.selectNew,
                                     );
                                   }).toList()),
                             );

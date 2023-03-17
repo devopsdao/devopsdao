@@ -39,7 +39,7 @@ class InterfaceServices extends ChangeNotifier {
     )
   };
 
-  //  ************ Wallet **************//
+  //  *************** Wallet ***************//
   late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/accounts_page.dart
   late PageController controller = PageController(initialPage: 0);

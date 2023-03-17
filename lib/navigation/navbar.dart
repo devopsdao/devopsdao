@@ -5,6 +5,7 @@ import '../config/theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../index.dart';
 
+import '../widgets/tags/search_services.dart';
 import 'beamer_delegate.dart';
 
 class NavBarPage extends StatefulWidget {
@@ -26,9 +27,13 @@ class _NavBarPageState extends State<NavBarPage> {
     _currentPage = widget.initialPage ?? _currentPage;
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var searchServices = context.read<SearchServices>();
+
     final tabs = {
       '/home': const HomePageWidget(),
       '/tasks': const HomePageWidget(),
@@ -47,6 +52,8 @@ class _NavBarPageState extends State<NavBarPage> {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (i) => {
+        searchServices.searchBarStart.value = false,
+        searchServices.searchKeywordController.clear(),
         setState(() => _currentPage = tabs.keys.toList()[i]),
         beamerDelegate.beamToNamed(tabs.keys.toList()[i])
       },

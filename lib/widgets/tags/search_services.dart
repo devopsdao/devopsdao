@@ -1,18 +1,20 @@
 import 'dart:async';
 
-import 'package:devopsdao/blockchain/classes.dart';
-import 'package:devopsdao/widgets/tags/tags_old.dart';
+import 'package:dodao/blockchain/classes.dart';
+import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'package:webthree/webthree.dart';
 
 import '../../tags_manager/nft_templorary.dart';
 
 class SearchServices extends ChangeNotifier {
+  final searchKeywordController = TextEditingController();
+  //
+  late ValueNotifier<bool> searchBarStart = ValueNotifier(true);
+
+  SimpleTags defaultTagAddNew = SimpleTags(collection: false, tag: "#", icon: "", nft: false, selected: true);
+
   Map<String, SimpleTags> tagsFilterResults = {...simpleTagsMap};
-
   Map<String, NftTagsBunch> nftFilterResults = {...nftTagsMap};
-
   Map<String, SimpleTags> auditorTagsList = {};
   Map<String, SimpleTags> tasksTagsList = {};
   Map<String, SimpleTags> customerTagsList = {};
@@ -20,6 +22,12 @@ class SearchServices extends ChangeNotifier {
   Map<String, SimpleTags> createTagsList = {};
 
   List<String> tagsListToPass = [];
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _searchKeywordController.dispose();
+  // }
 
   // Map<EthereumAddress, Task> _filterResults = {};
   // Map<EthereumAddress, Task> get filterResults => _filterResults;
@@ -33,10 +41,10 @@ class SearchServices extends ChangeNotifier {
 
   // set filterResults(Map<EthereumAddress, Task> filterResults) {}
 
-  // experimental future. ready allow to run taskService.runFilter
+  // experimental future. ready allow to run taskService.runFilter. to be deleted/
   late bool forbidSearchKeywordClear = false;
 
-  Future removeTagOnTasksPages(tagName, {required String page}) async {
+  Future removeTagsOnPages(tagName, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList.removeWhere((key, value) => value.tag == tagName);
     } else if (page == 'tasks') {
@@ -49,33 +57,72 @@ class SearchServices extends ChangeNotifier {
       createTagsList.removeWhere((key, value) => value.tag == tagName);
     }
     // always remove from main filter list:
-    tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
-    updateTagListOnTasksPages(page: page);
-    // print('removeTagOnTasksPages');
+    // tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
+    // after remove from actual list, we need to reset tagsFilterResults to false
+    tagsFilterResults[tagName]!.selected = false;
+    notifyListeners();
+    // updateTagListOnTasksPages(page: page, initial: false);
   }
 
-  Future updateTagListOnTasksPages({required String page}) async {
-    late Map<String, SimpleTags> list = {};
+  Future updateTagListOnTasksPages({required String page, required bool initial}) async {
+    // we add default "defaultTagAddNew" button that is displayed on task pages.
+    // "Initial" means that we do not want to update the lists if they have not
+    // been changed. Since we have only one "tagsFilterResults", we must avoid
+    // re-recordings data from it. "Initial:true" is launched only from task
+    // pages, "Initial:false" - from the tag selection page.
+
+    late Map<String, SimpleTags> list = {
+      "#" : defaultTagAddNew
+    };
     tagsFilterResults.entries.map((e) {
-      if(e.value.selected) {
+      if (e.value.selected) {
         list[e.value.tag] = e.value;
       }
     }).toList();
 
     if (page == 'auditor') {
-      auditorTagsList = list;
+      if (initial) {
+        if (auditorTagsList.isEmpty) {
+          auditorTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        auditorTagsList = list;
+      }
     } else if (page == 'tasks') {
-      tasksTagsList = list;
+      if (initial) {
+        if (tasksTagsList.isEmpty) {
+          tasksTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        tasksTagsList = list;
+      }
     } else if (page == 'customer') {
-      customerTagsList = list;
+      if (initial) {
+        if (customerTagsList.isEmpty) {
+          customerTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        customerTagsList = list;
+      }
     } else if (page == 'performer') {
-      performerTagsList = list;
+      if (initial) {
+        if (performerTagsList.isEmpty) {
+          performerTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        performerTagsList = list;
+      }
     } else if (page == 'create') {
-      createTagsList = list;
+      if (initial) {
+        if (createTagsList.isEmpty) {
+          createTagsList = {"#" : defaultTagAddNew};
+        }
+      } else {
+        createTagsList = list;
+      }
     }
     // tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();
-    // print('updateTagListOnTasksPages');
   }
 
   late String searchTagKeyword = '';
@@ -123,11 +170,9 @@ class SearchServices extends ChangeNotifier {
         } else {
           return e1.value.tag.compareTo(e2.value.tag);
         }
-      })
-    );
+      }));
 
     notifyListeners();
-    print('tagsSearchFilter');
   }
 
   Future<void> tagsAddAndUpdate(Map<String, SimpleTags> tagsList) async {
@@ -150,10 +195,8 @@ class SearchServices extends ChangeNotifier {
         } else {
           return e1.value.tag.compareTo(e2.value.tag);
         }
-      })
-    );
+      }));
     notifyListeners();
-    print('tagsAddAndUpdate');
   }
 
   Future<void> resetTagsFilter(Map<String, SimpleTags> tagsList) async {
@@ -164,8 +207,7 @@ class SearchServices extends ChangeNotifier {
   Future<void> tagSelection({required String typeSelection, required String tagName, required bool unselectAll}) async {
     if (typeSelection == 'selection') {
       for (String key in tagsFilterResults.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() ==
-            tagName.toLowerCase()) {
+        if (tagsFilterResults[key]?.tag.toLowerCase() == tagName.toLowerCase()) {
           if (tagsFilterResults[key]!.selected) {
             tagsFilterResults[key]!.selected = false;
           } else {
@@ -175,28 +217,24 @@ class SearchServices extends ChangeNotifier {
       }
     } else if (typeSelection == 'mint') {
       for (String key in tagsFilterResults.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() ==
-            tagName.toLowerCase()) {
-          if (tagsFilterResults[key]!.selected ) {
+        if (tagsFilterResults[key]?.tag.toLowerCase() == tagName.toLowerCase()) {
+          if (tagsFilterResults[key]!.selected) {
             tagsFilterResults[key]!.selected = false;
           } else {
             tagsFilterResults[key]!.selected = true;
           }
-        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll)  {
+        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
           tagsFilterResults[key]!.selected = false;
         }
       }
     }
     notifyListeners();
-    print('tagSelection');
   }
 
-
-  Future<void> resetNFTFilter(Map<String, NftTagsBunch>tagsList) async {
+  Future<void> resetNFTFilter(Map<String, NftTagsBunch> tagsList) async {
     nftFilterResults.clear();
     nftFilterResults = Map.from(tagsList);
   }
-
 
   Future<void> tagsNFTFilter(String enteredKeyword, Map<String, NftTagsBunch> tagsList) async {
     nftFilterResults.clear();
@@ -225,11 +263,9 @@ class SearchServices extends ChangeNotifier {
     }
     nftFilterResults = Map.fromEntries(nftFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
     notifyListeners();
-    print('tagsNFTFilter');
   }
 
   Future<void> nftSelection({required String tagName, required bool unselectAll}) async {
-
     for (String key in nftFilterResults.keys) {
       if (key.toLowerCase() == tagName.toLowerCase()) {
         nftFilterResults[key]!.selected = true;
@@ -238,7 +274,6 @@ class SearchServices extends ChangeNotifier {
       }
     }
     notifyListeners();
-    print('nftSelection');
   }
 
   //
@@ -269,4 +304,5 @@ class SearchServices extends ChangeNotifier {
   //   filterResults.clear();
   //   filterResults = Map.from(taskList);
   // }
+
 }

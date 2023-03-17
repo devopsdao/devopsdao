@@ -1,4 +1,4 @@
-import 'package:devopsdao/config/flutter_flow_util.dart';
+import 'package:dodao/config/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -100,7 +100,6 @@ class _WalletAction extends State<WalletAction> {
     }
 
     return AlertDialog(
-
       // title: Text('Connect your wallet'),
       content: SingleChildScrollView(
         child: ListBody(
@@ -415,7 +414,7 @@ class _WalletAction extends State<WalletAction> {
                             ],
                           ),
                         // if (tasksServices.interchainSelected.isNotEmpty)
-                        if(false)
+                        if (false)
                           Container(
                             padding: const EdgeInsets.only(top: 50.0),
                             child: Column(
