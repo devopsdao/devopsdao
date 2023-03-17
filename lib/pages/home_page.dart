@@ -462,6 +462,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               page: 'home',
                                               selected: e.selected,
                                               wrapperRole: e.tag == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
+
                                             );
                                           }).toList()),
                                     ),
@@ -547,21 +548,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           ),
                         ),
                         Container(
-                            padding: const EdgeInsets.only(top: 7.0),
-                            alignment: Alignment.center,
-                            child: InkWell(
-                                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  const Icon(
-                                    Icons.library_books_outlined,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  Text(
-                                    ' docs.dodao.dev',
-                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: Colors.grey[100]),
-                                  ),
-                                ]),
-                                onTap: () => launchUrl(Uri.parse('http://docs.dodao.dev/')))),
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 5),
+                          alignment: Alignment.center,
+                          child: InkWell(
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.library_books_outlined, color: Colors.white, size: 18,),
+                                  Text(' docs.dodao.dev', style: DodaoTheme.of(context).bodyText3.override(
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey[100],
+                                    fontSize: 15
+
+                                  ),),
+                                ]
+                              ),
+                              onTap: () => launchUrl(Uri.parse('http://docs.dodao.dev/'))
+                          )
+                        ),
                         Text(
                             tasksServices.browserPlatform ??
                                 'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
@@ -571,6 +575,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               color: Colors.white,
                               fontSize: 11,
                             )),
+
                       ],
                     );
                   })),
