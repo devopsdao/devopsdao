@@ -241,7 +241,7 @@ class _TaskItemState extends State<TaskItem> {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            '${task.tokenValues[0]} FTM',
+                            '${task.tokenValues[0]} ${tasksServices.chainTicker}',
                             style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: Colors.grey[300]),
                             softWrap: false,
                             overflow: TextOverflow.fade,

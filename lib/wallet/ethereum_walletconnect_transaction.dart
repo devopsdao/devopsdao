@@ -184,8 +184,8 @@ class EthereumWallectConnectTransaction extends WallectConnectTransaction {
       'chainId': '0x507',
       'chainName': 'Moonbase alpha',
       'nativeCurrency': <String, dynamic>{
-        'name': 'FTM',
-        'symbol': 'FTM',
+        'name': 'DEV',
+        'symbol': 'DEV',
         'decimals': 18,
       },
       'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],

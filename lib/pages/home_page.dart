@@ -352,7 +352,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.ethBalance} FTM',
+                                    Text('${tasksServices.ethBalance} ${tasksServices.chainTicker}',
                                         style: const TextStyle(
                                           height: 1.6,
                                           color: Colors.white,
@@ -394,7 +394,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.pendingBalance} FTM',
+                                    Text('${tasksServices.pendingBalance} ${tasksServices.chainTicker}',
                                         style: const TextStyle(
                                           height: 1.6,
                                           color: Colors.white,
@@ -461,7 +461,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               page: 'home',
                                               selected: e.selected,
                                               wrapperRole: WrapperRole.getMore,
-
                                             );
                                           }).toList()),
                                     ),

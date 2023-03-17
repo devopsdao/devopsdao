@@ -200,7 +200,9 @@ class _AccountMainPageState extends State<AccountMainPage> {
                               children: <Widget>[
                                 RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  TextSpan(text: '?? FTM \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
+                                  TextSpan(
+                                      text: '?? ${tasksServices.chainTicker} \n',
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
                                   TextSpan(text: '?? aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                 ])),
                               ],
