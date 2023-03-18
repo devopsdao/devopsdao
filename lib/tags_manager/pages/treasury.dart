@@ -13,6 +13,7 @@ import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/tag_open_container.dart';
 import '../../config/theme.dart';
 import 'package:flutter/material.dart';
+import '../../widgets/tags/tags_old.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 
 import 'package:webthree/credentials.dart';
@@ -36,6 +37,17 @@ class _TreasuryWidget extends State<TreasuryWidget> {
   final Duration splitDuration = const Duration(milliseconds: 600);
   final Curve splitCurve = Curves.easeInOutQuart;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var searchServices = Provider.of<SearchServices>(context, listen: false);
+      var tasksServices = Provider.of<TasksServices>(context, listen: false);
+      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
+      final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
+      tasksServices.collectMyNfts(emptyCollectionMap);
+    });
+  }
 
   @override
   void dispose() {

@@ -43,12 +43,18 @@ void main() async {
         //     return searchServices!..filterResults = tasksServices.filterResults;
         //   },
         // ),
-        // ChangeNotifierProxyProvider<SearchServices, TasksServices>(
+        // ChangeNotifierProxyProvider<ManagerServices, TasksServices>(
         //   create: (_) => TasksServices(),
-        //   update: (_, searchServices, tasksServices) {
-        //     return tasksServices!..tagsList = searchServices.tagsListToPass;
+        //   update: (_, managerServices, tasksServices) {
+        //     return tasksServices!..resultNftsMap = managerServices.resultNftsMapReceived;
         //   },
         // )
+        ChangeNotifierProxyProvider<TasksServices , SearchServices>(
+          create: (_) => SearchServices(),
+          update: (_,tasksServices , searchServices) {
+            return searchServices!..nftFilterResults = tasksServices.resultNftsMap;
+          },
+        )
       ],
       child: MyApp(),
     ),

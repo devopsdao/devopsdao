@@ -44,12 +44,15 @@ class _MintWidget extends State<MintWidget> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   var searchServices = Provider.of<SearchServices>(context, listen: false);
-    //   searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
-    // });
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var searchServices = Provider.of<SearchServices>(context, listen: false);
+      var tasksServices = Provider.of<TasksServices>(context, listen: false);
+      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
+      final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
+      tasksServices.collectMyNfts(emptyCollectionMap);
+    });
   }
+
   @override
   void dispose() {
     _searchKeywordController.dispose();
@@ -65,9 +68,7 @@ class _MintWidget extends State<MintWidget> {
     var managerServices = context.read<ManagerServices>();
     var tasksServices = context.read<TasksServices>();
 
-    final List<String> tagNamesList = searchServices.tagsFilterResults.values.map((tag) => tag.tag).toList();
 
-    // final List roleNftsBalance = await tasksServices.balanceOfBatchName(addressList, tagNamesList);
 
     return LayoutBuilder(
         builder: (context, constraints) {
