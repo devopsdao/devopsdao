@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Deploy Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/scripts/deploy.js",
+            "args": ["examples/call-contract-with-token", "local"
+            ]
+            
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Call contract Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/scripts/test.js",
+            "args": [
+                "examples/call-contract-with-token",
+                "local",
+                "Moonbeam",
+                "Ethereum",
+                "0.1",
+                "0xaB641Fe23a579455d7E580300d5334A3Fe8c42D5"
+            ]
+        }
+    ]
+}
+
