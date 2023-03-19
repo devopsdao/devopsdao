@@ -47,6 +47,8 @@ class _WalletAction extends State<WalletAction> {
     //   transactionStagesPending = 'loading';
     // }
 
+
+
     if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH') {
       if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
         if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'] == 'initial') {
@@ -84,7 +86,27 @@ class _WalletAction extends State<WalletAction> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else {
+    } else if (widget.taskName == 'createNFT') {
+      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    } else if (widget.taskName == 'mintFungible') {
+      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    } else  {
       if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';

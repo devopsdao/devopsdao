@@ -14,32 +14,24 @@ class SearchServices extends ChangeNotifier {
   SimpleTags defaultTagAddNew = SimpleTags(collection: false, tag: "#", icon: "", nft: false, selected: true);
 
   Map<String, SimpleTags> tagsFilterResults = {...simpleTagsMap};
-  Map<String, NftTagsBunch> nftFilterResults = {...nftTagsMap};
+  // Map<String, NftTagsBunch> nftFilterResults = {...nftTagsMap};
   Map<String, SimpleTags> auditorTagsList = {};
   Map<String, SimpleTags> tasksTagsList = {};
   Map<String, SimpleTags> customerTagsList = {};
   Map<String, SimpleTags> performerTagsList = {};
   Map<String, SimpleTags> createTagsList = {};
 
-  List<String> tagsListToPass = [];
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _searchKeywordController.dispose();
-  // }
-
-  // Map<EthereumAddress, Task> _filterResults = {};
-  // Map<EthereumAddress, Task> get filterResults => _filterResults;
-  // set filterResults(Map<EthereumAddress, Task> value) {
-  //   if (value != filterResults ) {
-  //     _filterResults = value;
-  //     notifyListeners();
-  //     print(_filterResults);
-  //   }
-  // }
-
-  // set filterResults(Map<EthereumAddress, Task> filterResults) {}
+  Map<String, NftTagsBunch> _nftFilterResults = {};
+  Map<String, NftTagsBunch> get nftFilterResults => _nftFilterResults;
+  set nftFilterResults(Map<String, NftTagsBunch> value) {
+    // print(_resultNftsMapReceived);
+    // print(resultNftsMapReceived);
+    print(nftFilterResults);
+    if (value != nftFilterResults ) {
+      _nftFilterResults = value;
+      notifyListeners();
+    }
+  }
 
   // experimental future. ready allow to run taskService.runFilter. to be deleted/
   late bool forbidSearchKeywordClear = false;
@@ -265,7 +257,7 @@ class SearchServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> nftSelection({required String tagName, required bool unselectAll}) async {
+  Future<void> nftInfoSelection({required String tagName, required bool unselectAll}) async {
     for (String key in nftFilterResults.keys) {
       if (key.toLowerCase() == tagName.toLowerCase()) {
         nftFilterResults[key]!.selected = true;

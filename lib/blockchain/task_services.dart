@@ -1228,35 +1228,32 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> collectMyNfts(List<String> names) async {
+  late Map<String, dynamic> resultCollectionMap;
+  late Map<String, NftTagsBunch> resultNftsMap = {};
+  Future<void> collectMyNfts(Map<String, dynamic> collection) async {
     if (publicAddress != null) {
-      final EtherAmount balance = await web3GetBalance(publicAddress!);
-      // final BigInt weiBalance = BigInt.from(0);
-      final BigInt weiBalance = balance.getInWei;
-      final ethBalancePrecise = weiBalance.toDouble() / pow(10, 18);
-      ethBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
-
-      late BigInt weiBalanceToken = BigInt.from(0);
-      if (hardhatDebug == false && hardhatLive == false) {
-        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
-      }
-
-      final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
-      ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-
-      final List<EthereumAddress> shared = List.filled(roleNfts.keys.toList().length, publicAddress!);
-      final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
-      print('roleNftsBalance: $roleNftsBalance');
+      final List<EthereumAddress> shared = List.filled(collection.entries.length, publicAddress!);
+      final List<String> collectionList = collection.entries.map((e) => e.key).toList();
+      final List roleNftsBalance = await balanceOfBatchName(shared, collectionList);
 
       int keyId = 0;
-      roleNfts = roleNfts.map((key, value) {
+      resultCollectionMap = collection.map((key, value) {
         // print(keyId);
         int newBalance = roleNftsBalance[keyId].toInt();
         late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
         keyId++;
         return mapEnt;
       });
-
+      for (var e in resultCollectionMap.entries) {
+        if (e.value != 0) {
+          late List<SimpleTags> bunch = [];
+          for (int i = 0 ; i < e.value; i++) {
+            bunch.add(SimpleTags(tag: e.key, collection: true, nft: true));
+          }
+          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false);
+        }
+      }
+      // print(resultNftsMap);
       notifyListeners();
     }
   }
@@ -2733,6 +2730,12 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> createNft(String uri, String name, bool isNF) async {
+    print('createNft');
+    // uri - exmple.com
+    // isNF - fungible or nonfungible
+    transactionStatuses['createNFT'] = {
+      'createNFT': {'status': 'pending', 'txn': 'initial'}
+    };
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2745,11 +2748,19 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    String tx = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
-    return tx;
+    String txn = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
+    transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
+    transactionStatuses['createNFT']!['createNFT']!['txn'] = txn;
+    notifyListeners();
+    return txn;
   }
 
+
   Future<String> mintFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
+    print('mintFungibleByName');
+    transactionStatuses['mintFungible'] = {
+      'mintFungible': {'status': 'pending', 'txn': 'initial'}
+    };
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2763,6 +2774,9 @@ class TasksServices extends ChangeNotifier {
       from: senderAddress,
     );
     String txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
+    transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
+    transactionStatuses['mintFungible']!['mintFungible']!['txn'] = txn;
+    notifyListeners();
     return txn;
   }
 

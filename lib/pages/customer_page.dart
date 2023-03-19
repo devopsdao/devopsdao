@@ -26,7 +26,6 @@ import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
 
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
 
 class CustomerPageWidget extends StatefulWidget {
   // static final beamLocation = BeamPage(key: ValueKey('Home'), child: CustomerPageWidget());

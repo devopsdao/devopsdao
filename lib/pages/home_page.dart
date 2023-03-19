@@ -1,7 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:jovial_svg/jovial_svg.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as SvgProvider;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
