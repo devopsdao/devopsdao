@@ -25,18 +25,18 @@
         //     ]
         // },
         {
-            "name": "   devopsdao",
+            "name": "dodao",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "devopsdao (profile mode)",
+            "name": "dodao (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "devopsdao (release mode)",
+            "name": "dodao (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

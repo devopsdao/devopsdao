@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
 
+import '../widgets/wallet_action.dart';
 import 'manager_services.dart';
 import 'nft_templorary.dart';
 import 'pages/treasury.dart';
@@ -54,7 +55,7 @@ class _MintItemState extends State<MintItem> {
 
   @override
   Widget build(BuildContext context) {
-    // var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
     // var interface = context.read<InterfaceServices>();
     // var searchServices = context.read<SearchServices>();
     var managerServices = context.watch<ManagerServices>();
@@ -302,17 +303,28 @@ class _MintItemState extends State<MintItem> {
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: ElevatedButton(
-                            style: stageCreate == Status.open ? activeButtonStyle : null,
-                            onPressed: (stageCreate != Status.done)
-                                ? () {
-                                    if (stageCreate == Status.open) {
-                                      setState(() {
-                                        stageCreate = Status.done;
-                                        stageMint = Status.open;
-                                      });
-                                    }
-                                  }
-                                : null,
+                            // style: stageCreate == Status.open ? activeButtonStyle : null,
+                            style: activeButtonStyle,
+                            // onPressed: (stageCreate != Status.done)
+                            //     ? () {
+                            //         if (stageCreate == Status.open) {
+                            //           setState(() {
+                            //             stageCreate = Status.done;
+                            //             stageMint = Status.open;
+                            //           });
+                            //         }
+                            //       }
+                            //     : null,
+                            onPressed:  () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => const WalletAction(
+                                    nanoId: 'createNFT',
+                                    taskName: 'createNFT',
+                                  ));
+                              tasksServices.createNft('example.com', collectionName , false);
+
+                            },
                             child: Text(
                               'Create collection',
                               style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),
@@ -337,15 +349,31 @@ class _MintItemState extends State<MintItem> {
                           padding: const EdgeInsets.all(5.0),
                           child: ElevatedButton(
                             style: stageMint == Status.open ? activeButtonStyle : null,
-                            onPressed: (stageMint != Status.done)
-                                ? () {
-                                    if (stageMint == Status.open) {
-                                      setState(() {
-                                        stageMint = Status.done;
-                                      });
-                                    }
-                                  }
-                                : null,
+                            // onPressed: (stageMint != Status.done)
+                            //     ? () {
+                            //         if (stageMint == Status.open) {
+                            //           setState(() {
+                            //             stageMint = Status.done;
+                            //           });
+                            //         }
+                            //       }
+                            //     : null,
+                            onPressed: () {
+                              if (tasksServices.publicAddress != null) {
+                                final List<EthereumAddress> address = [tasksServices.publicAddress!];
+                                final List<BigInt> quantities = [BigInt.from(1)];
+
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => const WalletAction(
+                                      nanoId: 'mintFungible',
+                                      taskName: 'mintFungible',
+                                    ));
+
+                                tasksServices.mintFungibleByName(collectionName, address, quantities);
+
+                              }
+                            },
                             child: Text(
                               'Mint',
                               style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),

@@ -391,6 +391,8 @@ List<SimpleTags> simpleTagsList = [
   SimpleTags(collection: true, tag: "Moonbase", icon: ""),
   SimpleTags(collection: true, tag: "Moonbase Alpha", icon: ""),
 
+  SimpleTags(collection: true, tag: "auditor", icon: ""),
+
 ];
 
 final Map<String, SimpleTags> simpleTagsMap = {
