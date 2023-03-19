@@ -1,4 +1,4 @@
-package com.mycompany.devopsdao_flow
+package dev.dodao_flow
 
 import io.flutter.embedding.android.FlutterActivity
 
