@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mycompany.devopsdao"
+    package="dev.dodao"
     xmlns:tools="http://schemas.android.com/tools">
    <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
-        android:label="devopsdao"
+        android:label="dodao"
         tools:replace="android:label"
         android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true">
