@@ -429,7 +429,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
         builder: (context, child) {
           return GestureDetector(
             onTap: onTapGesture,
-
             child: Container(
               width: widget.wrapperRole == WrapperRole.hash ? 68 : animationSize.value,
               padding: containerPadding,
@@ -447,27 +446,33 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
               ),
               child: Row(
                   children: [
-                    // if (icon == 'extra_icon')
-                    //   Flexible(
-                    //     child: Opacity(
-                    //       opacity: animationOpacity.value,
-                    //       child: GestureDetector(
-                    //         onTap: () {
-                    //           showDialog(context: context, builder: (context) {
-                    //             return TagMintDialog(tagName: widget.item.tag);
-                    //           });
-                    //         },
-                    //         child: Padding(
-                    //           padding: rightSpanPadding,
-                    //           child: Icon(
-                    //               Icons.tag_rounded,
-                    //               size: iconSize,
-                    //               color: nftMintColor
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
+                    if (icon == 'extra_icon')
+                      Flexible(
+
+                        child: Stack(
+
+                          children: [
+                            Opacity(
+                              opacity: animationOpacity.value,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(context: context, builder: (context) {
+                                    return TagMintDialog(tagName: widget.item.tag);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: rightSpanPadding,
+                                  child: Icon(
+                                      Icons.tag_rounded,
+                                      size: iconSize,
+                                      color: nftMintColor
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     if (icon == 'nft' && numOfNFTs < 1)
                     Flexible(
                       flex: 10,
@@ -491,7 +496,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                                 border: Border.all(
                                   color: nftColor,
                                 ),
-                                borderRadius: BorderRadius.all(Radius.circular(12))
+                                borderRadius: const BorderRadius.all(Radius.circular(12))
                             ),
                             width: 15,
                             height: 15,
