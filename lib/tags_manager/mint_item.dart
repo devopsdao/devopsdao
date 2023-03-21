@@ -22,7 +22,8 @@ import 'pages/treasury.dart';
 
 class MintItem extends StatefulWidget {
   final SimpleTags item;
-  const MintItem({Key? key, required this.item}) : super(key: key);
+  final String page;
+  const MintItem({Key? key, required this.item, required this.page}) : super(key: key);
 
   @override
   _MintItemState createState() => _MintItemState();

@@ -319,7 +319,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                                 page: 'performer',
                                 tabIndex: tabIndex,
                                 selected: e.value.selected,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),

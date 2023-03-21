@@ -267,7 +267,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                 page: 'tasks',
                                 selected: e.value.selected,
                                 tabIndex: 0,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),

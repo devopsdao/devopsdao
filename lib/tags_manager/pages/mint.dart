@@ -253,7 +253,7 @@ class _MintWidget extends State<MintWidget> {
                                 height: splitScreen ? secondPartHeight : 0.0,
                                 color: Colors.grey[900],
                                 curve: splitCurve,
-                                child: MintItem(item: model.mintNftTagSelected,)
+                                child: MintItem(item: model.mintNftTagSelected, page: 'mint')
                             );
                           }
                         )
