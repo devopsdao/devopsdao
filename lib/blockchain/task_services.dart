@@ -1247,7 +1247,7 @@ class TasksServices extends ChangeNotifier {
       for (var e in resultCollectionMap.entries) {
         if (e.value != 0) {
           late List<SimpleTags> bunch = [];
-          for (int i = 0 ; i < e.value; i++) {
+          for (int i = 0; i < e.value; i++) {
             bunch.add(SimpleTags(tag: e.key, collection: true, nft: true));
           }
           resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false);
@@ -2714,6 +2714,11 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
+  Future<List> getCreatedTokenNames() async {
+    List createdTokenNames = await tokenDataFacet.getCreatedTokenNames();
+    return createdTokenNames;
+  }
+
   Future<List> balanceOfBatchName(List<EthereumAddress> addresses, List<String> names) async {
     List balanceList = await tokenDataFacet.balanceOfBatchName(addresses, names);
     return balanceList;
@@ -2754,7 +2759,6 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
     return txn;
   }
-
 
   Future<String> mintFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
     print('mintFungibleByName');
