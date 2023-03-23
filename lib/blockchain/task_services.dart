@@ -1261,8 +1261,8 @@ class TasksServices extends ChangeNotifier {
 
       final List<String> tokenNames = await getTokenNames(publicAddress!);
       final List<BigInt> tokenIdsBI = await getTokenIds(publicAddress!);
-      print(tokenNames);
-      print(tokenIdsBI);
+      print('tokenNames: $tokenNames');
+      print('tokenIdsBI: $tokenIdsBI');
       final List<int> tokenIds = tokenIdsBI.map((bigInt) => bigInt.toInt()).toList();
       final Map<int, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
 
