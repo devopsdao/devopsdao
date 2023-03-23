@@ -1,0 +1,15 @@
+[
+  {
+    "inputs": [],
+    "name": "witnet",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequestBoard",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

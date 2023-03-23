@@ -2729,6 +2729,16 @@ class TasksServices extends ChangeNotifier {
     return totalSupply;
   }
 
+  Future<List> getTokenNames(EthereumAddress address) async {
+    List accountTokenNames = await tokenDataFacet.getTokenNames(address);
+    return accountTokenNames;
+  }
+
+  Future<List> getTokenIds(EthereumAddress address) async {
+    List accountTokenIds = await tokenDataFacet.getTokenIds(address);
+    return accountTokenIds;
+  }
+
   Future<List> uriOfBatchName(List<String> names) async {
     List totalSupply = await tokenDataFacet.uriOfBatchName(names);
     return totalSupply;
