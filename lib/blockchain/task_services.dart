@@ -166,7 +166,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -337,8 +337,9 @@ class TasksServices extends ChangeNotifier {
     }
 
     await connectRPC(chainId);
-
     await startup();
+    await nftInitialCollection();
+    await collectMyNfts();
     // await getABI();
     // await getDeployedContract();
 
@@ -518,6 +519,7 @@ class TasksServices extends ChangeNotifier {
               validChainIDWC = true;
               await connectRPC(chainId);
               await startup();
+              await collectMyNfts();
             } else {
               validChainID = false;
               validChainIDWC = false;
@@ -641,6 +643,7 @@ class TasksServices extends ChangeNotifier {
           validChainIDMM = true;
           await connectRPC(chainId);
           await startup();
+          await collectMyNfts();
         } else {
           validChainID = false;
           validChainIDMM = false;
@@ -1213,7 +1216,7 @@ class TasksServices extends ChangeNotifier {
 
       final List<EthereumAddress> shared = List.filled(roleNfts.keys.toList().length, publicAddress!);
       final List roleNftsBalance = await balanceOfBatchName(shared, roleNfts.keys.toList());
-      print('roleNftsBalance: $roleNftsBalance');
+      // print('roleNftsBalance: $roleNftsBalance');
 
       int keyId = 0;
       roleNfts = roleNfts.map((key, value) {
@@ -1228,33 +1231,32 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  late Map<String, dynamic> resultCollectionMap;
   late Map<String, NftTagsBunch> resultNftsMap = {};
-  Future<void> collectMyNfts(Map<String, dynamic> collection) async {
+  Future<void> collectMyNfts() async {
     if (publicAddress != null) {
-      final List<EthereumAddress> shared = List.filled(collection.entries.length, publicAddress!);
-      final List<String> collectionList = collection.entries.map((e) => e.key).toList();
+      late Map<String, dynamic> resultCollectionMap;
+      final List<EthereumAddress> shared = List.filled(resultInitialCollectionMap.entries.length, publicAddress!);
+      final List<String> collectionList = resultInitialCollectionMap.entries.map((e) => e.key).toList();
       final List roleNftsBalance = await balanceOfBatchName(shared, collectionList);
 
       int keyId = 0;
-      resultCollectionMap = collection.map((key, value) {
+      resultCollectionMap = resultInitialCollectionMap.map((key, value) {
         // print(keyId);
         int newBalance = roleNftsBalance[keyId].toInt();
         late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
         keyId++;
         return mapEnt;
       });
+
       for (var e in resultCollectionMap.entries) {
         if (e.value != 0) {
           late List<SimpleTags> bunch = [];
           for (int i = 0; i < e.value; i++) {
             bunch.add(SimpleTags(tag: e.key, collection: true, nft: true));
           }
-          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false);
+          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
         }
       }
-      // print(resultNftsMap);
-      notifyListeners();
     }
   }
 
@@ -2714,8 +2716,16 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
-  Future<List> getCreatedTokenNames() async {
-    List createdTokenNames = await tokenDataFacet.getCreatedTokenNames();
+  late Map<String, SimpleTags> resultInitialCollectionMap = {};
+  Future nftInitialCollection() async {
+    final List<String> names = await getCreatedTokenNames();
+    for (var e in names) {
+      resultInitialCollectionMap[e] = SimpleTags(tag: e, collection: true);
+    }
+  }
+
+  Future<List<String>> getCreatedTokenNames() async {
+    List<String> createdTokenNames = await tokenDataFacet.getCreatedTokenNames();
     return createdTokenNames;
   }
 

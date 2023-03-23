@@ -22,11 +22,11 @@ import 'main.dart';
 enum WrapperRole {
   mint,
   treasure,
-  getMore,
-  selectNew,
-  onPages,
-  onStartPage,
-  hashButton,
+  getMore, // get more with link on home page
+  selectNew, // add new tags on "add new Task"
+  onPages, // select for search filter page
+  onStartPage, // tag on home_page (not get more with link)
+  hashButton, // button "+ tags" on pages
 }
 
 class WrappedChip extends StatefulWidget {
@@ -39,6 +39,7 @@ class WrappedChip extends StatefulWidget {
   final wrapperRole;
   final String animationCicle;
   final int tabIndex;
+  final Map<String, NftTagsBunch> bunch;
   const WrappedChip({Key? key,
     required this.theme,
     required this.selected,
@@ -48,6 +49,7 @@ class WrappedChip extends StatefulWidget {
     required this.wrapperRole,
     this.animationCicle = 'none',
     this.tabIndex = 0,
+    this.bunch = const {},
   }) : super(key: key);
 
   @override
@@ -138,9 +140,9 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     if (widget.item.nft && widget.page != 'mint') {  icon = 'nft'; }
 
     if (widget.page == 'treasury') {
-      if (searchServices.nftFilterResults[widget.item.tag] != null) {
-        if (searchServices.nftFilterResults[widget.item.tag]!.bunch.length > 1) {
-          numOfNFTs = searchServices.nftFilterResults[widget.item.tag]!.bunch.length;
+      if (searchServices.nftBalanceFilterResults[widget.item.tag] != null) {
+        if (searchServices.nftBalanceFilterResults[widget.item.tag]!.bunch.length > 1) {
+          numOfNFTs = searchServices.nftBalanceFilterResults[widget.item.tag]!.bunch.length;
         }
       }
     }
@@ -188,19 +190,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     ));
 
 
-    // // sizes for all states:
-    // late double sizeTreasure = 22;
-    // late double sizeTreasureExpanded = 44;
-    // late double sizeMint = 0;
-    // late double sizeMintExpanded = 22;
-    // late double sizeSelectNew = 0;
-    // late double sizeSelectNewExpanded = 44;
-    // if (widget.item.nft) {
-    //   sizeSelectNew += nftIconSize;
-    // }
-    // late double sizeGetMore = 22;
-    // late double sizeOnPages = 0;
-    // late double sizeHash = 0;
     late Color colorBodyBegin = bodyColor;
     late Color colorBodyEnd = bodyColor;
     late Color colorTextBegin = textColor;
@@ -396,11 +385,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           });
 
         } else if(widget.page == 'selection') {
-          searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.item.tag);
+          searchServices.combinedTagsSelection(typeSelection: widget.page, tagName: widget.item.tag);
         } else if(widget.page == 'treasury') {
           searchServices.nftInfoSelection(unselectAll: false, tagName: widget.item.tag);
           if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
-            managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.item.tag]!);
+            managerServices.updateTreasuryNft(searchServices.nftBalanceFilterResults[widget.item.tag]!);
           } else {
             searchServices.nftInfoSelection(unselectAll: true, tagName: '', );
             managerServices.clearSelectedInManager();
@@ -408,7 +397,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
         } else if (widget.page == 'mint') {
           searchServices.tagSelection( unselectAll: false, tagName: widget.item.tag, typeSelection: 'mint');
           if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
-            managerServices.updateMintNft(searchServices.tagsFilterResults[widget.item.tag]!);
+            managerServices.updateMintNft(searchServices.tagsCollectionFilterResults[widget.item.tag]!);
           } else {
             searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', );
             managerServices.clearSelectedInManager();

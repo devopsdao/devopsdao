@@ -80,7 +80,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              // searchServices.resetNFTFilter(searchServices.nftFilterResults);
+              // searchServices.resetNFTFilter(searchServices.nftBalanceFilterResults);
               searchServices.nftInfoSelection(
                 unselectAll: true,
                 tagName: '',
@@ -119,7 +119,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
                   // isScrollable: true,
                   controller: _controller,
                   onTap: (index) {
-                    // searchServices.resetNFTFilter(searchServices.nftFilterResults);
+                    // searchServices.resetNFTFilter(searchServices.nftBalanceFilterResults);
                     searchServices.nftInfoSelection(unselectAll: true, tagName: '');
                     managerServices.clearSelectedInManager();
                   },
