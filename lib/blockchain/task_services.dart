@@ -1257,6 +1257,33 @@ class TasksServices extends ChangeNotifier {
           resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
         }
       }
+
+
+      final List<String> tokenNames = await getTokenNames(publicAddress!);
+      final List<BigInt> tokenIdsBI = await getTokenIds(publicAddress!);
+      print(tokenNames);
+      print(tokenIdsBI);
+      final List<int> tokenIds = tokenIdsBI.map((bigInt) => bigInt.toInt()).toList();
+      final Map<int, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
+
+      final Map<String, List<int>> result = combinedTokenMap.entries.fold(
+        {}, (Map<String, List<int>> acc, entry) {
+          final key = entry.value;
+          final value = entry.key;
+          acc.putIfAbsent(key, () => []).add(value);
+          return acc;
+        },
+      );
+
+      for (var e in result.entries) {
+        if (e.value.isNotEmpty) {
+          late List<SimpleTags> bunch = [];
+          for (int i = 0; i < e.value.length; i++) {
+            bunch.add(SimpleTags(tag: e.key, collection: true, nft: true));
+          }
+          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
+        }
+      }
     }
   }
 
@@ -2739,13 +2766,13 @@ class TasksServices extends ChangeNotifier {
     return totalSupply;
   }
 
-  Future<List> getTokenNames(EthereumAddress address) async {
-    List accountTokenNames = await tokenDataFacet.getTokenNames(address);
+  Future getTokenNames(EthereumAddress address) async {
+    List<String> accountTokenNames = await tokenDataFacet.getTokenNames(address);
     return accountTokenNames;
   }
 
-  Future<List> getTokenIds(EthereumAddress address) async {
-    List accountTokenIds = await tokenDataFacet.getTokenIds(address);
+  Future getTokenIds(EthereumAddress address) async {
+    List<BigInt> accountTokenIds = await tokenDataFacet.getTokenIds(address);
     return accountTokenIds;
   }
 
