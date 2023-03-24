@@ -1258,7 +1258,6 @@ class TasksServices extends ChangeNotifier {
         }
       }
 
-
       final List<String> tokenNames = await getTokenNames(publicAddress!);
       final List<BigInt> tokenIdsBI = await getTokenIds(publicAddress!);
       print('tokenNames: $tokenNames');
@@ -1267,7 +1266,8 @@ class TasksServices extends ChangeNotifier {
       final Map<int, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
 
       final Map<String, List<int>> result = combinedTokenMap.entries.fold(
-        {}, (Map<String, List<int>> acc, entry) {
+        {},
+        (Map<String, List<int>> acc, entry) {
           final key = entry.value;
           final value = entry.key;
           acc.putIfAbsent(key, () => []).add(value);
@@ -2767,11 +2767,13 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future getTokenNames(EthereumAddress address) async {
+    print(address);
     List<String> accountTokenNames = await tokenDataFacet.getTokenNames(address);
     return accountTokenNames;
   }
 
   Future getTokenIds(EthereumAddress address) async {
+    print(address);
     List<BigInt> accountTokenIds = await tokenDataFacet.getTokenIds(address);
     return accountTokenIds;
   }

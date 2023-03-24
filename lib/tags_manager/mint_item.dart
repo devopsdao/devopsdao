@@ -316,15 +316,14 @@ class _MintItemState extends State<MintItem> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed:  () {
+                            onPressed: () {
                               showDialog(
                                   context: context,
                                   builder: (context) => const WalletAction(
-                                    nanoId: 'createNFT',
-                                    taskName: 'createNFT',
-                                  ));
-                              tasksServices.createNft('example.com', collectionName , false);
-
+                                        nanoId: 'createNFT',
+                                        taskName: 'createNFT',
+                                      ));
+                              tasksServices.createNft('example.com', collectionName, true);
                             },
                             child: Text(
                               'Create collection',
@@ -367,12 +366,11 @@ class _MintItemState extends State<MintItem> {
                                 showDialog(
                                     context: context,
                                     builder: (context) => const WalletAction(
-                                      nanoId: 'mintFungible',
-                                      taskName: 'mintFungible',
-                                    ));
+                                          nanoId: 'mintFungible',
+                                          taskName: 'mintFungible',
+                                        ));
 
-                                tasksServices.mintFungibleByName(collectionName, address, quantities);
-
+                                tasksServices.mintNonFungibleByName(collectionName, address, quantities);
                               }
                             },
                             child: Text(
