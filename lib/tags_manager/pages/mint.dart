@@ -44,12 +44,14 @@ class _MintWidget extends State<MintWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
       searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
-      final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
-      tasksServices.collectMyNfts(emptyCollectionMap);
+      searchServices.refreshLists('collections');
+
+      // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
+      // final List collectionsList = await tasksServices.getCreatedTokenNames();
     });
   }
 
@@ -59,16 +61,11 @@ class _MintWidget extends State<MintWidget> {
     super.dispose();
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     var searchServices = context.read<SearchServices>();
     var managerServices = context.read<ManagerServices>();
     var tasksServices = context.read<TasksServices>();
-
-
 
     return LayoutBuilder(
         builder: (context, constraints) {
@@ -94,7 +91,7 @@ class _MintWidget extends State<MintWidget> {
                           return TextFormField(
                             controller: _searchKeywordController,
                             onChanged: (searchKeyword) {
-                              model.tagsSearchFilter(searchKeyword, simpleTagsMap);
+                              model.tagsSearchFilter(searchKeyword);
                             },
                             autofocus: false,
                             obscureText: false,
@@ -104,17 +101,17 @@ class _MintWidget extends State<MintWidget> {
                             // },
 
                             decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.add, color: Color(0xFF47CBE4),),
+                              // prefixIcon: const Icon(Icons.add, color: Color(0xFF47CBE4),),
                               suffixIcon: model.newTag ? IconButton(
                                 onPressed: () {
                                   // NEW TAG
-                                  simpleTagsMap[_searchKeywordController.text] =
-                                      SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
-                                  searchServices.tagSelection( unselectAll: true, tagName: '', typeSelection: 'mint');
-                                  model.tagsAddAndUpdate(simpleTagsMap);
-                                  managerServices.updateMintNft(searchServices.tagsFilterResults[_searchKeywordController.text]!);
+                                  // searchServices.nftInitialCollectionMap[_searchKeywordController.text] =
+                                  //     SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
+                                  // searchServices.tagSelection( unselectAll: true, tagName: '', typeSelection: 'mint');
+                                  model.tagsAddAndUpdate(_searchKeywordController.text);
+                                  managerServices.updateMintNft(searchServices.tagsCollectionFilterResults[_searchKeywordController.text]!);
                                 },
-                                icon: const Icon(Icons.add_box),
+                                icon: const Icon(Icons.add_box,color: Colors.deepOrangeAccent,),
                                 padding: const EdgeInsets.only(right: 12.0),
                                 highlightColor: Colors.grey,
                                 hoverColor: Colors.transparent,
@@ -174,7 +171,7 @@ class _MintWidget extends State<MintWidget> {
                                 return Wrap(
                                     alignment: WrapAlignment.start,
                                     direction: Axis.horizontal,
-                                    children: model.tagsFilterResults.entries.map((e) {
+                                    children: model.tagsCollectionFilterResults.entries.map((e) {
 
                                       if(!tagsCompare.containsKey(e.value.tag)){
                                         if (e.value.selected) {
@@ -253,7 +250,7 @@ class _MintWidget extends State<MintWidget> {
                                 height: splitScreen ? secondPartHeight : 0.0,
                                 color: Colors.grey[900],
                                 curve: splitCurve,
-                                child: MintItem(item: model.mintNftTagSelected,)
+                                child: MintItem(item: model.mintNftTagSelected, page: 'mint')
                             );
                           }
                         )

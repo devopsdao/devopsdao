@@ -54,7 +54,7 @@ List<SimpleTags> nftTagsList = [
 // final nftTagsBunch
 
 final Map<String, NftTagsBunch> nftTagsMap = {
-  for (var e in nftTagsList) e.tag : NftTagsBunch(bunch: [])
+  for (var e in nftTagsList) e.tag : NftTagsBunch(bunch: [], tag: e.tag )
 };
 
 void start() {

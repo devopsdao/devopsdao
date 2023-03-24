@@ -68,9 +68,10 @@ class SimpleTags {
 }
 
 class NftTagsBunch {
+  late String tag;
   late bool selected;
   final List<SimpleTags> bunch;
-  NftTagsBunch({this.selected = false, required this.bunch});
+  NftTagsBunch({required this.tag, this.selected = false, required this.bunch});
 }
 
 class TagsCompare {

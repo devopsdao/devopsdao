@@ -49,10 +49,17 @@ void main() async {
         //     return tasksServices!..resultNftsMap = managerServices.resultNftsMapReceived;
         //   },
         // )
+        // ChangeNotifierProxyProvider<TasksServices , SearchServices>(
+        //   create: (_) => SearchServices(),
+        //   update: (_,tasksServices , searchServices) {
+        //     return searchServices!..nftBalanceMap = tasksServices.resultNftsMap;
+        //   },
+        // ),
         ChangeNotifierProxyProvider<TasksServices , SearchServices>(
           create: (_) => SearchServices(),
           update: (_,tasksServices , searchServices) {
-            return searchServices!..nftFilterResults = tasksServices.resultNftsMap;
+            searchServices!.nftInitialCollectionMap = tasksServices.resultInitialCollectionMap;
+            return searchServices!..nftBalanceMap = tasksServices.resultNftsMap;
           },
         )
       ],

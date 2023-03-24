@@ -376,14 +376,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                 ),
 
                 const SizedBox(height: 14),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: maxStaticInternalDialogWidth,
-                  ),
-                  child: Payment(
-                    purpose: 'create', innerPaddingWidth: innerPaddingWidth,
-                  ),
-                ),
+                // ConstrainedBox(
+                //   constraints: BoxConstraints(
+                //     maxWidth: maxStaticInternalDialogWidth,
+                //   ),
+                //   child: Payment(
+                //     purpose: 'create', innerPaddingWidth: innerPaddingWidth,
+                //   ),
+                // ),
                 Container(
                   padding:  const EdgeInsets.only(top: 14.0),
                   child: Material(

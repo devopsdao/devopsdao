@@ -22,11 +22,11 @@ import 'main.dart';
 enum WrapperRole {
   mint,
   treasure,
-  getMore,
-  selectNew,
-  onPages,
-  onStartPage,
-  hash,
+  getMore, // get more with link on home page
+  selectNew, // add new tags on "add new Task"
+  onPages, // select for search filter page
+  onStartPage, // tag on home_page (not get more with link)
+  hashButton, // button "+ tags" on pages
 }
 
 class WrappedChip extends StatefulWidget {
@@ -39,6 +39,7 @@ class WrappedChip extends StatefulWidget {
   final wrapperRole;
   final String animationCicle;
   final int tabIndex;
+  final Map<String, NftTagsBunch> bunch;
   const WrappedChip({Key? key,
     required this.theme,
     required this.selected,
@@ -48,6 +49,7 @@ class WrappedChip extends StatefulWidget {
     required this.wrapperRole,
     this.animationCicle = 'none',
     this.tabIndex = 0,
+    this.bunch = const {},
   }) : super(key: key);
 
   @override
@@ -138,9 +140,9 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     if (widget.item.nft && widget.page != 'mint') {  icon = 'nft'; }
 
     if (widget.page == 'treasury') {
-      if (searchServices.nftFilterResults[widget.item.tag] != null) {
-        if (searchServices.nftFilterResults[widget.item.tag]!.bunch.length > 1) {
-          numOfNFTs = searchServices.nftFilterResults[widget.item.tag]!.bunch.length;
+      if (searchServices.nftBalanceFilterResults[widget.item.tag] != null) {
+        if (searchServices.nftBalanceFilterResults[widget.item.tag]!.bunch.length > 1) {
+          numOfNFTs = searchServices.nftBalanceFilterResults[widget.item.tag]!.bunch.length;
         }
       }
     }
@@ -174,10 +176,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     // sizes
     late double iconSize = 17;
     late double fontSize = 14;
-    late EdgeInsets containerPadding = const EdgeInsets.symmetric(horizontal: 6, vertical: 6);
+    late double containerMainHeight = 28.0;
     late EdgeInsets containerMargin = const EdgeInsets.symmetric(horizontal: 4, vertical: 4);
-    late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 4.0);
-    late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 4.0);
+    late EdgeInsets leftSideIconPadding = const EdgeInsets.only(left: 7.0);
+    late EdgeInsets rightSideIconPadding = const EdgeInsets.only(right: 7.0);
+    late EdgeInsets centerTextPadding = const EdgeInsets.only(left: 6.0, right: 6.0);
 
     var textSize = calcTextSize(widget.item.tag, DodaoTheme.of(context).bodyText3.override(
       fontFamily: 'Inter',
@@ -187,19 +190,6 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     ));
 
 
-    // // sizes for all states:
-    // late double sizeTreasure = 22;
-    // late double sizeTreasureExpanded = 44;
-    // late double sizeMint = 0;
-    // late double sizeMintExpanded = 22;
-    // late double sizeSelectNew = 0;
-    // late double sizeSelectNewExpanded = 44;
-    // if (widget.item.nft) {
-    //   sizeSelectNew += nftIconSize;
-    // }
-    // late double sizeGetMore = 22;
-    // late double sizeOnPages = 0;
-    // late double sizeHash = 0;
     late Color colorBodyBegin = bodyColor;
     late Color colorBodyEnd = bodyColor;
     late Color colorTextBegin = textColor;
@@ -209,7 +199,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late double opacityBegin = 0.0;
     late double opacityEnd = 1.0;
 
-    final double tagWidthInit = textSize.width;
+    final double tagWidthInit = textSize.width + 10;
     late double sizeRegular = tagWidthInit;
     late double sizeExpanded = tagWidthInit;
     late double sizeBegin = 0;
@@ -224,7 +214,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     } else if (widget.wrapperRole == WrapperRole.selectNew) {
       sizeRegular += 18;
 
-      sizeExpanded += 36;
+      sizeExpanded += 54;
       if (widget.item.nft) {
         sizeRegular += 18;
         sizeExpanded += 18;
@@ -240,7 +230,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
         sizeRegular += 18;
         sizeExpanded += 18;
       }
-    } else if (widget.wrapperRole == WrapperRole.hash) {
+    } else if (widget.wrapperRole == WrapperRole.hashButton) {
       sizeRegular += 30;
       sizeExpanded += 30;
     }
@@ -395,11 +385,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           });
 
         } else if(widget.page == 'selection') {
-          searchServices.tagSelection(unselectAll: false, typeSelection: widget.page, tagName: widget.item.tag);
+          searchServices.combinedTagsSelection(typeSelection: widget.page, tagName: widget.item.tag);
         } else if(widget.page == 'treasury') {
           searchServices.nftInfoSelection(unselectAll: false, tagName: widget.item.tag);
           if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
-            managerServices.updateTreasuryNft(searchServices.nftFilterResults[widget.item.tag]!);
+            managerServices.updateTreasuryNft(searchServices.nftBalanceFilterResults[widget.item.tag]!);
           } else {
             searchServices.nftInfoSelection(unselectAll: true, tagName: '', );
             managerServices.clearSelectedInManager();
@@ -407,7 +397,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
         } else if (widget.page == 'mint') {
           searchServices.tagSelection( unselectAll: false, tagName: widget.item.tag, typeSelection: 'mint');
           if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
-            managerServices.updateMintNft(searchServices.tagsFilterResults[widget.item.tag]!);
+            managerServices.updateMintNft(searchServices.tagsCollectionFilterResults[widget.item.tag]!);
           } else {
             searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', );
             managerServices.clearSelectedInManager();
@@ -428,51 +418,71 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
         animation: animationSize,
         builder: (context, child) {
           return GestureDetector(
-            onTap: onTapGesture,
 
+            onTap: onTapGesture,
             child: Container(
-              width: widget.wrapperRole == WrapperRole.hash ? 68 : animationSize.value,
-              padding: containerPadding,
+              width: widget.wrapperRole == WrapperRole.hashButton ? 68 : animationSize.value,
+
               margin: containerMargin,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10.0),
                 ),
                 border: Border.all(
-                    color: widget.wrapperRole == WrapperRole.hash ? Colors.black : animationBorderColor.value!,
+                    color: widget.wrapperRole == WrapperRole.hashButton ? Colors.black : animationBorderColor.value!,
                     width: 1
                 ),
-                gradient: widget.wrapperRole == WrapperRole.hash ? addTagButton : null,
+                gradient: widget.wrapperRole == WrapperRole.hashButton ? addTagButton : null,
                 color: animationColor.value,
               ),
               child: Row(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // if (icon == 'extra_icon')
-                    //   Flexible(
-                    //     child: Opacity(
-                    //       opacity: animationOpacity.value,
-                    //       child: GestureDetector(
-                    //         onTap: () {
-                    //           showDialog(context: context, builder: (context) {
-                    //             return TagMintDialog(tagName: widget.item.tag);
-                    //           });
-                    //         },
-                    //         child: Padding(
-                    //           padding: rightSpanPadding,
-                    //           child: Icon(
-                    //               Icons.tag_rounded,
-                    //               size: iconSize,
-                    //               color: nftMintColor
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
+                    if (widget.wrapperRole != WrapperRole.selectNew)
+                    Container(
+                      width: 7,
+                    ),
+                    if (widget.wrapperRole == WrapperRole.selectNew)
+                    Flexible(
+                      flex: 8,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        // ignore GestureDetector if item not selected:
+                        onTap: widget.selected ? () {
+                          showDialog(context: context, builder: (context) {
+                            return TagMintDialog(tagName: widget.item.tag);
+                          });
+                        } : null,
+                        child: Container(
+                          padding:const EdgeInsets.only(left: 3.0),
+                            height: containerMainHeight,
+                            width: 26,
+                            decoration: const BoxDecoration(
+                              // color: Colors.green,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12.0),
+                                bottomLeft: Radius.circular(12.0),
+                              ),
+                            ),
+                            child: Opacity(
+                              opacity: animationOpacity.value,
+                              child: Icon(
+                                  Icons.tag_rounded,
+                                  size: iconSize,
+                                  color: nftMintColor
+                              ),
+                            )
+                        ),
+                      ),
+                    ),
+
+
                     if (icon == 'nft' && numOfNFTs < 1)
                     Flexible(
                       flex: 10,
-                      child: Padding(
-                        padding: rightSpanPadding,
+                      child: Container(
+                        height: containerMainHeight,
                         child: Icon(
                             Icons.star,
                             size: iconSize,
@@ -484,14 +494,14 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                       Flexible(
                         flex: 10,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 5.0, left: 3.0),
+                          padding: const EdgeInsets.only(left: 4.0,right: 2),
                           child: Container(
                             decoration: BoxDecoration(
                                 color: nftColor,
                                 border: Border.all(
                                   color: nftColor,
                                 ),
-                                borderRadius: BorderRadius.all(Radius.circular(12))
+                                borderRadius: const BorderRadius.all(Radius.circular(12))
                             ),
                             width: 15,
                             height: 15,
@@ -503,37 +513,44 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                                 style: DodaoTheme.of(context).bodyText3.override(
                                   fontFamily: 'Inter',
                                   color: animationColor.value,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w700,
                                   fontSize: fontSize - 4,
                                 ),
                               ),
                             ),
-                          )
+                          ),
                         ),
                       ),
-
-
-                    // Gesture for TEXT field
                     if (
                           widget.wrapperRole != WrapperRole.getMore &&
-                          widget.wrapperRole != WrapperRole.hash
+                          widget.wrapperRole != WrapperRole.hashButton
                     )
-                    Text(
-                      widget.item.tag,
-                      style: DodaoTheme.of(context).bodyText3.override(
-                        fontFamily: 'Inter',
-                        color: animationTextColor.value,
-                        fontWeight: FontWeight.w400,
-                        fontSize: fontSize,
+                    Container(
+                      alignment: Alignment.center,
+                      height: containerMainHeight,
+                      child: Padding(
+                        padding: centerTextPadding,
+                        child: Text(
+                          widget.item.tag,
+                          style: DodaoTheme.of(context).bodyText3.override(
+                            fontFamily: 'Inter',
+                            color: animationTextColor.value,
+                            fontWeight: FontWeight.w400,
+                            fontSize: fontSize,
+                          ),
+                        ),
                       ),
                     ),
                     if (widget.wrapperRole == WrapperRole.getMore)
-                      GetMore(
-                        leftSpanPadding: leftSpanPadding,
-                        iconSize: iconSize,
-                        textColor: textColor, fontSize: fontSize,
+                      SizedBox(
+                        height: containerMainHeight,
+                        child: GetMore(
+                          leftSpanPadding: centerTextPadding,
+                          iconSize: iconSize,
+                          textColor: textColor, fontSize: fontSize,
+                        ),
                       ),
-                    if (widget.wrapperRole == WrapperRole.hash)
+                    if (widget.wrapperRole == WrapperRole.hashButton)
                       OpenAddTags(
                         iconSize: iconSize,
                         textColor: textColor,
@@ -546,16 +563,16 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                     Flexible(
                       child: Opacity(
                         opacity: animationOpacity.value,
-                        child: Padding(
-                          padding: leftSpanPadding,
-                          child: Icon(
-                              Icons.clear_rounded,
-                              size: iconSize,
-                              color: textColorSelected
-                          ),
+                        child: Icon(
+                            Icons.clear_rounded,
+                            size: iconSize,
+                            color: textColorSelected
                         ),
                       ),
                     ),
+                    Container(
+                      width: 7,
+                    )
                   ],
                 ),
             ),

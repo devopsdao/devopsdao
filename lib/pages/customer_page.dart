@@ -301,7 +301,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                       page: 'customer',
                                       selected: e.value.selected,
                                       tabIndex: tabIndex,
-                                      wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                                      wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                                     );
                                   }).toList()),
                             ),

@@ -404,7 +404,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                                 page: 'auditor',
                                 selected: e.value.selected,
                                 tabIndex: tabIndex,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                                wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),

@@ -54,11 +54,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
         tagsLocalList = {};
       }
 
-      for (var prop1 in searchServices.tagsFilterResults.values) {
-        searchServices.tagsFilterResults[prop1.tag]!.selected = false;
+      for (var prop1 in searchServices.tagsCollectionFilterResults.values) {
+        searchServices.tagsCollectionFilterResults[prop1.tag]!.selected = false;
         for (var prop2 in tagsLocalList.values) {
           if (prop1.tag == prop2.tag) {
-            searchServices.tagsFilterResults[prop1.tag]!.selected = true;
+            searchServices.tagsCollectionFilterResults[prop1.tag]!.selected = true;
           }
         }
       }
@@ -81,13 +81,13 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
 
 
-    // searchServices.tagsFilterResults.forEach((key, value) {
-    //   searchServices.tagsFilterResults[key]!.selected = false;
+    // searchServices.tagsCollectionFilterResults.forEach((key, value) {
+    //   searchServices.tagsCollectionFilterResults[key]!.selected = false;
     // });
-    // searchServices.tagsFilterResults.forEach((key, value) {
+    // searchServices.tagsCollectionFilterResults.forEach((key, value) {
     //   tagsLocalList.forEach((key2, value2) {
     //     if (key == key2) {
-    //       searchServices.tagsFilterResults[key]!.selected = true;
+    //       searchServices.tagsCollectionFilterResults[key]!.selected = true;
     //     } else {
     //       false
     //     }
@@ -187,7 +187,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         return TextFormField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            model.tagsSearchFilter(searchKeyword, simpleTagsMap);
+                            model.tagsSearchFilter(searchKeyword);
                           },
                           autofocus: false,
                           obscureText: false,
@@ -201,9 +201,9 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             suffixIcon: model.newTag ? IconButton(
                               onPressed: () {
                                 // NEW TAG
-                                simpleTagsMap[_searchKeywordController.text] =
-                                    SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
-                                model.tagsAddAndUpdate(simpleTagsMap);
+                                // searchServices.nftInitialCollectionMap[_searchKeywordController.text] =
+                                //     SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
+                                model.tagsAddAndUpdate(_searchKeywordController.text);
                               },
                               icon: const Icon(Icons.add_box),
                               padding: const EdgeInsets.only(right: 12.0),
@@ -255,8 +255,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         return Wrap(
                             alignment: WrapAlignment.start,
                             direction: Axis.horizontal,
-                            children: searchProvider.tagsFilterResults.entries.map((e) {
-
+                            children: searchProvider.combinedFilterResults.entries.map((e) {
                               if(!tagsCompare.containsKey(e.value.tag)){
                                 if (e.value.selected) {
                                   tagsCompare[e.value.tag] = TagsCompare(state: 'remain',);
@@ -289,7 +288,8 @@ class _MainTagsPageState extends State<MainTagsPage> {
                               return WrappedChip(
                                 key: ValueKey(e),
                                 theme: 'white',
-                                item: e.value,
+                                item: e.value.bunch.first,
+                                // bunch: e.value.bunch,
                                 page: 'selection',
                                 startScale: false,
                                 animationCicle: tagsCompare[e.value.tag]!.state,
