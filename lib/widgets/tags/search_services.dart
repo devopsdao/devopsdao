@@ -311,14 +311,14 @@ class SearchServices extends ChangeNotifier {
       for (var e in nftInitialCollectionMap.entries) {
         tempNfts['initial ${e.key}'] = NftTagsBunch(
             tag: e.key,
-          bunch: [(
+          bunch: { 0 : (
             SimpleTags(
                 tag: e.key,
                 collection: false,
                 nft: false,
                 selected: false
             )
-          )],
+          )},
           selected: false);
       }
     }

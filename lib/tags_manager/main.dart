@@ -49,7 +49,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
     var searchServices = context.read<SearchServices>();
     var managerServices = context.read<ManagerServices>();
 
-    start();
+    // start();
 
     return Scaffold(
       key: scaffoldKey,

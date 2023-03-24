@@ -70,7 +70,7 @@ class SimpleTags {
 class NftTagsBunch {
   late String tag;
   late bool selected;
-  final List<SimpleTags> bunch;
+  final Map<int, SimpleTags> bunch;
   NftTagsBunch({required this.tag, this.selected = false, required this.bunch});
 }
 

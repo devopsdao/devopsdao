@@ -1232,6 +1232,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   late Map<String, NftTagsBunch> resultNftsMap = {};
+  late Map<String, NftTagsBunch> resultNftsMap2 = {};
   Future<void> collectMyNfts() async {
     if (publicAddress != null) {
       late Map<String, dynamic> resultCollectionMap;
@@ -1250,9 +1251,9 @@ class TasksServices extends ChangeNotifier {
 
       for (var e in resultCollectionMap.entries) {
         if (e.value != 0) {
-          late List<SimpleTags> bunch = [];
+          late Map<int, SimpleTags> bunch = {};
           for (int i = 0; i < e.value; i++) {
-            bunch.add(SimpleTags(tag: e.key, collection: true, nft: true));
+            bunch[i] = SimpleTags(tag: e.key, collection: true, nft: true);
           }
           resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
         }
@@ -1263,6 +1264,8 @@ class TasksServices extends ChangeNotifier {
       final List<BigInt> tokenIdsBI = await getTokenIds(publicAddress!);
       print('tokenNames: $tokenNames');
       print('tokenIdsBI: $tokenIdsBI');
+      // final List<String> tokenNames = ['one', 'two'];
+      // final List<BigInt> tokenIdsBI = [BigInt.from(123), BigInt.from(222)];
       final List<int> tokenIds = tokenIdsBI.map((bigInt) => bigInt.toInt()).toList();
       final Map<int, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
 
@@ -1277,9 +1280,9 @@ class TasksServices extends ChangeNotifier {
 
       for (var e in result.entries) {
         if (e.value.isNotEmpty) {
-          late List<SimpleTags> bunch = [];
+          late Map<int, SimpleTags> bunch = {};
           for (int i = 0; i < e.value.length; i++) {
-            bunch.add(SimpleTags(tag: e.key, collection: true, nft: true));
+            bunch[i] = SimpleTags(tag: e.key, collection: true, nft: true);
           }
           resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
         }
@@ -2767,12 +2770,14 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future getTokenNames(EthereumAddress address) async {
-    List<String> accountTokenNames = await tokenDataFacet.getTokenNames(address);
+    List accountTokenNames = await tokenDataFacet.getTokenNames(address);
+    print('getTokenNames');
+    print(await tokenDataFacet.getTokenNames(address));
     return accountTokenNames;
   }
 
   Future getTokenIds(EthereumAddress address) async {
-    List<BigInt> accountTokenIds = await tokenDataFacet.getTokenIds(address);
+    List accountTokenIds = await tokenDataFacet.getTokenIds(address);
     return accountTokenIds;
   }
 
@@ -2832,6 +2837,10 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> mintNonFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
+    print('mintNonFungibleByName');
+    transactionStatuses['mintNonFungible'] = {
+      'mintNonFungible': {'status': 'pending', 'txn': 'initial'}
+    };
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2845,6 +2854,8 @@ class TasksServices extends ChangeNotifier {
       from: senderAddress,
     );
     String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
+    transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
+    transactionStatuses['mintNonFungible']!['mintNonFungible']!['txn'] = txn;
     return txn;
   }
 

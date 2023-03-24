@@ -76,8 +76,8 @@ class _TreasuryWidget extends State<TreasuryWidget> {
           late double secondPartHeight = 0.0;
           late bool splitScreen = false;
           final int nftCount = model.treasuryNftsInfoSelected.bunch.length;
-          final String collectionName = model.treasuryNftsInfoSelected.bunch.first.tag;
-          if (model.treasuryNftsInfoSelected.bunch.first.tag != 'empty') {
+          final String collectionName = model.treasuryNftsInfoSelected.bunch.entries.first.value.tag;
+          if (model.treasuryNftsInfoSelected.bunch.entries.first.value.tag != 'empty') {
             splitScreen = true;
           }
           secondPartHeight = 300;
@@ -187,7 +187,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                         itemBuilder: (BuildContext context, int index) {
                           return PageViewTreasuryItem(
                             index: index,
-                            item: model.treasuryNftsInfoSelected.bunch[index],
+                            item: model.treasuryNftsInfoSelected.bunch[index]!,
                             frameHeight: secondPartHeight,
                           );
                         },
@@ -348,7 +348,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                   return WrappedChip(
                                       key: ValueKey(e),
                                       theme: 'black',
-                                      item: e.value.bunch.first,
+                                      item: e.value.bunch.entries.first.value,
                                       page: 'treasury',
                                       startScale: false,
                                       selected: e.value.selected,

@@ -323,7 +323,7 @@ class _MintItemState extends State<MintItem> {
                                     nanoId: 'createNFT',
                                     taskName: 'createNFT',
                                   ));
-                              tasksServices.createNft('example.com', collectionName , false);
+                              tasksServices.createNft('example.com', collectionName , true);
 
                             },
                             child: Text(
@@ -371,7 +371,7 @@ class _MintItemState extends State<MintItem> {
                                       taskName: 'mintFungible',
                                     ));
 
-                                tasksServices.mintFungibleByName(collectionName, address, quantities);
+                                tasksServices.mintNonFungibleByName(collectionName, address, quantities);
 
                               }
                             },

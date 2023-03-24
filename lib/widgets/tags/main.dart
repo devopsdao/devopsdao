@@ -288,7 +288,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                               return WrappedChip(
                                 key: ValueKey(e),
                                 theme: 'white',
-                                item: e.value.bunch.first,
+                                item: e.value.bunch.entries.first.value,
                                 // bunch: e.value.bunch,
                                 page: 'selection',
                                 startScale: false,
