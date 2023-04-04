@@ -2,8 +2,13 @@
   {
     "inputs": [
       {
-        "internalType": "contract WitnetRequestBoard",
+        "internalType": "address",
         "name": "_witnetRequestBoard",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_witnetRequestFactory",
         "type": "address"
       }
     ],
@@ -11,12 +16,26 @@
     "type": "constructor"
   },
   {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "contract WitnetRequestFactory",
-        "name": "factory",
+        "indexed": false,
+        "internalType": "address",
+        "name": "contractAdr",
         "type": "address"
       },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "message",
+        "type": "string"
+      }
+    ],
+    "name": "Logs",
+    "type": "event"
+  },
+  {
+    "inputs": [
       {
         "internalType": "bytes32",
         "name": "httpGetValuesArray",
@@ -45,6 +64,19 @@
     "outputs": [
       {
         "internalType": "contract WitnetRequestBoard",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "witnetRequestFactory",
+    "outputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
