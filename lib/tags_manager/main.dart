@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
 
-import 'manager_services.dart';
+import 'collection_services.dart';
 import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
@@ -47,7 +47,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
     var tasksServices = context.read<TasksServices>();
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
-    var managerServices = context.read<ManagerServices>();
+    var collectionServices = context.read<CollectionServices>();
 
     // start();
 
@@ -80,12 +80,12 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              // searchServices.resetNFTFilter(searchServices.nftBalanceFilterResults);
-              searchServices.nftInfoSelection(
+              // searchServices.resetNFTFilter(searchServices.treasuryPageFilterResults);
+              searchServices.tagSelection(
                 unselectAll: true,
-                tagName: '',
+                tagName: '', typeSelection: 'treasury', tagKey: ''
               );
-              managerServices.clearSelectedInManager();
+              collectionServices.clearSelectedInManager();
               Navigator.of(context).pop(null);
             },
           ),
@@ -119,9 +119,9 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
                   // isScrollable: true,
                   controller: _controller,
                   onTap: (index) {
-                    // searchServices.resetNFTFilter(searchServices.nftBalanceFilterResults);
-                    searchServices.nftInfoSelection(unselectAll: true, tagName: '');
-                    managerServices.clearSelectedInManager();
+                    // searchServices.resetNFTFilter(searchServices.treasuryPageFilterResults);
+                    searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                    collectionServices.clearSelectedInManager();
                   },
                   tabs: const [
                     Tab(

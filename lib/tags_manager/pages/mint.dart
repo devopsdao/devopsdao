@@ -14,8 +14,8 @@ import '../../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 
-import '../manager_services.dart';
-import '../mint_item.dart';
+import '../collection_services.dart';
+import '../create_collection.dart';
 import '../nft_templorary.dart';
 
 enum Status {
@@ -34,7 +34,7 @@ class MintWidget extends StatefulWidget {
 class _MintWidget extends State<MintWidget> {
   final _searchKeywordController = TextEditingController();
   late Map<String, TagsCompare> tagsCompare = {};
-  final Duration splitDuration = const Duration(milliseconds: 600);
+  final Duration splitDuration = const Duration(milliseconds: 300);
   final Curve splitCurve = Curves.easeInOutQuart;
   final double buttonWidth = 140;
 
@@ -47,8 +47,14 @@ class _MintWidget extends State<MintWidget> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
-      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
-      searchServices.refreshLists('collections');
+      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
+
+
+      Future.delayed(
+        const Duration(milliseconds: 700), () {
+          searchServices.refreshLists('mint');
+        }
+      );
 
       // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
       // final List collectionsList = await tasksServices.getCreatedTokenNames();
@@ -64,7 +70,7 @@ class _MintWidget extends State<MintWidget> {
   @override
   Widget build(BuildContext context) {
     var searchServices = context.read<SearchServices>();
-    var managerServices = context.read<ManagerServices>();
+    var collectionServices = context.read<CollectionServices>();
     var tasksServices = context.read<TasksServices>();
 
     return LayoutBuilder(
@@ -74,7 +80,7 @@ class _MintWidget extends State<MintWidget> {
           // late double firstPartHeight = 0.0;
           // late double secondPartHeight = 0.0;
           // late bool splitScreen = false;
-          // if (managerServices.treasuryNftSelected.tag != 'empty') {
+          // if (collectionServices.treasuryNftSelected.name != 'empty') {
           //   splitScreen = true;
           //   firstPartHeight = maxHeight / 2;
           //   secondPartHeight = firstPartHeight;
@@ -89,9 +95,9 @@ class _MintWidget extends State<MintWidget> {
                     child: Consumer<SearchServices>(
                         builder: (context, model, child) {
                           return TextFormField(
-                            controller: _searchKeywordController,
+                            controller: searchServices.searchKeywordController,
                             onChanged: (searchKeyword) {
-                              model.tagsSearchFilter(searchKeyword);
+                              model.tagsSearchFilter( page: 'mint', enteredKeyword: searchKeyword,);
                             },
                             autofocus: false,
                             obscureText: false,
@@ -105,11 +111,9 @@ class _MintWidget extends State<MintWidget> {
                               suffixIcon: model.newTag ? IconButton(
                                 onPressed: () {
                                   // NEW TAG
-                                  // searchServices.nftInitialCollectionMap[_searchKeywordController.text] =
-                                  //     SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
-                                  // searchServices.tagSelection( unselectAll: true, tagName: '', typeSelection: 'mint');
-                                  model.tagsAddAndUpdate(_searchKeywordController.text);
-                                  managerServices.updateMintNft(searchServices.tagsCollectionFilterResults[_searchKeywordController.text]!);
+                                  searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                                  model.addNewTag(searchServices.searchKeywordController.text);
+                                  collectionServices.updateMintNft(searchServices.mintPageFilterResults[searchServices.searchKeywordController.text]!.bunch.values.first);
                                 },
                                 icon: const Icon(Icons.add_box,color: Colors.deepOrangeAccent,),
                                 padding: const EdgeInsets.only(right: 12.0),
@@ -171,34 +175,34 @@ class _MintWidget extends State<MintWidget> {
                                 return Wrap(
                                     alignment: WrapAlignment.start,
                                     direction: Axis.horizontal,
-                                    children: model.tagsCollectionFilterResults.entries.map((e) {
+                                    children: model.mintPageFilterResults.entries.map((e) {
 
-                                      if(!tagsCompare.containsKey(e.value.tag)){
+                                      if(!tagsCompare.containsKey(e.value.name)){
                                         if (e.value.selected) {
-                                          tagsCompare[e.value.tag] = TagsCompare(state: 'remain',);
+                                          tagsCompare[e.value.name] = TagsCompare(state: 'remain',);
                                         } else {
-                                          tagsCompare[e.value.tag] = TagsCompare(state: 'none',);
+                                          tagsCompare[e.value.name] = TagsCompare(state: 'none',);
                                         }
-                                      } else if (tagsCompare.containsKey(e.value.tag)) {
+                                      } else if (tagsCompare.containsKey(e.value.name)) {
                                         if (e.value.selected) {
-                                          if (tagsCompare[e.value.tag]!.state == 'start') {
-                                            tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'remain',));
+                                          if (tagsCompare[e.value.name]!.state == 'start') {
+                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'remain',));
                                           }
-                                          if (tagsCompare[e.value.tag]!.state == 'none') {
-                                            tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
+                                          if (tagsCompare[e.value.name]!.state == 'none') {
+                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
                                           }
-                                          if (tagsCompare[e.value.tag]!.state == 'end') {
-                                            tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
+                                          if (tagsCompare[e.value.name]!.state == 'end') {
+                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
                                           }
                                         } else {
-                                          if (tagsCompare[e.value.tag]!.state == 'end') {
-                                            tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'none',));
+                                          if (tagsCompare[e.value.name]!.state == 'end') {
+                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'none',));
                                           }
-                                          if (tagsCompare[e.value.tag]!.state == 'start') {
-                                            tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
+                                          if (tagsCompare[e.value.name]!.state == 'start') {
+                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
                                           }
-                                          if (tagsCompare[e.value.tag]!.state == 'remain') {
-                                            tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
+                                          if (tagsCompare[e.value.name]!.state == 'remain') {
+                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
                                           }
                                         }
 
@@ -223,10 +227,10 @@ class _MintWidget extends State<MintWidget> {
                                       return WrappedChip(
                                         key: ValueKey(e),
                                         theme: 'black',
-                                        item: e.value,
+                                        item: e,
                                         page: 'mint',
                                         startScale: false,
-                                        animationCicle: tagsCompare[e.value.tag]!.state,
+                                        animationCicle: tagsCompare[e.value.name]!.state,
                                         selected: e.value.selected,
                                         wrapperRole: WrapperRole.mint,
                                       );
@@ -235,22 +239,22 @@ class _MintWidget extends State<MintWidget> {
                               }
                           ),
                         ),
-                        Consumer<ManagerServices>(
+                        Consumer<CollectionServices>(
                             builder: (context, model, child) {
                             late double secondPartHeight = 0.0;
                             late bool splitScreen = false;
 
-                            if (model.mintNftTagSelected.tag != 'empty') {
+                            if (model.mintNftTagSelected.name != 'empty') {
                               splitScreen = true;
                             }
-                            secondPartHeight = 350;
+                            secondPartHeight = 300;
 
                             return AnimatedContainer(
                                 duration: splitDuration,
                                 height: splitScreen ? secondPartHeight : 0.0,
                                 color: Colors.grey[900],
                                 curve: splitCurve,
-                                child: MintItem(item: model.mintNftTagSelected, page: 'mint')
+                                child: CreateCollection(item: model.mintNftTagSelected, page: 'mint')
                             );
                           }
                         )

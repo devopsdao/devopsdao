@@ -4,6 +4,7 @@ import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../widgets/my_tools.dart';
 import '../widgets/payment.dart';
@@ -331,10 +332,19 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                     return WrappedChip(
                                                       key: ValueKey(e.value),
                                                       theme: 'white',
-                                                      item: e.value,
+                                                      item:
+
+                                                      MapEntry(
+                                                        e.key,
+                                                        NftTagsBunch(
+                                                          selected: false,
+                                                          name: e.value.name,
+                                                          bunch: e.value.bunch,
+                                                        )
+                                                      ),
                                                       page: 'create',
                                                       selected: e.value.selected,
-                                                      wrapperRole: WrapperRole.selectNew,
+                                                      wrapperRole: WrapperRole.removeNew,
                                                     );
                                                   }).toList()),
                                             );
@@ -572,7 +582,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
             final nanoId = customAlphabet(
                 '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
                 12);
-            final List<String> tags = searchServices.createTagsList.entries.map((tags) => tags.value.tag).toList();
+            final List<String> tags = searchServices.createTagsList.entries.map((tags) => tags.value.name).toList();
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,

@@ -6,6 +6,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../navigation/appbar.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
@@ -121,6 +122,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
 
     return Scaffold(
         key: scaffoldKey,
+        drawer: const NavDrawer(),
         appBar: OurAppBar(
           title: 'Customer',
           tabIndex: tabIndex,
@@ -276,7 +278,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                         //   ],
                         // ),
                         Consumer<SearchServices>(builder: (context, model, child) {
-                          // localTagsList = model.customerTagsList.entries.map((e) => e.value.tag).toList();
+                          // localTagsList = model.customerTagsList.entries.map((e) => e.value.name).toList();
                           // if (model.ready) {
                           //   tasksServices.runFilter(
                           //     tasksServices.tasksNew,
@@ -297,11 +299,18 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                     return WrappedChip(
                                       key: ValueKey(e.value),
                                       theme: 'black',
-                                      item: e.value,
+                                      item: MapEntry(
+                                          e.key,
+                                          NftTagsBunch(
+                                              selected: false,
+                                              name: e.value.name,
+                                              bunch: e.value.bunch
+                                          )
+                                      ),
                                       page: 'customer',
                                       selected: e.value.selected,
                                       tabIndex: tabIndex,
-                                      wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                                      wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                                     );
                                   }).toList()),
                             ),

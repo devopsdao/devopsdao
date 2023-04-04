@@ -95,56 +95,6 @@ class InterfaceServices extends ChangeNotifier {
 
   late TextSpan statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
 
-  // ***********  tags  ************ ////
-  // late List<SimpleTags> tempTagsList = [
-  //   SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Solidity", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Diamond", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Web3", icon: "", nft: true),
-  // ];
-  // late List<SimpleTags> tempTagsListForTask = [
-  //   SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Solidity", icon: ""),
-  //   SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Diamond", icon: ""),
-  //   SimpleTags(collection: true, tag: "Web3", icon: ""),
-  // ];
-  // late List<SimpleTags> auditorTagsList = [];
-  // late List<SimpleTags> tasksTagsList = [];
-  // late List<SimpleTags> customerTagsList = [];
-  // late List<SimpleTags> performerTagsList = [];
-  // late List<SimpleTags> createTagsList = [];
-  // Future updateTagList(list, {required String page}) async {
-  //   if (page == 'auditor') {
-  //     auditorTagsList = list;
-  //   } else if (page == 'tasks') {
-  //     tasksTagsList = list;
-  //   } else if (page == 'customer') {
-  //     customerTagsList = list;
-  //   } else if (page == 'performer') {
-  //     performerTagsList = list;
-  //   } else if (page == 'create') {
-  //     createTagsList = list;
-  //   }
-  //   notifyListeners();
-  // }
-  //
-  // Future removeTag(tagName, {required String page}) async {
-  //   if (page == 'auditor') {
-  //     auditorTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'tasks') {
-  //     tasksTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'customer') {
-  //     customerTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'performer') {
-  //     performerTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'create') {
-  //     createTagsList.removeWhere((item) => item.tag == tagName);
-  //   }
-  //   notifyListeners();
-  // }
-
   // **** manager treasury pageCount (to avoid screen freezing on animation)
   late int treasuryPageCount = 1;
   Future treasuryPageCountUpdate(number) async {
@@ -168,7 +118,7 @@ class InterfaceServices extends ChangeNotifier {
 //
 //   void addTag(SimpleTags val) {
 //     value.add(val);
-//     print(value.first.tag);
+//     print(value.first.name);
 //     notifyListeners();
 //   }
 // }

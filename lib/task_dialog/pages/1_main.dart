@@ -622,7 +622,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         ),
                         LayoutBuilder(builder: (context, constraints) {
                           final double width = constraints.maxWidth - 66;
-                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, tag: name)).toList();
+                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
 
                           if (tags.isNotEmpty) {
                             return SizedBox(
@@ -634,7 +634,19 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     return WrappedChip(
                                       key: ValueKey(e),
                                       theme: 'white',
-                                      item: e,
+                                      item: MapEntry(
+                                          e.name,
+                                          NftTagsBunch(
+                                            selected: false,
+                                            name: e.name,
+                                            bunch: {
+                                              BigInt.from(0) : SimpleTags(
+                                                  name: e.name,
+                                                  collection: true
+                                              )
+                                            },
+                                          )
+                                      ),
                                       page: 'create',
                                       selected: e.selected,
                                       wrapperRole: WrapperRole.selectNew,

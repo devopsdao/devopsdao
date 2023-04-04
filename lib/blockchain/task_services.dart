@@ -338,7 +338,7 @@ class TasksServices extends ChangeNotifier {
 
     await connectRPC(chainId);
     await startup();
-    await nftInitialCollection();
+    // await nftInitialCollection();
     await collectMyNfts();
     // await getABI();
     // await getDeployedContract();
@@ -1231,46 +1231,48 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  late Map<String, NftTagsBunch> resultInitialCollectionMap = {};
   late Map<String, NftTagsBunch> resultNftsMap = {};
-  late Map<String, NftTagsBunch> resultNftsMap2 = {};
   Future<void> collectMyNfts() async {
     if (publicAddress != null) {
-      late Map<String, dynamic> resultCollectionMap;
-      final List<EthereumAddress> shared = List.filled(resultInitialCollectionMap.entries.length, publicAddress!);
-      final List<String> collectionList = resultInitialCollectionMap.entries.map((e) => e.key).toList();
-      final List roleNftsBalance = await balanceOfBatchName(shared, collectionList);
+      // late Map<String, dynamic> resultCollectionMap;
+      // final List<EthereumAddress> shared = List.filled(resultInitialCollectionMap.entries.length, publicAddress!);
+      // final List<String> collectionList = resultInitialCollectionMap.entries.map((e) => e.key).toList();
+      // final List roleNftsBalance = await balanceOfBatchName(shared, collectionList);
+      //
+      // int keyId = 0;
+      // resultCollectionMap = resultInitialCollectionMap.map((key, value) {
+      //   // print(keyId);
+      //   int newBalance = roleNftsBalance[keyId].toInt();
+      //   late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
+      //   keyId++;
+      //   return mapEnt;
+      // });
+      //
+      // for (var e in resultCollectionMap.entries) {
+      //   if (e.value != 0) {
+      //     late Map<BigInt, SimpleTags> bunch = {};
+      //     for (int i = 0; i < e.value; i++) {
+      //       bunch[BigInt.from(i)] = SimpleTags(tag: e.key, collection: true, nft: true, id: BigInt.from(i));
+      //     }
+      //     resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
+      //   }
+      // }
 
-      int keyId = 0;
-      resultCollectionMap = resultInitialCollectionMap.map((key, value) {
-        // print(keyId);
-        int newBalance = roleNftsBalance[keyId].toInt();
-        late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
-        keyId++;
-        return mapEnt;
-      });
-
-      for (var e in resultCollectionMap.entries) {
-        if (e.value != 0) {
-          late Map<int, SimpleTags> bunch = {};
-          for (int i = 0; i < e.value; i++) {
-            bunch[i] = SimpleTags(tag: e.key, collection: true, nft: true);
-          }
-          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
-        }
+      final List<String> names = await getCreatedTokenNames();
+      for (var e in names) {
+        resultInitialCollectionMap[e] =
+            NftTagsBunch(bunch: {BigInt.from(0) : SimpleTags(name: e, collection: true)}, selected: false, name: e);
       }
 
-
       final List<String> tokenNames = await getTokenNames(publicAddress!);
-      final List<BigInt> tokenIdsBI = await getTokenIds(publicAddress!);
-      print('tokenNames: $tokenNames');
-      print('tokenIdsBI: $tokenIdsBI');
-      // final List<String> tokenNames = ['one', 'two'];
-      // final List<BigInt> tokenIdsBI = [BigInt.from(123), BigInt.from(222)];
-      final List<int> tokenIds = tokenIdsBI.map((bigInt) => bigInt.toInt()).toList();
-      final Map<int, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
+      final List<BigInt> tokenIds = await getTokenIds(publicAddress!);
+      // print(tokenIds);
+      // final List<int> tokenIds = tokenIdsBI.map((bigInt) => bigInt.toInt()).toList();
+      final Map<BigInt, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
 
-      final Map<String, List<int>> result = combinedTokenMap.entries.fold(
-        {}, (Map<String, List<int>> acc, entry) {
+      final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
+        {}, (Map<String, List<BigInt>> acc, entry) {
           final key = entry.value;
           final value = entry.key;
           acc.putIfAbsent(key, () => []).add(value);
@@ -1280,11 +1282,11 @@ class TasksServices extends ChangeNotifier {
 
       for (var e in result.entries) {
         if (e.value.isNotEmpty) {
-          late Map<int, SimpleTags> bunch = {};
+          late Map<BigInt, SimpleTags> bunch = {};
           for (int i = 0; i < e.value.length; i++) {
-            bunch[i] = SimpleTags(tag: e.key, collection: true, nft: true);
+            bunch[e.value[i]] = SimpleTags(name: e.key, collection: true, nft: true, id: e.value[i]);
           }
-          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
+          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, name: e.key);
         }
       }
     }
@@ -1375,8 +1377,8 @@ class TasksServices extends ChangeNotifier {
   // late String lastEnteredKeyword = '';
 
   Future<void> runFilter(
-      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, SimpleTags> tagsMap}) async {
-    final List<String> tagsList = tagsMap.entries.map((e) => e.value.tag).toList();
+      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, NftTagsBunch> tagsMap}) async {
+    final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
     // enteredKeyword ??= lastEnteredKeyword;
     // taskList ??= lastTaskList;
     // tagsList ??= [];
@@ -1387,7 +1389,7 @@ class TasksServices extends ChangeNotifier {
     } else {
       // for (EthereumAddress taskAddress in taskList.keys) {
       //   if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-      //     if (taskList.isNotEmpty && taskList[taskAddress]!.tags.isNotEmpty) {
+      //     if (taskList.isNotEmpty && taskList[taskAddress]!.names.isNotEmpty) {
       //     } else {
       //       filterResults[taskAddress] = taskList[taskAddress]!;
       //     }
@@ -1437,13 +1439,13 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, SimpleTags> tagsMap}) async {
-    final List<String> tagsList = tagsMap.entries.map((e) => e.value.tag).toList();
+  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftTagsBunch> tagsMap}) async {
+    final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
 
     filterResults.clear();
     //
     // taskList = Map.fromEntries(
-    //     taskList.entries.where((entry) => tagsList.contains(entry.value.tag))
+    //     taskList.entries.where((entry) => tagsList.contains(entry.value.name))
     // );
     if (tagsList.isNotEmpty && (tagsList.length != 1)) {
       filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
@@ -2746,14 +2748,6 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
-  late Map<String, SimpleTags> resultInitialCollectionMap = {};
-  Future nftInitialCollection() async {
-    final List<String> names = await getCreatedTokenNames();
-    for (var e in names) {
-      resultInitialCollectionMap[e] = SimpleTags(tag: e, collection: true);
-    }
-  }
-
   Future<List<String>> getCreatedTokenNames() async {
     List<String> createdTokenNames = await tokenDataFacet.getCreatedTokenNames();
     return createdTokenNames;
@@ -2856,6 +2850,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['txn'] = txn;
+    notifyListeners();
     return txn;
   }
 

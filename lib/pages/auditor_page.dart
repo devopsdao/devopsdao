@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
@@ -127,9 +128,10 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
     return Scaffold(
       key: scaffoldKey,
+      drawer: const NavDrawer(),
       appBar: AppBarWithSearchSwitch(
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         appBarBuilder: (context) {
           return AppBar(
             backgroundColor: Colors.black,
@@ -400,11 +402,18 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                               return WrappedChip(
                                 key: ValueKey(e.value),
                                 theme: 'black',
-                                item: e.value,
+                                item: MapEntry(
+                                    e.key,
+                                    NftTagsBunch(
+                                        selected: false,
+                                        name: e.value.name,
+                                        bunch: e.value.bunch
+                                    )
+                                ),
                                 page: 'auditor',
                                 selected: e.value.selected,
                                 tabIndex: tabIndex,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                                wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),

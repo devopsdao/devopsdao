@@ -1,7 +1,9 @@
 import 'package:provider/provider.dart';
 
 import '../account_dialog/account_transition_effect.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
@@ -75,9 +77,10 @@ class _AccountsPageState extends State<AccountsPage> {
     // }
     return Scaffold(
       key: scaffoldKey,
+      drawer: const NavDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         title: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -141,7 +144,7 @@ class _AccountsPageState extends State<AccountsPage> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.tag).toList();
+                            // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.name).toList();
                             tasksServices.runFilter(
                                 taskList: tasksServices.tasksNew,
                                 enteredKeyword: searchKeyword,
@@ -198,7 +201,14 @@ class _AccountsPageState extends State<AccountsPage> {
                           return WrappedChip(
                             key: ValueKey(e.value),
                             theme: 'black',
-                            item: e.value,
+                            item: MapEntry(
+                                e.key,
+                                NftTagsBunch(
+                                    selected: false,
+                                    name: e.value.name,
+                                    bunch: e.value.bunch
+                                )
+                            ),
                             page: 'accounts',
                             selected: e.value.selected,
                             wrapperRole: WrapperRole.onPages,);

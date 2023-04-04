@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../create_job/create_job_call_button.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/tags/search_services.dart';
@@ -101,6 +102,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
     return Scaffold(
       key: scaffoldKey,
+      drawer: const NavDrawer(),
       appBar: AppBarWithSearchSwitch(
         backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
@@ -247,7 +249,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                   //   ],
                   // ),
                   Consumer<SearchServices>(builder: (context, model, child) {
-                    localTagsList = model.tasksTagsList.entries.map((e) => e.value.tag).toList();
+                    localTagsList = model.tasksTagsList.entries.map((e) => e.value.name).toList();
                     // tasksServices.runFilter(
                     //     tasksServices.tasksNew,
                     //     enteredKeyword: _searchKeywordController.text,
@@ -263,11 +265,24 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                               return WrappedChip(
                                 key: ValueKey(e.value),
                                 theme: 'black',
-                                item: e.value,
+                                item: MapEntry(
+                                    e.key,
+                                    NftTagsBunch(
+                                      selected: false,
+                                      name: e.value.name,
+                                      bunch: e.value.bunch
+                                      // {
+                                      //   BigInt.from(0) : SimpleTags(
+                                      //     name: e.value.name,
+                                      //     collection: true,
+                                      //   )
+                                      // },
+                                    )
+                                ),
                                 page: 'tasks',
                                 selected: e.value.selected,
                                 tabIndex: 0,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                                wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),

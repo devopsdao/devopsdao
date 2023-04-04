@@ -18,7 +18,8 @@ import '../../widgets/tags/wrapped_chip.dart';
 
 import 'package:webthree/credentials.dart';
 
-import '../manager_services.dart';
+import '../collection_services.dart';
+import '../nft_item.dart';
 import '../nft_templorary.dart';
 
 class TreasuryWidget extends StatefulWidget {
@@ -43,12 +44,15 @@ class _TreasuryWidget extends State<TreasuryWidget> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
-      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true);
+      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
       // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
       // tasksServices.collectMyNfts();
       tasksServices.collectMyNfts();
-      searchServices.refreshLists('nft_balance');
-      searchServices.combineTagsWithNfts();
+      Future.delayed(
+        const Duration(milliseconds: 300), () {
+          searchServices.refreshLists('treasury');
+        }
+      );
     });
   }
 
@@ -62,7 +66,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    // var managerServices = context.read<ManagerServices>();
+    // var collectionServices = context.read<CollectionServices>();
     var searchServices = context.read<SearchServices>();
     var interfaceServices = context.read<InterfaceServices>();
 
@@ -71,13 +75,13 @@ class _TreasuryWidget extends State<TreasuryWidget> {
     //
     // }
 
-    final Widget nftInfoField = Consumer<ManagerServices>(
+    final Widget nftInfoField = Consumer<CollectionServices>(
         builder: (context, model, child) {
           late double secondPartHeight = 0.0;
           late bool splitScreen = false;
           final int nftCount = model.treasuryNftsInfoSelected.bunch.length;
-          final String collectionName = model.treasuryNftsInfoSelected.bunch.entries.first.value.tag;
-          if (model.treasuryNftsInfoSelected.bunch.entries.first.value.tag != 'empty') {
+          final String collectionName = model.treasuryNftsInfoSelected.bunch.entries.first.value.name;
+          if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
             splitScreen = true;
           }
           secondPartHeight = 300;
@@ -181,14 +185,13 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                         onPageChanged: (number) {
                           interfaceServices.treasuryPageCountUpdate(number + 1);
                         },
-                        itemCount: nftCount,
+                        itemCount: model.treasuryNftsInfoSelected.bunch.length,
                         controller: pageController,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          return PageViewTreasuryItem(
-                            index: index,
-                            item: model.treasuryNftsInfoSelected.bunch[index]!,
-                            frameHeight: secondPartHeight,
+                          return NftItem(
+                            item: model.treasuryNftsInfoSelected.bunch.values.toList()[index],
+                            frameHeight: secondPartHeight, page: 'treasury',
                           );
                         },
                       ),
@@ -208,7 +211,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
         // late double firstPartHeight = 0.0;
         // late double secondPartHeight = 0.0;
         // late bool splitScreen = false;
-        // if (managerServices.treasuryNftSelected.tag != 'empty') {
+        // if (collectionServices.treasuryNftSelected.tag != 'empty') {
         //   splitScreen = true;
         //   firstPartHeight = maxHeight / 2;
         //   secondPartHeight = firstPartHeight;
@@ -225,7 +228,8 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                         return TextFormField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            model.tagsNFTFilter(searchKeyword);
+                            model.tagsSearchFilter(enteredKeyword: searchKeyword, page: 'treasury');
+                            // model.tagsNFTFilter(searchKeyword);
                           },
                           autofocus: false,
                           obscureText: false,
@@ -297,7 +301,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             return Wrap(
                                 alignment: WrapAlignment.start,
                                 direction: Axis.horizontal,
-                                children: model.nftBalanceFilterResults.entries.map((e) {
+                                children: model.treasuryPageFilterResults.entries.map((e) {
 
                                   if(!tagsCompare.containsKey(e.key)){
                                     if (e.value.selected) {
@@ -348,7 +352,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                   return WrappedChip(
                                       key: ValueKey(e),
                                       theme: 'black',
-                                      item: e.value.bunch.entries.first.value,
+                                      item: e,
                                       page: 'treasury',
                                       startScale: false,
                                       selected: e.value.selected,
@@ -372,116 +376,4 @@ class _TreasuryWidget extends State<TreasuryWidget> {
 }
 
 
-class PageViewTreasuryItem extends StatelessWidget {
-  final int index;
-  final SimpleTags item;
-  final double frameHeight;
 
-  const PageViewTreasuryItem({
-    Key? key,
-    required this.index,
-    required this.item,
-    required this.frameHeight,
-  }) : super(key: key);
-
-  final EdgeInsets padding = const EdgeInsets.all(10.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      child: Card(
-
-        elevation: 2,
-        color: Colors.grey[700],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Padding(
-          padding: padding,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: padding,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        height: frameHeight - 150,
-                        filterQuality: FilterQuality.medium,
-                        isAntiAlias: true,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: padding,
-                    child: RichText(
-                        text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
-                            fontFamily: 'Inter',
-                            color: Colors.white,
-                          fontWeight: FontWeight.w400
-
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(text: 'NFT: ${item.tag}\n'),
-                          TextSpan(text: 'Features: ${item.feature}\n'),
-                          TextSpan(text: 'Rarity: ${item.nft}\n'),
-                          TextSpan(text: 'Total supply: ${item.nft}\n'),
-                          TextSpan(text: 'Issued by: ${item.nft}\n'),
-                          const TextSpan(text: 'You own: 1\n'),
-                        ]))
-                  ),
-                ],
-              ),
-
-
-              Container(
-                padding: padding,
-                child: GestureDetector(
-                  onTap: () async {
-                    Clipboard.setData(ClipboardData(text: '${item.tag}')).then((_) {
-                      Flushbar(
-                          icon: const Icon(
-                            Icons.copy,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          message: '${item.tag} copied to your clipboard!',
-                          duration: const Duration(seconds: 2),
-                          backgroundColor: Colors.blueAccent,
-                          shouldIconPulse: false)
-                          .show(context);
-                    });
-                  },
-                  child: RichText(
-                      text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
-                          fontFamily: 'Inter',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400
-                      ),
-                          children: [
-                            const WidgetSpan(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 5.0),
-                                  child: Icon(
-                                    Icons.copy,
-                                    size: 16,
-                                    color: Colors.white,
-                                  ),
-                                )),
-                            TextSpan(text: 'Metadata url: ${item.tag}'),
-                          ])),
-                ),
-              )
-            ],
-          ),
-        )
-      ),
-    );
-  }
-}
