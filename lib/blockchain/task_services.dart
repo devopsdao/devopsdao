@@ -263,9 +263,12 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlFantom;
   late String _wsUrlFantom;
 
+  late String _rpcUrlZksync;
+  late String _wsUrlZksync;
+
   int chainId = 0;
-  List allowedChainIds = [1287, 4002];
-  Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM'};
+  List allowedChainIds = [1287, 4002, 280];
+  Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH'};
   late String chainTicker;
 
   int chainIdAxelar = 80001;
@@ -362,6 +365,10 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'FTM';
       _rpcUrl = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       _wsUrl = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 280) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://zksync2-testnet.zksync.dev';
+      _wsUrl = 'wss://zksync2-testnet.zksync.dev';
     }
 
     // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -381,6 +388,9 @@ class TasksServices extends ChangeNotifier {
 
     _rpcUrlFantom = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlZksync = 'https://zksync2-testnet.zksync.dev';
+    _wsUrlZksync = 'wss://zksync2-testnet.zksync.dev';
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
