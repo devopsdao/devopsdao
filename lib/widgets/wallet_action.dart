@@ -1,15 +1,18 @@
 import 'package:dodao/config/flutter_flow_util.dart';
+import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../tags_manager/collection_services.dart';
 
 class WalletAction extends StatefulWidget {
   final String nanoId;
   final String taskName;
-  const WalletAction({Key? key, required this.nanoId, required this.taskName}) : super(key: key);
+  final String page;
+  const WalletAction({Key? key, required this.nanoId, required this.taskName, this.page = ''}) : super(key: key);
 
   @override
   _WalletAction createState() => _WalletAction();
@@ -30,7 +33,10 @@ class _WalletAction extends State<WalletAction> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    // var interface = context.watch<InterfaceServices>();
+
+    var searchServices = context.read<SearchServices>();
+    var collectionServices = context.read<CollectionServices>();
 
     // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
     //
@@ -47,11 +53,12 @@ class _WalletAction extends State<WalletAction> {
     //   transactionStagesPending = 'loading';
     // }
 
-
+    final String? status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
+    final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
 
     if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH') {
-      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
-        if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'] == 'initial') {
+      if (status == 'pending') {
+        if (tokenApproved == 'initial') {
           transactionStagesApprove = 'loading';
           // transactionStagesWaiting = 'initial';
           // transactionStagesPending = 'initial';
@@ -64,22 +71,19 @@ class _WalletAction extends State<WalletAction> {
           transactionStagesConfirmed = 'initial';
           transactionStagesMinted = 'initial';
         }
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'minted' &&
-          tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'] == 'approved') {
+      } else if (status == 'minted' && tokenApproved == 'approved') {
         transactionStagesApprove = 'done';
         // transactionStagesWaiting = 'done';
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed' &&
-          tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'] == 'complete') {
+      } else if (status == 'confirmed' && tokenApproved == 'complete') {
         transactionStagesApprove = 'done';
         // transactionStagesWaiting = 'done';
         // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'loading';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'minted' &&
-          tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'] == 'complete') {
+      } else if (status == 'minted' && tokenApproved == 'complete') {
         transactionStagesApprove = 'done';
         // transactionStagesWaiting = 'done';
         // transactionStagesPending = 'done';
@@ -87,35 +91,35 @@ class _WalletAction extends State<WalletAction> {
         transactionStagesMinted = 'done';
       }
     } else if (widget.taskName == 'createNFT') {
-      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
+      if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
+      } else if (status == 'confirmed') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else if (widget.taskName == 'mintFungible') {
-      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
+    } else if (widget.taskName == 'mintNonFungible') {
+      if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
+      } else if (status == 'confirmed') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
     } else  {
-      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'pending') {
+      if (status == 'pending') {
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'confirmed') {
+      } else if (status == 'confirmed') {
         // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'loading';
-      } else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'] == 'minted') {
+      } else if (status == 'minted') {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
@@ -436,20 +440,20 @@ class _WalletAction extends State<WalletAction> {
                             ],
                           ),
                         // if (tasksServices.interchainSelected.isNotEmpty)
-                        if (false)
-                          Container(
-                            padding: const EdgeInsets.only(top: 50.0),
-                            child: Column(
-                              children: [
-                                const Text('Interchain protocol:'),
-                                Container(
-                                  padding: const EdgeInsets.all(4.0),
-                                  // width: 128,
-                                  child: interface.interchainImages[tasksServices.interchainSelected],
-                                ),
-                              ],
-                            ),
-                          )
+                        // if (false)
+                        //   Container(
+                        //     padding: const EdgeInsets.only(top: 50.0),
+                        //     child: Column(
+                        //       children: [
+                        //         const Text('Interchain protocol:'),
+                        //         Container(
+                        //           padding: const EdgeInsets.all(4.0),
+                        //           // width: 128,
+                        //           child: interface.interchainImages[tasksServices.interchainSelected],
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   )
                       ],
                     ))
               ],
@@ -468,7 +472,17 @@ class _WalletAction extends State<WalletAction> {
                 // Navigator.pop(context);
               },
               child: const Text('Go To Wallet')),
-        TextButton(child: const Text('Close'), onPressed: () => Navigator.pop(context)),
+        TextButton(child: const Text('Close'), onPressed: () async {
+          Navigator.pop(context);
+
+          if (widget.page == 'create_collection') {
+            await tasksServices.collectMyNfts();
+            searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+            collectionServices.update();
+            searchServices.searchKeywordController.clear();
+            searchServices.refreshLists('mint');
+          }
+        }),
         // if (tasksServices.walletConnected)
         //   TextButton(
         //       child: Text('Disconnect'),

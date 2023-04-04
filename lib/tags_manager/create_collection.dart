@@ -16,24 +16,24 @@ import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
 
 import '../widgets/wallet_action.dart';
-import 'manager_services.dart';
+import 'collection_services.dart';
 import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
-class MintItem extends StatefulWidget {
+class CreateCollection extends StatefulWidget {
   final SimpleTags item;
   final String page;
-  const MintItem({Key? key, required this.item, required this.page}) : super(key: key);
+  const CreateCollection({Key? key, required this.item, required this.page}) : super(key: key);
 
   @override
-  _MintItemState createState() => _MintItemState();
+  _CreateCollectionState createState() => _CreateCollectionState();
 }
 
-class _MintItemState extends State<MintItem> {
+class _CreateCollectionState extends State<CreateCollection> {
   XFile? image;
   final ImagePicker picker = ImagePicker();
 
-  late Status stage_upload = Status.open;
+  late Status stageUpload = Status.open;
   late Status stageFeatures = Status.await;
   late Status stageCreate = Status.await;
   late Status stageMint = Status.await;
@@ -44,7 +44,7 @@ class _MintItemState extends State<MintItem> {
   void initState() {
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   var managerServices = Provider.of<ManagerServices>(context, listen: false);
+    //   var collectionServices = Provider.of<CollectionServices>(context, listen: false);
     //
     // });
   }
@@ -56,22 +56,28 @@ class _MintItemState extends State<MintItem> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     // var interface = context.read<InterfaceServices>();
     // var searchServices = context.read<SearchServices>();
-    var managerServices = context.watch<ManagerServices>();
+    var collectionServices = context.watch<CollectionServices>();
 
-    collectionExist = widget.item.collection;
+    collectionExist = collectionServices.mintNftTagSelected.collection;
 
     if (collectionExist) {
-      stage_upload = Status.done;
+      stageUpload = Status.done;
       stageFeatures = Status.done;
       stageCreate = Status.done;
-      stageMint = Status.open;
+      stageMint = Status.done;
     } else {
-      stage_upload = Status.open;
-      stageFeatures = Status.await;
+      stageUpload = Status.done;
+      stageFeatures = Status.done;
       stageCreate = Status.await;
+      stageMint = Status.await;
+    }
+
+    //temporary:
+    if (collectionServices.showMintButton) {
+      stageCreate = Status.done;
       stageMint = Status.await;
     }
 
@@ -103,7 +109,7 @@ class _MintItemState extends State<MintItem> {
                           onPressed: () {
                             Navigator.pop(context);
                             getImage(ImageSource.gallery);
-                            stage_upload = Status.done;
+                            stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
                           child: Row(
@@ -122,7 +128,7 @@ class _MintItemState extends State<MintItem> {
                           onPressed: () {
                             Navigator.pop(context);
                             getImage(ImageSource.camera);
-                            stage_upload = Status.done;
+                            stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
                           child: Row(
@@ -142,7 +148,7 @@ class _MintItemState extends State<MintItem> {
           });
     }
 
-    final String collectionName = managerServices.mintNftTagSelected.tag;
+    final String collectionName = collectionServices.mintNftTagSelected.name;
     final ButtonStyle activeButtonStyle = ElevatedButton.styleFrom(backgroundColor: Colors.deepOrangeAccent);
 
     return SingleChildScrollView(
@@ -170,7 +176,7 @@ class _MintItemState extends State<MintItem> {
                     radius: 35,
                     containedInkWell: false,
                     onTap: () {
-                      managerServices.clearSelectedInManager();
+                      collectionServices.clearSelectedInManager();
                     },
                     child: const Icon(
                       Icons.arrow_downward,
@@ -240,8 +246,8 @@ class _MintItemState extends State<MintItem> {
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: ElevatedButton(
-                            style: stage_upload == Status.open ? activeButtonStyle : null,
-                            onPressed: (stage_upload != Status.done)
+                            style: stageUpload == Status.open ? activeButtonStyle : null,
+                            onPressed: (stageUpload != Status.done)
                                 ? () {
                                     uploadAlert();
                                   }
@@ -277,7 +283,6 @@ class _MintItemState extends State<MintItem> {
                                         stageFeatures = Status.done;
                                         stageCreate = Status.open;
                                       });
-                                      print('features');
                                     }
                                   }
                                 : null,
@@ -304,8 +309,8 @@ class _MintItemState extends State<MintItem> {
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: ElevatedButton(
-                            // style: stageCreate == Status.open ? activeButtonStyle : null,
-                            style: activeButtonStyle,
+                            style: stageCreate == Status.open ? activeButtonStyle : null,
+                            // style: activeButtonStyle,
                             // onPressed: (stageCreate != Status.done)
                             //     ? () {
                             //         if (stageCreate == Status.open) {
@@ -316,15 +321,16 @@ class _MintItemState extends State<MintItem> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed: () {
+                            onPressed: (!collectionExist && !collectionServices.showMintButton) ? () {
                               showDialog(
                                   context: context,
                                   builder: (context) => const WalletAction(
                                         nanoId: 'createNFT',
                                         taskName: 'createNFT',
+                                        page: 'create_collection',
                                       ));
                               tasksServices.createNft('example.com', collectionName, true);
-                            },
+                            } : null,
                             child: Text(
                               'Create collection',
                               style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),
@@ -334,7 +340,6 @@ class _MintItemState extends State<MintItem> {
                       ],
                     ),
 
-                    //Mint nft:
                     Row(
                       children: [
                         // Text(
@@ -358,7 +363,7 @@ class _MintItemState extends State<MintItem> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed: () {
+                            onPressed: (collectionExist || collectionServices.showMintButton) ? () {
                               if (tasksServices.publicAddress != null) {
                                 final List<EthereumAddress> address = [tasksServices.publicAddress!];
                                 final List<BigInt> quantities = [BigInt.from(1)];
@@ -366,13 +371,15 @@ class _MintItemState extends State<MintItem> {
                                 showDialog(
                                     context: context,
                                     builder: (context) => const WalletAction(
-                                          nanoId: 'mintFungible',
-                                          taskName: 'mintFungible',
-                                        ));
+                                      nanoId: 'mintNonFungible',
+                                      taskName: 'mintNonFungible',
+                                    )
+                                );
 
                                 tasksServices.mintNonFungibleByName(collectionName, address, quantities);
+
                               }
-                            },
+                            } : null,
                             child: Text(
                               'Mint',
                               style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),

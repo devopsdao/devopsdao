@@ -1,5 +1,5 @@
 import 'package:dodao/blockchain/empty_classes.dart';
-import 'package:dodao/tags_manager/manager_services.dart';
+import 'package:dodao/tags_manager/collection_services.dart';
 import 'package:dodao/widgets/tags/main.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:provider/provider.dart';
@@ -36,17 +36,17 @@ void main() async {
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
-        ChangeNotifierProvider(create: (context) => ManagerServices()),
+        ChangeNotifierProvider(create: (context) => CollectionServices()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {
         //     return searchServices!..filterResults = tasksServices.filterResults;
         //   },
         // ),
-        // ChangeNotifierProxyProvider<ManagerServices, TasksServices>(
+        // ChangeNotifierProxyProvider<CollectionServices, TasksServices>(
         //   create: (_) => TasksServices(),
-        //   update: (_, managerServices, tasksServices) {
-        //     return tasksServices!..resultNftsMap = managerServices.resultNftsMapReceived;
+        //   update: (_, collectionServices, tasksServices) {
+        //     return tasksServices!..resultNftsMap = collectionServices.resultNftsMapReceived;
         //   },
         // )
         // ChangeNotifierProxyProvider<TasksServices , SearchServices>(
@@ -58,8 +58,8 @@ void main() async {
         ChangeNotifierProxyProvider<TasksServices , SearchServices>(
           create: (_) => SearchServices(),
           update: (_,tasksServices , searchServices) {
-            searchServices!.nftInitialCollectionMap = tasksServices.resultInitialCollectionMap;
-            return searchServices!..nftBalanceMap = tasksServices.resultNftsMap;
+            searchServices!.nftCollectionMap = tasksServices.resultInitialCollectionMap;
+            return searchServices..nftBalanceMap = tasksServices.resultNftsMap;
           },
         )
       ],
@@ -128,6 +128,7 @@ class _MyAppState extends State<MyApp> {
       locale: _locale,
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
+        // useMaterial3: true,
         scaffoldBackgroundColor: Colors.transparent,
         // useMaterial3: true,
         brightness: Brightness.light,

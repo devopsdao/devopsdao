@@ -57,21 +57,21 @@ class Task {
 }
 
 class SimpleTags {
-  final String tag;
+  final String name;
   final String? icon;
   late bool nft;
-  final String? id;
+  final BigInt? id;
   late bool selected;
   late String feature;
   final bool collection;
-  SimpleTags({required this.tag, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
+  SimpleTags({required this.name, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
 }
 
 class NftTagsBunch {
-  late String tag;
+  late String name;
   late bool selected;
-  final List<SimpleTags> bunch;
-  NftTagsBunch({required this.tag, this.selected = false, required this.bunch});
+  final Map<BigInt, SimpleTags> bunch;
+  NftTagsBunch({required this.name, this.selected = false, required this.bunch});
 }
 
 class TagsCompare {

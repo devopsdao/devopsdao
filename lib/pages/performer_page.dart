@@ -5,6 +5,7 @@ import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../navigation/appbar.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
@@ -114,6 +115,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
 
     return Scaffold(
       key: scaffoldKey,
+      drawer: const NavDrawer(),
       appBar: OurAppBar(
         title: 'Performer',
         tabIndex: tabIndex,
@@ -315,11 +317,18 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                               return WrappedChip(
                                 key: ValueKey(e.value),
                                 theme: 'black',
-                                item: e.value,
+                                item: MapEntry(
+                                    e.key,
+                                    NftTagsBunch(
+                                        selected: false,
+                                        name: e.value.name,
+                                        bunch: e.value.bunch
+                                    )
+                                ),
                                 page: 'performer',
                                 tabIndex: tabIndex,
                                 selected: e.value.selected,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                                wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),

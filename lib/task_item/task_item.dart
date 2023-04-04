@@ -202,7 +202,7 @@ class _TaskItemState extends State<TaskItem> {
                     children: [
                       Expanded(child: LayoutBuilder(builder: (context, constraints) {
                         final double width = constraints.maxWidth - 66;
-                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, tag: name)).toList();
+                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
 
                         return SizedBox(
                           width: width,

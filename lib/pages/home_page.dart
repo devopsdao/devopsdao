@@ -9,6 +9,7 @@ import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../create_job/create_job.dart.old';
+import '../navigation/navmenu.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';
 import '../config/flutter_flow_icon_button.dart';
@@ -139,9 +140,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     return Scaffold(
         key: scaffoldKey,
+        drawer: const NavDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.black,
-          automaticallyImplyLeading: false,
+          // automaticallyImplyLeading: false,
           title: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -430,12 +432,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 List<SimpleTags> tags = [];
 
                                 if (tasksServices.roleNfts['auditor'] > 0) {
-                                  tags.add(SimpleTags(collection: true, tag: "Auditor", icon: ""));
+                                  tags.add(SimpleTags(collection: true, name: "Auditor", icon: ""));
                                 }
                                 if (tasksServices.roleNfts['governor'] > 0) {
-                                  tags.add(SimpleTags(collection: true, tag: "Governor", icon: ""));
+                                  tags.add(SimpleTags(collection: true, name: "Governor", icon: ""));
                                 }
-                                tags.add(SimpleTags(collection: true, tag: "Get more...", icon: ""));
+                                tags.add(SimpleTags(collection: true, name: "Get more...", icon: ""));
 
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -457,10 +459,22 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             return WrappedChip(
                                               key: ValueKey(e),
                                               theme: 'black',
-                                              item: e,
+                                              item: MapEntry(
+                                                  e.name,
+                                                  NftTagsBunch(
+                                                    selected: false,
+                                                    name: e.name,
+                                                    bunch: {
+                                                      BigInt.from(0) : SimpleTags(
+                                                          name: e.name,
+                                                          collection: true
+                                                      )
+                                                    },
+                                                  )
+                                              ),
                                               page: 'home',
                                               selected: e.selected,
-                                              wrapperRole: e.tag == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
+                                              wrapperRole: e.name == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
                                             );
                                           }).toList()),
                                     ),
