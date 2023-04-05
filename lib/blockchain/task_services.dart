@@ -1468,7 +1468,6 @@ class TasksServices extends ChangeNotifier {
     if (tagsList.isNotEmpty && (tagsList.length != 1)) {
       Map<EthereumAddress, Task> filterResultsTags = taskList;
       for (var tag in tagsList) {
-        print(tag);
         if (tag != '#') {
           filterResultsTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
         }
