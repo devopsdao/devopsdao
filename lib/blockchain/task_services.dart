@@ -325,7 +325,7 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 1287;
+      chainId = 4002;
     }
 
     isDeviceConnected = false;
@@ -1145,8 +1145,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1271,8 +1271,7 @@ class TasksServices extends ChangeNotifier {
 
       final List<String> names = await getCreatedTokenNames();
       for (var e in names) {
-        resultInitialCollectionMap[e] =
-            NftTagsBunch(bunch: {BigInt.from(0) : SimpleTags(name: e, collection: true)}, selected: false, name: e);
+        resultInitialCollectionMap[e] = NftTagsBunch(bunch: {BigInt.from(0): SimpleTags(name: e, collection: true)}, selected: false, name: e);
       }
 
       final List<String> tokenNames = await getTokenNames(publicAddress!);
@@ -1282,7 +1281,8 @@ class TasksServices extends ChangeNotifier {
       final Map<BigInt, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
 
       final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
-        {}, (Map<String, List<BigInt>> acc, entry) {
+        {},
+        (Map<String, List<BigInt>> acc, entry) {
           final key = entry.value;
           final value = entry.key;
           acc.putIfAbsent(key, () => []).add(value);
@@ -1440,11 +1440,19 @@ class TasksServices extends ChangeNotifier {
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
 
       if (tagsList.isNotEmpty && (tagsList.length != 1)) {
-        filterResults = Map.from(filterResultsSearch)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
+        Map<EthereumAddress, Task> filterResultsTags = filterResultsSearch;
+        for (var tag in tagsList) {
+          if (tag != '#') {
+            filterResultsTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
+          }
+        }
+        filterResults = filterResultsTags;
+        // filterResults = Map.from(filterResultsSearch)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
       } else {
         filterResults = Map.from(filterResultsSearch);
       }
     }
+    print(filterResults);
     // Refresh the UI
     notifyListeners();
   }
@@ -1458,7 +1466,15 @@ class TasksServices extends ChangeNotifier {
     //     taskList.entries.where((entry) => tagsList.contains(entry.value.name))
     // );
     if (tagsList.isNotEmpty && (tagsList.length != 1)) {
-      filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
+      Map<EthereumAddress, Task> filterResultsTags = taskList;
+      for (var tag in tagsList) {
+        print(tag);
+        if (tag != '#') {
+          filterResultsTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
+        }
+      }
+      filterResults = filterResultsTags;
+      // filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
     } else {
       filterResults = Map.from(taskList);
     }
