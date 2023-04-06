@@ -323,6 +323,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                             //     : null,
                             onPressed: (!collectionExist && !collectionServices.showMintButton) ? () {
                               showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (context) => const WalletAction(
                                         nanoId: 'createNFT',
@@ -369,6 +370,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                                 final List<BigInt> quantities = [BigInt.from(1)];
 
                                 showDialog(
+                                    barrierDismissible: false,
                                     context: context,
                                     builder: (context) => const WalletAction(
                                       nanoId: 'mintNonFungible',

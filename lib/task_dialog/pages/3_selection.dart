@@ -342,6 +342,7 @@ class _SelectionPageState extends State<SelectionPage> {
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,

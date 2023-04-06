@@ -68,6 +68,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletAction(
                           nanoId: task.nanoId,
@@ -93,6 +94,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 Beamer.of(context).updateRouteInformation(routeInfo);
 
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletAction(
                           nanoId: task.nanoId,
@@ -116,6 +118,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 RouteInformation routeInfo = const RouteInformation(location: '/performer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletAction(
                           nanoId: task.nanoId,
@@ -170,6 +173,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 Navigator.pop(context);
                 interface.emptyTaskMessage();
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletAction(
                           nanoId: task.nanoId,
@@ -240,6 +244,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 RouteInformation routeInfo = const RouteInformation(location: '/customer');
                 Beamer.of(context).updateRouteInformation(routeInfo);
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletAction(
                           nanoId: task.nanoId,
@@ -263,6 +268,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                         Navigator.pop(context);
                         interface.emptyTaskMessage();
                         showDialog(
+                            barrierDismissible: false,
                             context: context,
                             builder: (context) => WalletAction(
                                   nanoId: task.nanoId,

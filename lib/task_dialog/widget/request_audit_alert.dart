@@ -198,6 +198,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         tasksServices.taskStateChange(task.taskAddress, task.performer, 'audit', task.nanoId,
                             message: messageController!.text.isEmpty ? null : messageController!.text);
                         showDialog(
+                            barrierDismissible: false,
                             context: context,
                             builder: (context) => WalletAction(
                                   nanoId: task.nanoId,
