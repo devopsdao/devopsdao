@@ -36,6 +36,14 @@ class _CreateJobState extends State<CreateJob> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var searchServices = Provider.of<SearchServices>(context, listen: false);
+      searchServices.removeAllTagsOnPages(page: 'create');
+
+      // searchServices.refreshLists('selection');
+      // searchServices.tagsSearchFilter('', simpleTagsMap);
+
+    });
   }
 
   late String backgroundPicture = "assets/images/niceshape.png";
@@ -261,7 +269,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                             //   Duration(milliseconds: 2000),
                             //   () => setState(() {}),
                             // ),
-                            autofocus: true,
+                            autofocus: false,
                             obscureText: false,
                             onTapOutside: (test) {
                               FocusScope.of(context).unfocus();
@@ -386,14 +394,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                 ),
 
                 const SizedBox(height: 14),
-                // ConstrainedBox(
-                //   constraints: BoxConstraints(
-                //     maxWidth: maxStaticInternalDialogWidth,
-                //   ),
-                //   child: Payment(
-                //     purpose: 'create', innerPaddingWidth: innerPaddingWidth,
-                //   ),
-                // ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: maxStaticInternalDialogWidth,
+                  ),
+                  child: Payment(
+                    purpose: 'create', innerPaddingWidth: innerPaddingWidth,
+                  ),
+                ),
                 Container(
                   padding:  const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -418,7 +426,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
 
                                     TextFormField(
                                       controller: githubLinkController,
-                                      autofocus: true,
+                                      autofocus: false,
                                       obscureText: false,
                                       onTapOutside: (test) {
                                         FocusScope.of(context).unfocus();

@@ -8,7 +8,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 
-const List<String> selectToken = <String>['DEV', 'aUSDC'];
+
 
 class Payment extends StatefulWidget {
   final String purpose;
@@ -25,7 +25,8 @@ class Payment extends StatefulWidget {
 
 class _PaymentState extends State<Payment> {
   TextEditingController? valueController;
-  String dropdownValue = selectToken.first;
+  late List<String> selectToken = [];
+  late String dropdownValue;
   double _currentPriceValue = 0.0;
   double ausdcHighPrice = 25.0;
   double ausdcLowPrice = 0.0;
@@ -40,6 +41,12 @@ class _PaymentState extends State<Payment> {
   void initState() {
     super.initState();
     valueController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var tasksServices = Provider.of<TasksServices>(context, listen: false);
+      selectToken = <String>[tasksServices.chainTicker, 'aUSDC'];
+      dropdownValue = selectToken.first;
+    });
   }
 
   @override
@@ -57,6 +64,7 @@ class _PaymentState extends State<Payment> {
     late double borderRadius = interface.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
+      // dropdownValue = tasksServices.taskTokenSymbol;
       dropdownValue = tasksServices.chainTicker;
       minPrice = devLowPrice;
       maxPrice = devHighPrice;
@@ -228,13 +236,16 @@ class _PaymentState extends State<Payment> {
                             ),
                             onChanged: (String? value) {
                               // This is called when the user selects an item.
-                              if (value == 'ETH') {
+                              if (value == tasksServices.chainTicker) {
                                 tasksServices.taskTokenSymbol = 'ETH';
+                                print('taskTokenSymbol changed to default value ${value!}');
                               } else {
                                 tasksServices.taskTokenSymbol = value!;
+                                print('taskTokenSymbol changed to ${value!}');
                               }
-                              if (value == 'ETH') {
+                              if (value == tasksServices.chainTicker) {
                                 interface.tokensEntered = 0.0;
+                                // valueController!.text = '0.0 ${tasksServices.chainTicker}';
                                 valueController!.text = '0.0 ${tasksServices.chainTicker}';
                                 _currentPriceValue = 0.0;
                                 minPrice = devLowPrice;

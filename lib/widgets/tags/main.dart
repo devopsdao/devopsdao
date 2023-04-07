@@ -307,7 +307,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         onTap: () {
                           searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                           searchServices.forbidSearchKeywordClear = true;
-                          searchServices.specialTagSelection(tagName: '', tagKey: '');
+                          searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
                           searchServices.nftSelection(nftName: '', nftKey: BigInt.from(0), unselectAll: true, unselectAllInBunch: false);
                           collectionServices.clearSelectedInManager();
                           Navigator.pop(context);

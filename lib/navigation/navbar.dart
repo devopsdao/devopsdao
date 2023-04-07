@@ -31,8 +31,9 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    // var tasksServices = context.watch<TasksServices>();
     var searchServices = context.read<SearchServices>();
+    var tasksServices = context.read<TasksServices>();
 
     final tabs = {
       '/home': const HomePageWidget(),

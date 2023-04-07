@@ -2,14 +2,46 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract WitnetRequestBoard",
         "name": "_witnetRequestBoard",
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "_witnetRequestFactory",
+        "internalType": "contract WitnetRequestTemplate",
+        "name": "_witnetRequestTemplate",
         "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitRevealFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "_witnetRadonSLA",
+        "type": "tuple"
       }
     ],
     "stateMutability": "nonpayable",
@@ -19,9 +51,9 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "contractAdr",
+        "name": "addr",
         "type": "address"
       },
       {
@@ -33,30 +65,6 @@
     ],
     "name": "Logs",
     "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "httpGetValuesArray",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "reducerModeNoFilters",
-        "type": "bytes32"
-      }
-    ],
-    "name": "buildRequestTemplate",
-    "outputs": [
-      {
-        "internalType": "contract WitnetRequestTemplate",
-        "name": "valuesArrayRequestTemplate",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "inputs": [],
@@ -73,10 +81,50 @@
   },
   {
     "inputs": [],
-    "name": "witnetRequestFactory",
+    "name": "witnetRadonSLA",
     "outputs": [
       {
-        "internalType": "address",
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitRevealFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "witnetRequestTemplate",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequestTemplate",
         "name": "",
         "type": "address"
       }

@@ -96,6 +96,21 @@ class SearchServices extends ChangeNotifier {
     // updateTagListOnTasksPages(page: page, initial: false);
   }
 
+  Future removeAllTagsOnPages({required String page}) async {
+    if (page == 'auditor') {
+      auditorTagsList.clear();
+    } else if (page == 'tasks') {
+      tasksTagsList.clear();
+    } else if (page == 'customer') {
+      customerTagsList.clear();
+    } else if (page == 'performer') {
+      performerTagsList.clear();
+    } else if (page == 'create') {
+      createTagsList.clear();
+    }
+    notifyListeners();
+  }
+
   Future updateTagListOnTasksPages({required String page, required bool initial}) async {
     // we add default "defaultTagAddNew" button that is displayed on task pages.
     // "Initial" means that we do not want to update the lists if they have not
@@ -394,6 +409,7 @@ class SearchServices extends ChangeNotifier {
               val.selected = false;
             }
           }
+
         }
         // select or unselect tapped Tag:
         if (e.value.name == tagName) {
@@ -405,6 +421,12 @@ class SearchServices extends ChangeNotifier {
           print('nftSelected: $nftSelected, e.value.name ${e.value.name}');
           e.value.selected = false;
           nftSelected = false;
+        }
+
+        if (unselectAll) {
+          if (e.value.selected) {
+            e.value.selected = false;
+          }
         }
         // if (e.value.selected && e.value.name == tagName) {
         //   e.value.selected = false;
@@ -426,15 +448,16 @@ class SearchServices extends ChangeNotifier {
     required bool unselectAll,
   }) async {
     if (typeSelection == 'selection') {
-      if (!unselectAll) {
-        for (String key in selectionPageFilterResults.keys) {
-          if (key == tagKey) {
-            if (selectionPageFilterResults[key]!.selected) {
-              selectionPageFilterResults[key]!.selected = false;
-            } else {
-              selectionPageFilterResults[key]!.selected = true;
-            }
+      for (String key in selectionPageFilterResults.keys) {
+        if (key == tagKey) {
+          if (selectionPageFilterResults[key]!.selected) {
+            selectionPageFilterResults[key]!.selected = false;
+          } else {
+            selectionPageFilterResults[key]!.selected = true;
           }
+        } else if (unselectAll) {
+          // print('unselectAll in selection');
+          selectionPageFilterResults[key]!.selected = false;
         }
       }
     } else if (typeSelection == 'mint') {

@@ -486,7 +486,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
             );
             collectionServices.clearSelectedInManager();
             // reset nft tags when regular tags tapped:
-            searchServices.specialTagSelection(tagName: '', tagKey: '');
+            searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
           } else {
             searchServices.specialTagSelection(tagName: tagName, tagKey: tagKey);
 

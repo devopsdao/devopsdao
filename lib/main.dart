@@ -130,7 +130,6 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         // useMaterial3: true,
         scaffoldBackgroundColor: Colors.transparent,
-        // useMaterial3: true,
         brightness: Brightness.light,
         splashFactory: NoSplash.splashFactory,
         iconTheme: const IconThemeData(
@@ -139,8 +138,8 @@ class _MyAppState extends State<MyApp> {
 
         primaryColor: const Color(0xff31d493),
         // cardColor: Colors.black,
-        // textTheme: const TextTheme(
-        //     bodyText1: TextStyle(fontSize: 20, color: Colors.white)),
+        textTheme: const TextTheme(
+            bodyText1: TextStyle(fontSize: 20, color: Colors.white)),
         // colorScheme: ColorScheme.light().copyWith(secondary: Colors.black),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
