@@ -67,6 +67,8 @@
     "type": "event"
   },
   {
+<<<<<<< HEAD
+=======
     "inputs": [
       {
         "internalType": "uint256",
@@ -103,6 +105,7 @@
     "type": "function"
   },
   {
+>>>>>>> 0a36b053944d811faa33857a272b2e8442d9cd84
     "inputs": [],
     "name": "witnet",
     "outputs": [

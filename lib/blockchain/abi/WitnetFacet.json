@@ -67,6 +67,42 @@
     "type": "event"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_appId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "subpath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct LibWitnetFacet.Args",
+        "name": "_args",
+        "type": "tuple"
+      }
+    ],
+    "name": "_postRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_witnetQueryId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "witnet",
     "outputs": [
