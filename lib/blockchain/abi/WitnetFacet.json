@@ -2,14 +2,46 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract WitnetRequestBoard",
         "name": "_witnetRequestBoard",
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "_witnetRequestFactory",
+        "internalType": "contract WitnetRequestTemplate",
+        "name": "_witnetRequestTemplate",
         "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitRevealFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "_witnetRadonSLA",
+        "type": "tuple"
       }
     ],
     "stateMutability": "nonpayable",
@@ -19,9 +51,9 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "contractAdr",
+        "name": "addr",
         "type": "address"
       },
       {
@@ -37,38 +69,37 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "httpGetValuesArray",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "_appId",
+        "type": "uint256"
       },
       {
-        "internalType": "bytes32",
-        "name": "reducerModeNoFilters",
-        "type": "bytes32"
+        "components": [
+          {
+            "internalType": "string",
+            "name": "subpath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct LibWitnetFacet.Args",
+        "name": "_args",
+        "type": "tuple"
       }
     ],
-    "name": "buildRequestTemplate",
+    "name": "_postRequest",
     "outputs": [
       {
-        "internalType": "contract WitnetRequestTemplate",
-        "name": "valuesArrayRequestTemplate",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_witnetQueryId",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "taskAddress",
-        "type": "address"
-      }
-    ],
-    "name": "createWitnetRequest",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -86,10 +117,50 @@
   },
   {
     "inputs": [],
-    "name": "witnetRequestFactory",
+    "name": "witnetRadonSLA",
     "outputs": [
       {
-        "internalType": "address",
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "numWitnesses",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minConsensusPercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witnessCollateral",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minerCommitRevealFee",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonSLA",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "witnetRequestTemplate",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequestTemplate",
         "name": "",
         "type": "address"
       }
