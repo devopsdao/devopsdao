@@ -592,6 +592,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                 tags);
             Navigator.pop(context);
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                   nanoId: nanoId,

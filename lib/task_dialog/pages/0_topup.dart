@@ -190,6 +190,7 @@ class _TopUpPageState extends State<TopUpPage> {
             interface.emptyTaskMessage();
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                   nanoId: task.nanoId,

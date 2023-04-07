@@ -86,7 +86,7 @@ Map<String, dynamic> dialogStates = {
     'name' : 'customer-review',
     'mainButtonName': 'Sign Review',
     'secondButtonName' : 'Request audit',
-    'labelMessage': 'Write your request for review to the Customer',
+    'labelMessage': 'Write your request for review to the Performer',
     'secondLabelMessage': 'Why are you requesting for audit?',
     'pages' : {
       'topup': 0,

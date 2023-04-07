@@ -182,6 +182,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
 
                         interface.emptyTaskMessage();
                         showDialog(
+                            barrierDismissible: false,
                             context: context,
                             builder: (context) => WalletAction(
                               nanoId: task.nanoId,
@@ -232,6 +233,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                             message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                         interface.emptyTaskMessage();
                         showDialog(
+                            barrierDismissible: false,
                             context: context,
                             builder: (context) => WalletAction(
                               nanoId: task.nanoId,

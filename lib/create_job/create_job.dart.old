@@ -408,6 +408,7 @@ class _NewTaskMainPageState extends State<NewTaskMainPage> {
                     //     nanoId);
                     Navigator.pop(context);
                     showDialog(
+                        barrierDismissible: false,
                         context: context,
                         builder: (context) => WalletAction(
                           nanoId: nanoId,

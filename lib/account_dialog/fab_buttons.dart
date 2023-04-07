@@ -52,6 +52,7 @@ class SetsOfFabButtons extends StatelessWidget {
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,
@@ -77,6 +78,7 @@ class SetsOfFabButtons extends StatelessWidget {
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,
@@ -100,6 +102,7 @@ class SetsOfFabButtons extends StatelessWidget {
             RouteInformation routeInfo = const RouteInformation(location: '/performer');
             Beamer.of(context).updateRouteInformation(routeInfo);
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,
@@ -136,6 +139,7 @@ class SetsOfFabButtons extends StatelessWidget {
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,
@@ -163,6 +167,7 @@ class SetsOfFabButtons extends StatelessWidget {
             RouteInformation routeInfo = const RouteInformation(location: '/customer');
             Beamer.of(context).updateRouteInformation(routeInfo);
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,
@@ -186,6 +191,7 @@ class SetsOfFabButtons extends StatelessWidget {
                     Navigator.pop(context);
                     interface.emptyTaskMessage();
                     showDialog(
+                        barrierDismissible: false,
                         context: context,
                         builder: (context) => WalletAction(
                               nanoId: task.nanoId,
@@ -210,6 +216,7 @@ class SetsOfFabButtons extends StatelessWidget {
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletAction(
                       nanoId: task.nanoId,

@@ -42,6 +42,7 @@ class _WithdrawButtonState extends State<WithdrawButton> {
                 Navigator.pop(context);
 
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletAction(
                           nanoId: widget.object.nanoId,

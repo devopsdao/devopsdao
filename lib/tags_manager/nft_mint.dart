@@ -108,6 +108,7 @@ class NftMint extends StatelessWidget {
                                           final List<BigInt> quantities = [BigInt.from(1)];
 
                                           showDialog(
+                                              barrierDismissible: false,
                                               context: context,
                                               builder: (context) => const WalletAction(
                                                 nanoId: 'mintNonFungible',

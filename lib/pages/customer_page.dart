@@ -66,6 +66,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
+            // barrierDismissible: false,
           context: context,
           builder: (context) => TaskDialogBeamer(
             taskAddress: widget.taskAddress,
