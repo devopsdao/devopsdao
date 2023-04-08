@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
+import '../main.dart';
 
 class NavDrawer extends StatelessWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -19,17 +20,37 @@ class NavDrawer extends StatelessWidget {
 
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
 
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.black,
                   // image: DecorationImage(
                   //     fit: BoxFit.fill,
                   //     image: AssetImage('assets/images/cover.jpg'))
               ),
-              child: Text(
-                'Dodao',
-                style: TextStyle(color: Colors.white, fontSize: 25),
+              child: Container(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Dodao',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    Consumer<ModelTheme>(
+                      builder: (context, ModelTheme themeNotifier, child) {
+                        return IconButton(
+                            icon: Icon(themeNotifier.isDark
+                                ? Icons.nightlight_round
+                                : Icons.wb_sunny, color: Colors.white,),
+                            onPressed: () {
+                              themeNotifier.isDark
+                                  ? themeNotifier.isDark = false
+                                  : themeNotifier.isDark = true;
+                        });
+                    })
+                  ],
+                ),
               ),
             ),
             // ListTile(

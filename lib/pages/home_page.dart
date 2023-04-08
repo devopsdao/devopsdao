@@ -116,6 +116,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    final isDarkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
     // tasksServices.initComplete.value = false;
     // tasksServices.initComplete.addListener(() {
     //   print(tasksServices.initComplete.value);
@@ -142,18 +144,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         key: scaffoldKey,
         drawer: const NavDrawer(),
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          // backgroundColor: Colors.black,
           // automaticallyImplyLeading: false,
           title: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
                 'Dodao',
-                style: DodaoTheme.of(context).title2.override(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                      fontSize: 22,
-                    ),
+                style: Theme.of(context).textTheme.titleLarge
               ),
             ],
           ),
@@ -245,7 +243,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           centerTitle: false,
           elevation: 2,
         ),
-        backgroundColor: const Color(0xFF1E2429),
+        // backgroundColor: Colors.black,
         floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
         body: Container(
             // width: double.infinity,
@@ -260,11 +258,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               //   begin: AlignmentDirectional(1, -1),
               //   end: AlignmentDirectional(-1, 1),
               // ),
-              color: Colors.black,
-              // image: DecorationImage(
-              //     image: SvgProvider.Svg('assets/images/background-from-png.svg'),
-              //     fit: BoxFit.fitHeight,
-              // ),
+              // color: Colors.black,
+
               image: DecorationImage(
                 image: AssetImage(
                   "assets/images/background.png",
@@ -421,7 +416,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: Container(
                             width: fullWidth,
                             decoration: BoxDecoration(
-                              color: Colors.white12,
+                              color: DodaoTheme.of(context).transparentCloud,
                               borderRadius: BorderRadius.circular(8),
                               shape: BoxShape.rectangle,
                             ),
@@ -444,9 +439,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Your Nft\'s:',
+                                    Text('Your Nft\'s:',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: DodaoTheme.of(context).primaryBtnText,
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
@@ -512,7 +507,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: Container(
                             width: fullWidth,
                             decoration: BoxDecoration(
-                              color: Colors.white12,
+                              color: DodaoTheme.of(context).transparentCloud,
                               borderRadius: BorderRadius.circular(8),
                               shape: BoxShape.rectangle,
                             ),
@@ -523,11 +518,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Your score:',
+                                  Text('Your score:',
                                       style: TextStyle(
-                                        color: Colors.white,
                                         fontSize: 14,
                                         fontFamily: 'Inter',
+                                        color: DodaoTheme.of(context).primaryBtnText,
                                       )),
                                   if (tasksServices.publicAddress == null)
                                     Text(
@@ -564,24 +559,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             alignment: Alignment.center,
                             child: InkWell(
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.library_books_outlined,
-                                    color: Colors.white,
+                                    color: DodaoTheme.of(context).primaryBtnText,
                                     size: 18,
                                   ),
                                   Text(
                                     ' docs.dodao.dev',
-                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: Colors.grey[100], fontSize: 14),
+                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryBtnText, fontSize: 14),
                                   ),
                                 ]),
                                 onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
                         Text(
                             tasksServices.browserPlatform ??
                                 'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               height: 2,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: DodaoTheme.of(context).primaryBtnText,
                               fontSize: 10,
                             )),
                       ],
