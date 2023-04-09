@@ -31,8 +31,9 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    // var tasksServices = context.watch<TasksServices>();
     var searchServices = context.read<SearchServices>();
+    var tasksServices = context.read<TasksServices>();
 
     final tabs = {
       '/home': const HomePageWidget(),
@@ -58,9 +59,9 @@ class _NavBarPageState extends State<NavBarPage> {
         beamerDelegate.beamToNamed(tabs.keys.toList()[i])
       },
       // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
-      backgroundColor: Colors.black,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: DodaoTheme.of(context).grayIcon,
+      // backgroundColor: Colors.black,
+      // selectedItemColor: Colors.white,
+      // unselectedItemColor: DodaoTheme.of(context).grayIcon,
       showSelectedLabels: true,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,

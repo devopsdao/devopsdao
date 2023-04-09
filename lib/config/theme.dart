@@ -29,12 +29,7 @@ abstract class DodaoTheme {
           ? DarkModeTheme()
           : LightModeTheme();
 
-  late Color primaryColor;
-  late Color secondaryColor;
-  late Color tertiaryColor;
-  late Color alternate;
-  late Color primaryBackground;
-  late Color secondaryBackground;
+  late Color transparentCloud;
   late Color primaryText;
   late Color secondaryText;
 
@@ -48,9 +43,6 @@ abstract class DodaoTheme {
   late Color textColor;
   late Color maximumBlueGreen;
   late Color plumpPurple;
-  late Color platinum;
-  late Color ashGray;
-  late Color darkSeaGreen;
 
   String get title1Family => typography.title1Family;
   TextStyle get title1 => typography.title1;
@@ -73,16 +65,11 @@ abstract class DodaoTheme {
 }
 
 class LightModeTheme extends DodaoTheme {
-  late Color primaryColor = const Color(0xFF4B39EF);
-  late Color secondaryColor = const Color(0xFF39D2C0);
-  late Color tertiaryColor = const Color(0xFFEE8B60);
-  late Color alternate = const Color(0xFFFF5963);
-  late Color primaryBackground = const Color(0xFFF1F4F8);
-  late Color secondaryBackground = const Color(0xFFFFFFFF);
+  late Color transparentCloud = Colors.black26;
   late Color primaryText = const Color(0xFF101213);
   late Color secondaryText = const Color(0xFF57636C);
 
-  late Color primaryBtnText = const Color(0xFFFFFFFF);
+  late Color primaryBtnText = Colors.black;
   late Color lineColor = const Color(0xFFE0E3E7);
   late Color grayIcon = const Color(0xFF95A1AC);
   late Color gray200 = const Color(0xFFDBE2E7);
@@ -92,9 +79,6 @@ class LightModeTheme extends DodaoTheme {
   late Color textColor = const Color(0xFF1E2429);
   late Color maximumBlueGreen = const Color(0xFF59C3C3);
   late Color plumpPurple = const Color(0xFF52489C);
-  late Color platinum = const Color(0xFFEBEBEB);
-  late Color ashGray = const Color(0xFFCAD2C5);
-  late Color darkSeaGreen = const Color(0xFF84A98C);
 }
 
 abstract class Typography {
@@ -180,12 +164,7 @@ class ThemeTypography extends Typography {
 }
 
 class DarkModeTheme extends DodaoTheme {
-  late Color primaryColor = const Color(0xFF000000);
-  late Color secondaryColor = const Color(0xFF39D2C0);
-  late Color tertiaryColor = const Color(0xFFEE8B60);
-  late Color alternate = const Color(0xFFFF5963);
-  late Color primaryBackground = const Color(0xFF1A1F24);
-  late Color secondaryBackground = const Color(0xFF101213);
+  late Color transparentCloud = Colors.white12;
   late Color primaryText = const Color(0xFFFFFFFF);
   late Color secondaryText = const Color(0xFF95A1AC);
 
@@ -199,9 +178,6 @@ class DarkModeTheme extends DodaoTheme {
   late Color textColor = const Color(0xFF1E2429);
   late Color maximumBlueGreen = const Color(0xFF59C3C3);
   late Color plumpPurple = const Color(0xFF52489C);
-  late Color platinum = const Color(0xFFEBEBEB);
-  late Color ashGray = const Color(0xFFCAD2C5);
-  late Color darkSeaGreen = const Color(0xFF84A98C);
 }
 
 extension TextStyleHelper on TextStyle {
