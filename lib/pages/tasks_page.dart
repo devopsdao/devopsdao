@@ -110,12 +110,12 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           return AppBar(
             backgroundColor: Colors.black,
             title: Text(
-                'Job Exchange',
+              'Job Exchange',
               style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
             ),
             actions: [
               // AppBarSearchButton(),
@@ -126,6 +126,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             ],
           );
         },
+        keepAppBarColors: false,
         searchInputDecoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Search',
@@ -134,14 +135,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           //   Icons.tag,
           //   color: Colors.grey[300],
           // ),
-
         ),
 
         onChanged: (searchKeyword) {
-          tasksServices.runFilter(
-              taskList: tasksServices.tasksNew,
-              tagsMap: searchServices.tasksTagsList,
-              enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchKeyword);
         },
         customTextEditingController: searchServices.searchKeywordController,
         // actions: [
@@ -267,18 +264,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                 theme: 'black',
                                 item: MapEntry(
                                     e.key,
-                                    NftTagsBunch(
-                                      selected: false,
-                                      name: e.value.name,
-                                      bunch: e.value.bunch
-                                      // {
-                                      //   BigInt.from(0) : SimpleTags(
-                                      //     name: e.value.name,
-                                      //     collection: true,
-                                      //   )
-                                      // },
-                                    )
-                                ),
+                                    NftTagsBunch(selected: false, name: e.value.name, bunch: e.value.bunch
+                                        // {
+                                        //   BigInt.from(0) : SimpleTags(
+                                        //     name: e.value.name,
+                                        //     collection: true,
+                                        //   )
+                                        // },
+                                        )),
                                 page: 'tasks',
                                 selected: e.value.selected,
                                 tabIndex: 0,
