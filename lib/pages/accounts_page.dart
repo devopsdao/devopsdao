@@ -79,7 +79,6 @@ class _AccountsPageState extends State<AccountsPage> {
       key: scaffoldKey,
       drawer: const NavDrawer(),
       appBar: AppBar(
-        backgroundColor: Colors.black,
         // automaticallyImplyLeading: false,
         title: Column(
           mainAxisSize: MainAxisSize.max,
@@ -106,18 +105,11 @@ class _AccountsPageState extends State<AccountsPage> {
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: const Color(0xFF1E2429),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,

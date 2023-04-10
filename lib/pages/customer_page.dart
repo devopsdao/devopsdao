@@ -128,7 +128,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           title: 'Customer',
           tabIndex: tabIndex,
         ),
-        backgroundColor: const Color(0xFF1E2429),
+        // backgroundColor: const Color(0xFF1E2429),
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () async {
         //     await Navigator.push(
@@ -152,12 +152,12 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
           alignment: Alignment.center,
           decoration:  const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.black, Colors.black, Colors.black],
-              stops: [0, 0.5, 1],
-              begin: AlignmentDirectional(1, -1),
-              end: AlignmentDirectional(-1, 1),
-            ),
+            // gradient: LinearGradient(
+            //   colors: [Colors.black, Colors.black, Colors.black],
+            //   stops: [0, 0.5, 1],
+            //   begin: AlignmentDirectional(1, -1),
+            //   end: AlignmentDirectional(-1, 1),
+            // ),
             // image: DecorationImage(
             //   image: SvgProvider.Svg('assets/images/background-from-png.svg'),
             //   fit: BoxFit.fitHeight,
@@ -186,9 +186,9 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                     return Column(
                       children: [
                         TabBar(
-                          labelColor: Colors.white,
+                          labelColor: DodaoTheme.of(context).primaryText,
                           labelStyle: DodaoTheme.of(context).bodyText1,
-                          indicatorColor: const Color(0xFF47CBE4),
+                          indicatorColor: DodaoTheme.of(context).tabIndicator,
                           indicatorWeight: 3,
                           // isScrollable: true,
                           onTap: (index) {

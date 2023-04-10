@@ -104,18 +104,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       key: scaffoldKey,
       drawer: const NavDrawer(),
       appBar: AppBarWithSearchSwitch(
-        backgroundColor: Colors.black,
+        backgroundColor: DodaoTheme.of(context).background,
+        titleTextStyle: Theme.of(context).textTheme.titleLarge,
         automaticallyImplyLeading: false,
         appBarBuilder: (context) {
           return AppBar(
-            backgroundColor: Colors.black,
             title: Text(
                 'Job Exchange',
-              style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
+                style: Theme.of(context).textTheme.titleLarge
             ),
             actions: [
               // AppBarSearchButton(),
@@ -126,10 +122,11 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             ],
           );
         },
+        keepAppBarColors: false,
         searchInputDecoration: InputDecoration(
           border: InputBorder.none,
           hintText: 'Search',
-          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+          hintStyle: Theme.of(context).textTheme.titleMedium
           // suffixIcon: Icon(
           //   Icons.tag,
           //   color: Colors.grey[300],
@@ -159,7 +156,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: const Color(0xFF1E2429),
+      // backgroundColor: const Color(0xFF1E2429),
       floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
       body: Container(
         width: double.infinity,
@@ -167,12 +164,12 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
+          // gradient: LinearGradient(
+          //   colors: [Colors.black, Colors.black, Colors.black],
+          //   stops: [0, 0.5, 1],
+          //   begin: AlignmentDirectional(1, -1),
+          //   end: AlignmentDirectional(-1, 1),
+          // ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
@@ -292,7 +289,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                   // TabBar(
                   //   labelColor: Colors.white,с
                   //   labelStyle: DodaoTheme.of(context).bodyText1,
-                  //   indicatorColor: Color(0xFF47CBE4),
+                  //   indicatorColor: DodaoTheme.of(context).tabIndicator,
                   //   indicatorWeight: 3,
                   //   tabs: [
                   //     Tab(

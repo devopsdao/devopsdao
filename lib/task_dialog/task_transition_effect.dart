@@ -8,6 +8,7 @@ import '../account_dialog/main.dart';
 import '../blockchain/accounts.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
+import '../config/theme.dart';
 import '../widgets/account_item.dart';
 import '../widgets/data_loading_dialog.dart';
 import '../task_item/task_item.dart';
@@ -30,6 +31,7 @@ class TaskTransition extends StatelessWidget {
 
     return OpenContainer(
       transitionType: _transitionType2,
+      openColor: DodaoTheme.of(context).taskBackgroundColor,
       openBuilder: (BuildContext context, VoidCallback _) {
         final String taskAddress = task.taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
@@ -37,7 +39,7 @@ class TaskTransition extends StatelessWidget {
         return TaskDialogFuture(
             fromPage: fromPage, taskAddress: task.taskAddress, shimmerEnabled: true);
       },
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 300),
       closedElevation: 0,
       closedShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -71,13 +73,14 @@ class LoadTaskByLink extends StatelessWidget {
     var tasksServices = context.watch<TasksServices>();
     return OpenContainer(
       transitionType: _transitionType2,
+      openColor: DodaoTheme.of(context).taskBackgroundColor,
       openBuilder: (BuildContext context, VoidCallback _) {
         final String taskAddressString = taskAddress.toString();
         RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
         Beamer.of(context).updateRouteInformation(routeInfo);
         return TaskDialogFuture(fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true);
       },
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 300),
       closedElevation: 0,
       closedShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -85,7 +88,7 @@ class LoadTaskByLink extends StatelessWidget {
         ),
       ),
       openElevation: 0,
-      closedColor: Colors.white,
+      closedColor: Colors.transparent,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return const AppDataLoadingDialogWidget();
       },

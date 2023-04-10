@@ -7,6 +7,8 @@ import '../blockchain/interface.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/services.dart';
 
+import '../config/theme.dart';
+
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class DialogHeader extends StatefulWidget {
@@ -146,14 +148,14 @@ class _DialogHeaderState extends State<DialogHeader> {
                       ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${account.walletAddress.toString()}'))
                       .then((_) {
                     Flushbar(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.copy,
                           size: 20,
-                          color: Colors.white,
+                          color: DodaoTheme.of(context).flushTextColor,
                         ),
                         message: 'Task URL copied to your clipboard!',
                         duration: const Duration(seconds: 2),
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                         shouldIconPulse: false)
                         .show(context);
                   });

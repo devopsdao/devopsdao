@@ -164,19 +164,19 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       //   centerTitle: false,
       //   elevation: 2,
       // ),
-      backgroundColor: const Color(0xFF1E2429),
+      // backgroundColor: const Color(0xFF1E2429),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
+          // gradient: LinearGradient(
+          //   colors: [Colors.black, Colors.black, Colors.black],
+          //   stops: [0, 0.5, 1],
+          //   begin: AlignmentDirectional(1, -1),
+          //   end: AlignmentDirectional(-1, 1),
+          // ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
@@ -192,9 +192,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
               return Column(
                 children: [
                   TabBar(
-                    labelColor: Colors.white,
+                    labelColor: DodaoTheme.of(context).primaryText,
                     labelStyle: DodaoTheme.of(context).bodyText1,
-                    indicatorColor: const Color(0xFF47CBE4),
+                    indicatorColor: DodaoTheme.of(context).tabIndicator,
                     indicatorWeight: 3,
                     // isScrollable: true,
                     onTap: (index) {

@@ -116,7 +116,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    final isDarkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     // tasksServices.initComplete.value = false;
     // tasksServices.initComplete.addListener(() {
@@ -181,11 +180,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       },
                       child: tasksServices.walletConnected && tasksServices.publicAddress != null
                           ? Text(
-                              '${tasksServices.publicAddress.toString().substring(0, 5)}'
+                              '${tasksServices.publicAddress.toString().substring(0, 4)}'
                               '...'
-                              '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
+                              '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
                               // textAlign: TextAlign.center,
-                              // style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(fontSize: 16, color: Colors.white),
                             )
                           : const Text(
                               'Connect wallet',

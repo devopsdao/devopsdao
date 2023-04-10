@@ -2,6 +2,7 @@ import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/tags_manager/collection_services.dart';
 import 'package:dodao/widgets/tags/main.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -156,14 +157,15 @@ class _MyAppState extends State<MyApp> {
               selectedItemColor: Colors.black
             ),
 
-            primaryColor: const Color(0xff31d493),
+            // primaryColor: const Color(0xff31d493),
             // cardColor: Colors.black,
             textTheme: const TextTheme(
-              bodyLarge: TextStyle(fontSize: 20, color: Colors.white),
-              titleLarge: TextStyle(fontFamily: 'Inter', fontSize: 22,)
+              bodyLarge: TextStyle(fontSize: 20, color: Colors.black),
+              bodyMedium: TextStyle(fontSize: 15, color: Colors.black),
+              titleLarge: TextStyle(fontSize: 22, color: Colors.black),
+              titleMedium: TextStyle(fontSize: 20, color: Colors.black)
             ),
 
-            // colorScheme: ColorScheme.light().copyWith(secondary: Colors.black),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(155, 40),
@@ -188,15 +190,46 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
 
             appBarTheme: const AppBarTheme(
+                // systemOverlayStyle: SystemUiOverlayStyle(
+                //     statusBarColor: Colors.white,
+                //     statusBarBrightness: Brightness.light,
+                //     systemNavigationBarColor: Colors.white,
+                // ),
               // backgroundColor: Colors.black,
                 color: Colors.black,
-                surfaceTintColor: Colors.black
+                surfaceTintColor: Colors.black,
+                // toolbarTextStyle: TextStyle(fontSize: 23, color: Colors.white),
+                // titleTextStyle: TextStyle(fontSize: 23, color: Colors.white),
+
+            ),
+            inputDecorationTheme: const InputDecorationTheme(
+
+              // fillColor: Colors.orange,
+              // labelStyle: TextStyle(fontSize: 23, color: Colors.white),
+              // floatingLabelStyle: TextStyle(fontSize: 23, color: Colors.white),
+              // helperStyle: TextStyle(fontSize: 23, color: Colors.white),
+              // filled: true,
             ),
             bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-                selectedItemColor: Colors.white
+                selectedItemColor: Colors.white70
             ),
-            primaryColor: Colors.green,
-            primarySwatch: Colors.green,
+            // primaryColor: Colors.green,
+            // primarySwatch: Colors.green,
+
+            textTheme: const TextTheme(
+                bodyLarge: TextStyle(fontSize: 19, color: Colors.white70),
+                bodyMedium: TextStyle(fontSize: 15, color: Colors.white70),
+                bodySmall: TextStyle(fontSize: 12, color: Colors.white70),
+                titleLarge: TextStyle(fontSize: 22, color: Colors.white),
+                titleMedium: TextStyle(fontSize: 20, color: Colors.white),
+
+            ),
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Colors.white70,
+              selectionColor: Colors.white70,
+              selectionHandleColor: Colors.white70,
+            ),
+
 
             // iconTheme: const IconThemeData(
             //   color: Colors.white,

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,19 +31,35 @@ abstract class DodaoTheme {
           : LightModeTheme();
 
   late Color transparentCloud;
+  late Color background;
+  late Color taskBackgroundColor;
   late Color primaryText;
   late Color secondaryText;
+  late Color tabIndicator;
+
 
   late Color primaryBtnText;
-  late Color lineColor;
-  late Color grayIcon;
-  late Color gray200;
-  late Color gray600;
-  late Color black600;
-  late Color tertiary400;
   late Color textColor;
   late Color maximumBlueGreen;
-  late Color plumpPurple;
+
+  late Color flushTextColor = Colors.white;
+  late Color flushForCopyBackgroundColor = Colors.blueAccent;
+  final BorderRadius borderRadius = BorderRadius.circular(14.0);
+  final double elevation = 7;
+
+  late LinearGradient gradient;
+
+  late GradientBoxBorder borderGradient;
+
+  late LinearGradient smallButtonGradient = const LinearGradient(
+      begin: AlignmentDirectional(1, -1),
+      end: AlignmentDirectional(-1, 1),
+      colors: [
+        Colors.purpleAccent,
+        Colors.purple,
+      ]
+  );
+
 
   String get title1Family => typography.title1Family;
   TextStyle get title1 => typography.title1;
@@ -66,19 +83,28 @@ abstract class DodaoTheme {
 
 class LightModeTheme extends DodaoTheme {
   late Color transparentCloud = Colors.black26;
+  late Color background = Colors.white;
+  late Color taskBackgroundColor = Colors.white;
   late Color primaryText = const Color(0xFF101213);
-  late Color secondaryText = const Color(0xFF57636C);
+  late Color secondaryText = Colors.grey.shade800;
+  late Color tabIndicator = const Color(0xFF47CBE4);
 
   late Color primaryBtnText = Colors.black;
-  late Color lineColor = const Color(0xFFE0E3E7);
-  late Color grayIcon = const Color(0xFF95A1AC);
-  late Color gray200 = const Color(0xFFDBE2E7);
-  late Color gray600 = const Color(0xFF262D34);
-  late Color black600 = const Color(0xFF090F13);
-  late Color tertiary400 = const Color(0xFF39D2C0);
   late Color textColor = const Color(0xFF1E2429);
   late Color maximumBlueGreen = const Color(0xFF59C3C3);
-  late Color plumpPurple = const Color(0xFF52489C);
+
+  late LinearGradient gradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+    Colors.green.shade800,
+    Colors.yellow.shade600,
+  ]);
+
+  late GradientBoxBorder borderGradient = const GradientBoxBorder(
+    gradient: LinearGradient(
+      colors: [Color(0xFFE8E8E8), Color(0xFFE8E8E8)],
+      begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    ),
+    width: 1,
+  );
 }
 
 abstract class Typography {
@@ -165,19 +191,30 @@ class ThemeTypography extends Typography {
 
 class DarkModeTheme extends DodaoTheme {
   late Color transparentCloud = Colors.white12;
+  late Color background = Colors.black;
+  // late Color taskBackgroundColor = const Color(0x1D1B20FF);
+  late Color taskBackgroundColor = const Color(0xFF1D1B20);
   late Color primaryText = const Color(0xFFFFFFFF);
-  late Color secondaryText = const Color(0xFF95A1AC);
+
+  late Color secondaryText = Colors.grey.shade300;
+  late Color tabIndicator = const Color(0xFF47CBE4);
 
   late Color primaryBtnText = const Color(0xFFFFFFFF);
-  late Color lineColor = const Color(0xFF22282F);
-  late Color grayIcon = const Color(0xFF95A1AC);
-  late Color gray200 = const Color(0xFFDBE2E7);
-  late Color gray600 = const Color(0xFF262D34);
-  late Color black600 = const Color(0xFF090F13);
-  late Color tertiary400 = const Color(0xFF39D2C0);
   late Color textColor = const Color(0xFF1E2429);
   late Color maximumBlueGreen = const Color(0xFF59C3C3);
-  late Color plumpPurple = const Color(0xFF52489C);
+
+  late LinearGradient gradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+    Colors.green.shade800,
+    Colors.yellow.shade600,
+  ]);
+
+  late GradientBoxBorder borderGradient = const GradientBoxBorder(
+    gradient: LinearGradient(
+      colors: [Color(0xFF5B5B5B), Color(0xFF1D1B20)],
+      begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    ),
+    width: 1,
+  );
 }
 
 extension TextStyleHelper on TextStyle {

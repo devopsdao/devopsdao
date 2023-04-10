@@ -1,42 +1,10 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:badges/badges.dart';
-import 'package:dodao/task_dialog/pages.dart';
-import 'package:dodao/task_dialog/pages/3_selection.dart';
-import 'package:dodao/task_dialog/widget/participants_list.dart';
-import 'package:dodao/task_dialog/widget/request_audit_alert.dart';
-import 'package:dodao/widgets/payment.dart';
-import 'package:dodao/widgets/select_menu.dart';
-import 'package:dodao/task_dialog/buttons.dart';
-import 'package:dodao/task_dialog/states.dart';
-import 'package:dodao/widgets/wallet_action.dart';
-import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:dodao/task_dialog/widget/rate_widget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:horizontal_blocked_scroll_physics/horizontal_blocked_scroll_physics.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:webthree/credentials.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
-import '../blockchain/task_services.dart';
-import '../widgets/chat/main.dart';
 
-import '../config/theme.dart';
-import '../config/flutter_flow_util.dart';
-
-import 'package:beamer/beamer.dart';
-
-import 'package:flutter/services.dart';
-
-import '../widgets/data_loading_dialog.dart';
-
-import 'dart:ui' as ui;
-
-import 'main.dart';
 
 class ShimmeredTaskPages extends StatefulWidget {
   final Task task;

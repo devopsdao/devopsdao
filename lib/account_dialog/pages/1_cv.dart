@@ -10,6 +10,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/flutter_flow_util.dart';
+import '../../config/theme.dart';
 import '../widget/dialog_button_widget.dart';
 
 class AccountCvPage extends StatefulWidget {
@@ -114,14 +115,14 @@ class _AccountCvPageState extends State<AccountCvPage> {
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: account.walletAddress.toString())).then((_) {
                                       Flushbar(
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.copy,
                                             size: 20,
-                                            color: Colors.white,
+                                            color: DodaoTheme.of(context).flushTextColor,
                                           ),
                                           message: '${account.walletAddress.toString()} copied to your clipboard!',
                                           duration: const Duration(seconds: 2),
-                                          backgroundColor: Colors.blueAccent,
+                                          backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                           shouldIconPulse: false)
                                           .show(context);
                                     });

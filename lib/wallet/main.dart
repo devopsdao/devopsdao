@@ -2,6 +2,7 @@ import 'package:dodao/wallet/widgets/transport_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../blockchain/interface.dart';
+import '../config/theme.dart';
 import 'algorand_walletconnect_transaction.dart';
 import 'ethereum_walletconnect_transaction.dart';
 import 'walletconnect_provider.dart';
@@ -364,14 +365,14 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               // const Spacer(),
               Material(
                 elevation: 10,
-                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   // height: MediaQuery.of(context).size.width * .08,
                   // width: MediaQuery.of(context).size.width * .57
                   width: innerPaddingWidth,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                   ),
                   child: const Text(
                     'By connecting a wallet, you agree to Terms of Service and Privacy Policy.',
@@ -415,12 +416,12 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                   padding: const EdgeInsets.all(18.0),
                   child: Material(
                     elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        borderRadius: DodaoTheme.of(context).borderRadius,
                       ),
                       child: TransportSelection(
                         screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
@@ -435,14 +436,14 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               Center(
                 child: Material(
                   elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
                     // height: MediaQuery.of(context).size.width * .08,
                     // width: MediaQuery.of(context).size.width * .57
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                     ),
                     child: Row(
                       children: const <Widget>[
@@ -483,14 +484,14 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: Material(
                         elevation: 6,
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        borderRadius: DodaoTheme.of(context).borderRadius,
                         child: Container(
                           padding: const EdgeInsets.all(10.0),
                           height: widget.screenHeightSizeNoKeyboard - 40,
                           // width: MediaQuery.of(context).size.width * .57
                           width: innerPaddingWidth,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
+                            borderRadius: DodaoTheme.of(context).borderRadius,
                           ),
                           child: DefaultTabController(
                             length: 2,
@@ -804,7 +805,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
 
     return Material(
       elevation: 9,
-      borderRadius: BorderRadius.circular(widget.borderRadius),
+      borderRadius: DodaoTheme.of(context).borderRadius,
       child: InkWell(
         onTap: () {
           if (widget.active) {
@@ -824,7 +825,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
           height: 50.0, //MediaQuery.of(context).size.width * .08,
           width: widget.buttonWidth,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
+            borderRadius: DodaoTheme.of(context).borderRadius,
           ),
           child: Row(
             children: <Widget>[

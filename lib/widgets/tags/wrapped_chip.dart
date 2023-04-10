@@ -550,7 +550,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                   Radius.circular(14.0),
                 ),
                 border: Border.all(
-                    color: widget.wrapperRole == WrapperRole.hashButton ? Colors.black : animationBorderColor.value!,
+                    color: widget.wrapperRole == WrapperRole.hashButton ? DodaoTheme.of(context).background : animationBorderColor.value!,
                     width: 1
                 ),
                 gradient: widget.wrapperRole == WrapperRole.hashButton ? addTagButton : null,

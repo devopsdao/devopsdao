@@ -82,7 +82,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
               // const SizedBox(height: 50),
               Material(
                 elevation: 10,
-                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 child: GestureDetector(
                   onTap: () {
                     // interface.accountsDialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
@@ -94,7 +94,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                     // width: MediaQuery.of(context).size.width * .57
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                     ),
                     child: LayoutBuilder(builder: (context, constraints) {
                       final text = TextSpan(
@@ -190,11 +190,11 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
                   elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
                       width: innerPaddingWidth,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        borderRadius: DodaoTheme.of(context).borderRadius,
                       ),
                       child: Column(
                         children: [
@@ -219,12 +219,12 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
                   elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                     ),
                     child: ListBody(
                       children: <Widget>[
@@ -260,12 +260,12 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
                   elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
                     padding: const EdgeInsets.all(8.0),
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                     ),
                     child: Row(
                       children: <Widget>[
@@ -300,13 +300,13 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
                   elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
                     // constraints: const BoxConstraints(maxHeight: 500),
                     padding: const EdgeInsets.all(8.0),
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                     ),
                     child: TextFormField(
                       controller: messageForStateController,
