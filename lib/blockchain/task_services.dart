@@ -325,7 +325,7 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 4002;
+      chainId = 1287;
     }
 
     isDeviceConnected = false;
