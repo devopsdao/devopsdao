@@ -131,11 +131,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       key: scaffoldKey,
       drawer: const NavDrawer(),
       appBar: AppBarWithSearchSwitch(
-        backgroundColor: Colors.black,
         // automaticallyImplyLeading: false,
         appBarBuilder: (context) {
           return AppBar(
-            backgroundColor: Colors.black,
             title: Text(
               'Auditor',
               style: DodaoTheme.of(context).title2.override(
@@ -153,10 +151,10 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
             ],
           );
         },
-        searchInputDecoration: InputDecoration(
+        searchInputDecoration: const InputDecoration(
           border: InputBorder.none,
           hintText: 'Search',
-          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+          hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
           // suffixIcon: Icon(
           //   Icons.tag,
           //   color: Colors.grey[300],
@@ -180,84 +178,18 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
           }
         },
         customTextEditingController: searchServices.searchKeywordController,
-        // actions: [
-        //   // IconButton(
-        //   //   onPressed: () {
-        //   //     showSearch(
-        //   //       context: context,
-        //   //       delegate: MainSearchDelegate(),
-        //   //     );
-        //   //   },
-        //   //   icon: const Icon(Icons.search)
-        //   // ),
-        //   // LoadButtonIndicator(),
-        // ],
         centerTitle: false,
         elevation: 2,
       ),
 
 
 
-      // AppBar(
-      //   backgroundColor: Colors.black,
-      //   automaticallyImplyLeading: false,
-      //   title: Column(
-      //     mainAxisSize: MainAxisSize.max,
-      //     children: [
-      //       Row(
-      //         mainAxisSize: MainAxisSize.max,
-      //         mainAxisAlignment: MainAxisAlignment.start,
-      //         children: [
-      //           Text(
-      //             'Auditor',
-      //             style: DodaoTheme.of(context).title2.override(
-      //                   fontFamily: 'Inter',
-      //                   color: Colors.white,
-      //                   fontSize: 22,
-      //                 ),
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   actions: const [
-      //     // LoadButtonIndicator(),
-      //   ],
-      //   centerTitle: false,
-      //   elevation: 2,
-      // ),
-      backgroundColor: const Color(0xFF1E2429),
-      // floatingActionButton: _isFloatButtonVisible
-      //     ? FloatingActionButton(
-      //         onPressed: () async {
-      //           await Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => CreateJobWidget(),
-      //             ),
-      //           );
-      //         },
-      //         backgroundColor: DodaoTheme.of(context).maximumBlueGreen,
-      //         elevation: 8,
-      //         child: Icon(
-      //           Icons.add,
-      //           color: Color(0xFFFCFCFC),
-      //           size: 28,
-      //         ),
-      //       )
-      //     : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
@@ -273,9 +205,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
               return Column(
                 children: [
                   TabBar(
-                    labelColor: Colors.white,
+                    labelColor: DodaoTheme.of(context).primaryText,
                     labelStyle: DodaoTheme.of(context).bodyText1,
-                    indicatorColor: const Color(0xFF47CBE4),
+                    indicatorColor: DodaoTheme.of(context).tabIndicator,
                     indicatorWeight: 3,
                     onTap: (index) {
                       searchServices.searchKeywordController.clear();

@@ -164,7 +164,7 @@ class _TaskItemState extends State<TaskItem> {
                         flex: 7,
                         child: Text(
                           task.title,
-                          style: DodaoTheme.of(context).subtitle1.override(fontFamily: 'Inter', color: Colors.grey[300]),
+                          style: DodaoTheme.of(context).subtitle1.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText),
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -176,7 +176,7 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             task.taskState,
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: Colors.grey[300]),
+                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -190,7 +190,7 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(
                         child: Text(
                           task.description,
-                          style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: Colors.grey[300]),
+                          style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -226,11 +226,8 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(
                         flex: 7,
                         child: Text(
-                          DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
-                          style: const TextStyle(
-                              // fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Colors.white),
+                          DateFormat('dd MMM HH:mm').format(task.createTime),
+                          style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
                           softWrap: false,
                           overflow: TextOverflow.fade,
                           maxLines: 1,
@@ -242,31 +239,31 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             '${task.tokenValues[0]} ${tasksServices.chainTicker}',
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: Colors.grey[300]),
+                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,
                             textAlign: TextAlign.end,
                           ),
                         ),
-                      if (task.tokenValues[0] != 0)
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            '${task.tokenValues[0]} aUSDC',
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: Colors.grey[300]),
-                            softWrap: false,
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
+                      // if (task.tokenValues[0] != 0)
+                      //   Expanded(
+                      //     flex: 3,
+                      //     child: Text(
+                      //       '${task.tokenValues[0]} aUSDC',
+                      //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
+                      //       softWrap: false,
+                      //       overflow: TextOverflow.fade,
+                      //       maxLines: 1,
+                      //       textAlign: TextAlign.end,
+                      //     ),
+                      //   ),
                       if (task.tokenValues[0] == 0 && task.tokenValues[0] == 0)
                         Expanded(
                           flex: 3,
                           child: Text(
                             'Has no money',
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: Colors.grey[300]),
+                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
                             softWrap: false,
                             overflow: TextOverflow.fade,
                             maxLines: 1,

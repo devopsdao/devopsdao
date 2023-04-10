@@ -151,7 +151,13 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
 
     final double screenHeightSize = widget.screenHeightSize;
 
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       // resizeToAvoidBottomInset: false,
       body: Container(
         height: screenHeightSize,
@@ -170,8 +176,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
               children: [
                 const CreateJobHeader(),
                 Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         maxWidth: maxStaticInternalDialogWidth,
@@ -186,10 +192,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                         return Container(
                           padding: const EdgeInsets.all(6.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child: TextFormField(
                             onTap: () {
                               scrollController.animateTo(
@@ -207,13 +210,11 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                             autofocus: true,
                             obscureText: false,
 
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Title:',
-                              labelStyle:
-                              TextStyle(fontSize: 17.0, color: textColor),
+                              labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Enter the Title..]',
-                              hintStyle:
-                              TextStyle(fontSize: 14.0, color: textColor),
+                              hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
@@ -221,11 +222,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                              fontFamily: 'Inter',
-                              color: textColor,
-                              lineHeight: 1,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
                             onChanged:  (text) {
 
@@ -242,8 +239,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                 Container(
                   padding:  const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                           maxWidth: maxStaticInternalDialogWidth,
@@ -251,10 +248,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                         child: Container(
                           padding: const EdgeInsets.all(6.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child: TextFormField(
                             onTap: () {
                               scrollController.animateTo(
@@ -274,13 +268,11 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                             onTapOutside: (test) {
                               FocusScope.of(context).unfocus();
                             },
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Description:',
-                              labelStyle:
-                              TextStyle(fontSize: 17.0, color: textColor),
+                              labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Job description...]',
-                              hintStyle:
-                              TextStyle(fontSize: 14.0, color: textColor),
+                              hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
@@ -288,11 +280,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                              fontFamily: 'Inter',
-                              color: textColor,
-                              lineHeight: 1,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
                             minLines: 1,
                             maxLines: 10,
                             keyboardType: TextInputType.multiline,
@@ -310,8 +298,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                 Container(
                   padding:  const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                           maxWidth: maxStaticInternalDialogWidth,
@@ -319,10 +307,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child:  LayoutBuilder(
                               builder: (context, constraints) {
                                 final double width = constraints.maxWidth - 66;
@@ -365,7 +350,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                 //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
                                                 // ),
                                                 RichText(
-                                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                                                       TextSpan(
                                                           text: 'Add relevant tags and NFT\'s',
                                                           style: TextStyle(
@@ -405,8 +390,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                 Container(
                   padding:  const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                           maxWidth: maxStaticInternalDialogWidth,
@@ -414,10 +399,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child:  LayoutBuilder(
                               builder: (context, constraints) {
                                 final double width = constraints.maxWidth - 66;
@@ -451,11 +433,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
 
                                       decoration: InputDecoration(
                                         labelText: 'Enter GitHub link here:',
-                                        labelStyle:
-                                        const TextStyle(fontSize: 17.0, color: textColor),
+                                        labelStyle: Theme.of(context).textTheme.bodyMedium,
                                         // hintText: '[Job description...]',
-                                        hintStyle:
-                                        const TextStyle(fontSize: 14.0, color: textColor),
+                                        hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                                         focusedBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide.none,
                                         ),
@@ -498,11 +478,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                         ),
 
                                       ),
-                                      style: DodaoTheme.of(context).bodyText1.override(
-                                        fontFamily: 'Inter',
-                                        color: textColor,
-                                        lineHeight: 1,
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyMedium,
                                       minLines: 1,
                                       maxLines: 1,
                                       keyboardType: TextInputType.multiline,
@@ -655,7 +631,7 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
                       // overflow: TextOverflow.ellipsis,
                       // maxLines: 1,
                       textAlign: TextAlign.center,
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: [
                           // const WidgetSpan(
                           //     child: Padding(
@@ -669,10 +645,7 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
                           //     )),
                           TextSpan(
                             text: 'Add new Task',
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ],
                       ),

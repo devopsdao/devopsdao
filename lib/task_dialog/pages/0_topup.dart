@@ -58,8 +58,14 @@ class _TopUpPageState extends State<TopUpPage> {
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageControllerForTopup!.text = interface.taskTopupMessage;
 
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+
       body: Container(
         // height: widget.screenHeightSizeNoKeyboard,
         // height: widget.screenHeightSize,
@@ -112,16 +118,13 @@ class _TopUpPageState extends State<TopUpPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(interface.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       // constraints: const BoxConstraints(maxHeight: 500),
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                        BorderRadius.circular(interface.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: TextFormField(
                         controller: messageControllerForTopup,
                         // onChanged: (_) => EasyDebounce.debounce(
@@ -137,17 +140,15 @@ class _TopUpPageState extends State<TopUpPage> {
                               messageControllerForTopup!.text;
                         },
 
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Your message here..',
-                          labelStyle: TextStyle(
-                              fontSize: 17.0, color: Colors.black54),
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           hintText: '[Enter your message here..]',
-                          hintStyle: TextStyle(
-                              fontSize: 14.0, color: Colors.black54),
-                          focusedBorder: UnderlineInputBorder(
+                          hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
                         ),

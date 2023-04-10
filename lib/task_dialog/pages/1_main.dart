@@ -70,8 +70,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
 
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top: 5.0),
@@ -83,8 +89,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
             children: [
               // const SizedBox(height: 50),
               Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(widget.borderRadius),
+                elevation: DodaoTheme.of(context).elevation,
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 child: GestureDetector(
                   onTap: () {
                     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
@@ -95,13 +101,11 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     // height: MediaQuery.of(context).size.width * .08,
                     // width: MediaQuery.of(context).size.width * .57
                     width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
+                    decoration: materialMainBoxDecoration,
                     child: LayoutBuilder(builder: (context, constraints) {
                       final text = TextSpan(
                         text: task.description,
-                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                        style: Theme.of(context).textTheme.bodySmall,
                       );
                       final textHeight = TextPainter(text: text, maxLines: 5, textDirection: ui.TextDirection.ltr);
                       final oneLineHeight = TextPainter(text: text, maxLines: 1, textDirection: ui.TextDirection.ltr);
@@ -130,54 +134,100 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         child: RichText(maxLines: 5, text: text)),
                                   ),
 
+                                  // Container(
+                                  //   width: 54,
+                                  //   padding: const EdgeInsets.all(4.0),
+                                  //   child: Material(
+                                  //     elevation: 7,
+                                  //     borderRadius: DodaoTheme.of(context).borderRadius,
+                                  //     color: Colors.lightBlue.shade600,
+                                  //     child: InkWell(
+                                  //       onTap: () {
+                                  //         interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description'] ?? 99,
+                                  //             duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                  //       },
+                                  //       child: Padding(
+                                  //         padding: const EdgeInsets.all(6.0),
+                                  //         child: Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+
                                   Container(
-                                    width: 54,
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      elevation: 9,
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.lightBlue.shade600,
-                                      child: InkWell(
-                                        onTap: () {
-                                          interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description'] ?? 99,
-                                              duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(6.0),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          child: Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
-                                        ),
-                                      ),
+                                    width: 38,
+                                    height: 38,
+                                    // padding: const EdgeInsets.all(2.0),
+                                    decoration: BoxDecoration(
+                                      gradient: DodaoTheme.of(context).smallButtonGradient,
+                                      borderRadius: DodaoTheme.of(context).borderRadius,
+                                      // boxShadow: [
+                                      //   BoxShadow(
+                                      //     color: Colors.grey.withOpacity(0.5),
+                                      //     spreadRadius: 5,
+                                      //     blurRadius: 7,
+                                      //     offset: Offset(0, 3), // changes position of shadow
+                                      //   ),
+                                      // ],
+
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
+                                      tooltip: 'Go to next page',
+                                      onPressed: () {
+                                        interface.dialogPagesController.animateToPage(
+                                            interface.dialogCurrentState['pages']['description'] ?? 99,
+                                            duration: const Duration(milliseconds: 400),
+                                            curve: Curves.ease
+                                        );
+                                      },
                                     ),
                                   ),
                                   // const SizedBox(
                                   //   width: ,
                                   // ),
                                   if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
-                                    Container(
-                                      width: 54,
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Material(
-                                        elevation: 9,
-                                        borderRadius: BorderRadius.circular(6),
-                                        color: Colors.lightBlue.shade600,
-                                        child: InkWell(
-                                          onTap: () {
-                                            interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
-                                                duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(6.0),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(6),
-                                            ),
-                                            child: Icon(Icons.chat_outlined, size: 22, color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
+                                    // Container(
+                                    //   width: 54,
+                                    //   padding: const EdgeInsets.all(4.0),
+                                    //   child: Material(
+                                    //     elevation: 9,
+                                    //     borderRadius: BorderRadius.circular(6),
+                                    //     color: Colors.lightBlue.shade600,
+                                    //     child: InkWell(
+                                    //       onTap: () {
+                                    //         interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
+                                    //             duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                    //       },
+                                    //       child: Container(
+                                    //         padding: EdgeInsets.all(6.0),
+                                    //         decoration: BoxDecoration(
+                                    //           borderRadius: BorderRadius.circular(6),
+                                    //         ),
+                                    //         child: Icon(Icons.chat_outlined, size: 22, color: Colors.white),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  Container(
+                                    width: 38,
+                                    height: 38,
+                                    // padding: const EdgeInsets.all(2.0),
+                                    decoration: BoxDecoration(
+                                      gradient: DodaoTheme.of(context).smallButtonGradient,
+                                      borderRadius: DodaoTheme.of(context).borderRadius,
                                     ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.chat_outlined, size: 22, color: Colors.white),
+                                      tooltip: 'Go to chat page',
+                                      onPressed: () {
+                                        interface.dialogPagesController.animateToPage(
+                                            interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
+                                            duration: const Duration(milliseconds: 400),
+                                            curve: Curves.ease);
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -187,10 +237,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   height: 14,
                                   width: constraints.maxWidth,
                                   decoration: BoxDecoration(
-                                    color: Colors.lightBlue.shade600,
-                                    borderRadius: const BorderRadius.only(
-                                      bottomRight: Radius.circular(8.0),
-                                      bottomLeft: Radius.circular(8.0),
+                                    gradient: DodaoTheme.of(context).smallButtonGradient,
+                                    borderRadius: BorderRadius.only(
+                                      bottomRight: DodaoTheme.of(context).borderRadius.bottomRight,
+                                      bottomLeft: DodaoTheme.of(context).borderRadius.bottomLeft,
                                     ),
                                     // borderRadius: BorderRadius.all(Radius.circular(6.0)),
                                   ),
@@ -199,7 +249,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     children: [
                                       TextSpan(
                                         text: 'Read more ',
-                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
+                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7, color: Colors.white),
                                       ),
                                       const WidgetSpan(
                                         child: Icon(Icons.forward, size: 13, color: Colors.white),
@@ -231,12 +281,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //     padding: const EdgeInsets.only(top: 14.0),
               //     child: Material(
               //       elevation: 10,
-              //       borderRadius: BorderRadius.circular(widget.borderRadius),
+              //       borderRadius: DodaoTheme.of(context).borderRadius,
               //       child: Container(
               //           width: innerPaddingWidth,
               //           decoration: BoxDecoration(
               //             borderRadius:
-              //             BorderRadius.circular(widget.borderRadius),
+              //             DodaoTheme.of(context).borderRadius,
               //           ),
               //           child: Column(
               //             children: [
@@ -310,20 +360,18 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                         width: innerPaddingWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                        ),
+                        decoration: materialMainBoxDecoration,
                         child: Column(
                           children: [
                             Container(
                               alignment: Alignment.topLeft,
                               padding: const EdgeInsets.all(8.0),
                               child: RichText(
-                                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                                 TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                               ])),
                             ),
@@ -370,14 +418,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: ListBody(
                         children: <Widget>[
                           Row(
@@ -390,7 +436,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                   flex: 2,
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    const Text('Warning, this contract on Audit state!', style: TextStyle(height: 1.1, fontWeight: FontWeight.bold)),
+                                    const Text('Warning, this contract on Audit state!', ),
                                     if (task.auditInitiator == tasksServices.publicAddress &&
                                         interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
@@ -400,7 +446,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           '${task.auditors.length == 1 ? '' : 's'}'
                                           ' waiting for your decision',
                                           style: const TextStyle(
-                                            height: 1.1,
+                                            // height: 1.1,
                                           )),
                                     if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
                                         task.auditInitiator != tasksServices.publicAddress)
@@ -442,37 +488,38 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: ListBody(
                         children: <Widget>[
                           Row(
                             children: <Widget>[
                               Container(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: const Icon(Icons.new_releases,
-                                    size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                    size: 40, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
                               ),
                               Expanded(
                                 flex: 2,
-                                child: RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'There '
-                                          '${task.participants.length == 1 ? 'is' : 'are'} '
-                                          '${task.participants.length.toString()} participant'
-                                          '${task.participants.length == 1 ? '' : 's'}'
-                                          ' waiting for your decision',
-                                      style: const TextStyle(
-                                        height: 1,
-                                      )),
-                                ])),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: RichText(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'There '
+                                            '${task.participants.length == 1 ? 'is' : 'are'} '
+                                            '${task.participants.length.toString()} participant'
+                                            '${task.participants.length == 1 ? '' : 's'}'
+                                            ' waiting for your decision',
+                                        style: const TextStyle(
+                                          height: 1,
+                                        )),
+                                  ])),
+                                ),
                               ),
                               TaskDialogButton(
                                 padding: 6.0,
@@ -500,14 +547,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: ListBody(
                         children: <Widget>[
                           Row(
@@ -520,7 +565,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                 flex: 2,
                                 child: RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                                   TextSpan(
                                       text: 'Thank you for your contribution. This Task completed. You have earned: ',
                                       style: TextStyle(
@@ -541,30 +586,31 @@ class _MainTaskPageState extends State<MainTaskPage> {
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10.0),
                     width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
+                    decoration: materialMainBoxDecoration,
                     child: Row(
                       children: <Widget>[
                         Expanded(
                             flex: 2,
-                            child: ListBody(
-                              children: <Widget>[
-                                RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  TextSpan(
-                                      text: '${task.tokenValues[0]} ${tasksServices.chainTicker} \n',
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                  TextSpan(
-                                      text: '${task.tokenValues[0]} aUSDC',
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0, color: Colors.black87))
-                                ])),
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: ListBody(
+                                children: <Widget>[
+                                  RichText(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                    TextSpan(
+                                        text: '${task.tokenValues[0]} ${tasksServices.chainTicker} \n',
+                                        ),
+                                    TextSpan(
+                                        text: '${task.tokenValues[0]} aUSDC',
+                                        )
+                                  ])),
+                                ],
+                              ),
                             )),
                         const Spacer(),
                         if (fromPage == 'customer' || tasksServices.hardhatDebug == true)
@@ -602,75 +648,73 @@ class _MainTaskPageState extends State<MainTaskPage> {
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(12.0),
                     width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
-                    ),
+                    decoration: materialMainBoxDecoration,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: RichText(
-                              text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87), children: <TextSpan>[
+                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                             TextSpan(text: 'Tags and NFT attached:'),
                           ])),
                         ),
-                        LayoutBuilder(builder: (context, constraints) {
-                          final double width = constraints.maxWidth - 66;
-                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            final double width = constraints.maxWidth - 66;
+                            List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
 
-                          if (tags.isNotEmpty) {
-                            return SizedBox(
-                              width: width,
-                              child: Wrap(
-                                  alignment: WrapAlignment.start,
-                                  direction: Axis.horizontal,
-                                  children: tags.map((e) {
-                                    return WrappedChip(
-                                      key: ValueKey(e),
-                                      theme: 'white',
-                                      item: MapEntry(
-                                          e.name,
-                                          NftTagsBunch(
-                                            selected: false,
-                                            name: e.name,
-                                            bunch: {
-                                              BigInt.from(0) : SimpleTags(
-                                                  name: e.name,
-                                                  collection: true
-                                              )
-                                            },
-                                          )
-                                      ),
-                                      page: 'create',
-                                      selected: e.selected,
-                                      wrapperRole: WrapperRole.selectNew,
-                                    );
-                                  }).toList()),
-                            );
-                          } else {
-                            return Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                    TextSpan(
-                                        text: 'No Tags or NFT tags attached',
-                                        style: TextStyle(
-                                          height: 1,
-                                        )),
+                            if (tags.isNotEmpty) {
+                              return SizedBox(
+                                width: width,
+                                child: Wrap(
+                                    alignment: WrapAlignment.start,
+                                    direction: Axis.horizontal,
+                                    children: tags.map((e) {
+                                      return WrappedChip(
+                                        key: ValueKey(e),
+                                        theme: 'white',
+                                        item: MapEntry(
+                                            e.name,
+                                            NftTagsBunch(
+                                              selected: false,
+                                              name: e.name,
+                                              bunch: {
+                                                BigInt.from(0) : SimpleTags(
+                                                    name: e.name,
+                                                    collection: true
+                                                )
+                                              },
+                                            )
+                                        ),
+                                        page: 'create',
+                                        selected: e.selected,
+                                        wrapperRole: WrapperRole.selectNew,
+                                      );
+                                    }).toList()),
+                              );
+                            } else {
+                              return Row(
+                                children: <Widget>[
+                                  RichText(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                          TextSpan(
+                                              text: 'Nothing here',
+                                              style: TextStyle(
+                                                height: 1,
+                                              )),
                                   ])),
-                                ),
-                              ],
-                            );
-                          }
-                        }),
+                                ],
+                              );
+                            }
+                          }),
+                        ),
                       ],
                     ),
                   ),
@@ -686,15 +730,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       // constraints: const BoxConstraints(maxHeight: 500),
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: TextFormField(
                         controller: messageForStateController,
                         // onChanged: (_) => EasyDebounce.debounce(
@@ -724,9 +766,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           //   // splashColor: Colors.black,
                           // ) : null,
                           labelText: interface.dialogCurrentState['labelMessage'],
-                          labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           hintText: '[Enter your message here..]',
-                          hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
+                          hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
@@ -753,8 +795,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                             // maxWidth: maxStaticInternalDialogWidth,
@@ -762,9 +804,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
                             return Column(
                               children: <Widget>[
@@ -790,14 +830,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog')).then((_) {
                                       Flushbar(
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
-                                                color: Colors.white,
+                                                color: DodaoTheme.of(context).flushTextColor,
                                               ),
                                               message: 'Pull request name copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
+                                              backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
                                           .show(context);
                                     });
@@ -806,7 +846,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     alignment: Alignment.topLeft,
                                     child: RichText(
-                                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const [
+                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
                                       WidgetSpan(
                                           child: Padding(
                                         padding: EdgeInsets.only(right: 5.0),
@@ -843,7 +883,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         }
                                       },
                                       child: RichText(
-                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
+                                          text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
                                         const WidgetSpan(
                                             child: Padding(
                                           padding: EdgeInsets.only(right: 5.0),
@@ -922,8 +962,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
                             // maxWidth: maxStaticInternalDialogWidth,
@@ -931,9 +971,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
                             return Column(
                               children: <Widget>[
@@ -947,7 +985,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   padding: const EdgeInsets.all(8.0),
                                   alignment: Alignment.topLeft,
                                   child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
                                     const WidgetSpan(
                                         child: Padding(
                                       padding: EdgeInsets.only(right: 5.0),
@@ -1058,15 +1096,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       // constraints: const BoxConstraints(maxHeight: 500),
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: SelectNetworkMenu(object: task),
                     ),
                   ),
@@ -1085,14 +1121,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //           padding: const EdgeInsets.only(),
               //           child: Material(
               //             elevation: 10,
-              //             borderRadius: BorderRadius.circular(widget.borderRadius),
+              //             borderRadius: DodaoTheme.of(context).borderRadius,
               //             child: Container(
               //                 // constraints: const BoxConstraints(maxHeight: 500),
               //                 padding: const EdgeInsets.all(5.0),
               //                 width: innerPaddingWidth,
-              //                 decoration: BoxDecoration(
-              //                   borderRadius: BorderRadius.circular(widget.borderRadius),
-              //                 ),
+              //                 decoration: materialMainBoxDecoration,
               //                 child: Column(
               //                   children: [
               //                     const Text('Interchain protocol:'),

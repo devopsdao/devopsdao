@@ -61,12 +61,13 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
     RouteInformation routeInfo = RouteInformation(location: '/$widget.fromPage/$taskAddressString');
     Beamer.of(context).updateRouteInformation(routeInfo);
     return Scaffold(
-        body: Container(
-      width: double.infinity,
-      height: double.infinity,
-      // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-      alignment: Alignment.center,
-      child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: true),
-    ));
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+        alignment: Alignment.center,
+        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: true),
+      )
+    );
   }
 }

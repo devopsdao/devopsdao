@@ -8,6 +8,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/flutter_flow_util.dart';
+import '../../config/theme.dart';
 import '../widget/dialog_button_widget.dart';
 import '../widget/request_audit_alert.dart';
 
@@ -39,8 +40,14 @@ class _DescriptionPageState extends State<DescriptionPage> {
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
 
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.only(top: 5.0),
@@ -51,8 +58,8 @@ class _DescriptionPageState extends State<DescriptionPage> {
           child: Column(
             children: [
               Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: GestureDetector(
                       onTap: () {
                         // interface.dialogPagesController.animateToPage(
@@ -70,13 +77,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                   // height: MediaQuery.of(context).size.width * .08,
                                   // width: MediaQuery.of(context).size.width * .57
                                   width: innerPaddingWidth,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(interface.borderRadius),
-                                  ),
+                                  // decoration: materialMainBoxDecoration,
                                   child: Container(
                                       padding: const EdgeInsets.all(6),
                                       child: RichText(
-                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                                          text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                                         TextSpan(
                                           text: task.description,
                                         )
@@ -87,11 +92,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           Container(
                             padding: const EdgeInsets.all(6),
                             child: RichText(
-                                text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                               const TextSpan(text: 'Created: ', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                               TextSpan(
                                   text: DateFormat('MM/dd/yyyy, hh:mm a').format(task.createTime),
-                                  style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                  style: Theme.of(context).textTheme.bodySmall)
                             ])),
                           ),
                         ],
@@ -101,43 +106,41 @@ class _DescriptionPageState extends State<DescriptionPage> {
               Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: GestureDetector(
                           child: Container(
                               padding: const EdgeInsets.all(8.0),
                               // height: MediaQuery.of(context).size.width * .08,
                               // width: MediaQuery.of(context).size.width * .57
                               width: innerPaddingWidth,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(interface.borderRadius),
-                              ),
+                              decoration: materialMainBoxDecoration,
                               child: ListBody(children: <Widget>[
                                 GestureDetector(
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: task.contractOwner.toString())).then((_) {
                                       Flushbar(
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
-                                                color: Colors.white,
+                                                color: DodaoTheme.of(context).flushTextColor,
                                               ),
                                               message: '${task.contractOwner.toString()} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
+                                              backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
                                           .show(context);
                                     });
                                   },
                                   child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                    const WidgetSpan(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
+                                    WidgetSpan(
                                         child: Padding(
                                       padding: EdgeInsets.only(right: 5.0),
                                       child: Icon(
                                         Icons.copy,
                                         size: 16,
-                                        color: Colors.black26,
+                                        color: DodaoTheme.of(context).secondaryText,
                                       ),
                                     )),
                                     const TextSpan(text: 'Contract owner: \n', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
@@ -149,28 +152,28 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: task.taskAddress.toString())).then((_) {
                                       Flushbar(
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
-                                                color: Colors.white,
+                                                color: DodaoTheme.of(context).flushTextColor,
                                               ),
                                               message: '${task.taskAddress} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
+                                              backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
                                           .show(context);
                                     });
                                   },
                                   child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                    const WidgetSpan(
-                                        child: Padding(
-                                      padding: EdgeInsets.only(right: 5.0),
-                                      child: Icon(
-                                        Icons.copy,
-                                        size: 16,
-                                        color: Colors.black26,
-                                      ),
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
+                                    WidgetSpan(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          Icons.copy,
+                                          size: 16,
+                                          color: DodaoTheme.of(context).secondaryText,
+                                        ),
                                     )),
                                     const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                     TextSpan(text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
@@ -181,28 +184,28 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                     onTap: () async {
                                       Clipboard.setData(ClipboardData(text: task.performer.toString())).then((_) {
                                         Flushbar(
-                                                icon: const Icon(
+                                                icon: Icon(
                                                   Icons.copy,
                                                   size: 20,
-                                                  color: Colors.white,
+                                                  color: DodaoTheme.of(context).flushTextColor,
                                                 ),
                                                 message: '${task.performer.toString()} copied to your clipboard!',
                                                 duration: const Duration(seconds: 2),
-                                                backgroundColor: Colors.blueAccent,
+                                                backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                                 shouldIconPulse: false)
                                             .show(context);
                                       });
                                     },
                                     child: RichText(
                                         text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                      const WidgetSpan(
-                                          child: Padding(
-                                        padding: EdgeInsets.only(right: 5.0),
-                                        child: Icon(
-                                          Icons.copy,
-                                          size: 16,
-                                          color: Colors.black26,
-                                        ),
+                                      WidgetSpan(
+                                        child: Padding(
+                                        padding: const EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.copy,
+                                            size: 16,
+                                            color: DodaoTheme.of(context).secondaryText,
+                                          ),
                                       )),
                                       const TextSpan(text: 'Performer: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                                       TextSpan(text: task.performer.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
@@ -213,27 +216,27 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                     onTap: () async {
                                       Clipboard.setData(ClipboardData(text: task.auditor.toString())).then((_) {
                                         Flushbar(
-                                                icon: const Icon(
+                                                icon: Icon(
                                                   Icons.copy,
                                                   size: 20,
-                                                  color: Colors.white,
+                                                  color: DodaoTheme.of(context).flushTextColor,
                                                 ),
                                                 message: '${task.auditor.toString()} copied to your clipboard!',
                                                 duration: const Duration(seconds: 2),
-                                                backgroundColor: Colors.blueAccent,
+                                                backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                                 shouldIconPulse: false)
                                             .show(context);
                                       });
                                     },
                                     child: RichText(
                                         text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                      const WidgetSpan(
+                                      WidgetSpan(
                                           child: Padding(
                                         padding: EdgeInsets.only(right: 5.0),
                                         child: Icon(
                                           Icons.copy,
                                           size: 16,
-                                          color: Colors.black26,
+                                          color: DodaoTheme.of(context).secondaryText,
                                         ),
                                       )),
                                       const TextSpan(text: 'Auditor selected: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),

@@ -7,6 +7,8 @@ import '../blockchain/classes.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/services.dart';
 
+import '../config/theme.dart';
+
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class TaskDialogHeader extends StatefulWidget {
@@ -26,7 +28,8 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
     final Task task = widget.task;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      // color: DodaoTheme.of(context).taskBackgroundColor,
+      padding: const EdgeInsets.all(14),
       width: interface.maxStaticDialogWidth,
       child: Row(
         children: [
@@ -35,7 +38,8 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
             child: InkWell(
               onTap: () {
                 interface.dialogPagesController
-                    .animateToPage(interface.dialogCurrentState['pages']['main'], duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                    .animateToPage(interface.dialogCurrentState['pages']['main'],
+                duration: const Duration(milliseconds: 400), curve: Curves.ease);
               },
               borderRadius: BorderRadius.circular(16),
               child: Container(
@@ -49,6 +53,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                       return const MapEntry('main', 0);
                     }).key;
                     return Row(
+
                       children: <Widget>[
                         if (page == 'topup')
                           const Expanded(
@@ -90,18 +95,19 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                         textAlign: TextAlign.center,
                         text: TextSpan(
                           children: [
-                            const WidgetSpan(
-                                child: Padding(
-                              padding: EdgeInsets.only(right: 5.0),
-                              child: Icon(
-                                Icons.copy,
-                                size: 20,
-                                color: Colors.black26,
-                              ),
-                            )),
+                            WidgetSpan(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Icon(
+                                  Icons.copy,
+                                  size: 20,
+                                  color: DodaoTheme.of(context).secondaryText,
+                                ),
+                              )
+                            ),
                             TextSpan(
                               text: task.title,
-                              style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ],
                         ),
@@ -112,14 +118,14 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                 onTap: () async {
                   Clipboard.setData(ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress}')).then((_) {
                     Flushbar(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.copy,
                               size: 20,
-                              color: Colors.white,
+                              color: DodaoTheme.of(context).flushTextColor,
                             ),
                             message: 'Task URL copied to your clipboard!',
                             duration: const Duration(seconds: 2),
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                             shouldIconPulse: false)
                         .show(context);
                   });

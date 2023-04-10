@@ -95,14 +95,14 @@ class NftItem extends StatelessWidget {
                                 onTap: () async {
                                   Clipboard.setData(ClipboardData(text: '${item.id}')).then((_) {
                                     Flushbar(
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.copy,
                                           size: 20,
-                                          color: Colors.white,
+                                          color: DodaoTheme.of(context).flushTextColor,
                                         ),
                                         message: '${item.id} copied to your clipboard!',
                                         duration: const Duration(seconds: 2),
-                                        backgroundColor: Colors.blueAccent,
+                                        backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                         shouldIconPulse: false)
                                         .show(context);
                                   });
@@ -135,14 +135,14 @@ class NftItem extends StatelessWidget {
                                 onTap: () async {
                                   Clipboard.setData(ClipboardData(text: '${item.name}')).then((_) {
                                     Flushbar(
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.copy,
                                           size: 20,
-                                          color: Colors.white,
+                                          color: DodaoTheme.of(context).flushTextColor,
                                         ),
                                         message: '${item.name} copied to your clipboard!',
                                         duration: const Duration(seconds: 2),
-                                        backgroundColor: Colors.blueAccent,
+                                        backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                         shouldIconPulse: false)
                                         .show(context);
                                   });

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
+import '../config/theme.dart';
 import '../main.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -15,7 +16,7 @@ class NavDrawer extends StatelessWidget {
     return Drawer(
 
       child: Container(
-        color: Colors.black26,
+        color:  DodaoTheme.of(context).taskBackgroundColor,
         child: ListView(
 
           padding: EdgeInsets.zero,
@@ -73,18 +74,18 @@ class NavDrawer extends StatelessWidget {
             //   title: Text('Feedback'),
             //   onTap: () => {Navigator.of(context).pop()},
             // ),
-            ListTile(
-              leading: Icon(Icons.brush),
-              title: Text('Theme'),
-              trailing: Switch(
-                value: true,
-                onChanged: (bool value) {
-                  // setState(() {
-                  //   _switchValue = value;
-                  // });
-                },
-              ),
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.brush),
+            //   title: Text('Theme'),
+            //   trailing: Switch(
+            //     value: true,
+            //     onChanged: (bool value) {
+            //       // setState(() {
+            //       //   _switchValue = value;
+            //       // });
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

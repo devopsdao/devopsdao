@@ -86,13 +86,19 @@ class _PaymentState extends State<Payment> {
       setBlackAndWhite = Colors.black;
       setGrey = Colors.grey;
     }
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
 
     return Column(
       children: [
         Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(borderRadius),
+            elevation: DodaoTheme.of(context).elevation,
+            borderRadius: DodaoTheme.of(context).borderRadius,
             child: Container(
+              decoration: materialMainBoxDecoration,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(9.0),
               width: innerPaddingWidth,
@@ -106,7 +112,7 @@ class _PaymentState extends State<Payment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          // padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                           // height: widget.topConstraints.maxHeight - 200,
                           width: innerPaddingWidth,
                           decoration: BoxDecoration(
@@ -122,9 +128,9 @@ class _PaymentState extends State<Payment> {
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'Value:',
-                              labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
+                              labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Please enter Task value]',
-                              hintStyle: TextStyle(fontSize: 14.0, color: setBlackAndWhite),
+                              hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               // enabledBorder: const UnderlineInputBorder(
                               //   borderSide: BorderSide(
                               //     color:  Colors.white,
@@ -142,11 +148,7 @@ class _PaymentState extends State<Payment> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: setBlackAndWhite,
-                                  lineHeight: 2,
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onEditingComplete: () {
@@ -178,17 +180,21 @@ class _PaymentState extends State<Payment> {
                           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                           child: SliderTheme(
                             data: SliderThemeData(
-                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 11),
-                              activeTrackColor: setBlackAndWhite,
-                              inactiveTrackColor: setBlackAndWhite,
+                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 11, elevation: 6),
+                              activeTrackColor: Colors.deepOrange,
+                              inactiveTrackColor: Colors.grey.shade600,
                               trackHeight: 5.0,
+                              thumbColor: Colors.white,
+
+
                             ),
                             child: Slider(
+
                               value: _currentPriceValue,
                               min: minPrice,
                               max: maxPrice,
                               divisions: 100,
-                              label: _currentPriceValue.toString(),
+                              // label: _currentPriceValue.toString(),
                               onChanged: (double value) {
                                 setState(() {
                                   _currentPriceValue = value;
@@ -221,52 +227,55 @@ class _PaymentState extends State<Payment> {
                           //               text: 'Select Token: ',
                           //               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                           //         ])),
-                          DropdownButton<String>(
-                            isExpanded: true,
-                            value: dropdownValue,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            borderRadius: BorderRadius.circular(borderRadius),
-                            dropdownColor: setGrey,
-                            style: TextStyle(color: setBlackAndWhite),
-                            hint: Text('Choose token ($dropdownValue)'),
-                            underline: Container(
-                              height: 2,
-                              color: setBlackAndWhite,
+                          ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              value: dropdownValue,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              // elevation: 6,
+                              borderRadius: BorderRadius.circular(borderRadius),
+                              dropdownColor: DodaoTheme.of(context).taskBackgroundColor,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              // hint: Text('Choose token ($dropdownValue)'),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepOrange,
+                              ),
+                              onChanged: (String? value) {
+                                // This is called when the user selects an item.
+                                if (value == tasksServices.chainTicker) {
+                                  tasksServices.taskTokenSymbol = 'ETH';
+                                  // print('taskTokenSymbol changed to default value ${value!}');
+                                } else {
+                                  tasksServices.taskTokenSymbol = value!;
+                                  // print('taskTokenSymbol changed to ${value!}');
+                                }
+                                if (value == tasksServices.chainTicker) {
+                                  interface.tokensEntered = 0.0;
+                                  // valueController!.text = '0.0 ${tasksServices.chainTicker}';
+                                  valueController!.text = '0.0 ${tasksServices.chainTicker}';
+                                  _currentPriceValue = 0.0;
+                                  minPrice = devLowPrice;
+                                  maxPrice = devHighPrice;
+                                } else {
+                                  interface.tokensEntered = 0.0;
+                                  valueController!.text = '0.0 aUSDC';
+                                  _currentPriceValue = 0.0;
+                                  minPrice = ausdcLowPrice;
+                                  maxPrice = ausdcHighPrice;
+                                }
+                                setState(() {
+                                  dropdownValue = value!;
+                                });
+                              },
+                              items: selectToken.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
-                            onChanged: (String? value) {
-                              // This is called when the user selects an item.
-                              if (value == tasksServices.chainTicker) {
-                                tasksServices.taskTokenSymbol = 'ETH';
-                                print('taskTokenSymbol changed to default value ${value!}');
-                              } else {
-                                tasksServices.taskTokenSymbol = value!;
-                                print('taskTokenSymbol changed to ${value!}');
-                              }
-                              if (value == tasksServices.chainTicker) {
-                                interface.tokensEntered = 0.0;
-                                // valueController!.text = '0.0 ${tasksServices.chainTicker}';
-                                valueController!.text = '0.0 ${tasksServices.chainTicker}';
-                                _currentPriceValue = 0.0;
-                                minPrice = devLowPrice;
-                                maxPrice = devHighPrice;
-                              } else {
-                                interface.tokensEntered = 0.0;
-                                valueController!.text = '0.0 aUSDC';
-                                _currentPriceValue = 0.0;
-                                minPrice = ausdcLowPrice;
-                                maxPrice = ausdcHighPrice;
-                              }
-                              setState(() {
-                                dropdownValue = value!;
-                              });
-                            },
-                            items: selectToken.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
                           ),
                         ],
                       ),

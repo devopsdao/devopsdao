@@ -26,18 +26,16 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
     var searchServices = context.read<SearchServices>();
 
     return AppBarWithSearchSwitch(
-      backgroundColor: Colors.black,
+      backgroundColor: DodaoTheme.of(context).background,
+      titleTextStyle:Theme.of(context).textTheme.titleMedium,
+      toolbarTextStyle: Theme.of(context).textTheme.titleMedium,
+
       automaticallyImplyLeading: false,
       appBarBuilder: (context) {
         return AppBar(
-            backgroundColor: Colors.black,
             title: Text(
               title,
-              style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             actions: [
               IconButton(
@@ -49,10 +47,23 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
             ]
         );
       },
-      searchInputDecoration: const InputDecoration(
+      keepAppBarColors: false,
+      // iconTheme: IconThemeData(color: Colors.black, ),
+      searchInputDecoration: InputDecoration(
         border: InputBorder.none,
         hintText: 'Search',
-        hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+
+        hintStyle: Theme.of(context).textTheme.titleMedium,
+
+
+        // labelStyle: Theme.of(context).textTheme.titleMedium,
+        // helperStyle: Theme.of(context).textTheme.titleMedium,
+        // floatingLabelStyle: Theme.of(context).textTheme.titleMedium,
+        // fillColor: Colors.black,
+        // focusColor: Colors.black,
+        //   hoverColor: Colors.black,
+        // prefixStyle: Theme.of(context).textTheme.titleLarge,
+
         // suffixIcon: Icon(
         //   Icons.tag,
         //   color: Colors.grey[300],
