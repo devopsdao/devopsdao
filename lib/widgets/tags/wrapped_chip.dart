@@ -172,31 +172,44 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     //   }
     // }
 
-    if (widget.theme == 'white') {
-      textColor = Colors.black;
-      borderColor = Colors.grey[400]!;
-      bodyColor = Colors.white;
-      nftColor = Colors.deepOrange;
-      nftMintColor = Colors.white;
+    // if (widget.theme == 'white') {
+    //   textColor = Colors.black;
+    //   borderColor = Colors.grey[400]!;
+    //   bodyColor = Colors.white;
+    //   nftColor = Colors.deepOrange;
+    //   nftMintColor = Colors.white;
+    //
+    //   textColorSelected = Colors.white;
+    //   borderColorSelected = Colors.orangeAccent;
+    //   bodyColorSelected = Colors.orangeAccent;
+    //   nftColorSelected = Colors.white;
+    //   nftMintColorSelected = Colors.white;
+    // } else if (widget.theme == 'black') {
+    //   textColor = Colors.grey[300]!;
+    //   borderColor = Colors.grey[850]!;
+    //   bodyColor = Colors.grey[850]!;
+    //   nftColor = Colors.deepOrange;
+    //   nftMintColor = Colors.white;
+    //
+    //   textColorSelected = Colors.white;
+    //   borderColorSelected = Colors.orange[900]!;
+    //   bodyColorSelected = Colors.orange[900]!;
+    //   nftColorSelected = Colors.white;
+    //   nftMintColorSelected = Colors.white;
+    // }
 
-      textColorSelected = Colors.white;
-      borderColorSelected = Colors.orangeAccent;
-      bodyColorSelected = Colors.orangeAccent;
-      nftColorSelected = Colors.white;
-      nftMintColorSelected = Colors.white;
-    } else if (widget.theme == 'black') {
-      textColor = Colors.grey[300]!;
-      borderColor = Colors.grey[850]!;
-      bodyColor = Colors.grey[850]!;
-      nftColor = Colors.deepOrange;
-      nftMintColor = Colors.white;
 
-      textColorSelected = Colors.white;
-      borderColorSelected = Colors.orange[900]!;
-      bodyColorSelected = Colors.orange[900]!;
-      nftColorSelected = Colors.white;
-      nftMintColorSelected = Colors.white;
-    }
+    textColor = DodaoTheme.of(context).chipTextColor;
+    borderColor = DodaoTheme.of(context).chipBorderColor;
+    bodyColor = DodaoTheme.of(context).chipBodyColor;
+    nftColor = DodaoTheme.of(context).chipNftColor;
+    nftMintColor = DodaoTheme.of(context).chipNftMintColor;
+
+    textColorSelected = Colors.white;
+    borderColorSelected = DodaoTheme.of(context).chipSelectedColor;
+    bodyColorSelected = DodaoTheme.of(context).chipSelectedColor;
+    nftColorSelected = Colors.white;
+    nftMintColorSelected = Colors.white;
 
 
     // This will show overall count of NFTs in bunch

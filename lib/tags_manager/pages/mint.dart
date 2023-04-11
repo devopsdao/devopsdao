@@ -141,20 +141,16 @@ class _MintWidget extends State<MintWidget> {
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.always,
                               labelText: 'Tag name',
-                              labelStyle:  TextStyle(
-                                  fontSize: 17.0, color: Colors.grey[300]),
+                              labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Find a tag or create a new one..]',
-                              hintStyle:  TextStyle(
-                                  fontSize: 14.0, color: Colors.grey[300]),
+                              hintStyle:  Theme.of(context).textTheme.bodyMedium,
+                              // hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               // focusedBorder: const UnderlineInputBorder(
                               //   borderSide: BorderSide.none,
                               // ),
 
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                              fontFamily: 'Inter',
-                              color: Colors.grey[300]
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
                             minLines: 1,
                             maxLines: 1,
                           );

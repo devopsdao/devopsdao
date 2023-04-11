@@ -193,7 +193,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                 children: [
                   TabBar(
                     labelColor: DodaoTheme.of(context).primaryText,
-                    labelStyle: DodaoTheme.of(context).bodyText1,
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
                     indicatorColor: DodaoTheme.of(context).tabIndicator,
                     indicatorWeight: 3,
                     // isScrollable: true,

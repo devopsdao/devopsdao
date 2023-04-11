@@ -64,7 +64,8 @@ class _TopUpPageState extends State<TopUpPage> {
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
 
       body: Container(
         // height: widget.screenHeightSizeNoKeyboard,

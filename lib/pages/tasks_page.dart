@@ -288,7 +288,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
                   // TabBar(
                   //   labelColor: Colors.white,с
-                  //   labelStyle: DodaoTheme.of(context).bodyText1,
+                  //   labelStyle: Theme.of(context).textTheme.bodyMedium,
                   //   indicatorColor: DodaoTheme.of(context).tabIndicator,
                   //   indicatorWeight: 3,
                   //   tabs: [

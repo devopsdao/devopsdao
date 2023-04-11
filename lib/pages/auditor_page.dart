@@ -206,7 +206,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 children: [
                   TabBar(
                     labelColor: DodaoTheme.of(context).primaryText,
-                    labelStyle: DodaoTheme.of(context).bodyText1,
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
                     indicatorColor: DodaoTheme.of(context).tabIndicator,
                     indicatorWeight: 3,
                     onTap: (index) {

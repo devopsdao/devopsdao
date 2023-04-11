@@ -33,9 +33,18 @@ abstract class DodaoTheme {
   late Color transparentCloud;
   late Color background;
   late Color taskBackgroundColor;
+  late Color walletBackgroundColor;
   late Color primaryText;
+  late Color revertedPrimaryTextColor;
   late Color secondaryText;
   late Color tabIndicator;
+
+  late Color chipTextColor;
+  late Color chipBodyColor;
+  late Color chipBorderColor;
+  late Color chipNftColor;
+  late Color chipNftMintColor;
+  late Color chipSelectedColor;
 
 
   late Color primaryBtnText;
@@ -85,9 +94,18 @@ class LightModeTheme extends DodaoTheme {
   late Color transparentCloud = Colors.black26;
   late Color background = Colors.white;
   late Color taskBackgroundColor = Colors.white;
+  late Color walletBackgroundColor = Colors.grey.shade100;
   late Color primaryText = const Color(0xFF101213);
+  late Color revertedPrimaryTextColor = Colors.black;
   late Color secondaryText = Colors.grey.shade800;
   late Color tabIndicator = const Color(0xFF47CBE4);
+
+  late Color chipTextColor = Colors.black;
+  late Color chipBodyColor = Colors.white;
+  late Color chipBorderColor = Colors.grey.shade400;
+  late Color chipNftColor = Colors.deepOrange;
+  late Color chipNftMintColor = Colors.white;
+  late Color chipSelectedColor = Colors.orangeAccent;
 
   late Color primaryBtnText = Colors.black;
   late Color textColor = const Color(0xFF1E2429);
@@ -194,7 +212,16 @@ class DarkModeTheme extends DodaoTheme {
   late Color background = Colors.black;
   // late Color taskBackgroundColor = const Color(0x1D1B20FF);
   late Color taskBackgroundColor = const Color(0xFF1D1B20);
+  late Color walletBackgroundColor = const Color(0xFF302D34);
   late Color primaryText = const Color(0xFFFFFFFF);
+  late Color revertedPrimaryTextColor = Colors.white;
+
+  late Color chipTextColor = Colors.grey.shade300;
+  late Color chipBodyColor = Colors.grey.shade800;
+  late Color chipBorderColor = Colors.grey.shade800;
+  late Color chipNftColor = Colors.deepOrange;
+  late Color chipNftMintColor = Colors.white;
+  late Color chipSelectedColor = Colors.orange.shade900;
 
   late Color secondaryText = Colors.grey.shade300;
   late Color tabIndicator = const Color(0xFF47CBE4);

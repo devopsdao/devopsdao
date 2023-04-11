@@ -54,8 +54,9 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
         title: Column(
           mainAxisSize: MainAxisSize.max,
@@ -66,11 +67,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
               children: [
                 Text(
                   'Tags Manager',
-                  style: DodaoTheme.of(context).title2.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
             ),
@@ -99,12 +96,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
+
         ),
         child: SizedBox(
             width: interface.maxStaticGlobalWidth,
@@ -112,9 +104,10 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
               children: [
                 TabBar(
                   physics: const NeverScrollableScrollPhysics(),
-                  labelColor: Colors.white,
-                  labelStyle: DodaoTheme.of(context).bodyText1,
-                  indicatorColor: const Color(0xFF47CBE4),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+
+                  labelColor: DodaoTheme.of(context).secondaryText,
+                  indicatorColor: DodaoTheme.of(context).tabIndicator,
                   indicatorWeight: 3,
                   // isScrollable: true,
                   controller: _controller,
