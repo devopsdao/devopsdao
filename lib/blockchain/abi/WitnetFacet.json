@@ -48,6 +48,65 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "EmptyBuffer",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "range",
+        "type": "uint256"
+      }
+    ],
+    "name": "IndexOutOfBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "length",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidLengthEncoding",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "read",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expected",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnexpectedMajorType",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "unexpected",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnsupportedMajorType",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -90,6 +149,42 @@
     "name": "checkResultAvailability",
     "outputs": [],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract WitnetRequestBoard",
+        "name": "witnet",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_appId",
+        "type": "uint256"
+      }
+    ],
+    "name": "fetchResult",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "merged",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "status",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct LibWitnetFacet.Result",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
