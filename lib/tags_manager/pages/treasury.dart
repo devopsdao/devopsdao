@@ -126,10 +126,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                     }
                                     return Text(
                                       '${model.treasuryPageCount} of ${nftCount.toString()}',
-                                      style: DodaoTheme.of(context).bodyText1.override(
-                                          fontFamily: 'Inter',
-                                          color: Colors.white
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyMedium?.apply(color: DodaoTheme.of(context).primaryText),
                                     );
                                   }
                                 ),
@@ -153,10 +150,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                             child: Text(
                               collectionName,
-                              style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium?.apply(color: DodaoTheme.of(context).primaryText),
                             ),
                           ),
                           const Spacer(),
@@ -271,16 +265,11 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             ),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: 'Tag name',
-                            labelStyle:  TextStyle(
-                                fontSize: 17.0, color: Colors.grey[300]),
+                            labelStyle:  Theme.of(context).textTheme.bodyMedium,
                             hintText: '[Enter nft name..]',
-                            hintStyle: TextStyle(
-                                fontSize: 14.0, color: Colors.grey[300]),
+                            hintStyle: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          style: DodaoTheme.of(context).bodyText1.override(
-                            fontFamily: 'Inter',
-                            color: Colors.grey[300]
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium,
                           minLines: 1,
                           maxLines: 1,
                         );

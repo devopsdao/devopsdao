@@ -153,10 +153,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                       }
                                       return Text(
                                         '${model.treasuryPageCount} of ${nftCount.toString()}',
-                                        style: DodaoTheme.of(context).bodyText1.override(
-                                            fontFamily: 'Inter',
-                                            color: Colors.white
-                                        ),
+                                        style: Theme.of(context).textTheme.bodySmall,
                                       );
                                     }
                                 ),
@@ -180,10 +177,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                             child: Text(
                               collectionName,
-                              style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ),
                           const Spacer(),
@@ -264,7 +258,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
           return Align(
             alignment: Alignment.center,
             child: Container(
-              color: Colors.white,
               padding: const EdgeInsets.all(myPadding),
               width: maxStaticDialogWidth,
               child: Column(
@@ -287,14 +280,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 child: RichText(
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
-                                  text: const TextSpan(
+                                  text: TextSpan(
                                     children: [
                                       TextSpan(
                                         text: 'Add tags',
-                                        style: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
+                                        style: Theme.of(context).textTheme.titleLarge
                                       ),
                                     ],
                                   ),
@@ -378,12 +368,13 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                   }
                                 });
                               },
-                              borderRadius: const BorderRadius.all(Radius.circular(8)),
-                              selectedBorderColor: Colors.blueAccent,
-                              selectedColor: Colors.white,
-                              fillColor: Colors.lightBlue.shade300,
-                              color: Colors.black87,
-                              borderColor: Colors.blueAccent,
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              borderWidth: 2,
+                              selectedBorderColor: DodaoTheme.of(context).tabIndicator,
+                              selectedColor: DodaoTheme.of(context).primaryText,
+                              fillColor: DodaoTheme.of(context).tabIndicator,
+                              color: DodaoTheme.of(context).secondaryText,
+                              borderColor: DodaoTheme.of(context).tabIndicator,
                               constraints: const BoxConstraints(
                                 minHeight: 30.0,
                                 minWidth: 60.0,
@@ -403,9 +394,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                     alignment: Alignment.center,
                                     child: Text(
                                         searchServices.tags.toString(),
-                                        style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 12)),
+                                        style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),
+                                      // style: Theme.of(context).textTheme.bodySmall?.apply(color: DodaoTheme.of(context).primaryText),
+                                    ),
                                   ),
-                                  badgeColor: Colors.lightBlue.shade300,
+                                  badgeColor: DodaoTheme.of(context).tabIndicator,
                                   // badgeColor: Colors.white,
                                   // animationDuration: const Duration(milliseconds: 600),
                                   // animationType: Badges.BadgeAnimationType.fade,
@@ -427,9 +420,9 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                     alignment: Alignment.center,
                                     child: Text(
                                         searchServices.nfts.toString(),
-                                        style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 12)),
+                                        style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),),
                                   ),
-                                  badgeColor: Colors.lightBlue.shade300,
+                                  badgeColor: DodaoTheme.of(context).tabIndicator,
                                   toAnimate: false,
                                   shape: Badges.BadgeShape.square,
                                   borderRadius: BorderRadius.circular(6),
@@ -472,14 +465,14 @@ class _MainTagsPageState extends State<MainTagsPage> {
                               padding: const EdgeInsets.only(right: 12.0),
                               highlightColor: Colors.grey,
                               hoverColor: Colors.transparent,
-                              color: Colors.blueAccent,
+                              color: DodaoTheme.of(context).tabIndicator,
                               splashColor: Colors.black,
                             ) : null,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              borderSide: const BorderSide(
-                                color: Colors.blueAccent,
-                                width: 1.0,
+                              borderSide: BorderSide(
+                                color: DodaoTheme.of(context).tabIndicator,
+                                width: 2.0,
                               ),
                             ),
                             border: OutlineInputBorder(
@@ -487,19 +480,16 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             ),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: 'Tag name',
-                            labelStyle: const TextStyle(
-                                fontSize: 17.0, color: Colors.black54),
+                            labelStyle: Theme.of(context).textTheme.bodyMedium,
                             hintText: '[Enter your tag here..]',
-                            hintStyle: const TextStyle(
-                                fontSize: 14.0, color: Colors.black54),
+                            hintStyle:  Theme.of(context).textTheme.bodyMedium,
+                            // hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                             // focusedBorder: const UnderlineInputBorder(
                             //   borderSide: BorderSide.none,
                             // ),
 
                           ),
-                          style: DodaoTheme.of(context).bodyText1.override(
-                            fontFamily: 'Inter',
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
                           minLines: 1,
                           maxLines: 1,
                         );
@@ -578,81 +568,76 @@ class _MainTagsPageState extends State<MainTagsPage> {
         }
     );
 
-    return Container(
-      alignment: Alignment.topCenter,
-      child: SizedBox(
-        width: interfaceServices.maxStaticDialogWidth,
-        child: Scaffold(
-          // resizeToAvoidBottomInset: false,
-          body: body,
-          floatingActionButtonAnimator: NoScalingAnimation(),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
-          floatingActionButton: Consumer<CollectionServices>(
-            builder: (context, model, child) {
-              late bool splitScreen = false;
-              if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
-                splitScreen = true;
-              }
-              return AnimatedContainer(
-                // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
-                padding: EdgeInsets.only(right: 13, left: 46, bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 320.0 : 0),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeInOutQuart,
-                child: TagsFAB(
+    return Scaffold(
+      // resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+      body: body,
+      floatingActionButtonAnimator: NoScalingAnimation(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
+      floatingActionButton: Consumer<CollectionServices>(
+        builder: (context, model, child) {
+          late bool splitScreen = false;
+          if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
+            splitScreen = true;
+          }
+          return AnimatedContainer(
+            // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
+            padding: EdgeInsets.only(right: 13, left: 46, bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 320.0 : 0),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOutQuart,
+            child: TagsFAB(
 
-                  inactive: false,
-                  expand: false,
-                  buttonName: 'Apply',
-                  buttonColorRequired: Colors.lightBlue.shade300,
-                  widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
-                  callback: () {
-                    searchServices.updateTagListOnTasksPages(page: widget.page, initial: false);
-                    if (widget.page == 'audit') {
-                      if (widget.tabIndex == 0) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-                          tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                      } else if (widget.tabIndex == 1) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-                          tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                      } else if (widget.tabIndex == 2) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-                          tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                      } else if (widget.tabIndex == 3) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-                          tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                      }
-                    } else if (widget.page == 'tasks') {
-                      tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                    } else if (widget.page == 'customer') {
-                      if (widget.tabIndex == 0) {
-                        tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
-                            tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 1) {
-                        tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
-                            tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 2) {
-                        tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
-                            tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                      }
-                    } else if (widget.page == 'performer') {
-                      if (widget.tabIndex == 0) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                            tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 1) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                            tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 2) {
-                        tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                            tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                      }
-                    }
-                    Navigator.pop(context);
-                  },
-                ),
-              );
-            }
-          ),
-        ),
+              inactive: false,
+              expand: false,
+              buttonName: 'Apply',
+              buttonColorRequired: Colors.lightBlue.shade300,
+              widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
+              callback: () {
+                searchServices.updateTagListOnTasksPages(page: widget.page, initial: false);
+                if (widget.page == 'audit') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                  } else if (widget.tabIndex == 3) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                  }
+                } else if (widget.page == 'tasks') {
+                  tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                } else if (widget.page == 'customer') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
+                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                  }
+                } else if (widget.page == 'performer') {
+                  if (widget.tabIndex == 0) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                  } else if (widget.tabIndex == 1) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                  } else if (widget.tabIndex == 2) {
+                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
+                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                  }
+                }
+                Navigator.pop(context);
+              },
+            ),
+          );
+        }
       ),
     );
   }
