@@ -1,3 +1,4 @@
+import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:nanoid/nanoid.dart';
@@ -107,7 +108,14 @@ class CreateJobSkeleton extends StatefulWidget {
   _CreateJobSkeletonState createState() => _CreateJobSkeletonState();
 }
 
-class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
+class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProviderStateMixin {
+
+  late AnimationController animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+  );
+
   TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
   TextEditingController? valueController;
@@ -136,6 +144,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
 
 
   late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 200));
+  late bool witnetSection = false;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +154,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
 
     const Color textColor = Colors.black54;
-    final double borderRadius = interface.borderRadius;
     final double myMaxWidth = widget.myMaxWidth;
     final double innerPaddingWidth = myMaxWidth - 50;
 
@@ -155,6 +163,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
       borderRadius: DodaoTheme.of(context).borderRadius,
       border: DodaoTheme.of(context).borderGradient,
     );
+
+    if (githubLinkController!.text.isNotEmpty) {
+      animationController.forward();
+    } else {
+      animationController.reverse();
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
@@ -197,7 +211,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                             onTap: () {
                               scrollController.animateTo(
                                 scrollController.position.minScrollExtent,
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 curve: Curves.fastOutSlowIn,
                               );
                             },
@@ -215,10 +229,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                               labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Enter the Title..]',
                               hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
-                              focusedBorder: UnderlineInputBorder(
+                              focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
-                              enabledBorder: UnderlineInputBorder(
+                              enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
                             ),
@@ -253,7 +267,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                             onTap: () {
                               scrollController.animateTo(
                                 scrollController.position.minScrollExtent,
-                                duration: Duration(seconds: 1),
+                                duration: const Duration(seconds: 1),
                                 curve: Curves.fastOutSlowIn,
                               );
                             },
@@ -273,10 +287,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                               labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Job description...]',
                               hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
-                              focusedBorder: UnderlineInputBorder(
+                              focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
-                              enabledBorder: UnderlineInputBorder(
+                              enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
                             ),
@@ -310,7 +324,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                           decoration: materialMainBoxDecoration,
                           child:  LayoutBuilder(
                               builder: (context, constraints) {
-                                final double width = constraints.maxWidth - 66;
+                                final double width = constraints.maxWidth - 68;
                                 return Row(
                                   children: <Widget>[
                                     Consumer<SearchServices>(
@@ -342,23 +356,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                                   }).toList()),
                                             );
                                           } else {
-                                            return Row(
-                                              children: <Widget>[
-                                                // Container(
-                                                //   padding: const EdgeInsets.all(2.0),
-                                                //   child: const Icon(Icons.new_releases,
-                                                //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                                // ),
-                                                RichText(
-                                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
-                                                      TextSpan(
-                                                          text: 'Add relevant tags and NFT\'s',
-                                                          style: TextStyle(
-                                                            height: 1,
-                                                          )),
-                                                    ])),
-                                              ],
-                                            );
+                                            return RichText(
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                                  TextSpan(
+                                                      text: 'Add relevant tags and NFT\'s',
+                                                      style: TextStyle(
+                                                        height: 1,
+                                                      )),
+                                                ]));
                                           }
                                         }
                                     ),
@@ -421,16 +426,16 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                         //   curve: Curves.fastOutSlowIn,
                                         // );
                                         Future.delayed(
-                                            const Duration(milliseconds: 1100),
-                                                () {
-                                              scrollController.animateTo(
-                                                scrollController.position.maxScrollExtent,
-                                                duration: const Duration(seconds: 1),
-                                                curve: Curves.fastOutSlowIn,
-                                              );
-                                            });
+                                          const Duration(milliseconds: 400),
+                                              () {
+                                            scrollController.animateTo(
+                                              scrollController.position.maxScrollExtent,
+                                              duration: const Duration(seconds: 1),
+                                              curve: Curves.fastOutSlowIn,
+                                            );
+                                          }
+                                        );
                                       },
-
                                       decoration: InputDecoration(
                                         labelText: 'Enter GitHub link here:',
                                         labelStyle: Theme.of(context).textTheme.bodyMedium,
@@ -442,68 +447,126 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                         enabledBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide.none,
                                         ),
-                                        suffixIcon: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              onPressed: () async {
-                                                final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                                setState(() {
-                                                  githubLinkController!.text = '${clipboardData?.text}';
-                                                });
+                                        prefixIcon: IconButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              if (witnetSection) {
+                                                witnetSection = false;
+                                              } else {
+                                                witnetSection = true;
+                                              }
+
+                                            });
+                                          },
+                                          icon: DodaoTheme.of(context).witnetLogo,
+                                          highlightColor: Colors.grey,
+                                          hoverColor: Colors.transparent,
+                                          color: Colors.blueAccent,
+                                          splashColor: Colors.black,
+                                        ),
+                                        suffixIcon: Builder(
+                                          builder: (context) {
+                                            const Duration duration = Duration(milliseconds: 750);
+                                            return AnimatedIconButton(
+                                              animationController: animationController,
+                                              size: 24,
+                                              onPressed: () {
                                               },
-                                              icon: const Icon(Icons.content_paste_outlined),
-                                              padding: const EdgeInsets.only(right: 12.0),
-                                              highlightColor: Colors.grey,
-                                              hoverColor: Colors.transparent,
-                                              color: Colors.blueAccent,
-                                              splashColor: Colors.black,
-                                            ),
-                                            IconButton(
-                                              onPressed: () async {
-                                                final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                                setState(() {
-                                                  githubLinkController!.text = '';
-                                                });
-                                              },
-                                              icon: const Icon(Icons.close_rounded),
-                                              padding: const EdgeInsets.only(right: 12.0),
-                                              highlightColor: Colors.grey,
-                                              hoverColor: Colors.transparent,
-                                              color: Colors.blueAccent,
-                                              splashColor: Colors.black,
-                                            ),
-                                          ],
+                                              duration: duration,
+                                              initialIcon: githubLinkController!.text.isNotEmpty ? 1 : 0,
+                                              icons: <AnimatedIconItem>[
+                                                AnimatedIconItem(
+                                                  icon: Icon(
+                                                    Icons.content_paste_outlined,
+                                                    color: DodaoTheme.of(context).primaryText,
+                                                    // size: 30,
+                                                  ),
+                                                  onPressed: () async {
+                                                    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                                    setState(() {
+                                                      githubLinkController!.text = '${clipboardData?.text}';
+                                                    });
+                                                  },
+                                                  // backgroundColor: Colors.white,
+                                                ),
+                                                AnimatedIconItem(
+                                                  icon: Icon(
+                                                    Icons.close_rounded,
+                                                    color: DodaoTheme.of(context).primaryText,
+                                                  ),
+                                                  onPressed: () async {
+                                                    // final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                                    setState(() {
+                                                      githubLinkController!.text = '';
+                                                    });
+                                                  },
+                                                  // backgroundColor: Colors.white,
+                                                ),
+
+                                              ],
+                                            );
+                                          }
                                         ),
 
+
+                                        // Row(
+                                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                        //   mainAxisSize: MainAxisSize.min,
+                                        //   children: [
+                                        //     IconButton(
+                                        //       onPressed: () async {
+                                        //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                        //         setState(() {
+                                        //           githubLinkController!.text = '${clipboardData?.text}';
+                                        //         });
+                                        //       },
+                                        //       icon: const Icon(Icons.content_paste_outlined),
+                                        //       padding: const EdgeInsets.only(right: 12.0),
+                                        //       highlightColor: Colors.grey,
+                                        //       hoverColor: Colors.transparent,
+                                        //       color: Colors.blueAccent,
+                                        //       splashColor: Colors.black,
+                                        //     ),
+                                        //     IconButton(
+                                        //       onPressed: () async {
+                                        //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                        //         setState(() {
+                                        //           githubLinkController!.text = '';
+                                        //         });
+                                        //       },
+                                        //       icon: const Icon(Icons.close_rounded),
+                                        //       padding: const EdgeInsets.only(right: 12.0),
+                                        //       highlightColor: Colors.grey,
+                                        //       hoverColor: Colors.transparent,
+                                        //       color: Colors.blueAccent,
+                                        //       splashColor: Colors.black,
+                                        //     ),
+                                        //   ],
+                                        // ),
                                       ),
                                       style: Theme.of(context).textTheme.bodyMedium,
                                       minLines: 1,
                                       maxLines: 1,
                                       keyboardType: TextInputType.multiline,
                                       onChanged:  (text) {
-
                                         debounceNotifyListener.debounce(() {
                                           tasksServices.myNotifyListeners();
-
                                         });
                                       },
                                     ),
 
                                     // if (githubLinkController!.text.isNotEmpty)
 
-
                                     ExpandedSection(
-                                      expand: githubLinkController!.text.isNotEmpty,
+                                      expand: witnetSection,
                                       callback: () {
-                                        if (githubLinkController!.text.isNotEmpty) {
+                                        if (witnetSection) {
                                           Future.delayed(
                                               const Duration(milliseconds: 300),
                                                   () {
                                                 scrollController.animateTo(
                                                   scrollController.position.maxScrollExtent,
-                                                  duration: const Duration(seconds: 1),
+                                                  duration: const Duration(milliseconds: 400),
                                                   curve: Curves.fastOutSlowIn,
                                                 );
                                               });
@@ -516,14 +579,56 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> {
                                         child: Row(
                                           // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                                           // mainAxisSize: MainAxisSize.max,
+                                          children:  [
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 12.0),
+                                              child: Image.asset(
+                                                'assets/images/wn_mascot.png',
+                                                height: 90,
+                                                filterQuality: FilterQuality.medium,
+                                              ),
+                                            ),
+                                            const Flexible(
+
+                                              // height: 35,
+                                              // width: double.infinity,
+                                              child: Text('Dodao uses Witnet oracle to connect to Github API and get PR merge status'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    ExpandedSection(
+                                      expand: githubLinkController!.text.isNotEmpty,
+                                      callback: () {
+                                        if (githubLinkController!.text.isNotEmpty) {
+                                          Future.delayed(
+                                              const Duration(milliseconds: 300),
+                                                  () {
+                                                scrollController.animateTo(
+                                                  scrollController.position.maxScrollExtent,
+                                                  duration: const Duration(milliseconds: 400),
+                                                  curve: Curves.fastOutSlowIn,
+                                                );
+                                              });
+                                        }
+                                      },
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                          // mainAxisSize: MainAxisSize.max,
                                           children:  const [
                                             Padding(
                                               padding: EdgeInsets.only(right: 12.0),
-                                              child: Icon(Icons.new_releases,
-                                                  size: 35, color: Colors.lightGreen),
+                                              child: Icon(
+                                                Icons.new_releases,
+                                                size: 35, color: Colors.lightGreen
+                                              ),
                                             ),
                                             Flexible(
-
                                               // height: 35,
                                               // width: double.infinity,
                                               child: Text('This repository URL will be used for automatic Task acceptance based on accepted merge request.'),

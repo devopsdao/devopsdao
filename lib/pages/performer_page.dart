@@ -154,7 +154,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       //     //       padding: EdgeInsetsDirectional.fromSTEB(11, 11, 11, 11),
       //     //       child: Icon(
       //     //         Icons.settings_outlined,
-      //     //         color: DodaoTheme.of(context).primaryBtnText,
+      //     //         color: DodaoTheme.of(context).primaryText,
       //     //         size: 24,
       //     //       ),
       //     //     ),

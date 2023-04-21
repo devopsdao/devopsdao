@@ -159,22 +159,19 @@ class _MyAppState extends State<MyApp> {
 
             // primaryColor: const Color(0xff31d493),
             // cardColor: Colors.black,
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(fontSize: 20, color: Colors.black),
-              bodyMedium: TextStyle(fontSize: 15, color: Colors.black),
-              titleLarge: TextStyle(fontSize: 22, color: Colors.black),
-              titleMedium: TextStyle(fontSize: 20, color: Colors.black)
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(fontSize: 20, color: DodaoTheme.of(context).secondaryText),
+              bodyMedium: TextStyle(fontSize: 15, color: DodaoTheme.of(context).secondaryText),
+              bodySmall: TextStyle(fontSize: 12, color: DodaoTheme.of(context).secondaryText),
+              titleLarge: const TextStyle(fontSize: 22, color: Colors.black),
+              titleMedium: const TextStyle(fontSize: 20, color: Colors.black)
             ),
 
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(155, 40),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                disabledBackgroundColor: Colors.grey[800],
-                // textStyle: const TextStyle(
-                //     color: Colors.red,
-                //     fontWeight: FontWeight.w400
-                // )
+                disabledBackgroundColor: Colors.grey.shade300,
+                backgroundColor: DodaoTheme.of(context).buttonBackgroundColor,
               ),
             ),
           ),
@@ -218,7 +215,7 @@ class _MyAppState extends State<MyApp> {
 
             textTheme: const TextTheme(
                 bodyLarge: TextStyle(fontSize: 19, color: Colors.white70),
-                bodyMedium: TextStyle(fontSize: 15, color: Colors.white70),
+                bodyMedium: TextStyle(fontSize: 14, color: Colors.white70),
                 bodySmall: TextStyle(fontSize: 12, color: Colors.white70),
                 titleLarge: TextStyle(fontSize: 22, color: Colors.white),
                 titleMedium: TextStyle(fontSize: 20, color: Colors.white),
@@ -230,6 +227,18 @@ class _MyAppState extends State<MyApp> {
               selectionHandleColor: Colors.white70,
             ),
 
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(155, 40),
+                // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                disabledBackgroundColor: Colors.grey.shade800,
+                backgroundColor: DodaoTheme.of(context).buttonBackgroundColor,
+                // textStyle: const TextStyle(
+                //     color: Colors.red,
+                //     fontWeight: FontWeight.w400
+                // )
+              ),
+            ),
 
             // iconTheme: const IconThemeData(
             //   color: Colors.white,

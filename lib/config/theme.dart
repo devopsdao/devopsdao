@@ -34,6 +34,9 @@ abstract class DodaoTheme {
   late Color background;
   late Color taskBackgroundColor;
   late Color walletBackgroundColor;
+  late Color nftInfoBackgroundColor;
+  late Color nftCardBackgroundColor;
+
   late Color primaryText;
   late Color revertedPrimaryTextColor;
   late Color secondaryText;
@@ -46,19 +49,31 @@ abstract class DodaoTheme {
   late Color chipNftMintColor;
   late Color chipSelectedColor;
 
+  late Color iconInitial;
+  late Color iconProcess;
+  late Color iconDone;
+  late Color iconWrong;
 
-  late Color primaryBtnText;
-  late Color textColor;
-  late Color maximumBlueGreen;
+  late Color buttonTextColor;
+  late Color buttonBackgroundColor;
+  late Color buttonDisabledColor;
+  late Color buttonDisabledBackgroundColor;
+
+  late Color maximumBlueGreen = const Color(0xFF59C3C3);
+  late Color createTaskButton;
+
+  late Image witnetLogo;
 
   late Color flushTextColor = Colors.white;
   late Color flushForCopyBackgroundColor = Colors.blueAccent;
+
   final BorderRadius borderRadius = BorderRadius.circular(14.0);
   final double elevation = 7;
 
   late LinearGradient gradient;
 
   late GradientBoxBorder borderGradient;
+  late GradientBoxBorder pictureBorderGradient;
 
   late LinearGradient smallButtonGradient = const LinearGradient(
       begin: AlignmentDirectional(1, -1),
@@ -95,6 +110,9 @@ class LightModeTheme extends DodaoTheme {
   late Color background = Colors.white;
   late Color taskBackgroundColor = Colors.white;
   late Color walletBackgroundColor = Colors.grey.shade100;
+  late Color nftInfoBackgroundColor = Colors.grey.shade200;
+  late Color nftCardBackgroundColor = Colors.grey.shade600;
+
   late Color primaryText = const Color(0xFF101213);
   late Color revertedPrimaryTextColor = Colors.black;
   late Color secondaryText = Colors.grey.shade800;
@@ -107,9 +125,23 @@ class LightModeTheme extends DodaoTheme {
   late Color chipNftMintColor = Colors.white;
   late Color chipSelectedColor = Colors.orangeAccent;
 
-  late Color primaryBtnText = Colors.black;
-  late Color textColor = const Color(0xFF1E2429);
-  late Color maximumBlueGreen = const Color(0xFF59C3C3);
+  late Color iconInitial = Colors.black12;
+  late Color iconProcess = Colors.black54;
+  late Color iconDone = Colors.lightGreen;
+  late Color iconWrong = Colors.redAccent;
+
+  late Color buttonTextColor = Colors.white;
+  late Color buttonBackgroundColor = Colors.lightBlue.shade300;
+  late Color buttonDisabledColor = Colors.white;
+  late Color buttonDisabledBackgroundColor = Colors.grey.shade300;
+
+  late Color createTaskButton = const Color(0xFFCDBEE4);
+
+  late Image witnetLogo = Image.asset(
+    'assets/images/witnet_logo_light.png',
+    height: 44,
+    filterQuality: FilterQuality.medium,
+  );
 
   late LinearGradient gradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
     Colors.green.shade800,
@@ -122,6 +154,14 @@ class LightModeTheme extends DodaoTheme {
       begin: Alignment.topCenter, end: Alignment.bottomCenter,
     ),
     width: 1,
+  );
+
+  late GradientBoxBorder pictureBorderGradient = GradientBoxBorder(
+    gradient: LinearGradient(
+      colors: [Colors.grey.shade900, Color(0xFF6E6E6E)],
+      begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    ),
+    width: 2,
   );
 }
 
@@ -210,11 +250,14 @@ class ThemeTypography extends Typography {
 class DarkModeTheme extends DodaoTheme {
   late Color transparentCloud = Colors.white12;
   late Color background = Colors.black;
-  // late Color taskBackgroundColor = const Color(0x1D1B20FF);
   late Color taskBackgroundColor = const Color(0xFF1D1B20);
   late Color walletBackgroundColor = const Color(0xFF302D34);
+  late Color nftInfoBackgroundColor = const Color(0xFF302D34);
+  late Color nftCardBackgroundColor = Colors.grey.shade700;
+
   late Color primaryText = const Color(0xFFFFFFFF);
   late Color revertedPrimaryTextColor = Colors.white;
+  late Color secondaryText = Colors.grey.shade300;
 
   late Color chipTextColor = Colors.grey.shade300;
   late Color chipBodyColor = Colors.grey.shade800;
@@ -223,12 +266,25 @@ class DarkModeTheme extends DodaoTheme {
   late Color chipNftMintColor = Colors.white;
   late Color chipSelectedColor = Colors.orange.shade900;
 
-  late Color secondaryText = Colors.grey.shade300;
+  late Color iconInitial = Colors.white24;
+  late Color iconProcess = Colors.white70;
+  late Color iconDone = Colors.lightGreen;
+  late Color iconWrong = Colors.redAccent;
+
   late Color tabIndicator = const Color(0xFF47CBE4);
 
-  late Color primaryBtnText = const Color(0xFFFFFFFF);
-  late Color textColor = const Color(0xFF1E2429);
-  late Color maximumBlueGreen = const Color(0xFF59C3C3);
+  late Color buttonTextColor = Colors.white;
+  late Color buttonBackgroundColor = Colors.lightBlue.shade300;
+  late Color buttonDisabledColor = Colors.white;
+  late Color buttonDisabledBackgroundColor = Colors.grey.shade800;
+
+  late Image witnetLogo = Image.asset(
+    'assets/images/witnet_logo_dark.png',
+    height: 44,
+    filterQuality: FilterQuality.medium,
+  );
+
+  late Color createTaskButton = const Color(0xFF4E378C);
 
   late LinearGradient gradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
     Colors.green.shade800,
@@ -241,6 +297,14 @@ class DarkModeTheme extends DodaoTheme {
       begin: Alignment.topCenter, end: Alignment.bottomCenter,
     ),
     width: 1,
+  );
+
+  late GradientBoxBorder pictureBorderGradient = const GradientBoxBorder(
+    gradient: LinearGradient(
+      colors: [Color(0xFFD0D0D0), Color(0xFF6E6E6E)],
+      begin: Alignment.topCenter, end: Alignment.bottomCenter,
+    ),
+    width: 2,
   );
 }
 

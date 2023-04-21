@@ -26,7 +26,7 @@ class OpenAddTags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 300),
       transitionType: _transitionType,
       openBuilder: (BuildContext context, VoidCallback _) {
         return Container(
@@ -41,7 +41,7 @@ class OpenAddTags extends StatelessWidget {
         ),
       ),
       openElevation: 2,
-      openColor: Colors.transparent,
+      // openColor: Colors.transparent,
       closedColor: Colors.transparent,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
         return Padding(

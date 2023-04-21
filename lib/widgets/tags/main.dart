@@ -14,7 +14,7 @@ import '../../config/theme.dart';
 import '../../pages/performer_page.dart';
 import '../../tags_manager/collection_services.dart';
 import '../../tags_manager/nft_item.dart';
-import '../../tags_manager/nft_mint.dart';
+import '../../tags_manager/nft_card.dart';
 import '../my_tools.dart';
 import 'wrapped_chip.dart';
 import 'package:flutter/services.dart';
@@ -116,7 +116,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
             duration: splitDuration,
             height: splitScreen ? secondPartHeight : 0.0,
-            color: Colors.grey[900],
+            color: DodaoTheme.of(context).nftInfoBackgroundColor,
             curve: splitCurve,
             child: SingleChildScrollView(
               child: Column(
@@ -137,10 +137,10 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 onTap: () {
                                   pageController.animateToPage(pageController.page!.toInt() - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.arrow_back_ios_new,
                                   size: 24,
-                                  color: Colors.white,
+                                  color: DodaoTheme.of(context).secondaryText,
                                 ),
                               ),
                               Padding(
@@ -153,7 +153,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                       }
                                       return Text(
                                         '${model.treasuryPageCount} of ${nftCount.toString()}',
-                                        style: Theme.of(context).textTheme.bodySmall,
+                                        style: Theme.of(context).textTheme.bodyMedium?.apply(color: DodaoTheme.of(context).primaryText),
                                       );
                                     }
                                 ),
@@ -164,10 +164,10 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 onTap: () {
                                   pageController.animateToPage(pageController.page!.toInt() + 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.arrow_forward_ios,
                                   size: 24,
-                                  color: Colors.white,
+                                  color: DodaoTheme.of(context).secondaryText,
                                 ),
                               ),
                             ],
@@ -177,7 +177,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                             child: Text(
                               collectionName,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style:  Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
                           const Spacer(),
@@ -187,10 +187,10 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             onTap: () {
                               model.clearSelectedInManager();
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.arrow_downward,
                               size: 24,
-                              color: Colors.white,
+                              color: DodaoTheme.of(context).secondaryText,
                             ),
                           ),
                         ],
@@ -199,7 +199,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                   ),
 
                   SizedBox(
-                    height: secondPartHeight - 53,
+                    height: secondPartHeight - 58,
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: PageView.builder(
@@ -249,7 +249,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
         builder: (context, constraints) {
           final double myHeight = constraints.maxHeight - (myPadding * 2);
           final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
-          final double maxHeight = myHeight - statusBarHeight - 160;
+          final double maxHeight = myHeight - statusBarHeight - 138;
 
 
 
@@ -258,7 +258,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
           return Align(
             alignment: Alignment.center,
             child: Container(
-              padding: const EdgeInsets.all(myPadding),
+              padding: const EdgeInsets.only(top: myPadding),
               width: maxStaticDialogWidth,
               child: Column(
                 children: [
@@ -454,20 +454,22 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.add),
-                            suffixIcon: model.newTag ? IconButton(
-                              onPressed: () {
-                                // NEW TAG
-                                // searchServices.nftInitialCollectionMap[_searchKeywordController.text] =
-                                //     SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
-                                model.addNewTag(_searchKeywordController.text);
-                              },
-                              icon: const Icon(Icons.add_box),
-                              padding: const EdgeInsets.only(right: 12.0),
-                              highlightColor: Colors.grey,
-                              hoverColor: Colors.transparent,
-                              color: DodaoTheme.of(context).tabIndicator,
-                              splashColor: Colors.black,
-                            ) : null,
+                            // suffixIcon: model.newTag ? IconButton(
+                            //   onPressed: () {
+                            //     // NEW TAG
+                            //     // searchServices.nftInitialCollectionMap[_searchKeywordController.text] =
+                            //     //     SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
+                            //     searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                            //     model.addNewTag(_searchKeywordController.text, 'selection');
+                            //     collectionServices.updateMintNft(searchServices.selectionPageInitialCombined[_searchKeywordController.text]!.bunch.values.first);
+                            //   },
+                            //   icon: const Icon(Icons.add_box),
+                            //   padding: const EdgeInsets.only(right: 12.0),
+                            //   highlightColor: Colors.grey,
+                            //   hoverColor: Colors.transparent,
+                            //   color: DodaoTheme.of(context).tabIndicator,
+                            //   splashColor: Colors.black,
+                            // ) : null,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
@@ -503,6 +505,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                     alignment: Alignment.bottomCenter,
                     children: [
                       Container(
+                        padding: const EdgeInsets.only(top: 4.0, right: 8.0, left: 8.0, bottom: 4.0),
                         height: maxHeight - 10,
                         alignment: Alignment.topLeft,
                         child: Builder(
@@ -582,7 +585,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
           }
           return AnimatedContainer(
             // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
-            padding: EdgeInsets.only(right: 13, left: 46, bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 320.0 : 0),
+            padding: EdgeInsets.only(right: 13, left: 46, bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 300.0 : 0),
             duration: const Duration(milliseconds: 600),
             curve: Curves.easeInOutQuart,
             child: TagsFAB(
