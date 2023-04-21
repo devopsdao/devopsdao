@@ -101,7 +101,7 @@ class _ParticipantListState extends State<ParticipantList> {
               child: ListTile(
                 title: Center(
                   child: RichText(
-                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.9), children: <TextSpan>[
+                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                     TextSpan(
                       text: participants[index2].toString(),
                     ),

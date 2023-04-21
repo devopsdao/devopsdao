@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
+import '../../config/theme.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -69,11 +70,12 @@ class _ChatWidgetState extends State<ChatWidget> {
         sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
         // inputClearMode: InputClearMode
       ),
-      theme: const DefaultChatTheme(
+
+      theme: DefaultChatTheme(
+        backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
         inputBackgroundColor: Colors.black87,
-        inputBorderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
+        inputBorderRadius: DodaoTheme.of(context).borderRadius,
+
       ),
     );
   }

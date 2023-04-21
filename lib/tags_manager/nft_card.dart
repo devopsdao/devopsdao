@@ -34,9 +34,8 @@ class NftMint extends StatelessWidget {
 
     return InkWell(
       child: Card(
-
           elevation: 2,
-          color: Colors.grey[700],
+          color: DodaoTheme.of(context).nftCardBackgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:beamer/beamer.dart';
+import 'package:dodao/config/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
@@ -56,24 +57,21 @@ class _SelectionPageState extends State<SelectionPage> {
     late double heightForInfo = 0;
 
     final Widget contractorList = Material(
-      elevation: 10,
-      borderRadius: BorderRadius.circular(interface.borderRadius),
+      elevation: DodaoTheme.of(context).elevation,
+      borderRadius: DodaoTheme.of(context).borderRadius,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           // color:  Color(0xFFF8F8F8),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
+          color: DodaoTheme.of(context).walletBackgroundColor,
+          borderRadius: DodaoTheme.of(context).borderRadius,
+          border: DodaoTheme.of(context).borderGradient,
         ),
         child: Column(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF8F8F8),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8.0),
-                  // topLeft: Radius.circular(8.0),
-                ),
+              decoration: BoxDecoration(
+                color: DodaoTheme.of(context).walletBackgroundColor,
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 // borderRadius: BorderRadius.all(Radius.circular(6.0)),
               ),
               child: Column(
@@ -82,13 +80,13 @@ class _SelectionPageState extends State<SelectionPage> {
                     padding: const EdgeInsets.all(10),
                     alignment: Alignment.topLeft,
                     child: RichText(
-                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                       TextSpan(text: 'Choose contractor: ', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
                     ])),
                   ),
                   if (task.participants.isEmpty && interface.dialogCurrentState['name'] == 'customer-new')
                     RichText(
-                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                       TextSpan(
                           text: 'Participants not applied to your Task yet. ',
                           style: TextStyle(
@@ -99,7 +97,7 @@ class _SelectionPageState extends State<SelectionPage> {
                       (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
                           interface.dialogCurrentState['name'] == 'performer-audit-requested'))
                     RichText(
-                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                       TextSpan(
                           text: 'Auditors not applied to your request yet. ',
                           style: TextStyle(
@@ -138,12 +136,10 @@ class _SelectionPageState extends State<SelectionPage> {
               child: RichText(
                   maxLines: 10,
                   softWrap: true,
-                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
+                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                     TextSpan(
                         text: '${interface.selectedUser['address']} \n \n',
-                        style: const TextStyle(height: 1, fontSize: 12, fontWeight: FontWeight.bold
-                            // backgroundColor: Colors.black12
-                            )),
+                        style: Theme.of(context).textTheme.bodySmall),
                     const TextSpan(
                         text: 'Wallet nickname \n',
                         style: TextStyle(
@@ -173,6 +169,7 @@ class _SelectionPageState extends State<SelectionPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Center(
         child: Container(
           alignment: Alignment.center,

@@ -158,7 +158,7 @@ class _CreateCollectionState extends State<CreateCollection> {
           Material(
             type: MaterialType.transparency,
             elevation: 6.0,
-            color: Colors.transparent,
+            // color: Colors.transparent,
             child: Padding(
               padding: const EdgeInsets.only(top: 10.0, bottom: 18, left: 8, right: 8),
               child: Row(
@@ -168,7 +168,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                     padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: Text(
                       collectionName,
-                      style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                   const Spacer(),
@@ -178,10 +178,10 @@ class _CreateCollectionState extends State<CreateCollection> {
                     onTap: () {
                       collectionServices.clearSelectedInManager();
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_downward,
                       size: 24,
-                      color: Colors.white,
+                      color: DodaoTheme.of(context).secondaryText,
                     ),
                   ),
                 ],
@@ -197,16 +197,13 @@ class _CreateCollectionState extends State<CreateCollection> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  height: 160,
-                  width: 160,
+                  // height: 160,
+                  // width: 160,
                   alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.all(4.0),
+                  // padding: const EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
-                    border: const GradientBoxBorder(
-                      gradient: LinearGradient(colors: [Color(0xFFD0D0D0), Color(0xFF6E6E6E)]),
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
+                    border: DodaoTheme.of(context).pictureBorderGradient,
+                    borderRadius: BorderRadius.circular(17),
                   ),
                   child: image != null
                       ? ClipRRect(
@@ -254,7 +251,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                                 : null,
                             child: Text(
                               'Upload picture',
-                              style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: DodaoTheme.of(context).buttonTextColor),
                             ),
                           ),
                         ),
@@ -288,7 +285,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                                 : null,
                             child: Text(
                               'Add features',
-                              style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: DodaoTheme.of(context).buttonTextColor),
                             ),
                           ),
                         ),
@@ -334,7 +331,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                             } : null,
                             child: Text(
                               'Create collection',
-                              style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: DodaoTheme.of(context).buttonTextColor),
                             ),
                           ),
                         ),
@@ -384,7 +381,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                             } : null,
                             child: Text(
                               'Mint',
-                              style: DodaoTheme.of(context).bodyText1.override(fontFamily: 'Inter', color: Colors.white, fontWeight: FontWeight.w400),
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: DodaoTheme.of(context).buttonTextColor),
                             ),
                           ),
                         ),

@@ -5,6 +5,7 @@ import '../../blockchain/empty_classes.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
+import '../../config/theme.dart';
 import '../../widgets/chat/main.dart';
 
 class ChatPage extends StatelessWidget {
@@ -28,10 +29,10 @@ class ChatPage extends StatelessWidget {
 
     return Center(
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(14),
           child: Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(interface.borderRadius),
+              elevation: DodaoTheme.of(context).elevation,
+              borderRadius: DodaoTheme.of(context).borderRadius,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: interface.maxStaticInternalDialogWidth,
@@ -41,7 +42,8 @@ class ChatPage extends StatelessWidget {
                     // height: widget.topConstraints.maxHeight,
                     width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      border: DodaoTheme.of(context).borderGradient,
                     ),
                     child: ChatWidget(
                       task: task, account:

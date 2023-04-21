@@ -243,13 +243,12 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           }
         }
         if (!selectedNftAvailable) {
-          bodyColorSelected = Colors.white;
-          textColorSelected = Colors.black;
-          nftMintColorSelected = Colors.black54;
-          nftMintColor = Colors.black54;
-          textColorSelected = Colors.black87;
+          bodyColorSelected = DodaoTheme.of(context).chipBodyColor;
+          textColorSelected = DodaoTheme.of(context).chipTextColor;
+          nftMintColorSelected = DodaoTheme.of(context).chipNftColor;
+          nftMintColor = DodaoTheme.of(context).chipNftColor;
           if (widget.selected) {
-            nftColorSelected = Colors.black54;
+            nftColorSelected = DodaoTheme.of(context).chipNftColor;
           }
         }
       }
@@ -767,7 +766,13 @@ class WrappedChipSmall extends StatelessWidget {
     late Color borderColor = Colors.grey[850]!;
     late Color bodyColor = Colors.grey[850]!;
     late Color nftColor = Colors.deepOrange;
-    late Color nftMintColor = Colors.grey[600]!;
+
+
+    textColor = DodaoTheme.of(context).chipTextColor;
+    borderColor = DodaoTheme.of(context).chipBorderColor;
+    bodyColor = DodaoTheme.of(context).chipBodyColor;
+    nftColor = DodaoTheme.of(context).chipNftColor;
+
 
 
     if (theme == 'small-white') {

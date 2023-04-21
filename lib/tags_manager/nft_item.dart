@@ -29,7 +29,6 @@ class NftItem extends StatelessWidget {
     final bool selected = item.selected;
     return InkWell(
       child: Card(
-
           elevation: 2,
           color: Colors.grey[700],
           shape: RoundedRectangleBorder(

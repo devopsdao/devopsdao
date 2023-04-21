@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   algorand_dart: ^1.0.3
+  animated_icon_button: ^1.0.2
   animations: ^2.0.7
   another_flushbar: ^1.12.29
   app_bar_with_search_switch: ^1.3.8
@@ -48,13 +49,14 @@ dependencies:
   flutter_secure_storage_linux: ^1.1.0
   flutter_svg: ^1.0.1
   flutter_svg_provider: ^1.0.3
-  font_awesome_flutter: ^10.1.0
+  font_awesome_flutter: ^10.4.0
   g_json: ^4.1.0
   google_fonts: ^4.0.0
   gradient_borders: ^1.0.0
   horizontal_blocked_scroll_physics: ^4.0.1
   html: ^0.15.0
   http: ^0.13.4
+  icons_animate: ^0.0.2
   image_picker: ^0.8.6+4
   internet_connection_checker: ^1.0.0+1
   intl: ^0.18.0

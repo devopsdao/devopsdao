@@ -65,9 +65,9 @@ class _TreasuryWidget extends State<TreasuryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    // var tasksServices = context.read<TasksServices>();
     // var collectionServices = context.read<CollectionServices>();
-    var searchServices = context.read<SearchServices>();
+    // var searchServices = context.read<SearchServices>();
     var interfaceServices = context.read<InterfaceServices>();
 
     // if (_searchKeywordController.text.isEmpty) {
@@ -89,7 +89,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
           return AnimatedContainer(
             duration: splitDuration,
             height: splitScreen ? secondPartHeight : 0.0,
-            color: Colors.grey[900],
+            color: DodaoTheme.of(context).nftInfoBackgroundColor,
             curve: splitCurve,
             child: SingleChildScrollView(
               child: Column(
@@ -110,10 +110,10 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                 onTap: () {
                                   pageController.animateToPage(pageController.page!.toInt() - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.arrow_back_ios_new,
                                   size: 24,
-                                  color: Colors.white,
+                                  color: DodaoTheme.of(context).secondaryText,
                                 ),
                               ),
                               Padding(
@@ -137,10 +137,10 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                 onTap: () {
                                   pageController.animateToPage(pageController.page!.toInt() + 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.arrow_forward_ios,
                                   size: 24,
-                                  color: Colors.white,
+                                  color: DodaoTheme.of(context).secondaryText,
                                 ),
                               ),
                             ],
@@ -150,7 +150,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                             child: Text(
                               collectionName,
-                              style: Theme.of(context).textTheme.bodyMedium?.apply(color: DodaoTheme.of(context).primaryText),
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
                           const Spacer(),
@@ -160,10 +160,10 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             onTap: () {
                               model.clearSelectedInManager();
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.arrow_downward,
                               size: 24,
-                              color: Colors.white,
+                              color: DodaoTheme.of(context).secondaryText,
                             ),
                           ),
                         ],
@@ -172,7 +172,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                   ),
 
                   SizedBox(
-                    height: secondPartHeight - 53,
+                    height: secondPartHeight - 58,
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: PageView.builder(
@@ -201,7 +201,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
-        late final maxHeight = constraints.maxHeight - statusBarHeight - 84;
+        late final maxHeight = constraints.maxHeight - statusBarHeight - 76;
         // late double firstPartHeight = 0.0;
         // late double secondPartHeight = 0.0;
         // late bool splitScreen = false;
@@ -210,154 +210,152 @@ class _TreasuryWidget extends State<TreasuryWidget> {
         //   firstPartHeight = maxHeight / 2;
         //   secondPartHeight = firstPartHeight;
         // }
-        return Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(2, 6, 2, 2),
-            child: Column(
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 16.0, right: 12.0, left: 12.0),
+              height: 70,
+              child: Consumer<SearchServices>(
+                  builder: (context, model, child) {
+                    return TextFormField(
+                      controller: _searchKeywordController,
+                      onChanged: (searchKeyword) {
+                        model.tagsSearchFilter(enteredKeyword: searchKeyword, page: 'treasury');
+                        // model.tagsNFTFilter(searchKeyword);
+                      },
+                      autofocus: false,
+                      obscureText: false,
+                      onTapOutside: (test) {
+                        FocusScope.of(context).unfocus();
+                      },
+                      decoration: InputDecoration(
+                        // prefixIcon: const Icon(Icons.add),
+                        // suffixIcon: model.newTag ? IconButton(
+                        //   onPressed: () {
+                        //     // NEW TAG
+                        //     nftTagsMap[_searchKeywordController.text] =
+                        //         SimpleTags(collection: true, tag: _searchKeywordController.text, icon: "", selected: true);
+                        //     model.tagsUpdate(nftTagsMap);
+                        //   },
+                        //   icon: const Icon(Icons.add_box),
+                        //   padding: const EdgeInsets.only(right: 12.0),
+                        //   highlightColor: Colors.grey,
+                        //   hoverColor: Colors.transparent,
+                        //   color: Colors.blueAccent,
+                        //   splashColor: Colors.black,
+                        // ) : null,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF47CBE4),
+                            width: 2.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF47CBE4),
+                            width: 2.0,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        labelText: 'Tag name',
+                        labelStyle:  Theme.of(context).textTheme.bodyMedium,
+                        hintText: '[Enter nft name..]',
+                        hintStyle: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      minLines: 1,
+                      maxLines: 1,
+                    );
+                  }
+              ),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            Stack(
+              alignment: Alignment.bottomCenter,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(top: 16.0, right: 12.0, left: 12.0),
-                  height: 70,
-                  child: Consumer<SearchServices>(
+                  padding: const EdgeInsets.only(top: 4.0, right: 8.0, left: 8.0, bottom: 4.0),
+                  height: maxHeight,
+                  alignment: Alignment.topLeft,
+                  child:  Consumer<SearchServices>(
                       builder: (context, model, child) {
-                        return TextFormField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            model.tagsSearchFilter(enteredKeyword: searchKeyword, page: 'treasury');
-                            // model.tagsNFTFilter(searchKeyword);
-                          },
-                          autofocus: false,
-                          obscureText: false,
-                          onTapOutside: (test) {
-                            FocusScope.of(context).unfocus();
-                          },
-                          decoration: InputDecoration(
-                            // prefixIcon: const Icon(Icons.add),
-                            // suffixIcon: model.newTag ? IconButton(
-                            //   onPressed: () {
-                            //     // NEW TAG
-                            //     nftTagsMap[_searchKeywordController.text] =
-                            //         SimpleTags(collection: true, tag: _searchKeywordController.text, icon: "", selected: true);
-                            //     model.tagsUpdate(nftTagsMap);
-                            //   },
-                            //   icon: const Icon(Icons.add_box),
-                            //   padding: const EdgeInsets.only(right: 12.0),
-                            //   highlightColor: Colors.grey,
-                            //   hoverColor: Colors.transparent,
-                            //   color: Colors.blueAccent,
-                            //   splashColor: Colors.black,
-                            // ) : null,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF47CBE4),
-                                width: 2.0,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF47CBE4),
-                                width: 2.0,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            labelText: 'Tag name',
-                            labelStyle:  Theme.of(context).textTheme.bodyMedium,
-                            hintText: '[Enter nft name..]',
-                            hintStyle: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          minLines: 1,
-                          maxLines: 1,
+                        return Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.treasuryPageFilterResults.entries.map((e) {
+
+                              if(!tagsCompare.containsKey(e.key)){
+                                if (e.value.selected) {
+                                  tagsCompare[e.key] = TagsCompare(state: 'remain',);
+                                } else {
+                                  tagsCompare[e.key] = TagsCompare(state: 'none',);
+                                }
+                              } else if (tagsCompare.containsKey(e.key)) {
+                                if (e.value.selected) {
+                                  if (tagsCompare[e.key]!.state == 'start') {
+                                    tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'remain',));
+                                  }
+                                  if (tagsCompare[e.key]!.state == 'none') {
+                                    tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'start',));
+                                  }
+                                  if (tagsCompare[e.key]!.state == 'end') {
+                                    tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'start',));
+                                  }
+                                } else {
+                                  if (tagsCompare[e.key]!.state == 'end') {
+                                    tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'none',));
+                                  }
+                                  if (tagsCompare[e.key]!.state == 'start') {
+                                    tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'end',));
+                                  }
+                                  if (tagsCompare[e.key]!.state == 'remain') {
+                                    tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'end',));
+                                  }
+                                }
+
+
+                                // if (e.value.selected && tagsCompare[e.value.tag]!.state == 'none') {
+                                //   // Start animation on clicked Widget
+                                //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
+                                // } else if (tagsCompare[e.value.tag]!.state == 'none' && !e.value.selected) {
+                                //   // End(exit) animation
+                                //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
+                                // }
+
+
+                                // for (var entry in entriesCopy.entries) {
+                                //   print(DateTime.now().difference(entry.value.timestamp).inSeconds);
+                                //   if (DateTime.now().difference(entry.value.timestamp).inSeconds > 1) {
+                                //     tagsCompare.remove(e.value.tag);
+                                //   }
+                                // }
+                              }
+                              return WrappedChip(
+                                  key: ValueKey(e),
+                                  theme: 'black',
+                                  item: e,
+                                  page: 'treasury',
+                                  startScale: false,
+                                  selected: e.value.selected,
+                                  animationCicle: tagsCompare[e.key]!.state,
+                                  wrapperRole: WrapperRole.treasure,
+                              );
+                            }).toList()
                         );
                       }
                   ),
                 ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Container(
-                      height: maxHeight,
-                      alignment: Alignment.topLeft,
-                      child:  Consumer<SearchServices>(
-                          builder: (context, model, child) {
-                            return Wrap(
-                                alignment: WrapAlignment.start,
-                                direction: Axis.horizontal,
-                                children: model.treasuryPageFilterResults.entries.map((e) {
-
-                                  if(!tagsCompare.containsKey(e.key)){
-                                    if (e.value.selected) {
-                                      tagsCompare[e.key] = TagsCompare(state: 'remain',);
-                                    } else {
-                                      tagsCompare[e.key] = TagsCompare(state: 'none',);
-                                    }
-                                  } else if (tagsCompare.containsKey(e.key)) {
-                                    if (e.value.selected) {
-                                      if (tagsCompare[e.key]!.state == 'start') {
-                                        tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'remain',));
-                                      }
-                                      if (tagsCompare[e.key]!.state == 'none') {
-                                        tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'start',));
-                                      }
-                                      if (tagsCompare[e.key]!.state == 'end') {
-                                        tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'start',));
-                                      }
-                                    } else {
-                                      if (tagsCompare[e.key]!.state == 'end') {
-                                        tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'none',));
-                                      }
-                                      if (tagsCompare[e.key]!.state == 'start') {
-                                        tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'end',));
-                                      }
-                                      if (tagsCompare[e.key]!.state == 'remain') {
-                                        tagsCompare.update(e.key, (val) => val = TagsCompare(state: 'end',));
-                                      }
-                                    }
-
-
-                                    // if (e.value.selected && tagsCompare[e.value.tag]!.state == 'none') {
-                                    //   // Start animation on clicked Widget
-                                    //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
-                                    // } else if (tagsCompare[e.value.tag]!.state == 'none' && !e.value.selected) {
-                                    //   // End(exit) animation
-                                    //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
-                                    // }
-
-
-                                    // for (var entry in entriesCopy.entries) {
-                                    //   print(DateTime.now().difference(entry.value.timestamp).inSeconds);
-                                    //   if (DateTime.now().difference(entry.value.timestamp).inSeconds > 1) {
-                                    //     tagsCompare.remove(e.value.tag);
-                                    //   }
-                                    // }
-                                  }
-                                  return WrappedChip(
-                                      key: ValueKey(e),
-                                      theme: 'black',
-                                      item: e,
-                                      page: 'treasury',
-                                      startScale: false,
-                                      selected: e.value.selected,
-                                      animationCicle: tagsCompare[e.key]!.state,
-                                      wrapperRole: WrapperRole.treasure,
-                                  );
-                                }).toList()
-                            );
-                          }
-                      ),
-                    ),
-                    nftInfoField,
-                  ]
-                ),
-              ],
-            )
+                nftInfoField,
+              ]
+            ),
+          ],
         );
       }
     );

@@ -76,7 +76,7 @@ class _MintWidget extends State<MintWidget> {
     return LayoutBuilder(
         builder: (context, constraints) {
           final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
-          late double maxHeight = constraints.maxHeight - statusBarHeight - 84;
+          late double maxHeight = constraints.maxHeight - statusBarHeight - 76;
           // late double firstPartHeight = 0.0;
           // late double secondPartHeight = 0.0;
           // late bool splitScreen = false;
@@ -85,179 +85,177 @@ class _MintWidget extends State<MintWidget> {
           //   firstPartHeight = maxHeight / 2;
           //   secondPartHeight = firstPartHeight;
           // }
-          return Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(2, 6, 2, 2),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 16.0, right: 12.0, left: 12.0),
-                    height: 70,
-                    child: Consumer<SearchServices>(
-                        builder: (context, model, child) {
-                          return TextFormField(
-                            controller: searchServices.searchKeywordController,
-                            onChanged: (searchKeyword) {
-                              model.tagsSearchFilter( page: 'mint', enteredKeyword: searchKeyword,);
+          return Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 16.0, right: 12.0, left: 12.0),
+                height: 70,
+                child: Consumer<SearchServices>(
+                    builder: (context, model, child) {
+                      return TextFormField(
+                        controller: searchServices.searchKeywordController,
+                        onChanged: (searchKeyword) {
+                          model.tagsSearchFilter( page: 'mint', enteredKeyword: searchKeyword,);
+                        },
+                        autofocus: false,
+                        obscureText: false,
+                        // onTapOutside: (test) {
+                        //   FocusScope.of(context).unfocus();
+                        //   // interface.taskMessage = messageController!.text;
+                        // },
+
+                        decoration: InputDecoration(
+                          // prefixIcon: const Icon(Icons.add, color: Color(0xFF47CBE4),),
+                          suffixIcon: model.newTag ? IconButton(
+                            onPressed: () {
+                              // NEW TAG
+                              searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                              model.addNewTag(searchServices.searchKeywordController.text, 'mint');
+                              collectionServices.updateMintNft(searchServices.mintPageFilterResults[searchServices.searchKeywordController.text]!.bunch.values.first);
                             },
-                            autofocus: false,
-                            obscureText: false,
-                            // onTapOutside: (test) {
-                            //   FocusScope.of(context).unfocus();
-                            //   // interface.taskMessage = messageController!.text;
-                            // },
-
-                            decoration: InputDecoration(
-                              // prefixIcon: const Icon(Icons.add, color: Color(0xFF47CBE4),),
-                              suffixIcon: model.newTag ? IconButton(
-                                onPressed: () {
-                                  // NEW TAG
-                                  searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
-                                  model.addNewTag(searchServices.searchKeywordController.text);
-                                  collectionServices.updateMintNft(searchServices.mintPageFilterResults[searchServices.searchKeywordController.text]!.bunch.values.first);
-                                },
-                                icon: const Icon(Icons.add_box,color: Colors.deepOrangeAccent,),
-                                padding: const EdgeInsets.only(right: 12.0),
-                                highlightColor: Colors.grey,
-                                hoverColor: Colors.transparent,
-                                color: const Color(0xFF47CBE4),
-                                splashColor: Colors.white,
-                              ) : null,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF47CBE4),
-                                  width: 2.0,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF47CBE4),
-                                  width: 2.0,
-                                ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelText: 'Tag name',
-                              labelStyle: Theme.of(context).textTheme.bodyMedium,
-                              hintText: '[Find a tag or create a new one..]',
-                              hintStyle:  Theme.of(context).textTheme.bodyMedium,
-                              // hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
-                              // focusedBorder: const UnderlineInputBorder(
-                              //   borderSide: BorderSide.none,
-                              // ),
-
+                            icon: const Icon(Icons.add_box,color: Colors.deepOrangeAccent,),
+                            padding: const EdgeInsets.only(right: 12.0),
+                            highlightColor: Colors.grey,
+                            hoverColor: Colors.transparent,
+                            color: DodaoTheme.of(context).tabIndicator,
+                            splashColor: Colors.white,
+                          ) : null,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            borderSide: BorderSide(
+                              color: DodaoTheme.of(context).tabIndicator,
+                              width: 2.0,
                             ),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            minLines: 1,
-                            maxLines: 1,
-                          );
-                        }
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Container(
-                          height: maxHeight,
-                          alignment: Alignment.topLeft,
-                          child: Consumer<SearchServices>(
-                              builder: (context, model, child) {
-                                return Wrap(
-                                    alignment: WrapAlignment.start,
-                                    direction: Axis.horizontal,
-                                    children: model.mintPageFilterResults.entries.map((e) {
-
-                                      if(!tagsCompare.containsKey(e.value.name)){
-                                        if (e.value.selected) {
-                                          tagsCompare[e.value.name] = TagsCompare(state: 'remain',);
-                                        } else {
-                                          tagsCompare[e.value.name] = TagsCompare(state: 'none',);
-                                        }
-                                      } else if (tagsCompare.containsKey(e.value.name)) {
-                                        if (e.value.selected) {
-                                          if (tagsCompare[e.value.name]!.state == 'start') {
-                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'remain',));
-                                          }
-                                          if (tagsCompare[e.value.name]!.state == 'none') {
-                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
-                                          }
-                                          if (tagsCompare[e.value.name]!.state == 'end') {
-                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
-                                          }
-                                        } else {
-                                          if (tagsCompare[e.value.name]!.state == 'end') {
-                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'none',));
-                                          }
-                                          if (tagsCompare[e.value.name]!.state == 'start') {
-                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
-                                          }
-                                          if (tagsCompare[e.value.name]!.state == 'remain') {
-                                            tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
-                                          }
-                                        }
-
-
-                                        // if (e.value.selected && tagsCompare[e.value.tag]!.state == 'none') {
-                                        //   // Start animation on clicked Widget
-                                        //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
-                                        // } else if (tagsCompare[e.value.tag]!.state == 'none' && !e.value.selected) {
-                                        //   // End(exit) animation
-                                        //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
-                                        // }
-
-
-                                        // for (var entry in entriesCopy.entries) {
-                                        //   print(DateTime.now().difference(entry.value.timestamp).inSeconds);
-                                        //   if (DateTime.now().difference(entry.value.timestamp).inSeconds > 1) {
-                                        //     tagsCompare.remove(e.value.tag);
-                                        //   }
-                                        // }
-                                      }
-                                      // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
-                                      return WrappedChip(
-                                        key: ValueKey(e),
-                                        theme: 'black',
-                                        item: e,
-                                        page: 'mint',
-                                        startScale: false,
-                                        animationCicle: tagsCompare[e.value.name]!.state,
-                                        selected: e.value.selected,
-                                        wrapperRole: WrapperRole.mint,
-                                      );
-                                    }).toList()
-                                );
-                              }
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            borderSide: BorderSide(
+                              color: DodaoTheme.of(context).tabIndicator,
+                              width: 2.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          labelText: 'Tag name',
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
+                          hintText: '[Find a tag or create a new one..]',
+                          hintStyle:  Theme.of(context).textTheme.bodyMedium,
+                          // hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                          // focusedBorder: const UnderlineInputBorder(
+                          //   borderSide: BorderSide.none,
+                          // ),
+
                         ),
-                        Consumer<CollectionServices>(
-                            builder: (context, model, child) {
-                            late double secondPartHeight = 0.0;
-                            late bool splitScreen = false;
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        minLines: 1,
+                        maxLines: 1,
+                      );
+                    }
+                ),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 4.0, right: 8.0, left: 8.0, bottom: 4.0),
+                      height: maxHeight,
+                      alignment: Alignment.topLeft,
+                      child: Consumer<SearchServices>(
+                          builder: (context, model, child) {
+                            return Wrap(
+                                alignment: WrapAlignment.start,
+                                direction: Axis.horizontal,
+                                children: model.mintPageFilterResults.entries.map((e) {
 
-                            if (model.mintNftTagSelected.name != 'empty') {
-                              splitScreen = true;
-                            }
-                            secondPartHeight = 300;
+                                  if(!tagsCompare.containsKey(e.value.name)){
+                                    if (e.value.selected) {
+                                      tagsCompare[e.value.name] = TagsCompare(state: 'remain',);
+                                    } else {
+                                      tagsCompare[e.value.name] = TagsCompare(state: 'none',);
+                                    }
+                                  } else if (tagsCompare.containsKey(e.value.name)) {
+                                    if (e.value.selected) {
+                                      if (tagsCompare[e.value.name]!.state == 'start') {
+                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'remain',));
+                                      }
+                                      if (tagsCompare[e.value.name]!.state == 'none') {
+                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
+                                      }
+                                      if (tagsCompare[e.value.name]!.state == 'end') {
+                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
+                                      }
+                                    } else {
+                                      if (tagsCompare[e.value.name]!.state == 'end') {
+                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'none',));
+                                      }
+                                      if (tagsCompare[e.value.name]!.state == 'start') {
+                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
+                                      }
+                                      if (tagsCompare[e.value.name]!.state == 'remain') {
+                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
+                                      }
+                                    }
 
-                            return AnimatedContainer(
-                                duration: splitDuration,
-                                height: splitScreen ? secondPartHeight : 0.0,
-                                color: Colors.grey[900],
-                                curve: splitCurve,
-                                child: CreateCollection(item: model.mintNftTagSelected, page: 'mint')
+
+                                    // if (e.value.selected && tagsCompare[e.value.tag]!.state == 'none') {
+                                    //   // Start animation on clicked Widget
+                                    //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
+                                    // } else if (tagsCompare[e.value.tag]!.state == 'none' && !e.value.selected) {
+                                    //   // End(exit) animation
+                                    //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
+                                    // }
+
+
+                                    // for (var entry in entriesCopy.entries) {
+                                    //   print(DateTime.now().difference(entry.value.timestamp).inSeconds);
+                                    //   if (DateTime.now().difference(entry.value.timestamp).inSeconds > 1) {
+                                    //     tagsCompare.remove(e.value.tag);
+                                    //   }
+                                    // }
+                                  }
+                                  // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
+                                  return WrappedChip(
+                                    key: ValueKey(e),
+                                    theme: 'black',
+                                    item: e,
+                                    page: 'mint',
+                                    startScale: false,
+                                    animationCicle: tagsCompare[e.value.name]!.state,
+                                    selected: e.value.selected,
+                                    wrapperRole: WrapperRole.mint,
+                                  );
+                                }).toList()
                             );
                           }
-                        )
-                      ]
-                  ),
-                ],
-              )
+                      ),
+                    ),
+                    Consumer<CollectionServices>(
+                        builder: (context, model, child) {
+                        late double secondPartHeight = 0.0;
+                        late bool splitScreen = false;
+
+                        if (model.mintNftTagSelected.name != 'empty') {
+                          splitScreen = true;
+                        }
+                        secondPartHeight = 300;
+
+                        return AnimatedContainer(
+                            duration: splitDuration,
+                            height: splitScreen ? secondPartHeight : 0.0,
+                            color: DodaoTheme.of(context).nftInfoBackgroundColor,
+                            curve: splitCurve,
+                            child: CreateCollection(item: model.mintNftTagSelected, page: 'mint')
+                        );
+                      }
+                    )
+                  ]
+              ),
+            ],
           );
         }
     );
@@ -265,47 +263,47 @@ class _MintWidget extends State<MintWidget> {
 }
 
 
-class MintButton extends StatelessWidget {
-  final String name;
-  final String state;
-  const MintButton({
-    Key? key,
-    required this.name,
-    required this.state,
-  }) : super(key: key);
-
-
-  @override
-  Widget build(BuildContext context) {
-    // var tasksServices = context.read<TasksServices>();
-
-    if (state == 'await') {
-
-    } else if (state == 'open') {
-
-    } else if (state == 'done') {
-
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            minimumSize: Size(155, 40),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-
-          // put the width and height you want
-        ),
-        onPressed: () {  },
-        child: Text(
-          name,
-          style: DodaoTheme.of(context).bodyText1.override(
-              fontFamily: 'Inter',
-              color: Colors.white,
-              fontWeight: FontWeight.w400
-          ),
-        ),
-      ),
-    );
-  }
-}
+// class MintButton extends StatelessWidget {
+//   final String name;
+//   final String state;
+//   const MintButton({
+//     Key? key,
+//     required this.name,
+//     required this.state,
+//   }) : super(key: key);
+//
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // var tasksServices = context.read<TasksServices>();
+//
+//     if (state == 'await') {
+//
+//     } else if (state == 'open') {
+//
+//     } else if (state == 'done') {
+//
+//     }
+//
+//     return Padding(
+//       padding: const EdgeInsets.all(5.0),
+//       child: ElevatedButton(
+//         style: ElevatedButton.styleFrom(
+//             minimumSize: Size(155, 40),
+//             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+//
+//           // put the width and height you want
+//         ),
+//         onPressed: () {  },
+//         child: Text(
+//           name,
+//           style: DodaoTheme.of(context).bodyText1.override(
+//               fontFamily: 'Inter',
+//               color: Colors.white,
+//               fontWeight: FontWeight.w400
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

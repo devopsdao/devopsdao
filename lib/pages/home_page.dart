@@ -157,11 +157,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           actions: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding:const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
                 child: Container(
                   // width: 150,
                   height: 30,
-                  padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
 
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
@@ -184,12 +184,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               '...'
                               '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
                               // textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 16, color: Colors.white),
+                              style: const TextStyle(fontSize: 14, color: Colors.white),
                             )
                           : const Text(
                               'Connect wallet',
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 16, color: Colors.white),
+                              style: TextStyle(fontSize: 14, color: Colors.white),
                             )),
                 ),
               ),
@@ -215,28 +215,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             // const LoadButtonIndicator(),
 
             if (!tasksServices.isDeviceConnected)
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 30,
-                    borderWidth: 1,
-                    buttonSize: 60,
-                    icon: const Icon(
-                      Icons.cloud_off,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    onPressed: () async {
-                      // tasksServices.connectWallet();
-                      // () async {
-                      //   await tasksServices.connectWallet();
-                      //   print(
-                      // }();
-                    },
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(left: 0.0, right: 14),
+                child: Icon(
+                  Icons.cloud_off,
+                  color: DodaoTheme.of(context).primaryText,
+                  size: 26,
+                ),
               ),
           ],
           centerTitle: false,
@@ -321,6 +306,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         //   ),
                         //   // .animated([animationsMap['textOnPageLoadAnimation']!]),
                         // ),
+
                         Row(
                           mainAxisSize: MainAxisSize.max,
                           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -440,7 +426,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   children: [
                                     Text('Your Nft\'s:',
                                         style: TextStyle(
-                                          color: DodaoTheme.of(context).primaryBtnText,
+                                          color: DodaoTheme.of(context).primaryText,
                                           fontSize: 14,
                                           fontFamily: 'Inter',
                                         )),
@@ -481,7 +467,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     //     fontFamily: 'Inter',
                                     //     fontSize: 11,
                                     //     color:
-                                    //     DodaoTheme.of(context).primaryBtnText,
+                                    //     DodaoTheme.of(context).primaryText,
                                     //   ),
                                     // )
 
@@ -492,7 +478,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     //       .override(
                                     //     fontFamily: 'Inter',
                                     //     color:
-                                    //     DodaoTheme.of(context).primaryBtnText,
+                                    //     DodaoTheme.of(context).primaryText,
                                     //   ),
                                     // ),
                                   ],
@@ -521,14 +507,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontFamily: 'Inter',
-                                        color: DodaoTheme.of(context).primaryBtnText,
+                                        color: DodaoTheme.of(context).primaryText,
                                       )),
                                   if (tasksServices.publicAddress == null)
                                     Text(
                                       'Not Connected',
                                       style: DodaoTheme.of(context).bodyText2.override(
                                             fontFamily: 'Inter',
-                                            color: DodaoTheme.of(context).primaryBtnText,
+                                            color: DodaoTheme.of(context).primaryText,
                                           ),
                                     )
                                   else if (tasksServices.scoredTaskCount == 0)
@@ -536,7 +522,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       'No completed evaluated tasks',
                                       style: DodaoTheme.of(context).bodyText2.override(
                                             fontFamily: 'Inter',
-                                            color: DodaoTheme.of(context).primaryBtnText,
+                                            color: DodaoTheme.of(context).primaryText,
                                           ),
                                     )
                                   else
@@ -545,7 +531,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       style: DodaoTheme.of(context).bodyText2.override(
                                             fontFamily: 'Inter',
                                             fontSize: 11,
-                                            color: DodaoTheme.of(context).primaryBtnText,
+                                            color: DodaoTheme.of(context).primaryText,
                                           ),
                                     )
                                 ],
@@ -560,12 +546,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                                   Icon(
                                     Icons.library_books_outlined,
-                                    color: DodaoTheme.of(context).primaryBtnText,
+                                    color: DodaoTheme.of(context).primaryText,
                                     size: 18,
                                   ),
                                   Text(
                                     ' docs.dodao.dev',
-                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryBtnText, fontSize: 14),
+                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText, fontSize: 14),
                                   ),
                                 ]),
                                 onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
@@ -575,7 +561,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             style: TextStyle(
                               height: 2,
                               fontWeight: FontWeight.bold,
-                              color: DodaoTheme.of(context).primaryBtnText,
+                              color: DodaoTheme.of(context).primaryText,
                               fontSize: 10,
                             )),
                       ],

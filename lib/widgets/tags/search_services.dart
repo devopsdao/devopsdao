@@ -143,7 +143,15 @@ class SearchServices extends ChangeNotifier {
           //
           // list[e.key]!.bunch.clear();
           // list[e.key]!.bunch = nft;
-          list[e.key] = e.value;
+
+          // check if bunch has selected item (nft) then add this bunch
+          late bool selected = false;
+          for (SimpleTags nft in e.value.bunch.values) {
+            selected = nft.selected;
+          }
+          if (selected) {
+            list[e.key] = e.value;
+          }
         } else {
           list[e.key] = e.value;
         }
@@ -290,30 +298,56 @@ class SearchServices extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> addNewTag(String newTagName) async {
-    mintPageFilterResults.clear();
-    mintPageFilterResults = Map.from(nftCollectionMap); // {...nftBalanceMap};
-    mintPageFilterResults[newTagName] = NftTagsBunch(
-      name: newTagName,
-      bunch: { BigInt.from(0) : (
-        SimpleTags(
+  Future<void> addNewTag(String newTagName, String page) async {
+    if (page == 'mint') {
+      mintPageFilterResults.clear();
+      mintPageFilterResults = Map.from(nftCollectionMap); // {...nftBalanceMap};
+      mintPageFilterResults[newTagName] = NftTagsBunch(
           name: newTagName,
-          collection: false,
-          nft: false,
-          selected: false
-        )
-      )},
-      selected: true
-    );
-    newTag = false;
-    mintPageFilterResults = Map.fromEntries(mintPageFilterResults.entries.toList()
-      ..sort((e1, e2) {
-        if (e2.value.selected != e1.value.selected) {
-          return e2.value.selected ? 1 : -1;
-        } else {
-          return e1.value.name.compareTo(e2.value.name);
-        }
-      }));
+          bunch: { BigInt.from(0) : (
+              SimpleTags(
+                  name: newTagName,
+                  collection: false,
+                  nft: false,
+                  selected: false
+              )
+          )},
+          selected: true
+      );
+      newTag = false;
+      mintPageFilterResults = Map.fromEntries(mintPageFilterResults.entries.toList()
+        ..sort((e1, e2) {
+          if (e2.value.selected != e1.value.selected) {
+            return e2.value.selected ? 1 : -1;
+          } else {
+            return e1.value.name.compareTo(e2.value.name);
+          }
+        }));
+    } else if (page == 'selection') {
+      selectionPageInitialCombined.clear();
+      selectionPageInitialCombined = Map.from(nftCollectionMap); // {...nftBalanceMap};
+      selectionPageInitialCombined[newTagName] = NftTagsBunch(
+          name: newTagName,
+          bunch: { BigInt.from(0) : (
+              SimpleTags(
+                  name: newTagName,
+                  collection: false,
+                  nft: false,
+                  selected: false
+              )
+          )},
+          selected: true
+      );
+      newTag = false;
+      selectionPageInitialCombined = Map.fromEntries(selectionPageInitialCombined.entries.toList()
+        ..sort((e1, e2) {
+          if (e2.value.selected != e1.value.selected) {
+            return e2.value.selected ? 1 : -1;
+          } else {
+            return e1.value.name.compareTo(e2.value.name);
+          }
+        }));
+    }
     notifyListeners();
   }
 
