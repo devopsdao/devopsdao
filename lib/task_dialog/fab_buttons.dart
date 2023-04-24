@@ -117,11 +117,15 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Check merge',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
-          callback: () {
-            interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
-            tasksServices.myNotifyListeners();
+          callback: () async {
+
+            // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
+            // // tasksServices.myNotifyListeners();
+            var response = tasksServices.postWitnetRequest(task.taskAddress);
+            interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+
             debounceNotifyListener.debounce(() {
-              interface.statusText = const TextSpan(text: 'Open', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+              interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
               tasksServices.myNotifyListeners();
             });
           },

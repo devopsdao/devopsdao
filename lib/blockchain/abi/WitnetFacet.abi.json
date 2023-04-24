@@ -48,11 +48,6 @@
     "type": "constructor"
   },
   {
-    "inputs": [],
-    "name": "EmptyBuffer",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -96,36 +91,6 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "unexpected",
-        "type": "uint256"
-      }
-    ],
-    "name": "UnsupportedMajorType",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "addr",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "message",
-        "type": "string"
-      }
-    ],
-    "name": "Logs",
-    "type": "event"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -141,36 +106,42 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
     "name": "checkResultAvailability",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "contract WitnetRequestBoard",
-        "name": "witnet",
+        "internalType": "address",
+        "name": "taskAddress",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
       }
     ],
-    "name": "fetchResult",
+    "name": "getLastResult",
     "outputs": [
       {
         "components": [
           {
             "internalType": "bool",
-            "name": "merged",
+            "name": "failed",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "pendingMerge",
             "type": "bool"
           },
           {
@@ -180,82 +151,107 @@
           }
         ],
         "internalType": "struct LibWitnetFacet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getLastWitnetQuery",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "slaHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "radHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "gasprice",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "reward",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct Witnet.Request",
+            "name": "request",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "reporter",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "drTxHash",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes",
+                "name": "cborBytes",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct Witnet.Response",
+            "name": "response",
+            "type": "tuple"
+          },
+          {
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct Witnet.Query",
         "name": "",
         "type": "tuple"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "subpath",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "title",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct LibWitnetFacet.Args",
-        "name": "_args",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
-    "name": "postRequest",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_witnetQueryId",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_witnetRadHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "postRequest2",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_witnetQueryId",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
-      }
-    ],
-    "name": "readResult",
+    "name": "getLastWitnetResult",
     "outputs": [
       {
         "components": [
@@ -320,6 +316,66 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_radHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "postRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_queryId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "subpath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct LibWitnetFacet.Args",
+        "name": "_args",
+        "type": "tuple"
+      }
+    ],
+    "name": "postRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_queryId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
     "type": "function"
   },
   {

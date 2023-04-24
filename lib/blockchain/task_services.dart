@@ -1733,10 +1733,7 @@ class TasksServices extends ChangeNotifier {
       print('loadOneTask end');
 
       return tasks[taskAddress]!;
-
     }
-
-
   }
 
   Future<void> refreshTask(Task task) async {
@@ -2462,8 +2459,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2927,7 +2924,7 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  Future<String> postWitnetRequest() async {
+  Future<String> postWitnetRequest(EthereumAddress taskAddress) async {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2943,19 +2940,19 @@ class TasksServices extends ChangeNotifier {
 
     BigInt appId = BigInt.from(100);
     List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
-    String txn = await witnetFacet.postRequest$2(appId, args, credentials: creds, transaction: transaction);
+    String txn = await witnetFacet.postRequest$2(taskAddress, args, credentials: creds, transaction: transaction);
     return txn;
   }
 
-  Future<bool> checkResultAvailability(List<String> names) async {
+  Future<bool> checkResultAvailability(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
-    bool result = await witnetFacet.checkResultAvailability(appId);
+    bool result = await witnetFacet.checkResultAvailability(taskAddress);
     return result;
   }
 
-  Future<dynamic> getLastResult(List<String> names) async {
+  Future<dynamic> getLastResult(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
-    var result = await witnetFacet.getLastResult(appId);
+    var result = await witnetFacet.getLastResult(taskAddress);
     return result;
   }
 

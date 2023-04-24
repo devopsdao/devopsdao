@@ -876,7 +876,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 Container(
                                   padding: const EdgeInsets.only(top: 8),
                                   alignment: Alignment.topLeft,
-                                  child: const Text('In customer repository: '),
+                                  child: const Text('Customer pull request link: '),
                                 ),
 
                                 Builder(builder: (context) {
