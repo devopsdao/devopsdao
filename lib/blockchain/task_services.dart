@@ -1508,21 +1508,22 @@ class TasksServices extends ChangeNotifier {
           taskType: task[2],
           title: task[3],
           description: task[4],
-          tags: task[5],
-          tagsNFT: task[6],
-          symbols: task[7],
-          amounts: task[8],
-          taskState: task[9],
-          auditState: task[10],
-          rating: task[11].toInt(),
-          contractOwner: task[12],
-          performer: task[13],
-          auditInitiator: task[14],
-          auditor: task[15],
-          participants: task[16],
-          funders: task[17],
-          auditors: task[18],
-          messages: task[19],
+          repository: task[5],
+          tags: task[6],
+          tagsNFT: task[7],
+          symbols: task[8],
+          amounts: task[9],
+          taskState: task[10],
+          auditState: task[11],
+          rating: task[12].toInt(),
+          contractOwner: task[13],
+          performer: task[14],
+          auditInitiator: task[15],
+          auditor: task[16],
+          participants: task[17],
+          funders: task[18],
+          auditors: task[19],
+          messages: task[20],
           taskAddress: taskAddress,
           justLoaded: true,
           tokenNames: ['ETH'],
@@ -1554,21 +1555,22 @@ class TasksServices extends ChangeNotifier {
           taskType: task[0][2],
           title: task[0][3],
           description: task[0][4],
-          tags: task[0][5],
-          tagsNFT: task[0][6],
-          symbols: task[0][7],
-          amounts: task[0][8],
-          taskState: task[0][9],
-          auditState: task[0][10],
-          rating: task[0][11].toInt(),
-          contractOwner: task[0][12],
-          performer: task[0][13],
-          auditInitiator: task[0][14],
-          auditor: task[0][15],
-          participants: task[0][16],
-          funders: task[0][17],
-          auditors: task[0][18],
-          messages: task[0][19],
+          repository: task[0][5],
+          tags: task[0][6],
+          tagsNFT: task[0][7],
+          symbols: task[0][8],
+          amounts: task[0][9],
+          taskState: task[0][10],
+          auditState: task[0][11],
+          rating: task[0][12].toInt(),
+          contractOwner: task[0][13],
+          performer: task[0][14],
+          auditInitiator: task[0][15],
+          auditor: task[0][16],
+          participants: task[0][17],
+          funders: task[0][18],
+          auditors: task[0][19],
+          messages: task[0][20],
           taskAddress: taskAddresses[i],
           justLoaded: true,
           tokenNames: task[1].cast<String>(),
@@ -2350,7 +2352,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(String title, String description, double price, String nanoId, List<String> tags) async {
+  Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> tags) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -2384,6 +2386,7 @@ class TasksServices extends ChangeNotifier {
         "taskType": taskType,
         "title": title,
         "description": description,
+        "repository": repository,
         "tags": tags,
         "symbols": symbols,
         "amounts": amounts
@@ -2938,9 +2941,9 @@ class TasksServices extends ChangeNotifier {
       from: senderAddress,
     );
 
-    BigInt appId = BigInt.from(100);
-    List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
-    String txn = await witnetFacet.postRequest$2(taskAddress, args, credentials: creds, transaction: transaction);
+    // BigInt appId = BigInt.from(100);
+    // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
+    String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
     return txn;
   }
 

@@ -147,16 +147,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           title: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text(
-                'Dodao',
-                style: Theme.of(context).textTheme.titleLarge
-              ),
+              Text('Dodao', style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
           actions: [
             Center(
               child: Padding(
-                padding:const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
+                padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
                 child: Container(
                   // width: 150,
                   height: 30,
@@ -443,14 +440,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   NftTagsBunch(
                                                     selected: false,
                                                     name: e.name,
-                                                    bunch: {
-                                                      BigInt.from(0) : SimpleTags(
-                                                          name: e.name,
-                                                          collection: true
-                                                      )
-                                                    },
-                                                  )
-                                              ),
+                                                    bunch: {BigInt.from(0): SimpleTags(name: e.name, collection: true)},
+                                                  )),
                                               page: 'home',
                                               selected: e.selected,
                                               wrapperRole: e.name == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
@@ -550,7 +541,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   ),
                                   Text(
                                     ' docs.dodao.dev',
-                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText, fontSize: 14),
+                                    style: DodaoTheme.of(context)
+                                        .bodyText3
+                                        .override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText, fontSize: 14),
                                   ),
                                 ]),
                                 onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),

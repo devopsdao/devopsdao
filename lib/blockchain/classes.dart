@@ -6,6 +6,7 @@ class Task {
   final String taskType;
   final String title;
   late String description;
+  late String repository;
   final List<dynamic> tags;
   final List<dynamic> tagsNFT;
   final List<dynamic> symbols;
@@ -33,6 +34,7 @@ class Task {
     required this.taskType,
     required this.title,
     required this.description,
+    required this.repository,
     required this.tags,
     required this.tagsNFT,
     required this.symbols,

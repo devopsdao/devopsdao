@@ -348,6 +348,25 @@
         "internalType": "address",
         "name": "taskAddress",
         "type": "address"
+      }
+    ],
+    "name": "postRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_queryId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       },
       {
         "components": [
@@ -367,7 +386,7 @@
         "type": "tuple"
       }
     ],
-    "name": "postRequest",
+    "name": "postRequestTest",
     "outputs": [
       {
         "internalType": "uint256",
