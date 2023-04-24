@@ -29,6 +29,11 @@
             "type": "string"
           },
           {
+            "internalType": "string",
+            "name": "repository",
+            "type": "string"
+          },
+          {
             "internalType": "string[]",
             "name": "tags",
             "type": "string[]"
@@ -163,6 +168,11 @@
           {
             "internalType": "string",
             "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "repository",
             "type": "string"
           },
           {

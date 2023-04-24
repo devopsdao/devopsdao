@@ -2350,7 +2350,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(String title, String description, double price, String nanoId, List<String> tags) async {
+  Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> tags) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -2384,6 +2384,7 @@ class TasksServices extends ChangeNotifier {
         "taskType": taskType,
         "title": title,
         "description": description,
+        "repository": repository,
         "tags": tags,
         "symbols": symbols,
         "amounts": amounts
@@ -2938,9 +2939,9 @@ class TasksServices extends ChangeNotifier {
       from: senderAddress,
     );
 
-    BigInt appId = BigInt.from(100);
-    List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
-    String txn = await witnetFacet.postRequest$2(taskAddress, args, credentials: creds, transaction: transaction);
+    // BigInt appId = BigInt.from(100);
+    // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
+    String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
     return txn;
   }
 

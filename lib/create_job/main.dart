@@ -43,7 +43,6 @@ class _CreateJobState extends State<CreateJob> {
 
       // searchServices.refreshLists('selection');
       // searchServices.tagsSearchFilter('', simpleTagsMap);
-
     });
   }
 
@@ -55,14 +54,11 @@ class _CreateJobState extends State<CreateJob> {
 
   @override
   Widget build(BuildContext context) {
-
     var interface = context.watch<InterfaceServices>();
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
     late String backgroundPicture = "assets/images/niceshape.png";
-
-
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final double myMaxWidth = constraints.maxWidth;
@@ -77,29 +73,23 @@ class _CreateJobState extends State<CreateJob> {
       // print(keyboardSize);
       return Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(backgroundPicture),
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.bottomRight
-            ),
+            image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
           ),
           child: SafeArea(
               minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
               child: CreateJobSkeleton(
                 screenHeightSize: screenHeightSize,
                 myMaxWidth: myMaxWidth,
-              )
-          )
-      );
+              )));
     });
   }
 }
 
-
 class CreateJobSkeleton extends StatefulWidget {
   final double screenHeightSize;
   final double myMaxWidth;
-  const CreateJobSkeleton({Key? key,
+  const CreateJobSkeleton({
+    Key? key,
     required this.screenHeightSize,
     required this.myMaxWidth,
   }) : super(key: key);
@@ -109,19 +99,18 @@ class CreateJobSkeleton extends StatefulWidget {
 }
 
 class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProviderStateMixin {
-
   late AnimationController animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-      reverseDuration: Duration(milliseconds: 200),
+    vsync: this,
+    duration: Duration(milliseconds: 200),
+    reverseDuration: Duration(milliseconds: 200),
   );
 
-  TextEditingController? descriptionController;
   TextEditingController? titleFieldController;
+  TextEditingController? descriptionController;
+  TextEditingController? repositoryController;
   TextEditingController? valueController;
   TextEditingController? githubLinkController;
   final scrollController = ScrollController();
-
 
   @override
   void initState() {
@@ -141,7 +130,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     scrollController.dispose();
     super.dispose();
   }
-
 
   late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 200));
   late bool witnetSection = false;
@@ -171,7 +159,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+      resizeToAvoidBottomInset: false, backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       // resizeToAvoidBottomInset: false,
       body: Container(
         height: screenHeightSize,
@@ -228,7 +216,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                               labelText: 'Title:',
                               labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Enter the Title..]',
-                              hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                              hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
@@ -238,20 +226,17 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                             ),
                             style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 1,
-                            onChanged:  (text) {
-
+                            onChanged: (text) {
                               debounceNotifyListener.debounce(() {
                                 tasksServices.myNotifyListeners();
                               });
                             },
                           ),
                         );
-                      }
-                      ),
-                    )
-                ),
+                      }),
+                    )),
                 Container(
-                  padding:  const EdgeInsets.only(top: 14.0),
+                  padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                       elevation: DodaoTheme.of(context).elevation,
                       borderRadius: DodaoTheme.of(context).borderRadius,
@@ -286,7 +271,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                               labelText: 'Description:',
                               labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Job description...]',
-                              hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                              hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
@@ -298,19 +283,17 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                             minLines: 1,
                             maxLines: 10,
                             keyboardType: TextInputType.multiline,
-                            onChanged:  (text) {
-
+                            onChanged: (text) {
                               debounceNotifyListener.debounce(() {
                                 tasksServices.myNotifyListeners();
                               });
                             },
                           ),
                         ),
-                      )
-                  ),
+                      )),
                 ),
                 Container(
-                  padding:  const EdgeInsets.only(top: 14.0),
+                  padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                       elevation: DodaoTheme.of(context).elevation,
                       borderRadius: DodaoTheme.of(context).borderRadius,
@@ -322,78 +305,71 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                           padding: DodaoTheme.of(context).inputEdge,
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
-                          child:  LayoutBuilder(
-                              builder: (context, constraints) {
-                                final double width = constraints.maxWidth - 68;
-                                return Row(
-                                  children: <Widget>[
-                                    Consumer<SearchServices>(
-                                        builder: (context, model, child) {
-                                          if (model.createTagsList.isNotEmpty) {
-                                            return SizedBox(
-                                              width: width,
-                                              child: Wrap(
-                                                  alignment: WrapAlignment.start,
-                                                  direction: Axis.horizontal,
-                                                  children: model.createTagsList.entries.map((e) {
-                                                    return WrappedChip(
-                                                      key: ValueKey(e.value),
-                                                      theme: 'white',
-                                                      item:
-
-                                                      MapEntry(
-                                                        e.key,
-                                                        NftTagsBunch(
-                                                          selected: false,
-                                                          name: e.value.name,
-                                                          bunch: e.value.bunch,
-                                                        )
-                                                      ),
-                                                      page: 'create',
-                                                      selected: e.value.selected,
-                                                      wrapperRole: WrapperRole.removeNew,
-                                                    );
-                                                  }).toList()),
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            final double width = constraints.maxWidth - 68;
+                            return Row(
+                              children: <Widget>[
+                                Consumer<SearchServices>(builder: (context, model, child) {
+                                  if (model.createTagsList.isNotEmpty) {
+                                    return SizedBox(
+                                      width: width,
+                                      child: Wrap(
+                                          alignment: WrapAlignment.start,
+                                          direction: Axis.horizontal,
+                                          children: model.createTagsList.entries.map((e) {
+                                            return WrappedChip(
+                                              key: ValueKey(e.value),
+                                              theme: 'white',
+                                              item: MapEntry(
+                                                  e.key,
+                                                  NftTagsBunch(
+                                                    selected: false,
+                                                    name: e.value.name,
+                                                    bunch: e.value.bunch,
+                                                  )),
+                                              page: 'create',
+                                              selected: e.value.selected,
+                                              wrapperRole: WrapperRole.removeNew,
                                             );
-                                          } else {
-                                            return RichText(
-                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
-                                                  TextSpan(
-                                                      text: 'Add relevant tags and NFT\'s',
-                                                      style: TextStyle(
-                                                        height: 1,
-                                                      )),
-                                                ]));
-                                          }
-                                        }
-                                    ),
-                                    const Spacer(),
-                                    const Padding(
-                                      padding: EdgeInsets.all(6.0),
-                                      child: TagCallButton(
-                                        page: 'create',
-                                        tabIndex: 0,),
-                                    ),
-                                  ],
-                                );
-                              }
-                          ),
+                                          }).toList()),
+                                    );
+                                  } else {
+                                    return RichText(
+                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                      TextSpan(
+                                          text: 'Add relevant tags and NFT\'s',
+                                          style: TextStyle(
+                                            height: 1,
+                                          )),
+                                    ]));
+                                  }
+                                }),
+                                const Spacer(),
+                                const Padding(
+                                  padding: EdgeInsets.all(6.0),
+                                  child: TagCallButton(
+                                    page: 'create',
+                                    tabIndex: 0,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
-                      )
-                  ),
+                      )),
                 ),
-
                 const SizedBox(height: 14),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: maxStaticInternalDialogWidth,
                   ),
                   child: Payment(
-                    purpose: 'create', innerPaddingWidth: innerPaddingWidth,
+                    purpose: 'create',
+                    innerPaddingWidth: innerPaddingWidth,
                   ),
                 ),
                 Container(
-                  padding:  const EdgeInsets.only(top: 14.0),
+                  padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                       elevation: DodaoTheme.of(context).elevation,
                       borderRadius: DodaoTheme.of(context).borderRadius,
@@ -405,244 +381,224 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
-                          child:  LayoutBuilder(
-                              builder: (context, constraints) {
-                                final double width = constraints.maxWidth - 66;
-                                return Column(
-                                  children: <Widget>[
-
-                                    TextFormField(
-                                      controller: githubLinkController,
-                                      autofocus: false,
-                                      obscureText: false,
-                                      onTapOutside: (test) {
-                                        FocusScope.of(context).unfocus();
-                                      },
-                                      onTap: () {
-                                        // FocusScope.of(context).;
-                                        // scrollController.animateTo(
-                                        //   scrollController.position.maxScrollExtent,
-                                        //   duration: const Duration(seconds: 1),
-                                        //   curve: Curves.fastOutSlowIn,
-                                        // );
-                                        Future.delayed(
-                                          const Duration(milliseconds: 400),
-                                              () {
-                                            scrollController.animateTo(
-                                              scrollController.position.maxScrollExtent,
-                                              duration: const Duration(seconds: 1),
-                                              curve: Curves.fastOutSlowIn,
-                                            );
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            final double width = constraints.maxWidth - 66;
+                            return Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  controller: githubLinkController,
+                                  autofocus: false,
+                                  obscureText: false,
+                                  onTapOutside: (test) {
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  onTap: () {
+                                    // FocusScope.of(context).;
+                                    // scrollController.animateTo(
+                                    //   scrollController.position.maxScrollExtent,
+                                    //   duration: const Duration(seconds: 1),
+                                    //   curve: Curves.fastOutSlowIn,
+                                    // );
+                                    Future.delayed(const Duration(milliseconds: 400), () {
+                                      scrollController.animateTo(
+                                        scrollController.position.maxScrollExtent,
+                                        duration: const Duration(seconds: 1),
+                                        curve: Curves.fastOutSlowIn,
+                                      );
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: 'Enter GitHub link here:',
+                                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                                    hintText: '',
+                                    hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.2),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    enabledBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          if (witnetSection) {
+                                            witnetSection = false;
+                                          } else {
+                                            witnetSection = true;
                                           }
-                                        );
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Enter GitHub link here:',
-                                        labelStyle: Theme.of(context).textTheme.bodyMedium,
-                                        hintText: '',
-                                        hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.2),
-                                        focusedBorder: const UnderlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        enabledBorder: const UnderlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        prefixIcon: IconButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              if (witnetSection) {
-                                                witnetSection = false;
-                                              } else {
-                                                witnetSection = true;
-                                              }
-                                            });
-                                          },
-                                          icon: DodaoTheme.of(context).witnetLogo,
-                                          highlightColor: Colors.grey,
-                                          hoverColor: Colors.transparent,
-                                          color: Colors.blueAccent,
-                                          splashColor: Colors.black,
-                                        ),
-                                        suffixIcon: Builder(
-                                          builder: (context) {
-                                            const Duration duration = Duration(milliseconds: 750);
-                                            return AnimatedIconButton(
-                                              animationController: animationController,
-                                              size: 24,
-                                              onPressed: () {
-                                              },
-                                              duration: duration,
-                                              initialIcon: githubLinkController!.text.isNotEmpty ? 1 : 0,
-                                              icons: <AnimatedIconItem>[
-                                                AnimatedIconItem(
-                                                  icon: Icon(
-                                                    Icons.content_paste_outlined,
-                                                    color: DodaoTheme.of(context).secondaryText,
-                                                    // size: 30,
-                                                  ),
-                                                  onPressed: () async {
-                                                    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                                    setState(() {
-                                                      githubLinkController!.text = '${clipboardData?.text}';
-                                                    });
-                                                  },
-                                                  // backgroundColor: Colors.white,
-                                                ),
-                                                AnimatedIconItem(
-                                                  icon: Icon(
-                                                    Icons.close_rounded,
-                                                    color: DodaoTheme.of(context).secondaryText,
-                                                  ),
-                                                  onPressed: () async {
-                                                    // final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                                    setState(() {
-                                                      githubLinkController!.text = '';
-                                                    });
-                                                  },
-                                                  // backgroundColor: Colors.white,
-                                                ),
-
-                                              ],
-                                            );
-                                          }
-                                        ),
-
-
-                                        // Row(
-                                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                                        //   mainAxisSize: MainAxisSize.min,
-                                        //   children: [
-                                        //     IconButton(
-                                        //       onPressed: () async {
-                                        //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                        //         setState(() {
-                                        //           githubLinkController!.text = '${clipboardData?.text}';
-                                        //         });
-                                        //       },
-                                        //       icon: const Icon(Icons.content_paste_outlined),
-                                        //       padding: const EdgeInsets.only(right: 12.0),
-                                        //       highlightColor: Colors.grey,
-                                        //       hoverColor: Colors.transparent,
-                                        //       color: Colors.blueAccent,
-                                        //       splashColor: Colors.black,
-                                        //     ),
-                                        //     IconButton(
-                                        //       onPressed: () async {
-                                        //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                        //         setState(() {
-                                        //           githubLinkController!.text = '';
-                                        //         });
-                                        //       },
-                                        //       icon: const Icon(Icons.close_rounded),
-                                        //       padding: const EdgeInsets.only(right: 12.0),
-                                        //       highlightColor: Colors.grey,
-                                        //       hoverColor: Colors.transparent,
-                                        //       color: Colors.blueAccent,
-                                        //       splashColor: Colors.black,
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                      ),
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                      minLines: 1,
-                                      maxLines: 1,
-                                      keyboardType: TextInputType.multiline,
-                                      onChanged:  (text) {
-                                        debounceNotifyListener.debounce(() {
-                                          tasksServices.myNotifyListeners();
                                         });
                                       },
+                                      icon: DodaoTheme.of(context).witnetLogo,
+                                      highlightColor: Colors.grey,
+                                      hoverColor: Colors.transparent,
+                                      color: Colors.blueAccent,
+                                      splashColor: Colors.black,
                                     ),
-
-                                    // if (githubLinkController!.text.isNotEmpty)
-
-                                    ExpandedSection(
-                                      expand: witnetSection,
-                                      callback: () {
-                                        if (witnetSection) {
-                                          Future.delayed(
-                                              const Duration(milliseconds: 300),
-                                                  () {
-                                                scrollController.animateTo(
-                                                  scrollController.position.maxScrollExtent,
-                                                  duration: const Duration(milliseconds: 400),
-                                                  curve: Curves.fastOutSlowIn,
-                                                );
+                                    suffixIcon: Builder(builder: (context) {
+                                      const Duration duration = Duration(milliseconds: 750);
+                                      return AnimatedIconButton(
+                                        animationController: animationController,
+                                        size: 24,
+                                        onPressed: () {},
+                                        duration: duration,
+                                        initialIcon: githubLinkController!.text.isNotEmpty ? 1 : 0,
+                                        icons: <AnimatedIconItem>[
+                                          AnimatedIconItem(
+                                            icon: Icon(
+                                              Icons.content_paste_outlined,
+                                              color: DodaoTheme.of(context).secondaryText,
+                                              // size: 30,
+                                            ),
+                                            onPressed: () async {
+                                              final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                              setState(() {
+                                                githubLinkController!.text = '${clipboardData?.text}';
                                               });
-                                        }
-                                      },
-                                      child: Container(
-
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                                          // mainAxisSize: MainAxisSize.max,
-                                          children:  [
-                                            Padding(
-                                              padding: const EdgeInsets.only(right: 12.0),
-                                              child: Image.asset(
-                                                'assets/images/wn_mascot.png',
-                                                height: 90,
-                                                filterQuality: FilterQuality.medium,
-                                              ),
+                                            },
+                                            // backgroundColor: Colors.white,
+                                          ),
+                                          AnimatedIconItem(
+                                            icon: Icon(
+                                              Icons.close_rounded,
+                                              color: DodaoTheme.of(context).secondaryText,
                                             ),
-                                            const Flexible(
-
-                                              // height: 35,
-                                              // width: double.infinity,
-                                              child: Text('Dodao uses Witnet oracle to connect to Github API and get PR merge status'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-
-                                    ExpandedSection(
-                                      expand: githubLinkController!.text.isNotEmpty,
-                                      callback: () {
-                                        if (githubLinkController!.text.isNotEmpty) {
-                                          Future.delayed(
-                                              const Duration(milliseconds: 300),
-                                                  () {
-                                                scrollController.animateTo(
-                                                  scrollController.position.maxScrollExtent,
-                                                  duration: const Duration(milliseconds: 400),
-                                                  curve: Curves.fastOutSlowIn,
-                                                );
+                                            onPressed: () async {
+                                              // final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                              setState(() {
+                                                githubLinkController!.text = '';
                                               });
-                                        }
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                                          // mainAxisSize: MainAxisSize.max,
-                                          children:  const [
-                                            Padding(
-                                              padding: EdgeInsets.only(right: 12.0),
-                                              child: Icon(
-                                                Icons.new_releases,
-                                                size: 35, color: Colors.lightGreen
-                                              ),
-                                            ),
-                                            Flexible(
-                                              // height: 35,
-                                              // width: double.infinity,
-                                              child: Text('This repository URL will be used for automatic Task acceptance based on accepted merge request.'),
-                                            ),
-                                          ],
+                                            },
+                                            // backgroundColor: Colors.white,
+                                          ),
+                                        ],
+                                      );
+                                    }),
+
+                                    // Row(
+                                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                    //   mainAxisSize: MainAxisSize.min,
+                                    //   children: [
+                                    //     IconButton(
+                                    //       onPressed: () async {
+                                    //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                    //         setState(() {
+                                    //           githubLinkController!.text = '${clipboardData?.text}';
+                                    //         });
+                                    //       },
+                                    //       icon: const Icon(Icons.content_paste_outlined),
+                                    //       padding: const EdgeInsets.only(right: 12.0),
+                                    //       highlightColor: Colors.grey,
+                                    //       hoverColor: Colors.transparent,
+                                    //       color: Colors.blueAccent,
+                                    //       splashColor: Colors.black,
+                                    //     ),
+                                    //     IconButton(
+                                    //       onPressed: () async {
+                                    //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                                    //         setState(() {
+                                    //           githubLinkController!.text = '';
+                                    //         });
+                                    //       },
+                                    //       icon: const Icon(Icons.close_rounded),
+                                    //       padding: const EdgeInsets.only(right: 12.0),
+                                    //       highlightColor: Colors.grey,
+                                    //       hoverColor: Colors.transparent,
+                                    //       color: Colors.blueAccent,
+                                    //       splashColor: Colors.black,
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.multiline,
+                                  onChanged: (text) {
+                                    debounceNotifyListener.debounce(() {
+                                      tasksServices.myNotifyListeners();
+                                    });
+                                  },
+                                ),
+
+                                // if (githubLinkController!.text.isNotEmpty)
+
+                                ExpandedSection(
+                                  expand: witnetSection,
+                                  callback: () {
+                                    if (witnetSection) {
+                                      Future.delayed(const Duration(milliseconds: 300), () {
+                                        scrollController.animateTo(
+                                          scrollController.position.maxScrollExtent,
+                                          duration: const Duration(milliseconds: 400),
+                                          curve: Curves.fastOutSlowIn,
+                                        );
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                      // mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 12.0),
+                                          child: Image.asset(
+                                            'assets/images/wn_mascot.png',
+                                            height: 90,
+                                            filterQuality: FilterQuality.medium,
+                                          ),
                                         ),
-                                      ),
+                                        const Flexible(
+                                          // height: 35,
+                                          // width: double.infinity,
+                                          child: Text('Dodao uses Witnet oracle to connect to Github API and get PR merge status'),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                );
-                              }
-                          ),
+                                  ),
+                                ),
+
+                                ExpandedSection(
+                                  expand: githubLinkController!.text.isNotEmpty,
+                                  callback: () {
+                                    if (githubLinkController!.text.isNotEmpty) {
+                                      Future.delayed(const Duration(milliseconds: 300), () {
+                                        scrollController.animateTo(
+                                          scrollController.position.maxScrollExtent,
+                                          duration: const Duration(milliseconds: 400),
+                                          curve: Curves.fastOutSlowIn,
+                                        );
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                      // mainAxisSize: MainAxisSize.max,
+                                      children: const [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 12.0),
+                                          child: Icon(Icons.new_releases, size: 35, color: Colors.lightGreen),
+                                        ),
+                                        Flexible(
+                                          // height: 35,
+                                          // width: double.infinity,
+                                          child:
+                                              Text('This repository URL will be used for automatic Task acceptance based on accepted merge request.'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
-                      )
-                  ),
+                      )),
                 ),
                 const SizedBox(
                   height: 65,
@@ -653,7 +609,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
         ),
       ),
 
-      floatingActionButtonAnimator:  NoScalingAnimation(),
+      floatingActionButtonAnimator: NoScalingAnimation(),
       // floatingActionButtonLocation: keyboardSize == 0 ? FloatingActionButtonLocation.centerFloat : FloatingActionButtonLocation.endFloat,
       // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
@@ -667,13 +623,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard is here?
           // keyboardActive: keyboardSize == 0 ? false : true;
           callback: () {
-            final nanoId = customAlphabet(
-                '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
-                12);
+            final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
             final List<String> tags = searchServices.createTagsList.entries.map((tags) => tags.value.name).toList();
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
+                repositoryController!.text,
                 // valueController!.text,
                 interface.tokensEntered,
                 nanoId,
@@ -683,17 +638,15 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletActionDialog(
-                  nanoId: nanoId,
-                  taskName: 'createTaskContract',
-                )
-            );
+                      nanoId: nanoId,
+                      taskName: 'createTaskContract',
+                    ));
           },
         ),
       ),
     );
   }
 }
-
 
 class CreateJobHeader extends StatefulWidget {
   const CreateJobHeader({
@@ -705,7 +658,6 @@ class CreateJobHeader extends StatefulWidget {
 }
 
 class _CreateJobHeaderState extends State<CreateJobHeader> {
-
   @override
   void initState() {
     super.initState();
@@ -815,10 +767,7 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
   }
 
   void prepareAnimations() {
-    expandController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 200)
-    );
+    expandController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
     animation = CurvedAnimation(
       parent: expandController,
       curve: Curves.fastOutSlowIn,
@@ -826,10 +775,9 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
   }
 
   void _runExpandCheck() {
-    if(widget.expand) {
+    if (widget.expand) {
       expandController.forward();
-    }
-    else {
+    } else {
       expandController.reverse();
     }
   }
@@ -849,10 +797,6 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     widget.callback();
-    return SizeTransition(
-        axisAlignment: 1.0,
-        sizeFactor: animation,
-        child: widget.child
-    );
+    return SizeTransition(axisAlignment: 1.0, sizeFactor: animation, child: widget.child);
   }
 }
