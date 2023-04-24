@@ -1733,10 +1733,7 @@ class TasksServices extends ChangeNotifier {
       print('loadOneTask end');
 
       return tasks[taskAddress]!;
-
     }
-
-
   }
 
   Future<void> refreshTask(Task task) async {
@@ -2927,7 +2924,7 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  Future<String> postWitnetRequest() async {
+  Future<String> postWitnetRequest(EthereumAddress taskAddress) async {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2947,13 +2944,13 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  Future<bool> checkResultAvailability(List<String> names) async {
+  Future<bool> checkResultAvailability(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
     bool result = await witnetFacet.checkResultAvailability(appId);
     return result;
   }
 
-  Future<dynamic> getLastResult(List<String> names) async {
+  Future<dynamic> getLastResult(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
     var result = await witnetFacet.getLastResult(appId);
     return result;
