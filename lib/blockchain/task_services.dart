@@ -32,6 +32,7 @@ import 'abi/AxelarFacet.g.dart';
 import 'abi/HyperlaneFacet.g.dart';
 import 'abi/LayerzeroFacet.g.dart';
 import 'abi/WormholeFacet.g.dart';
+import 'abi/WitnetFacet.g.dart';
 // import 'abi/Wormhole.g.dart';
 import 'abi/IERC20.g.dart';
 import 'accounts.dart';
@@ -1089,6 +1090,7 @@ class TasksServices extends ChangeNotifier {
   late HyperlaneFacet hyperlaneFacet;
   late LayerzeroFacet layerzeroFacet;
   late WormholeFacet wormholeFacet;
+  late WitnetFacet witnetFacet;
   // late TaskContract taskContract;
 
   late DeployedContract _deployedContract;
@@ -1204,6 +1206,7 @@ class TasksServices extends ChangeNotifier {
       hyperlaneFacet = HyperlaneFacet(address: _contractAddressHyperlane, client: _web3clientHyperlane, chainId: chainIdHyperlane);
       layerzeroFacet = LayerzeroFacet(address: _contractAddressLayerzero, client: _web3clientLayerzero, chainId: chainIdLayerzero);
       wormholeFacet = WormholeFacet(address: _contractAddressWormhole, client: _web3clientWormhole, chainId: chainIdWormhole);
+      witnetFacet = WitnetFacet(address: _contractAddress, client: _web3client, chainId: chainId);
     }
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: _web3client, chainId: chainId);
   }
@@ -2923,6 +2926,39 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.safeBatchTransferFrom(senderAddress, to, ids, amounts, data, credentials: creds, transaction: transaction);
     return txn;
   }
+
+  Future<String> postWitnetRequest() async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+
+    BigInt appId = BigInt.from(100);
+    List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
+    String txn = await witnetFacet.postRequest$2(appId, args, credentials: creds, transaction: transaction);
+    return txn;
+  }
+
+  Future<bool> checkResultAvailability(List<String> names) async {
+    BigInt appId = BigInt.from(100);
+    bool result = await witnetFacet.checkResultAvailability(appId);
+    return result;
+  }
+
+  Future<dynamic> getLastResult(List<String> names) async {
+    BigInt appId = BigInt.from(100);
+    var result = await witnetFacet.getLastResult(appId);
+    return result;
+  }
+
   // Future<void> checkTokenBalance(EthereumAddress address, int tokenType) async {
   //   TokenContract tokenContract = TokenContract(address: contractAddress, client: _web3client, chainId: chainId);
   // }
