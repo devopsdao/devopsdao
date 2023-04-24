@@ -9,7 +9,7 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
-import '../widgets/wallet_action.dart';
+import '../widgets/wallet_action_dialog.dart';
 
 class DialogButtonSetOnFirstPage extends StatefulWidget {
   final Task task;
@@ -70,7 +70,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: task.nanoId,
                           taskName: 'taskParticipate',
                         ));
@@ -96,7 +96,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
@@ -120,7 +120,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
@@ -152,7 +152,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 // Beamer.of(context).updateRouteInformation(routeInfo);
                 // showDialog(
                 //     context: context,
-                //     builder: (context) => WalletAction(
+                //     builder: (context) => WalletActionDialog(
                 //       nanoId: task.nanoId,
                 //       taskName: 'taskStateChange',
                 //     ));
@@ -175,7 +175,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: task.nanoId,
                           taskName: 'withdrawToChain',
                         ));
@@ -207,7 +207,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
           //
           //                   showDialog(
           //                       context: context,
-          //                       builder: (context) => WalletAction(
+          //                       builder: (context) => WalletActionDialog(
           //                         nanoId: task.nanoId,
           //                         taskName: 'addTokens',
           //                       ));
@@ -246,7 +246,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: task.nanoId,
                           taskName: 'taskStateChange',
                         ));
@@ -270,7 +270,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                         showDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (context) => WalletAction(
+                            builder: (context) => WalletActionDialog(
                                   nanoId: task.nanoId,
                                   taskName: 'rateTask',
                                 ));
@@ -296,7 +296,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: task.nanoId,
                           taskName: 'taskAuditParticipate',
                         ));
@@ -329,7 +329,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
           // interface.emptyTaskMessage();
           //       showDialog(
           //           context: context,
-          //           builder: (context) => WalletAction(
+          //           builder: (context) => WalletActionDialog(
           //             nanoId: task.nanoId,
           //             taskName: 'taskAuditDecision',
           //           ));

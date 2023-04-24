@@ -9,17 +9,17 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../tags_manager/collection_services.dart';
 
-class WalletAction extends StatefulWidget {
+class WalletActionDialog extends StatefulWidget {
   final String nanoId;
   final String taskName;
   final String page;
-  const WalletAction({Key? key, required this.nanoId, required this.taskName, this.page = ''}) : super(key: key);
+  const WalletActionDialog({Key? key, required this.nanoId, required this.taskName, this.page = ''}) : super(key: key);
 
   @override
-  _WalletAction createState() => _WalletAction();
+  _WalletActionDialog createState() => _WalletActionDialog();
 }
 
-class _WalletAction extends State<WalletAction> {
+class _WalletActionDialog extends State<WalletActionDialog> {
   String transactionStagesApprove = 'initial';
   String transactionStagesWaiting = 'initial';
   String transactionStagesPending = 'initial';
@@ -34,10 +34,8 @@ class _WalletAction extends State<WalletAction> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    // var interface = context.watch<InterfaceServices>();
-
-    var searchServices = context.read<SearchServices>();
-    var collectionServices = context.read<CollectionServices>();
+    var searchServices = context.watch<SearchServices>();
+    var collectionServices = context.watch<CollectionServices>();
 
     // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
     //
@@ -125,101 +123,142 @@ class _WalletAction extends State<WalletAction> {
         transactionStagesMinted = 'done';
       }
     }
+    var width = MediaQuery.of(context).size.width ;
 
-    return AlertDialog(
+
+    return Dialog(
       // title: Text('Connect your wallet'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            // RichText(text: TextSpan(
-            //     style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-            //     children: <TextSpan>[
-            //       TextSpan(
-            //           text: 'Description: \n',
-            //           style: const TextStyle(height: 2, fontWeight: FontWeight.bold)),
-            //       TextSpan(text: widget.obj[index].description)
-            //     ]
-            // )),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Builder(
-                  builder: (context) {
-                    var width = MediaQuery.of(context).size.width;
-
-                    return Container(
-                      width: width < 400 ? width : 350,
-                      padding: const EdgeInsets.only(
-                        top: 15,
-                        left: 5,
-                        right: 5,
-                        // bottom: 16,
-                      ),
-                      child: Column(
-                        children: [
-                          if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'rejected')
-                            Row(
-                              children: [
-                                Container(
-                                    width: 45,
-                                    height: 35,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.dangerous_outlined,
-                                          size: 30.0,
-                                          color: DodaoTheme.of(context).iconWrong,
-                                        ),
-                                      ],
-                                    )),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Transaction has been rejected',
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
+      shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
+      insetAnimationDuration: const Duration(milliseconds: 1100),
+      // actions: [
+      //   if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
+      //   TextButton(
+      //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
+      //     onPressed: () async {
+      //       launchURL(tasksServices.walletConnectSessionUri);
+      //       // _transactionStateToAction(context, state: _state);
+      //       setState(() {});
+      //       // Navigator.pop(context);
+      //     },
+      //     child: const Text('Go To Wallet')
+      //   ),
+      //   TextButton(
+      //     child: const Text('Close'),
+      //     onPressed: () async {
+      //       Navigator.pop(context);
+      //
+      //       if (widget.page == 'create_collection') {
+      //         await tasksServices.collectMyNfts();
+      //         searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+      //         collectionServices.update();
+      //         searchServices.searchKeywordController.clear();
+      //         searchServices.refreshLists('mint');
+      //       }
+      //     }
+      //   ),
+      //   // if (tasksServices.walletConnected)
+      //   //   TextButton(
+      //   //       child: Text('Disconnect'),
+      //   //       style: TextButton.styleFrom(
+      //   //           primary: Colors.white, backgroundColor: Colors.red),
+      //   //       onPressed: () async {
+      //   //         await tasksServices.wallectConnectTransaction?.disconnect();
+      //   //         // _transactionStateToAction(context, state: _state);
+      //   //         setState(() {});
+      //   //         // Navigator.pop(context);
+      //   //       }),
+      //   // if (!tasksServices.walletConnected)
+      //   //   TextButton(
+      //   //     child: Text('Connect'),
+      //   //     style: TextButton.styleFrom(
+      //   //         primary: Colors.white, backgroundColor: Colors.green),
+      //   //     onPressed: _transactionStateToAction(context, state2: _state2),
+      //   //     // _transactionStateToAction(context, state: _state);
+      //   //     // setState(() {});
+      //   //     // Navigator.pop(context)
+      //   //   ),
+      // ],
+      child: Container(
+        padding: const EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 20
+        ),
+        width: width < 400 ? width : 350,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 250,
+                    // padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'rejected')
+                          Row(
+                            children: [
+                              SizedBox(
+                                  width: 40,
+                                  height: 35,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.dangerous_outlined,
+                                        size: 30.0,
+                                        color: DodaoTheme.of(context).iconWrong,
+                                      ),
+                                    ],
+                                  )
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Transaction has been rejected',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
                                 ),
-                              ],
-                            )
-                          // Text(
-                          //   'Transaction has been rejected',
-                          //   style: Theme.of(context).textTheme.bodyText1,
-                          //   textAlign: TextAlign.center,
-                          // )
-                          else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'failed')
-                            Row(
-                              children: [
-                                Container(
-                                    width: 45,
-                                    height: 35,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.dangerous_outlined,
-                                          size: 30.0,
-                                          color: DodaoTheme.of(context).iconWrong,
-                                        ),
-                                      ],
-                                    )),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Transaction has failed, \nplease retry',
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
+                              ),
+                            ],
+                          )
+                        // Text(
+                        //   'Transaction has been rejected',
+                        //   style: Theme.of(context).textTheme.bodyText1,
+                        //   textAlign: TextAlign.center,
+                        // )
+                        else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'failed')
+                          Row(
+                            children: [
+                              SizedBox(
+                                  width: 40,
+                                  height: 35,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.dangerous_outlined,
+                                        size: 30.0,
+                                        color: DodaoTheme.of(context).iconWrong,
+                                      ),
+                                    ],
+                                  )),
+                              Container(
+                                child: Text(
+                                  'Transaction has failed, \nplease retry',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
                                 ),
-                              ],
-                            )
-                          // Text(
-                          //   'Transaction has failed, please retry',
-                          //   style: Theme.of(context).textTheme.bodyText1,
-                          //   textAlign: TextAlign.center,
-                          // )
-                          else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'failed' ||
+                              ),
+                            ],
+                          )
+                        // Text(
+                        //   'Transaction has failed, please retry',
+                        //   style: Theme.of(context).textTheme.bodyText1,
+                        //   textAlign: TextAlign.center,
+                        // )
+                        else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'failed' ||
                               tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'rejected')
                             Column(
                               children: [
@@ -227,12 +266,12 @@ class _WalletAction extends State<WalletAction> {
                                   Row(
                                     children: [
                                       Container(
-                                          width: 45,
+                                          width: 40,
                                           height: 45,
                                           child: Row(
                                             children: [
                                               if (transactionStagesApprove == 'initial')
-                                                 Icon(
+                                                Icon(
                                                   Icons.task_alt,
                                                   size: 30.0,
                                                   color: DodaoTheme.of(context).iconInitial,
@@ -243,11 +282,11 @@ class _WalletAction extends State<WalletAction> {
                                                   size: 30,
                                                 )
                                               else if (transactionStagesApprove == 'done')
-                                                 Icon(
-                                                  Icons.task_alt,
-                                                  size: 30.0,
-                                                  color: DodaoTheme.of(context).iconDone,
-                                                )
+                                                  Icon(
+                                                    Icons.task_alt,
+                                                    size: 30.0,
+                                                    color: DodaoTheme.of(context).iconDone,
+                                                  )
                                             ],
                                           )),
                                       if (transactionStagesApprove == 'initial')
@@ -340,12 +379,12 @@ class _WalletAction extends State<WalletAction> {
                                 Row(
                                   children: [
                                     Container(
-                                        width: 45,
+                                        width: 40,
                                         height: 45,
                                         child: Row(
                                           children: [
                                             if (transactionStagesConfirmed == 'initial')
-                                              // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                                            // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
                                               Icon(
                                                 Icons.task_alt,
                                                 size: 30.0,
@@ -357,11 +396,11 @@ class _WalletAction extends State<WalletAction> {
                                                 size: 30,
                                               )
                                             else if (transactionStagesConfirmed == 'done')
-                                              Icon(
-                                                Icons.task_alt,
-                                                size: 30.0,
-                                                color: DodaoTheme.of(context).iconDone,
-                                              )
+                                                Icon(
+                                                  Icons.task_alt,
+                                                  size: 30.0,
+                                                  color: DodaoTheme.of(context).iconDone,
+                                                )
                                           ],
                                         )),
                                     if (transactionStagesConfirmed == 'initial' || transactionStagesConfirmed == 'loading')
@@ -385,7 +424,7 @@ class _WalletAction extends State<WalletAction> {
                                 Row(
                                   children: [
                                     Container(
-                                        width: 45,
+                                        width: 40,
                                         height: 45,
                                         child: Row(
                                           children: [
@@ -401,11 +440,11 @@ class _WalletAction extends State<WalletAction> {
                                                 size: 30,
                                               )
                                             else if (transactionStagesMinted == 'done')
-                                              Icon(
-                                                Icons.task_alt,
-                                                size: 30.0,
-                                                color: DodaoTheme.of(context).iconDone,
-                                              )
+                                                Icon(
+                                                  Icons.task_alt,
+                                                  size: 30.0,
+                                                  color: DodaoTheme.of(context).iconDone,
+                                                )
                                           ],
                                         )),
                                     Text(
@@ -415,106 +454,113 @@ class _WalletAction extends State<WalletAction> {
                                     ),
                                   ],
                                 ),
-                                // Prevent to show *Token transaction approved* for other
-
-                                // Container(
-                                //
-                                //     // width: 45,
-                                //     height:  35,
-                                //     child: Row(
-                                //
-                                //       mainAxisAlignment: MainAxisAlignment.center,
-                                //       crossAxisAlignment: CrossAxisAlignment.center,
-                                //       children: [
-                                //         if(tasksServices.lastTxn != 'minted')
-                                //         Padding(
-                                //           padding: const EdgeInsets.only(
-                                //             top: 25,
-                                //             // left: 17,
-                                //             // right: 17,
-                                //             // bottom: 16,
-                                //         ),
-                                //           child: LoadingAnimationWidget.prograssiveDots(
-                                //             color: Colors.black54,
-                                //             size: 44,
-                                //           ),
-                                //         )
-                                //         //
-                                //
-                                //       ],
-                                //     )
-                                // ),
                               ],
                             ),
-                          // if (tasksServices.interchainSelected.isNotEmpty)
-                          // if (false)
-                          //   Container(
-                          //     padding: const EdgeInsets.only(top: 50.0),
-                          //     child: Column(
-                          //       children: [
-                          //         const Text('Interchain protocol:'),
-                          //         Container(
-                          //           padding: const EdgeInsets.all(4.0),
-                          //           // width: 128,
-                          //           child: interface.interchainImages[tasksServices.interchainSelected],
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   )
-                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // if (tasksServices.interchainSelected.isNotEmpty)
+              // if (false)
+              //   Container(
+              //     padding: const EdgeInsets.only(top: 50.0),
+              //     child: Column(
+              //       children: [
+              //         const Text('Interchain protocol:'),
+              //         Container(
+              //           padding: const EdgeInsets.all(4.0),
+              //           // width: 128,
+              //           child: interface.interchainImages[tasksServices.interchainSelected],
+              //         ),
+              //       ],
+              //     ),
+              //   )
+              const SizedBox( height: 15,),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () async {
+                        Navigator.pop(context);
+
+                        if (widget.page == 'create_collection') {
+                          await tasksServices.collectMyNfts();
+                          searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                          collectionServices.update();
+                          searchServices.searchKeywordController.clear();
+                          searchServices.refreshLists('mint');
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(0.0),
+                        height: 54.0,
+                        alignment: Alignment.center,
+                        //MediaQuery.of(context).size.width * .08,
+                        // width: halfWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: DodaoTheme.of(context).borderRadius,
+                          border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
+                          ),
+                        ),
+                        child: const Text(
+                          'Close',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
                       ),
-                    );
-                  }
-                )
-              ],
-            ),
-          ],
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
+                  Expanded(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20.0),
+                      onTap: () {
+                        // Navigator.pop(context);
+                        launchURL(tasksServices.walletConnectSessionUri);
+                        // _transactionStateToAction(context, state: _state);
+                        setState(() {
+
+                        });
+                        // Navigator.pop(context);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(0.0),
+                        height: 54.0,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: DodaoTheme.of(context).borderRadius,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
+                            stops: [0, 0.6, 1],
+                          ),
+                        ),
+                        child: const Text(
+                          'Go to wallet',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
-      actions: [
-        if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
-          TextButton(
-              style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-              onPressed: () async {
-                launchURL(tasksServices.walletConnectSessionUri);
-                // _transactionStateToAction(context, state: _state);
-                setState(() {});
-                // Navigator.pop(context);
-              },
-              child: const Text('Go To Wallet')),
-        TextButton(child: const Text('Close'), onPressed: () async {
-          Navigator.pop(context);
-
-          if (widget.page == 'create_collection') {
-            await tasksServices.collectMyNfts();
-            searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
-            collectionServices.update();
-            searchServices.searchKeywordController.clear();
-            searchServices.refreshLists('mint');
-          }
-        }),
-        // if (tasksServices.walletConnected)
-        //   TextButton(
-        //       child: Text('Disconnect'),
-        //       style: TextButton.styleFrom(
-        //           primary: Colors.white, backgroundColor: Colors.red),
-        //       onPressed: () async {
-        //         await tasksServices.wallectConnectTransaction?.disconnect();
-        //         // _transactionStateToAction(context, state: _state);
-        //         setState(() {});
-        //         // Navigator.pop(context);
-        //       }),
-        // if (!tasksServices.walletConnected)
-        //   TextButton(
-        //     child: Text('Connect'),
-        //     style: TextButton.styleFrom(
-        //         primary: Colors.white, backgroundColor: Colors.green),
-        //     onPressed: _transactionStateToAction(context, state2: _state2),
-        //     // _transactionStateToAction(context, state: _state);
-        //     // setState(() {});
-        //     // Navigator.pop(context)
-        //   ),
-      ],
     );
   }
 }

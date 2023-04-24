@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
+import '../config/theme.dart';
 
 
 class ShimmeredTaskPages extends StatefulWidget {
@@ -41,24 +42,78 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
+                        baseColor: Colors.grey[900]!,
                         highlightColor: Colors.grey[100]!,
-                        child: Container(height: 62, width: innerPaddingWidth, color: Colors.grey[300])),
+                        child: Container(
+                          height: 82,
+                          width: innerPaddingWidth,
+                          // color: Colors.grey[300],
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+                          ),
+                          child: Text(widget.task.description),
+                        )
+                    ),
                   ),
                   // ************ Show prices and topup part ******** //
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
+                        baseColor: Colors.grey[900]!,
                         highlightColor: Colors.grey[100]!,
-                        child: Container(padding: const EdgeInsets.only(top: 14), height: 50, width: innerPaddingWidth, color: Colors.grey[300])),
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 14),
+                          height: 60,
+                          width: innerPaddingWidth,
+                          // color: Colors.grey[300]
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+                          ),
+                        )
+                    ),
                   ),
 
                   // ********* Text Input ************ //
-                  Shimmer.fromColors(
-                      baseColor: Colors.grey[350]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(padding: const EdgeInsets.only(top: 14), height: 70, width: innerPaddingWidth, color: Colors.grey[350]))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Shimmer.fromColors(
+                        baseColor: Colors.grey[900]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 14),
+                          height: 70,
+                          width: innerPaddingWidth,
+                          // color: Colors.grey[350],
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+                          ),
+                        )
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Shimmer.fromColors(
+
+                        baseColor: Colors.grey[900]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 14),
+                          height: 170,
+                          width: innerPaddingWidth,
+                          // color: Colors.grey[350],
+                          decoration: BoxDecoration(
+
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+
+                            // color: Colors.grey[350],
+                          ),
+                        )
+                    ),
+                  )
                 ],
               ),
             ),

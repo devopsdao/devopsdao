@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
 
-import '../widgets/wallet_action.dart';
+import '../widgets/wallet_action_dialog.dart';
 import 'collection_services.dart';
 import 'nft_templorary.dart';
 import 'pages/treasury.dart';
@@ -322,7 +322,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                               showDialog(
                                   barrierDismissible: false,
                                   context: context,
-                                  builder: (context) => const WalletAction(
+                                  builder: (context) => const WalletActionDialog(
                                         nanoId: 'createNFT',
                                         taskName: 'createNFT',
                                         page: 'create_collection',
@@ -369,7 +369,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                                 showDialog(
                                     barrierDismissible: false,
                                     context: context,
-                                    builder: (context) => const WalletAction(
+                                    builder: (context) => const WalletActionDialog(
                                       nanoId: 'mintNonFungible',
                                       taskName: 'mintNonFungible',
                                     )

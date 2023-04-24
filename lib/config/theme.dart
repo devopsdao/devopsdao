@@ -54,6 +54,11 @@ abstract class DodaoTheme {
   late Color iconDone;
   late Color iconWrong;
 
+  late Color rateStroke;
+  late Color rateBody;
+  late Color rateBodySelected;
+  late Color rateGlowAndSparks;
+
   late Color buttonTextColor;
   late Color buttonBackgroundColor;
   late Color buttonDisabledColor;
@@ -67,8 +72,9 @@ abstract class DodaoTheme {
   late Color flushTextColor = Colors.white;
   late Color flushForCopyBackgroundColor = Colors.blueAccent;
 
-  final BorderRadius borderRadius = BorderRadius.circular(14.0);
+  final BorderRadius borderRadius = BorderRadius.circular(18.0);
   final double elevation = 7;
+  final EdgeInsets inputEdge =  const EdgeInsets.only(top: 6.0, bottom: 6.0, right: 12, left: 12);
 
   late LinearGradient gradient;
 
@@ -129,6 +135,11 @@ class LightModeTheme extends DodaoTheme {
   late Color iconProcess = Colors.black54;
   late Color iconDone = Colors.lightGreen;
   late Color iconWrong = Colors.redAccent;
+
+  late Color rateStroke = Colors.transparent;
+  late Color rateBody = Colors.grey.shade200;
+  late Color rateBodySelected = Colors.purple.shade400;
+  late Color rateGlowAndSparks = Colors.purple;
 
   late Color buttonTextColor = Colors.white;
   late Color buttonBackgroundColor = Colors.lightBlue.shade300;
@@ -270,6 +281,11 @@ class DarkModeTheme extends DodaoTheme {
   late Color iconProcess = Colors.white70;
   late Color iconDone = Colors.lightGreen;
   late Color iconWrong = Colors.redAccent;
+
+  late Color rateStroke = Colors.grey.shade300;
+  late Color rateBody = Colors.grey.shade800;
+  late Color rateBodySelected = Colors.purpleAccent.shade400;
+  late Color rateGlowAndSparks = Colors.purpleAccent.shade100;
 
   late Color tabIndicator = const Color(0xFF47CBE4);
 

@@ -7,7 +7,7 @@ import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/payment.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 import '../widget/dialog_button_widget.dart';
 
 class TopUpPage extends StatefulWidget {
@@ -107,7 +107,7 @@ class _TopUpPageState extends State<TopUpPage> {
                 //
                 //           showDialog(
                 //               context: context,
-                //               builder: (context) => WalletAction(
+                //               builder: (context) => WalletActionDialog(
                 //                 nanoId: task.nanoId,
                 //                 taskName: 'addTokens',
                 //               ));
@@ -194,7 +194,7 @@ class _TopUpPageState extends State<TopUpPage> {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                   nanoId: task.nanoId,
                   taskName: 'addTokens',
                 ));

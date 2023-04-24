@@ -6,7 +6,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 
 class AuditorDecision extends StatefulWidget {
   final Task task;
@@ -184,7 +184,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                         showDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (context) => WalletAction(
+                            builder: (context) => WalletActionDialog(
                               nanoId: task.nanoId,
                               taskName: 'taskAuditDecision',
                             ));
@@ -235,7 +235,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                         showDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (context) => WalletAction(
+                            builder: (context) => WalletActionDialog(
                               nanoId: task.nanoId,
                               taskName: 'taskAuditDecision',
                             ));

@@ -276,7 +276,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                                 RichText(
                                     text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
                                   TextSpan(text: '?? FTM \n', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                  TextSpan(text: '?? aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                  TextSpan(text: '?? USDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                 ])),
                               ],
                             )),

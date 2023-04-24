@@ -11,7 +11,7 @@ import 'package:jovial_svg/jovial_svg.dart';
 // import 'abi/IERC20.g.dart';
 
 class InterfaceServices extends ChangeNotifier {
-  // Payments goes here (create_job.dart.old -> payment.dart):
+
   late double tokensEntered = 0.0;
 
   // ************* Transport Images ****** //

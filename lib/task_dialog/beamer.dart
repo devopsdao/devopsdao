@@ -9,7 +9,7 @@ import 'package:dodao/widgets/payment.dart';
 import 'package:dodao/widgets/select_menu.dart';
 import 'package:dodao/task_dialog/buttons.dart';
 import 'package:dodao/task_dialog/states.dart';
-import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:dodao/task_dialog/widget/rate_widget.dart';
 import 'package:flutter/gestures.dart';

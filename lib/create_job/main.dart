@@ -10,7 +10,7 @@ import '../blockchain/interface.dart';
 import '../widgets/my_tools.dart';
 import '../widgets/payment.dart';
 import '../widgets/tags/tag_open_container.dart';
-import '../widgets/wallet_action.dart';
+import '../widgets/wallet_action_dialog.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
@@ -204,7 +204,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                         // }
 
                         return Container(
-                          padding: const EdgeInsets.all(6.0),
+                          padding: DodaoTheme.of(context).inputEdge,
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: TextFormField(
@@ -260,7 +260,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                           maxWidth: maxStaticInternalDialogWidth,
                         ),
                         child: Container(
-                          padding: const EdgeInsets.all(6.0),
+                          padding: DodaoTheme.of(context).inputEdge,
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: TextFormField(
@@ -319,7 +319,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                           maxWidth: maxStaticInternalDialogWidth,
                         ),
                         child: Container(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: DodaoTheme.of(context).inputEdge,
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child:  LayoutBuilder(
@@ -439,8 +439,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                       decoration: InputDecoration(
                                         labelText: 'Enter GitHub link here:',
                                         labelStyle: Theme.of(context).textTheme.bodyMedium,
-                                        // hintText: '[Job description...]',
-                                        hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                                        hintText: '',
+                                        hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.2),
                                         focusedBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide.none,
                                         ),
@@ -455,7 +455,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                               } else {
                                                 witnetSection = true;
                                               }
-
                                             });
                                           },
                                           icon: DodaoTheme.of(context).witnetLogo,
@@ -478,7 +477,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                                 AnimatedIconItem(
                                                   icon: Icon(
                                                     Icons.content_paste_outlined,
-                                                    color: DodaoTheme.of(context).primaryText,
+                                                    color: DodaoTheme.of(context).secondaryText,
                                                     // size: 30,
                                                   ),
                                                   onPressed: () async {
@@ -492,7 +491,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                                 AnimatedIconItem(
                                                   icon: Icon(
                                                     Icons.close_rounded,
-                                                    color: DodaoTheme.of(context).primaryText,
+                                                    color: DodaoTheme.of(context).secondaryText,
                                                   ),
                                                   onPressed: () async {
                                                     // final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
@@ -683,7 +682,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                   nanoId: nanoId,
                   taskName: 'createTaskContract',
                 )

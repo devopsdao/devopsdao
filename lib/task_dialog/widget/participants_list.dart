@@ -1,5 +1,6 @@
 import 'package:dodao/blockchain/classes.dart';
-import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/config/theme.dart';
+import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -115,7 +116,7 @@ class _ParticipantListState extends State<ParticipantList> {
                 dense: true,
                 selected: index2 == selectedIndex,
                 // selectedColor: Colors.green,
-                selectedTileColor: Colors.blue.shade100,
+                selectedTileColor: DodaoTheme.of(context).nftInfoBackgroundColor,
                 // trailing: const Icon(
                 //   Icons.info_sharp,
                 //   color: Colors.black45,
@@ -129,7 +130,9 @@ class _ParticipantListState extends State<ParticipantList> {
                   );
                   setState(() {
                     selectedIndex = index2.toDouble();
-                    interface.selectedUser = {'address': participants[index2].toString()};
+                    interface.selectedUser = {
+                      'address': participants[index2].toString()
+                    };
                   });
                   tasksServices.myNotifyListeners();
 
@@ -142,7 +145,7 @@ class _ParticipantListState extends State<ParticipantList> {
                   //
                   // showDialog(
                   //     context: context,
-                  //     builder: (context) => WalletAction(
+                  //     builder: (context) => WalletActionDialog(
                   //           nanoId: widget.task.nanoId,
                   //           taskName: 'taskStateChange',
                   //         ));

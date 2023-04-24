@@ -47,13 +47,28 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
     var emptyClasses = context.read<EmptyClasses>();
 
     EthereumAddress? taskAddress = widget.taskAddress;
+
     return FutureBuilder<Task>(
+
         future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
+
           if (snapshot.connectionState == ConnectionState.done) {
-            task = snapshot.data!;
-            return TaskDialogSkeleton(fromPage: widget.fromPage, task: task, isLoading: false);
+            print('snapshot start:');
+            print(snapshot);
+            print('snapshot end');
+
+            if (snapshot.hasError) {
+              emptyClasses.loadingTask.description = snapshot.error.toString();
+              return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
+            } else if (snapshot.hasData) {
+              return TaskDialogSkeleton(fromPage: widget.fromPage, task: snapshot.data!, isLoading: false);
+            } else {
+              return const Text('Empty data');
+            }
+
           }
+
           return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
         });
   }

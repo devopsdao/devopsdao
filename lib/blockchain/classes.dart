@@ -5,7 +5,7 @@ class Task {
   final DateTime createTime;
   final String taskType;
   final String title;
-  final String description;
+  late String description;
   final List<dynamic> tags;
   final List<dynamic> tagsNFT;
   final List<dynamic> symbols;

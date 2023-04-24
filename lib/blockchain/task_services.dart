@@ -166,7 +166,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -1218,7 +1218,7 @@ class TasksServices extends ChangeNotifier {
 
       late BigInt weiBalanceToken = BigInt.from(0);
       if (hardhatDebug == false && hardhatLive == false) {
-        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'aUSDC');
+        // weiBalanceToken = await web3GetBalanceToken(publicAddress!, 'USDC');
       }
 
       final ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 6);
@@ -1492,7 +1492,7 @@ class TasksServices extends ChangeNotifier {
       final double ethBalancePrecise = 0;
       BigInt weiBalanceToken = BigInt.from(0);
       if (hardhatDebug == false && hardhatLive == false) {
-        // weiBalanceToken = await web3GetBalanceToken(taskAddress, 'aUSDC');
+        // weiBalanceToken = await web3GetBalanceToken(taskAddress, 'USDC');
       }
       final double ethBalancePreciseToken = weiBalanceToken.toDouble() / pow(10, 18);
       final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
@@ -1715,14 +1715,25 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Task> loadOneTask(taskAddress) async {
+    print('loadOneTask start');
+    print(taskAddress);
     if (tasks.containsKey(taskAddress)) {
       return tasks[taskAddress]!;
     } else {
-      final Map<EthereumAddress, Task> tasksTemp = await getTasksData(taskAddress);
+      print('containsKey != start:');
+      final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
+
       tasks[taskAddress] = tasksTemp[taskAddress]!;
       refreshTask(tasks[taskAddress]!);
+
+      print(tasks[taskAddress]!);
+      print('loadOneTask end');
+
       return tasks[taskAddress]!;
+
     }
+
+
   }
 
   Future<void> refreshTask(Task task) async {
@@ -2398,7 +2409,7 @@ class TasksServices extends ChangeNotifier {
         } else {
           txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
         }
-      } else if (taskTokenSymbol == 'aUSDC') {
+      } else if (taskTokenSymbol == 'USDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);
         final transaction = Transaction(
           from: senderAddress,
@@ -2467,7 +2478,7 @@ class TasksServices extends ChangeNotifier {
 
       txn = await web3Transaction(credentials, transaction, chainId: chainId);
       print(txn);
-    } else if (taskTokenSymbol == 'aUSDC') {
+    } else if (taskTokenSymbol == 'USDC') {
       final transaction = Transaction(
         from: senderAddress,
       );

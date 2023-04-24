@@ -9,7 +9,7 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
-import '../widgets/wallet_action.dart';
+import '../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtons extends StatelessWidget {
   final Task task;
@@ -54,7 +54,7 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskParticipate',
                     ));
@@ -80,7 +80,7 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
@@ -104,7 +104,7 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
@@ -141,7 +141,7 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'withdrawToChain',
                     ));
@@ -169,7 +169,7 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
@@ -193,7 +193,7 @@ class SetsOfFabButtons extends StatelessWidget {
                     showDialog(
                         barrierDismissible: false,
                         context: context,
-                        builder: (context) => WalletAction(
+                        builder: (context) => WalletActionDialog(
                               nanoId: task.nanoId,
                               taskName: 'rateTask',
                             ));
@@ -218,7 +218,7 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskAuditParticipate',
                     ));

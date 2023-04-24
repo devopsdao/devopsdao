@@ -9,7 +9,7 @@ import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../widgets/tags/search_services.dart';
-import '../widgets/wallet_action.dart';
+import '../widgets/wallet_action_dialog.dart';
 import 'collection_services.dart';
 
 class NftMint extends StatelessWidget {
@@ -109,7 +109,7 @@ class NftMint extends StatelessWidget {
                                           showDialog(
                                               barrierDismissible: false,
                                               context: context,
-                                              builder: (context) => const WalletAction(
+                                              builder: (context) => const WalletActionDialog(
                                                 nanoId: 'mintNonFungible',
                                                 taskName: 'mintNonFungible',
                                               ));

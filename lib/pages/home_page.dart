@@ -341,7 +341,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 20,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.ethBalanceToken} aUSDC',
+                                    Text('${tasksServices.ethBalanceToken} USDC',
                                         style: const TextStyle(
                                           height: 1,
                                           color: Colors.white,
@@ -383,7 +383,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           fontSize: 20,
                                           fontFamily: 'Inter',
                                         )),
-                                    Text('${tasksServices.pendingBalanceToken} aUSDC',
+                                    Text('${tasksServices.pendingBalanceToken} USDC',
                                         style: const TextStyle(
                                           height: 1,
                                           color: Colors.white,

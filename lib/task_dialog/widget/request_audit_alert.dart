@@ -6,7 +6,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 
 class RequestAuditDialog extends StatefulWidget {
   final String who;
@@ -54,7 +54,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
     }
 
     return Dialog(
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
       child: SizedBox(
         height: 440,
         width: 350,
@@ -120,14 +120,14 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                   //   // splashColor: Colors.black,
                   // ) : null,
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     borderSide: const BorderSide(
                       color: Colors.black45,
                       width: 1.0,
                     ),
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     borderSide: const BorderSide(
                       color: Colors.black45,
                       width: 1.0,
@@ -165,7 +165,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         //MediaQuery.of(context).size.width * .08,
                         // width: halfWidth,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: DodaoTheme.of(context).borderRadius,
                           border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
                               ),
                         ),
@@ -200,7 +200,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         showDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (context) => WalletAction(
+                            builder: (context) => WalletActionDialog(
                                   nanoId: task.nanoId,
                                   taskName: 'taskStateChange',
                                 ));
@@ -210,7 +210,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         height: 54.0,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: DodaoTheme.of(context).borderRadius,
                           gradient: const LinearGradient(
                             colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
                             stops: [0, 0.6, 1],

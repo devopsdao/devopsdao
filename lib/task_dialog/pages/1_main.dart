@@ -117,13 +117,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       // textHeight.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
                       // print(tp.didExceedMaxLines);
                       return LimitedBox(
-                        maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * 5) + 12,
+                        maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.fromLTRB(3.0, 0.0, 8.0, 0.0),
+                              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 12.0, 0.0),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -154,35 +154,35 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   //   ),
                                   // ),
 
-                                  Container(
-                                    width: 38,
-                                    height: 38,
-                                    // padding: const EdgeInsets.all(2.0),
-                                    decoration: BoxDecoration(
-                                      gradient: DodaoTheme.of(context).smallButtonGradient,
-                                      borderRadius: DodaoTheme.of(context).borderRadius,
-                                      // boxShadow: [
-                                      //   BoxShadow(
-                                      //     color: Colors.grey.withOpacity(0.5),
-                                      //     spreadRadius: 5,
-                                      //     blurRadius: 7,
-                                      //     offset: Offset(0, 3), // changes position of shadow
-                                      //   ),
-                                      // ],
-
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
-                                      tooltip: 'Go to next page',
-                                      onPressed: () {
-                                        interface.dialogPagesController.animateToPage(
-                                            interface.dialogCurrentState['pages']['description'] ?? 99,
-                                            duration: const Duration(milliseconds: 400),
-                                            curve: Curves.ease
-                                        );
-                                      },
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   width: 38,
+                                  //   height: 38,
+                                  //   // padding: const EdgeInsets.all(2.0),
+                                  //   decoration: BoxDecoration(
+                                  //     gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  //     borderRadius: DodaoTheme.of(context).borderRadius,
+                                  //     // boxShadow: [
+                                  //     //   BoxShadow(
+                                  //     //     color: Colors.grey.withOpacity(0.5),
+                                  //     //     spreadRadius: 5,
+                                  //     //     blurRadius: 7,
+                                  //     //     offset: Offset(0, 3), // changes position of shadow
+                                  //     //   ),
+                                  //     // ],
+                                  //
+                                  //   ),
+                                  //   child: IconButton(
+                                  //     icon: const Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
+                                  //     tooltip: 'Go to next page',
+                                  //     onPressed: () {
+                                  //       interface.dialogPagesController.animateToPage(
+                                  //           interface.dialogCurrentState['pages']['description'] ?? 99,
+                                  //           duration: const Duration(milliseconds: 400),
+                                  //           curve: Curves.ease
+                                  //       );
+                                  //     },
+                                  //   ),
+                                  // ),
                                   // const SizedBox(
                                   //   width: ,
                                   // ),
@@ -210,15 +210,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     //   ),
                                     // ),
                                   Container(
-                                    width: 38,
-                                    height: 38,
-                                    // padding: const EdgeInsets.all(2.0),
+                                    width: 36,
+                                    height: 36,
                                     decoration: BoxDecoration(
                                       gradient: DodaoTheme.of(context).smallButtonGradient,
                                       borderRadius: DodaoTheme.of(context).borderRadius,
                                     ),
                                     child: IconButton(
-                                      icon: const Icon(Icons.chat_outlined, size: 22, color: Colors.white),
+                                      icon: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
                                       tooltip: 'Go to chat page',
                                       onPressed: () {
                                         interface.dialogPagesController.animateToPage(
@@ -363,46 +362,26 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     elevation: DodaoTheme.of(context).elevation,
                     borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
+                        padding: const EdgeInsets.only(top: 5.0),
                         width: innerPaddingWidth,
                         decoration: materialMainBoxDecoration,
-                        child: Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              padding: const EdgeInsets.all(8.0),
-                              child: RichText(
-                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
-                                TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                              ])),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: const [
-                                // RatingBar.builder(
-                                //   initialRating: 4,
-                                //   minRating: 1,
-                                //   direction: Axis.horizontal,
-                                //   allowHalfRating: true,
-                                //   itemCount: 5,
-                                //   itemPadding: const EdgeInsets.symmetric(
-                                //       horizontal: 5.0),
-                                //   itemBuilder: (context, _) => const Icon(
-                                //     Icons.star,
-                                //     color: Colors.amber,
-                                //   ),
-                                //   itemSize: 30.0,
-                                //   onRatingUpdate: (rating) {
-                                //     setState(() {
-                                //       enableRatingButton = true;
-                                //     });
-                                //     ratingScore = rating;
-                                //     tasksServices.myNotifyListeners();
-                                //   },
-                                // ),
-                                RateAnimatedWidget()
-                              ]),
-                            ),
-                          ],
+                        child: Padding(
+                          padding: DodaoTheme.of(context).inputEdge,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: RichText(
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                  TextSpan(
+                                      text: 'Rate the task:',
+                                      style: Theme.of(context).textTheme.bodySmall
+                                  ),
+                                ])),
+                              ),
+                              const RateAnimatedWidget(),
+                            ],
+                          ),
                         )),
                   ),
                 ),
@@ -462,6 +441,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           )),
                                   ])),
                               if (task.auditInitiator == tasksServices.publicAddress && interface.dialogCurrentState['pages'].containsKey('select'))
+
+
+
                                 TaskDialogButton(
                                   padding: 6.0,
                                   inactive: false,
@@ -521,15 +503,31 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   ])),
                                 ),
                               ),
-                              TaskDialogButton(
-                                padding: 6.0,
-                                inactive: false,
-                                buttonName: 'Select',
-                                buttonColorRequired: Colors.orange,
-                                callback: () {
-                                  interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
-                                      duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                },
+                              // TaskDialogButton(
+                              //   padding: 6.0,
+                              //   inactive: false,
+                              //   buttonName: 'Select',
+                              //   buttonColorRequired: Colors.orange,
+                              //   callback: () {
+                              //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                              //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                              //   },
+                              // ),
+                              Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  borderRadius: DodaoTheme.of(context).borderRadius,
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
+                                  tooltip: 'Go to select page',
+                                  onPressed: () {
+                                    interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                                        duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -606,24 +604,41 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         text: '${task.tokenValues[0]} ${tasksServices.chainTicker} \n',
                                         ),
                                     TextSpan(
-                                        text: '${task.tokenValues[0]} aUSDC',
+                                        text: '${task.tokenValues[0]} USDC',
                                         )
                                   ])),
                                 ],
                               ),
                             )),
                         const Spacer(),
-                        if (fromPage == 'customer' || tasksServices.hardhatDebug == true)
-                          TaskDialogButton(
-                            padding: 6.0,
-                            inactive: false,
-                            buttonName: 'Topup',
-                            buttonColorRequired: Colors.lightBlue.shade600,
-                            callback: () {
-                              interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                        if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') || tasksServices.hardhatDebug == true)
+                          // TaskDialogButton(
+                          //   padding: 6.0,
+                          //   inactive: false,
+                          //   buttonName: 'Topup',
+                          //   buttonColorRequired: Colors.lightBlue.shade600,
+                          //   callback: () {
+                          //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                          //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                          //   },
+                          // ),
+
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            gradient: DodaoTheme.of(context).smallButtonGradient,
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                            tooltip: 'Go to topup page',
+                            onPressed: () {
+                              interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99 ,
                                   duration: const Duration(milliseconds: 400), curve: Curves.ease);
                             },
                           ),
+                        ),
                       ],
                     ),
                   ),
@@ -734,7 +749,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
+                      padding: DodaoTheme.of(context).inputEdge,
                       width: innerPaddingWidth,
                       decoration: materialMainBoxDecoration,
                       child: TextFormField(
@@ -768,7 +783,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           labelText: interface.dialogCurrentState['labelMessage'],
                           labelStyle: Theme.of(context).textTheme.bodyMedium,
                           hintText: '[Enter your message here..]',
-                          hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                          hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.6),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
@@ -776,11 +791,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        style: DodaoTheme.of(context).bodyText1.override(
-                              fontFamily: 'Inter',
-                              color: Colors.black87,
-                              lineHeight: null,
-                            ),
+                        style: Theme.of(context).textTheme.bodyMedium,
                         minLines: 1,
                         maxLines: 3,
                       ),

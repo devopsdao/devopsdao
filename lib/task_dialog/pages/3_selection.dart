@@ -12,7 +12,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/my_tools.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 import '../widget/participants_list.dart';
 
 class SelectionPage extends StatefulWidget {
@@ -62,7 +62,7 @@ class _SelectionPageState extends State<SelectionPage> {
       child: Container(
         decoration: BoxDecoration(
           // color:  Color(0xFFF8F8F8),
-          color: DodaoTheme.of(context).walletBackgroundColor,
+          // color: DodaoTheme.of(context).walletBackgroundColor,
           borderRadius: DodaoTheme.of(context).borderRadius,
           border: DodaoTheme.of(context).borderGradient,
         ),
@@ -70,7 +70,7 @@ class _SelectionPageState extends State<SelectionPage> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: DodaoTheme.of(context).walletBackgroundColor,
+                // color: DodaoTheme.of(context).walletBackgroundColor,
                 borderRadius: DodaoTheme.of(context).borderRadius,
                 // borderRadius: BorderRadius.all(Radius.circular(6.0)),
               ),
@@ -125,8 +125,9 @@ class _SelectionPageState extends State<SelectionPage> {
               // padding: const EdgeInsets.only(right: 14),
               width: 100,
               height: 100,
-              decoration: const BoxDecoration(
-                image: DecorationImage(image: AssetImage("assets/images/logo.png"), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
+              decoration: BoxDecoration(
+                image: const DecorationImage(image: AssetImage("assets/images/logo.png"), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight,),
+                borderRadius: DodaoTheme.of(context).borderRadius,
               ),
             ),
             Container(
@@ -234,8 +235,13 @@ class _SelectionPageState extends State<SelectionPage> {
                             expand: walletSelected,
                             child: Material(
                               elevation: 10,
-                              borderRadius: BorderRadius.circular(interface.borderRadius),
+                              borderRadius: DodaoTheme.of(context).borderRadius,
                               child: Container(
+                                decoration: BoxDecoration(
+                                  // gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  borderRadius: DodaoTheme.of(context).borderRadius,
+                                  border: DodaoTheme.of(context).borderGradient,
+                                ),
                                 height: heightForInfo,
                                 padding: const EdgeInsets.all(14),
                                 child: contractorInfo,
@@ -292,7 +298,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 //
                 //           showDialog(
                 //             context: context,
-                //             builder: (context) => WalletAction(
+                //             builder: (context) => WalletActionDialog(
                 //               nanoId: task.nanoId,
                 //               taskName: 'taskStateChange',
                 //             )
@@ -341,7 +347,7 @@ class _SelectionPageState extends State<SelectionPage> {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));

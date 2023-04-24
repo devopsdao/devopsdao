@@ -44,7 +44,7 @@ class _PaymentState extends State<Payment> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
-      selectToken = <String>[tasksServices.chainTicker, 'aUSDC'];
+      selectToken = <String>[tasksServices.chainTicker, 'USDC'];
       dropdownValue = selectToken.first;
     });
   }
@@ -260,7 +260,7 @@ class _PaymentState extends State<Payment> {
                                   maxPrice = devHighPrice;
                                 } else {
                                   interface.tokensEntered = 0.0;
-                                  valueController!.text = '0.0 aUSDC';
+                                  valueController!.text = '0.0 USDC';
                                   _currentPriceValue = 0.0;
                                   minPrice = ausdcLowPrice;
                                   maxPrice = ausdcHighPrice;

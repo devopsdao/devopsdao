@@ -9,8 +9,8 @@ import '../blockchain/task_services.dart';
 
 const List<String> selectNetwork = <String>['Moonbase', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];
 
-// const List<String> selectToken = <String>['ETH', 'WETH', 'WFTM', 'aUSDC'];
-const List<String> selectToken = <String>['ETH', 'aUSDC'];
+// const List<String> selectToken = <String>['ETH', 'WETH', 'WFTM', 'USDC'];
+const List<String> selectToken = <String>['ETH', 'USDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
   final Task object;
@@ -35,7 +35,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
     if (widget.object.tokenValues[0] != 0.0) {
       valueName = 'ETH';
     } else if (widget.object.tokenValues[0] != 0.0) {
-      valueName = 'aUSDC';
+      valueName = 'USDC';
     }
 
     return Column(
@@ -90,7 +90,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
               );
             }).toList(),
           ),
-        if (valueName == 'aUSDC')
+        if (valueName == 'USDC')
           RichText(
               text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.9), children: <TextSpan>[
             if (dropdownValue != 'Moonbase')

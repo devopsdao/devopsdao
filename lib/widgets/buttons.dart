@@ -1,5 +1,5 @@
 import 'package:dodao/blockchain/classes.dart';
-import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +44,7 @@ class _WithdrawButtonState extends State<WithdrawButton> {
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: widget.object.nanoId,
                           taskName: 'withdrawToChain',
                         ));
