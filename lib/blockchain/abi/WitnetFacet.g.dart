@@ -5,7 +5,7 @@ import 'package:webthree/webthree.dart' as _i1;
 import 'dart:typed_data' as _i2;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"inputs":[{"internalType":"address","name":"_witnetRequestBoard","type":"address"},{"internalType":"address","name":"_witnetRequestFactory","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"Logs","type":"event"},{"inputs":[{"internalType":"bytes32","name":"httpGetValuesArray","type":"bytes32"},{"internalType":"bytes32","name":"reducerModeNoFilters","type":"bytes32"}],"name":"buildRequestTemplate","outputs":[{"internalType":"contract WitnetRequestTemplate","name":"valuesArrayRequestTemplate","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"taskAddress","type":"address"}],"name":"createWitnetRequest","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"witnet","outputs":[{"internalType":"contract WitnetRequestBoard","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"witnetRequestFactory","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}]',
+  '[{"inputs":[{"internalType":"contract WitnetRequestBoard","name":"_witnetRequestBoard","type":"address"},{"internalType":"contract WitnetRequestTemplate","name":"_witnetRequestTemplate","type":"address"},{"components":[{"internalType":"uint256","name":"numWitnesses","type":"uint256"},{"internalType":"uint256","name":"minConsensusPercentage","type":"uint256"},{"internalType":"uint256","name":"witnessReward","type":"uint256"},{"internalType":"uint256","name":"witnessCollateral","type":"uint256"},{"internalType":"uint256","name":"minerCommitRevealFee","type":"uint256"}],"internalType":"struct WitnetV2.RadonSLA","name":"_witnetRadonSLA","type":"tuple"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"uint256","name":"index","type":"uint256"},{"internalType":"uint256","name":"range","type":"uint256"}],"name":"IndexOutOfBounds","type":"error"},{"inputs":[{"internalType":"uint256","name":"length","type":"uint256"}],"name":"InvalidLengthEncoding","type":"error"},{"inputs":[{"internalType":"uint256","name":"read","type":"uint256"},{"internalType":"uint256","name":"expected","type":"uint256"}],"name":"UnexpectedMajorType","type":"error"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes32","name":"hash","type":"bytes32"}],"name":"NewRadonRequestHash","type":"event"},{"inputs":[{"internalType":"uint256","name":"_appId","type":"uint256"}],"name":"checkResultAvailability","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_appId","type":"uint256"}],"name":"getLastResult","outputs":[{"components":[{"internalType":"bool","name":"failed","type":"bool"},{"internalType":"bool","name":"pendingMerge","type":"bool"},{"internalType":"string","name":"status","type":"string"}],"internalType":"struct LibWitnetFacet.Result","name":"_result","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_appId","type":"uint256"}],"name":"getLastWitnetQuery","outputs":[{"components":[{"components":[{"internalType":"address","name":"addr","type":"address"},{"internalType":"bytes32","name":"slaHash","type":"bytes32"},{"internalType":"bytes32","name":"radHash","type":"bytes32"},{"internalType":"uint256","name":"gasprice","type":"uint256"},{"internalType":"uint256","name":"reward","type":"uint256"}],"internalType":"struct Witnet.Request","name":"request","type":"tuple"},{"components":[{"internalType":"address","name":"reporter","type":"address"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"bytes32","name":"drTxHash","type":"bytes32"},{"internalType":"bytes","name":"cborBytes","type":"bytes"}],"internalType":"struct Witnet.Response","name":"response","type":"tuple"},{"internalType":"address","name":"from","type":"address"}],"internalType":"struct Witnet.Query","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_appId","type":"uint256"}],"name":"getLastWitnetResult","outputs":[{"components":[{"internalType":"bool","name":"success","type":"bool"},{"components":[{"components":[{"internalType":"bytes","name":"data","type":"bytes"},{"internalType":"uint256","name":"cursor","type":"uint256"}],"internalType":"struct WitnetBuffer.Buffer","name":"buffer","type":"tuple"},{"internalType":"uint8","name":"initialByte","type":"uint8"},{"internalType":"uint8","name":"majorType","type":"uint8"},{"internalType":"uint8","name":"additionalInformation","type":"uint8"},{"internalType":"uint64","name":"len","type":"uint64"},{"internalType":"uint64","name":"tag","type":"uint64"}],"internalType":"struct WitnetCBOR.CBOR","name":"value","type":"tuple"}],"internalType":"struct Witnet.Result","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_appId","type":"uint256"},{"internalType":"bytes32","name":"_radHash","type":"bytes32"}],"name":"postRequest","outputs":[{"internalType":"uint256","name":"_queryId","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_appId","type":"uint256"},{"components":[{"internalType":"string","name":"subpath","type":"string"},{"internalType":"string","name":"title","type":"string"}],"internalType":"struct LibWitnetFacet.Args","name":"_args","type":"tuple"}],"name":"postRequest","outputs":[{"internalType":"uint256","name":"_queryId","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"slaHash","type":"bytes32"}],"name":"updateRadonSLA","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"witnet","outputs":[{"internalType":"contract WitnetRequestBoard","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"witnetRadonSLA","outputs":[{"components":[{"internalType":"uint256","name":"numWitnesses","type":"uint256"},{"internalType":"uint256","name":"minConsensusPercentage","type":"uint256"},{"internalType":"uint256","name":"witnessReward","type":"uint256"},{"internalType":"uint256","name":"witnessCollateral","type":"uint256"},{"internalType":"uint256","name":"minerCommitRevealFee","type":"uint256"}],"internalType":"struct WitnetV2.RadonSLA","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"witnetRequestTemplate","outputs":[{"internalType":"contract WitnetRequestTemplate","name":"","type":"address"}],"stateMutability":"view","type":"function"}]',
   'WitnetFacet',
 );
 
@@ -23,20 +23,100 @@ class WitnetFacet extends _i1.GeneratedContract {
           chainId,
         );
 
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<bool> checkResultAvailability(
+    BigInt _appId, {
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[1];
+    assert(checkSignature(function, '5cea2016'));
+    final params = [_appId];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as bool);
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<dynamic> getLastResult(
+    BigInt _appId, {
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[2];
+    assert(checkSignature(function, '26837dfb'));
+    final params = [_appId];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as dynamic);
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<dynamic> getLastWitnetQuery(
+    BigInt _appId, {
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[3];
+    assert(checkSignature(function, 'ba1112f0'));
+    final params = [_appId];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as dynamic);
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<dynamic> getLastWitnetResult(
+    BigInt _appId, {
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[4];
+    assert(checkSignature(function, '2c9c5e8b'));
+    final params = [_appId];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as dynamic);
+  }
+
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
-  Future<String> buildRequestTemplate(
-    _i2.Uint8List httpGetValuesArray,
-    _i2.Uint8List reducerModeNoFilters, {
+  Future<String> postRequest(
+    BigInt _appId,
+    _i2.Uint8List _radHash, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[1];
-    assert(checkSignature(function, 'aa5f7d4e'));
+    final function = self.abi.functions[5];
+    assert(checkSignature(function, '7572c86b'));
     final params = [
-      httpGetValuesArray,
-      reducerModeNoFilters,
+      _appId,
+      _radHash,
     ];
     return write(
       credentials,
@@ -49,14 +129,37 @@ class WitnetFacet extends _i1.GeneratedContract {
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
-  Future<String> createWitnetRequest(
-    _i1.EthereumAddress taskAddress, {
+  Future<String> postRequest$2(
+    BigInt _appId,
+    dynamic _args, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[2];
-    assert(checkSignature(function, '0e627947'));
-    final params = [taskAddress];
+    final function = self.abi.functions[6];
+    assert(checkSignature(function, 'e66f2387'));
+    final params = [
+      _appId,
+      _args,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> updateRadonSLA(
+    _i2.Uint8List slaHash, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[7];
+    assert(checkSignature(function, '664801df'));
+    final params = [slaHash];
     return write(
       credentials,
       transaction,
@@ -72,7 +175,7 @@ class WitnetFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[3];
+    final function = self.abi.functions[8];
     assert(checkSignature(function, '46d1d21a'));
     final params = [];
     final response = await read(
@@ -87,12 +190,31 @@ class WitnetFacet extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<_i1.EthereumAddress> witnetRequestFactory({
+  Future<dynamic> witnetRadonSLA({
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[4];
-    assert(checkSignature(function, 'f9580227'));
+    final function = self.abi.functions[9];
+    assert(checkSignature(function, '0894fc02'));
+    final params = [];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as dynamic);
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<_i1.EthereumAddress> witnetRequestTemplate({
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[10];
+    assert(checkSignature(function, '4db820d5'));
     final params = [];
     final response = await read(
       sender,
@@ -103,12 +225,12 @@ class WitnetFacet extends _i1.GeneratedContract {
     return (response[0] as _i1.EthereumAddress);
   }
 
-  /// Returns a live stream of all Logs events emitted by this contract.
-  Stream<Logs> logsEvents({
+  /// Returns a live stream of all NewRadonRequestHash events emitted by this contract.
+  Stream<NewRadonRequestHash> newRadonRequestHashEvents({
     _i1.BlockNum? fromBlock,
     _i1.BlockNum? toBlock,
   }) {
-    final event = self.event('Logs');
+    final event = self.event('NewRadonRequestHash');
     final filter = _i1.FilterOptions.events(
       contract: self,
       event: event,
@@ -120,17 +242,14 @@ class WitnetFacet extends _i1.GeneratedContract {
         result.topics!,
         result.data!,
       );
-      return Logs(decoded);
+      return NewRadonRequestHash(decoded);
     });
   }
 }
 
-class Logs {
-  Logs(List<dynamic> response)
-      : contractAdr = (response[0] as _i1.EthereumAddress),
-        message = (response[1] as String);
+class NewRadonRequestHash {
+  NewRadonRequestHash(List<dynamic> response)
+      : hash = (response[0] as _i2.Uint8List);
 
-  final _i1.EthereumAddress contractAdr;
-
-  final String message;
+  final _i2.Uint8List hash;
 }
