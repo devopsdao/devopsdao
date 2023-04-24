@@ -8,7 +8,6 @@ import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
-import '../create_job/create_job.dart.old';
 import '../navigation/navmenu.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';

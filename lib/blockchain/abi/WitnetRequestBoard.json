@@ -139,6 +139,156 @@
         "type": "tuple"
       }
     ],
+    "name": "asBool",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "asBytes",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
     "name": "asBytes32",
     "outputs": [
       {
@@ -214,10 +364,85 @@
         "type": "tuple"
       }
     ],
+    "name": "asErrorCode",
+    "outputs": [
+      {
+        "internalType": "enum Witnet.ErrorCodes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
     "name": "asErrorMessage",
     "outputs": [
       {
-        "internalType": "enum Witnet.ResultErrorCodes",
+        "internalType": "enum Witnet.ErrorCodes",
         "name": "",
         "type": "uint8"
       },
@@ -294,12 +519,12 @@
         "type": "tuple"
       }
     ],
-    "name": "asUint64",
+    "name": "asFixed16",
     "outputs": [
       {
-        "internalType": "uint64",
+        "internalType": "int32",
         "name": "",
-        "type": "uint64"
+        "type": "int32"
       }
     ],
     "stateMutability": "pure",
@@ -308,51 +533,526 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_queryId",
-        "type": "uint256"
-      }
-    ],
-    "name": "checkResultError",
-    "outputs": [
-      {
         "components": [
           {
-            "internalType": "enum Witnet.ResultErrorCodes",
-            "name": "code",
-            "type": "uint8"
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
           },
           {
-            "internalType": "string",
-            "name": "reason",
-            "type": "string"
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
           }
         ],
-        "internalType": "struct Witnet.ResultError",
-        "name": "",
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "name": "asFixed16Array",
+    "outputs": [
+      {
+        "internalType": "int32[]",
+        "name": "",
+        "type": "int32[]"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "asInt128",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "asInt128Array",
+    "outputs": [
+      {
+        "internalType": "int256[]",
+        "name": "",
+        "type": "int256[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "asString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "asStringArray",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "asUint64",
+    "outputs": [
+      {
         "internalType": "uint256",
-        "name": "_queryId",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "checkResultStatus",
-    "outputs": [
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "internalType": "enum Witnet.ResultStatus",
-        "name": "",
-        "type": "uint8"
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "name": "asUint64Array",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -410,19 +1110,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "factory",
-    "outputs": [
-      {
-        "internalType": "contract WitnetRequestFactory",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -543,6 +1230,81 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "_result",
+        "type": "tuple"
+      }
+    ],
+    "name": "isError",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -944,7 +1706,7 @@
     "name": "registry",
     "outputs": [
       {
-        "internalType": "contract WitnetBytecodes",
+        "internalType": "contract IWitnetBytecodes",
         "name": "",
         "type": "address"
       }
@@ -1041,6 +1803,81 @@
     "name": "reportResultBatch",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_cborBytes",
+        "type": "bytes"
+      }
+    ],
+    "name": "resultFromCborBytes",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "components": [
+                  {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "cursor",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct WitnetBuffer.Buffer",
+                "name": "buffer",
+                "type": "tuple"
+              },
+              {
+                "internalType": "uint8",
+                "name": "initialByte",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "majorType",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint8",
+                "name": "additionalInformation",
+                "type": "uint8"
+              },
+              {
+                "internalType": "uint64",
+                "name": "len",
+                "type": "uint64"
+              },
+              {
+                "internalType": "uint64",
+                "name": "tag",
+                "type": "uint64"
+              }
+            ],
+            "internalType": "struct WitnetCBOR.CBOR",
+            "name": "value",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct Witnet.Result",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {

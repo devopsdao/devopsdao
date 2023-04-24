@@ -4,7 +4,7 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
+        "internalType": "contract WitnetRequestTemplate",
         "name": "template",
         "type": "address"
       },
@@ -44,7 +44,7 @@
     "name": "buildRequestTemplate",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "contract WitnetRequestTemplate",
         "name": "template",
         "type": "address"
       }
@@ -70,7 +70,7 @@
     "name": "registry",
     "outputs": [
       {
-        "internalType": "contract WitnetBytecodes",
+        "internalType": "contract IWitnetBytecodes",
         "name": "",
         "type": "address"
       }
