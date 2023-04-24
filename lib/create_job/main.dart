@@ -107,7 +107,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
 
   TextEditingController? titleFieldController;
   TextEditingController? descriptionController;
-  TextEditingController? repositoryController;
   TextEditingController? valueController;
   TextEditingController? githubLinkController;
   final scrollController = ScrollController();
@@ -628,7 +627,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
-                repositoryController!.text,
+                githubLinkController!.text,
                 // valueController!.text,
                 interface.tokensEntered,
                 nanoId,
