@@ -106,9 +106,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
     "name": "checkResultAvailability",
@@ -125,9 +125,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
     "name": "getLastResult",
@@ -161,9 +161,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
     "name": "getLastWitnetQuery",
@@ -246,9 +246,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       }
     ],
     "name": "getLastWitnetResult",
@@ -321,9 +321,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       },
       {
         "internalType": "bytes32",
@@ -345,9 +345,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_appId",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       },
       {
         "components": [
