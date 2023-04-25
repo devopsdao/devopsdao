@@ -110,7 +110,7 @@ class SetsOfFabButtons extends StatelessWidget {
                     ));
           },
         );
-      } else if (task.taskState == "review" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+      } else if (task.taskState == "review" && (fromPage == 'performer')) {
         return TaskDialogFAB(
           inactive: false,
           expand: true,

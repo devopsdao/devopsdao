@@ -127,7 +127,7 @@ class _DialogButtonSetState extends State<DialogButtonSetOnFirstPage> {
               },
             ),
 
-          if (task.taskState == "review" && (fromPage == 'performer' || tasksServices.hardhatDebug == true))
+          if (task.taskState == "review" && (fromPage == 'performer'))
             TaskDialogButton(
               inactive: false,
               buttonName: 'Check merge',

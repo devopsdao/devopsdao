@@ -1,16 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "message",
-        "type": "string"
-      }
-    ],
-    "name": "RevertReason",
-    "type": "error"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {

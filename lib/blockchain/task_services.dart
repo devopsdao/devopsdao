@@ -166,8 +166,8 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatDebug = true;
+  bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -2365,8 +2365,8 @@ class TasksServices extends ChangeNotifier {
       var creds;
       var senderAddress;
       if (hardhatDebug == true) {
-        creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-        senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+        creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+        senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       } else {
         creds = credentials;
         senderAddress = publicAddress;
@@ -2746,7 +2746,7 @@ class TasksServices extends ChangeNotifier {
       'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
-    String chain = 'moonbase';
+    String chain = 'Moonbase';
     TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
     //should send value now?!
     var creds;
