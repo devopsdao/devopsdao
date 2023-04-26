@@ -54,9 +54,9 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
 
           if (snapshot.connectionState == ConnectionState.done) {
-            print('snapshot start:');
-            print(snapshot);
-            print('snapshot end');
+            // print('snapshot start:');
+            // print(snapshot);
+            // print('snapshot end');
 
             if (snapshot.hasError) {
               emptyClasses.loadingTask.description = snapshot.error.toString();

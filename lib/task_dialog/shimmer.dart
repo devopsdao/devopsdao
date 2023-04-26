@@ -48,17 +48,17 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                           baseColor: DodaoTheme.of(context).shimmerBaseColor,
                           highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
                           child: Container(
-                            height: 82,
+                            height: 62,
                             width: innerPaddingWidth,
                             // color: Colors.grey[300],
                             decoration: BoxDecoration(
                               borderRadius: DodaoTheme.of(context).borderRadius,
                               border: DodaoTheme.of(context).borderGradient,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(widget.task.description),
-                            ),
+                            // child: Padding(
+                            //   padding: const EdgeInsets.all(10.0),
+                            //   child: Text(widget.task.description),
+                            // ),
                           )
                       ),
                     )

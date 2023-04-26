@@ -117,17 +117,26 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Check merge',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
-          callback: () async {
+          callback: () {
 
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
             var response = tasksServices.postWitnetRequest(task.taskAddress);
-            interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            print(response);
 
-            debounceNotifyListener.debounce(() {
-              interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
-              tasksServices.myNotifyListeners();
-            });
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                  nanoId: task.nanoId,
+                  taskName: 'postWitnetRequest',
+                ));
+            // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //
+            // debounceNotifyListener.debounce(() {
+            //   interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //   tasksServices.myNotifyListeners();
+            // });
           },
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {

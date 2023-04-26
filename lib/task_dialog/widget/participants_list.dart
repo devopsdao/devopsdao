@@ -111,7 +111,7 @@ class _ParticipantListState extends State<ParticipantList> {
                 // style: TextButton.styleFrom(
                 //   textStyle: const TextStyle(fontSize: 13),
                 // ),
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
                 visualDensity: const VisualDensity(vertical: -3),
                 dense: true,
                 selected: index2 == selectedIndex,
