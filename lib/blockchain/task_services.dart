@@ -166,7 +166,7 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
-  bool hardhatDebug = true;
+  bool hardhatDebug = false;
   bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
@@ -326,7 +326,7 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 1287;
+      chainId = 4002;
     }
 
     isDeviceConnected = false;
@@ -2372,8 +2372,10 @@ class TasksServices extends ChangeNotifier {
         senderAddress = publicAddress;
       }
       final transaction = Transaction(
-        from: senderAddress,
-      );
+          from: senderAddress,
+          gasPrice: fees['medium'].gasPrice,
+          maxFeePerGas: fees['medium'].maxFeePerGas,
+          maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
 
       // List<String> tags = [];
       List<String> symbols = [taskTokenSymbol];
