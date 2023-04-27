@@ -118,12 +118,25 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
           callback: () {
-            interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
-            tasksServices.myNotifyListeners();
-            debounceNotifyListener.debounce(() {
-              interface.statusText = const TextSpan(text: 'Open', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
-              tasksServices.myNotifyListeners();
-            });
+
+            // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
+            // // tasksServices.myNotifyListeners();
+            var response = tasksServices.postWitnetRequest(task.taskAddress);
+            print(response);
+
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                  nanoId: task.nanoId,
+                  taskName: 'postWitnetRequest',
+                ));
+            // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //
+            // debounceNotifyListener.debounce(() {
+            //   interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //   tasksServices.myNotifyListeners();
+            // });
           },
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {

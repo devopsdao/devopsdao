@@ -64,6 +64,9 @@ abstract class DodaoTheme {
   late Color buttonDisabledColor;
   late Color buttonDisabledBackgroundColor;
 
+  late Color shimmerBaseColor;
+  late Color shimmerHighlightColor;
+
   late Color maximumBlueGreen = const Color(0xFF59C3C3);
   late Color createTaskButton;
 
@@ -145,6 +148,9 @@ class LightModeTheme extends DodaoTheme {
   late Color buttonBackgroundColor = Colors.lightBlue.shade300;
   late Color buttonDisabledColor = Colors.white;
   late Color buttonDisabledBackgroundColor = Colors.grey.shade300;
+
+  late Color shimmerBaseColor = Colors.white;
+  late Color shimmerHighlightColor = Colors.grey.shade700;
 
   late Color createTaskButton = const Color(0xFFCDBEE4);
 
@@ -293,6 +299,9 @@ class DarkModeTheme extends DodaoTheme {
   late Color buttonBackgroundColor = Colors.lightBlue.shade300;
   late Color buttonDisabledColor = Colors.white;
   late Color buttonDisabledBackgroundColor = Colors.grey.shade800;
+
+  late Color shimmerBaseColor = Colors.grey.shade700;
+  late Color shimmerHighlightColor = Colors.grey.shade100;
 
   late Image witnetLogo = Image.asset(
     'assets/images/witnet_logo_dark.png',

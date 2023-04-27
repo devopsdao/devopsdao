@@ -89,40 +89,77 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else if (widget.taskName == 'createNFT') {
+    }
+
+    if (widget.taskName == 'createNFT') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
       } else if (status == 'confirmed') {
         // transactionStagesApprove = 'done';
-        transactionStagesConfirmed = 'done';
-        transactionStagesMinted = 'done';
-      }
-    } else if (widget.taskName == 'mintNonFungible') {
-      if (status == 'pending') {
-        // transactionStagesApprove = 'done';
-        transactionStagesConfirmed = 'loading';
-        transactionStagesMinted = 'initial';
-      } else if (status == 'confirmed') {
-        // transactionStagesApprove = 'done';
-        transactionStagesConfirmed = 'done';
-        transactionStagesMinted = 'done';
-      }
-    } else  {
-      if (status == 'pending') {
-        // transactionStagesPending = 'loading';
-        transactionStagesConfirmed = 'loading';
-        transactionStagesMinted = 'initial';
-      } else if (status == 'confirmed') {
-        // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'loading';
       } else if (status == 'minted') {
+        // transactionStagesApprove = 'done';
+        // transactionStagesWaiting = 'done';
+        // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
     }
+
+    if (widget.taskName == 'mintNonFungible') {
+      if (status == 'pending') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesApprove = 'done';
+        // transactionStagesWaiting = 'done';
+        // transactionStagesPending = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    }
+
+    if (widget.taskName == 'postWitnetRequest') {
+      if (status == 'pending') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        // transactionStagesApprove = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        // transactionStagesApprove = 'done';
+        // transactionStagesWaiting = 'done';
+        // transactionStagesPending = 'done';
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    }
+
+
+    // else  {
+    //   if (status == 'pending') {
+    //     // transactionStagesPending = 'loading';
+    //     transactionStagesConfirmed = 'loading';
+    //     transactionStagesMinted = 'initial';
+    //   } else if (status == 'confirmed') {
+    //     // transactionStagesPending = 'done';
+    //     transactionStagesConfirmed = 'done';
+    //     transactionStagesMinted = 'loading';
+    //   } else if (status == 'minted') {
+    //     transactionStagesConfirmed = 'done';
+    //     transactionStagesMinted = 'done';
+    //   }
+    // }
     var width = MediaQuery.of(context).size.width ;
 
 

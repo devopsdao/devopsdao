@@ -77,31 +77,31 @@ class _SelectionPageState extends State<SelectionPage> {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 1),
                     alignment: Alignment.topLeft,
                     child: RichText(
-                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-                      TextSpan(text: 'Choose contractor: ', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
+                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                      TextSpan(text: 'Choose contractor: ', style: Theme.of(context).textTheme.bodySmall),
                     ])),
                   ),
                   if (task.participants.isEmpty && interface.dialogCurrentState['name'] == 'customer-new')
                     RichText(
-                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                       TextSpan(
                           text: 'Participants not applied to your Task yet. ',
                           style: TextStyle(
-                            height: 2,
+                            height: 4.5,
                           )),
                     ])),
                   if (task.auditors.isEmpty &&
                       (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
                           interface.dialogCurrentState['name'] == 'performer-audit-requested'))
                     RichText(
-                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                       TextSpan(
                           text: 'Auditors not applied to your request yet. ',
                           style: TextStyle(
-                            height: 2,
+                            height: 4.5,
                           )),
                     ])),
                 ],
@@ -217,7 +217,7 @@ class _SelectionPageState extends State<SelectionPage> {
                         return AnimatedContainer(
                           // color: Colors.amber,
                           duration: const Duration(milliseconds: 300),
-                          height: walletSelected ? heightLeft : layoutHeight,
+                          height: walletSelected ? heightLeft  : layoutHeight,
                           curve: Curves.fastOutSlowIn,
                           child: contractorList,
                         );

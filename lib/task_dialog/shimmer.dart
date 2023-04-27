@@ -41,27 +41,38 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                   // const SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey[900]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          height: 82,
-                          width: innerPaddingWidth,
-                          // color: Colors.grey[300],
-                          decoration: BoxDecoration(
-                            borderRadius: DodaoTheme.of(context).borderRadius,
-                            border: DodaoTheme.of(context).borderGradient,
-                          ),
-                          child: Text(widget.task.description),
-                        )
-                    ),
+                    child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: Shimmer.fromColors(
+                          baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                          highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                          child: Container(
+                            height: 62,
+                            width: innerPaddingWidth,
+                            // color: Colors.grey[300],
+                            decoration: BoxDecoration(
+                              borderRadius: DodaoTheme.of(context).borderRadius,
+                              border: DodaoTheme.of(context).borderGradient,
+                            ),
+                            // child: Padding(
+                            //   padding: const EdgeInsets.all(10.0),
+                            //   child: Text(widget.task.description),
+                            // ),
+                          )
+                      ),
+                    )
+
+
+
+
                   ),
                   // ************ Show prices and topup part ******** //
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Shimmer.fromColors(
-                        baseColor: Colors.grey[900]!,
-                        highlightColor: Colors.grey[100]!,
+                        baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                        highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
                         child: Container(
                           padding: const EdgeInsets.only(top: 14),
                           height: 60,
@@ -79,8 +90,8 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Shimmer.fromColors(
-                        baseColor: Colors.grey[900]!,
-                        highlightColor: Colors.grey[100]!,
+                        baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                        highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
                         child: Container(
                           padding: const EdgeInsets.only(top: 14),
                           height: 70,
@@ -97,8 +108,8 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
                     padding: const EdgeInsets.only(bottom: 14),
                     child: Shimmer.fromColors(
 
-                        baseColor: Colors.grey[900]!,
-                        highlightColor: Colors.grey[100]!,
+                        baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                        highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
                         child: Container(
                           padding: const EdgeInsets.only(top: 14),
                           height: 170,

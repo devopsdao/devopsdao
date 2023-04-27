@@ -736,6 +736,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 ),
               ),
 
+
+
               // ********* Text Input ************ //
               if (interface.dialogCurrentState['name'] == 'tasks-new-logged' ||
                   interface.dialogCurrentState['name'] == 'performer-agreed' ||
@@ -799,7 +801,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   ),
                 ),
 
-              // ********* GitHub pull/request Input ************ //
+              // ********* GitHub pull/request Performer ************ //
               if (interface.dialogCurrentState['name'] == 'performer-progress' ||
                   interface.dialogCurrentState['name'] == 'performer-review' ||
                   tasksServices.hardhatDebug == true)
@@ -876,9 +878,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 Container(
                                   padding: const EdgeInsets.only(top: 8),
                                   alignment: Alignment.topLeft,
-                                  child: const Text('In customer repository: '),
+                                  child: const Text('Pull request link: '),
                                 ),
-
                                 Builder(builder: (context) {
                                   final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
                                   return Container(
@@ -909,58 +910,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     ),
                                   );
                                 }),
-
-                                // TextFormField(
-                                //   controller: pullRequestController,
-                                //   autofocus: true,
-                                //   obscureText: false,
-                                //   onTapOutside: (test) {
-                                //     FocusScope.of(context).unfocus();
-                                //   },
-                                //
-                                //   decoration: InputDecoration(
-                                //     labelText: 'Create a pull request with a following name:',
-                                //     labelStyle:
-                                //     const TextStyle(fontSize: 17.0, color: Colors.black54),
-                                //     // hintText: '[Job description...]',
-                                //     hintStyle:
-                                //     const TextStyle(fontSize: 14.0, color: Colors.black54),
-                                //     focusedBorder: const UnderlineInputBorder(
-                                //       borderSide: BorderSide.none,
-                                //     ),
-                                //     enabledBorder: const UnderlineInputBorder(
-                                //       borderSide: BorderSide.none,
-                                //     ),
-                                //     suffixIcon: IconButton(
-                                //       onPressed: () async {
-                                //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                //         setState(() {
-                                //           pullRequestController!.text = '${clipboardData?.text}';
-                                //         });
-                                //       },
-                                //       icon: const Icon(Icons.content_paste_outlined),
-                                //       padding: const EdgeInsets.only(right: 12.0),
-                                //       highlightColor: Colors.grey,
-                                //       hoverColor: Colors.transparent,
-                                //       color: Colors.blueAccent,
-                                //       splashColor: Colors.black,
-                                //     ),
-                                //   ),
-                                //   style: DodaoTheme.of(context).bodyText1.override(
-                                //     fontFamily: 'Inter',
-                                //     color: Colors.black54,
-                                //     lineHeight: 1,
-                                //   ),
-                                //   minLines: 1,
-                                //   maxLines: 1,
-                                //   keyboardType: TextInputType.multiline,
-                                //   onChanged:  (text) {
-                                //
-                                //     // debounceNotifyListener.debounce(() {
-                                //     //   tasksServices.myNotifyListeners();
-                                //     // });
-                                //   },
-                                // ),
                               ],
                             );
                           }),
@@ -968,7 +917,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       )),
                 ),
 
-              // ********* GitHub pull/request Input ************ //
+              // ********* GitHub pull/request Status ************ //
               if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
@@ -1089,6 +1038,105 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 //             ),
                                 //           ])),
                                 // )
+                              ],
+                            );
+                          }),
+                        ),
+                      )),
+                ),
+
+              // ********* GitHub pull/request Link Information ************ //
+              if (((interface.dialogCurrentState['name'] == 'customer-new' ||
+                  interface.dialogCurrentState['name'] == 'customer-progress' ||
+                  // interface.dialogCurrentState['name'] == 'performer-new' ||
+                  interface.dialogCurrentState['name'] == 'performer-agreed') &&
+                  widget.task.repository.isNotEmpty) || tasksServices.hardhatDebug == true)
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          // maxWidth: maxStaticInternalDialogWidth,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: innerPaddingWidth,
+                          decoration: materialMainBoxDecoration,
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            return Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  alignment: Alignment.topLeft,
+                                  child: const Text('Created with the repository:'),
+                                ),
+
+                                // Container(
+                                //   padding: const EdgeInsets.all(8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                //         const WidgetSpan(
+                                //             child: Padding(
+                                //               padding: EdgeInsets.only(right: 5.0),
+                                //               child: Icon(
+                                //                 Icons.api,
+                                //                 size: 16,
+                                //                 color: Colors.black26,
+                                //               ),
+                                //             )),
+                                //         TextSpan(text: widget.task.repository, style: const TextStyle(fontWeight: FontWeight.bold))
+                                //       ])),
+                                // ),
+
+
+                                GestureDetector(
+                                  onTap: () async {
+                                    Clipboard.setData(ClipboardData(text: widget.task.repository)).then((_) {
+                                      Flushbar(
+                                          icon: Icon(
+                                            Icons.copy,
+                                            size: 20,
+                                            color: DodaoTheme.of(context).flushTextColor,
+                                          ),
+                                          message: '${widget.task.repository} copied to your clipboard!',
+                                          duration: const Duration(seconds: 2),
+                                          backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                                          shouldIconPulse: false)
+                                          .show(context);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    alignment: Alignment.topLeft,
+                                    child: RichText(
+                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                          const WidgetSpan(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(right: 5.0),
+                                                child: Icon(
+                                                  Icons.copy,
+                                                  size: 16,
+                                                  color: Colors.black26,
+                                                ),
+                                              )),
+                                          TextSpan(
+                                              text: widget.task.repository,
+                                              style: const TextStyle(fontWeight: FontWeight.bold)),
+                                        ])),
+                                  ),
+                                ),
+
+                                // Container(
+                                //   padding: const EdgeInsets.only(top: 8),
+                                //   alignment: Alignment.topLeft,
+                                //   child: const Text(
+                                //     '* this ',
+                                //     style: TextStyle(fontSize: 10),
+                                //   ),
+                                // ),
                               ],
                             );
                           }),

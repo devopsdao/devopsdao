@@ -12,11 +12,9 @@ import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/select_menu.dart';
-import '../buttons.dart';
 
 import 'dart:ui' as ui;
 
-import '../fab_buttons.dart';
 import '../widget/dialog_button_widget.dart';
 
 class AccountCloseUpPage extends StatefulWidget {
