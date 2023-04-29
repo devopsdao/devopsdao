@@ -117,7 +117,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       // textHeight.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
                       // print(tp.didExceedMaxLines);
                       return LimitedBox(
-                        maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
+                        maxHeight:
+                            textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -209,24 +210,22 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     //     ),
                                     //   ),
                                     // ),
-                                  Container(
-                                    width: 36,
-                                    height: 36,
-                                    decoration: BoxDecoration(
-                                      gradient: DodaoTheme.of(context).smallButtonGradient,
-                                      borderRadius: DodaoTheme.of(context).borderRadius,
+                                    Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        borderRadius: DodaoTheme.of(context).borderRadius,
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
+                                        tooltip: 'Go to chat page',
+                                        onPressed: () {
+                                          interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
+                                              duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                        },
+                                      ),
                                     ),
-                                    child: IconButton(
-                                      icon: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
-                                      tooltip: 'Go to chat page',
-                                      onPressed: () {
-                                        interface.dialogPagesController.animateToPage(
-                                            interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
-                                            duration: const Duration(milliseconds: 400),
-                                            curve: Curves.ease);
-                                      },
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -373,10 +372,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 alignment: Alignment.topLeft,
                                 child: RichText(
                                     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'Rate the task:',
-                                      style: Theme.of(context).textTheme.bodySmall
-                                  ),
+                                  TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
                                 ])),
                               ),
                               const RateAnimatedWidget(),
@@ -415,7 +411,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                   flex: 2,
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    const Text('Warning, this contract on Audit state!', ),
+                                    const Text(
+                                      'Warning, this contract on Audit state!',
+                                    ),
                                     if (task.auditInitiator == tasksServices.publicAddress &&
                                         interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
@@ -425,8 +423,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           '${task.auditors.length == 1 ? '' : 's'}'
                                           ' waiting for your decision',
                                           style: const TextStyle(
-                                            // height: 1.1,
-                                          )),
+                                              // height: 1.1,
+                                              )),
                                     if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
                                         task.auditInitiator != tasksServices.publicAddress)
                                       const Text('the auditor is expected to be selected', style: TextStyle(height: 1.1)),
@@ -441,9 +439,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           )),
                                   ])),
                               if (task.auditInitiator == tasksServices.publicAddress && interface.dialogCurrentState['pages'].containsKey('select'))
-
-
-
                                 TaskDialogButton(
                                   padding: 6.0,
                                   inactive: false,
@@ -601,17 +596,18 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   RichText(
                                       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                                     TextSpan(
-                                        text: '${task.tokenValues[0]} ${tasksServices.chainTicker} \n',
-                                        ),
+                                      text: '${task.tokenBalanceValues[0]} ${tasksServices.chainTicker} \n',
+                                    ),
                                     TextSpan(
-                                        text: '${task.tokenValues[0]} USDC',
-                                        )
+                                      text: '${task.tokenBalanceValues[0]} USDC',
+                                    )
                                   ])),
                                 ],
                               ),
                             )),
                         const Spacer(),
-                        if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') || tasksServices.hardhatDebug == true)
+                        if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') ||
+                            tasksServices.hardhatDebug == true)
                           // TaskDialogButton(
                           //   padding: 6.0,
                           //   inactive: false,
@@ -623,22 +619,22 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           //   },
                           // ),
 
-                        Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            gradient: DodaoTheme.of(context).smallButtonGradient,
-                            borderRadius: DodaoTheme.of(context).borderRadius,
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              gradient: DodaoTheme.of(context).smallButtonGradient,
+                              borderRadius: DodaoTheme.of(context).borderRadius,
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                              tooltip: 'Go to topup page',
+                              onPressed: () {
+                                interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                                    duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                              },
+                            ),
                           ),
-                          child: IconButton(
-                            icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
-                            tooltip: 'Go to topup page',
-                            onPressed: () {
-                              interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99 ,
-                                  duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -700,14 +696,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             NftTagsBunch(
                                               selected: false,
                                               name: e.name,
-                                              bunch: {
-                                                BigInt.from(0) : SimpleTags(
-                                                    name: e.name,
-                                                    collection: true
-                                                )
-                                              },
-                                            )
-                                        ),
+                                              bunch: {BigInt.from(0): SimpleTags(name: e.name, collection: true)},
+                                            )),
                                         page: 'create',
                                         selected: e.selected,
                                         wrapperRole: WrapperRole.selectNew,
@@ -719,11 +709,11 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 children: <Widget>[
                                   RichText(
                                       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
-                                          TextSpan(
-                                              text: 'Nothing here',
-                                              style: TextStyle(
-                                                height: 1,
-                                              )),
+                                    TextSpan(
+                                        text: 'Nothing here',
+                                        style: TextStyle(
+                                          height: 1,
+                                        )),
                                   ])),
                                 ],
                               );
@@ -735,8 +725,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   ),
                 ),
               ),
-
-
 
               // ********* Text Input ************ //
               if (interface.dialogCurrentState['name'] == 'tasks-new-logged' ||
@@ -785,7 +773,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           labelText: interface.dialogCurrentState['labelMessage'],
                           labelStyle: Theme.of(context).textTheme.bodyMedium,
                           hintText: '[Enter your message here..]',
-                          hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.6),
+                          hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.6),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
@@ -1047,10 +1035,11 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ********* GitHub pull/request Link Information ************ //
               if (((interface.dialogCurrentState['name'] == 'customer-new' ||
-                  interface.dialogCurrentState['name'] == 'customer-progress' ||
-                  // interface.dialogCurrentState['name'] == 'performer-new' ||
-                  interface.dialogCurrentState['name'] == 'performer-agreed') &&
-                  widget.task.repository.isNotEmpty) || tasksServices.hardhatDebug == true)
+                          interface.dialogCurrentState['name'] == 'customer-progress' ||
+                          // interface.dialogCurrentState['name'] == 'performer-new' ||
+                          interface.dialogCurrentState['name'] == 'performer-agreed') &&
+                      widget.task.repository.isNotEmpty) ||
+                  tasksServices.hardhatDebug == true)
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -1058,8 +1047,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          // maxWidth: maxStaticInternalDialogWidth,
-                        ),
+                            // maxWidth: maxStaticInternalDialogWidth,
+                            ),
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
@@ -1091,20 +1080,19 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 //       ])),
                                 // ),
 
-
                                 GestureDetector(
                                   onTap: () async {
                                     Clipboard.setData(ClipboardData(text: widget.task.repository)).then((_) {
                                       Flushbar(
-                                          icon: Icon(
-                                            Icons.copy,
-                                            size: 20,
-                                            color: DodaoTheme.of(context).flushTextColor,
-                                          ),
-                                          message: '${widget.task.repository} copied to your clipboard!',
-                                          duration: const Duration(seconds: 2),
-                                          backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
-                                          shouldIconPulse: false)
+                                              icon: Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: DodaoTheme.of(context).flushTextColor,
+                                              ),
+                                              message: '${widget.task.repository} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                                              shouldIconPulse: false)
                                           .show(context);
                                     });
                                   },
@@ -1113,19 +1101,17 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     alignment: Alignment.topLeft,
                                     child: RichText(
                                         text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                          const WidgetSpan(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(right: 5.0),
-                                                child: Icon(
-                                                  Icons.copy,
-                                                  size: 16,
-                                                  color: Colors.black26,
-                                                ),
-                                              )),
-                                          TextSpan(
-                                              text: widget.task.repository,
-                                              style: const TextStyle(fontWeight: FontWeight.bold)),
-                                        ])),
+                                      const WidgetSpan(
+                                          child: Padding(
+                                        padding: EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          Icons.copy,
+                                          size: 16,
+                                          color: Colors.black26,
+                                        ),
+                                      )),
+                                      TextSpan(text: widget.task.repository, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                    ])),
                                   ),
                                 ),
 
@@ -1146,7 +1132,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
-              if ((task.tokenValues[0] != 0 || task.tokenValues[0] != 0) &&
+              if ((task.tokenBalanceValues[0] != 0 || task.tokenBalanceValues[0] != 0) &&
                   (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
                 // if (task.taskState == 'completed' &&
                 //     (fromPage == 'performer' ||

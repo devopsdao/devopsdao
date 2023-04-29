@@ -15,8 +15,10 @@ class EmptyClasses extends ChangeNotifier {
       repository: 'https://github.com/devopsdao/dodao',
       tags: [],
       tagsNFT: [],
-      symbols: [],
-      amounts: [],
+      tokenNames: [],
+      tokenContracts: [],
+      tokenIds: [],
+      tokenAmounts: [],
       taskState: 'loading',
       auditState: '',
       rating: 0,
@@ -30,8 +32,8 @@ class EmptyClasses extends ChangeNotifier {
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
       justLoaded: true,
-      tokenNames: [],
-      tokenValues: [],
+      tokenBalanceNames: [],
+      tokenBalanceValues: [],
       transport: '');
 
   final emptyTask = Task(
@@ -43,8 +45,10 @@ class EmptyClasses extends ChangeNotifier {
       repository: 'https://github.com/devopsdao/dodao',
       tags: [],
       tagsNFT: [],
-      symbols: [],
-      amounts: [],
+      tokenNames: [],
+      tokenContracts: [],
+      tokenIds: [],
+      tokenAmounts: [],
       taskState: 'empty',
       auditState: '',
       rating: 0,
@@ -58,8 +62,8 @@ class EmptyClasses extends ChangeNotifier {
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
       justLoaded: true,
-      tokenNames: [],
-      tokenValues: [],
+      tokenBalanceNames: [],
+      tokenBalanceValues: [],
       transport: '');
 
   final loadingAccount = Account(

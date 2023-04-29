@@ -201,13 +201,23 @@
               },
               {
                 "internalType": "string[]",
-                "name": "symbols",
+                "name": "tokenNames",
                 "type": "string[]"
               },
               {
-                "internalType": "uint256[]",
-                "name": "amounts",
-                "type": "uint256[]"
+                "internalType": "address[]",
+                "name": "tokenContracts",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint256[][]",
+                "name": "tokenIds",
+                "type": "uint256[][]"
+              },
+              {
+                "internalType": "uint256[][]",
+                "name": "tokenAmounts",
+                "type": "uint256[][]"
               },
               {
                 "internalType": "string",

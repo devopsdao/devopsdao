@@ -32,9 +32,9 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
     // bool showMenu;
     String valueName = '';
 
-    if (widget.object.tokenValues[0] != 0.0) {
+    if (widget.object.tokenBalanceValues[0] != 0.0) {
       valueName = 'ETH';
-    } else if (widget.object.tokenValues[0] != 0.0) {
+    } else if (widget.object.tokenBalanceValues[0] != 0.0) {
       valueName = 'USDC';
     }
 
@@ -72,12 +72,12 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                 dropdownValue = value;
                 // tasksServices.getGasPrice('Moonbeam', value,
                 //     tokenSymbol: dropdownValue);
-                if (widget.object.tokenValues[0] > 0) {
+                if (widget.object.tokenBalanceValues[0] > 0) {
                   assetName = 'ETH';
-                  asset = widget.object.tokenValues[0];
-                } else if (widget.object.tokenValues[0] > 0 && dropdownValue != 'Moonbase') {
+                  asset = widget.object.tokenBalanceValues[0];
+                } else if (widget.object.tokenBalanceValues[0] > 0 && dropdownValue != 'Moonbase') {
                   assetName = 'uausdc';
-                  asset = widget.object.tokenValues[0];
+                  asset = widget.object.tokenBalanceValues[0];
                   tasksServices.getTransferFee(
                       sourceChainName: 'moonbeam', destinationChainName: value.toLowerCase(), assetDenom: assetName, amountInDenom: 100000);
                 }
@@ -97,7 +97,7 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
               TextSpan(
                   text: 'Transfer fee from Moonbase via Axelar to $dropdownValue is: ${tasksServices.transferFee}',
                   style: const TextStyle(height: 1.8, fontWeight: FontWeight.bold)),
-            if (widget.object.tokenValues[0] < tasksServices.transferFee && dropdownValue != 'Moonbase')
+            if (widget.object.tokenBalanceValues[0] < tasksServices.transferFee && dropdownValue != 'Moonbase')
               const TextSpan(
                   text: '\nFunds stored in the contract are less \nthan Axelar transaction fee: ',
                   style: TextStyle(height: 1.8, fontWeight: FontWeight.bold, color: Colors.redAccent)),

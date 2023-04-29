@@ -9,8 +9,10 @@ class Task {
   late String repository;
   final List<dynamic> tags;
   final List<dynamic> tagsNFT;
-  final List<dynamic> symbols;
-  final List<dynamic> amounts;
+  final List<dynamic> tokenNames;
+  final List<dynamic> tokenContracts;
+  final List<dynamic> tokenIds;
+  final List<dynamic> tokenAmounts;
   final String taskState;
   final String auditState;
   final int rating;
@@ -23,8 +25,8 @@ class Task {
   final List<dynamic> auditors;
   final List<dynamic> messages;
   final EthereumAddress taskAddress;
-  final List<String> tokenNames;
-  final List<dynamic> tokenValues;
+  final List<String> tokenBalanceNames;
+  final List<dynamic> tokenBalanceValues;
   late bool justLoaded;
   final String transport;
 
@@ -37,8 +39,10 @@ class Task {
     required this.repository,
     required this.tags,
     required this.tagsNFT,
-    required this.symbols,
-    required this.amounts,
+    required this.tokenNames,
+    required this.tokenContracts,
+    required this.tokenIds,
+    required this.tokenAmounts,
     required this.taskState,
     required this.auditState,
     required this.rating,
@@ -51,8 +55,8 @@ class Task {
     required this.auditors,
     required this.messages,
     required this.taskAddress,
-    required this.tokenNames,
-    required this.tokenValues,
+    required this.tokenBalanceNames,
+    required this.tokenBalanceValues,
     required this.justLoaded,
     required this.transport,
   });

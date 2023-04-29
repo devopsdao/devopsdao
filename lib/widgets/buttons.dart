@@ -21,10 +21,10 @@ class _WithdrawButtonState extends State<WithdrawButton> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     // print(tasksServices.destinationChain);
-    if (widget.object.tokenValues[0] != 0) {
+    if (widget.object.tokenBalanceValues[0] != 0) {
       _buttonState = true;
-    } else if (widget.object.tokenValues[0] != 0) {
-      if (widget.object.tokenValues[0] > tasksServices.transferFee || tasksServices.destinationChain == 'Moonbase') {
+    } else if (widget.object.tokenBalanceValues[0] != 0) {
+      if (widget.object.tokenBalanceValues[0] > tasksServices.transferFee || tasksServices.destinationChain == 'Moonbase') {
         _buttonState = true;
       } else {
         _buttonState = false;

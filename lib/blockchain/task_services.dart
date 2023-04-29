@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:convert/convert.dart';
 // import 'dart:ffi';
 import 'dart:io';
 // import 'dart:js';
@@ -34,6 +35,9 @@ import 'abi/LayerzeroFacet.g.dart';
 import 'abi/WormholeFacet.g.dart';
 import 'abi/WitnetFacet.g.dart';
 // import 'abi/Wormhole.g.dart';
+import 'abi/IERC165.g.dart';
+import 'abi/IERC1155.g.dart';
+import 'abi/IERC721.g.dart';
 import 'abi/IERC20.g.dart';
 import 'accounts.dart';
 import 'classes.dart';
@@ -167,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -326,7 +330,7 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 4002;
+      chainId = 1287;
     }
 
     isDeviceConnected = false;
@@ -1147,8 +1151,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1511,8 +1515,10 @@ class TasksServices extends ChangeNotifier {
           repository: task[5],
           tags: task[6],
           tagsNFT: task[7],
-          symbols: task[8],
-          amounts: task[9],
+          tokenNames: task[0][8],
+          tokenContracts: task[0][9],
+          tokenIds: task[0][10],
+          tokenAmounts: task[0][11],
           taskState: task[10],
           auditState: task[11],
           rating: task[12].toInt(),
@@ -1526,8 +1532,8 @@ class TasksServices extends ChangeNotifier {
           messages: task[20],
           taskAddress: taskAddress,
           justLoaded: true,
-          tokenNames: ['ETH'],
-          tokenValues: [ethBalancePrecise],
+          tokenBalanceNames: ['ETH'],
+          tokenBalanceValues: [ethBalancePrecise],
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[9] == transportAxelarAdr || task[9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1547,6 +1553,7 @@ class TasksServices extends ChangeNotifier {
         final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
         tokenValues.add(ethBalanceToken);
       }
+
       // print('Task loaded: ${task.title}');
       var taskObject = Task(
           // nanoId: task[0],
@@ -1558,23 +1565,25 @@ class TasksServices extends ChangeNotifier {
           repository: task[0][5],
           tags: task[0][6],
           tagsNFT: task[0][7],
-          symbols: task[0][8],
-          amounts: task[0][9],
-          taskState: task[0][10],
-          auditState: task[0][11],
-          rating: task[0][12].toInt(),
-          contractOwner: task[0][13],
-          performer: task[0][14],
-          auditInitiator: task[0][15],
-          auditor: task[0][16],
-          participants: task[0][17],
-          funders: task[0][18],
-          auditors: task[0][19],
-          messages: task[0][20],
+          tokenNames: task[0][8],
+          tokenContracts: task[0][9],
+          tokenIds: task[0][10],
+          tokenAmounts: task[0][11],
+          taskState: task[0][12],
+          auditState: task[0][13],
+          rating: task[0][14].toInt(),
+          contractOwner: task[0][15],
+          performer: task[0][16],
+          auditInitiator: task[0][17],
+          auditor: task[0][18],
+          participants: task[0][19],
+          funders: task[0][20],
+          auditors: task[0][21],
+          messages: task[0][22],
           taskAddress: taskAddresses[i],
           justLoaded: true,
-          tokenNames: task[1].cast<String>(),
-          tokenValues: tokenValues,
+          tokenBalanceNames: task[1].cast<String>(),
+          tokenBalanceValues: tokenValues,
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1664,8 +1673,8 @@ class TasksServices extends ChangeNotifier {
       fundersList.addAll(task.funders);
       auditorList.add(task.auditor);
       auditorsList.addAll(task.auditors);
-      tokenNamesList.add(task.tokenNames);
-      tokenValuesList.add(task.tokenValues);
+      tokenNamesList.add(task.tokenBalanceNames);
+      tokenValuesList.add(task.tokenBalanceValues);
     }
 
     // tagsList.map((e) {
@@ -1720,6 +1729,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Task> loadOneTask(taskAddress) async {
+    print('loadOneTask start');
+    print(taskAddress);
     if (tasks.containsKey(taskAddress)) {
       return tasks[taskAddress]!;
     } else {
@@ -1729,8 +1740,8 @@ class TasksServices extends ChangeNotifier {
       tasks[taskAddress] = tasksTemp[taskAddress]!;
       refreshTask(tasks[taskAddress]!);
 
-      // print(tasks[taskAddress]!);
-      // print('loadOneTask end');
+      print(tasks[taskAddress]!);
+      print('loadOneTask end');
 
       return tasks[taskAddress]!;
     }
@@ -1740,9 +1751,9 @@ class TasksServices extends ChangeNotifier {
     // Who participate in the TASK:
     if (task.performer == publicAddress) {
       // Calculate Pending among:
-      if ((task.tokenValues[0] != 0 || task.tokenValues[0] != 0)) {
+      if ((task.tokenBalanceValues[0] != 0 || task.tokenBalanceValues[0] != 0)) {
         if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
-          final double ethBalancePreciseToken = task.tokenValues[0].toDouble() / pow(10, 18);
+          final double ethBalancePreciseToken = task.tokenBalanceValues[0].toDouble() / pow(10, 18);
           final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
           pendingBalance = pendingBalance! + ethBalanceToken;
           pendingBalanceToken = pendingBalanceToken! + 0;
@@ -2369,15 +2380,41 @@ class TasksServices extends ChangeNotifier {
         creds = credentials;
         senderAddress = publicAddress;
       }
+      int historicalBlocks = 10;
+      if (hardhatDebug || hardhatLive) {
+        historicalBlocks = 1;
+      }
+      final fees = await _web3client.getGasInEIP1559(historicalBlocks);
+      // final gasPrice = await _web3client.getGasPrice();
+
       final transaction = Transaction(
           from: senderAddress,
-          gasPrice: fees['medium'].gasPrice,
-          maxFeePerGas: fees['medium'].maxFeePerGas,
-          maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+          // gasPrice: gasPrice,
+          maxFeePerGas: fees['medium']?.maxFeePerGas,
+          maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas);
 
       // List<String> tags = [];
-      List<String> symbols = [taskTokenSymbol];
-      List<BigInt> amounts = [BigInt.from(0)];
+      List<String> tokenNames = [taskTokenSymbol];
+      List<EthereumAddress> tokenContracts = [_contractAddress];
+      List<List<BigInt>> tokenIds = [
+        [BigInt.from(0)]
+      ];
+      List<List<BigInt>> tokenAmounts = [
+        [BigInt.from(0)]
+      ];
+
+      for (var i = 0; i < tokenContracts.length; i++) {
+        var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        //check if ERC-1155
+        var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
+        var supportsInterface = await ierc165.supportsInterface(interfaceID);
+        if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
+          var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+          if (ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
+            ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds);
+          }
+        }
+      }
       // late TaskData taskData =
       //     new TaskData(nanoId: nanoId, taskType: taskType, title: title, description: description, symbols: symbols, amounts: amounts);
 
@@ -2388,8 +2425,10 @@ class TasksServices extends ChangeNotifier {
         "description": description,
         "repository": repository,
         "tags": tags,
-        "symbols": symbols,
-        "amounts": amounts
+        "tokenNames": tokenNames,
+        "tokenContracts": tokenContracts,
+        "tokenIds": tokenIds,
+        "tokenAmounts": tokenAmounts
       };
 
       if (taskTokenSymbol == 'ETH') {
@@ -2462,8 +2501,8 @@ class TasksServices extends ChangeNotifier {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
     } else {
       creds = credentials;
       senderAddress = publicAddress;
@@ -2820,7 +2859,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> createNft(String uri, String name, bool isNF) async {
-    // print('createNft');
+    print('createNft');
     // uri - exmple.com
     // isNF - fungible or nonfungible
     transactionStatuses['createNFT'] = {
@@ -2842,12 +2881,11 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
     transactionStatuses['createNFT']!['createNFT']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'createNFT', 'createNFT');
     return txn;
   }
 
   Future<String> mintFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
-    // print('mintFungibleByName');
+    print('mintFungibleByName');
     transactionStatuses['mintFungible'] = {
       'mintFungible': {'status': 'pending', 'txn': 'initial'}
     };
@@ -2867,12 +2905,11 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
     transactionStatuses['mintFungible']!['mintFungible']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'mintFungible', 'mintFungible');
     return txn;
   }
 
   Future<String> mintNonFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
-    // print('mintNonFungibleByName');
+    print('mintNonFungibleByName');
     transactionStatuses['mintNonFungible'] = {
       'mintNonFungible': {'status': 'pending', 'txn': 'initial'}
     };
@@ -2892,7 +2929,6 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'mintNonFungible', 'mintNonFungible');
     return txn;
   }
 
@@ -2931,9 +2967,6 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> postWitnetRequest(EthereumAddress taskAddress) async {
-    transactionStatuses['postWitnetRequest'] = {
-      'postWitnetRequest': {'status': 'pending', 'txn': 'initial'}
-    };
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2950,10 +2983,6 @@ class TasksServices extends ChangeNotifier {
     // BigInt appId = BigInt.from(100);
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
     String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
-    transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['status'] = 'confirmed';
-    transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['txn'] = txn;
-    notifyListeners();
-    tellMeHasItMined(txn, 'postWitnetRequest', 'postWitnetRequest');
     return txn;
   }
 
@@ -3044,6 +3073,29 @@ class TasksServices extends ChangeNotifier {
     transferFee = transferFeeDenum / 1000000;
 
     notifyListeners();
+  }
+
+  Uint8List convertStringToUint8List(String str) {
+    final List<int> codeUnits = str.codeUnits;
+    final Uint8List unit8List = Uint8List.fromList(codeUnits);
+
+    return unit8List;
+  }
+
+  Uint8List hexToUint8List(String hex) {
+    if (hex.length % 2 != 0) {
+      throw 'Odd number of hex digits';
+    }
+    var l = hex.length ~/ 2;
+    var result = Uint8List(l);
+    for (var i = 0; i < l; ++i) {
+      var x = int.parse(hex.substring(2 * i, 2 * (i + 1)), radix: 16);
+      if (x.isNaN) {
+        throw 'Expected hex string';
+      }
+      result[i] = x;
+    }
+    return result;
   }
 
   Future<void> myNotifyListeners() async {

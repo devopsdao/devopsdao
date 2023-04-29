@@ -126,14 +126,8 @@
       {
         "indexed": false,
         "internalType": "string[]",
-        "name": "_symbol",
+        "name": "_tokenName",
         "type": "string[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256[]",
-        "name": "_amount",
-        "type": "uint256[]"
       }
     ],
     "name": "TaskContractCreating",
