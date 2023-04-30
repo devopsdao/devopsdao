@@ -111,14 +111,3 @@ class InterfaceServices extends ChangeNotifier {
   final double maxStaticInternalDialogWidth = 480;
   final double maxStaticGlobalWidth = 1000;
 }
-
-
-// class TagsValueController extends ValueNotifier{
-//   TagsValueController(List<SimpleTags>super.value);
-//
-//   void addTag(SimpleTags val) {
-//     value.add(val);
-//     print(value.first.name);
-//     notifyListeners();
-//   }
-// }

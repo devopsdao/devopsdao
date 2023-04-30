@@ -869,7 +869,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   child: const Text('Pull request link: '),
                                 ),
                                 Builder(builder: (context) {
-                                  final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
+                                  final Uri toLaunch = Uri.parse(widget.task.repository);
+                                  // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
                                   return Container(
                                     padding: const EdgeInsets.all(8.0),
                                     alignment: Alignment.topLeft,
@@ -1034,12 +1035,15 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 ),
 
               // ********* GitHub pull/request Link Information ************ //
-              if (((interface.dialogCurrentState['name'] == 'customer-new' ||
-                          interface.dialogCurrentState['name'] == 'customer-progress' ||
-                          // interface.dialogCurrentState['name'] == 'performer-new' ||
-                          interface.dialogCurrentState['name'] == 'performer-agreed') &&
-                      widget.task.repository.isNotEmpty) ||
-                  tasksServices.hardhatDebug == true)
+              if (((
+                  interface.dialogCurrentState['name'] == 'customer-new' ||
+                  interface.dialogCurrentState['name'] == 'customer-progress' ||
+                  interface.dialogCurrentState['name'] == 'customer-agreed' ||
+                  // interface.dialogCurrentState['name'] == 'performer-new' ||
+                  interface.dialogCurrentState['name'] == 'performer-agreed') &&
+                    widget.task.repository.isNotEmpty) ||
+                    tasksServices.hardhatDebug == true
+              )
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
