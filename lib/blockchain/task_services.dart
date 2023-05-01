@@ -1530,8 +1530,7 @@ class TasksServices extends ChangeNotifier {
           messages: task[20],
           taskAddress: taskAddress,
           justLoaded: true,
-          tokenBalanceNames: ['ETH'],
-          tokenBalanceValues: [ethBalancePrecise],
+          tokenBalances: [ethBalancePrecise],
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[9] == transportAxelarAdr || task[9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1580,8 +1579,7 @@ class TasksServices extends ChangeNotifier {
           messages: task[0][22],
           taskAddress: taskAddresses[i],
           justLoaded: true,
-          tokenBalanceNames: task[1].cast<String>(),
-          tokenBalanceValues: tokenValues,
+          tokenBalances: tokenValues,
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1671,8 +1669,8 @@ class TasksServices extends ChangeNotifier {
       fundersList.addAll(task.funders);
       auditorList.add(task.auditor);
       auditorsList.addAll(task.auditors);
-      tokenNamesList.add(task.tokenBalanceNames);
-      tokenValuesList.add(task.tokenBalanceValues);
+      // tokenNamesList.add(task.tokenBalanceNames);
+      tokenValuesList.add(task.tokenBalances);
     }
 
     // tagsList.map((e) {
@@ -1749,9 +1747,9 @@ class TasksServices extends ChangeNotifier {
     // Who participate in the TASK:
     if (task.performer == publicAddress) {
       // Calculate Pending among:
-      if ((task.tokenBalanceValues[0] != 0 || task.tokenBalanceValues[0] != 0)) {
+      if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0)) {
         if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
-          final double ethBalancePreciseToken = task.tokenBalanceValues[0].toDouble() / pow(10, 18);
+          final double ethBalancePreciseToken = task.tokenBalances[0].toDouble() / pow(10, 18);
           final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
           pendingBalance = pendingBalance! + ethBalanceToken;
           pendingBalanceToken = pendingBalanceToken! + 0;

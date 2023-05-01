@@ -90,9 +90,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string[]",
+        "internalType": "string[][]",
         "name": "_tokenNames",
-        "type": "string[]"
+        "type": "string[][]"
       }
     ],
     "name": "TaskContractCreating",
@@ -292,9 +292,9 @@
             "type": "string[]"
           },
           {
-            "internalType": "string[]",
+            "internalType": "string[][]",
             "name": "tokenNames",
-            "type": "string[]"
+            "type": "string[][]"
           },
           {
             "internalType": "address[]",

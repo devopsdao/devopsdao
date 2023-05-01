@@ -39,9 +39,9 @@
             "type": "string[]"
           },
           {
-            "internalType": "string[]",
+            "internalType": "string[][]",
             "name": "tokenNames",
-            "type": "string[]"
+            "type": "string[][]"
           },
           {
             "internalType": "address[]",
@@ -183,9 +183,9 @@
             "type": "uint256[]"
           },
           {
-            "internalType": "string[]",
+            "internalType": "string[][]",
             "name": "tokenNames",
-            "type": "string[]"
+            "type": "string[][]"
           },
           {
             "internalType": "address[]",

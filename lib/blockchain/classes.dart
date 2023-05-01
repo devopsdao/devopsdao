@@ -25,8 +25,7 @@ class Task {
   final List<dynamic> auditors;
   final List<dynamic> messages;
   final EthereumAddress taskAddress;
-  final List<String> tokenBalanceNames;
-  final List<dynamic> tokenBalanceValues;
+  final List<dynamic> tokenBalances;
   late bool justLoaded;
   final String transport;
 
@@ -55,8 +54,7 @@ class Task {
     required this.auditors,
     required this.messages,
     required this.taskAddress,
-    required this.tokenBalanceNames,
-    required this.tokenBalanceValues,
+    required this.tokenBalances,
     required this.justLoaded,
     required this.transport,
   });

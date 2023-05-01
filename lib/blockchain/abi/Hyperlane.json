@@ -116,9 +116,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string[]",
-        "name": "_tokenName",
-        "type": "string[]"
+        "internalType": "string[][]",
+        "name": "_tokenNames",
+        "type": "string[][]"
       }
     ],
     "name": "TaskContractCreating",

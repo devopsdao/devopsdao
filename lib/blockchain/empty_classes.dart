@@ -32,8 +32,7 @@ class EmptyClasses extends ChangeNotifier {
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
       justLoaded: true,
-      tokenBalanceNames: [],
-      tokenBalanceValues: [],
+      tokenBalances: [],
       transport: '');
 
   final emptyTask = Task(
@@ -62,8 +61,7 @@ class EmptyClasses extends ChangeNotifier {
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
       justLoaded: true,
-      tokenBalanceNames: [],
-      tokenBalanceValues: [],
+      tokenBalances: [],
       transport: '');
 
   final loadingAccount = Account(
