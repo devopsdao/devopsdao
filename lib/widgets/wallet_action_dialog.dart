@@ -55,7 +55,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     final String? status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
     final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
 
-    if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH') {
+    if (widget.taskName == 'createTaskContract' && tasksServices.isRequestApproved) {
       if (status == 'pending') {
         if (tokenApproved == 'initial') {
           transactionStagesApprove = 'loading';
@@ -89,9 +89,10 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else
 
-    if (widget.taskName == 'createNFT') {
+      tasksServices.isRequestApproved = false;
+      
+    } else if (widget.taskName == 'createNFT') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
@@ -107,9 +108,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else
-
-    if (widget.taskName == 'mintNonFungible') {
+    } else if (widget.taskName == 'mintNonFungible') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
@@ -125,9 +124,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else
-
-    if (widget.taskName == 'postWitnetRequest') {
+    } else if (widget.taskName == 'postWitnetRequest') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
@@ -143,10 +140,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    }
-
-
-    else  {
+    } else  {
       if (status == 'pending') {
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';
@@ -328,25 +322,25 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                                           )),
                                       if (transactionStagesApprove == 'initial')
                                         Text(
-                                          'Please approve access',
+                                          'Please approve token spend',
                                           style: Theme.of(context).textTheme.bodyMedium,
                                           textAlign: TextAlign.left,
                                         ),
                                       if (transactionStagesApprove == 'loading')
                                         Text(
-                                          'Please approve access',
+                                          'Please approve token spend',
                                           style: Theme.of(context).textTheme.bodyMedium,
                                           textAlign: TextAlign.left,
                                         ),
                                       if (transactionStagesApprove == 'approve')
                                         Text(
-                                          'Token access approved',
+                                          'Token spend approved',
                                           style: Theme.of(context).textTheme.bodyMedium,
                                           textAlign: TextAlign.left,
                                         ),
                                       if (transactionStagesApprove == 'done')
                                         Text(
-                                          'Token access approved',
+                                          'Token spend approved',
                                           style: Theme.of(context).textTheme.bodyMedium,
                                           textAlign: TextAlign.left,
                                         ),
