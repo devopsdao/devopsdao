@@ -200,9 +200,9 @@
                 "type": "uint256[]"
               },
               {
-                "internalType": "string[]",
+                "internalType": "string[][]",
                 "name": "tokenNames",
-                "type": "string[]"
+                "type": "string[][]"
               },
               {
                 "internalType": "address[]",
@@ -317,14 +317,9 @@
             "type": "tuple"
           },
           {
-            "internalType": "string[]",
-            "name": "tokenNames",
-            "type": "string[]"
-          },
-          {
-            "internalType": "uint256[]",
+            "internalType": "uint256[][]",
             "name": "tokenBalances",
-            "type": "uint256[]"
+            "type": "uint256[][]"
           }
         ],
         "internalType": "struct TaskWithBalance[]",

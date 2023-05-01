@@ -596,10 +596,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   RichText(
                                       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                                     TextSpan(
-                                      text: '${task.tokenBalanceValues[0]} ${tasksServices.chainTicker} \n',
+                                      text: '${task.tokenBalances[0]} ${tasksServices.chainTicker} \n',
                                     ),
                                     TextSpan(
-                                      text: '${task.tokenBalanceValues[0]} USDC',
+                                      text: '${task.tokenBalances[0]} USDC',
                                     )
                                   ])),
                                 ],
@@ -1036,15 +1036,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 ),
 
               // ********* GitHub pull/request Link Information ************ //
-              if (((
-                  interface.dialogCurrentState['name'] == 'customer-new' ||
-                  interface.dialogCurrentState['name'] == 'customer-progress' ||
-                  interface.dialogCurrentState['name'] == 'customer-agreed' ||
-                  // interface.dialogCurrentState['name'] == 'performer-new' ||
-                  interface.dialogCurrentState['name'] == 'performer-agreed') &&
-                    widget.task.repository.isNotEmpty) ||
-                    tasksServices.hardhatDebug == true
-              )
+              if (((interface.dialogCurrentState['name'] == 'customer-new' ||
+                          interface.dialogCurrentState['name'] == 'customer-progress' ||
+                          interface.dialogCurrentState['name'] == 'customer-agreed' ||
+                          // interface.dialogCurrentState['name'] == 'performer-new' ||
+                          interface.dialogCurrentState['name'] == 'performer-agreed') &&
+                      widget.task.repository.isNotEmpty) ||
+                  tasksServices.hardhatDebug == true)
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -1137,7 +1135,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
-              if ((task.tokenBalanceValues[0] != 0 || task.tokenBalanceValues[0] != 0) &&
+              if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0) &&
                   (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
                 // if (task.taskState == 'completed' &&
                 //     (fromPage == 'performer' ||

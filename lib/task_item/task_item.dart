@@ -234,11 +234,11 @@ class _TaskItemState extends State<TaskItem> {
                         ),
                       ),
                       // Spacer(),
-                      if (task.tokenBalanceValues[0] != 0)
+                      if (task.tokenBalances[0] != 0)
                         Expanded(
                           flex: 3,
                           child: Text(
-                            '${task.tokenBalanceValues[0]} ${tasksServices.chainTicker}',
+                            '${task.tokenBalances[0]} ${tasksServices.chainTicker}',
                             style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
                             softWrap: false,
                             overflow: TextOverflow.fade,
@@ -258,7 +258,7 @@ class _TaskItemState extends State<TaskItem> {
                       //       textAlign: TextAlign.end,
                       //     ),
                       //   ),
-                      if (task.tokenBalanceValues[0] == 0 && task.tokenBalanceValues[0] == 0)
+                      if (task.tokenBalances[0] == 0 && task.tokenBalances[0] == 0)
                         Expanded(
                           flex: 3,
                           child: Text(
