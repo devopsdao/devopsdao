@@ -2359,7 +2359,17 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> tags) async {
+  Future<void> createTaskContract(
+        String title,
+        String description,
+        String repository,
+        double price,
+        String nanoId,
+        List<String> bunchOfTokenNames,
+        List<String> tags,
+        List<BigInt> nfts,
+        List<BigInt> amounts
+      ) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -2392,13 +2402,13 @@ class TasksServices extends ChangeNotifier {
           maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas);
 
       // List<String> tags = [];
-      List<String> tokenNames = [taskTokenSymbol];
+      List<String> tokenNames = bunchOfTokenNames;
       List<EthereumAddress> tokenContracts = [_contractAddress];
       List<List<BigInt>> tokenIds = [
-        [BigInt.from(0)]
+        nfts
       ];
       List<List<BigInt>> tokenAmounts = [
-        [BigInt.from(0)]
+        amounts
       ];
 
       for (var i = 0; i < tokenContracts.length; i++) {
