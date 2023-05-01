@@ -2419,7 +2419,7 @@ class TasksServices extends ChangeNotifier {
         if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
           var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
           if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
-            await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds);
+            await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
           }
         }
       }
