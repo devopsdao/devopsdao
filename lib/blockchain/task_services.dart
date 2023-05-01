@@ -171,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -2493,7 +2493,7 @@ class TasksServices extends ChangeNotifier {
         } else if ((!allowedChainIds.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
           txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
         } else {
-          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+          txn = await taskCreateFacet.1createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
         }
       } else if (taskTokenSymbol == 'USDC') {
         await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);

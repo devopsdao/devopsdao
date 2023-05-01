@@ -91,7 +91,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       }
 
       tasksServices.isRequestApproved = false;
-      
+
     } else if (widget.taskName == 'createNFT') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
