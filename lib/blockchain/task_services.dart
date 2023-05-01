@@ -2391,17 +2391,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(
-        String title,
-        String description,
-        String repository,
-        double price,
-        String nanoId,
-        List<String> bunchOfTokenNames,
-        List<String> tags,
-        List<BigInt> nfts,
-        List<BigInt> amounts
-      ) async {
+  Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> bunchOfTokenNames,
+      List<String> tags, List<BigInt> nfts, List<BigInt> amounts) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -2428,21 +2419,17 @@ class TasksServices extends ChangeNotifier {
       // final gasPrice = await _web3client.getGasPrice();
 
       final transaction = Transaction(
-          from: senderAddress,
-          // gasPrice: gasPrice,
-          // maxFeePerGas: fees['medium']?.maxFeePerGas,
-          // maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas
+        from: senderAddress,
+        // gasPrice: gasPrice,
+        // maxFeePerGas: fees['medium']?.maxFeePerGas,
+        // maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas
       );
 
       // List<String> tags = [];
-      List<String> tokenNames = bunchOfTokenNames;
+      List<List<String>> tokenNames = [bunchOfTokenNames];
       List<EthereumAddress> tokenContracts = [_contractAddress];
-      List<List<BigInt>> tokenIds = [
-        nfts
-      ];
-      List<List<BigInt>> tokenAmounts = [
-        amounts
-      ];
+      List<List<BigInt>> tokenIds = [nfts];
+      List<List<BigInt>> tokenAmounts = [amounts];
 
       for (var i = 0; i < tokenContracts.length; i++) {
         var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
@@ -2452,8 +2439,6 @@ class TasksServices extends ChangeNotifier {
         if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
           var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
           if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
-
-
             isRequestApproved = true;
             await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
           }
