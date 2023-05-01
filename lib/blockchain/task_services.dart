@@ -2392,7 +2392,9 @@ class TasksServices extends ChangeNotifier {
           maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas);
 
       // List<String> tags = [];
-      List<String> tokenNames = [taskTokenSymbol];
+      List<List<String>> tokenNames = [
+        [taskTokenSymbol]
+      ];
       List<EthereumAddress> tokenContracts = [_contractAddress];
       List<List<BigInt>> tokenIds = [
         [BigInt.from(0)]
@@ -2408,8 +2410,8 @@ class TasksServices extends ChangeNotifier {
         var supportsInterface = await ierc165.supportsInterface(interfaceID);
         if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
           var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-          if (ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
-            ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds);
+          if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
+            await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds);
           }
         }
       }
