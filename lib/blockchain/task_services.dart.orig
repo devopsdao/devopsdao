@@ -2402,7 +2402,13 @@ class TasksServices extends ChangeNotifier {
           maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas);
 
       // List<String> tags = [];
+<<<<<<< HEAD
       List<String> tokenNames = bunchOfTokenNames;
+=======
+      List<List<String>> tokenNames = [
+        [taskTokenSymbol]
+      ];
+>>>>>>> 97c19d704d3202e33c028f7608c7ac5ce78469e8
       List<EthereumAddress> tokenContracts = [_contractAddress];
       List<List<BigInt>> tokenIds = [
         nfts
