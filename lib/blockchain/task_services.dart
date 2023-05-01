@@ -1170,6 +1170,7 @@ class TasksServices extends ChangeNotifier {
     await myBalance();
     await Future.delayed(const Duration(milliseconds: 200));
     await monitorEvents();
+    notifyListeners();
 
     List<EthereumAddress> accountsList = await getAccountsList();
     accountsData = await getAccountsData(accountsList);
@@ -1243,8 +1244,6 @@ class TasksServices extends ChangeNotifier {
         keyId++;
         return mapEnt;
       });
-
-      notifyListeners();
     }
   }
 
@@ -1319,7 +1318,6 @@ class TasksServices extends ChangeNotifier {
         // print('refreshed task: ${tasks[event.contractAdr]!.title}');
         // await myBalance();
         await monitorTaskEvents(event.contractAdr);
-        notifyListeners();
       } on GetTaskException {
         print('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
