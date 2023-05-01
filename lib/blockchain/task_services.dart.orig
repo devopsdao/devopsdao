@@ -171,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -1530,7 +1530,8 @@ class TasksServices extends ChangeNotifier {
           messages: task[20],
           taskAddress: taskAddress,
           justLoaded: true,
-          tokenBalances: [ethBalancePrecise],
+          tokenBalanceNames: ['ETH'],
+          tokenBalanceValues: [ethBalancePrecise],
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[9] == transportAxelarAdr || task[9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1579,7 +1580,8 @@ class TasksServices extends ChangeNotifier {
           messages: task[0][22],
           taskAddress: taskAddresses[i],
           justLoaded: true,
-          tokenBalances: tokenValues,
+          tokenBalanceNames: task[1].cast<String>(),
+          tokenBalanceValues: tokenValues,
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
@@ -1669,8 +1671,8 @@ class TasksServices extends ChangeNotifier {
       fundersList.addAll(task.funders);
       auditorList.add(task.auditor);
       auditorsList.addAll(task.auditors);
-      // tokenNamesList.add(task.tokenBalanceNames);
-      tokenValuesList.add(task.tokenBalances);
+      tokenNamesList.add(task.tokenBalanceNames);
+      tokenValuesList.add(task.tokenBalanceValues);
     }
 
     // tagsList.map((e) {
@@ -1747,9 +1749,9 @@ class TasksServices extends ChangeNotifier {
     // Who participate in the TASK:
     if (task.performer == publicAddress) {
       // Calculate Pending among:
-      if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0)) {
+      if ((task.tokenBalanceValues[0] != 0 || task.tokenBalanceValues[0] != 0)) {
         if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
-          final double ethBalancePreciseToken = task.tokenBalances[0].toDouble() / pow(10, 18);
+          final double ethBalancePreciseToken = task.tokenBalanceValues[0].toDouble() / pow(10, 18);
           final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
           pendingBalance = pendingBalance! + ethBalanceToken;
           pendingBalanceToken = pendingBalanceToken! + 0;
@@ -2356,40 +2358,6 @@ class TasksServices extends ChangeNotifier {
     print('mined');
   }
 
-  late bool isRequestApproved = false;
-
-  Future<void> isApproved() async {
-    var creds;
-    var senderAddress;
-    if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
-    } else {
-      creds = credentials;
-      senderAddress = publicAddress;
-    }
-    final transaction = Transaction(
-      from: senderAddress,
-    );
-
-    List<EthereumAddress> tokenContracts = [_contractAddress];
-
-    for (var i = 0; i < tokenContracts.length; i++) {
-      var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
-      //check if ERC-1155
-      var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
-      var supportsInterface = await ierc165.supportsInterface(interfaceID);
-      if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
-        var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
-          isRequestApproved = true;
-          await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-          notifyListeners();
-        }
-      }
-    }
-  }
-
   String taskTokenSymbol = 'ETH';
   Future<void> createTaskContract(
         String title,
@@ -2430,12 +2398,17 @@ class TasksServices extends ChangeNotifier {
       final transaction = Transaction(
           from: senderAddress,
           // gasPrice: gasPrice,
-          // maxFeePerGas: fees['medium']?.maxFeePerGas,
-          // maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas
-      );
+          maxFeePerGas: fees['medium']?.maxFeePerGas,
+          maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas);
 
       // List<String> tags = [];
+<<<<<<< HEAD
       List<String> tokenNames = bunchOfTokenNames;
+=======
+      List<List<String>> tokenNames = [
+        [taskTokenSymbol]
+      ];
+>>>>>>> 97c19d704d3202e33c028f7608c7ac5ce78469e8
       List<EthereumAddress> tokenContracts = [_contractAddress];
       List<List<BigInt>> tokenIds = [
         nfts
@@ -2452,10 +2425,7 @@ class TasksServices extends ChangeNotifier {
         if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
           var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
           if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
-
-
-            isRequestApproved = true;
-            await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+            await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds);
           }
         }
       }

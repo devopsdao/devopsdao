@@ -623,7 +623,28 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           // keyboardActive: keyboardSize == 0 ? false : true;
           callback: () {
             final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
-            final List<String> tags = searchServices.createTagsList.entries.map((tags) => tags.value.name).toList();
+            final List<String> tags = [];
+            final List<BigInt> nfts = [];
+            final List<BigInt> amounts = [];
+
+            for (var e in searchServices.createTagsList.entries) {
+              for (var e2 in e.value.bunch.entries) {
+                if (e2.value.nft) {
+                  nfts.add(e2.key);
+                  amounts.add(BigInt.from(1));
+                } else {
+                  tags.add(e.value.name);
+                }
+              }
+            }
+
+            final List<String> tokenNames = [];
+            if (interface.tokensEntered != 0) {
+              tokenNames.add(tasksServices.taskTokenSymbol);
+            }
+            if (nfts.isNotEmpty) {
+              tokenNames.add('dodao');
+            }
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
@@ -631,7 +652,11 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 // valueController!.text,
                 interface.tokensEntered,
                 nanoId,
-                tags);
+                tokenNames,
+                tags,
+                nfts,
+                amounts
+            );
             Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,
