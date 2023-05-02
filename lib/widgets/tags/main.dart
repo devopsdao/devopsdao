@@ -596,7 +596,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
               callback: () {
-                searchServices.updateTagListOnTasksPages(page: widget.page, initial: false);
+                searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
                 if (widget.page == 'audit') {
                   if (widget.tabIndex == 0) {
                     tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,

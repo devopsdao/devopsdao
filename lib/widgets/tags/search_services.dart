@@ -93,7 +93,7 @@ class SearchServices extends ChangeNotifier {
     // after remove from actual list, we need to reset mintPageFilterResults to false
     selectionPageFilterResults[tagKey]!.selected = false;
     notifyListeners();
-    // updateTagListOnTasksPages(page: page, initial: false);
+    // selectTagListOnTasksPages(page: page, initial: false);
   }
 
   Future removeAllTagsOnPages({required String page}) async {
@@ -111,7 +111,7 @@ class SearchServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateTagListOnTasksPages({required String page, required bool initial}) async {
+  Future selectTagListOnTasksPages({required String page, required bool initial}) async {
     // we add default "defaultTagAddNew" button that is displayed on task pages.
     // "Initial" means that we do not want to update the lists if they have not
     // been changed. Since we have only one "mintPageFilterResults", we must avoid
@@ -130,30 +130,30 @@ class SearchServices extends ChangeNotifier {
 
     // exclude create(add new task) page to add # tag:
     if (page != 'create') { list = defaultTagAddNew; }
+
     selectionPageFilterResults.entries.map((e) {
       // ...TagsList store tags on pages, it is ok to pass only first value from bunch
       if (e.value.selected) {
-        if (page == 'create') {
-          // final Map<BigInt, SimpleTags> nft = {};
-          // for (var e2 in e.value.bunch.entries) {
-          //   if (e2.value.selected) {
-          //     nft[e2.key] = e2.value;
-          //   }
-          // }
-          //
-          // list[e.key]!.bunch.clear();
-          // list[e.key]!.bunch = nft;
+        // final Map<BigInt, SimpleTags> nft = {};
+        // for (var e2 in e.value.bunch.entries) {
+        //   if (e2.value.selected) {
+        //     nft[e2.key] = e2.value;
+        //   }
+        // }
+        //
+        // list[e.key]!.bunch.clear();
+        // list[e.key]!.bunch = nft;
 
-          // check if bunch has selected item (nft) then add this bunch
-          late bool selected = false;
-          for (SimpleTags nft in e.value.bunch.values) {
-            selected = nft.selected;
-          }
-          if (selected) {
+        // loop "bunch" for selected items
+        for (SimpleTags n in e.value.bunch.values) {
+          // only NFTs has
+          if (n.nft) {
+            if (n.selected) {
+              list[e.key] = e.value;
+            }
+          } else {
             list[e.key] = e.value;
           }
-        } else {
-          list[e.key] = e.value;
         }
       }
     }).toList();
@@ -426,42 +426,49 @@ class SearchServices extends ChangeNotifier {
     for (MapEntry<String, NftTagsBunch> e in selectionPageFilterResults.entries) {
       final Map<BigInt, SimpleTags> bunch = e.value.bunch;
 
-
-
       // tag bunch has Nft?
       if (bunch.values.first.nft) {
         // print('name(tag key): ${e.key}, tag selected: ${e.value.selected}');
-        for (var val in bunch.values) {
+        for (var v in bunch.values) {
           // print('nft name: ${val.name}, nft in bunch selected: ${val.selected}');
           // tag bunch has selected Nft?
-          if (val.selected) {
+          if (v.selected) {
             nftSelected = true;
           }
           // unselect all nfts if tag going to unselect:
           if (tagKey == e.key) {
             if (e.value.selected) {
-              val.selected = false;
+              v.selected = false;
             }
           }
-
         }
         // select or unselect tapped Tag:
         if (e.value.name == tagName) {
-          e.value.selected ? e.value.selected = false : e.value.selected = true;
+
+          if (bunch.values.length < 2 && !e.value.selected) {
+            e.value.selected = true;
+            e.value.bunch.values.first.selected = true;
+            // nftSelected = true;
+          } else {
+            e.value.selected ? e.value.selected = false : e.value.selected = true;
+          }
         }
 
         // unselect other tags(except with nft selected):
         if (e.value.name != tagName && !nftSelected) {
-          print('nftSelected: $nftSelected, e.value.name ${e.value.name}');
+          // print('nftSelected: $nftSelected, e.value.name ${e.value.name}');
           e.value.selected = false;
           nftSelected = false;
+
         }
 
         if (unselectAll) {
-          if (e.value.selected) {
+          if (e.value.selected && !nftSelected) {
             e.value.selected = false;
           }
         }
+
+
         // if (e.value.selected && e.value.name == tagName) {
         //   e.value.selected = false;
         // } else if (!e.value.selected && e.value.name == tagName){

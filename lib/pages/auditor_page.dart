@@ -73,7 +73,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
     // init customerTagsList to show tag '+' button:
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var searchServices = context.read<SearchServices>();
-      searchServices.updateTagListOnTasksPages(page: 'auditor', initial: true);
+      searchServices.selectTagListOnTasksPages(page: 'auditor', initial: true);
     });
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});

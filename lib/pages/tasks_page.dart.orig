@@ -63,7 +63,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     // init customerTagsList to show tag '+' button:
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var searchServices = context.read<SearchServices>();
-      searchServices.updateTagListOnTasksPages(page: 'tasks', initial: true);
+      searchServices.selectTagListOnTasksPages(page: 'tasks', initial: true);
     });
   }
 

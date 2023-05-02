@@ -639,9 +639,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             }
 
             final List<String> tokenNames = [];
-            if (interface.tokensEntered != 0) {
+            // if (interface.tokensEntered != 0) {
               tokenNames.add(tasksServices.taskTokenSymbol);
-            }
+            // }
             if (nfts.isNotEmpty) {
               tokenNames.add('dodao');
             }

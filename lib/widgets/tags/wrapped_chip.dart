@@ -591,6 +591,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                           //   item: widget.item,
                           //   frameHeight: 300,
                           // );
+                          searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
                           collectionServices.updateTreasuryNft(searchServices.selectionPageFilterResults[tagKey]!);
                         } : null,
                         child: Opacity(

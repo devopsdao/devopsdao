@@ -68,7 +68,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
     // init customerTagsList to show tag '+' button:
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var searchServices = context.read<SearchServices>();
-      searchServices.updateTagListOnTasksPages(page: 'performer', initial: true);
+      searchServices.selectTagListOnTasksPages(page: 'performer', initial: true);
     });
 
   }
