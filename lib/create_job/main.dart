@@ -634,6 +634,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   amounts.add(BigInt.from(1));
                 } else {
                   tags.add(e.value.name);
+                  amounts.add(BigInt.from(0));
                 }
               }
             }
