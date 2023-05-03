@@ -171,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -1545,7 +1545,7 @@ class TasksServices extends ChangeNotifier {
     late int i = 0;
     for (final task in rawTasksList) {
       List<double> tokenValues = [];
-      for (final tokenValueRaw in task[2]) {
+      for (final tokenValueRaw in task[1]) {
         final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
         final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
         tokenValues.add(ethBalanceToken);
