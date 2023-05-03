@@ -1530,7 +1530,7 @@ class TasksServices extends ChangeNotifier {
           messages: task[20],
           taskAddress: taskAddress,
           justLoaded: true,
-          tokenBalances: [ethBalancePrecise],
+          tokenBalances: [ethBalanceToken],
 
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[9] == transportAxelarAdr || task[9] == transportHyperlaneAdr) ? task[9] : '');
