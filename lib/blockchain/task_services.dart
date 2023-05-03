@@ -1151,8 +1151,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1545,10 +1545,10 @@ class TasksServices extends ChangeNotifier {
     late int i = 0;
     for (final task in rawTasksList) {
       List<double> tokenValues = [];
-      for (final tokenValueRaw in task[2]) {
-        final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
-        final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-        tokenValues.add(ethBalanceToken);
+      for (final tokenValueRaw in task[1]) {
+        // final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
+        // final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+        // tokenValues.add(ethBalanceToken);
       }
 
       // print('Task loaded: ${task.title}');
