@@ -1549,7 +1549,7 @@ class TasksServices extends ChangeNotifier {
         for (final tokenValueRaw in tokenBalances) {
           final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
           final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-          tokenValues.add(ethBalanceToken);
+          tokenValues.add(ethBalancePreciseToken);
         }
       }
 
