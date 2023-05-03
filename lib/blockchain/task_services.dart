@@ -1545,10 +1545,12 @@ class TasksServices extends ChangeNotifier {
     late int i = 0;
     for (final task in rawTasksList) {
       List<double> tokenValues = [];
-      for (final tokenValueRaw in task[1]) {
-        final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
-        final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-        tokenValues.add(ethBalanceToken);
+      for (final tokenBalances in task[1]) {
+        for (final tokenValueRaw in tokenBalances) {
+          final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
+          final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+          tokenValues.add(ethBalanceToken);
+        }
       }
 
       // print('Task loaded: ${task.title}');
