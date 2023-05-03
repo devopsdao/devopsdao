@@ -678,8 +678,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: LayoutBuilder(builder: (context, constraints) {
-                            final double width = constraints.maxWidth - 66;
-                            print (task.tokenIds);
+                            final double width = constraints.maxWidth - 66; 
+                            // print (task.tokenBalances);
                             List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
 
                             if (tags.isNotEmpty) {
