@@ -91,12 +91,6 @@
         "internalType": "string[]",
         "name": "_tags",
         "type": "string[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "string[][]",
-        "name": "_tokenNames",
-        "type": "string[][]"
       }
     ],
     "name": "TaskContractCreating",
@@ -294,11 +288,6 @@
             "internalType": "string[]",
             "name": "tags",
             "type": "string[]"
-          },
-          {
-            "internalType": "string[][]",
-            "name": "tokenNames",
-            "type": "string[][]"
           },
           {
             "internalType": "address[]",

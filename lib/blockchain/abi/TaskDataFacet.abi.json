@@ -200,11 +200,6 @@
                 "type": "uint256[]"
               },
               {
-                "internalType": "string[][]",
-                "name": "tokenNames",
-                "type": "string[][]"
-              },
-              {
                 "internalType": "address[]",
                 "name": "tokenContracts",
                 "type": "address[]"
@@ -315,6 +310,11 @@
             "internalType": "struct Task",
             "name": "task",
             "type": "tuple"
+          },
+          {
+            "internalType": "string[][]",
+            "name": "tokenNames",
+            "type": "string[][]"
           },
           {
             "internalType": "uint256[][]",

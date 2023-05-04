@@ -624,35 +624,44 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           callback: () {
             final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
             final List<String> tags = [];
-            final List<BigInt> tokenIds = [];
+            final List<BigInt> nfts = [];
             final List<BigInt> amounts = [];
-            //final List<String> tokenNames = [];
+            final List<String> tokenNames = [];
 
 
 
             for (var e in searchServices.createTagsList.entries) {
               for (var e2 in e.value.bunch.entries) {
                 if (e2.value.nft) {
-                  tokenIds.add(e2.key);
+                  nfts.add(e2.key);
                   amounts.add(BigInt.from(1));
-                //  tokenNames.add(e2.value.name);
+                  tokenNames.add(e2.value.name);
                 } else {
                   tags.add(e.value.name);
                 }
               }
             }
 
+<<<<<<< HEAD
             if (interface.tokensEntered != 0) {
               // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
-            //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
-              tokenIds.insert(0, BigInt.from(0));
+              tokenNames.insert(0, tasksServices.taskTokenSymbol);
               amounts.insert(0, BigInt.from(interface.tokensEntered.toDouble()));
-            } else if (tokenIds.isEmpty) {
-            //  tokenNames.insert(0, 'dodao');
-            //   amounts.insert(0, BigInt.from(0));
+            } else if (nfts.isEmpty) {
+              tokenNames.insert(0, 'dodao');
+              amounts.insert(0, BigInt.from(0));
             }
 
 
+=======
+            // final List<String> tokenNames = [];
+            // // if (interface.tokensEntered != 0) {
+            //   tokenNames.add(tasksServices.taskTokenSymbol);
+            // // }
+            // if (nfts.isNotEmpty) {
+            //   tokenNames.add('dodao');
+            // }
+>>>>>>> c37a2ba46a4e8aa7b72e0710ffc0f335e8a9588e
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
@@ -660,11 +669,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 // valueController!.text,
                 interface.tokensEntered,
                 nanoId,
-                //tokenNames,
                 tags,
-                tokenIds,
-                amounts
-            );
+                nfts,
+                amounts);
             Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,
