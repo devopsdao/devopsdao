@@ -203,8 +203,12 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(child: LayoutBuilder(builder: (context, constraints) {
                         final double width = constraints.maxWidth - 66;
 
-                        List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
-                        tags.addAll(task.tokenBalances.map((name) => SimpleTags(collection: true, nft: true, name: name.toString())).toList());
+                        final List<SimpleTags> tags;
+                        tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
+                        for(var e in task.tokenNames.first) {
+                          tags.add(
+                            SimpleTags(collection: true, nft: true, name: e.toString()));
+                        }
 
                         return SizedBox(
                           width: width,

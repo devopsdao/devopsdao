@@ -215,7 +215,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       height: 36,
                                       decoration: BoxDecoration(
                                         gradient: DodaoTheme.of(context).smallButtonGradient,
-                                        borderRadius: DodaoTheme.of(context).borderRadius,
+                                        borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                                       ),
                                       child: IconButton(
                                         icon: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
@@ -513,7 +513,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 height: 36,
                                 decoration: BoxDecoration(
                                   gradient: DodaoTheme.of(context).smallButtonGradient,
-                                  borderRadius: DodaoTheme.of(context).borderRadius,
+                                  borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                                 ),
                                 child: IconButton(
                                   icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
@@ -624,7 +624,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             height: 36,
                             decoration: BoxDecoration(
                               gradient: DodaoTheme.of(context).smallButtonGradient,
-                              borderRadius: DodaoTheme.of(context).borderRadius,
+                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                             ),
                             child: IconButton(
                               icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
@@ -678,9 +678,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: LayoutBuilder(builder: (context, constraints) {
-                            final double width = constraints.maxWidth - 66; 
+                            final double width = constraints.maxWidth - 66;
                             // print (task.tokenBalances);
                             List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
+                            for(var e in task.tokenNames.first) {
+                              tags.add(
+                                  SimpleTags(collection: true, nft: true, name: e.toString()));
+                            }
 
                             if (tags.isNotEmpty) {
                               return SizedBox(
@@ -697,9 +701,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             NftTagsBunch(
                                               selected: false,
                                               name: e.name,
-                                              bunch: {BigInt.from(0): SimpleTags(name: e.name, collection: true)},
+                                              bunch: {BigInt.from(0): SimpleTags(name: e.name, nft: e.nft, collection: true)},
                                             )),
-                                        page: 'create',
+                                        page: 'tasks',
                                         selected: e.selected,
                                         wrapperRole: WrapperRole.selectNew,
                                       );

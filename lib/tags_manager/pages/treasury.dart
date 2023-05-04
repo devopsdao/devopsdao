@@ -44,13 +44,15 @@ class _TreasuryWidget extends State<TreasuryWidget> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
-      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
+      searchServices.tagSelection(typeSelection: 'treasury', tagName: '', unselectAll: true, tagKey: '');
+
       // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
       // tasksServices.collectMyNfts();
       tasksServices.collectMyNfts();
       Future.delayed(
         const Duration(milliseconds: 300), () {
           searchServices.refreshLists('treasury');
+          searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
         }
       );
     });
@@ -67,7 +69,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
   Widget build(BuildContext context) {
     // var tasksServices = context.read<TasksServices>();
     // var collectionServices = context.read<CollectionServices>();
-    // var searchServices = context.read<SearchServices>();
+    var searchServices = context.read<SearchServices>();
     var interfaceServices = context.read<InterfaceServices>();
 
     // if (_searchKeywordController.text.isEmpty) {
@@ -159,6 +161,10 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             containedInkWell: false  ,
                             onTap: () {
                               model.clearSelectedInManager();
+                              searchServices.tagSelection(
+                                  unselectAll: true,
+                                  tagName: '', typeSelection: 'treasury', tagKey: ''
+                              );
                             },
                             child: Icon(
                               Icons.arrow_downward,
@@ -223,7 +229,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                         model.tagsSearchFilter(enteredKeyword: searchKeyword, page: 'treasury');
                         // model.tagsNFTFilter(searchKeyword);
                       },
-                      autofocus: false,
+                      autofocus: true,
                       obscureText: false,
                       onTapOutside: (test) {
                         FocusScope.of(context).unfocus();

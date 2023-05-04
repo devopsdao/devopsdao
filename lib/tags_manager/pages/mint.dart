@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 
 import '../collection_services.dart';
-import '../create_collection.dart';
+import '../create_or_mint.dart';
 import '../nft_templorary.dart';
 
 enum Status {
@@ -46,12 +46,10 @@ class _MintWidget extends State<MintWidget> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
-      var tasksServices = Provider.of<TasksServices>(context, listen: false);
       searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
 
-
       Future.delayed(
-        const Duration(milliseconds: 700), () {
+        const Duration(milliseconds: 300), () {
           searchServices.refreshLists('mint');
         }
       );
@@ -97,7 +95,7 @@ class _MintWidget extends State<MintWidget> {
                         onChanged: (searchKeyword) {
                           model.tagsSearchFilter( page: 'mint', enteredKeyword: searchKeyword,);
                         },
-                        autofocus: false,
+                        autofocus: true,
                         obscureText: false,
                         // onTapOutside: (test) {
                         //   FocusScope.of(context).unfocus();
@@ -109,7 +107,7 @@ class _MintWidget extends State<MintWidget> {
                           suffixIcon: model.newTag ? IconButton(
                             onPressed: () {
                               // NEW TAG
-                              searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                              searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', tagKey: '');
                               model.addNewTag(searchServices.searchKeywordController.text, 'mint');
                               collectionServices.updateMintNft(searchServices.mintPageFilterResults[searchServices.searchKeywordController.text]!.bunch.values.first);
                             },
@@ -249,7 +247,7 @@ class _MintWidget extends State<MintWidget> {
                             height: splitScreen ? secondPartHeight : 0.0,
                             color: DodaoTheme.of(context).nftInfoBackgroundColor,
                             curve: splitCurve,
-                            child: CreateCollection(item: model.mintNftTagSelected, page: 'mint')
+                            child: CreateOrMint(item: model.mintNftTagSelected, page: 'mint')
                         );
                       }
                     )

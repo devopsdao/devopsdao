@@ -2428,9 +2428,10 @@ class TasksServices extends ChangeNotifier {
       );
 
       // List<String> tags = [];
-      List<List<String>> tokenNames = [
-        ["dodao"]
-      ];
+      List<List<String>> tokenNames = [bunchOfTokenNames];
+      // List<List<String>> tokenNames = [
+      //   ["dodao"]
+      // ];
       List<EthereumAddress> tokenContracts = [_contractAddress];
       List<List<BigInt>> tokenIds = [nfts];
       List<List<BigInt>> tokenAmounts = [amounts];

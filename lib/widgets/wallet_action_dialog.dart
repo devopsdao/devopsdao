@@ -518,10 +518,10 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
                         if (widget.page == 'create_collection') {
                           await tasksServices.collectMyNfts();
-                          searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                          // searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
                           collectionServices.update();
                           searchServices.searchKeywordController.clear();
-                          searchServices.refreshLists('mint');
+                          // searchServices.refreshLists('mint');
                         }
                       },
                       child: Container(
@@ -535,11 +535,11 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                           border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Close',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: DodaoTheme.of(context).primaryText,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),

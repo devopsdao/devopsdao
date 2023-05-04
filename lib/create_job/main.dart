@@ -628,6 +628,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             final List<BigInt> amounts = [];
             final List<String> tokenNames = [];
 
+
+
             for (var e in searchServices.createTagsList.entries) {
               for (var e2 in e.value.bunch.entries) {
                 if (e2.value.nft) {
@@ -636,16 +638,20 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   tokenNames.add(e2.value.name);
                 } else {
                   tags.add(e.value.name);
-                  amounts.add(BigInt.from(0));
                 }
               }
             }
 
-            // if (interface.tokensEntered != 0) {
-            // }
-            if (nfts.isEmpty) {
-              tokenNames.add(tasksServices.taskTokenSymbol);
+            if (interface.tokensEntered != 0) {
+              // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
+              tokenNames.insert(0, tasksServices.taskTokenSymbol);
+              amounts.insert(0, BigInt.from(interface.tokensEntered.toDouble()));
+            } else if (nfts.isEmpty) {
+              tokenNames.insert(0, 'dodao');
+              amounts.insert(0, BigInt.from(0));
             }
+
+
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,

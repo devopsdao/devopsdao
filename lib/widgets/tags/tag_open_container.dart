@@ -79,7 +79,7 @@ class TagCallButton extends StatelessWidget {
             },
             closedElevation: 0,
             closedShape: RoundedRectangleBorder(
-              borderRadius: DodaoTheme.of(context).borderRadius,
+              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
             ),
             openElevation: 2,
             openColor: DodaoTheme.of(context).background,
@@ -91,7 +91,7 @@ class TagCallButton extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   gradient: DodaoTheme.of(context).smallButtonGradient,
-                  borderRadius: DodaoTheme.of(context).borderRadius,
+                  borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                 ),
                 child: const IconButton(
                   icon: Icon(Icons.tag_rounded, size: 18, color: Colors.white),

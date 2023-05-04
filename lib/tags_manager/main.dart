@@ -82,6 +82,10 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
                 unselectAll: true,
                 tagName: '', typeSelection: 'treasury', tagKey: ''
               );
+              searchServices.tagSelection(
+                  unselectAll: true,
+                  tagName: '', typeSelection: 'mint', tagKey: ''
+              );
               collectionServices.clearSelectedInManager();
               Navigator.of(context).pop(null);
             },

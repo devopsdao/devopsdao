@@ -45,11 +45,20 @@ class _MainTagsPageState extends State<MainTagsPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
+      var tasksServices = Provider.of<TasksServices>(context, listen: false);
       searchServices.tagSelection(typeSelection: 'selection', tagName: '', unselectAll: true, tagKey: '');
 
-      searchServices.refreshLists('selection');
+      //refresh NFT "selection" list
+      tasksServices.collectMyNfts();
+      Future.delayed(
+        const Duration(milliseconds: 300), () {
+            searchServices.refreshLists('selection');
+            searchServices.refreshLists('treasury');
+        }
+      );
+
       // searchServices.tagsSearchFilter('', simpleTagsMap);
       if (widget.page == 'audit') {
         tagsLocalList = searchServices.auditorTagsList;

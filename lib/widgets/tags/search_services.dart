@@ -76,7 +76,7 @@ class SearchServices extends ChangeNotifier {
   // experimental future. ready allow to run taskService.runFilter. to be deleted/
   late bool forbidSearchKeywordClear = false;
 
-  Future removeTagsOnPages(tagKey, {required String page}) async {
+  Future removeTagOnPages(tagKey, {required String page}) async {
     if (page == 'auditor') {
       auditorTagsList.removeWhere((key, value) => key== tagKey);
     } else if (page == 'tasks') {
@@ -192,6 +192,8 @@ class SearchServices extends ChangeNotifier {
       }
     } else if (page == 'create') {
       createTagsList = list;
+      // clear selectionPageFilterResults to prevent appearing on pages
+      selectionPageFilterResults.clear();
     }
     // tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();

@@ -20,16 +20,16 @@ import 'collection_services.dart';
 import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
-class CreateCollection extends StatefulWidget {
+class CreateOrMint extends StatefulWidget {
   final SimpleTags item;
   final String page;
-  const CreateCollection({Key? key, required this.item, required this.page}) : super(key: key);
+  const CreateOrMint({Key? key, required this.item, required this.page}) : super(key: key);
 
   @override
-  _CreateCollectionState createState() => _CreateCollectionState();
+  _CreateOrMintState createState() => _CreateOrMintState();
 }
 
-class _CreateCollectionState extends State<CreateCollection> {
+class _CreateOrMintState extends State<CreateOrMint> {
   XFile? image;
   final ImagePicker picker = ImagePicker();
 
@@ -58,7 +58,7 @@ class _CreateCollectionState extends State<CreateCollection> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     // var interface = context.read<InterfaceServices>();
-    // var searchServices = context.read<SearchServices>();
+    var searchServices = context.read<SearchServices>();
     var collectionServices = context.watch<CollectionServices>();
 
     collectionExist = collectionServices.mintNftTagSelected.collection;
@@ -177,6 +177,10 @@ class _CreateCollectionState extends State<CreateCollection> {
                     containedInkWell: false,
                     onTap: () {
                       collectionServices.clearSelectedInManager();
+                      searchServices.tagSelection(
+                          unselectAll: true,
+                          tagName: '', typeSelection: 'mint', tagKey: ''
+                      );
                     },
                     child: Icon(
                       Icons.arrow_downward,
@@ -319,6 +323,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                             //       }
                             //     : null,
                             onPressed: (!collectionExist && !collectionServices.showMintButton) ? () {
+                              // collectionServices.clearSelectedInManager();
                               showDialog(
                                   barrierDismissible: false,
                                   context: context,
@@ -328,6 +333,7 @@ class _CreateCollectionState extends State<CreateCollection> {
                                         page: 'create_collection',
                                       ));
                               tasksServices.createNft('example.com', collectionName, true);
+                              // searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                             } : null,
                             child: Text(
                               'Create collection',

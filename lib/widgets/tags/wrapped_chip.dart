@@ -404,7 +404,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           scaleEffectController.reverse();
           Future.delayed(
               const Duration(milliseconds: 550), () {
-            searchServices.removeTagsOnPages(tagKey, page: widget.page, );
+            searchServices.removeTagOnPages(tagKey, page: widget.page, );
 
             if (widget.page == 'audit') {
               if (widget.tabIndex == 0) {
