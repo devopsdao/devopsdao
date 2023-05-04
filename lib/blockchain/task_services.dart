@@ -1513,7 +1513,6 @@ class TasksServices extends ChangeNotifier {
           repository: task[5],
           tags: task[6],
           tagsNFT: task[7],
-          tokenNames: task[0][8],
           tokenContracts: task[0][9],
           tokenIds: task[0][10],
           tokenAmounts: task[0][11],
@@ -1530,6 +1529,7 @@ class TasksServices extends ChangeNotifier {
           messages: task[20],
           taskAddress: taskAddress,
           justLoaded: true,
+          tokenNames: task[0][8],
           tokenBalances: [ethBalanceToken],
 
           // temporary solution. in the future "transport" String name will come directly from the block:
@@ -1545,7 +1545,7 @@ class TasksServices extends ChangeNotifier {
     late int i = 0;
     for (final task in rawTasksList) {
       List<double> tokenValues = [];
-      for (final tokenBalances in task[1]) {
+      for (final tokenBalances in task[2]) {
         for (final tokenValueRaw in tokenBalances) {
           final double ethBalancePreciseToken = tokenValueRaw.toDouble() / pow(10, 18);
           final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
@@ -1564,23 +1564,23 @@ class TasksServices extends ChangeNotifier {
           repository: task[0][5],
           tags: task[0][6],
           tagsNFT: task[0][7],
-          tokenNames: task[0][8],
-          tokenContracts: task[0][9],
-          tokenIds: task[0][10],
-          tokenAmounts: task[0][11],
-          taskState: task[0][12],
-          auditState: task[0][13],
-          rating: task[0][14].toInt(),
-          contractOwner: task[0][15],
-          performer: task[0][16],
-          auditInitiator: task[0][17],
-          auditor: task[0][18],
-          participants: task[0][19],
-          funders: task[0][20],
-          auditors: task[0][21],
-          messages: task[0][22],
+          tokenContracts: task[0][8],
+          tokenIds: task[0][9],
+          tokenAmounts: task[0][10],
+          taskState: task[0][11],
+          auditState: task[0][12],
+          rating: task[0][13].toInt(),
+          contractOwner: task[0][14],
+          performer: task[0][15],
+          auditInitiator: task[0][16],
+          auditor: task[0][17],
+          participants: task[0][18],
+          funders: task[0][19],
+          auditors: task[0][20],
+          messages: task[0][21],
           taskAddress: taskAddresses[i],
           justLoaded: true,
+          tokenNames: task[1],
           tokenBalances: tokenValues,
 
           // temporary solution. in the future "transport" String name will come directly from the block:
@@ -2393,8 +2393,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   String taskTokenSymbol = 'ETH';
-  Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> bunchOfTokenNames,
-      List<String> tags, List<BigInt> nfts, List<BigInt> amounts) async {
+  Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> tags,
+      List<BigInt> nfts, List<BigInt> amounts) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -2428,9 +2428,9 @@ class TasksServices extends ChangeNotifier {
       );
 
       // List<String> tags = [];
-      List<List<String>> tokenNames = [
-        ["dodao"]
-      ];
+      // List<List<String>> tokenNames = [
+      //   ["dodao"]
+      // ];
       List<EthereumAddress> tokenContracts = [_contractAddress];
       List<List<BigInt>> tokenIds = [nfts];
       List<List<BigInt>> tokenAmounts = [amounts];
@@ -2458,7 +2458,6 @@ class TasksServices extends ChangeNotifier {
         "description": description,
         "repository": repository,
         "tags": tags,
-        "tokenNames": tokenNames,
         "tokenContracts": tokenContracts,
         "tokenIds": tokenIds,
         "tokenAmounts": tokenAmounts

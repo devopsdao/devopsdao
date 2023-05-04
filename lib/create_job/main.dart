@@ -638,13 +638,13 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               }
             }
 
-            final List<String> tokenNames = [];
-            // if (interface.tokensEntered != 0) {
-              tokenNames.add(tasksServices.taskTokenSymbol);
+            // final List<String> tokenNames = [];
+            // // if (interface.tokensEntered != 0) {
+            //   tokenNames.add(tasksServices.taskTokenSymbol);
+            // // }
+            // if (nfts.isNotEmpty) {
+            //   tokenNames.add('dodao');
             // }
-            if (nfts.isNotEmpty) {
-              tokenNames.add('dodao');
-            }
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
@@ -652,11 +652,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 // valueController!.text,
                 interface.tokensEntered,
                 nanoId,
-                tokenNames,
                 tags,
                 nfts,
-                amounts
-            );
+                amounts);
             Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,

@@ -64,11 +64,6 @@
             "type": "string[]"
           },
           {
-            "internalType": "string[][]",
-            "name": "tokenNames",
-            "type": "string[][]"
-          },
-          {
             "internalType": "address[]",
             "name": "tokenContracts",
             "type": "address[]"

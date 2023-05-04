@@ -15,7 +15,6 @@ class EmptyClasses extends ChangeNotifier {
       repository: 'https://github.com/devopsdao/dodao',
       tags: [],
       tagsNFT: [],
-      tokenNames: [],
       tokenContracts: [],
       tokenIds: [],
       tokenAmounts: [],
@@ -32,6 +31,7 @@ class EmptyClasses extends ChangeNotifier {
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
       justLoaded: true,
+      tokenNames: [],
       tokenBalances: [],
       transport: '');
 
