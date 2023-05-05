@@ -655,7 +655,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
             //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
               tokenId.insert(0, BigInt.from(0));
-              amounts.insert(0, BigInt.from(interface.tokensEntered.toDouble()));
+              amounts.insert(0, BigInt.from(interface.tokensEntered));
               tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
             } else if (tokenId.isEmpty) {
             //  tokenNames.insert(0, 'dodao');
