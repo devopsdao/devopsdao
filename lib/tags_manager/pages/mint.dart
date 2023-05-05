@@ -219,7 +219,6 @@ class _MintWidget extends State<MintWidget> {
                                   // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
                                   return WrappedChip(
                                     key: ValueKey(e),
-                                    theme: 'black',
                                     item: e,
                                     page: 'mint',
                                     startScale: false,

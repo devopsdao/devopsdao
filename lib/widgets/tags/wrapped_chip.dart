@@ -34,7 +34,6 @@ enum WrapperRole {
 
 class WrappedChip extends StatefulWidget {
   // static ValueNotifier<List<TokenItem>> tags = ValueNotifier([]);
-  final String theme;
   final bool selected;
   final MapEntry<String, NftCollection> item;
   final String page;
@@ -44,7 +43,6 @@ class WrappedChip extends StatefulWidget {
   final int tabIndex;
   final Map<String, NftCollection> bunch;
   const WrappedChip({Key? key,
-    required this.theme,
     required this.selected,
     required this.item,
     required this.page,
@@ -210,6 +208,13 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     bodyColorSelected = DodaoTheme.of(context).chipSelectedColor;
     nftColorSelected = Colors.white;
     nftMintColorSelected = Colors.white;
+
+    if (widget.item.value.bunch.values.first.inactive) {
+      textColor = DodaoTheme.of(context).chipInactiveTextColor;
+      borderColor = DodaoTheme.of(context).chipInactiveBorderColor;
+      bodyColor = DodaoTheme.of(context).chipInactiveBodyColor;
+      nftColor = DodaoTheme.of(context).chipInactiveNftColor;
+    }
 
 
     // This will show overall count of NFTs in bunch
@@ -763,17 +768,17 @@ class WrappedChipSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Colors (black BIG is default):
-    late Color textColor = Colors.grey[300]!;
-    late Color borderColor = Colors.grey[850]!;
-    late Color bodyColor = Colors.grey[850]!;
-    late Color nftColor = Colors.deepOrange;
+    late Color textColor = DodaoTheme.of(context).chipTextColor;
+    late Color borderColor = DodaoTheme.of(context).chipBorderColor;
+    late Color bodyColor = DodaoTheme.of(context).chipBodyColor;
+    late Color nftColor = DodaoTheme.of(context).chipNftColor;
 
-
-    textColor = DodaoTheme.of(context).chipTextColor;
-    borderColor = DodaoTheme.of(context).chipBorderColor;
-    bodyColor = DodaoTheme.of(context).chipBodyColor;
-    nftColor = DodaoTheme.of(context).chipNftColor;
-
+    if (item.inactive) {
+      textColor = DodaoTheme.of(context).chipInactiveTextColor;
+      borderColor = DodaoTheme.of(context).chipInactiveBorderColor;
+      bodyColor = DodaoTheme.of(context).chipInactiveBodyColor;
+      nftColor = DodaoTheme.of(context).chipInactiveNftColor;
+    }
 
 
     if (theme == 'small-white') {

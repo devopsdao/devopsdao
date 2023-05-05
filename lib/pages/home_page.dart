@@ -434,7 +434,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           children: tags.map((e) {
                                             return WrappedChip(
                                               key: ValueKey(e),
-                                              theme: 'black',
                                               item: MapEntry(
                                                   e.name,
                                                   NftCollection(

@@ -702,11 +702,24 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           child: LayoutBuilder(builder: (context, constraints) {
                             final double width = constraints.maxWidth - 66;
                             // print (task.tokenBalances);
-                            List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
-                            for(var e in task.tokenNames.first) {
-                              tags.add(
-                                  TokenItem(collection: true, nft: true, name: e.toString()));
+                            final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                            for (int i = 0; i < task.tokenNames.length; i++) {
+                              for (var e in task.tokenNames[i]) {
+                                if (task.tokenNames[i].first == 'ETH') {
+                                  tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                                } else {
+                                  if (task.tokenBalances[i] == 0) {
+                                    tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
+                                  } else {
+                                    tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
+                                  }
+                                }
+                              }
                             }
+                            // for(var e in task.tokenNames.first) {
+                            //   tags.add(
+                            //       TokenItem(collection: true, nft: true, name: e.toString()));
+                            // }
 
                             if (tags.isNotEmpty) {
                               return SizedBox(
@@ -717,13 +730,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     children: tags.map((e) {
                                       return WrappedChip(
                                         key: ValueKey(e),
-                                        theme: 'white',
                                         item: MapEntry(
                                             e.name,
                                             NftCollection(
                                               selected: false,
                                               name: e.name,
-                                              bunch: {BigInt.from(0): TokenItem(name: e.name, nft: e.nft, collection: true)},
+                                              bunch: {BigInt.from(0): TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)},
                                             )),
                                         page: 'tasks',
                                         selected: e.selected,

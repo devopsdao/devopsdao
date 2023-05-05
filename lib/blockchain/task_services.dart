@@ -272,7 +272,7 @@ class TasksServices extends ChangeNotifier {
   late String _wsUrlZksync;
 
   int chainId = 0;
-  List allowedChainIds = [1287, 4002, 280];
+  List allowedChainIds = [1287, 4002, 280, 80001];
   Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH'};
   late String chainTicker;
 
@@ -330,7 +330,7 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 1287;
+      chainId = 80001;
     }
 
     isDeviceConnected = false;
