@@ -2440,15 +2440,17 @@ class TasksServices extends ChangeNotifier {
       List<List<BigInt>> tokenAmounts = [amounts];
 
       for (var i = 0; i < tokenContracts.length; i++) {
-        var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        //check if ERC-1155
-        var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
-        var supportsInterface = await ierc165.supportsInterface(interfaceID);
-        if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
-          var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-          if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
-            isRequestApproved = true;
-            await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+        if (tokenContracts[i] != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000')) {
+          var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+          //check if ERC-1155
+          var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
+          var supportsInterface = await ierc165.supportsInterface(interfaceID);
+          if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
+            var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+            if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
+              isRequestApproved = true;
+              await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+            }
           }
         }
       }
