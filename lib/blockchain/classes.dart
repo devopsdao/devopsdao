@@ -64,11 +64,12 @@ class TokenItem {
   final String name;
   final String? icon;
   late bool nft;
+  late bool inactive;
   final BigInt? id;
   late bool selected;
   late String feature;
   final bool collection;
-  TokenItem({required this.name, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
+  TokenItem({required this.name, this.icon, this.nft = false, this.inactive = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
 }
 
 class NftCollection {

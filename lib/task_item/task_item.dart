@@ -205,11 +205,25 @@ class _TaskItemState extends State<TaskItem> {
 
                         final List<TokenItem> tags;
                         tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
-                        for (var tn in task.tokenNames) {
-                          for(var e in tn) {
+                        for(int i=0; i < task.tokenNames.length; i++){
+
+                          for(int j=0; j < task.tokenBalances[i].length; j++){
+                            if (task.tokenBalances[i][j] > ) {
+
+                            }
+                          }
+
+
+                          for(var e in task.tokenNames[i]) {
+                            if (task.tokenBalances[i]) {
+
+                            }
                             tags.add(
                                 TokenItem(collection: true, nft: true, name: e.toString()));
                           }
+                        }
+                        for (var tn in task.tokenNames) {
+
                         }
 
 
