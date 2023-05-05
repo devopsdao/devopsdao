@@ -171,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -370,6 +370,10 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'FTM';
       _rpcUrl = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       _wsUrl = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 80001) {
+      chainTicker = 'MATIC';
+      _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
+      _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
     } else if (chainId == 280) {
       chainTicker = 'ETH';
       _rpcUrl = 'https://zksync2-testnet.zksync.dev';
