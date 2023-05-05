@@ -703,9 +703,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             final double width = constraints.maxWidth - 66;
                             // print (task.tokenBalances);
                             List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
-                            for(var e in task.tokenNames.first) {
-                              tags.add(
-                                  TokenItem(collection: true, nft: true, name: e.toString()));
+                            for (var e in task.tokenNames.first) {
+                              tags.add(TokenItem(collection: true, nft: true, name: e.toString()));
                             }
 
                             if (tags.isNotEmpty) {
@@ -826,7 +825,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       elevation: DodaoTheme.of(context).elevation,
                       borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                             // maxWidth: maxStaticInternalDialogWidth,
                             ),
                         child: Container(
@@ -856,7 +855,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
                                 GestureDetector(
                                   onTap: () async {
-                                    Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog')).then((_) {
+                                    // Clipboard.setData(ClipboardData(text: "dodao.dev/#/tasks/${task.taskAddress} task: ${task.title}")).then((_) {
+                                    Clipboard.setData(ClipboardData(text: "dodao.dev/#/tasks/${task.taskAddress}")).then((_) {
                                       Flushbar(
                                               icon: Icon(
                                                 Icons.copy,
@@ -874,8 +874,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     alignment: Alignment.topLeft,
                                     child: RichText(
-                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
-                                      WidgetSpan(
+                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                      const WidgetSpan(
                                           child: Padding(
                                         padding: EdgeInsets.only(right: 5.0),
                                         child: Icon(
@@ -885,8 +885,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         ),
                                       )),
                                       TextSpan(
-                                          text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog',
-                                          style: TextStyle(fontWeight: FontWeight.bold)),
+                                          // text: "dodao.dev/#/tasks/${task.taskAddress} task: ${task.title}",
+                                          text: "dodao.dev/#/tasks/${task.taskAddress}",
+                                          style: const TextStyle(fontWeight: FontWeight.bold)),
                                     ])),
                                   ),
                                 ),
@@ -941,7 +942,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       elevation: DodaoTheme.of(context).elevation,
                       borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                             // maxWidth: maxStaticInternalDialogWidth,
                             ),
                         child: Container(
@@ -1075,7 +1076,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       elevation: DodaoTheme.of(context).elevation,
                       borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                             // maxWidth: maxStaticInternalDialogWidth,
                             ),
                         child: Container(

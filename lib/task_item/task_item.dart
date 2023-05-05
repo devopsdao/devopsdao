@@ -212,10 +212,10 @@ class _TaskItemState extends State<TaskItem> {
                           //   }
                           // }
 
-                          for (var e in task.tokenNames[i]) {
-                            if (task.tokenBalances[i]) {}
-                            tags.add(TokenItem(collection: true, nft: true, name: e.toString()));
-                          }
+                          // for (var e in task.tokenNames[i]) {
+                          //   if (task.tokenBalances[i]) {}
+                          //   tags.add(TokenItem(collection: true, nft: true, name: e.toString()));
+                          // }
                         }
                         for (var tn in task.tokenNames) {}
 

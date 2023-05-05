@@ -3018,8 +3018,9 @@ class TasksServices extends ChangeNotifier {
       senderAddress = publicAddress;
     }
     final transaction = Transaction(
-      from: senderAddress,
-    );
+        from: senderAddress,
+        value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000),
+        maxFeePerGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000));
 
     // BigInt appId = BigInt.from(100);
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
