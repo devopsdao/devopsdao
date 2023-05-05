@@ -5,6 +5,7 @@ import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
 import 'package:webthree/credentials.dart';
+import 'dart:math';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
@@ -639,7 +640,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   tokenId.add(e2.key);
                   amounts.add(BigInt.from(1));
                   nftPresent = true;
-                //  tokenNames.add(e2.value.name);
+                  //  tokenNames.add(e2.value.name);
                 } else {
                   tags.add(e.value.name);
                 }
@@ -653,30 +654,20 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
 
             if (interface.tokensEntered != 0) {
               // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
-            //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
+              //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
               tokenId.insert(0, BigInt.from(0));
-              amounts.insert(0, BigInt.from(interface.tokensEntered.toDouble()));
+              amounts.insert(0, BigInt.from(interface.tokensEntered * pow(10, 18)));
               tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
             } else if (tokenId.isEmpty) {
-            //  tokenNames.insert(0, 'dodao');
-            //   amounts.insert(0, BigInt.from(0));
+              //  tokenNames.insert(0, 'dodao');
+              //   amounts.insert(0, BigInt.from(0));
             }
 
             List<List<BigInt>> tokenIds = [tokenId];
             List<List<BigInt>> tokenAmounts = [amounts];
 
-
-            tasksServices.createTaskContract(
-                titleFieldController!.text,
-                descriptionController!.text,
-                githubLinkController!.text,
-                interface.tokensEntered,
-                nanoId,
-                tags,
-                tokenIds,
-                tokenAmounts,
-                tokenContracts
-            );
+            tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
+                interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
             Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,
