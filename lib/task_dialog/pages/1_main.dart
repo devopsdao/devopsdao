@@ -508,20 +508,42 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
                               //   },
                               // ),
-                              Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  gradient: DodaoTheme.of(context).smallButtonGradient,
-                                  borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    gradient: DodaoTheme.of(context).smallButtonGradient,
+                                    borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                                    tooltip: 'Go to topup page',
+                                    onPressed: () {
+                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                                          duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                    },
+                                  ),
                                 ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
-                                  tooltip: 'Go to select page',
-                                  onPressed: () {
-                                    interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
-                                        duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                  },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    gradient: DodaoTheme.of(context).smallButtonGradient,
+                                    borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
+                                    tooltip: 'Go to select page',
+                                    onPressed: () {
+                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                                          duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -576,70 +598,70 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ************ Show prices and topup part ******** //
               // if (!FocusScope.of(context).hasFocus)
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: DodaoTheme.of(context).elevation,
-                  borderRadius: DodaoTheme.of(context).borderRadius,
-                  child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    width: innerPaddingWidth,
-                    decoration: materialMainBoxDecoration,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: ListBody(
-                                children: <Widget>[
-                                  RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                                    TextSpan(
-                                      text: '${task.tokenBalances[0]} ${tasksServices.chainTicker} \n',
-                                    ),
-                                    TextSpan(
-                                      text: '${task.tokenBalances[0]} USDC',
-                                    )
-                                  ])),
-                                ],
-                              ),
-                            )),
-                        const Spacer(),
-                        if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') ||
-                            tasksServices.hardhatDebug == true)
-                          // TaskDialogButton(
-                          //   padding: 6.0,
-                          //   inactive: false,
-                          //   buttonName: 'Topup',
-                          //   buttonColorRequired: Colors.lightBlue.shade600,
-                          //   callback: () {
-                          //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-                          //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                          //   },
-                          // ),
-
-                          Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              gradient: DodaoTheme.of(context).smallButtonGradient,
-                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
-                              tooltip: 'Go to topup page',
-                              onPressed: () {
-                                interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-                                    duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                              },
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.only(top: 14.0),
+              //   child: Material(
+              //     elevation: DodaoTheme.of(context).elevation,
+              //     borderRadius: DodaoTheme.of(context).borderRadius,
+              //     child: Container(
+              //       padding: const EdgeInsets.all(10.0),
+              //       width: innerPaddingWidth,
+              //       decoration: materialMainBoxDecoration,
+              //       child: Row(
+              //         children: <Widget>[
+              //           Expanded(
+              //               flex: 2,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.all(4.0),
+              //                 child: ListBody(
+              //                   children: <Widget>[
+              //                     // RichText(
+              //                     //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+              //                     //   TextSpan(
+              //                     //     text: '${task.tokenBalances[0]} ${tasksServices.chainTicker} \n',
+              //                     //   ),
+              //                     //   TextSpan(
+              //                     //     text: '${task.tokenBalances[0]} USDC',
+              //                     //   )
+              //                     // ])),
+              //                   ],
+              //                 ),
+              //               )),
+              //           const Spacer(),
+              //           if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') ||
+              //               tasksServices.hardhatDebug == true)
+              //             // TaskDialogButton(
+              //             //   padding: 6.0,
+              //             //   inactive: false,
+              //             //   buttonName: 'Topup',
+              //             //   buttonColorRequired: Colors.lightBlue.shade600,
+              //             //   callback: () {
+              //             //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+              //             //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
+              //             //   },
+              //             // ),
+              //
+              //             Container(
+              //               width: 36,
+              //               height: 36,
+              //               decoration: BoxDecoration(
+              //                 gradient: DodaoTheme.of(context).smallButtonGradient,
+              //                 borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+              //               ),
+              //               child: IconButton(
+              //                 icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+              //                 tooltip: 'Go to topup page',
+              //                 onPressed: () {
+              //                   interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+              //                       duration: const Duration(milliseconds: 400), curve: Curves.ease);
+              //                 },
+              //               ),
+              //             ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               // ChooseWalletButton(
               //   active: tasksServices.platform == 'mobile' ? true : false,
               //   buttonName: 'metamask',
@@ -680,10 +702,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           child: LayoutBuilder(builder: (context, constraints) {
                             final double width = constraints.maxWidth - 66;
                             // print (task.tokenBalances);
-                            List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
+                            List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
                             for(var e in task.tokenNames.first) {
                               tags.add(
-                                  SimpleTags(collection: true, nft: true, name: e.toString()));
+                                  TokenItem(collection: true, nft: true, name: e.toString()));
                             }
 
                             if (tags.isNotEmpty) {
@@ -698,10 +720,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         theme: 'white',
                                         item: MapEntry(
                                             e.name,
-                                            NftTagsBunch(
+                                            NftCollection(
                                               selected: false,
                                               name: e.name,
-                                              bunch: {BigInt.from(0): SimpleTags(name: e.name, nft: e.nft, collection: true)},
+                                              bunch: {BigInt.from(0): TokenItem(name: e.name, nft: e.nft, collection: true)},
                                             )),
                                         page: 'tasks',
                                         selected: e.selected,
@@ -1139,26 +1161,26 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
-              if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0) &&
-                  (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
-                // if (task.taskState == 'completed' &&
-                //     (fromPage == 'performer' ||
-                //         tasksServices.hardhatDebug == true) &&
-                //     (task.contractValue != 0 || task.contractValueToken != 0))
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: DodaoTheme.of(context).elevation,
-                    borderRadius: DodaoTheme.of(context).borderRadius,
-                    child: Container(
-                      // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerPaddingWidth,
-                      decoration: materialMainBoxDecoration,
-                      child: SelectNetworkMenu(object: task),
-                    ),
-                  ),
-                ),
+              // if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0) &&
+              //     (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
+              //   // if (task.taskState == 'completed' &&
+              //   //     (fromPage == 'performer' ||
+              //   //         tasksServices.hardhatDebug == true) &&
+              //   //     (task.contractValue != 0 || task.contractValueToken != 0))
+              //   Container(
+              //     padding: const EdgeInsets.only(top: 14.0),
+              //     child: Material(
+              //       elevation: DodaoTheme.of(context).elevation,
+              //       borderRadius: DodaoTheme.of(context).borderRadius,
+              //       child: Container(
+              //         // constraints: const BoxConstraints(maxHeight: 500),
+              //         padding: const EdgeInsets.all(8.0),
+              //         width: innerPaddingWidth,
+              //         decoration: materialMainBoxDecoration,
+              //         child: SelectNetworkMenu(object: task),
+              //       ),
+              //     ),
+              //   ),
 
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
 

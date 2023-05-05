@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
+import 'package:webthree/credentials.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
@@ -321,7 +322,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                               theme: 'white',
                                               item: MapEntry(
                                                   e.key,
-                                                  NftTagsBunch(
+                                                  NftCollection(
                                                     selected: false,
                                                     name: e.value.name,
                                                     bunch: e.value.bunch,
@@ -624,17 +625,20 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           callback: () {
             final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
             final List<String> tags = [];
-            final List<BigInt> tokenIds = [];
+            final List<BigInt> tokenId = [];
             final List<BigInt> amounts = [];
             //final List<String> tokenNames = [];
 
+            List<EthereumAddress> tokenContracts = [];
 
+            late bool nftPresent = false;
 
             for (var e in searchServices.createTagsList.entries) {
               for (var e2 in e.value.bunch.entries) {
                 if (e2.value.nft) {
-                  tokenIds.add(e2.key);
+                  tokenId.add(e2.key);
                   amounts.add(BigInt.from(1));
+                  nftPresent = true;
                 //  tokenNames.add(e2.value.name);
                 } else {
                   tags.add(e.value.name);
@@ -642,28 +646,36 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               }
             }
 
+            if (nftPresent) {
+              tokenContracts.add(tasksServices.contractAddress);
+              nftPresent = false;
+            }
+
             if (interface.tokensEntered != 0) {
               // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
             //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
-              tokenIds.insert(0, BigInt.from(0));
+              tokenId.insert(0, BigInt.from(0));
               amounts.insert(0, BigInt.from(interface.tokensEntered.toDouble()));
-            } else if (tokenIds.isEmpty) {
+              tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+            } else if (tokenId.isEmpty) {
             //  tokenNames.insert(0, 'dodao');
             //   amounts.insert(0, BigInt.from(0));
             }
+
+            List<List<BigInt>> tokenIds = [tokenId];
+            List<List<BigInt>> tokenAmounts = [amounts];
 
 
             tasksServices.createTaskContract(
                 titleFieldController!.text,
                 descriptionController!.text,
                 githubLinkController!.text,
-                // valueController!.text,
                 interface.tokensEntered,
                 nanoId,
-                //tokenNames,
                 tags,
                 tokenIds,
-                amounts
+                tokenAmounts,
+                tokenContracts
             );
             Navigator.pop(context);
             showDialog(

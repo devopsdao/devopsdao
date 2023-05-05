@@ -9,7 +9,7 @@ import '../config/theme.dart';
 import '../widgets/tags/search_services.dart';
 
 class NftItem extends StatelessWidget {
-  final SimpleTags item;
+  final TokenItem item;
   final double frameHeight;
   final String page;
 
@@ -189,7 +189,7 @@ class NftItem extends StatelessWidget {
 
 
 class NftCheckBox extends StatefulWidget {
-  final SimpleTags item;
+  final TokenItem item;
   const NftCheckBox({Key? key, required this.item}) : super(key: key);
 
   @override

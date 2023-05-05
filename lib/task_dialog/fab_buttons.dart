@@ -140,7 +140,7 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: (task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0) ? false : true,
+          inactive: (task.tokenBalances.isNotEmpty) ? false : true,
           expand: true,
           buttonName: 'Withdraw',
           buttonColorRequired: Colors.lightBlue.shade300,

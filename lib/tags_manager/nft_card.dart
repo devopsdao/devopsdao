@@ -13,7 +13,7 @@ import '../widgets/wallet_action_dialog.dart';
 import 'collection_services.dart';
 
 class NftMint extends StatelessWidget {
-  final SimpleTags item;
+  final TokenItem item;
   final double frameHeight;
 
   const NftMint({

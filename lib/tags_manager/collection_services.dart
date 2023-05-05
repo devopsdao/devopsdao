@@ -2,19 +2,19 @@ import 'package:dodao/blockchain/classes.dart';
 import 'package:flutter/cupertino.dart';
 
 class CollectionServices extends ChangeNotifier {
-  final NftTagsBunch emptyNftBunch  = NftTagsBunch(name: 'empty', bunch: { BigInt.from(0) : SimpleTags(collection: true, name: 'empty', id: BigInt.from(0))});
-  final SimpleTags emptyTag = SimpleTags(collection: true, name: 'empty', id: BigInt.from(0));
-  late NftTagsBunch treasuryNftsInfoSelected = emptyNftBunch;
-  late SimpleTags mintNftTagSelected = emptyTag;
+  final NftCollection emptyNftBunch  = NftCollection(name: 'empty', bunch: { BigInt.from(0) : TokenItem(collection: true, name: 'empty', id: BigInt.from(0))});
+  final TokenItem emptyTag = TokenItem(collection: true, name: 'empty', id: BigInt.from(0));
+  late NftCollection treasuryNftsInfoSelected = emptyNftBunch;
+  late TokenItem mintNftTagSelected = emptyTag;
   late bool showMintButton = false;
 
-  Future<void> updateTreasuryNft(NftTagsBunch nft) async {
+  Future<void> updateTreasuryNft(NftCollection nft) async {
     treasuryNftsInfoSelected = nft;
     showMintButton = false;
     notifyListeners();
   }
 
-  Future<void> updateMintNft(SimpleTags collection) async {
+  Future<void> updateMintNft(TokenItem collection) async {
     mintNftTagSelected = collection;
     showMintButton = false;
     notifyListeners();

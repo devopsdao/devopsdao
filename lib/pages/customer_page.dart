@@ -302,7 +302,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                       theme: 'black',
                                       item: MapEntry(
                                           e.key,
-                                          NftTagsBunch(
+                                          NftCollection(
                                               selected: false,
                                               name: e.value.name,
                                               bunch: e.value.bunch

@@ -240,7 +240,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                         //   onPressed: () {
                         //     // NEW TAG
                         //     nftTagsMap[_searchKeywordController.text] =
-                        //         SimpleTags(collection: true, tag: _searchKeywordController.text, icon: "", selected: true);
+                        //         TokenItem(collection: true, tag: _searchKeywordController.text, icon: "", selected: true);
                         //     model.tagsUpdate(nftTagsMap);
                         //   },
                         //   icon: const Icon(Icons.add_box),

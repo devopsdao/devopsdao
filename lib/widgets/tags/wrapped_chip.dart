@@ -33,16 +33,16 @@ enum WrapperRole {
 }
 
 class WrappedChip extends StatefulWidget {
-  // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
+  // static ValueNotifier<List<TokenItem>> tags = ValueNotifier([]);
   final String theme;
   final bool selected;
-  final MapEntry<String, NftTagsBunch> item;
+  final MapEntry<String, NftCollection> item;
   final String page;
   final bool startScale;
   final wrapperRole;
   final String animationCicle;
   final int tabIndex;
-  final Map<String, NftTagsBunch> bunch;
+  final Map<String, NftCollection> bunch;
   const WrappedChip({Key? key,
     required this.theme,
     required this.selected,
@@ -750,9 +750,9 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 }
 
 class WrappedChipSmall extends StatelessWidget {
-  // static ValueNotifier<List<SimpleTags>> tags = ValueNotifier([]);
+  // static ValueNotifier<List<TokenItem>> tags = ValueNotifier([]);
   final String theme;
-  final SimpleTags item;
+  final TokenItem item;
   final String page;
   const WrappedChipSmall({Key? key,
     required this.theme,
