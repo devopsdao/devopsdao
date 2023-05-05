@@ -195,7 +195,7 @@ class _AccountsPageState extends State<AccountsPage> {
                             theme: 'black',
                             item: MapEntry(
                                 e.key,
-                                NftTagsBunch(
+                                NftCollection(
                                     selected: false,
                                     name: e.value.name,
                                     bunch: e.value.bunch

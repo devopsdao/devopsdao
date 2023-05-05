@@ -203,12 +203,15 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(child: LayoutBuilder(builder: (context, constraints) {
                         final double width = constraints.maxWidth - 66;
 
-                        final List<SimpleTags> tags;
-                        tags = task.tags.map((name) => SimpleTags(collection: true, name: name)).toList();
-                        for(var e in task.tokenNames.first) {
-                          tags.add(
-                            SimpleTags(collection: true, nft: true, name: e.toString()));
+                        final List<TokenItem> tags;
+                        tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                        for (var tn in task.tokenNames) {
+                          for(var e in tn) {
+                            tags.add(
+                                TokenItem(collection: true, nft: true, name: e.toString()));
+                          }
                         }
+
 
                         return SizedBox(
                           width: width,
@@ -240,18 +243,18 @@ class _TaskItemState extends State<TaskItem> {
                         ),
                       ),
                       // Spacer(),
-                      if (task.tokenBalances[0] != 0)
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            '${task.tokenBalances[0]} ${tasksServices.chainTicker}',
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                            softWrap: false,
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
+                      // if (task.tokenBalances[0] != 0)
+                      //   Expanded(
+                      //     flex: 3,
+                      //     child: Text(
+                      //       '${task.tokenBalances[0]} ${tasksServices.chainTicker}',
+                      //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
+                      //       softWrap: false,
+                      //       overflow: TextOverflow.fade,
+                      //       maxLines: 1,
+                      //       textAlign: TextAlign.end,
+                      //     ),
+                      //   ),
                       // if (task.tokenValues[0] != 0)
                       //   Expanded(
                       //     flex: 3,
@@ -264,18 +267,19 @@ class _TaskItemState extends State<TaskItem> {
                       //       textAlign: TextAlign.end,
                       //     ),
                       //   ),
-                      if (task.tokenBalances[0] == 0 && task.tokenBalances[0] == 0)
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            'Has no money',
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                            softWrap: false,
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
+                      // if (task.tokenBalances[0] == 0 && task.tokenBalances[0] == 0)
+                      //   Expanded(
+                      //     flex: 3,
+                      //     child: Text(
+                      //       // 'Has no money',
+                      //       '',
+                      //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
+                      //       softWrap: false,
+                      //       overflow: TextOverflow.fade,
+                      //       maxLines: 1,
+                      //       textAlign: TextAlign.end,
+                      //     ),
+                      //   ),
                     ],
                   ),
                 ],

@@ -337,7 +337,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                                 theme: 'black',
                                 item: MapEntry(
                                     e.key,
-                                    NftTagsBunch(
+                                    NftCollection(
                                         selected: false,
                                         name: e.value.name,
                                         bunch: e.value.bunch

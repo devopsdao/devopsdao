@@ -264,12 +264,12 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                 theme: 'black',
                                 item: MapEntry(
                                     e.key,
-                                    NftTagsBunch(
+                                    NftCollection(
                                       selected: false,
                                       name: e.value.name,
                                       bunch: e.value.bunch
                                       // {
-                                      //   BigInt.from(0) : SimpleTags(
+                                      //   BigInt.from(0) : TokenItem(
                                       //     name: e.value.name,
                                       //     collection: true,
                                       //   )

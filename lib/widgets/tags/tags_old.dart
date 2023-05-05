@@ -14,9 +14,9 @@ import 'wrapped_chip.dart';
 // }
 //
 // class _TagsPageState extends State<TagsPage> {
-//   // late List<SimpleTags> selectedTagsListLocal = [];
+//   // late List<TokenItem> selectedTagsListLocal = [];
 //   // TagsValueController tags = TagsValueController([]);
-//   late List<SimpleTags> selectedListData;
+//   late List<TokenItem> selectedListData;
 //   @override
 //   void initState() {
 //     super.initState();
@@ -171,7 +171,7 @@ import 'wrapped_chip.dart';
 //                 ),
 //                 SizedBox(
 //                   height: maxHeight,
-//                   child: FilterListWidget<SimpleTags>(
+//                   child: FilterListWidget<TokenItem>(
 //                     hideSelectedTextCount: true,
 //                     themeData: FilterListThemeData(
 //                       context,

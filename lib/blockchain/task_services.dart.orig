@@ -1247,8 +1247,8 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  late Map<String, NftTagsBunch> resultInitialCollectionMap = {};
-  late Map<String, NftTagsBunch> resultNftsMap = {};
+  late Map<String, NftCollection> resultInitialCollectionMap = {};
+  late Map<String, NftCollection> resultNftsMap = {};
   Future<void> collectMyNfts() async {
     if (publicAddress != null) {
       // late Map<String, dynamic> resultCollectionMap;
@@ -1267,17 +1267,17 @@ class TasksServices extends ChangeNotifier {
       //
       // for (var e in resultCollectionMap.entries) {
       //   if (e.value != 0) {
-      //     late Map<BigInt, SimpleTags> bunch = {};
+      //     late Map<BigInt, TokenItem> bunch = {};
       //     for (int i = 0; i < e.value; i++) {
-      //       bunch[BigInt.from(i)] = SimpleTags(tag: e.key, collection: true, nft: true, id: BigInt.from(i));
+      //       bunch[BigInt.from(i)] = TokenItem(tag: e.key, collection: true, nft: true, id: BigInt.from(i));
       //     }
-      //     resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
+      //     resultNftsMap[e.key] = NftCollection(bunch: bunch, selected: false, tag: e.key);
       //   }
       // }
 
       final List<String> names = await getCreatedTokenNames();
       for (var e in names) {
-        resultInitialCollectionMap[e] = NftTagsBunch(bunch: {BigInt.from(0): SimpleTags(name: e, collection: true)}, selected: false, name: e);
+        resultInitialCollectionMap[e] = NftCollection(bunch: {BigInt.from(0): TokenItem(name: e, collection: true)}, selected: false, name: e);
       }
 
       final List<String> tokenNames = await getTokenNames(publicAddress!);
@@ -1298,11 +1298,11 @@ class TasksServices extends ChangeNotifier {
 
       for (var e in result.entries) {
         if (e.value.isNotEmpty) {
-          late Map<BigInt, SimpleTags> bunch = {};
+          late Map<BigInt, TokenItem> bunch = {};
           for (int i = 0; i < e.value.length; i++) {
-            bunch[e.value[i]] = SimpleTags(name: e.key, collection: true, nft: true, id: e.value[i]);
+            bunch[e.value[i]] = TokenItem(name: e.key, collection: true, nft: true, id: e.value[i]);
           }
-          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, name: e.key);
+          resultNftsMap[e.key] = NftCollection(bunch: bunch, selected: false, name: e.key);
         }
       }
     }
@@ -1392,7 +1392,7 @@ class TasksServices extends ChangeNotifier {
   // late String lastEnteredKeyword = '';
 
   Future<void> runFilter(
-      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, NftTagsBunch> tagsMap}) async {
+      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, NftCollection> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
     // enteredKeyword ??= lastEnteredKeyword;
     // taskList ??= lastTaskList;
@@ -1462,7 +1462,7 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftTagsBunch> tagsMap}) async {
+  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftCollection> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
 
     filterResults.clear();

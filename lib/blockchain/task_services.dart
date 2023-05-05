@@ -478,6 +478,9 @@ class TasksServices extends ChangeNotifier {
   late EthereumAddress _contractAddressHyperlane;
   late EthereumAddress _contractAddressLayerzero;
   late EthereumAddress _contractAddressWormhole;
+
+  EthereumAddress get contractAddress => _contractAddress;
+
   EthereumAddress zeroAddress = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
   // Future<void> getABI() async {
   //   // String abiFile =
@@ -1151,8 +1154,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1247,8 +1250,8 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  late Map<String, NftTagsBunch> resultInitialCollectionMap = {};
-  late Map<String, NftTagsBunch> resultNftsMap = {};
+  late Map<String, NftCollection> resultInitialCollectionMap = {};
+  late Map<String, NftCollection> resultNftsMap = {};
   Future<void> collectMyNfts() async {
     if (publicAddress != null) {
       // late Map<String, dynamic> resultCollectionMap;
@@ -1267,17 +1270,17 @@ class TasksServices extends ChangeNotifier {
       //
       // for (var e in resultCollectionMap.entries) {
       //   if (e.value != 0) {
-      //     late Map<BigInt, SimpleTags> bunch = {};
+      //     late Map<BigInt, TokenItem> bunch = {};
       //     for (int i = 0; i < e.value; i++) {
-      //       bunch[BigInt.from(i)] = SimpleTags(tag: e.key, collection: true, nft: true, id: BigInt.from(i));
+      //       bunch[BigInt.from(i)] = TokenItem(tag: e.key, collection: true, nft: true, id: BigInt.from(i));
       //     }
-      //     resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, tag: e.key);
+      //     resultNftsMap[e.key] = NftCollection(bunch: bunch, selected: false, tag: e.key);
       //   }
       // }
 
       final List<String> names = await getCreatedTokenNames();
       for (var e in names) {
-        resultInitialCollectionMap[e] = NftTagsBunch(bunch: {BigInt.from(0): SimpleTags(name: e, collection: true)}, selected: false, name: e);
+        resultInitialCollectionMap[e] = NftCollection(bunch: {BigInt.from(0): TokenItem(name: e, collection: true)}, selected: false, name: e);
       }
 
       final List<String> tokenNames = await getTokenNames(publicAddress!);
@@ -1298,11 +1301,11 @@ class TasksServices extends ChangeNotifier {
 
       for (var e in result.entries) {
         if (e.value.isNotEmpty) {
-          late Map<BigInt, SimpleTags> bunch = {};
+          late Map<BigInt, TokenItem> bunch = {};
           for (int i = 0; i < e.value.length; i++) {
-            bunch[e.value[i]] = SimpleTags(name: e.key, collection: true, nft: true, id: e.value[i]);
+            bunch[e.value[i]] = TokenItem(name: e.key, collection: true, nft: true, id: e.value[i]);
           }
-          resultNftsMap[e.key] = NftTagsBunch(bunch: bunch, selected: false, name: e.key);
+          resultNftsMap[e.key] = NftCollection(bunch: bunch, selected: false, name: e.key);
         }
       }
     }
@@ -1392,7 +1395,7 @@ class TasksServices extends ChangeNotifier {
   // late String lastEnteredKeyword = '';
 
   Future<void> runFilter(
-      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, NftTagsBunch> tagsMap}) async {
+      {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, NftCollection> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
     // enteredKeyword ??= lastEnteredKeyword;
     // taskList ??= lastTaskList;
@@ -1462,7 +1465,7 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftTagsBunch> tagsMap}) async {
+  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftCollection> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
 
     filterResults.clear();
@@ -1749,14 +1752,14 @@ class TasksServices extends ChangeNotifier {
     // Who participate in the TASK:
     if (task.performer == publicAddress) {
       // Calculate Pending among:
-      if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0)) {
-        if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
-          final double ethBalancePreciseToken = task.tokenBalances[0].toDouble() / pow(10, 18);
-          final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-          pendingBalance = pendingBalance! + ethBalanceToken;
-          pendingBalanceToken = pendingBalanceToken! + 0;
-        }
-      }
+      // if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0)) {
+      //   if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
+      //     final double ethBalancePreciseToken = task.tokenBalances[0].toDouble() / pow(10, 18);
+      //     final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
+      //     pendingBalance = pendingBalance! + ethBalanceToken;
+      //     pendingBalanceToken = pendingBalanceToken! + 0;
+      //   }
+      // }
       // add all scored Task for calculation:
       if (task.rating != 0) {
         score = score + task.rating;
@@ -2394,7 +2397,7 @@ class TasksServices extends ChangeNotifier {
 
   String taskTokenSymbol = 'ETH';
   Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> tags,
-      List<BigInt> nfts, List<BigInt> amounts) async {
+      List<List<BigInt>> tokenIds, List<List<BigInt>> tokenAmounts, List<EthereumAddress> tokenContracts) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'createTaskContract': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
@@ -2431,9 +2434,9 @@ class TasksServices extends ChangeNotifier {
       // List<List<String>> tokenNames = [
       //   ["dodao"]
       // ];
-      List<EthereumAddress> tokenContracts = [_contractAddress];
-      List<List<BigInt>> tokenIds = [nfts];
-      List<List<BigInt>> tokenAmounts = [amounts];
+      // List<EthereumAddress> tokenContracts = [_contractAddress];
+      // List<List<BigInt>> tokenIds = [tokenIds];
+      // List<List<BigInt>> tokenAmounts = [amounts];
 
       for (var i = 0; i < tokenContracts.length; i++) {
         var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);

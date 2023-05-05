@@ -405,15 +405,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                               child: LayoutBuilder(builder: (context, constraints) {
                                 final double width = constraints.maxWidth - 66;
-                                List<SimpleTags> tags = [];
+                                List<TokenItem> tags = [];
 
                                 if (tasksServices.roleNfts['auditor'] > 0) {
-                                  tags.add(SimpleTags(collection: true, name: "Auditor", icon: ""));
+                                  tags.add(TokenItem(collection: true, name: "Auditor", icon: ""));
                                 }
                                 if (tasksServices.roleNfts['governor'] > 0) {
-                                  tags.add(SimpleTags(collection: true, name: "Governor", icon: ""));
+                                  tags.add(TokenItem(collection: true, name: "Governor", icon: ""));
                                 }
-                                tags.add(SimpleTags(collection: true, name: "Get more...", icon: ""));
+                                tags.add(TokenItem(collection: true, name: "Get more...", icon: ""));
 
                                 return Column(
                                   mainAxisSize: MainAxisSize.max,
@@ -437,10 +437,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                               theme: 'black',
                                               item: MapEntry(
                                                   e.name,
-                                                  NftTagsBunch(
+                                                  NftCollection(
                                                     selected: false,
                                                     name: e.name,
-                                                    bunch: {BigInt.from(0): SimpleTags(name: e.name, collection: true)},
+                                                    bunch: {BigInt.from(0): TokenItem(name: e.name, collection: true)},
                                                   )),
                                               page: 'home',
                                               selected: e.selected,

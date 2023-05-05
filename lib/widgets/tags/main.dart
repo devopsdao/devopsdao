@@ -36,7 +36,7 @@ class MainTagsPage extends StatefulWidget {
 
 class _MainTagsPageState extends State<MainTagsPage> {
   final PageController pageController = PageController(initialPage: 0);
-  late Map<String, NftTagsBunch> tagsLocalList;
+  late Map<String, NftCollection> tagsLocalList;
   final _searchKeywordController = TextEditingController();
 
   final Duration splitDuration = const Duration(milliseconds: 600);
@@ -467,7 +467,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             //   onPressed: () {
                             //     // NEW TAG
                             //     // searchServices.nftInitialCollectionMap[_searchKeywordController.text] =
-                            //     //     SimpleTags(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
+                            //     //     TokenItem(collection: false, tag: _searchKeywordController.text, icon: "", selected: true);
                             //     searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
                             //     model.addNewTag(_searchKeywordController.text, 'selection');
                             //     collectionServices.updateMintNft(searchServices.selectionPageInitialCombined[_searchKeywordController.text]!.bunch.values.first);

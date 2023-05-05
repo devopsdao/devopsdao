@@ -8,7 +8,7 @@ class TagsFAB extends StatefulWidget {
   final String buttonName;
   final Color buttonColorRequired;
   final VoidCallback callback;
-  final SimpleTags? tags;
+  final TokenItem? tags;
   final bool inactive;
   final double? padding;
   final bool expand;

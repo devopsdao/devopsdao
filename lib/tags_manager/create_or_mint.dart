@@ -21,7 +21,7 @@ import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
 class CreateOrMint extends StatefulWidget {
-  final SimpleTags item;
+  final TokenItem item;
   final String page;
   const CreateOrMint({Key? key, required this.item, required this.page}) : super(key: key);
 

@@ -60,7 +60,7 @@ class Task {
   });
 }
 
-class SimpleTags {
+class TokenItem {
   final String name;
   final String? icon;
   late bool nft;
@@ -68,14 +68,14 @@ class SimpleTags {
   late bool selected;
   late String feature;
   final bool collection;
-  SimpleTags({required this.name, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
+  TokenItem({required this.name, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
 }
 
-class NftTagsBunch {
+class NftCollection {
   late String name;
   late bool selected;
-  final Map<BigInt, SimpleTags> bunch;
-  NftTagsBunch({required this.name, this.selected = false, required this.bunch});
+  final Map<BigInt, TokenItem> bunch;
+  NftCollection({required this.name, this.selected = false, required this.bunch});
 }
 
 class TagsCompare {
