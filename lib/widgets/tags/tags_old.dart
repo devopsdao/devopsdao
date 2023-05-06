@@ -246,7 +246,6 @@ import 'wrapped_chip.dart';
 //                     choiceChipBuilderSelected: (context, item, isSelected) {
 //                       return WrappedChip(
 //                         // key: ValueKey(simpleTagsList.indexOf(item)),
-//                         theme: 'white',
 //                         item: item,
 //                           delete: false,
 //                         page: widget.page

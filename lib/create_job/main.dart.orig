@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
+import 'package:webthree/credentials.dart';
+import 'dart:math';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
@@ -318,7 +320,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                           children: model.createTagsList.entries.map((e) {
                                             return WrappedChip(
                                               key: ValueKey(e.value),
-                                              theme: 'white',
                                               item: MapEntry(
                                                   e.key,
                                                   NftCollection(
@@ -624,54 +625,52 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           callback: () {
             final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
             final List<String> tags = [];
-            final List<BigInt> nfts = [];
+            final List<BigInt> tokenId = [];
             final List<BigInt> amounts = [];
-            final List<String> tokenNames = [];
+            //final List<String> tokenNames = [];
 
+            List<EthereumAddress> tokenContracts = [];
 
+            late bool nftPresent = false;
 
             for (var e in searchServices.createTagsList.entries) {
               for (var e2 in e.value.bunch.entries) {
                 if (e2.value.nft) {
-                  nfts.add(e2.key);
+                  tokenId.add(e2.key);
                   amounts.add(BigInt.from(1));
-                  tokenNames.add(e2.value.name);
+                  nftPresent = true;
+                  //  tokenNames.add(e2.value.name);
                 } else {
                   tags.add(e.value.name);
                 }
               }
             }
 
-<<<<<<< HEAD
-            if (interface.tokensEntered != 0) {
-              // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
-              tokenNames.insert(0, tasksServices.taskTokenSymbol);
-              amounts.insert(0, BigInt.from(interface.tokensEntered.toDouble()));
-            } else if (nfts.isEmpty) {
-              tokenNames.insert(0, 'dodao');
-              amounts.insert(0, BigInt.from(0));
+            if (nftPresent) {
+              tokenContracts.add(tasksServices.contractAddress);
+              nftPresent = false;
             }
 
-
+            if (interface.tokensEntered != 0) {
+              // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
+              //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
+              tokenId.insert(0, BigInt.from(0));
+<<<<<<< HEAD
+              amounts.insert(0, BigInt.from(interface.tokensEntered));
 =======
-            // final List<String> tokenNames = [];
-            // // if (interface.tokensEntered != 0) {
-            //   tokenNames.add(tasksServices.taskTokenSymbol);
-            // // }
-            // if (nfts.isNotEmpty) {
-            //   tokenNames.add('dodao');
-            // }
->>>>>>> c37a2ba46a4e8aa7b72e0710ffc0f335e8a9588e
-            tasksServices.createTaskContract(
-                titleFieldController!.text,
-                descriptionController!.text,
-                githubLinkController!.text,
-                // valueController!.text,
-                interface.tokensEntered,
-                nanoId,
-                tags,
-                nfts,
-                amounts);
+              amounts.insert(0, BigInt.from(interface.tokensEntered * pow(10, 18)));
+>>>>>>> a87a995482b3d053ec76037bae86a2e48b2a647c
+              tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+            } else if (tokenId.isEmpty) {
+              //  tokenNames.insert(0, 'dodao');
+              //   amounts.insert(0, BigInt.from(0));
+            }
+
+            List<List<BigInt>> tokenIds = [tokenId];
+            List<List<BigInt>> tokenAmounts = [amounts];
+
+            tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
+                interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
             Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,

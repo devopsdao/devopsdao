@@ -203,21 +203,28 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(child: LayoutBuilder(builder: (context, constraints) {
                         final double width = constraints.maxWidth - 66;
 
-                        final List<TokenItem> tags;
-                        tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                        final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
                         for (int i = 0; i < task.tokenNames.length; i++) {
                           // for(int j=0; j < task.tokenBalances[i].length; j++){
-                          //   if (task.tokenBalances[i][j] > ) {
-
-                          //   }
+                          //   // if (task.tokenBalances[i][j] >  ) {
+                          //   //
+                          //   // }
                           // }
 
-                          // for (var e in task.tokenNames[i]) {
-                          //   if (task.tokenBalances[i]) {}
-                          //   tags.add(TokenItem(collection: true, nft: true, name: e.toString()));
-                          // }
+                          for (var e in task.tokenNames[i]) {
+                            // if (task.tokenBalances[i]) {}
+                            if (task.tokenNames[i].first == 'ETH') {
+                              tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                            } else {
+                              if (task.tokenBalances[i] == 0) {
+                                tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
+                              } else {
+                                tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
+                              }
+                            }
+                          }
                         }
-                        for (var tn in task.tokenNames) {}
+                        // for (var tn in task.tokenNames) {}
 
                         return SizedBox(
                           width: width,

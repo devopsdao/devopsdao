@@ -48,6 +48,10 @@ abstract class DodaoTheme {
   late Color chipNftColor;
   late Color chipNftMintColor;
   late Color chipSelectedColor;
+  late Color chipInactiveTextColor;
+  late Color chipInactiveBorderColor;
+  late Color chipInactiveBodyColor;
+  late Color chipInactiveNftColor;
 
   late Color iconInitial;
   late Color iconProcess;
@@ -134,6 +138,10 @@ class LightModeTheme extends DodaoTheme {
   late Color chipNftColor = Colors.deepOrange;
   late Color chipNftMintColor = Colors.white;
   late Color chipSelectedColor = Colors.orangeAccent;
+  late Color chipInactiveTextColor = Colors.grey.shade500;
+  late Color chipInactiveBorderColor = Colors.grey.shade300;
+  late Color chipInactiveBodyColor = Colors.grey.shade300;
+  late Color chipInactiveNftColor = Colors.grey.shade500;
 
   late Color iconInitial = Colors.black12;
   late Color iconProcess = Colors.black54;
@@ -283,6 +291,10 @@ class DarkModeTheme extends DodaoTheme {
   late Color chipNftColor = Colors.deepOrange;
   late Color chipNftMintColor = Colors.white;
   late Color chipSelectedColor = Colors.orange.shade900;
+  late Color chipInactiveTextColor = Colors.grey.shade700;
+  late Color chipInactiveBorderColor = Colors.grey.shade500;
+  late Color chipInactiveBodyColor = Colors.grey.shade500;
+  late Color chipInactiveNftColor = Colors.grey.shade700;
 
   late Color iconInitial = Colors.white24;
   late Color iconProcess = Colors.white70;

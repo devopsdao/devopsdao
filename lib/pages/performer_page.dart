@@ -316,7 +316,6 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                             children: model.performerTagsList.entries.map((e) {
                               return WrappedChip(
                                 key: ValueKey(e.value),
-                                theme: 'black',
                                 item: MapEntry(
                                     e.key,
                                     NftCollection(

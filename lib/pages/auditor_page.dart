@@ -334,7 +334,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                             children: model.auditorTagsList.entries.map((e) {
                               return WrappedChip(
                                 key: ValueKey(e.value),
-                                theme: 'black',
                                 item: MapEntry(
                                     e.key,
                                     NftCollection(

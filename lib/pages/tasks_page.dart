@@ -261,7 +261,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                             children: model.tasksTagsList.entries.map((e) {
                               return WrappedChip(
                                 key: ValueKey(e.value),
-                                theme: 'black',
                                 item: MapEntry(
                                     e.key,
                                     NftCollection(

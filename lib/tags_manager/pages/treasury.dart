@@ -345,7 +345,6 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                               }
                               return WrappedChip(
                                   key: ValueKey(e),
-                                  theme: 'black',
                                   item: e,
                                   page: 'treasury',
                                   startScale: false,

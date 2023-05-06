@@ -556,7 +556,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                   }
                                   return WrappedChip(
                                     key: ValueKey(e),
-                                    theme: 'white',
                                     item: e,
                                     // selection or filter:
                                     page: actualPage,

@@ -250,7 +250,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                 //         children: model.tempTagsList.map((e) {
                                 //           return WrappedChip(
                                 //               key: ValueKey(e),
-                                //               theme: 'white',
                                 //               item: e,
                                 //               delete: true,
                                 //               page: 'create'
