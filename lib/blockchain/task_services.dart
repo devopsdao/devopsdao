@@ -3025,7 +3025,6 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(from: senderAddress, value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000), maxGas: 2000000);
     // maxFeePerGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000));
 
-    // BigInt appId = BigInt.from(100);
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
     String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
     transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['status'] = 'confirmed';
@@ -3034,7 +3033,7 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  Future<bool> checkResultAvailability(EthereumAddress taskAddress) async {
+  Future<bool> checkWitnetResultAvailability(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
     bool result = await witnetFacet.checkResultAvailability(taskAddress);
     return result;
@@ -3046,10 +3045,31 @@ class TasksServices extends ChangeNotifier {
     1 pendingMerge: bool,
     2 status: text(closed/(unmerged))
   */
-  Future<dynamic> getLastResult(EthereumAddress taskAddress) async {
-    BigInt appId = BigInt.from(100);
+  Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress) async {
     var result = await witnetFacet.getLastResult(taskAddress);
     return result;
+  }
+
+  Future<dynamic> saveSuccessfulResult(EthereumAddress taskAddress) async {
+    transactionStatuses['saveLastWitnetResult'] = {
+      'saveLastWitnetResult': {'status': 'pending', 'txn': 'initial'}
+    };
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(from: senderAddress, value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000), maxGas: 2000000);
+
+    String txn = await witnetFacet.saveSuccessfulResult(taskAddress, credentials: creds, transaction: transaction);
+    transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['status'] = 'confirmed';
+    transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['txn'] = txn;
+    tellMeHasItMined(txn, 'saveLastWitnetResult', 'saveLastWitnetResult');
+    return txn;
   }
 
   // Future<void> checkTokenBalance(EthereumAddress address, int tokenType) async {

@@ -979,7 +979,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          response = await tasksServices.checkResultAvailability(task.taskAddress);
+                                          response = await tasksServices.checkWitnetResultAvailability(task.taskAddress);
                                           print(response);
                                         },
                                         child: Container(
@@ -1001,7 +1001,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          response2 = await tasksServices.getLastResult(task.taskAddress);
+                                          response2 = await tasksServices.getLastWitnetResult(task.taskAddress);
                                           print(response2);
                                         },
                                         child: Container(
@@ -1013,7 +1013,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             ),
                                             child: const Center(
                                               child: Text(
-                                                'getLastResult',
+                                                'getLastWitnetResult',
                                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                                               ),
                                             )),

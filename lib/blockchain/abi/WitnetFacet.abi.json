@@ -405,7 +405,7 @@
         "type": "address"
       }
     ],
-    "name": "saveLastResult",
+    "name": "saveSuccessfulResult",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
