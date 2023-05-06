@@ -171,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = false;
+  bool hardhatLive = true;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -2863,7 +2863,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = txn;
     transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
@@ -2921,7 +2921,8 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
     transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
     transactionStatuses['createNFT']!['createNFT']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
+    tellMeHasItMined(txn, 'createNFT', 'createNFT');
     return txn;
   }
 
@@ -2945,7 +2946,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
     transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
     transactionStatuses['mintFungible']!['mintFungible']!['txn'] = txn;
-    notifyListeners();
+    tellMeHasItMined(txn, 'mintFungible', 'mintFungible');
     return txn;
   }
 
@@ -2969,7 +2970,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['txn'] = txn;
-    notifyListeners();
+    tellMeHasItMined(txn, 'mintNonFungible', 'mintNonFungible');
     return txn;
   }
 
@@ -3008,6 +3009,10 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> postWitnetRequest(EthereumAddress taskAddress) async {
+    print('postWitnetRequest');
+    transactionStatuses['postWitnetRequest'] = {
+      'postWitnetRequest': {'status': 'pending', 'txn': 'initial'}
+    };
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -3023,7 +3028,9 @@ class TasksServices extends ChangeNotifier {
     // BigInt appId = BigInt.from(100);
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
     String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
-    print('postWitnetRequest: $txn');
+    transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['status'] = 'confirmed';
+    transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['txn'] = txn;
+    tellMeHasItMined(txn, 'postWitnetRequest', 'postWitnetRequest');
     return txn;
   }
 

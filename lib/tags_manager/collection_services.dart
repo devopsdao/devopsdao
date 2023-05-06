@@ -21,7 +21,14 @@ class CollectionServices extends ChangeNotifier {
   }
 
   Future<void> update() async {
-    showMintButton = true;
+    mintNftTagSelected = TokenItem(
+        collection: true,
+        name: mintNftTagSelected.name,
+        id: mintNftTagSelected.id,
+        balance: mintNftTagSelected.balance,
+        nft: mintNftTagSelected.nft,
+        inactive: mintNftTagSelected.inactive,
+    );
     notifyListeners();
   }
 

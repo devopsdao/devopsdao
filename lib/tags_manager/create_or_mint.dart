@@ -75,11 +75,11 @@ class _CreateOrMintState extends State<CreateOrMint> {
       stageMint = Status.await;
     }
 
-    //temporary:
-    if (collectionServices.showMintButton) {
-      stageCreate = Status.done;
-      stageMint = Status.await;
-    }
+    // //temporary:
+    // if (collectionServices.showMintButton) {
+    //   stageCreate = Status.done;
+    //   stageMint = Status.await;
+    // }
 
     Future getImage(ImageSource media) async {
       var img = await picker.pickImage(source: media);
@@ -322,7 +322,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed: (!collectionExist && !collectionServices.showMintButton) ? () {
+                            onPressed: (!collectionExist ) ? () {
                               // collectionServices.clearSelectedInManager();
                               showDialog(
                                   barrierDismissible: false,
@@ -367,7 +367,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed: (collectionExist || collectionServices.showMintButton) ? () {
+                            onPressed: (collectionExist ) ? () {
                               if (tasksServices.publicAddress != null) {
                                 final List<EthereumAddress> address = [tasksServices.publicAddress!];
                                 final List<BigInt> quantities = [BigInt.from(1)];
