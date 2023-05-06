@@ -3033,6 +3033,12 @@ class TasksServices extends ChangeNotifier {
     return result;
   }
 
+  /*
+    returns result array:
+    0 failed: bool,
+    1 pendingMerge: bool,
+    2 status: text(closed/(unmerged))
+  */
   Future<dynamic> getLastResult(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
     var result = await witnetFacet.getLastResult(taskAddress);
