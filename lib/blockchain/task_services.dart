@@ -1375,7 +1375,6 @@ class TasksServices extends ChangeNotifier {
       if (transactionReceipt.status == true) {
         transactionStatuses[nanoId]![taskAction]!['status'] = 'minted';
         transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
-        notifyListeners();
         // thr.debounce(() {
         //   fetchTasks();
         // });
@@ -1384,6 +1383,7 @@ class TasksServices extends ChangeNotifier {
     } else {
       isLoadingBackground = false;
     }
+    notifyListeners();
   }
 
   // List<String> _tagsList = [];
@@ -2362,7 +2362,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] = 'approved';
     notifyListeners();
     await tellMeHasItMined(result, 'createTaskContract', nanoId);
-    print('mined');
+    // print('mined');
   }
 
   late bool isRequestApproved = false;
@@ -2523,7 +2523,7 @@ class TasksServices extends ChangeNotifier {
       transactionStatuses[nanoId]!['createTaskContract']!['txn'] = txn;
 
       tellMeHasItMined(txn, 'createTaskContract', nanoId);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -2578,7 +2578,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['addTokens']!['txn'] = txn;
 
     tellMeHasItMined(txn, 'addTokens', nanoId);
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> taskParticipate(EthereumAddress contractAddress, String nanoId, {String? message, BigInt? replyTo}) async {
@@ -2621,7 +2621,7 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = txn;
     transactionStatuses[nanoId]!['taskParticipate']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskParticipate']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
     tellMeHasItMined(txn, 'taskParticipate', nanoId);
   }
 
@@ -2667,7 +2667,7 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = txn;
     transactionStatuses[nanoId]!['taskAuditParticipate']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskAuditParticipate']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
     tellMeHasItMined(txn, 'taskAuditParticipate', nanoId);
   }
 
@@ -2726,7 +2726,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = txn;
     transactionStatuses[nanoId]!['taskStateChange']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskStateChange']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
     tellMeHasItMined(txn, 'taskStateChange', nanoId);
   }
 
@@ -2773,7 +2773,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = txn;
     transactionStatuses[nanoId]!['taskAuditDecision']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskAuditDecision']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
   }
 
@@ -2815,7 +2815,7 @@ class TasksServices extends ChangeNotifier {
 
     transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['txn'] = txn;
-    notifyListeners();
+    // notifyListeners();
 
     tellMeHasItMined(txn, 'sendChatMessage', nanoId, messageNanoID);
   }
@@ -3008,11 +3008,18 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
+  late String witnetPostResult = 'not initialized';
+  late bool witnetAvailabilityResult = false;
+  late List witnetGetLastResult = [false, false, ''];
+  // late String saveSuccessfulWitnetResult = witnetSuccessfulResult;
+
   Future<String> postWitnetRequest(EthereumAddress taskAddress) async {
     print('postWitnetRequest');
     transactionStatuses['postWitnetRequest'] = {
       'postWitnetRequest': {'status': 'pending', 'txn': 'initial'}
     };
+    witnetPostResult = 'initialized request';
+    notifyListeners();
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -3030,24 +3037,49 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['status'] = 'confirmed';
     transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['txn'] = txn;
     tellMeHasItMined(txn, 'postWitnetRequest', 'postWitnetRequest');
+    if (txn.length == 66) {
+      witnetPostResult = 'request mined';
+      checkWitnetResultAvailability(taskAddress);
+    } else {
+      witnetPostResult = 'request failed';
+    }
     return txn;
   }
 
-  Future<bool> checkWitnetResultAvailability(EthereumAddress taskAddress) async {
+  Future checkWitnetResultAvailability(EthereumAddress taskAddress) async {
     BigInt appId = BigInt.from(100);
-    bool result = await witnetFacet.checkResultAvailability(taskAddress);
-    return result;
+    Timer.periodic(const Duration(seconds: 15), (timer) async {
+      // print(timer.tick);
+      bool result = await witnetFacet.checkResultAvailability(taskAddress);
+      if (result) {
+        witnetAvailabilityResult = result;
+        notifyListeners();
+        getLastWitnetResult(taskAddress);
+        print('Cancel timer');
+        timer.cancel();
+      }
+    });
+    // return result;
   }
 
   /*
-    returns result array:
+    getLastWitnetResult returns result array:
     0 failed: bool,
     1 pendingMerge: bool,
     2 status: text(closed/(unmerged))
   */
   Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress) async {
-    var result = await witnetFacet.getLastResult(taskAddress);
-    return result;
+    Timer.periodic(const Duration(seconds: 15), (timer) async {
+      // print(timer.tick);
+      var result = await witnetFacet.getLastResult(taskAddress);
+
+      if (result) {
+        witnetGetLastResult = result;
+        notifyListeners();
+        print('Cancel timer');
+        timer.cancel();
+      }
+    });
   }
 
   Future<dynamic> saveSuccessfulWitnetResult(EthereumAddress taskAddress) async {

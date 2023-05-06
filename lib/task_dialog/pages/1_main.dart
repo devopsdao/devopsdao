@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webthree/credentials.dart';
@@ -61,6 +62,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+
+    // if() {
+    //
+    // }
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
@@ -962,8 +967,22 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
-                            late bool response = false;
-                            late List response2 = [];
+                            // late bool response = false;
+                            // late List response2 = [];
+                            late String status = '';
+                            if (tasksServices.witnetGetLastResult[2] == '') {
+                              status = 'checking';
+                            } else if (tasksServices.witnetGetLastResult[0]) {
+                              status = 'not found';
+                            } else if (tasksServices.witnetGetLastResult[1]) {
+                              status = 'merged';
+                            } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
+                              status = 'closed';
+                            } else if (tasksServices.witnetGetLastResult[2] == 'open') {
+                              status = 'open';
+                            } else {
+                              status = 'error';
+                            }
 
                             return Column(
                               children: <Widget>[
@@ -979,8 +998,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          response = await tasksServices.checkWitnetResultAvailability(task.taskAddress);
-                                          print(response);
+                                          tasksServices.checkWitnetResultAvailability(task.taskAddress);
                                         },
                                         child: Container(
                                             width: 76,
@@ -1001,8 +1019,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          response2 = await tasksServices.getLastWitnetResult(task.taskAddress);
-                                          print(response2);
+                                          await tasksServices.getLastWitnetResult(task.taskAddress);
                                         },
                                         child: Container(
                                             width: 86,
@@ -1022,43 +1039,74 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   ],
                                 ),
 
-                                Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  alignment: Alignment.topLeft,
-                                  child: RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                    const WidgetSpan(
-                                        child: Padding(
-                                      padding: EdgeInsets.only(right: 5.0),
-                                      child: Icon(
-                                        Icons.api,
-                                        size: 16,
-                                        color: Colors.black26,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // const Padding(
+                                    //   padding: EdgeInsets.all(6.0),
+                                    //   child: Icon(
+                                    //     Icons.api,
+                                    //     size: 16,
+                                    //     color: Colors.black26,
+                                    //   ),
+                                    // ),
+                                    Text(tasksServices.witnetPostResult, style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: DodaoTheme.of(context).secondaryText,)),
+                                    if (tasksServices.witnetPostResult == 'initialized request')
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                      alignment: Alignment.bottomCenter,
+                                      height: 23,
+                                      child: LoadingAnimationWidget.prograssiveDots(
+                                        size: 15,
+                                        color: DodaoTheme.of(context).secondaryText,
                                       ),
-                                    )),
-                                    TextSpan(text: response.toString(), style: TextStyle(fontWeight: FontWeight.bold))
-                                    // interface.statusText
-                                  ])),
+                                    ),
+                                  ],
                                 ),
 
-                                Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  alignment: Alignment.topLeft,
-                                  child: RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                    const WidgetSpan(
-                                        child: Padding(
-                                      padding: EdgeInsets.only(right: 5.0),
-                                      child: Icon(
-                                        Icons.api,
-                                        size: 16,
-                                        color: Colors.black26,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(status, style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: DodaoTheme.of(context).secondaryText,)),
+                                    if (status == 'checking')
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                        alignment: Alignment.bottomCenter,
+                                        height: 23,
+                                        child: LoadingAnimationWidget.prograssiveDots(
+                                          size: 15,
+                                          color: DodaoTheme.of(context).secondaryText,
+                                        ),
                                       ),
-                                    )),
-                                    // TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
-                                    // interface.statusText
-                                  ])),
+                                  ],
                                 ),
+
+                                // Container(
+                                //   padding: const EdgeInsets.all(8.0),
+                                //   alignment: Alignment.topLeft,
+                                //   child: RichText(
+                                //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
+                                //     WidgetSpan(
+                                //         child: Padding(
+                                //       padding: EdgeInsets.only(right: 5.0),
+                                //       child: Icon(
+                                //         Icons.api,
+                                //         size: 16,
+                                //         color: Colors.black26,
+                                //       ),
+                                //     )),
+                                //     // TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
+                                //     // interface.statusText
+                                //   ])),
+                                // ),
 
                                 Container(
                                   padding: const EdgeInsets.only(top: 8),

@@ -140,6 +140,28 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
+    } else if (widget.taskName == 'postWitnetRequest') {
+      if (status == 'pending') {
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    } else if (widget.taskName == 'saveLastWitnetResult') {
+      if (status == 'pending') {
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
     } else  {
       if (status == 'pending') {
         // transactionStagesPending = 'loading';
@@ -161,54 +183,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       // title: Text('Connect your wallet'),
       shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
       insetAnimationDuration: const Duration(milliseconds: 1100),
-      // actions: [
-      //   if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
-      //   TextButton(
-      //     style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.green),
-      //     onPressed: () async {
-      //       launchURL(tasksServices.walletConnectSessionUri);
-      //       // _transactionStateToAction(context, state: _state);
-      //       setState(() {});
-      //       // Navigator.pop(context);
-      //     },
-      //     child: const Text('Go To Wallet')
-      //   ),
-      //   TextButton(
-      //     child: const Text('Close'),
-      //     onPressed: () async {
-      //       Navigator.pop(context);
-      //
-      //       if (widget.page == 'create_collection') {
-      //         await tasksServices.collectMyNfts();
-      //         searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
-      //         collectionServices.update();
-      //         searchServices.searchKeywordController.clear();
-      //         searchServices.refreshLists('mint');
-      //       }
-      //     }
-      //   ),
-      //   // if (tasksServices.walletConnected)
-      //   //   TextButton(
-      //   //       child: Text('Disconnect'),
-      //   //       style: TextButton.styleFrom(
-      //   //           primary: Colors.white, backgroundColor: Colors.red),
-      //   //       onPressed: () async {
-      //   //         await tasksServices.wallectConnectTransaction?.disconnect();
-      //   //         // _transactionStateToAction(context, state: _state);
-      //   //         setState(() {});
-      //   //         // Navigator.pop(context);
-      //   //       }),
-      //   // if (!tasksServices.walletConnected)
-      //   //   TextButton(
-      //   //     child: Text('Connect'),
-      //   //     style: TextButton.styleFrom(
-      //   //         primary: Colors.white, backgroundColor: Colors.green),
-      //   //     onPressed: _transactionStateToAction(context, state2: _state2),
-      //   //     // _transactionStateToAction(context, state: _state);
-      //   //     // setState(() {});
-      //   //     // Navigator.pop(context)
-      //   //   ),
-      // ],
       child: Container(
         padding: const EdgeInsets.only(
           top: 20,
