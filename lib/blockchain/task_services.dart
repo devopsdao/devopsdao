@@ -3050,7 +3050,7 @@ class TasksServices extends ChangeNotifier {
     return result;
   }
 
-  Future<dynamic> saveSuccessfulResult(EthereumAddress taskAddress) async {
+  Future<dynamic> saveSuccessfulWitnetResult(EthereumAddress taskAddress) async {
     transactionStatuses['saveLastWitnetResult'] = {
       'saveLastWitnetResult': {'status': 'pending', 'txn': 'initial'}
     };
