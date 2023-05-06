@@ -999,8 +999,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
-                                        onTap: () {
-                                          response = tasksServices.getLastResult(task.taskAddress).toString();
+                                        onTap: () async {
+                                          response = await tasksServices.getLastResult(task.taskAddress);
                                           print(response);
                                         },
                                         child: Container(
