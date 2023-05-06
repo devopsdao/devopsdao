@@ -731,7 +731,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             NftCollection(
                                               selected: false,
                                               name: e.name,
-                                              bunch: {BigInt.from(0): TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)},
+                                              bunch: {
+                                                BigInt.from(0):
+                                                    TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                              },
                                             )),
                                         page: 'tasks',
                                         selected: e.selected,
@@ -959,7 +962,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
-                            late String response = '';
+                            late bool response = false;
 
                             return Column(
                               children: <Widget>[
@@ -974,24 +977,23 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
-                                        onTap: () {
-                                          response = tasksServices.checkResultAvailability(task.taskAddress).toString();
+                                        onTap: () async {
+                                          response = await tasksServices.checkResultAvailability(task.taskAddress);
                                           print(response);
                                         },
                                         child: Container(
-                                          width: 76,
-                                          height: 36,
-                                          decoration: BoxDecoration(
-                                            gradient: DodaoTheme.of(context).smallButtonGradient,
-                                            borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              'checkResult',
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                            width: 76,
+                                            height: 36,
+                                            decoration: BoxDecoration(
+                                              gradient: DodaoTheme.of(context).smallButtonGradient,
+                                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                                             ),
-                                          )
-                                        ),
+                                            child: const Center(
+                                              child: Text(
+                                                'checkResult',
+                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                              ),
+                                            )),
                                       ),
                                     ),
                                     Padding(
@@ -1002,25 +1004,22 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           print(response);
                                         },
                                         child: Container(
-                                          width: 86,
-                                          height: 36,
-                                          decoration: BoxDecoration(
-                                            gradient: DodaoTheme.of(context).smallButtonGradient,
-                                            borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              'getLastResult',
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                            width: 86,
+                                            height: 36,
+                                            decoration: BoxDecoration(
+                                              gradient: DodaoTheme.of(context).smallButtonGradient,
+                                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                                             ),
-                                          )
-                                        ),
+                                            child: const Center(
+                                              child: Text(
+                                                'getLastResult',
+                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                              ),
+                                            )),
                                       ),
                                     ),
                                   ],
                                 ),
-
-
 
                                 Container(
                                   padding: const EdgeInsets.all(8.0),
