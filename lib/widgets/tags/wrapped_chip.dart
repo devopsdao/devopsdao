@@ -539,7 +539,8 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
         } else if (widget.page == 'mint') {
           searchServices.tagSelection( unselectAll: false, tagName: tagName, typeSelection: 'mint', tagKey: tagKey);
           if (widget.animationCicle != 'remain' && widget.animationCicle != 'start') {
-            collectionServices.updateMintNft(searchServices.mintPageFilterResults[tagName]!.bunch.values.first);
+            // collectionServices.updateMintNft(searchServices.mintPageFilterResults[tagName]!.bunch.values.first);
+            collectionServices.updateMintNft(widget.item.value.bunch.values.first);
           } else {
             searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', tagKey: tagKey, );
             collectionServices.clearSelectedInManager();
