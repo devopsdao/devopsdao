@@ -787,7 +787,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         //   Duration(milliseconds: 2000),
                         //   () => setState(() {}),
                         // ),
-                        autofocus: false,
+                        autofocus: true,
                         obscureText: false,
                         onTapOutside: (test) {
                           FocusScope.of(context).unfocus();
@@ -1001,8 +1001,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(4.0),
                                       child: GestureDetector(
                                         onTap: () async {
-                                          response = await tasksServices.getLastResult(task.taskAddress);
-                                          print(response);
+                                          response2 = await tasksServices.getLastResult(task.taskAddress);
+                                          print(response2);
                                         },
                                         child: Container(
                                             width: 86,
