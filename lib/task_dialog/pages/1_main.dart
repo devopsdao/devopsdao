@@ -1055,7 +1055,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                 color: Colors.black26,
                                               ),
                                             )),
-                                        TextSpan(text: response2, style: TextStyle(fontWeight: FontWeight.bold))
+                                        TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
                                         // interface.statusText
                                       ])),
                                 ),
