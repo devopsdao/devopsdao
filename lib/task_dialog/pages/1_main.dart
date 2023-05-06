@@ -963,7 +963,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
                             late bool response = false;
-                            late String response2 = 'empty';
+                            late List response2 = [];
 
                             return Column(
                               children: <Widget>[
@@ -1046,18 +1046,18 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   alignment: Alignment.topLeft,
                                   child: RichText(
                                       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                        const WidgetSpan(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.api,
-                                                size: 16,
-                                                color: Colors.black26,
-                                              ),
-                                            )),
-                                        TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
-                                        // interface.statusText
-                                      ])),
+                                    const WidgetSpan(
+                                        child: Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.api,
+                                        size: 16,
+                                        color: Colors.black26,
+                                      ),
+                                    )),
+                                    // TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
+                                    // interface.statusText
+                                  ])),
                                 ),
 
                                 Container(
