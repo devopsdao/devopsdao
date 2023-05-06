@@ -210,6 +210,7 @@ class _TaskItemState extends State<TaskItem> {
                           //   //
                           //   // }
                           // }
+
                           for (var e in task.tokenNames[i]) {
                             // if (task.tokenBalances[i]) {}
                             if (task.tokenNames[i].first == 'ETH') {

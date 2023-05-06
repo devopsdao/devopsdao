@@ -702,6 +702,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           child: LayoutBuilder(builder: (context, constraints) {
                             final double width = constraints.maxWidth - 66;
                             // print (task.tokenBalances);
+<<<<<<< HEAD
                             final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
                             for (int i = 0; i < task.tokenNames.length; i++) {
                               for (var e in task.tokenNames[i]) {
@@ -715,7 +716,16 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   }
                                 }
                               }
+=======
+                            List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                            for (var e in task.tokenNames.first) {
+                              tags.add(TokenItem(collection: true, nft: true, name: e.toString()));
+>>>>>>> 9e62df4be76e79a07254974dc5d84ec388684164
                             }
+                            // for(var e in task.tokenNames.first) {
+                            //   tags.add(
+                            //       TokenItem(collection: true, nft: true, name: e.toString()));
+                            // }
 
                             if (tags.isNotEmpty) {
                               return SizedBox(
@@ -959,8 +969,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
-                            late String response = '';
-
                             return Column(
                               children: <Widget>[
                                 Container(
@@ -968,59 +976,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   alignment: Alignment.topLeft,
                                   child: const Text('Pull request status:'),
                                 ),
-
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          response = tasksServices.checkResultAvailability(task.taskAddress).toString();
-                                          print(response);
-                                        },
-                                        child: Container(
-                                          width: 76,
-                                          height: 36,
-                                          decoration: BoxDecoration(
-                                            gradient: DodaoTheme.of(context).smallButtonGradient,
-                                            borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              'checkResult',
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
-                                            ),
-                                          )
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          response = tasksServices.getLastResult(task.taskAddress).toString();
-                                          print(response);
-                                        },
-                                        child: Container(
-                                          width: 86,
-                                          height: 36,
-                                          decoration: BoxDecoration(
-                                            gradient: DodaoTheme.of(context).smallButtonGradient,
-                                            borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              'getLastResult',
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
-                                            ),
-                                          )
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-
 
                                 Container(
                                   padding: const EdgeInsets.all(8.0),
@@ -1036,8 +991,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         color: Colors.black26,
                                       ),
                                     )),
-                                    TextSpan(text: response.toString(), style: TextStyle(fontWeight: FontWeight.bold))
-                                    // interface.statusText
+                                    interface.statusText
                                   ])),
                                 ),
 

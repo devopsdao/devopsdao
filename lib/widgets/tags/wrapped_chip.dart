@@ -41,7 +41,7 @@ class WrappedChip extends StatefulWidget {
   final wrapperRole;
   final String animationCicle;
   final int tabIndex;
-  final Map<String, NftCollection> bunch;
+  // final Map<String, NftCollection> bunch;
   const WrappedChip({Key? key,
     required this.selected,
     required this.item,
@@ -50,7 +50,7 @@ class WrappedChip extends StatefulWidget {
     required this.wrapperRole,
     this.animationCicle = 'none',
     this.tabIndex = 0,
-    this.bunch = const {},
+    // this.bunch = const {},
   }) : super(key: key);
 
   @override
@@ -269,12 +269,15 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       centerTextPadding = const EdgeInsets.only(left: 1.0, right: 6.0);
     }
 
-    var textSize = calcTextSize(tagName, DodaoTheme.of(context).bodyText3.override(
-      fontFamily: 'Inter',
-      color: textColor,
-      fontWeight: FontWeight.w400,
-      fontSize: fontSize,
-    ));
+    var textSize = calcTextSize(
+      tagName == 'ETH' ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
+      DodaoTheme.of(context).bodyText3.override(
+        fontFamily: 'Inter',
+        color: textColor,
+        fontWeight: FontWeight.w400,
+        fontSize: fontSize,
+      )
+    );
 
     late Color colorBodyBegin = bodyColor;
     late Color colorBodyEnd = bodyColor;
@@ -697,7 +700,8 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                       child: Padding(
                         padding: centerTextPadding,
                         child: Text(
-                          tagName,
+
+                          tagName == 'ETH' ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
                           style: DodaoTheme.of(context).bodyText3.override(
                             fontFamily: 'Inter',
                             color: animationTextColor.value,
@@ -795,7 +799,9 @@ class WrappedChipSmall extends StatelessWidget {
     late EdgeInsets rightSpanPadding = const EdgeInsets.only(right: 2.0);
     late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 2.0);
 
-    var textSize = calcTextSize(item.name, DodaoTheme.of(context).bodyText3.override(
+    var textSize = calcTextSize(
+      item.name == 'ETH' ? "${item.balance}  ${item.name}" : item.name,
+      DodaoTheme.of(context).bodyText3.override(
       fontFamily: 'Inter',
       color: textColor,
       fontWeight: FontWeight.w400,
@@ -843,8 +849,8 @@ class WrappedChipSmall extends StatelessWidget {
             child: Container(
               width: tagWidth,
               alignment: Alignment.center,
-              child: Text(
-                item.name,
+              child:  Text(
+                item.name == 'ETH' ? "${item.balance}  ${item.name}" : item.name,
                 style: DodaoTheme.of(context).bodyText3.override(
                   fontFamily: 'Inter',
                   color: textColor,

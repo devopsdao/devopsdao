@@ -1158,8 +1158,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -3017,9 +3017,8 @@ class TasksServices extends ChangeNotifier {
       creds = credentials;
       senderAddress = publicAddress;
     }
-    final transaction = Transaction(
-      from: senderAddress,
-    );
+    final transaction = Transaction(from: senderAddress, value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000), maxGas: 1000000);
+    // maxFeePerGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000));
 
     // BigInt appId = BigInt.from(100);
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
