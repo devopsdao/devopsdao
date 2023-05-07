@@ -43,7 +43,6 @@ class _CreateJobState extends State<CreateJob> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       searchServices.removeAllTagsOnPages(page: 'create');
-
       // searchServices.refreshLists('selection');
       // searchServices.tagsSearchFilter('', simpleTagsMap);
     });
@@ -668,14 +667,17 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
 
             tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
                 interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
-            Navigator.pop(context);
+            // Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletActionDialog(
+                builder: (context) {
+                  interface.mainDialogContext = context;
+                  return WalletActionDialog(
                       nanoId: nanoId,
                       taskName: 'createTaskContract',
-                    ));
+                    );
+                });
           },
         ),
       ),

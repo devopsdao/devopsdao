@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:dodao/config/flutter_flow_util.dart';
 import 'package:dodao/config/theme.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:nanoid/async.dart';
 import 'package:provider/provider.dart';
+import 'package:webthree/credentials.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
@@ -34,8 +38,9 @@ class _WalletActionDialog extends State<WalletActionDialog> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var searchServices = context.watch<SearchServices>();
-    var collectionServices = context.watch<CollectionServices>();
+    var searchServices = context.read<SearchServices>();
+    var collectionServices = context.read<CollectionServices>();
+    var interface = context.read<InterfaceServices>();
 
     // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
     //
@@ -88,6 +93,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
+        Navigator.pop(interface.mainDialogContext);
       }
 
       tasksServices.isRequestApproved = false;
@@ -559,7 +565,86 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  // if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
+                  //   Expanded(
+                  //     child: InkWell(
+                  //       borderRadius: BorderRadius.circular(20.0),
+                  //       onTap: () {
+                  //         // Navigator.pop(context);
+                  //         // launchURL(tasksServices.walletConnectSessionUri);
+                  //         // _transactionStateToAction(context, state: _state);
+                  //         setState(() {
+                  //           // final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
+                  //           // final List<String> tags = [];
+                  //           // final List<BigInt> tokenId = [];
+                  //           // final List<BigInt> amounts = [];
+                  //           // //final List<String> tokenNames = [];
+                  //           //
+                  //           // List<EthereumAddress> tokenContracts = [];
+                  //           //
+                  //           // late bool nftPresent = false;
+                  //           //
+                  //           // for (var e in searchServices.createTagsList.entries) {
+                  //           //   for (var e2 in e.value.bunch.entries) {
+                  //           //     if (e2.value.nft) {
+                  //           //       tokenId.add(e2.key);
+                  //           //       amounts.add(BigInt.from(1));
+                  //           //       nftPresent = true;
+                  //           //       //  tokenNames.add(e2.value.name);
+                  //           //     } else {
+                  //           //       tags.add(e.value.name);
+                  //           //     }
+                  //           //   }
+                  //           // }
+                  //           //
+                  //           // if (nftPresent) {
+                  //           //   tokenContracts.add(tasksServices.contractAddress);
+                  //           //   nftPresent = false;
+                  //           // }
+                  //           //
+                  //           // if (interface.tokensEntered != 0) {
+                  //           //   // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
+                  //           //   //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
+                  //           //   tokenId.insert(0, BigInt.from(0));
+                  //           //   amounts.insert(0, BigInt.from(interface.tokensEntered * pow(10, 18)));
+                  //           //   tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+                  //           // } else if (tokenId.isEmpty) {
+                  //           //   //  tokenNames.insert(0, 'dodao');
+                  //           //   //   amounts.insert(0, BigInt.from(0));
+                  //           // }
+                  //           //
+                  //           // List<List<BigInt>> tokenIds = [tokenId];
+                  //           // List<List<BigInt>> tokenAmounts = [amounts];
+                  //           //
+                  //           // tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
+                  //           //     interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
+                  //         });
+                  //         // Navigator.pop(context);
+                  //       },
+                  //       child: Container(
+                  //         padding: const EdgeInsets.all(0.0),
+                  //         height: 54.0,
+                  //         alignment: Alignment.center,
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: DodaoTheme.of(context).borderRadius,
+                  //           gradient: const LinearGradient(
+                  //             colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
+                  //             stops: [0, 0.6, 1],
+                  //           ),
+                  //         ),
+                  //         child: const Text(
+                  //           'Retry',
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //             fontWeight: FontWeight.bold,
+                  //             fontSize: 18,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   )
                 ],
               )
             ],

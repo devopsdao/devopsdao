@@ -171,7 +171,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -2523,6 +2523,8 @@ class TasksServices extends ChangeNotifier {
       transactionStatuses[nanoId]!['createTaskContract']!['txn'] = txn;
 
       tellMeHasItMined(txn, 'createTaskContract', nanoId);
+
+
       // notifyListeners();
     }
   }
@@ -3073,7 +3075,7 @@ class TasksServices extends ChangeNotifier {
       // print(timer.tick);
       var result = await witnetFacet.getLastResult(taskAddress);
 
-      if (result) {
+      if (result[2] == 'closed') {
         witnetGetLastResult = result;
         notifyListeners();
         print('Cancel timer');
