@@ -2524,7 +2524,6 @@ class TasksServices extends ChangeNotifier {
 
       tellMeHasItMined(txn, 'createTaskContract', nanoId);
 
-
       // notifyListeners();
     }
   }
@@ -3053,6 +3052,7 @@ class TasksServices extends ChangeNotifier {
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
       bool result = await witnetFacet.checkResultAvailability(taskAddress);
+      print(result);
       if (result) {
         witnetPostResult = 'result available';
         witnetAvailabilityResult = result;
@@ -3074,6 +3074,7 @@ class TasksServices extends ChangeNotifier {
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
       var result = await witnetFacet.getLastResult(taskAddress);
+      print(result);
 
       if (result[2] == 'closed') {
         witnetGetLastResult = result;
