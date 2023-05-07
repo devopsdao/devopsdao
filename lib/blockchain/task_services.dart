@@ -3054,10 +3054,10 @@ class TasksServices extends ChangeNotifier {
       // print(timer.tick);
       bool result = await witnetFacet.checkResultAvailability(taskAddress);
       if (result) {
+        witnetPostResult = 'result available';
         witnetAvailabilityResult = result;
         notifyListeners();
         getLastWitnetResult(taskAddress);
-        print('Cancel timer');
         timer.cancel();
       }
     });
