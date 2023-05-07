@@ -3081,6 +3081,11 @@ class TasksServices extends ChangeNotifier {
         notifyListeners();
         print('Cancel timer');
         timer.cancel();
+      } else if (result[2] == 'Unknown error (0x70)') {
+        witnetGetLastResult = result;
+        notifyListeners();
+        print('Cancel timer');
+        timer.cancel();
       }
     });
   }
