@@ -3054,11 +3054,17 @@ class TasksServices extends ChangeNotifier {
       bool result = await witnetFacet.checkResultAvailability(taskAddress);
       print(result);
       if (result) {
-        witnetPostResult = 'result available';
-        witnetAvailabilityResult = result;
-        notifyListeners();
-        getLastWitnetResult(taskAddress);
-        timer.cancel();
+        var lastResult = await witnetFacet.getLastResult(taskAddress);
+
+        if (lastResult[0] == false && lastResult[1] == false && lastResult[2] == '') {
+          print('old result received');
+        } else {
+          witnetPostResult = 'result available';
+          witnetAvailabilityResult = result;
+          notifyListeners();
+          getLastWitnetResult(taskAddress);
+          timer.cancel();
+        }
       }
     });
     // return result;
@@ -3082,6 +3088,11 @@ class TasksServices extends ChangeNotifier {
         print('Cancel timer');
         timer.cancel();
       } else if (result[2] == 'Unknown error (0x70)') {
+        witnetGetLastResult = result;
+        notifyListeners();
+        print('Cancel timer');
+        timer.cancel();
+      } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
         witnetGetLastResult = result;
         notifyListeners();
         print('Cancel timer');
