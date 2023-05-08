@@ -2399,6 +2399,39 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<Map<EthereumAddress, bool>> isTokenApproved(tokenContracts) async {
+    var creds;
+    var senderAddress;
+    if (hardhatDebug == true) {
+      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+    } else {
+      creds = credentials;
+      senderAddress = publicAddress;
+    }
+    final transaction = Transaction(
+      from: senderAddress,
+    );
+
+    Map<EthereumAddress, bool> tokenContractsApproved = {};
+
+    for (var i = 0; i < tokenContracts.length; i++) {
+      var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+      //check if ERC-1155
+      var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
+      var supportsInterface = await ierc165.supportsInterface(interfaceID);
+      if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
+        var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+          tokenContractsApproved[tokenContracts[i]] = false;
+        } else {
+          tokenContractsApproved[tokenContracts[i]] = false;
+        }
+      }
+    }
+    return tokenContractsApproved;
+  }
+
   String taskTokenSymbol = 'ETH';
   Future<void> createTaskContract(String title, String description, String repository, double price, String nanoId, List<String> tags,
       List<List<BigInt>> tokenIds, List<List<BigInt>> tokenAmounts, List<EthereumAddress> tokenContracts) async {
