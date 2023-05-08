@@ -58,7 +58,7 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
   @override
   Widget build(BuildContext context) {
     final String taskAddressString = widget.taskAddress.toString();
-    RouteInformation routeInfo = RouteInformation(location: '/$widget.fromPage/$taskAddressString');
+    RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}/$taskAddressString');
     Beamer.of(context).updateRouteInformation(routeInfo);
     return Scaffold(
       body: Container(

@@ -94,7 +94,7 @@ class TagCallButton extends StatelessWidget {
                   borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                 ),
                 child: const IconButton(
-                  icon: Icon(Icons.tag_rounded, size: 18, color: Colors.white),
+                  icon: Icon(Icons.loyalty_outlined, size: 18, color: Colors.white),
                   tooltip: 'Add tags or NFT\'s',
                   onPressed: null,
                   // onPressed: () {

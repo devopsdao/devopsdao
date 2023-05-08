@@ -63,10 +63,13 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
         showDialog(
             // barrierDismissible: false,
             context: context,
-            builder: (context) => TaskDialogBeamer(
+            builder: (context) {
+              // interface.mainDialogContext = context;
+              return TaskDialogBeamer(
                   taskAddress: widget.taskAddress,
                   fromPage: 'auditor',
-                ));
+                );
+            });
       });
     }
 

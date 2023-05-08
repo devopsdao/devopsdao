@@ -158,6 +158,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     } else {
       animationController.reverse();
     }
+    interface.mainDialogContext = context;
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false, backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
@@ -630,6 +632,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             //final List<String> tokenNames = [];
 
             List<EthereumAddress> tokenContracts = [];
+            List<List<BigInt>> tokenIds = [];
+            List<List<BigInt>> tokenAmounts = [];
 
             late bool nftPresent = false;
 
@@ -657,27 +661,26 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               tokenId.insert(0, BigInt.from(0));
               amounts.insert(0, BigInt.from(interface.tokensEntered * pow(10, 18)));
               tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+              tokenIds = [tokenId];
+              tokenAmounts = [amounts];
             } else if (tokenId.isEmpty) {
             //  tokenNames.insert(0, 'dodao');
             //   amounts.insert(0, BigInt.from(0));
             }
 
-            List<List<BigInt>> tokenIds = [tokenId];
-            List<List<BigInt>> tokenAmounts = [amounts];
+
 
             tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
                 interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
             // Navigator.pop(context);
+            interface.createJobPageContext = context;
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) {
-                  interface.mainDialogContext = context;
-                  return WalletActionDialog(
+                builder: (context) => WalletActionDialog(
                       nanoId: nanoId,
                       taskName: 'createTaskContract',
-                    );
-                });
+                    ));
           },
         ),
       ),

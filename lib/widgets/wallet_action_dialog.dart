@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:beamer/beamer.dart';
 import 'package:dodao/config/flutter_flow_util.dart';
 import 'package:dodao/config/theme.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
@@ -56,11 +57,14 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     // } else {
     //   transactionStagesPending = 'loading';
     // }
+    // Beamer.of(interface.createJobPageContext).beamBack();
+    // Beamer.of(context).beamToNamed('/');
 
     final String? status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
     final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
 
     if (widget.taskName == 'createTaskContract' && tasksServices.isRequestApproved) {
+
       if (status == 'pending') {
         if (tokenApproved == 'initial') {
           transactionStagesApprove = 'loading';
@@ -93,11 +97,33 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
-        Navigator.pop(interface.mainDialogContext);
+        Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            interface.mainDialogContext.beamToNamed('/customer');
+          });
+        });
+
       }
+
 
       tasksServices.isRequestApproved = false;
 
+    } else if (widget.taskName == 'createTaskContract') {
+      if (status == 'pending') {
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+        Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            interface.mainDialogContext.beamToNamed('/customer');
+          });
+        });
+      }
     } else if (widget.taskName == 'createNFT') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
@@ -184,7 +210,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     }
     var width = MediaQuery.of(context).size.width ;
 
-
+ 
     return Dialog(
       // title: Text('Connect your wallet'),
       shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
