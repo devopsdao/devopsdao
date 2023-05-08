@@ -972,12 +972,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             late String status = '';
                             if (tasksServices.witnetGetLastResult[2] == '') {
                               status = 'checking';
-                            } else if (tasksServices.witnetGetLastResult[0]) {
-                              status = 'not found';
-                            } else if (tasksServices.witnetGetLastResult[1]) {
-                              status = 'merged';
+                            } else if (tasksServices.witnetGetLastResult[0] && tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
+                              status = 'no matching PR'; //request failed
+                            } else if (tasksServices.witnetGetLastResult[1] ||
+                                tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
+                              status = 'PR is pending merge';
                             } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
-                              status = 'closed';
+                              status = 'PR merged';
                             } else if (tasksServices.witnetGetLastResult[2] == 'open') {
                               status = 'open';
                             } else {
@@ -1051,20 +1052,22 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     //     color: Colors.black26,
                                     //   ),
                                     // ),
-                                    Text(tasksServices.witnetPostResult, style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: DodaoTheme.of(context).secondaryText,)),
+                                    Text(tasksServices.witnetPostResult,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          color: DodaoTheme.of(context).secondaryText,
+                                        )),
                                     if (tasksServices.witnetPostResult == 'initialized request')
-                                    Container(
-                                      padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                      alignment: Alignment.bottomCenter,
-                                      height: 23,
-                                      child: LoadingAnimationWidget.prograssiveDots(
-                                        size: 15,
-                                        color: DodaoTheme.of(context).secondaryText,
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                        alignment: Alignment.bottomCenter,
+                                        height: 23,
+                                        child: LoadingAnimationWidget.prograssiveDots(
+                                          size: 15,
+                                          color: DodaoTheme.of(context).secondaryText,
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
 
@@ -1072,10 +1075,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(status, style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: DodaoTheme.of(context).secondaryText,)),
+                                    Text(status,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          color: DodaoTheme.of(context).secondaryText,
+                                        )),
                                     if (status == 'checking')
                                       Container(
                                         padding: const EdgeInsets.only(left: 3.0, right: 4.0),

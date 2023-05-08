@@ -111,8 +111,9 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if ((task.taskState == "review" && fromPage == 'performer') &&
-        ( tasksServices.witnetPostResult == 'not initialized' ||
-          tasksServices.witnetPostResult == 'request failed')) {
+          (tasksServices.witnetPostResult == 'not initialized' ||
+              tasksServices.witnetPostResult == 'request failed' ||
+              tasksServices.witnetGetLastResult[0])) {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
@@ -124,13 +125,12 @@ class SetsOfFabButtons extends StatelessWidget {
             // // tasksServices.myNotifyListeners();
             tasksServices.postWitnetRequest(task.taskAddress);
             showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => WalletActionDialog(
-                nanoId: task.nanoId,
-                taskName: 'postWitnetRequest',
-              )
-            );
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                      nanoId: task.nanoId,
+                      taskName: 'postWitnetRequest',
+                    ));
             // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
             //
             // debounceNotifyListener.debounce(() {
@@ -139,8 +139,7 @@ class SetsOfFabButtons extends StatelessWidget {
             // });
           },
         );
-      } else if ((task.taskState == "review" && fromPage == 'performer') &&
-              tasksServices.witnetGetLastResult[2] == 'merged') {
+      } else if ((task.taskState == "review" && fromPage == 'performer') && tasksServices.witnetGetLastResult[2] == 'merged') {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
@@ -155,10 +154,9 @@ class SetsOfFabButtons extends StatelessWidget {
                 barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletActionDialog(
-                  nanoId: task.nanoId,
-                  taskName: 'saveLastWitnetResult',
-                )
-            );
+                      nanoId: task.nanoId,
+                      taskName: 'saveLastWitnetResult',
+                    ));
             // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
             //
             // debounceNotifyListener.debounce(() {
