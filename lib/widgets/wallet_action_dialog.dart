@@ -210,7 +210,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     }
     var width = MediaQuery.of(context).size.width ;
 
- 
+
     return Dialog(
       // title: Text('Connect your wallet'),
       shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
@@ -255,7 +255,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                                 alignment: Alignment.center,
                                 child: Text(
                                   'Transaction has been rejected',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.bodySmall,
                                   textAlign: TextAlign.center,
                                 ),
                               ),

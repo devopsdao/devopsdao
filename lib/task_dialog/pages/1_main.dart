@@ -846,29 +846,19 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             // maxWidth: maxStaticInternalDialogWidth,
                             ),
                         child: Container(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(10.0),
                           width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
                             return Column(
                               children: <Widget>[
+                                if (interface.dialogCurrentState['name'] == 'performer-progress' ||
+                                    interface.dialogCurrentState['name'] == 'performer-review' ||
+                                    tasksServices.hardhatDebug == true)
                                 Container(
-                                  padding: const EdgeInsets.only(top: 8),
                                   alignment: Alignment.topLeft,
-                                  child: const Text('Create a pull request with a following name: '),
+                                  child: Text('Create a pull request with a following name: ', style: Theme.of(context).textTheme.bodyMedium,),
                                 ),
-                                // Container(
-                                //   padding: const EdgeInsets.all(5.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: Column(
-                                //     children: [
-                                //       const Text(
-                                //         '#NNX-06 Fix glitches on chat page in Task dialog',
-                                //         style: TextStyle(fontWeight: FontWeight.bold),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
 
                                 GestureDetector(
                                   onTap: () async {
@@ -880,7 +870,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                 size: 20,
                                                 color: DodaoTheme.of(context).flushTextColor,
                                               ),
-                                              message: 'Pull request name copied to your clipboard!',
+                                              message: 'Pull request name: dodao.dev/#/tasks/${task.taskAddress} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
                                               backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
@@ -890,314 +880,363 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   child: Container(
                                     padding: const EdgeInsets.all(8.0),
                                     alignment: Alignment.topLeft,
-                                    child: RichText(
-                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                      const WidgetSpan(
-                                          child: Padding(
-                                        padding: EdgeInsets.only(right: 5.0),
-                                        child: Icon(
-                                          Icons.copy,
-                                          size: 16,
-                                          color: Colors.black26,
-                                        ),
-                                      )),
-                                      TextSpan(
-                                          // text: "dodao.dev/#/tasks/${task.taskAddress} task: ${task.title}",
-                                          text: "dodao.dev/#/tasks/${task.taskAddress}",
-                                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    ])),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text('Pull request link: '),
-                                ),
-                                Builder(builder: (context) {
-                                  final Uri toLaunch = Uri.parse(widget.task.repository);
-                                  // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
-                                  return Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.topLeft,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        if (!await launchUrl(
-                                          toLaunch,
-                                          mode: LaunchMode.externalApplication,
-                                        )) {
-                                          throw 'Could not launch $toLaunch';
-                                        }
-                                      },
-                                      child: RichText(
-                                          text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                    child: Text.rich(
+                                      TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
                                         const WidgetSpan(
                                             child: Padding(
-                                          padding: EdgeInsets.only(right: 5.0),
-                                          child: Icon(
-                                            Icons.link,
-                                            size: 16,
-                                            color: Colors.black26,
-                                          ),
-                                        )),
-                                        TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                                      ])),
-                                    ),
-                                  );
-                                }),
-                              ],
-                            );
-                          }),
-                        ),
-                      )),
-                ),
-
-              // ********* GitHub pull/request Status ************ //
-              if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                      elevation: DodaoTheme.of(context).elevation,
-                      borderRadius: DodaoTheme.of(context).borderRadius,
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                            // maxWidth: maxStaticInternalDialogWidth,
-                            ),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          width: innerPaddingWidth,
-                          decoration: materialMainBoxDecoration,
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            // late bool response = false;
-                            // late List response2 = [];
-                            late String status = '';
-                            if (tasksServices.witnetGetLastResult[2] == '') {
-                              status = 'checking';
-                            } else if (tasksServices.witnetGetLastResult[0] && tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
-                              status = 'no matching PR'; //request failed
-                            } else if (tasksServices.witnetGetLastResult[1] ||
-                                tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
-                              status = 'PR is pending merge';
-                            } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
-                              status = 'PR merged';
-                            } else if (tasksServices.witnetGetLastResult[2] == 'open') {
-                              status = 'open';
-                            } else {
-                              status = 'error';
-                            }
-
-                            return Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text('Pull request status:'),
-                                ),
-
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          tasksServices.checkWitnetResultAvailability(task.taskAddress);
-                                        },
-                                        child: Container(
-                                            width: 76,
-                                            height: 36,
-                                            decoration: BoxDecoration(
-                                              gradient: DodaoTheme.of(context).smallButtonGradient,
-                                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                            ),
-                                            child: const Center(
-                                              child: Text(
-                                                'checkResult',
-                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.copy,
+                                                size: 16,
+                                                color: Colors.black26,
                                               ),
                                             )),
-                                      ),
+                                        TextSpan(
+                                            text: "dodao.dev/#/tasks/${task.taskAddress}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold
+                                            )
+                                          // style: const TextStyle(fontWeight: FontWeight.w700)
+                                        ),
+                                      ]
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          await tasksServices.getLastWitnetResult(task.taskAddress);
-                                        },
-                                        child: Container(
-                                            width: 86,
-                                            height: 36,
-                                            decoration: BoxDecoration(
-                                              gradient: DodaoTheme.of(context).smallButtonGradient,
-                                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                            ),
-                                            child: const Center(
-                                              child: Text(
-                                                'getLastWitnetResult',
-                                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
-                                              ),
-                                            )),
-                                      ),
-                                    ),
-                                  ],
-                                ),
 
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // const Padding(
-                                    //   padding: EdgeInsets.all(6.0),
-                                    //   child: Icon(
-                                    //     Icons.api,
-                                    //     size: 16,
-                                    //     color: Colors.black26,
+                                      softWrap: false,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                    // RichText(
+                                    //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                    //   const WidgetSpan(
+                                    //       child: Padding(
+                                    //     padding: EdgeInsets.only(right: 5.0),
+                                    //     child: Icon(
+                                    //       Icons.copy,
+                                    //       size: 16,
+                                    //       color: Colors.black26,
+                                    //     ),
+                                    //   )),
+                                    //   TextSpan(
+                                    //       text: "dodao.dev/#/tasks/${task.taskAddress}",
+                                    //       style: const TextStyle(
+                                    //         overflow: TextOverflow.fade,
+                                    //         )
+                                    //       // style: const TextStyle(fontWeight: FontWeight.w700)
                                     //   ),
-                                    // ),
-                                    Text(tasksServices.witnetPostResult,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: DodaoTheme.of(context).secondaryText,
-                                        )),
-                                    if (tasksServices.witnetPostResult == 'initialized request')
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                        alignment: Alignment.bottomCenter,
-                                        height: 23,
-                                        child: LoadingAnimationWidget.prograssiveDots(
-                                          size: 15,
-                                          color: DodaoTheme.of(context).secondaryText,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(status,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: DodaoTheme.of(context).secondaryText,
-                                        )),
-                                    if (status == 'checking')
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                        alignment: Alignment.bottomCenter,
-                                        height: 23,
-                                        child: LoadingAnimationWidget.prograssiveDots(
-                                          size: 15,
-                                          color: DodaoTheme.of(context).secondaryText,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-
-                                // Container(
-                                //   padding: const EdgeInsets.all(8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
-                                //     WidgetSpan(
-                                //         child: Padding(
-                                //       padding: EdgeInsets.only(right: 5.0),
-                                //       child: Icon(
-                                //         Icons.api,
-                                //         size: 16,
-                                //         color: Colors.black26,
-                                //       ),
-                                //     )),
-                                //     // TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
-                                //     // interface.statusText
-                                //   ])),
-                                // ),
-
-                                Container(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text(
-                                    '* Please wait until your pull request is merged in to '
-                                    'the repository or till customer manually accepts Task completion:',
-                                    style: TextStyle(fontSize: 10),
+                                    // ])
+                                    ),
                                   ),
                                 ),
+                                if (interface.dialogCurrentState['name'] == 'performer-progress' ||
+                                    interface.dialogCurrentState['name'] == 'performer-review' ||
+                                    tasksServices.hardhatDebug == true)
+                                Column(
+                                  children: [
+                                    Container(
+                                      // padding: const EdgeInsets.only(top: 8),
+                                      alignment: Alignment.topLeft,
+                                      child: const Text('Pull request link: '),
+                                    ),
+                                    Builder(builder: (context) {
+                                      final Uri toLaunch = Uri.parse(widget.task.repository);
+                                      // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
+                                      return Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        alignment: Alignment.topLeft,
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            if (!await launchUrl(
+                                              toLaunch,
+                                              mode: LaunchMode.externalApplication,
+                                            )) {
+                                              throw 'Could not launch $toLaunch';
+                                            }
+                                          },
+                                          child: RichText(
+                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                                const WidgetSpan(
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(right: 5.0),
+                                                      child: Icon(
+                                                        Icons.link,
+                                                        size: 16,
+                                                        color: Colors.black26,
+                                                      ),
+                                                    )),
+                                                TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                              ])),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                                if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
 
-                                // Container(
-                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                //           children: const [
-                                //             WidgetSpan(
-                                //                 child: Padding(
-                                //                   padding: EdgeInsets.only(right: 5.0),
-                                //                   child: Icon(
-                                //                     Icons.api,
-                                //                     size: 16,
-                                //                     color: Colors.black26,
-                                //                   ),
-                                //                 )
-                                //             ),
-                                //
-                                //             TextSpan(
-                                //                 text: 'Open',
-                                //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                //             ),
-                                //           ])),
-                                // ),
-                                // Container(
-                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                //           children: const [
-                                //             WidgetSpan(
-                                //                 child: Padding(
-                                //                   padding: EdgeInsets.only(right: 5.0),
-                                //                   child: Icon(
-                                //                     Icons.api,
-                                //                     size: 16,
-                                //                     color: Colors.black26,
-                                //                   ),
-                                //                 )
-                                //             ),
-                                //
-                                //             TextSpan(
-                                //                 text: 'Closed (merged)',
-                                //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                //             ),
-                                //           ])),
-                                // ),
-                                // Container(
-                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                //           children: const [
-                                //             WidgetSpan(
-                                //                 child: Padding(
-                                //                   padding: EdgeInsets.only(right: 5.0),
-                                //                   child: Icon(
-                                //                     Icons.api,
-                                //                     size: 16,
-                                //                     color: Colors.black26,
-                                //                   ),
-                                //                 )
-                                //             ),
-                                //
-                                //             TextSpan(
-                                //                 text: 'Closed (rejected)',
-                                //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                //             ),
-                                //           ])),
-                                // )
+                                  Builder(builder: (context) {
+                                    // late bool response = false;
+                                    // late List response2 = [];
+                                    late String status = '';
+                                    if (tasksServices.witnetGetLastResult[2] == '') {
+                                      status = '';
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'checking') {
+                                      status = 'checking';
+                                    } else if (tasksServices.witnetGetLastResult[0] && tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
+                                      status = 'no matching PR'; //request failed
+                                    } else if (tasksServices.witnetGetLastResult[1] ||
+                                        tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
+                                      status = 'PR is pending merge';
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
+                                      status = 'PR merged';
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'open') {
+                                      status = 'open';
+                                    } else {
+                                      status = 'error';
+                                    }
+
+
+
+
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          // padding: const EdgeInsets.only(top: 8),
+                                          alignment: Alignment.topLeft,
+                                          child: const Text('Pull request status:'),
+                                        ),
+
+                                        // Row(
+                                        //   children: [
+                                        //     Padding(
+                                        //       padding: const EdgeInsets.all(4.0),
+                                        //       child: GestureDetector(
+                                        //         onTap: () async {
+                                        //           tasksServices.checkWitnetResultAvailability(task.taskAddress);
+                                        //         },
+                                        //         child: Container(
+                                        //             width: 76,
+                                        //             height: 36,
+                                        //             decoration: BoxDecoration(
+                                        //               gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        //               borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                        //             ),
+                                        //             child: const Center(
+                                        //               child: Text(
+                                        //                 'checkResult',
+                                        //                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                        //               ),
+                                        //             )),
+                                        //       ),
+                                        //     ),
+                                        //     Padding(
+                                        //       padding: const EdgeInsets.all(4.0),
+                                        //       child: GestureDetector(
+                                        //         onTap: () async {
+                                        //           await tasksServices.getLastWitnetResult(task.taskAddress);
+                                        //         },
+                                        //         child: Container(
+                                        //             width: 86,
+                                        //             height: 36,
+                                        //             decoration: BoxDecoration(
+                                        //               gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        //               borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                        //             ),
+                                        //             child: const Center(
+                                        //               child: Text(
+                                        //                 'getLastWitnetResult',
+                                        //                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                        //               ),
+                                        //             )),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: RichText(
+                                            text: TextSpan(style: Theme.of(context).textTheme.bodySmall,
+                                                children: [
+                                              const WidgetSpan(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(right: 5.0),
+                                                    child: Icon(
+                                                      Icons.api,
+                                                      size: 16,
+                                                      color: Colors.black26,
+                                                    ),
+                                                  )),
+                                              TextSpan(text: tasksServices.witnetPostResult, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                                  if (tasksServices.witnetPostResult == 'initialized request')
+                                                    WidgetSpan(
+                                                      child: Container(
+                                                        padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                                        alignment: Alignment.bottomCenter,
+                                                        height: 23,
+                                                        child: LoadingAnimationWidget.prograssiveDots(
+                                                          size: 15,
+                                                          color: DodaoTheme.of(context).secondaryText,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ])),
+                                        ),
+
+                                        if (tasksServices.witnetPostResult == 'request mined' || tasksServices.witnetPostResult == 'result available')
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                          child: RichText(
+                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall,
+                                                  children: [
+                                                    const WidgetSpan(
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(right: 5.0),
+                                                          child: Icon(
+                                                            Icons.api,
+                                                            size: 16,
+                                                            color: Colors.black26,
+                                                          ),
+                                                        )),
+                                                    TextSpan(text: status, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                                    if (status == 'checking')
+                                                      WidgetSpan(
+                                                        child: Container(
+                                                          padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                                          alignment: Alignment.bottomCenter,
+                                                          height: 23,
+                                                          child: LoadingAnimationWidget.prograssiveDots(
+                                                            size: 15,
+                                                            color: DodaoTheme.of(context).secondaryText,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ])),
+                                        ),
+
+                                        // Container(
+                                        //   padding: const EdgeInsets.all(8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
+                                        //     WidgetSpan(
+                                        //         child: Padding(
+                                        //       padding: EdgeInsets.only(right: 5.0),
+                                        //       child: Icon(
+                                        //         Icons.api,
+                                        //         size: 16,
+                                        //         color: Colors.black26,
+                                        //       ),
+                                        //     )),
+                                        //     // TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
+                                        //     // interface.statusText
+                                        //   ])),
+                                        // ),
+                                        if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
+                                        Container(
+                                          padding: const EdgeInsets.only(top: 8),
+                                          alignment: Alignment.topLeft,
+                                          child: const Text(
+                                            '* Please wait until your pull request is merged in to '
+                                                'the repository or till customer manually accepts Task completion:',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ),
+
+                                        // Container(
+                                        //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                        //           children: const [
+                                        //             WidgetSpan(
+                                        //                 child: Padding(
+                                        //                   padding: EdgeInsets.only(right: 5.0),
+                                        //                   child: Icon(
+                                        //                     Icons.api,
+                                        //                     size: 16,
+                                        //                     color: Colors.black26,
+                                        //                   ),
+                                        //                 )
+                                        //             ),
+                                        //
+                                        //             TextSpan(
+                                        //                 text: 'Open',
+                                        //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                        //             ),
+                                        //           ])),
+                                        // ),
+                                        // Container(
+                                        //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                        //           children: const [
+                                        //             WidgetSpan(
+                                        //                 child: Padding(
+                                        //                   padding: EdgeInsets.only(right: 5.0),
+                                        //                   child: Icon(
+                                        //                     Icons.api,
+                                        //                     size: 16,
+                                        //                     color: Colors.black26,
+                                        //                   ),
+                                        //                 )
+                                        //             ),
+                                        //
+                                        //             TextSpan(
+                                        //                 text: 'Closed (merged)',
+                                        //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                        //             ),
+                                        //           ])),
+                                        // ),
+                                        // Container(
+                                        //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                        //           children: const [
+                                        //             WidgetSpan(
+                                        //                 child: Padding(
+                                        //                   padding: EdgeInsets.only(right: 5.0),
+                                        //                   child: Icon(
+                                        //                     Icons.api,
+                                        //                     size: 16,
+                                        //                     color: Colors.black26,
+                                        //                   ),
+                                        //                 )
+                                        //             ),
+                                        //
+                                        //             TextSpan(
+                                        //                 text: 'Closed (rejected)',
+                                        //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                        //             ),
+                                        //           ])),
+                                        // )
+                                      ],
+                                    );
+                                  }),
+
+
                               ],
                             );
                           }),
                         ),
                       )),
                 ),
+
+              // // ********* GitHub pull/request Status ************ //
+              //
+              //   Container(
+              //     padding: const EdgeInsets.only(top: 14.0),
+              //     child: Material(
+              //         elevation: DodaoTheme.of(context).elevation,
+              //         borderRadius: DodaoTheme.of(context).borderRadius,
+              //         child: ConstrainedBox(
+              //           constraints: const BoxConstraints(
+              //               // maxWidth: maxStaticInternalDialogWidth,
+              //               ),
+              //           child: Center()
+              //         )),
+              //   ),
 
               // ********* GitHub pull/request Link Information ************ //
               if (((interface.dialogCurrentState['name'] == 'customer-new' ||

@@ -651,6 +651,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             }
 
             if (nftPresent) {
+              tokenIds = [tokenId];
+              tokenAmounts = [amounts];
               tokenContracts.add(tasksServices.contractAddress);
               nftPresent = false;
             }

@@ -2521,7 +2521,7 @@ class TasksServices extends ChangeNotifier {
       transactionStatuses[nanoId]!['createTaskContract']!['status'] = 'confirmed';
       transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] = 'complete';
       transactionStatuses[nanoId]!['createTaskContract']!['txn'] = txn;
-
+      notifyListeners();
       tellMeHasItMined(txn, 'createTaskContract', nanoId);
 
       // notifyListeners();
@@ -2577,7 +2577,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['addTokens']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['addTokens']!['tokenApproved'] = 'complete';
     transactionStatuses[nanoId]!['addTokens']!['txn'] = txn;
-
+    notifyListeners();
     tellMeHasItMined(txn, 'addTokens', nanoId);
     // notifyListeners();
   }
@@ -2622,7 +2622,7 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = txn;
     transactionStatuses[nanoId]!['taskParticipate']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskParticipate']!['txn'] = txn;
-    // notifyListeners();
+    notifyListeners();
     tellMeHasItMined(txn, 'taskParticipate', nanoId);
   }
 
@@ -2668,7 +2668,7 @@ class TasksServices extends ChangeNotifier {
     // lastTxn = txn;
     transactionStatuses[nanoId]!['taskAuditParticipate']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskAuditParticipate']!['txn'] = txn;
-    // notifyListeners();
+    notifyListeners();
     tellMeHasItMined(txn, 'taskAuditParticipate', nanoId);
   }
 
@@ -2727,7 +2727,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = txn;
     transactionStatuses[nanoId]!['taskStateChange']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskStateChange']!['txn'] = txn;
-    // notifyListeners();
+    notifyListeners();
     tellMeHasItMined(txn, 'taskStateChange', nanoId);
   }
 
@@ -2774,7 +2774,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = txn;
     transactionStatuses[nanoId]!['taskAuditDecision']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskAuditDecision']!['txn'] = txn;
-    // notifyListeners();
+    notifyListeners();
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
   }
 
@@ -2816,8 +2816,7 @@ class TasksServices extends ChangeNotifier {
 
     transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['txn'] = txn;
-    // notifyListeners();
-
+    notifyListeners();
     tellMeHasItMined(txn, 'sendChatMessage', nanoId, messageNanoID);
   }
 
@@ -2864,7 +2863,7 @@ class TasksServices extends ChangeNotifier {
     lastTxn = txn;
     transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
-    // notifyListeners();
+    notifyListeners();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
@@ -2922,7 +2921,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
     transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
     transactionStatuses['createNFT']!['createNFT']!['txn'] = txn;
-    // notifyListeners();
+    notifyListeners();
     tellMeHasItMined(txn, 'createNFT', 'createNFT');
     return txn;
   }
@@ -2947,6 +2946,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
     transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
     transactionStatuses['mintFungible']!['mintFungible']!['txn'] = txn;
+    notifyListeners();
     tellMeHasItMined(txn, 'mintFungible', 'mintFungible');
     return txn;
   }
@@ -2971,6 +2971,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['txn'] = txn;
+    notifyListeners();
     tellMeHasItMined(txn, 'mintNonFungible', 'mintNonFungible');
     return txn;
   }
@@ -3037,9 +3038,11 @@ class TasksServices extends ChangeNotifier {
     String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
     transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['status'] = 'confirmed';
     transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['txn'] = txn;
+    notifyListeners();
     tellMeHasItMined(txn, 'postWitnetRequest', 'postWitnetRequest');
     if (txn.length == 66) {
       witnetPostResult = 'request mined';
+      witnetGetLastResult = [false, false, 'checking'];
       checkWitnetResultAvailability(taskAddress);
     } else {
       witnetPostResult = 'request failed';
@@ -3079,6 +3082,7 @@ class TasksServices extends ChangeNotifier {
   Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress) async {
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
+
       var result = await witnetFacet.getLastResult(taskAddress);
       print(result);
 
@@ -3119,6 +3123,7 @@ class TasksServices extends ChangeNotifier {
     String txn = await witnetFacet.saveSuccessfulResult(taskAddress, credentials: creds, transaction: transaction);
     transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['status'] = 'confirmed';
     transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['txn'] = txn;
+    notifyListeners();
     tellMeHasItMined(txn, 'saveLastWitnetResult', 'saveLastWitnetResult');
     return txn;
   }
