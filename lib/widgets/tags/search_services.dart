@@ -91,7 +91,9 @@ class SearchServices extends ChangeNotifier {
     // always remove from main filter list:
     // mintPageFilterResults.removeWhere((key, value) => value.tag == tagName);
     // after remove from actual list, we need to reset mintPageFilterResults to false
-    selectionPageFilterResults[tagKey]!.selected = false;
+    if (page != 'create') {
+      selectionPageFilterResults[tagKey]!.selected = false;
+    }
     notifyListeners();
     // selectTagListOnTasksPages(page: page, initial: false);
   }

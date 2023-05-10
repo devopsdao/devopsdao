@@ -1071,9 +1071,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                     WidgetSpan(
                                                       child: Container(
                                                         padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                                        alignment: Alignment.bottomCenter,
-                                                        height: 23,
-                                                        child: LoadingAnimationWidget.prograssiveDots(
+                                                        // alignment: Alignment.bottomCenter,
+                                                        // height: 23,
+                                                        child: LoadingAnimationWidget.fourRotatingDots(
                                                           size: 15,
                                                           color: DodaoTheme.of(context).secondaryText,
                                                         ),
@@ -1102,9 +1102,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                       WidgetSpan(
                                                         child: Container(
                                                           padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                                          alignment: Alignment.bottomCenter,
-                                                          height: 23,
-                                                          child: LoadingAnimationWidget.prograssiveDots(
+                                                          // alignment: Alignment,
+                                                          // height: 20,
+                                                          child: LoadingAnimationWidget.fourRotatingDots(
                                                             size: 15,
                                                             color: DodaoTheme.of(context).secondaryText,
                                                           ),

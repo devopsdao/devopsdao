@@ -245,13 +245,10 @@ class _PaymentState extends State<Payment> {
                               onChanged: (String? value) {
                                 // This is called when the user selects an item.
                                 if (value == tasksServices.chainTicker) {
+                                  // interface.tokenSelected passing to create_job/main.dart to detect USDC token selection:
+                                  interface.tokenSelected = value!;
                                   tasksServices.taskTokenSymbol = 'ETH';
                                   // print('taskTokenSymbol changed to default value ${value!}');
-                                } else {
-                                  tasksServices.taskTokenSymbol = value!;
-                                  // print('taskTokenSymbol changed to ${value!}');
-                                }
-                                if (value == tasksServices.chainTicker) {
                                   interface.tokensEntered = 0.0;
                                   // valueController!.text = '0.0 ${tasksServices.chainTicker}';
                                   valueController!.text = '0.0 ${tasksServices.chainTicker}';
@@ -259,6 +256,9 @@ class _PaymentState extends State<Payment> {
                                   minPrice = devLowPrice;
                                   maxPrice = devHighPrice;
                                 } else {
+                                  interface.tokenSelected = value!;
+                                  tasksServices.taskTokenSymbol = value!;
+                                  // print('taskTokenSymbol changed to ${value!}');
                                   interface.tokensEntered = 0.0;
                                   valueController!.text = '0.0 USDC';
                                   _currentPriceValue = 0.0;

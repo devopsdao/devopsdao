@@ -2344,9 +2344,14 @@ class TasksServices extends ChangeNotifier {
   //   return tasks;
   // }
 
-  Future<void> approveSpend(EthereumAddress _contractAddress, EthereumAddress publicAddress, String symbol, BigInt amount, String nanoId) async {
+  Future<void> approveSpend(EthereumAddress _contractAddress, EthereumAddress publicAddress, BigInt amount, String nanoId, bool initial, String operationName) async {
     var creds;
     var senderAddress;
+    if (initial) {
+      transactionStatuses[nanoId] = {
+        operationName: {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'}
+      };
+    }
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
       senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
@@ -2359,9 +2364,10 @@ class TasksServices extends ChangeNotifier {
     );
     final result = await ierc20.approve(_contractAddress, amount, credentials: creds, transaction: transaction);
     print('result of approveSpend: ' + result);
-    transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] = 'approved';
+    transactionStatuses[nanoId]![operationName]!['tokenApproved'] = 'approved';
     notifyListeners();
-    await tellMeHasItMined(result, 'createTaskContract', nanoId);
+    await tellMeHasItMined(result, operationName, nanoId);
+
     // print('mined');
   }
 
@@ -2423,7 +2429,7 @@ class TasksServices extends ChangeNotifier {
       if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
         var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
         if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-          tokenContractsApproved[tokenContracts[i]] = false;
+          tokenContractsApproved[tokenContracts[i]] = true;
         } else {
           tokenContractsApproved[tokenContracts[i]] = false;
         }
@@ -2556,7 +2562,8 @@ class TasksServices extends ChangeNotifier {
           txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
         }
       } else if (taskTokenSymbol == 'USDC') {
-        await approveSpend(_contractAddress, publicAddress!, taskTokenSymbol, priceInBigInt, nanoId);
+        isRequestApproved = true;
+        await approveSpend(_contractAddress, publicAddress!, priceInBigInt, nanoId, false, 'createTaskContract');
         final transaction = Transaction(
           from: senderAddress,
           // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),

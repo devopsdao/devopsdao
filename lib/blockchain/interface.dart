@@ -13,6 +13,8 @@ import 'package:jovial_svg/jovial_svg.dart';
 class InterfaceServices extends ChangeNotifier {
 
   late double tokensEntered = 0.0;
+  late String tokenSelected = '';
+
 
   // ************* Transport Images ****** //
   late Map<String, Widget> interchainImages = {

@@ -493,6 +493,8 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                     enteredKeyword: searchServices.searchKeywordController.text,
                     tagsMap: searchServices.customerTagsList );
               }
+            }  else if (widget.page == 'create') {
+
             }
           });
 
