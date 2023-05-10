@@ -2405,7 +2405,7 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<Map<EthereumAddress, bool>> isTokenApproved(tokenContracts) async {
+  Future<Map<EthereumAddress, bool>> isTokenApproved(tokenContracts, amounts) async {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2424,12 +2424,27 @@ class TasksServices extends ChangeNotifier {
     for (var i = 0; i < tokenContracts.length; i++) {
       var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
       //check if ERC-1155
-      var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
-      var supportsInterface = await ierc165.supportsInterface(interfaceID);
-      if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
+      var erc1155InterfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
+      var erc20InterfaceID = Uint8List.fromList(hex.decode('0x36372b07'));
+      var erc721InterfaceID = Uint8List.fromList(hex.decode('0x80ac58cd'));
+      if (await ierc165.supportsInterface(Uint8List.fromList(erc1155InterfaceID)) == true) {
         var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
         if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
           tokenContractsApproved[tokenContracts[i]] = true;
+        } else {
+          tokenContractsApproved[tokenContracts[i]] = false;
+        }
+      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc20InterfaceID)) == true) {
+        var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc20.allowance(senderAddress, tokenContracts[i]) >= amounts[i]) {
+          tokenContractsApproved[tokenContracts[i]] = false;
+        } else {
+          tokenContractsApproved[tokenContracts[i]] = false;
+        }
+      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc721InterfaceID)) == true) {
+        var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+          tokenContractsApproved[tokenContracts[i]] = false;
         } else {
           tokenContractsApproved[tokenContracts[i]] = false;
         }
@@ -2438,7 +2453,7 @@ class TasksServices extends ChangeNotifier {
     return tokenContractsApproved;
   }
 
-  Future<void> setApprovalForAll(tokenContracts) async {
+  Future<void> setApprovalForAll(tokenContracts, amounts) async {
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2458,11 +2473,22 @@ class TasksServices extends ChangeNotifier {
       var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
       //check if ERC-1155
       var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
-      var supportsInterface = await ierc165.supportsInterface(interfaceID);
+      var erc20InterfaceID = Uint8List.fromList(hex.decode('0x36372b07'));
+      var erc721InterfaceID = Uint8List.fromList(hex.decode('0x80ac58cd'));
       if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
         var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
         if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
           await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+        }
+      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc20InterfaceID)) == true) {
+        var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
+          await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
+        }
+      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc721InterfaceID)) == true) {
+        var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+          await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
         }
       }
     }
