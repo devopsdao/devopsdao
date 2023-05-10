@@ -113,7 +113,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
   TextEditingController? githubLinkController;
   final scrollController = ScrollController();
   late bool isTokenApproved = false;
-  late bool nftDetected = false;
+  late bool erc1155Detected = false;
   late bool tokenDetected = false;
   late bool nftApproved = false;
   late bool tokenApproved = false;
@@ -130,10 +130,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var tasksServices = context.read<TasksServices>();
       List<EthereumAddress> addrList = [tasksServices.contractAddress];
-      var response = await tasksServices.isTokenApproved(addrList, [[0]]);
+      var response = await tasksServices.isTokenApproved(addrList);
       isTokenApproved = response[tasksServices.contractAddress]!;
-      tasksServices.myNotifyListeners();
-      print('isTokenApproved $response' );
+      // print(response);
     });
 
   }
@@ -640,14 +639,39 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
             final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
 
+            late approvalButtonName = '';
 
+            final List<String> tags = [];
+            final List<BigInt> tokenId = [];
+            final List<BigInt> amounts = [];
+            //final List<String> tokenNames = [];
 
-            for (var e in searchServices.createTagsList.entries) {
-              if (e.value.bunch.values.first.nft) {
-                nftDetected = true;
+            List<EthereumAddress> tokenContracts = [];
+            List<List<BigInt>> tokenIds = [];
+            List<List<BigInt>> tokenAmounts = [];
+
+            for (var e in searchServices.createTagsList.values) {
+              if (e.bunch.values.first.nft) {
+                erc1155Detected = true;
+                amounts.add(BigInt.from(0));
               }
             }
+            if (erc1155Detected) {
+              tokenContracts.add(tasksServices.contractAddress);
+              tokenAmounts = [amounts];
 
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                final Map<EthereumAddress, <>> tokenContractsApproved = await tasksServices.isTokenApproved(tokenContracts, tokenAmounts);
+                for (var tokenContractApproved in tokenContractsApproved.entries) {
+                  if (!tokenContractApproved.value) {
+                    await tasksServices.getContractTokenName(tokenContractApproved.key);
+                    break;
+                  }
+                }
+                tasksServices.myNotifyListeners();
+              });
+            }
+////////////////////////////////////////\
             //
             //
             // if (interface.tokenSelected == 'USDC' && !tokenApproved) {
@@ -655,6 +679,50 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             //   interface.tokenSelected == '';
             //
             // }
+
+
+
+            late bool nftPresent = false;
+
+            for (var e in searchServices.createTagsList.entries) {
+              for (var e2 in e.value.bunch.entries) {
+                if (e2.value.nft) {
+                  tokenId.add(e2.key);
+                  amounts.add(BigInt.from(1));
+                  nftPresent = true;
+                  //  tokenNames.add(e2.value.name);
+                } else {
+                  tags.add(e.value.name);
+                }
+              }
+            }
+
+            if (nftPresent) {
+              tokenIds = [tokenId];
+              tokenAmounts = [amounts];
+              tokenContracts.add(tasksServices.contractAddress);
+              nftPresent = false;
+            }
+
+            if (interface.tokensEntered != 0) {
+              // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
+              tokenId.insert(0, BigInt.from(0));
+              amounts.insert(0, BigInt.from(interface.tokensEntered * pow(10, 18)));
+              tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
+              tokenIds = [tokenId];
+              tokenAmounts = [amounts];
+            }
+
+            return TaskDialogFAB(
+                inactive: inactive,
+                expand: true,
+                buttonName: buttonName,
+                buttonColorRequired: Colors.lightBlue.shade300,
+                widthSize: buttonWidth,
+                // keyboardActive: keyboardSize == 0 ? false : true;
+                callback: callbackFn,
+            );
+
 
 
             var submitButton = TaskDialogFAB(
@@ -670,9 +738,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 final List<BigInt> amounts = [];
                 //final List<String> tokenNames = [];
 
-                late List<EthereumAddress> tokenContracts = [];
-                late List<List<BigInt>> tokenIds = [];
-                late List<List<BigInt>> tokenAmounts = [];
+                List<EthereumAddress> tokenContracts = [];
+                List<List<BigInt>> tokenIds = [];
+                List<List<BigInt>> tokenAmounts = [];
 
                 late bool nftPresent = false;
 
@@ -720,7 +788,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             );
 
             var approveButtonERC1155 = TaskDialogFAB(
-              inactive: false,
+              inactive: isTokenApproved ? true : false,
               expand: true,
               buttonName: 'Approve(Nft)',
               buttonColorRequired: Colors.lightBlue.shade300,
@@ -728,23 +796,18 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               // keyboardActive: keyboardSize == 0 ? false : true;
               callback: () async {
                 // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
-                final List<EthereumAddress> tokenContracts = [];
-                tokenContracts.add(tasksServices.contractAddress);
+                setState(() {
+                  nftApproved = true;
+                });
                 tasksServices.myNotifyListeners();
                 showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (context) => const WalletActionDialog(
-                      nanoId: 'setApprovalForAll',
-                      taskName: 'setApprovalForAll',
+                    builder: (context) => WalletActionDialog(
+                      nanoId: nanoId,
+                      taskName: 'createTaskContract',
                     ));
-                await tasksServices.setApprovalForAll(tokenContracts, [[0]]);
-                var response = await tasksServices.isTokenApproved(tokenContracts, [[0]]);
-                setState(() {
-                  isTokenApproved = response[tasksServices.contractAddress]!;
-                });
-                tasksServices.myNotifyListeners();
-                print('isTokenApproved $response' );
+
                 // List<EthereumAddress> addrList = [tasksServices.contractAddress];
                 // var response = await tasksServices.isTokenApproved(addrList);
                 // nftApproved = response[tasksServices.contractAddress]!;
@@ -786,53 +849,26 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               callback: () async {},
             );
 
+            if (!tokenApproved && nftDetected) {
+              if (nftDetected && !nftApproved) {
+                print('nftDetected fired');
 
-            if (nftDetected && !isTokenApproved) {
-              // if (nftDetected && !nftApproved) {
-              //   print('nftDetected fired');
-              //   nftDetected = false;
-              // }
+                nftDetected = false;
+              }
               return approveButtonERC1155;
-            }
-
-            // else if (!nftApproved && interface.tokenSelected == 'USDC') {
-            //   if (tokenApproved && interface.tokenSelected != 'USDC') {
-            //     print('fired USDC');
-            //     interface.tokenSelected == '';
-            //   }
-            //   return approveButtonERC20;
-            // }
-
-            else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
+            } else if (!nftApproved && interface.tokenSelected == 'USDC') {
+              if (tokenApproved && interface.tokenSelected != 'USDC') {
+                print('fired USDC');
+                interface.tokenSelected == '';
+              }
+              return approveButtonERC20;
+            } else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
               interface.tokenSelected == '';
               nftDetected = false;
               return submitButton;
             } else {
               return errorButton;
             }
-            //
-            // if (!tokenApproved && nftDetected) {
-            //   if (nftDetected && !nftApproved) {
-            //     print('nftDetected fired');
-            //
-            //     nftDetected = false;
-            //   }
-            //   return approveButtonERC1155;
-            // } else if (!nftApproved && interface.tokenSelected == 'USDC') {
-            //   if (tokenApproved && interface.tokenSelected != 'USDC') {
-            //     print('fired USDC');
-            //     interface.tokenSelected == '';
-            //   }
-            //   return approveButtonERC20;
-            // }
-            //
-            // else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
-            //   interface.tokenSelected == '';
-            //   nftDetected = false;
-            //   return submitButton;
-            // } else {
-            //   return errorButton;
-            // }
 
           }
         ),

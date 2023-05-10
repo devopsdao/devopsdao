@@ -85,6 +85,12 @@ class TagsCompare {
   TagsCompare({required this.state});
 }
 
+class Token {
+  final String name;
+  final bool approved;
+  Token({required this.name, required this.approved});
+}
+
 // class TaskData extends MapBase<String, TaskData> {
 //   final String nanoId;
 //   final String taskType;

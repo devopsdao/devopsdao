@@ -99,7 +99,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
         Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            interface.mainDialogContext.beamToNamed('/customer');
+            context.beamToNamed('/customer');
           });
         });
 
@@ -120,7 +120,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
         Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            interface.mainDialogContext.beamToNamed('/customer');
+            context.beamToNamed('/customer');
           });
         });
       }
@@ -194,7 +194,18 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    } else  {
+    } else if (widget.taskName == 'setApprovalForAll') {
+      if (status == 'pending') {
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
+    }  else  {
       if (status == 'pending') {
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';
