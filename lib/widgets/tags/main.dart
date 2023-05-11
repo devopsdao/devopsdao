@@ -302,29 +302,32 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             ],
                           )),
                       const Spacer(),
-                      InkWell(
-                        onTap: () {
-                          searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
-                          searchServices.forbidSearchKeywordClear = true;
-                          searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
-                          searchServices.nftSelection(nftName: '', nftKey: BigInt.from(0), unselectAll: true, unselectAllInBunch: false);
-                          collectionServices.clearSelectedInManager();
-                          Navigator.pop(context);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(0.0),
-                          height: 30,
-                          width: 30,
-                          child: Row(
-                            children: const <Widget>[
-                              Expanded(
-                                child: Icon(
-                                  Icons.close,
-                                  size: 30,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: InkWell(
+                          onTap: () {
+                            searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
+                            searchServices.forbidSearchKeywordClear = true;
+                            searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
+                            searchServices.nftSelection(nftName: '', nftKey: BigInt.from(0), unselectAll: true, unselectAllInBunch: false);
+                            collectionServices.clearSelectedInManager();
+                            Navigator.pop(context);
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
+                            height: 30,
+                            width: 30,
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 30,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -338,7 +341,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                       builder: (context, model, child) {
                         return Row(
                           // crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             // SegmentedButton<ItemFilter>(
                             //   segments: const <ButtonSegment<ItemFilter>>[
@@ -362,38 +365,39 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             //     });
                             //   },
                             // ),
-
-                            ToggleButtons(
-                              direction: Axis.horizontal,
-                              onPressed: (int index) {
-                                setState(() {
-                                  // The button that is tapped is set to true, and the others to false.
-                                  for (int i = 0; i < selectedFilter.length; i++) {
-                                    setState(() {
-
-                                      selectedFilter[i] = i == index;
-
-                                    });
-                                  }
-                                });
-                              },
-                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                              borderWidth: 2,
-                              selectedBorderColor: DodaoTheme.of(context).tabIndicator,
-                              selectedColor: DodaoTheme.of(context).primaryText,
-                              fillColor: DodaoTheme.of(context).tabIndicator,
-                              color: DodaoTheme.of(context).secondaryText,
-                              borderColor: DodaoTheme.of(context).tabIndicator,
-                              constraints: const BoxConstraints(
-                                minHeight: 30.0,
-                                minWidth: 60.0,
-                              ),
-                              isSelected: selectedFilter,
-                              children: filter,
-                            ),
+                            // Expanded(child: Center()),
+                            // Container(),
+                            // ToggleButtons(
+                            //   direction: Axis.horizontal,
+                            //   onPressed: (int index) {
+                            //     setState(() {
+                            //       // The button that is tapped is set to true, and the others to false.
+                            //       for (int i = 0; i < selectedFilter.length; i++) {
+                            //         setState(() {
+                            //
+                            //           selectedFilter[i] = i == index;
+                            //
+                            //         });
+                            //       }
+                            //     });
+                            //   },
+                            //   borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            //   borderWidth: 2,
+                            //   selectedBorderColor: DodaoTheme.of(context).tabIndicator,
+                            //   selectedColor: DodaoTheme.of(context).primaryText,
+                            //   fillColor: DodaoTheme.of(context).tabIndicator,
+                            //   color: DodaoTheme.of(context).secondaryText,
+                            //   borderColor: DodaoTheme.of(context).tabIndicator,
+                            //   constraints: const BoxConstraints(
+                            //     minHeight: 30.0,
+                            //     minWidth: 60.0,
+                            //   ),
+                            //   isSelected: selectedFilter,
+                            //   children: filter,
+                            // ),
                             Row(
                               children: [
-                                const Text('Tags: '),
+                                const Text('Tags selected: '),
                                 Badges.Badge(
                                   // position: BadgePosition.topEnd(top: 10, end: 10),
                                   elevation: 0,
@@ -420,7 +424,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             ),
                             Row(
                               children: [
-                                const Text('Nft\'s: '),
+                                const Text('Nft\'s selected: '),
                                 Badges.Badge(
                                   elevation: 0,
                                   badgeContent: Container(

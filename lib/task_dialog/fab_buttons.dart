@@ -67,7 +67,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Start the task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 150, // Keyboard shown?
           callback: () {
             task.justLoaded = false;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
@@ -113,7 +113,7 @@ class SetsOfFabButtons extends StatelessWidget {
       } else if ((task.taskState == "review" && fromPage == 'performer') &&
           (tasksServices.witnetPostResult == 'not initialized' ||
               tasksServices.witnetPostResult == 'request failed' ||
-              tasksServices.witnetGetLastResult[0])) {
+              tasksServices.witnetGetLastResult[0]) && task.repository.isNotEmpty) {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
@@ -127,8 +127,8 @@ class SetsOfFabButtons extends StatelessWidget {
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletActionDialog(
-                      nanoId: task.nanoId,
+                builder: (context) => const WalletActionDialog(
+                      nanoId: 'postWitnetRequest',
                       taskName: 'postWitnetRequest',
                     ));
             // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));

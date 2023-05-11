@@ -3,6 +3,7 @@ import 'package:dodao/blockchain/task_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:nanoid/async.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
 import '../../config/theme.dart';
+import '../wallet_action_dialog.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -236,7 +238,17 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
-    await widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text);
+    final messageNanoID = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
+    widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text, messageNanoID);
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => WalletActionDialog(
+        nanoId: widget.task.nanoId,
+        taskName: 'sendChatMessage_$messageNanoID',
+      )
+    );
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.task.messages[0][3].toString()),

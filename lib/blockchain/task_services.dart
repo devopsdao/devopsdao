@@ -2886,8 +2886,7 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
   }
 
-  Future<void> sendChatMessage(EthereumAddress contractAddress, String nanoId, String message, {BigInt? replyTo}) async {
-    final messageNanoID = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
+  Future<void> sendChatMessage(EthereumAddress contractAddress, String nanoId, String message, messageNanoID, {BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'sendChatMessage_$messageNanoID': {'status': 'pending', 'txn': 'initial'}
     };

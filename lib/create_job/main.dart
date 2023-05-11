@@ -118,6 +118,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
   late bool nftApproved = false;
   late bool tokenApproved = false;
 
+  late bool expandOnceWitnetInfo = true;
+  late bool expandOnceWitnetLink = true;
+
   @override
   void initState() {
     super.initState();
@@ -218,11 +221,18 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                           decoration: materialMainBoxDecoration,
                           child: TextFormField(
                             onTap: () {
-                              scrollController.animateTo(
-                                scrollController.position.minScrollExtent,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.fastOutSlowIn,
-                              );
+                              // scrollController.animateTo(
+                              //   scrollController.position.minScrollExtent,
+                              //   duration: const Duration(milliseconds: 500),
+                              //   curve: Curves.fastOutSlowIn,
+                              // );
+                              Future.delayed(const Duration(milliseconds: 400), () {
+                                scrollController.animateTo(
+                                  scrollController.position.minScrollExtent,
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.fastOutSlowIn,
+                                );
+                              });
                             },
                             controller: titleFieldController,
                             // onChanged: (_) => EasyDebounce.debounce(
@@ -388,6 +398,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                     innerPaddingWidth: innerPaddingWidth,
                   ),
                 ),
+
+                /// Witnet Container **********
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -440,6 +452,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                     ),
                                     prefixIcon: IconButton(
                                       onPressed: () async {
+
                                         setState(() {
                                           if (witnetSection) {
                                             witnetSection = false;
@@ -447,6 +460,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                             witnetSection = true;
                                           }
                                         });
+
                                       },
                                       icon: DodaoTheme.of(context).witnetLogo,
                                       highlightColor: Colors.grey,
@@ -470,6 +484,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                               // size: 30,
                                             ),
                                             onPressed: () async {
+
                                               final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
                                               setState(() {
                                                 githubLinkController!.text = '${clipboardData?.text}';
@@ -545,7 +560,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                 ExpandedSection(
                                   expand: witnetSection,
                                   callback: () {
-                                    if (witnetSection) {
+                                    if (witnetSection && expandOnceWitnetInfo) {
                                       Future.delayed(const Duration(milliseconds: 300), () {
                                         scrollController.animateTo(
                                           scrollController.position.maxScrollExtent,
@@ -553,6 +568,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                           curve: Curves.fastOutSlowIn,
                                         );
                                       });
+                                      expandOnceWitnetInfo = false;
                                     }
                                   },
                                   child: Container(
@@ -583,7 +599,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                 ExpandedSection(
                                   expand: githubLinkController!.text.isNotEmpty,
                                   callback: () {
-                                    if (githubLinkController!.text.isNotEmpty) {
+                                    if (githubLinkController!.text.isNotEmpty && expandOnceWitnetLink) {
                                       Future.delayed(const Duration(milliseconds: 300), () {
                                         scrollController.animateTo(
                                           scrollController.position.maxScrollExtent,
@@ -591,6 +607,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                           curve: Curves.fastOutSlowIn,
                                         );
                                       });
+                                      expandOnceWitnetLink = false;
                                     }
                                   },
                                   child: Container(
