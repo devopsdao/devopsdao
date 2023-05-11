@@ -534,7 +534,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                         Navigator.pop(context);
 
                         if (widget.page == 'create_collection') {
-                          await tasksServices.collectMyNfts();
+                          await tasksServices.collectMyTokens();
                           // searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
                           collectionServices.update();
                           searchServices.searchKeywordController.clear();

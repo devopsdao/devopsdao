@@ -51,9 +51,9 @@ class _MainTagsPageState extends State<MainTagsPage> {
       searchServices.tagSelection(typeSelection: 'selection', tagName: '', unselectAll: true, tagKey: '');
 
       //refresh NFT "selection" list
-      tasksServices.collectMyNfts();
+      await tasksServices.collectMyTokens();
       Future.delayed(
-        const Duration(milliseconds: 300), () {
+        const Duration(milliseconds: 200), () {
             searchServices.refreshLists('selection');
             searchServices.refreshLists('treasury');
         }

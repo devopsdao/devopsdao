@@ -347,7 +347,7 @@ class TasksServices extends ChangeNotifier {
     await connectRPC(chainId);
     await startup();
     // await nftInitialCollection();
-    await collectMyNfts();
+    await collectMyTokens();
     // await getABI();
     // await getDeployedContract();
 
@@ -543,7 +543,7 @@ class TasksServices extends ChangeNotifier {
               validChainIDWC = true;
               await connectRPC(chainId);
               await startup();
-              await collectMyNfts();
+              await collectMyTokens();
             } else {
               validChainID = false;
               validChainIDWC = false;
@@ -667,7 +667,7 @@ class TasksServices extends ChangeNotifier {
           validChainIDMM = true;
           await connectRPC(chainId);
           await startup();
-          await collectMyNfts();
+          await collectMyTokens();
         } else {
           validChainID = false;
           validChainIDMM = false;
@@ -1160,8 +1160,8 @@ class TasksServices extends ChangeNotifier {
 
       String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
       hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+      credentials = EthPrivateKey.fromHex(hardhatAccounts[2]["key"]);
+      publicAddress = EthereumAddress.fromHex(hardhatAccounts[2]["address"]);
       walletConnected = true;
       validChainID = true;
     }
@@ -1258,7 +1258,7 @@ class TasksServices extends ChangeNotifier {
 
   late Map<String, NftCollection> resultInitialCollectionMap = {};
   late Map<String, NftCollection> resultNftsMap = {};
-  Future<void> collectMyNfts() async {
+  Future<void> collectMyTokens() async {
     if (publicAddress != null) {
       // late Map<String, dynamic> resultCollectionMap;
       // final List<EthereumAddress> shared = List.filled(resultInitialCollectionMap.entries.length, publicAddress!);
@@ -1304,7 +1304,7 @@ class TasksServices extends ChangeNotifier {
           return acc;
         },
       );
-
+      resultNftsMap.clear();
       for (var e in result.entries) {
         if (e.value.isNotEmpty) {
           late Map<BigInt, TokenItem> bunch = {};

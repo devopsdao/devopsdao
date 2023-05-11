@@ -833,9 +833,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 ),
 
               // ********* GitHub pull/request Performer ************ //
-              if (interface.dialogCurrentState['name'] == 'performer-progress' ||
+              if ((interface.dialogCurrentState['name'] == 'performer-progress' ||
                   interface.dialogCurrentState['name'] == 'performer-review' ||
-                  tasksServices.hardhatDebug == true)
+                  tasksServices.hardhatDebug == true) && task.repository.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(

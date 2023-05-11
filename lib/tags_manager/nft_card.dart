@@ -56,7 +56,7 @@ class NftMint extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image.asset(
                             'assets/images/logo.png',
-                            height: frameHeight - 150,
+                            height: frameHeight - 153,
                             filterQuality: FilterQuality.medium,
                             isAntiAlias: true,
                           ),
