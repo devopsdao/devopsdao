@@ -696,10 +696,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 for (var e in searchServices.createTagsList.entries) {
                   for (var e2 in e.value.bunch.entries) {
                     if (e2.value.nft) {
-                      tokenId.add(e2.key);
-                      amounts.add(BigInt.from(1));
-                      nftPresent = true;
-                      //  tokenNames.add(e2.value.name);
+                      if (e2.value.selected) {
+                        tokenId.add(e2.key);
+                        amounts.add(BigInt.from(1));
+                        nftPresent = true;
+                        //  tokenNames.add(e2.value.name);
+                      }
                     } else {
                       tags.add(e.value.name);
                     }
