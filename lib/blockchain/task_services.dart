@@ -2534,7 +2534,7 @@ class TasksServices extends ChangeNotifier {
       if (hardhatDebug || hardhatLive) {
         historicalBlocks = 1;
       }
-      final fees = await _web3client.getGasInEIP1559(historicalBlocks: historicalBlocks);
+      // final fees = await _web3client.getGasInEIP1559(historicalBlocks: historicalBlocks);
       // final gasPrice = await _web3client.getGasPrice();
 
       final transaction = Transaction(
