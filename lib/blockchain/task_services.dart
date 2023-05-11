@@ -374,6 +374,8 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'MATIC';
       _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
       _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
+      // _rpcUrl = 'https://rpc-mumbai.matic.today';
+      // _wsUrl = 'wss://rpc-mumbai.matic.today';
     } else if (chainId == 280) {
       chainTicker = 'ETH';
       _rpcUrl = 'https://zksync2-testnet.zksync.dev';
@@ -2344,7 +2346,8 @@ class TasksServices extends ChangeNotifier {
   //   return tasks;
   // }
 
-  Future<void> approveSpend(EthereumAddress _contractAddress, EthereumAddress publicAddress, BigInt amount, String nanoId, bool initial, String operationName) async {
+  Future<void> approveSpend(
+      EthereumAddress _contractAddress, EthereumAddress publicAddress, BigInt amount, String nanoId, bool initial, String operationName) async {
     var creds;
     var senderAddress;
     if (initial) {
