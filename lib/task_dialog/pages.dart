@@ -38,7 +38,6 @@ class TaskDialogPages extends StatefulWidget {
 }
 
 class _TaskDialogPagesState extends State<TaskDialogPages> {
-  double ratingScore = 0;
 
   late bool initDone;
   @override
@@ -78,41 +77,15 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
       double innerPaddingWidth = dialogConstraints.maxWidth - 50;
       // print (dialogConstraints.maxWidth);
 
-      return Container(
-        // color: DodaoTheme.of(context).taskBackgroundColor,
-        child: PageView(
+        return PageView(
           scrollDirection: Axis.horizontal,
-
-          // pageSnapping: false,
-          // physics: ((
-          //   fromPage == 'tasks' ||
-          //   fromPage == 'auditor' ||
-          //   fromPage == 'performer') &&
-          //   interface.di6666Num == 1)
-          //     ? const RightBlockedScrollPhysics() : null,
-          // physics: BouncingScrollPhysics(),
-          // physics: const NeverScrollableScrollPhysics(),
           controller: interface.dialogPagesController,
           onPageChanged: (number) {
             Provider.of<InterfaceServices>(context, listen: false).updateDialogPageNum(number);
           },
           children: <Widget>[
-            // GestureDetector(
-            //   child: RiveAnimation.file(
-            //     'assets/rive_animations/rating_animation.riv',
-            //     fit: BoxFit.fitWidth,
-            //     onInit: _onRiveInit,
-            //   ),
-            //   onTap: _hitBump,
-            // ),
-            // Shimmer.fromColors(
-            //   baseColor: Colors.grey[300]!,
-            //   highlightColor: Colors.grey[100]!,
-            //   enabled: shimmerEnabled,
-            //   child:
             if (interface.dialogCurrentState['pages'].containsKey('topup'))
               TopUpPage(
-                screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
                 screenHeightSize: widget.screenHeightSize,
                 innerPaddingWidth: innerPaddingWidth,
                 task: task,
@@ -133,12 +106,16 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
                 fromPage: fromPage,
               ),
             if (interface.dialogCurrentState['pages'].containsKey('select'))
-              SelectionPage(screenHeightSize: widget.screenHeightSize, innerPaddingWidth: innerPaddingWidth, task: task),
+              SelectionPage(
+                  screenHeightSize: widget.screenHeightSize,
+                  innerPaddingWidth: innerPaddingWidth,
+                  task: task
+              ),
 
-            if (interface.dialogCurrentState['pages'].containsKey('widgets.chat')) ChatPage(task: task, innerPaddingWidth: innerPaddingWidth)
+            if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
+              ChatPage(task: task, innerPaddingWidth: innerPaddingWidth)
           ],
-        ),
-      );
+        );
     });
   }
 }

@@ -11,7 +11,6 @@ import '../../widgets/wallet_action_dialog.dart';
 import '../widget/dialog_button_widget.dart';
 
 class TopUpPage extends StatefulWidget {
-  final double screenHeightSizeNoKeyboard;
   final double innerPaddingWidth;
   final double screenHeightSize;
   final Task task;
@@ -19,7 +18,6 @@ class TopUpPage extends StatefulWidget {
 
   const TopUpPage(
       {Key? key,
-        required this.screenHeightSizeNoKeyboard,
         required this.innerPaddingWidth,
         required this.screenHeightSize,
         required this.task,
@@ -68,13 +66,11 @@ class _TopUpPageState extends State<TopUpPage> {
       backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
 
       body: Container(
-        // height: widget.screenHeightSizeNoKeyboard,
         // height: widget.screenHeightSize,
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: interface.maxStaticInternalDialogWidth,
-            // maxHeight: widget.screenHeightSizeNoKeyboard,
             maxHeight: widget.screenHeightSize,
           ),
           child: SingleChildScrollView(

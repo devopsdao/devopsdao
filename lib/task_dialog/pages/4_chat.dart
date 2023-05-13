@@ -27,30 +27,34 @@ class ChatPage extends StatelessWidget {
     var interface = context.watch<InterfaceServices>();
     var emptyClasses = context.watch<EmptyClasses>();
 
-    return Center(
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          child: Material(
-              elevation: DodaoTheme.of(context).elevation,
-              borderRadius: DodaoTheme.of(context).borderRadius,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: interface.maxStaticInternalDialogWidth,
-                ),
-                child: Container(
-                    padding: const EdgeInsets.all(6.0),
-                    // height: widget.topConstraints.maxHeight,
-                    width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: DodaoTheme.of(context).borderRadius,
-                      border: DodaoTheme.of(context).borderGradient,
-                    ),
-                    child: ChatWidget(
-                      task: task, account:
-                      emptyClasses.emptyAccount,
-                      tasksServices: tasksServices
-                    )),
-              )),
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: Material(
+                elevation: DodaoTheme.of(context).elevation,
+                borderRadius: DodaoTheme.of(context).borderRadius,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: interface.maxStaticInternalDialogWidth,
+                  ),
+                  child: Container(
+                      padding: const EdgeInsets.all(6.0),
+                      // height: widget.topConstraints.maxHeight,
+                      width: innerPaddingWidth,
+                      decoration: BoxDecoration(
+                        borderRadius: DodaoTheme.of(context).borderRadius,
+                        border: DodaoTheme.of(context).borderGradient,
+                      ),
+                      child:
+                      ChatWidget(
+                        task: task,
+                        tasksServices: tasksServices
+                      )
+                  ),
+                )),
+          ),
         ));
   }
 }

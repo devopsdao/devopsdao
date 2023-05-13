@@ -237,7 +237,7 @@ class SearchServices extends ChangeNotifier {
       }
 
       // show button to add new tag:
-      enteredKeyword.length > 2 ? newTag = true : newTag = false;
+      enteredKeyword.length > 1 ? newTag = true : newTag = false;
       // show button to add new tag !break used in loop:
       for (String key in initialMap.keys) {
         if (resultMap[key]?.name.toLowerCase() == enteredKeyword.toLowerCase()) {

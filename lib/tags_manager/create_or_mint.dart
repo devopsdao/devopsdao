@@ -62,6 +62,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
     var collectionServices = context.watch<CollectionServices>();
 
     collectionExist = collectionServices.mintNftTagSelected.collection;
+    collectionExist = widget.item.collection;
 
     if (collectionExist) {
       stageUpload = Status.done;
@@ -333,6 +334,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                                         page: 'create_collection',
                                       ));
                               tasksServices.createNft('example.com', collectionName, true);
+                              collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
                               // searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                             } : null,
                             child: Text(

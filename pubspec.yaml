@@ -42,7 +42,7 @@ dependencies:
   eth_sig_util: ^0.0.9
   flutter:
     sdk: flutter
-  flutter_chat_ui: ^1.6.5
+  flutter_chat_ui: ^1.6.6
 #  flutter_keyboard_size: ^1.0.1
   flutter_localizations:
     sdk: flutter
