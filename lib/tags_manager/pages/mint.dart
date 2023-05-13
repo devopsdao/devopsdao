@@ -107,11 +107,12 @@ class _MintWidget extends State<MintWidget> {
                         decoration: InputDecoration(
                           // prefixIcon: const Icon(Icons.add, color: Color(0xFF47CBE4),),
                           suffixIcon: model.newTag ? IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               // NEW TAG
                               searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'mint', tagKey: '');
-                              model.addNewTag(searchServices.searchKeywordController.text, 'mint');
+                              await model.addNewTag(searchServices.searchKeywordController.text, 'mint');
                               collectionServices.updateMintNft(searchServices.mintPageFilterResults[searchServices.searchKeywordController.text]!.bunch.values.first);
+                              FocusScope.of(context).unfocus();
                             },
                             icon: const Icon(Icons.add_box,color: Colors.deepOrangeAccent,),
                             padding: const EdgeInsets.only(right: 12.0),

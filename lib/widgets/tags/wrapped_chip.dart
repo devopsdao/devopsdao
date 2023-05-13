@@ -815,7 +815,7 @@ class WrappedChipSmall extends StatelessWidget {
     late double tagWidth = textSize.width + 22;
     late double tagWidthFull = tagWidth;
     if (item.nft) {
-      tagWidthFull += 15;
+      tagWidthFull += 20;
     }
 
     return Container(

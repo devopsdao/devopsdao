@@ -6,17 +6,17 @@ class CollectionServices extends ChangeNotifier {
   final TokenItem emptyTag = TokenItem(collection: true, name: 'empty', id: BigInt.from(0));
   late NftCollection treasuryNftsInfoSelected = emptyNftBunch;
   late TokenItem mintNftTagSelected = emptyTag;
-  late bool showMintButton = false;
+  // late bool showMintButton = false;
 
   Future<void> updateTreasuryNft(NftCollection nft) async {
     treasuryNftsInfoSelected = nft;
-    showMintButton = false;
+    // showMintButton = false;
     notifyListeners();
   }
 
   Future<void> updateMintNft(TokenItem collection) async {
     mintNftTagSelected = collection;
-    showMintButton = false;
+    // showMintButton = false;
     notifyListeners();
   }
 
@@ -35,7 +35,7 @@ class CollectionServices extends ChangeNotifier {
   Future<void> clearSelectedInManager() async {
     treasuryNftsInfoSelected = emptyNftBunch;
     mintNftTagSelected = emptyTag;
-    showMintButton = false;
+    // showMintButton = false;
     notifyListeners();
   }
 }

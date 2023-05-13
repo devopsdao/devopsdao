@@ -1384,6 +1384,7 @@ class TasksServices extends ChangeNotifier {
         transactionReceipt = await web3GetTransactionReceipt(hash);
       }
       if (messageNanoId != '') {
+        // sendChatMessage_$messageNanoID
         taskAction = '${taskAction}_$messageNanoId';
       }
 
@@ -2902,7 +2903,7 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
   }
 
-  Future<void> sendChatMessage(EthereumAddress contractAddress, String nanoId, String message, messageNanoID, {BigInt? replyTo}) async {
+  Future<void> sendChatMessage(EthereumAddress contractAddress, String nanoId, String message, String messageNanoID, {BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'sendChatMessage_$messageNanoID': {'status': 'pending', 'txn': 'initial'}
     };

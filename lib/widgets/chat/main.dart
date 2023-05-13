@@ -30,9 +30,11 @@ import '../wallet_action_dialog.dart';
 
 class ChatWidget extends StatefulWidget {
   final Task task;
-  final Account account;
+  // final Account account;
   final TasksServices tasksServices;
-  const ChatWidget({super.key, required this.task, required this.account, required this.tasksServices});
+  const ChatWidget({super.key, required this.task,
+    // required this.account,
+    required this.tasksServices});
 
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
@@ -59,6 +61,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
 
     return Chat(
+
       messages: _messages,
       customBottomWidget: !logged ? const NotLoggedInput() : null,
       // onAttachmentPressed: _handleAttachmentPressed,
@@ -69,8 +72,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       showUserNames: true,
       user: types.User(id: tasksServices.publicAddress.toString()),
       inputOptions: const InputOptions(
-        sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-        // inputClearMode: InputClearMode
+        // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
       ),
 
       theme: DefaultChatTheme(
@@ -238,7 +240,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
-    final messageNanoID = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
+    final messageNanoID = await customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
     widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text, messageNanoID);
 
     showDialog(

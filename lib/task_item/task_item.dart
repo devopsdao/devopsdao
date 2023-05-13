@@ -306,16 +306,17 @@ class _TaskItemState extends State<TaskItem> {
               (widget.fromPage == 'performer' ||
                   widget.fromPage == 'customer' ||
                   widget.fromPage == 'auditor' ||
-                  (widget.fromPage == 'tasks' && taskCount != 0)))
+                  (widget.fromPage == 'tasks')) && taskCount != 0
+          )
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
               child: Badges.Badge(
                 // position: BadgePosition.topEnd(top: 10, end: 10),
                 badgeContent: Container(
-                  width: 17,
-                  height: 17,
+                  width: 18,
+                  height: 18,
                   alignment: Alignment.center,
-                  child: Text(taskCount.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(taskCount.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13)),
                 ),
                 badgeColor: (() {
                   if (task.taskState == "new") {
@@ -329,9 +330,9 @@ class _TaskItemState extends State<TaskItem> {
                   }
                 }()),
                 animationDuration: const Duration(milliseconds: 300),
-                animationType: Badges.BadgeAnimationType.scale,
-                shape: Badges.BadgeShape.circle,
-                borderRadius: BorderRadius.circular(14),
+                animationType: Badges.BadgeAnimationType.fade,
+                shape: Badges.BadgeShape.square,
+                borderRadius: BorderRadius.circular(4),
                 // child: Icon(Icons.settings),
               ),
             ),

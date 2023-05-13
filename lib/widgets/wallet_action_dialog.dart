@@ -158,22 +158,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       }
     } else if (widget.taskName == 'postWitnetRequest') {
       if (status == 'pending') {
-        // transactionStagesApprove = 'done';
-        transactionStagesConfirmed = 'loading';
-        transactionStagesMinted = 'initial';
-      } else if (status == 'confirmed') {
-        // transactionStagesApprove = 'done';
-        transactionStagesConfirmed = 'done';
-        transactionStagesMinted = 'loading';
-      } else if (status == 'minted') {
-        // transactionStagesApprove = 'done';
-        // transactionStagesWaiting = 'done';
-        // transactionStagesPending = 'done';
-        transactionStagesConfirmed = 'done';
-        transactionStagesMinted = 'done';
-      }
-    } else if (widget.taskName == 'postWitnetRequest') {
-      if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
       } else if (status == 'confirmed') {

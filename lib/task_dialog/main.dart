@@ -42,15 +42,12 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
 
   @override
   Widget build(BuildContext context) {
-    late Task task;
     var tasksServices = context.read<TasksServices>();
     var emptyClasses = context.read<EmptyClasses>();
 
-    EthereumAddress? taskAddress = widget.taskAddress;
-
     return FutureBuilder<Task>(
 
-        future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
+        future: tasksServices.loadOneTask(widget.taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
 
           if (snapshot.connectionState == ConnectionState.done) {
@@ -181,6 +178,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
       final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+      // print (screenHeightSize);
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
       return Container(
         color: DodaoTheme.of(context).taskBackgroundColor,
@@ -194,21 +192,18 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
           ),
           SizedBox(
             height: screenHeightSize - statusBarHeight,
-            // width: constraints.maxWidth * .8,
-            // height: 550,
             width: interface.maxStaticDialogWidth,
-
-
-            child: widget.isLoading == false
-                ? TaskDialogPages(
-                    task: task,
-                    fromPage: widget.fromPage,
-                    screenHeightSize: screenHeightSize,
-                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
-                  )
-                : ShimmeredTaskPages(
-                    task: task,
-                  ),
+            child:
+              widget.isLoading == false
+              ? TaskDialogPages(
+                  task: task,
+                  fromPage: widget.fromPage,
+                  screenHeightSize: screenHeightSize,
+                  screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
+                )
+              : ShimmeredTaskPages(
+                  task: task,
+                ),
           ),
         ]),
       );

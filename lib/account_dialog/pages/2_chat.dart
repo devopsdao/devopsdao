@@ -30,23 +30,23 @@ class AccountsChatPage extends StatelessWidget {
 
     return Center(
         child: Container(
-          padding: const EdgeInsets.all(12),
+          // padding: const EdgeInsets.all(12),
           child: Material(
               elevation: 10,
               borderRadius: BorderRadius.circular(interface.borderRadius),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: interface.maxStaticInternalDialogWidth,
+                  // maxWidth: interface.maxStaticInternalDialogWidth,
                 ),
                 child: Container(
-                    padding: const EdgeInsets.all(6.0),
+                    // padding: const EdgeInsets.all(6.0),
                     // height: widget.topConstraints.maxHeight,
-                    width: innerPaddingWidth,
+                    // width: innerPaddingWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(interface.borderRadius),
                     ),
                     child: ChatWidget(
-                        account: account,
+                        // account: account,
                         task: emptyClasses.emptyTask,
                         tasksServices: tasksServices)),
               )),

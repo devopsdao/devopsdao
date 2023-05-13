@@ -120,6 +120,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
 
   late bool expandOnceWitnetInfo = true;
   late bool expandOnceWitnetLink = true;
+  late bool validUri = true;
+  late bool validGithubUri = true;
 
   @override
   void initState() {
@@ -128,6 +130,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     titleFieldController = TextEditingController();
     valueController = TextEditingController();
     githubLinkController = TextEditingController();
+    githubLinkController!.addListener(_checkUri);
 
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -139,6 +142,17 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
       print('isTokenApproved $response' );
     });
 
+  }
+
+  void _checkUri() {
+    final Uri parsedUri = Uri.parse(githubLinkController!.text);
+    validUri = parsedUri.isAbsolute;
+
+    if (parsedUri.host == 'github.com' && parsedUri.pathSegments.length == 2) {
+      validGithubUri = true;
+    } else {
+      validGithubUri = false;
+    }
   }
 
   @override
@@ -440,10 +454,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                     });
                                   },
                                   decoration: InputDecoration(
-                                    labelText: 'Enter GitHub link here:',
-                                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                                    labelText: validGithubUri ? validUri ? 'Enter GitHub link here:' : 'Invalid link entered' : 'Please enter github link',
+                                    labelStyle: Theme.of(context).textTheme.bodyMedium?.apply(
+                                        color: (validUri && validGithubUri) ? DodaoTheme.of(context).primaryText : Colors.redAccent
+                                    ),
                                     hintText: '',
-                                    hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.2),
+                                    hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(
+                                       heightFactor: 1.2,
+                                    ),
                                     focusedBorder: const UnderlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
@@ -452,7 +470,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                     ),
                                     prefixIcon: IconButton(
                                       onPressed: () async {
-
                                         setState(() {
                                           if (witnetSection) {
                                             witnetSection = false;
@@ -460,7 +477,6 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                             witnetSection = true;
                                           }
                                         });
-
                                       },
                                       icon: DodaoTheme.of(context).witnetLogo,
                                       highlightColor: Colors.grey,
@@ -489,6 +505,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                               setState(() {
                                                 githubLinkController!.text = '${clipboardData?.text}';
                                               });
+
                                             },
                                             // backgroundColor: Colors.white,
                                           ),
@@ -581,7 +598,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                         Padding(
                                           padding: const EdgeInsets.only(right: 12.0),
                                           child: Image.asset(
-                                            'assets/images/wn_mascot.png',
+                                            'assets/images/wn_dodao_mascot.png',
                                             height: 90,
                                             filterQuality: FilterQuality.medium,
                                           ),
@@ -696,10 +713,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 for (var e in searchServices.createTagsList.entries) {
                   for (var e2 in e.value.bunch.entries) {
                     if (e2.value.nft) {
-                      tokenId.add(e2.key);
-                      amounts.add(BigInt.from(1));
-                      nftPresent = true;
-                      //  tokenNames.add(e2.value.name);
+                      if (e2.value.selected) {
+                        tokenId.add(e2.key);
+                        amounts.add(BigInt.from(1));
+                        nftPresent = true;
+                        //  tokenNames.add(e2.value.name);
+                      }
                     } else {
                       tags.add(e.value.name);
                     }
@@ -722,7 +741,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   // tokenAmounts = [amounts];
                 }
 
-                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
+                final Uri parsedUri = Uri.parse(githubLinkController!.text);
+                print('parsedUri.path: ${parsedUri.path}');
+
+                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, parsedUri.path,
                     interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
                 // Navigator.pop(context);
                 interface.createJobPageContext = context;
