@@ -27,8 +27,6 @@ class _NavBarPageState extends State<NavBarPage> {
     _currentPage = widget.initialPage ?? _currentPage;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     // var tasksServices = context.watch<TasksServices>();
@@ -59,7 +57,7 @@ class _NavBarPageState extends State<NavBarPage> {
         beamerDelegate.beamToNamed(tabs.keys.toList()[i])
       },
       // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
-      backgroundColor:  DodaoTheme.of(context).background,
+      backgroundColor: DodaoTheme.of(context).background,
       // selectedItemColor: Colors.white,
       // unselectedItemColor: DodaoTheme.of(context).grayIcon,
       showSelectedLabels: true,
@@ -99,23 +97,23 @@ class _NavBarPageState extends State<NavBarPage> {
           tooltip: '',
         ),
         if (tasksServices.roleNfts['auditor'] > 0)
-        const BottomNavigationBarItem(
-          icon: FaIcon(
-            FontAwesomeIcons.penRuler,
-            size: 24,
+          const BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.penRuler,
+              size: 24,
+            ),
+            label: 'Audit',
+            tooltip: '',
           ),
-          label: 'Audit',
-          tooltip: '',
-        ),
-        if(tasksServices.roleNfts['governor'] > 0)
-        const BottomNavigationBarItem(
-          icon: FaIcon(
-            FontAwesomeIcons.peopleGroup,
-            size: 24,
+        if (tasksServices.roleNfts['governor'] > 0)
+          const BottomNavigationBarItem(
+            icon: FaIcon(
+              FontAwesomeIcons.peopleGroup,
+              size: 24,
+            ),
+            label: 'Accounts',
+            tooltip: '',
           ),
-          label: 'Accounts',
-          tooltip: '',
-        ),
       ],
     );
   }
