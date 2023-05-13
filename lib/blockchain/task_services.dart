@@ -1334,6 +1334,19 @@ class TasksServices extends ChangeNotifier {
       }
     });
 
+    tokenFacet.transferBatchEvents().listen((event) async {
+      print(
+          'received event approvalEvents from: ${event.from} operator: ${event.operator} to: ${event.to} ids: ${event.ids} values: ${event.values}');
+      if (event.from == publicAddress || event.to == publicAddress) {
+        await collectMyTokens();
+      }
+    });
+
+    tokenFacet.approvalForAllEvents().listen((event) async {
+      print('received event approvalEvents account: ${event.account} operator: ${event.operator} approved: ${event.approved}');
+      if (event.account == publicAddress) {}
+    });
+
     final subscription3 = ierc20.approvalEvents().listen((event) async {
       print('received event approvalEvents ${event.owner} spender ${event.spender} value ${event.value}');
       if (event.owner == publicAddress) {
