@@ -48,9 +48,11 @@ class _NavBarPageState extends State<NavBarPage> {
 
     // final currentPage = beamerDelegate.currentBeamLocation;
 
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: (i) => {
+    return NavigationBar(
+      height: 68,
+      elevation: 8,
+      selectedIndex: currentIndex,
+      onDestinationSelected: (i) => {
         searchServices.searchBarStart.value = false,
         searchServices.searchKeywordController.clear(),
         setState(() => _currentPage = tabs.keys.toList()[i]),
@@ -58,63 +60,188 @@ class _NavBarPageState extends State<NavBarPage> {
       },
       // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
       backgroundColor: DodaoTheme.of(context).background,
-      // selectedItemColor: Colors.white,
-      // unselectedItemColor: DodaoTheme.of(context).grayIcon,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
-      type: BottomNavigationBarType.fixed,
-      items: <BottomNavigationBarItem>[
-        const BottomNavigationBarItem(
+      destinations: <Widget>[
+        const NavigationDestination(
           icon: Icon(
-            Icons.home_sharp,
+            Icons.dashboard_rounded,
             size: 24,
           ),
-          label: 'Home',
-          tooltip: '',
+          label: 'Dashboard',
         ),
-        const BottomNavigationBarItem(
+        const NavigationDestination(
           icon: Icon(
-            Icons.compare_arrows,
+            Icons.list_rounded,
             size: 24,
           ),
           label: 'Tasks',
-          tooltip: '',
         ),
-        const BottomNavigationBarItem(
-          icon: FaIcon(
-            FontAwesomeIcons.wpforms,
+        const NavigationDestination(
+          icon: Icon(
+            Icons.work_rounded,
             size: 24,
           ),
           label: 'Customer',
-          tooltip: '',
         ),
-        const BottomNavigationBarItem(
-          icon: FaIcon(
-            FontAwesomeIcons.pen,
+        const NavigationDestination(
+          // selectedIcon: Icon(Icons.bookmark),
+          icon: Icon(
+            Icons.engineering_rounded,
             size: 24,
           ),
           label: 'Performer',
-          tooltip: '',
         ),
         if (tasksServices.roleNfts['auditor'] > 0)
-          const BottomNavigationBarItem(
+          const NavigationDestination(
             icon: FaIcon(
               FontAwesomeIcons.penRuler,
               size: 24,
             ),
             label: 'Audit',
-            tooltip: '',
           ),
         if (tasksServices.roleNfts['governor'] > 0)
-          const BottomNavigationBarItem(
+          const NavigationDestination(
             icon: FaIcon(
               FontAwesomeIcons.peopleGroup,
               size: 24,
             ),
             label: 'Accounts',
-            tooltip: '',
           ),
       ],
+      // destinations: <BottomNavigationBarItem>[
+      //   const BottomNavigationBarItem(
+      //     icon: Icon(
+      //       Icons.dashboard_rounded,
+      //       size: 24,
+      //     ),
+      //     label: 'Dashboard',
+      //     tooltip: '',
+      //   ),
+      //   const BottomNavigationBarItem(
+      //     icon: Icon(
+      //       Icons.list_rounded,
+      //       size: 24,
+      //     ),
+      //     label: 'Tasks',
+      //     tooltip: '',
+      //   ),
+      //   const BottomNavigationBarItem(
+      //     icon: Icon(
+      //       Icons.work_rounded,
+      //       size: 24,
+      //     ),
+      //     // icon: FaIcon(
+      //     //   FontAwesomeIcons.wpforms,
+      //     //   size: 24,
+      //     // ),
+      //     label: 'Customer',
+      //     tooltip: '',
+      //   ),
+      //   const BottomNavigationBarItem(
+      //     icon: Icon(
+      //       Icons.engineering_rounded,
+      //       size: 24,
+      //     ),
+      //     label: 'Performer',
+      //     tooltip: '',
+      //   ),
+      //   if (tasksServices.roleNfts['auditor'] > 0)
+      //     const BottomNavigationBarItem(
+      //       icon: FaIcon(
+      //         FontAwesomeIcons.penRuler,
+      //         size: 24,
+      //       ),
+      //       label: 'Audit',
+      //       tooltip: '',
+      //     ),
+      //   if(tasksServices.roleNfts['governor'] > 0)
+      //     const BottomNavigationBarItem(
+      //       icon: FaIcon(
+      //         FontAwesomeIcons.peopleGroup,
+      //         size: 24,
+      //       ),
+      //       label: 'Accounts',
+      //       tooltip: '',
+      //     ),
+      // ],
     );
+
+    // return BottomNavigationBar(
+    //   currentIndex: currentIndex,
+    //   onTap: (i) => {
+    //     searchServices.searchBarStart.value = false,
+    //     searchServices.searchKeywordController.clear(),
+    //     setState(() => _currentPage = tabs.keys.toList()[i]),
+    //     beamerDelegate.beamToNamed(tabs.keys.toList()[i])
+    //   },
+    //   // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
+    //   backgroundColor:  DodaoTheme.of(context).background,
+    //   // selectedItemColor: Colors.white,
+    //   // unselectedItemColor: DodaoTheme.of(context).grayIcon,
+    //   // showSelectedLabels: true,
+    //   // showUnselectedLabels: true,
+    //   // useLegacyColorScheme: false,
+    //   type: BottomNavigationBarType.fixed,
+    //   items: <BottomNavigationBarItem>[
+    //     const BottomNavigationBarItem(
+    //       icon: Icon(
+    //         Icons.dashboard_rounded,
+    //         size: 24,
+    //       ),
+    //       label: 'Dashboard',
+    //       tooltip: '',
+    //     ),
+    //     const BottomNavigationBarItem(
+    //       icon: Icon(
+    //         Icons.list_rounded,
+    //         size: 24,
+    //       ),
+    //       label: 'Tasks',
+    //       tooltip: '',
+    //     ),
+    //     const BottomNavigationBarItem(
+    //       icon: Icon(
+    //         Icons.work_rounded,
+    //         size: 24,
+    //       ),
+    //       // icon: FaIcon(
+    //       //   FontAwesomeIcons.wpforms,
+    //       //   size: 24,
+    //       // ),
+    //       label: 'Customer',
+    //       tooltip: '',
+    //     ),
+    //     const BottomNavigationBarItem(
+    //       icon: Icon(
+    //         Icons.engineering_rounded,
+    //         size: 24,
+    //       ),
+    //       // icon: FaIcon(
+    //       //   Icons.engineering,
+    //       //   // FontAwesomeIcons.pen,
+    //       //   size: 24,
+    //       // ),
+    //       label: 'Performer',
+    //       tooltip: '',
+    //     ),
+    //     if (tasksServices.roleNfts['auditor'] > 0)
+    //     const BottomNavigationBarItem(
+    //       icon: FaIcon(
+    //         FontAwesomeIcons.penRuler,
+    //         size: 24,
+    //       ),
+    //       label: 'Audit',
+    //       tooltip: '',
+    //     ),
+    //     if(tasksServices.roleNfts['governor'] > 0)
+    //     const BottomNavigationBarItem(
+    //       icon: FaIcon(
+    //         FontAwesomeIcons.peopleGroup,
+    //         size: 24,
+    //       ),
+    //       label: 'Accounts',
+    //       tooltip: '',
+    //     ),
+    //   ],
+    // );
   }
 }
