@@ -48,7 +48,6 @@ class _CreateJobState extends State<CreateJob> {
     });
   }
 
-  late String backgroundPicture = "assets/images/niceshape.png";
   // late double actualFieldWidth = 300;
   late double buttonPaddingLeft = 76.0;
   late double buttonPaddingRight = 43.0;
@@ -73,16 +72,12 @@ class _CreateJobState extends State<CreateJob> {
       final double screenHeightSizeNoKeyboard = constraints.maxHeight;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
       // print(keyboardSize);
-      return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
-          ),
-          child: SafeArea(
-              minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
-              child: CreateJobSkeleton(
-                screenHeightSize: screenHeightSize,
-                myMaxWidth: myMaxWidth,
-              )));
+      return SafeArea(
+          minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
+          child: CreateJobSkeleton(
+            screenHeightSize: screenHeightSize,
+            myMaxWidth: myMaxWidth,
+          ));
     });
   }
 }
@@ -895,7 +890,6 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
     super.initState();
   }
 
-  late String backgroundPicture = "assets/images/niceshape.png";
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
