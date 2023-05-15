@@ -1075,20 +1075,20 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: (() {
-                                                    if (tasksServices.witnetPostResult == 'initialized request') {
+                                                    if (tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'] == 'initialized request') {
                                                       return Colors.yellow;
-                                                    } else if (tasksServices.witnetPostResult == 'request mined') {
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult']  == 'request mined') {
                                                       return Colors.yellow;
-                                                    } else if (tasksServices.witnetPostResult == 'request failed') {
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'] == 'request failed') {
                                                       return Colors.redAccent;
-                                                    } else if (tasksServices.witnetPostResult == 'result available') {
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'] == 'result available') {
                                                       return Colors.green;
                                                     } else {
                                                       return DodaoTheme.of(context).primaryText;
                                                     }
                                                   }()),
                                                 )),
-                                            if (tasksServices.witnetPostResult == 'initialized request')
+                                            if (tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'] == 'initialized request')
                                               WidgetSpan(
                                                 child: Container(
                                                   padding: const EdgeInsets.only(left: 3.0, right: 4.0),
@@ -1103,7 +1103,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           ])),
                                         ),
 
-                                        if (tasksServices.witnetPostResult == 'request mined' || tasksServices.witnetPostResult == 'result available')
+                                        if (tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'] == 'request mined' ||
+                                            tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'] == 'result available')
                                           Padding(
                                             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                                             child: RichText(
@@ -1117,7 +1118,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                   color: DodaoTheme.of(context).primaryText,
                                                 ),
                                               )),
-                                              TextSpan(text: status, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                              TextSpan(text: status, style: TextStyle(fontWeight: FontWeight.bold, color: statusColor)),
                                               if (status == 'checking')
                                                 WidgetSpan(
                                                   child: Container(

@@ -217,7 +217,7 @@ class TasksServices extends ChangeNotifier {
   //       nickName: 'Huh', about: 'super HUH', walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000333'), rating: 342),
   // };
 
-  Map<String, Map<String, Map<String, String>>> transactionStatuses = {};
+  Map<String, Map<String, Map<String, dynamic>>> transactionStatuses = {};
 
   bool transportEnabled = true;
   String transportUsed = '';
@@ -3142,7 +3142,12 @@ class TasksServices extends ChangeNotifier {
   Future<String> postWitnetRequest(EthereumAddress taskAddress, String nanoId) async {
     print('postWitnetRequest');
     transactionStatuses[nanoId] = {
-      'postWitnetRequest': {'status': 'pending', 'txn': 'initial', 'witnetPostResult': 'initialized request'}
+      'postWitnetRequest': {
+        'status': 'pending',
+        'txn': 'initial',
+        'witnetPostResult': 'initialized request',
+        'witnetGetLastResult': [false, false, '']
+      }
     };
     witnetPostResult = 'initialized request';
     notifyListeners();
@@ -3168,11 +3173,13 @@ class TasksServices extends ChangeNotifier {
       witnetPostResult = 'request mined';
       witnetGetLastResult = [false, false, 'checking'];
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request mined';
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = [false, false, 'checking'];
       checkWitnetResultAvailability(taskAddress, nanoId);
     } else {
       witnetPostResult = 'request failed';
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request failed';
     }
+    notifyListeners();
     return txn;
   }
 
@@ -3184,7 +3191,6 @@ class TasksServices extends ChangeNotifier {
       print(result);
       if (result) {
         var lastResult = await witnetFacet.getLastResult(taskAddress);
-
         if (lastResult[0] == false && lastResult[1] == false && lastResult[2] == '') {
           print('old result received');
         } else {
@@ -3192,7 +3198,7 @@ class TasksServices extends ChangeNotifier {
           transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'result available';
           witnetAvailabilityResult = result;
           notifyListeners();
-          getLastWitnetResult(taskAddress);
+          getLastWitnetResult(taskAddress, nanoId);
           timer.cancel();
         }
       }
@@ -3206,25 +3212,27 @@ class TasksServices extends ChangeNotifier {
     1 pendingMerge: bool,
     2 status: text(closed/(unmerged))
   */
-  Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress) async {
+  Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress, String nanoId) async {
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
 
       var result = await witnetFacet.getLastResult(taskAddress);
       print(result);
-
       if (result[2] == 'closed') {
         witnetGetLastResult = result;
+        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
         notifyListeners();
         print('Cancel timer');
         timer.cancel();
       } else if (result[2] == 'Unknown error (0x70)') {
         witnetGetLastResult = result;
+        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] =result;
         notifyListeners();
         print('Cancel timer');
         timer.cancel();
       } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
         witnetGetLastResult = result;
+        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
         notifyListeners();
         print('Cancel timer');
         timer.cancel();
