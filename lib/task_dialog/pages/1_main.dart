@@ -985,8 +985,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
                                       status = 'Unknown error (0x70)'; //request failed
                                       statusColor = Colors.yellow;
-                                    } else if (tasksServices.witnetGetLastResult[1] ||
-                                        tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
                                       status = 'no matching PR';
                                       statusColor = Colors.yellow;
                                     } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
