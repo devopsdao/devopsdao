@@ -27,8 +27,6 @@ class _NavBarPageState extends State<NavBarPage> {
     _currentPage = widget.initialPage ?? _currentPage;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     // var tasksServices = context.watch<TasksServices>();
@@ -61,7 +59,7 @@ class _NavBarPageState extends State<NavBarPage> {
         beamerDelegate.beamToNamed(tabs.keys.toList()[i])
       },
       // onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
-      backgroundColor:  DodaoTheme.of(context).background,
+      backgroundColor: DodaoTheme.of(context).background,
       destinations: <Widget>[
         const NavigationDestination(
           icon: Icon(
@@ -93,21 +91,21 @@ class _NavBarPageState extends State<NavBarPage> {
           label: 'Performer',
         ),
         if (tasksServices.roleNfts['auditor'] > 0)
-        const NavigationDestination(
-          icon: FaIcon(
-            FontAwesomeIcons.penRuler,
-            size: 24,
+          const NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.penRuler,
+              size: 24,
+            ),
+            label: 'Audit',
           ),
-          label: 'Audit',
-        ),
-        if(tasksServices.roleNfts['governor'] > 0)
-        const NavigationDestination(
-          icon: FaIcon(
-            FontAwesomeIcons.peopleGroup,
-            size: 24,
+        if (tasksServices.roleNfts['governor'] > 0)
+          const NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.peopleGroup,
+              size: 24,
+            ),
+            label: 'Accounts',
           ),
-          label: 'Accounts',
-        ),
       ],
       // destinations: <BottomNavigationBarItem>[
       //   const BottomNavigationBarItem(

@@ -45,24 +45,25 @@ class _AccountFutureState extends State<AccountFuture> {
 
     EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Account>(
+        future: null,
         // future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Account> snapshot) {
-      // if (snapshot.connectionState == ConnectionState.done) {
-      // if (true) {
-      //   account = tasksServices.accountsData['2']!;
-      //   return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: false);
-      // }
-      account = Account(
-          nickName: 'Loading ...',
-          about: 'Loading ...',
-          walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-          customerTasks: [],
-          participantTasks: [],
-          auditParticipantTasks: [],
-          customerRating: [0],
-          performerRating: [0]);
-      return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
-    });
+          // if (snapshot.connectionState == ConnectionState.done) {
+          // if (true) {
+          //   account = tasksServices.accountsData['2']!;
+          //   return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: false);
+          // }
+          account = Account(
+              nickName: 'Loading ...',
+              about: 'Loading ...',
+              walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+              customerTasks: [],
+              participantTasks: [],
+              auditParticipantTasks: [],
+              customerRating: [0],
+              performerRating: [0]);
+          return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
+        });
   }
 }
 
