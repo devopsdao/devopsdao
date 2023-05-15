@@ -3212,20 +3212,22 @@ class TasksServices extends ChangeNotifier {
 
       if (result[2] == 'closed') {
         witnetGetLastResult = result;
-        notifyListeners();
         print('Cancel timer');
         timer.cancel();
       } else if (result[2] == 'Unknown error (0x70)') {
         witnetGetLastResult = result;
-        notifyListeners();
         print('Cancel timer');
         timer.cancel();
       } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
         witnetGetLastResult = result;
-        notifyListeners();
+        print('Cancel timer');
+        timer.cancel();
+      } else if (result[2] == '(unmerged)') {
+        witnetGetLastResult = result;
         print('Cancel timer');
         timer.cancel();
       }
+      notifyListeners();
     });
   }
 
