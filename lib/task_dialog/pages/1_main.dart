@@ -885,13 +885,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     alignment: Alignment.topLeft,
                                     child: Text.rich(
                                       TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                        const WidgetSpan(
+                                        WidgetSpan(
                                             child: Padding(
-                                          padding: EdgeInsets.only(right: 5.0),
+                                          padding: const EdgeInsets.only(right: 5.0),
                                           child: Icon(
                                             Icons.copy,
                                             size: 16,
-                                            color: Colors.black26,
+                                            color: DodaoTheme.of(context).flushTextColor,
                                           ),
                                         )),
                                         TextSpan(text: "dodao.dev/#/tasks/${task.taskAddress}", style: const TextStyle(fontWeight: FontWeight.bold)
@@ -951,13 +951,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             },
                                             child: RichText(
                                                 text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                              const WidgetSpan(
+                                              WidgetSpan(
                                                   child: Padding(
-                                                padding: EdgeInsets.only(right: 5.0),
+                                                padding: const EdgeInsets.only(right: 5.0),
                                                 child: Icon(
                                                   Icons.link,
                                                   size: 16,
-                                                  color: Colors.black26,
+                                                  color: DodaoTheme.of(context).primaryText,
                                                 ),
                                               )),
                                               TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -972,25 +972,32 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     // late bool response = false;
                                     // late List response2 = [];
                                     late String status = '';
+                                    late MaterialColor statusColor = Colors.yellow;
                                     if (tasksServices.witnetGetLastResult[2] == '') {
                                       status = '';
                                     } else if (tasksServices.witnetGetLastResult[2] == 'checking') {
                                       status = 'checking';
+                                      statusColor = Colors.yellow;
                                     } else if (tasksServices.witnetGetLastResult[0] &&
                                         tasksServices.witnetGetLastResult[2] == 'Unknown error (0x30)') {
                                       status = '${tasksServices.witnetGetLastResult[2]}'; //request failed
                                     } else if (tasksServices.witnetGetLastResult[0] &&
                                         tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
                                       status = 'Unknown error (0x70)'; //request failed
+                                      statusColor = Colors.yellow;
                                     } else if (tasksServices.witnetGetLastResult[1] ||
                                         tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
                                       status = 'no matching PR';
+                                      statusColor = Colors.yellow;
                                     } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
                                       status = 'PR merged';
+                                      statusColor = Colors.green;
                                     } else if (tasksServices.witnetGetLastResult[2] == '(unmerged)') {
                                       status = 'PR open, not merged';
+                                      statusColor = Colors.yellow;
                                     } else {
                                       status = 'error';
+                                      statusColor = Colors.red;
                                     }
 
                                     return Column(
@@ -1054,16 +1061,33 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: RichText(
                                               text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                            const WidgetSpan(
+                                            WidgetSpan(
                                                 child: Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
+                                              padding: const EdgeInsets.only(right: 5.0),
                                               child: Icon(
                                                 Icons.api,
                                                 size: 16,
-                                                color: Colors.black26,
+                                                color: DodaoTheme.of(context).primaryText,
                                               ),
                                             )),
-                                            TextSpan(text: tasksServices.witnetPostResult, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            TextSpan(
+                                                text: tasksServices.witnetPostResult,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: (() {
+                                                    if (tasksServices.witnetPostResult == 'initialized request') {
+                                                      return Colors.yellow;
+                                                    } else if (tasksServices.witnetPostResult == 'request mined') {
+                                                      return Colors.yellow;
+                                                    } else if (tasksServices.witnetPostResult == 'request failed') {
+                                                      return Colors.redAccent;
+                                                    } else if (tasksServices.witnetPostResult == 'result available') {
+                                                      return Colors.green;
+                                                    } else {
+                                                      return DodaoTheme.of(context).primaryText;
+                                                    }
+                                                  }()),
+                                                )),
                                             if (tasksServices.witnetPostResult == 'initialized request')
                                               WidgetSpan(
                                                 child: Container(
@@ -1084,13 +1108,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                                             child: RichText(
                                                 text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                              const WidgetSpan(
+                                              WidgetSpan(
                                                   child: Padding(
-                                                padding: EdgeInsets.only(right: 5.0),
+                                                padding: const EdgeInsets.only(right: 5.0),
                                                 child: Icon(
                                                   Icons.api,
                                                   size: 16,
-                                                  color: Colors.black26,
+                                                  color: DodaoTheme.of(context).primaryText,
                                                 ),
                                               )),
                                               TextSpan(text: status, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -1301,13 +1325,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     alignment: Alignment.topLeft,
                                     child: RichText(
                                         text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                      const WidgetSpan(
+                                      WidgetSpan(
                                           child: Padding(
-                                        padding: EdgeInsets.only(right: 5.0),
+                                        padding: const EdgeInsets.only(right: 5.0),
                                         child: Icon(
                                           Icons.copy,
                                           size: 16,
-                                          color: Colors.black26,
+                                          color: DodaoTheme.of(context).flushTextColor,
                                         ),
                                       )),
                                       TextSpan(
