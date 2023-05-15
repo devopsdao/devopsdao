@@ -448,9 +448,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                   decoration: InputDecoration(
                                     labelText: validGithubUri
                                         ? validUri
-                                            ? 'Enter GitHub link here:'
-                                            : 'Invalid link entered'
-                                        : 'Please enter github link',
+                                            ? 'GitHub repository link:'
+                                            : 'Invalid URI'
+                                        : 'Please input a link to Github repository',
                                     labelStyle: Theme.of(context)
                                         .textTheme
                                         .bodyMedium

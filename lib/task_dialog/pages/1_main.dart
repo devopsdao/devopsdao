@@ -935,7 +935,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         child: const Text('Repository to create a pull request in:'),
                                       ),
                                       Builder(builder: (context) {
-                                        final Uri toLaunch = Uri.parse('https://github.com${widget.task.repository}');
+                                        final Uri toLaunch = Uri.parse('https://github.com/${widget.task.repository}');
                                         // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
                                         return Container(
                                           padding: const EdgeInsets.all(8.0),
@@ -978,23 +978,23 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     } else if (tasksServices.witnetGetLastResult[2] == 'checking') {
                                       status = 'checking';
                                       statusColor = Colors.yellow;
-                                    } else if (tasksServices.witnetGetLastResult[0] &&
-                                        tasksServices.witnetGetLastResult[2] == 'Unknown error (0x30)') {
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'Unknown error (0x30)') {
                                       status = '${tasksServices.witnetGetLastResult[2]}'; //request failed
-                                    } else if (tasksServices.witnetGetLastResult[0] &&
-                                        tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
-                                      status = 'Unknown error (0x70)'; //request failed
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
+                                      status = 'no matching PR'; //request failed
                                       statusColor = Colors.yellow;
                                     } else if (tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
-                                      status = 'no matching PR';
+                                      status = 'PR open, not merged';
                                       statusColor = Colors.yellow;
                                     } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
                                       status = 'PR merged';
                                       statusColor = Colors.green;
-                                    } else if (tasksServices.witnetGetLastResult[2] == '(unmerged)') {
-                                      status = 'PR open, not merged';
-                                      statusColor = Colors.yellow;
-                                    } else {
+                                    }
+                                    // else if (tasksServices.witnetGetLastResult[2] == '(unmerged)') {
+                                    //   status = 'PR open, not merged';
+                                    //   statusColor = Colors.yellow;
+                                    // }
+                                    else {
                                       status = 'error';
                                       statusColor = Colors.red;
                                     }
@@ -1305,14 +1305,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
                                 GestureDetector(
                                   onTap: () async {
-                                    Clipboard.setData(ClipboardData(text: 'https://github.com${widget.task.repository}')).then((_) {
+                                    Clipboard.setData(ClipboardData(text: 'https://github.com/${widget.task.repository}')).then((_) {
                                       Flushbar(
                                               icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
                                                 color: DodaoTheme.of(context).flushTextColor,
                                               ),
-                                              message: 'https://github.com${widget.task.repository} copied to your clipboard!',
+                                              message: 'https://github.com/${widget.task.repository} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
                                               backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
@@ -1334,7 +1334,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         ),
                                       )),
                                       TextSpan(
-                                          text: 'https://github.com${widget.task.repository}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                          text: 'https://github.com/${widget.task.repository}', style: const TextStyle(fontWeight: FontWeight.bold)),
                                     ])),
                                   ),
                                 ),
