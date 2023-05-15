@@ -127,16 +127,16 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     githubLinkController = TextEditingController();
     githubLinkController!.addListener(_checkUri);
 
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       var tasksServices = context.read<TasksServices>();
       List<EthereumAddress> addrList = [tasksServices.contractAddress];
-      var response = await tasksServices.isTokenApproved(addrList, [[0]]);
+      var response = await tasksServices.isTokenApproved(addrList, [
+        [0]
+      ]);
       isTokenApproved = response[tasksServices.contractAddress]!;
       tasksServices.myNotifyListeners();
-      print('isTokenApproved $response' );
+      print('isTokenApproved $response');
     });
-
   }
 
   void _checkUri() {
@@ -181,15 +181,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
       border: DodaoTheme.of(context).borderGradient,
     );
 
-
-
     if (githubLinkController!.text.isNotEmpty) {
       animationController.forward();
     } else {
       animationController.reverse();
     }
     interface.mainDialogContext = context;
-
 
     return Scaffold(
       resizeToAvoidBottomInset: false, backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
@@ -449,14 +446,19 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                     });
                                   },
                                   decoration: InputDecoration(
-                                    labelText: validGithubUri ? validUri ? 'Enter GitHub link here:' : 'Invalid link entered' : 'Please enter github link',
-                                    labelStyle: Theme.of(context).textTheme.bodyMedium?.apply(
-                                        color: (validUri && validGithubUri) ? DodaoTheme.of(context).primaryText : Colors.redAccent
-                                    ),
+                                    labelText: validGithubUri
+                                        ? validUri
+                                            ? 'Enter GitHub link here:'
+                                            : 'Invalid link entered'
+                                        : 'Please enter github link',
+                                    labelStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.apply(color: (validUri && validGithubUri) ? DodaoTheme.of(context).primaryText : Colors.redAccent),
                                     hintText: '',
                                     hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(
-                                       heightFactor: 1.2,
-                                    ),
+                                          heightFactor: 1.2,
+                                        ),
                                     focusedBorder: const UnderlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
@@ -495,12 +497,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                               // size: 30,
                                             ),
                                             onPressed: () async {
-
                                               final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
                                               setState(() {
                                                 githubLinkController!.text = '${clipboardData?.text}';
                                               });
-
                                             },
                                             // backgroundColor: Colors.white,
                                           ),
@@ -636,8 +636,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                         Flexible(
                                           // height: 35,
                                           // width: double.infinity,
-                                          child:
-                                              Text('This repository URL will be used for automatic Task acceptance based on accepted merge request.'),
+                                          child: Text('This repository URL will be used for automatic Task acceptance based on merged pull request.'),
                                         ),
                                       ],
                                     ),
@@ -664,29 +663,25 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
       floatingActionButton: Padding(
         // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.only(right: 13, left: 46),
-        child: Builder(
-          builder: (context) {
-            final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
-            final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
+        child: Builder(builder: (context) {
+          final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
+          final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
 
-
-
-            for (var e in searchServices.createTagsList.entries) {
-              if (e.value.bunch.values.first.nft) {
-                nftDetected = true;
-              }
+          for (var e in searchServices.createTagsList.entries) {
+            if (e.value.bunch.values.first.nft) {
+              nftDetected = true;
             }
+          }
 
-            //
-            //
-            // if (interface.tokenSelected == 'USDC' && !tokenApproved) {
-            //   print('fired USDC');
-            //   interface.tokenSelected == '';
-            //
-            // }
+          //
+          //
+          // if (interface.tokenSelected == 'USDC' && !tokenApproved) {
+          //   print('fired USDC');
+          //   interface.tokenSelected == '';
+          //
+          // }
 
-
-            var submitButton = TaskDialogFAB(
+          var submitButton = TaskDialogFAB(
               inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ? true : false,
               expand: true,
               buttonName: 'Submit',
@@ -737,9 +732,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 }
 
                 final Uri parsedUri = Uri.parse(githubLinkController!.text);
-                print('parsedUri.path: ${parsedUri.path}');
+                print('parsedUri.path: ${parsedUri.path.substring(1)}');
 
-                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, parsedUri.path,
+                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, parsedUri.path.substring(1),
                     interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
                 // Navigator.pop(context);
                 interface.createJobPageContext = context;
@@ -747,129 +742,127 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                     barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletActionDialog(
-                      nanoId: nanoId,
-                      taskName: 'createTaskContract',
-                    ));
-              }
-            );
+                          nanoId: nanoId,
+                          taskName: 'createTaskContract',
+                        ));
+              });
 
-            var approveButtonERC1155 = TaskDialogFAB(
-              inactive: false,
-              expand: true,
-              buttonName: 'Approve(Nft)',
-              buttonColorRequired: Colors.lightBlue.shade300,
-              widthSize: buttonWidth,
-              // keyboardActive: keyboardSize == 0 ? false : true;
-              callback: () async {
-                // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
-                final List<EthereumAddress> tokenContracts = [];
-                tokenContracts.add(tasksServices.contractAddress);
-                tasksServices.myNotifyListeners();
-                showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) => const WalletActionDialog(
-                      nanoId: 'setApprovalForAll',
-                      taskName: 'setApprovalForAll',
-                    ));
-                await tasksServices.setApprovalForAll(tokenContracts, [[0]]);
-                var response = await tasksServices.isTokenApproved(tokenContracts, [[0]]);
-                setState(() {
-                  isTokenApproved = response[tasksServices.contractAddress]!;
-                });
-                tasksServices.myNotifyListeners();
-                print('isTokenApproved $response' );
-                // List<EthereumAddress> addrList = [tasksServices.contractAddress];
-                // var response = await tasksServices.isTokenApproved(addrList);
-                // nftApproved = response[tasksServices.contractAddress]!;
+          var approveButtonERC1155 = TaskDialogFAB(
+            inactive: false,
+            expand: true,
+            buttonName: 'Approve(Nft)',
+            buttonColorRequired: Colors.lightBlue.shade300,
+            widthSize: buttonWidth,
+            // keyboardActive: keyboardSize == 0 ? false : true;
+            callback: () async {
+              // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+              final List<EthereumAddress> tokenContracts = [];
+              tokenContracts.add(tasksServices.contractAddress);
+              tasksServices.myNotifyListeners();
+              showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) => const WalletActionDialog(
+                        nanoId: 'setApprovalForAll',
+                        taskName: 'setApprovalForAll',
+                      ));
+              await tasksServices.setApprovalForAll(tokenContracts, [
+                [0]
+              ]);
+              var response = await tasksServices.isTokenApproved(tokenContracts, [
+                [0]
+              ]);
+              setState(() {
+                isTokenApproved = response[tasksServices.contractAddress]!;
+              });
+              tasksServices.myNotifyListeners();
+              print('isTokenApproved $response');
+              // List<EthereumAddress> addrList = [tasksServices.contractAddress];
+              // var response = await tasksServices.isTokenApproved(addrList);
+              // nftApproved = response[tasksServices.contractAddress]!;
+            },
+          );
 
-              },
-            );
+          var approveButtonERC20 = TaskDialogFAB(
+            inactive: isTokenApproved ? true : false,
+            expand: true,
+            buttonName: 'Approve(Token)',
+            buttonColorRequired: Colors.lightBlue.shade300,
+            widthSize: buttonWidth,
+            callback: () async {
+              // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+              tokenApproved = true;
+              tasksServices.myNotifyListeners();
+              showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) => WalletActionDialog(
+                        nanoId: nanoId,
+                        taskName: 'createTaskContract',
+                      ));
 
-            var approveButtonERC20 = TaskDialogFAB(
-              inactive: isTokenApproved ? true : false,
-              expand: true,
-              buttonName: 'Approve(Token)',
-              buttonColorRequired: Colors.lightBlue.shade300,
-              widthSize: buttonWidth,
-              callback: () async {
-                // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
-                tokenApproved = true;
-                tasksServices.myNotifyListeners();
-                showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) => WalletActionDialog(
-                      nanoId: nanoId,
-                      taskName: 'createTaskContract',
-                    ));
+              // List<EthereumAddress> addrList = [tasksServices.contractAddress];
+              // var response = await tasksServices.isTokenApproved(addrList);
+              // tokenApproved = response[tasksServices.contractAddress]!;
+            },
+          );
 
-                // List<EthereumAddress> addrList = [tasksServices.contractAddress];
-                // var response = await tasksServices.isTokenApproved(addrList);
-                // tokenApproved = response[tasksServices.contractAddress]!;
+          var errorButton = TaskDialogFAB(
+            inactive: false,
+            expand: true,
+            buttonName: 'Error',
+            buttonColorRequired: Colors.lightBlue.shade300,
+            widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard is here?
+            callback: () async {},
+          );
 
-              },
-            );
-
-            var errorButton = TaskDialogFAB(
-              inactive: false,
-              expand: true,
-              buttonName: 'Error',
-              buttonColorRequired: Colors.lightBlue.shade300,
-              widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard is here?
-              callback: () async {},
-            );
-
-
-            if (nftDetected && !isTokenApproved) {
-              // if (nftDetected && !nftApproved) {
-              //   print('nftDetected fired');
-              //   nftDetected = false;
-              // }
-              return approveButtonERC1155;
-            }
-
-            // else if (!nftApproved && interface.tokenSelected == 'USDC') {
-            //   if (tokenApproved && interface.tokenSelected != 'USDC') {
-            //     print('fired USDC');
-            //     interface.tokenSelected == '';
-            //   }
-            //   return approveButtonERC20;
-            // }
-
-            else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
-              interface.tokenSelected == '';
-              nftDetected = false;
-              return submitButton;
-            } else {
-              return errorButton;
-            }
-            //
-            // if (!tokenApproved && nftDetected) {
-            //   if (nftDetected && !nftApproved) {
-            //     print('nftDetected fired');
-            //
-            //     nftDetected = false;
-            //   }
-            //   return approveButtonERC1155;
-            // } else if (!nftApproved && interface.tokenSelected == 'USDC') {
-            //   if (tokenApproved && interface.tokenSelected != 'USDC') {
-            //     print('fired USDC');
-            //     interface.tokenSelected == '';
-            //   }
-            //   return approveButtonERC20;
-            // }
-            //
-            // else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
-            //   interface.tokenSelected == '';
+          if (nftDetected && !isTokenApproved) {
+            // if (nftDetected && !nftApproved) {
+            //   print('nftDetected fired');
             //   nftDetected = false;
-            //   return submitButton;
-            // } else {
-            //   return errorButton;
             // }
-
+            return approveButtonERC1155;
           }
-        ),
+
+          // else if (!nftApproved && interface.tokenSelected == 'USDC') {
+          //   if (tokenApproved && interface.tokenSelected != 'USDC') {
+          //     print('fired USDC');
+          //     interface.tokenSelected == '';
+          //   }
+          //   return approveButtonERC20;
+          // }
+
+          else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
+            interface.tokenSelected == '';
+            nftDetected = false;
+            return submitButton;
+          } else {
+            return errorButton;
+          }
+          //
+          // if (!tokenApproved && nftDetected) {
+          //   if (nftDetected && !nftApproved) {
+          //     print('nftDetected fired');
+          //
+          //     nftDetected = false;
+          //   }
+          //   return approveButtonERC1155;
+          // } else if (!nftApproved && interface.tokenSelected == 'USDC') {
+          //   if (tokenApproved && interface.tokenSelected != 'USDC') {
+          //     print('fired USDC');
+          //     interface.tokenSelected == '';
+          //   }
+          //   return approveButtonERC20;
+          // }
+          //
+          // else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
+          //   interface.tokenSelected == '';
+          //   nftDetected = false;
+          //   return submitButton;
+          // } else {
+          //   return errorButton;
+          // }
+        }),
       ),
     );
   }
