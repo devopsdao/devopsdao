@@ -47,6 +47,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var tasksServices = context.watch<TasksServices>();
+      var interface = context.watch<InterfaceServices>();
+      if (interface.dialogCurrentState['name'] == 'performer-review') {
+        tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
+      }
+    });
+
     pullRequestController = TextEditingController();
     messageForStateController = TextEditingController();
   }
