@@ -123,12 +123,12 @@ class SetsOfFabButtons extends StatelessWidget {
           callback: () {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
-            tasksServices.postWitnetRequest(task.taskAddress);
+            tasksServices.postWitnetRequest(task.taskAddress, task.nanoId);
             showDialog(
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => const WalletActionDialog(
-                      nanoId: 'postWitnetRequest',
+                builder: (context) => WalletActionDialog(
+                      nanoId: task.nanoId,
                       taskName: 'postWitnetRequest',
                     ));
             // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));

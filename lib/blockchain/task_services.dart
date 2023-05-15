@@ -3139,10 +3139,10 @@ class TasksServices extends ChangeNotifier {
   late List witnetGetLastResult = [false, false, ''];
   // late String saveSuccessfulWitnetResult = witnetSuccessfulResult;
 
-  Future<String> postWitnetRequest(EthereumAddress taskAddress) async {
+  Future<String> postWitnetRequest(EthereumAddress taskAddress, String nanoId) async {
     print('postWitnetRequest');
-    transactionStatuses['postWitnetRequest'] = {
-      'postWitnetRequest': {'status': 'pending', 'txn': 'initial'}
+    transactionStatuses[nanoId] = {
+      'postWitnetRequest': {'status': 'pending', 'txn': 'initial', 'witnetPostResult': 'initialized request'}
     };
     witnetPostResult = 'initialized request';
     notifyListeners();
@@ -3160,21 +3160,23 @@ class TasksServices extends ChangeNotifier {
 
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
     String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
-    transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['status'] = 'confirmed';
-    transactionStatuses['postWitnetRequest']!['postWitnetRequest']!['txn'] = txn;
+    transactionStatuses[nanoId]!['postWitnetRequest']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['postWitnetRequest']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'postWitnetRequest', 'postWitnetRequest');
+    tellMeHasItMined(txn, nanoId, 'postWitnetRequest');
     if (txn.length == 66) {
       witnetPostResult = 'request mined';
       witnetGetLastResult = [false, false, 'checking'];
-      checkWitnetResultAvailability(taskAddress);
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request mined';
+      checkWitnetResultAvailability(taskAddress, nanoId);
     } else {
       witnetPostResult = 'request failed';
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request failed';
     }
     return txn;
   }
 
-  Future checkWitnetResultAvailability(EthereumAddress taskAddress) async {
+  Future checkWitnetResultAvailability(EthereumAddress taskAddress, String nanoId) async {
     BigInt appId = BigInt.from(100);
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
@@ -3187,6 +3189,7 @@ class TasksServices extends ChangeNotifier {
           print('old result received');
         } else {
           witnetPostResult = 'result available';
+          transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'result available';
           witnetAvailabilityResult = result;
           notifyListeners();
           getLastWitnetResult(taskAddress);
