@@ -3134,7 +3134,7 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  late String witnetPostResult = 'not initialized';
+  late String witnetPostResult = 'check not initialized';
   late bool witnetAvailabilityResult = false;
   late List witnetGetLastResult = [false, false, ''];
   // late String saveSuccessfulWitnetResult = witnetSuccessfulResult;

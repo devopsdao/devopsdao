@@ -111,9 +111,10 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if ((task.taskState == "review" && fromPage == 'performer') &&
-          (tasksServices.witnetPostResult == 'not initialized' ||
+          (tasksServices.witnetPostResult == 'check not initialized' ||
               tasksServices.witnetPostResult == 'request failed' ||
-              tasksServices.witnetGetLastResult[0]) && task.repository.isNotEmpty) {
+              tasksServices.witnetGetLastResult[0]) &&
+          task.repository.isNotEmpty) {
         return TaskDialogFAB(
           inactive: false,
           expand: true,

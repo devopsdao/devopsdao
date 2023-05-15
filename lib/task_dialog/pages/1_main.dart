@@ -834,8 +834,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ********* GitHub pull/request Performer ************ //
               if ((interface.dialogCurrentState['name'] == 'performer-progress' ||
-                  interface.dialogCurrentState['name'] == 'performer-review' ||
-                  tasksServices.hardhatDebug == true) && task.repository.isNotEmpty)
+                      interface.dialogCurrentState['name'] == 'performer-review' ||
+                      tasksServices.hardhatDebug == true) &&
+                  task.repository.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -855,11 +856,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 if (interface.dialogCurrentState['name'] == 'performer-progress' ||
                                     interface.dialogCurrentState['name'] == 'performer-review' ||
                                     tasksServices.hardhatDebug == true)
-                                Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text('Create a pull request with a following name: ', style: Theme.of(context).textTheme.bodyMedium,),
-                                ),
-
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Create a pull request with the following name: ',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ),
                                 GestureDetector(
                                   onTap: () async {
                                     // Clipboard.setData(ClipboardData(text: "dodao.dev/#/tasks/${task.taskAddress} task: ${task.title}")).then((_) {
@@ -884,93 +887,87 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
                                         const WidgetSpan(
                                             child: Padding(
-                                              padding: EdgeInsets.only(right: 5.0),
-                                              child: Icon(
-                                                Icons.copy,
-                                                size: 16,
-                                                color: Colors.black26,
-                                              ),
-                                            )),
-                                        TextSpan(
-                                            text: "dodao.dev/#/tasks/${task.taskAddress}",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold
-                                            )
-                                          // style: const TextStyle(fontWeight: FontWeight.w700)
-                                        ),
-                                      ]
-                                    ),
+                                          padding: EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.copy,
+                                            size: 16,
+                                            color: Colors.black26,
+                                          ),
+                                        )),
+                                        TextSpan(text: "dodao.dev/#/tasks/${task.taskAddress}", style: const TextStyle(fontWeight: FontWeight.bold)
+                                            // style: const TextStyle(fontWeight: FontWeight.w700)
+                                            ),
+                                      ]),
 
                                       softWrap: false,
                                       overflow: TextOverflow.fade,
                                       maxLines: 1,
-                                    // RichText(
-                                    //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                    //   const WidgetSpan(
-                                    //       child: Padding(
-                                    //     padding: EdgeInsets.only(right: 5.0),
-                                    //     child: Icon(
-                                    //       Icons.copy,
-                                    //       size: 16,
-                                    //       color: Colors.black26,
-                                    //     ),
-                                    //   )),
-                                    //   TextSpan(
-                                    //       text: "dodao.dev/#/tasks/${task.taskAddress}",
-                                    //       style: const TextStyle(
-                                    //         overflow: TextOverflow.fade,
-                                    //         )
-                                    //       // style: const TextStyle(fontWeight: FontWeight.w700)
-                                    //   ),
-                                    // ])
+                                      // RichText(
+                                      //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                      //   const WidgetSpan(
+                                      //       child: Padding(
+                                      //     padding: EdgeInsets.only(right: 5.0),
+                                      //     child: Icon(
+                                      //       Icons.copy,
+                                      //       size: 16,
+                                      //       color: Colors.black26,
+                                      //     ),
+                                      //   )),
+                                      //   TextSpan(
+                                      //       text: "dodao.dev/#/tasks/${task.taskAddress}",
+                                      //       style: const TextStyle(
+                                      //         overflow: TextOverflow.fade,
+                                      //         )
+                                      //       // style: const TextStyle(fontWeight: FontWeight.w700)
+                                      //   ),
+                                      // ])
                                     ),
                                   ),
                                 ),
                                 if (interface.dialogCurrentState['name'] == 'performer-progress' ||
                                     interface.dialogCurrentState['name'] == 'performer-review' ||
                                     tasksServices.hardhatDebug == true)
-                                Column(
-                                  children: [
-                                    Container(
-                                      // padding: const EdgeInsets.only(top: 8),
-                                      alignment: Alignment.topLeft,
-                                      child: const Text('Pull request link: '),
-                                    ),
-                                    Builder(builder: (context) {
-                                      final Uri toLaunch = Uri.parse(widget.task.repository);
-                                      // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
-                                      return Container(
-                                        padding: const EdgeInsets.all(8.0),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        // padding: const EdgeInsets.only(top: 8),
                                         alignment: Alignment.topLeft,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            if (!await launchUrl(
-                                              toLaunch,
-                                              mode: LaunchMode.externalApplication,
-                                            )) {
-                                              throw 'Could not launch $toLaunch';
-                                            }
-                                          },
-                                          child: RichText(
-                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
-                                                const WidgetSpan(
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(right: 5.0),
-                                                      child: Icon(
-                                                        Icons.link,
-                                                        size: 16,
-                                                        color: Colors.black26,
-                                                      ),
-                                                    )),
-                                                TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                                              ])),
-                                        ),
-                                      );
-                                    }),
-                                  ],
-                                ),
+                                        child: const Text('Repository to create a pull request in:'),
+                                      ),
+                                      Builder(builder: (context) {
+                                        final Uri toLaunch = Uri.parse('https://github.com${widget.task.repository}');
+                                        // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
+                                        return Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          alignment: Alignment.topLeft,
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              if (!await launchUrl(
+                                                toLaunch,
+                                                mode: LaunchMode.externalApplication,
+                                              )) {
+                                                throw 'Could not launch $toLaunch';
+                                              }
+                                            },
+                                            child: RichText(
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                              const WidgetSpan(
+                                                  child: Padding(
+                                                padding: EdgeInsets.only(right: 5.0),
+                                                child: Icon(
+                                                  Icons.link,
+                                                  size: 16,
+                                                  color: Colors.black26,
+                                                ),
+                                              )),
+                                              TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            ])),
+                                          ),
+                                        );
+                                      }),
+                                    ],
+                                  ),
                                 if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
-
                                   Builder(builder: (context) {
                                     // late bool response = false;
                                     // late List response2 = [];
@@ -979,21 +976,22 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       status = '';
                                     } else if (tasksServices.witnetGetLastResult[2] == 'checking') {
                                       status = 'checking';
-                                    } else if (tasksServices.witnetGetLastResult[0] && tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
-                                      status = 'no matching PR'; //request failed
+                                    } else if (tasksServices.witnetGetLastResult[0] &&
+                                        tasksServices.witnetGetLastResult[2] == 'Unknown error (0x30)') {
+                                      status = '${tasksServices.witnetGetLastResult[2]}'; //request failed
+                                    } else if (tasksServices.witnetGetLastResult[0] &&
+                                        tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
+                                      status = 'Unknown error (0x70)'; //request failed
                                     } else if (tasksServices.witnetGetLastResult[1] ||
                                         tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
-                                      status = 'PR is pending merge';
+                                      status = 'no matching PR';
                                     } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
                                       status = 'PR merged';
-                                    } else if (tasksServices.witnetGetLastResult[2] == 'open') {
-                                      status = 'open';
+                                    } else if (tasksServices.witnetGetLastResult[2] == '(unmerged)') {
+                                      status = 'PR open, not merged';
                                     } else {
                                       status = 'error';
                                     }
-
-
-
 
                                     return Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1055,63 +1053,61 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: RichText(
-                                            text: TextSpan(style: Theme.of(context).textTheme.bodySmall,
-                                                children: [
-                                              const WidgetSpan(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(right: 5.0),
-                                                    child: Icon(
-                                                      Icons.api,
-                                                      size: 16,
-                                                      color: Colors.black26,
-                                                    ),
-                                                  )),
-                                              TextSpan(text: tasksServices.witnetPostResult, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                  if (tasksServices.witnetPostResult == 'initialized request')
-                                                    WidgetSpan(
-                                                      child: Container(
-                                                        padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                                        // alignment: Alignment.bottomCenter,
-                                                        // height: 23,
-                                                        child: LoadingAnimationWidget.fourRotatingDots(
-                                                          size: 15,
-                                                          color: DodaoTheme.of(context).secondaryText,
-                                                        ),
-                                                      ),
-                                                    ),
-                                            ])),
+                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                            const WidgetSpan(
+                                                child: Padding(
+                                              padding: EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.api,
+                                                size: 16,
+                                                color: Colors.black26,
+                                              ),
+                                            )),
+                                            TextSpan(text: tasksServices.witnetPostResult, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            if (tasksServices.witnetPostResult == 'initialized request')
+                                              WidgetSpan(
+                                                child: Container(
+                                                  padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                                  // alignment: Alignment.bottomCenter,
+                                                  // height: 23,
+                                                  child: LoadingAnimationWidget.fourRotatingDots(
+                                                    size: 15,
+                                                    color: DodaoTheme.of(context).secondaryText,
+                                                  ),
+                                                ),
+                                              ),
+                                          ])),
                                         ),
 
                                         if (tasksServices.witnetPostResult == 'request mined' || tasksServices.witnetPostResult == 'result available')
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                          child: RichText(
-                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall,
-                                                  children: [
-                                                    const WidgetSpan(
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(right: 5.0),
-                                                          child: Icon(
-                                                            Icons.api,
-                                                            size: 16,
-                                                            color: Colors.black26,
-                                                          ),
-                                                        )),
-                                                    TextSpan(text: status, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                    if (status == 'checking')
-                                                      WidgetSpan(
-                                                        child: Container(
-                                                          padding: const EdgeInsets.only(left: 3.0, right: 4.0),
-                                                          // alignment: Alignment,
-                                                          // height: 20,
-                                                          child: LoadingAnimationWidget.fourRotatingDots(
-                                                            size: 15,
-                                                            color: DodaoTheme.of(context).secondaryText,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                  ])),
-                                        ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                            child: RichText(
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                              const WidgetSpan(
+                                                  child: Padding(
+                                                padding: EdgeInsets.only(right: 5.0),
+                                                child: Icon(
+                                                  Icons.api,
+                                                  size: 16,
+                                                  color: Colors.black26,
+                                                ),
+                                              )),
+                                              TextSpan(text: status, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                              if (status == 'checking')
+                                                WidgetSpan(
+                                                  child: Container(
+                                                    padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                                    // alignment: Alignment,
+                                                    // height: 20,
+                                                    child: LoadingAnimationWidget.fourRotatingDots(
+                                                      size: 15,
+                                                      color: DodaoTheme.of(context).secondaryText,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ])),
+                                          ),
 
                                         // Container(
                                         //   padding: const EdgeInsets.all(8.0),
@@ -1132,15 +1128,15 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         //   ])),
                                         // ),
                                         if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
-                                        Container(
-                                          padding: const EdgeInsets.only(top: 8),
-                                          alignment: Alignment.topLeft,
-                                          child: const Text(
-                                            '* Please wait until your pull request is merged in to '
-                                                'the repository or till customer manually accepts Task completion:',
-                                            style: TextStyle(fontSize: 10),
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            alignment: Alignment.topLeft,
+                                            child: const Text(
+                                              '* Please wait until your pull request is merged in to '
+                                              'the repository or till customer manually accepts Task completion:',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
                                           ),
-                                        ),
 
                                         // Container(
                                         //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
@@ -1214,8 +1210,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       ],
                                     );
                                   }),
-
-
                               ],
                             );
                           }),
@@ -1265,7 +1259,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 Container(
                                   padding: const EdgeInsets.only(top: 8),
                                   alignment: Alignment.topLeft,
-                                  child: const Text('Created with the repository:'),
+                                  child: const Text('Repository to create a pull request in:'),
                                 ),
 
                                 // Container(
@@ -1288,14 +1282,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
                                 GestureDetector(
                                   onTap: () async {
-                                    Clipboard.setData(ClipboardData(text: widget.task.repository)).then((_) {
+                                    Clipboard.setData(ClipboardData(text: 'https://github.com${widget.task.repository}')).then((_) {
                                       Flushbar(
                                               icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
                                                 color: DodaoTheme.of(context).flushTextColor,
                                               ),
-                                              message: '${widget.task.repository} copied to your clipboard!',
+                                              message: 'https://github.com${widget.task.repository} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
                                               backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
@@ -1316,7 +1310,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           color: Colors.black26,
                                         ),
                                       )),
-                                      TextSpan(text: widget.task.repository, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text: 'https://github.com${widget.task.repository}', style: const TextStyle(fontWeight: FontWeight.bold)),
                                     ])),
                                   ),
                                 ),
