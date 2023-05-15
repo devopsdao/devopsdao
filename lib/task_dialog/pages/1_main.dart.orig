@@ -871,7 +871,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
-                                                color: DodaoTheme.of(context).flushTextColor,
+                                                color: DodaoTheme.of(context).secondaryText,
                                               ),
                                               message: 'Pull request name: dodao.dev/#/tasks/${task.taskAddress} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
@@ -977,24 +977,45 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       status = '';
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'checking') {
                                       status = 'checking';
+<<<<<<< HEAD
                                       statusColor = Colors.yellow.shade800;
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'Unknown error (0x30)') {
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][0] &&
+                                        tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'Unknown error (0x30)') {
                                       status = '${tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2]}'; //request failed
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'Unknown error (0x70)') {
-                                      status = 'no matching PR'; //request failed
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][0] &&
+                                        tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'Unknown error (0x70)') {
+                                      status = 'Unknown error (0x70)'; //request failed
                                       statusColor = Colors.yellow.shade800;
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'WitnetErrorsLib: assertion failed') {
-                                      status = 'PR open, not merged';
+                                      status = 'no matching PR';
                                       statusColor = Colors.yellow.shade800;
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'closed') {
                                       status = 'PR merged';
                                       statusColor = Colors.green;
-                                    } 
-                                    // else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '(unmerged)') {
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '(unmerged)') {
+                                      status = 'PR open, not merged';
+                                      statusColor = Colors.yellow.shade800;
+                                    } else {
+=======
+                                      statusColor = Colors.yellow;
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'Unknown error (0x30)') {
+                                      status = '${tasksServices.witnetGetLastResult[2]}'; //request failed
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'Unknown error (0x70)') {
+                                      status = 'no matching PR'; //request failed
+                                      statusColor = Colors.yellow;
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'WitnetErrorsLib: assertion failed') {
+                                      status = 'PR open, not merged';
+                                      statusColor = Colors.yellow;
+                                    } else if (tasksServices.witnetGetLastResult[2] == 'closed') {
+                                      status = 'PR merged';
+                                      statusColor = Colors.green;
+                                    }
+                                    // else if (tasksServices.witnetGetLastResult[2] == '(unmerged)') {
                                     //   status = 'PR open, not merged';
-                                    //   statusColor = Colors.yellow.shade800;
-                                    // } 
+                                    //   statusColor = Colors.yellow;
+                                    // }
                                     else {
+>>>>>>> 6fce573c7741c8191cd662259a285825779a3bf7
                                       status = 'error';
                                       statusColor = Colors.red;
                                     }
