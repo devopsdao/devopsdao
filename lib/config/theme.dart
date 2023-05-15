@@ -129,7 +129,7 @@ class LightModeTheme extends DodaoTheme {
 
   late Color primaryText = const Color(0xFF101213);
   late Color revertedPrimaryTextColor = Colors.black;
-  late Color secondaryText = Colors.grey.shade800;
+  late Color secondaryText = Colors.grey.shade700;
   late Color tabIndicator = const Color(0xFF47CBE4);
 
   late Color chipTextColor = Colors.black;
@@ -283,7 +283,7 @@ class DarkModeTheme extends DodaoTheme {
 
   late Color primaryText = const Color(0xFFFFFFFF);
   late Color revertedPrimaryTextColor = Colors.white;
-  late Color secondaryText = Colors.grey.shade300;
+  late Color secondaryText = Colors.grey.shade400;
 
   late Color chipTextColor = Colors.grey.shade300;
   late Color chipBodyColor = Colors.grey.shade800;
