@@ -51,6 +51,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
       var tasksServices = context.read<TasksServices>();
       var interface = context.read<InterfaceServices>();
       if (interface.dialogCurrentState['name'] == 'performer-review') {
+        tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
         tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
       }
     });
@@ -983,21 +984,27 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     late Color statusColor = Colors.yellow.shade800;
                                     if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '') {
                                       status = '';
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'checking') {
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'checking') {
                                       status = 'checking';
                                       statusColor = Colors.yellow.shade800;
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'Unknown error (0x30)') {
-                                      status = '${tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2]}'; //request failed
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'Unknown error (0x70)') {
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'Unknown error (0x30)') {
+                                      status =
+                                          '${tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2]}'; //request failed
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'Unknown error (0x70)') {
                                       status = 'no matching PR'; //request failed
                                       statusColor = Colors.yellow.shade800;
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'WitnetErrorsLib: assertion failed') {
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'WitnetErrorsLib: assertion failed') {
                                       status = 'PR open, not merged';
                                       statusColor = Colors.yellow.shade800;
-                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'closed') {
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'closed') {
                                       status = 'PR merged';
                                       statusColor = Colors.green;
-                                    } 
+                                    }
                                     // else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '(unmerged)') {
                                     //   status = 'PR open, not merged';
                                     //   statusColor = Colors.yellow.shade800;
@@ -1078,24 +1085,34 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               ),
                                             )),
                                             TextSpan(
-                                                text: !tasksServices.transactionStatuses.containsKey(task.nanoId) ? 'check not initialized' : tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'],
+                                                text: !tasksServices.transactionStatuses.containsKey(task.nanoId)
+                                                    ? 'check not initialized'
+                                                    : tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'],
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: (() {
-                                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] == 'initialized request') {
+                                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                                        'initialized request') {
                                                       return Colors.yellow.shade900;
-                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult']  == 'request mined') {
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]
+                                                            ?['postWitnetRequest']!['witnetPostResult'] ==
+                                                        'request mined') {
                                                       return Colors.yellow.shade900;
-                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] == 'request failed') {
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]
+                                                            ?['postWitnetRequest']!['witnetPostResult'] ==
+                                                        'request failed') {
                                                       return Colors.redAccent;
-                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] == 'result available') {
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]
+                                                            ?['postWitnetRequest']!['witnetPostResult'] ==
+                                                        'result available') {
                                                       return Colors.green;
                                                     } else {
                                                       return DodaoTheme.of(context).primaryText;
                                                     }
                                                   }()),
                                                 )),
-                                            if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] == 'initialized request')
+                                            if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                                'initialized request')
                                               WidgetSpan(
                                                 child: Container(
                                                   padding: const EdgeInsets.only(left: 3.0, right: 4.0),
@@ -1110,8 +1127,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           ])),
                                         ),
 
-                                        if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] == 'request mined' ||
-                                            tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] == 'result available')
+                                        if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                                'request mined' ||
+                                            tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                                'result available')
                                           Padding(
                                             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                                             child: RichText(
