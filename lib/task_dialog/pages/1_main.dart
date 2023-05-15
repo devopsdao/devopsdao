@@ -993,7 +993,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     // else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '(unmerged)') {
                                     //   status = 'PR open, not merged';
                                     //   statusColor = Colors.yellow.shade800;
-                                    // } 
+                                    // }
                                     else {
                                       status = 'error';
                                       statusColor = Colors.red;
