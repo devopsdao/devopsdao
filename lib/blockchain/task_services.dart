@@ -3195,8 +3195,19 @@ class TasksServices extends ChangeNotifier {
         if (lastResult[0] == false && lastResult[1] == false && lastResult[2] == '') {
           print('old result received');
         } else {
-          witnetPostResult = 'result available';
-          transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'result available';
+          if (transactionStatuses.containsKey(nanoId)) {
+            witnetPostResult = 'result available';
+
+          } else {
+            transactionStatuses[nanoId] = {
+              'postWitnetRequest': {
+                'status': 'confirmed',
+                'txn': 'none',
+                'witnetPostResult': 'result available',
+                'witnetGetLastResult': [false, false, 'checking']
+              }
+            };
+          }
           witnetAvailabilityResult = result;
           notifyListeners();
           getLastWitnetResult(taskAddress, nanoId);
