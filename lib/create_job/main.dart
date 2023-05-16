@@ -732,9 +732,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 }
 
                 final Uri parsedUri = Uri.parse(githubLinkController!.text);
-                print('parsedUri.path: ${parsedUri.path.substring(1)}');
+                final String uri;
+                if (githubLinkController!.text.isNotEmpty) {
+                  uri = parsedUri.path.substring(1);
+                } else {
+                  uri = '';
+                }
 
-                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, parsedUri.path.substring(1),
+                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, uri,
                     interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
                 // Navigator.pop(context);
                 interface.createJobPageContext = context;

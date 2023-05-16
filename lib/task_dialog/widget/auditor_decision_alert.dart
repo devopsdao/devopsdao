@@ -170,7 +170,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                     child: InkWell(
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pop(interface.mainDialogContext);
+                        // Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
                         setState(() {
                           task.justLoaded = false;
@@ -222,7 +222,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pop(interface.mainDialogContext);
+                        // Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
                         setState(() {
                           task.justLoaded = false;

@@ -134,16 +134,16 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                     ),
                   ),
                   labelText: interface.dialogCurrentState['secondLabelMessage'],
-                  labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
+                  labelStyle: TextStyle(fontSize: 17.0, color: DodaoTheme.of(context).secondaryText),
                   hintText: '[Enter your message here..]',
-                  hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
+                  hintStyle: TextStyle(fontSize: 14.0, color: DodaoTheme.of(context).secondaryText),
                   // focusedBorder: const UnderlineInputBorder(
                   //   borderSide: BorderSide.none,
                   // ),
                 ),
                 style: DodaoTheme.of(context).bodyText1.override(
                       fontFamily: 'Inter',
-                      color: Colors.black87,
+                      color: DodaoTheme.of(context).secondaryText,
                       lineHeight: null,
                     ),
                 minLines: 2,
@@ -189,7 +189,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pop(interface.mainDialogContext);
+                        // Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
 
                         setState(() {

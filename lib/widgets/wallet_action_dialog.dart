@@ -167,6 +167,17 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
+    } else if (widget.taskName == 'taskStateChange') {
+      if (status == 'pending') {
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      }
     } else if (widget.taskName == 'saveLastWitnetResult') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
