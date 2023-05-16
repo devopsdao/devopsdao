@@ -3174,7 +3174,7 @@ class TasksServices extends ChangeNotifier {
       witnetGetLastResult = [false, false, 'checking'];
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request mined';
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = [false, false, 'checking'];
-      checkWitnetResultAvailability(taskAddress, nanoId);
+      // checkWitnetResultAvailabilityTimer(taskAddress, nanoId);
     } else {
       witnetPostResult = 'request failed';
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request failed';
@@ -3183,7 +3183,7 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  Future checkWitnetResultAvailability(EthereumAddress taskAddress, String nanoId) async {
+  Future checkWitnetResultAvailabilityTimer(EthereumAddress taskAddress, String nanoId) async {
     BigInt appId = BigInt.from(100);
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
@@ -3197,7 +3197,6 @@ class TasksServices extends ChangeNotifier {
         } else {
           if (transactionStatuses.containsKey(nanoId)) {
             witnetPostResult = 'result available';
-
           } else {
             transactionStatuses[nanoId] = {
               'postWitnetRequest': {
@@ -3210,11 +3209,43 @@ class TasksServices extends ChangeNotifier {
           }
           witnetAvailabilityResult = result;
           notifyListeners();
+          getLastWitnetResultTimer(taskAddress, nanoId);
           getLastWitnetResult(taskAddress, nanoId);
           timer.cancel();
         }
       }
     });
+    // return result;
+  }
+
+  Future checkWitnetResultAvailability(EthereumAddress taskAddress, String nanoId) async {
+    BigInt appId = BigInt.from(100);
+    // print(timer.tick);
+    bool result = await witnetFacet.checkResultAvailability(taskAddress);
+    print(result);
+    if (result) {
+      var lastResult = await witnetFacet.getLastResult(taskAddress);
+
+      if (lastResult[0] == false && lastResult[1] == false && lastResult[2] == '') {
+        print('old result received');
+      } else {
+        if (transactionStatuses.containsKey(nanoId)) {
+          witnetPostResult = 'result available';
+        } else {
+          transactionStatuses[nanoId] = {
+            'postWitnetRequest': {
+              'status': 'confirmed',
+              'txn': 'none',
+              'witnetPostResult': 'result available',
+              'witnetGetLastResult': [false, false, 'checking']
+            }
+          };
+        }
+        witnetAvailabilityResult = result;
+        notifyListeners();
+        getLastWitnetResult(taskAddress, nanoId);
+      }
+    }
     // return result;
   }
 
@@ -3224,7 +3255,7 @@ class TasksServices extends ChangeNotifier {
     1 pendingMerge: bool,
     2 status: text(closed/(unmerged))
   */
-  Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress, String nanoId) async {
+  Future<dynamic> getLastWitnetResultTimer(EthereumAddress taskAddress, String nanoId) async {
     Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
 
@@ -3237,14 +3268,14 @@ class TasksServices extends ChangeNotifier {
         timer.cancel();
       } else if (result[2] == 'Unknown error (0x70)') {
         witnetGetLastResult = result;
-        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] =result;
+        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
         timer.cancel();
       } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
-	      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
         witnetGetLastResult = result;
         timer.cancel();
       } else if (result[2] == '(unmerged)') {
-	      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
         witnetGetLastResult = result;
         timer.cancel();
       } else if (result[2] == 'The structure of the request is invalid and it cannot be parsed') {
@@ -3254,6 +3285,30 @@ class TasksServices extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  Future<dynamic> getLastWitnetResult(EthereumAddress taskAddress, String nanoId) async {
+    // print(timer.tick);
+    var result = await witnetFacet.getLastResult(taskAddress);
+    print(result);
+
+    if (result[2] == 'closed') {
+      witnetGetLastResult = result;
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+    } else if (result[2] == 'Unknown error (0x70)') {
+      witnetGetLastResult = result;
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+    } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+      witnetGetLastResult = result;
+    } else if (result[2] == '(unmerged)') {
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+      witnetGetLastResult = result;
+    } else if (result[2] == 'The structure of the request is invalid and it cannot be parsed') {
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+      witnetGetLastResult = result;
+    }
+    notifyListeners();
   }
 
   Future<dynamic> saveSuccessfulWitnetResult(EthereumAddress taskAddress) async {
