@@ -3262,27 +3262,9 @@ class TasksServices extends ChangeNotifier {
       var result = await witnetFacet.getLastResult(taskAddress);
       print(result);
 
-      if (result[2] == 'closed') {
-        witnetGetLastResult = result;
-        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-        timer.cancel();
-      } else if (result[2] == 'Unknown error (0x70)') {
-        witnetGetLastResult = result;
-        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-        timer.cancel();
-      } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
-        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-        witnetGetLastResult = result;
-        timer.cancel();
-      } else if (result[2] == '(unmerged)') {
-        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-        witnetGetLastResult = result;
-        timer.cancel();
-      } else if (result[2] == 'The structure of the request is invalid and it cannot be parsed') {
-        transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-        witnetGetLastResult = result;
-        timer.cancel();
-      }
+      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+      witnetGetLastResult = result;
+      timer.cancel();
       notifyListeners();
     });
   }
@@ -3292,22 +3274,8 @@ class TasksServices extends ChangeNotifier {
     var result = await witnetFacet.getLastResult(taskAddress);
     print(result);
 
-    if (result[2] == 'closed') {
-      witnetGetLastResult = result;
-      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-    } else if (result[2] == 'Unknown error (0x70)') {
-      witnetGetLastResult = result;
-      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-    } else if (result[2] == 'WitnetErrorsLib: assertion failed') {
-      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-      witnetGetLastResult = result;
-    } else if (result[2] == '(unmerged)') {
-      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-      witnetGetLastResult = result;
-    } else if (result[2] == 'The structure of the request is invalid and it cannot be parsed') {
-      transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
-      witnetGetLastResult = result;
-    }
+    transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = result;
+    witnetGetLastResult = result;
     notifyListeners();
   }
 
