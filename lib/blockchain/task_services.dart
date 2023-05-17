@@ -1123,6 +1123,7 @@ class TasksServices extends ChangeNotifier {
 
   late Map fees;
   Future<void> startup() async {
+    isLoadingBackground = true;
     WidgetsFlutterBinding.ensureInitialized();
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -1183,6 +1184,7 @@ class TasksServices extends ChangeNotifier {
 
     List<EthereumAddress> accountsList = await getAccountsList();
     accountsData = await getAccountsData(accountsList);
+    isLoadingBackground = false;
 
     // fees = await _web3client.getGasInEIP1559();
     // print(fees);
@@ -2168,6 +2170,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> fetchTasksByState(String state) async {
+    isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsByState(state);
 
     filterResults.clear();
@@ -2196,12 +2199,13 @@ class TasksServices extends ChangeNotifier {
     }
 
     // isLoading = false;
-    // isLoadingBackground = false;
+    isLoadingBackground = false;
     // await myBalance();
     // notifyListeners();
   }
 
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
+    isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
 
     filterResults.clear();
@@ -2235,6 +2239,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
+    isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
 
     filterResults.clear();
@@ -2279,43 +2284,57 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List<EthereumAddress>> getAccountsList() async {
+    isLoadingBackground = true;
     List<EthereumAddress> accountsList = await accountFacet.getAccountsList();
+    isLoadingBackground = false;
     return accountsList;
   }
 
   Future<List<EthereumAddress>> getTaskListFull() async {
+    isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContracts();
     List<EthereumAddress> taskListReversed = List.from(taskList.reversed);
+    isLoadingBackground = false;
     return taskListReversed;
   }
 
   Future<List> getTaskListCustomers(List<EthereumAddress> publicAddresses) async {
+    isLoadingBackground = true;
     List taskList = await taskDataFacet.getTaskContractsCustomers(publicAddresses);
     List taskListReversed = List.from(taskList.reversed);
+    isLoadingBackground = false;
     return taskListReversed;
   }
 
   Future<List> getTaskListPerformers(List<EthereumAddress> publicAddresses) async {
+    isLoadingBackground = true;
     List taskList = await taskDataFacet.getTaskContractsPerformers(publicAddresses);
     List taskListReversed = List.from(taskList.reversed);
+    isLoadingBackground = false;
     return taskListReversed;
   }
 
   Future<List> getTaskListCustomer(EthereumAddress publicAddress) async {
+    isLoadingBackground = true;
     List taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
     List taskListReversed = List.from(taskList.reversed);
+    isLoadingBackground = false;
     return taskListReversed;
   }
 
   Future<List> getTaskListPerformer(EthereumAddress publicAddress) async {
+    isLoadingBackground = true;
     List taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
     List taskListReversed = List.from(taskList.reversed);
+    isLoadingBackground = false;
     return taskListReversed;
   }
 
   Future<List> getTaskListByState(String state) async {
+    isLoadingBackground = true;
     List taskList = await taskDataFacet.getTaskContractsByState(state);
     List taskListReversed = List.from(taskList.reversed);
+    isLoadingBackground = false;
     return taskListReversed;
   }
 
@@ -2391,6 +2410,7 @@ class TasksServices extends ChangeNotifier {
   late bool isRequestApproved = false;
 
   Future<void> isApproved() async {
+    isLoadingBackground = true;
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2420,9 +2440,11 @@ class TasksServices extends ChangeNotifier {
         }
       }
     }
+    isLoadingBackground = false;
   }
 
   Future<Map<EthereumAddress, bool>> isTokenApproved(tokenContracts, amounts) async {
+    isLoadingBackground = true;
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2467,6 +2489,7 @@ class TasksServices extends ChangeNotifier {
         }
       }
     }
+    isLoadingBackground = false;
     return tokenContractsApproved;
   }
 
@@ -2997,29 +3020,39 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List> balanceOfBatchName(List<EthereumAddress> addresses, List<String> names) async {
+    isLoadingBackground = true;
     List balanceList = await tokenDataFacet.balanceOfBatchName(addresses, names);
+    isLoadingBackground = false;
     return balanceList;
   }
 
   Future<List> totalSupplyOfBatchName(List<String> names) async {
+    isLoadingBackground = true;
     List totalSupply = await tokenDataFacet.totalSupplyOfBatchName(names);
+    isLoadingBackground = false;
     return totalSupply;
   }
 
   Future getTokenNames(EthereumAddress address) async {
+    isLoadingBackground = true;
     List accountTokenNames = await tokenDataFacet.getTokenNames(address);
     print('getTokenNames');
     print(await tokenDataFacet.getTokenNames(address));
+    isLoadingBackground = false;
     return accountTokenNames;
   }
 
   Future getTokenIds(EthereumAddress address) async {
+    isLoadingBackground = true;
     List accountTokenIds = await tokenDataFacet.getTokenIds(address);
+    isLoadingBackground = false;
     return accountTokenIds;
   }
 
   Future<List> uriOfBatchName(List<String> names) async {
+    isLoadingBackground = true;
     List totalSupply = await tokenDataFacet.uriOfBatchName(names);
+    isLoadingBackground = false;
     return totalSupply;
   }
 
