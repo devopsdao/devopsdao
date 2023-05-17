@@ -990,8 +990,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       statusColor = Colors.yellow.shade800;
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
                                         'Unknown error (0x30)') {
-                                      status =
-                                          '${tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2]}'; //request failed
+                                      status = 'request failed'; //request failed
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
                                         'Unknown error (0x70)') {
                                       status = 'no matching PR'; //request failed

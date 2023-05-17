@@ -3168,13 +3168,13 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['postWitnetRequest']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['postWitnetRequest']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, nanoId, 'postWitnetRequest');
+    tellMeHasItMined(txn, 'postWitnetRequest', nanoId);
     if (txn.length == 66) {
       witnetPostResult = 'request mined';
       witnetGetLastResult = [false, false, 'checking'];
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request mined';
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetGetLastResult'] = [false, false, 'checking'];
-      // checkWitnetResultAvailabilityTimer(taskAddress, nanoId);
+      checkWitnetResultAvailabilityTimer(taskAddress, nanoId);
     } else {
       witnetPostResult = 'request failed';
       transactionStatuses[nanoId]!['postWitnetRequest']!['witnetPostResult'] = 'request failed';
@@ -3292,7 +3292,7 @@ class TasksServices extends ChangeNotifier {
       creds = credentials;
       senderAddress = publicAddress;
     }
-    final transaction = Transaction(from: senderAddress, value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000), maxGas: 2000000);
+    final transaction = Transaction(from: senderAddress, maxGas: 2000000);
 
     String txn = await witnetFacet.saveSuccessfulResult(taskAddress, credentials: creds, transaction: transaction);
     transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['status'] = 'confirmed';
