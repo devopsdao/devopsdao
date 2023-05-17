@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'package:provider/provider.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/tags_old.dart';
-import 'package:dodao/widgets/tags/widgets/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as Badges;
 
@@ -41,6 +40,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
   final Duration splitDuration = const Duration(milliseconds: 600);
   final Curve splitCurve = Curves.easeInOutQuart;
+  late double safeAreaWidth = 0;
 
   @override
   void initState() {
@@ -102,13 +102,14 @@ class _MainTagsPageState extends State<MainTagsPage> {
     late String actualPage = '';
     widget.page == 'create' ? actualPage = 'selection' : actualPage = 'filter';
 
+    final double maxStaticDialogWidth = interfaceServices.maxStaticDialogWidth;
+    const double myPadding = 8.0;
 
-    // searchServices.resetTagsFilter(simpleTagsMap);
-
-
-    // tagsLocalList.entries.where((element) {
-    //   return element.value.selected == true;
-    // });
+    const List<Widget> filter = <Widget>[
+      Text('Tags'),
+      Text('Both'),
+      Text('Nft\'s')
+    ];
 
     final Widget nftInfoField = Consumer<CollectionServices>(
         builder: (context, model, child) {
@@ -127,132 +128,114 @@ class _MainTagsPageState extends State<MainTagsPage> {
             height: splitScreen ? secondPartHeight : 0.0,
             color: DodaoTheme.of(context).nftInfoBackgroundColor,
             curve: splitCurve,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Material(
-                    type: MaterialType.transparency,
-                    elevation: 6.0,
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 18, left: 8, right: 8),
-                      child: Row(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10, left: 8, right: 8),
+                  child: Row(
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              InkResponse(
-                                radius: 35,
-                                containedInkWell: false  ,
-                                onTap: () {
-                                  pageController.animateToPage(pageController.page!.toInt() - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
-                                },
-                                child: Icon(
-                                  Icons.arrow_back_ios_new,
-                                  size: 24,
-                                  color: DodaoTheme.of(context).secondaryText,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                                child: Consumer<InterfaceServices>(
-                                    builder: (context, model, child) {
-                                      // Reset count:
-                                      if (model.treasuryPageCount > nftCount) {
-                                        model.treasuryPageCount = 1;
-                                      }
-                                      return Text(
-                                        '${model.treasuryPageCount} of ${nftCount.toString()}',
-                                        style: Theme.of(context).textTheme.bodyMedium?.apply(color: DodaoTheme.of(context).primaryText),
-                                      );
-                                    }
-                                ),
-                              ),
-                              InkResponse(
-                                radius: 35,
-                                containedInkWell: false  ,
-                                onTap: () {
-                                  pageController.animateToPage(pageController.page!.toInt() + 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
-                                },
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 24,
-                                  color: DodaoTheme.of(context).secondaryText,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                            child: Text(
-                              collectionName,
-                              style:  Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
-                          const Spacer(),
                           InkResponse(
                             radius: 35,
                             containedInkWell: false  ,
                             onTap: () {
-                              model.clearSelectedInManager();
+                              pageController.animateToPage(pageController.page!.toInt() - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
                             },
                             child: Icon(
-                              Icons.arrow_downward,
+                              Icons.arrow_back_ios_new,
+                              size: 24,
+                              color: DodaoTheme.of(context).secondaryText,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                            child: Consumer<InterfaceServices>(
+                                builder: (context, model, child) {
+                                  // Reset count:
+                                  if (model.treasuryPageCount > nftCount) {
+                                    model.treasuryPageCount = 1;
+                                  }
+                                  return Text(
+                                    '${model.treasuryPageCount} of ${nftCount.toString()}',
+                                    style: Theme.of(context).textTheme.bodyMedium?.apply(color: DodaoTheme.of(context).primaryText),
+                                  );
+                                }
+                            ),
+                          ),
+                          InkResponse(
+                            radius: 35,
+                            containedInkWell: false  ,
+                            onTap: () {
+                              pageController.animateToPage(pageController.page!.toInt() + 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                            },
+                            child: Icon(
+                              Icons.arrow_forward_ios,
                               size: 24,
                               color: DodaoTheme.of(context).secondaryText,
                             ),
                           ),
                         ],
                       ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                        child: Text(
+                          collectionName,
+                          style:  Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                      const Spacer(),
+                      InkResponse(
+                        radius: 35,
+                        containedInkWell: false  ,
+                        onTap: () {
+                          model.clearSelectedInManager();
+                        },
+                        child: Icon(
+                          Icons.arrow_downward,
+                          size: 24,
+                          color: DodaoTheme.of(context).secondaryText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(
+                  height: secondPartHeight - 60,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: PageView.builder(
+                      onPageChanged: (number) {
+                        interfaceServices.treasuryPageCountUpdate(number + 1);
+                      },
+                      itemCount: model.treasuryNftsInfoSelected.bunch.length,
+                      controller: pageController,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        late Widget nftItemWidget;
+                        if (model.treasuryNftsInfoSelected.bunch.values.toList()[index].nft) {
+                          nftItemWidget = NftItem(
+                            item: model.treasuryNftsInfoSelected.bunch.values.toList()[index],
+                            frameHeight: secondPartHeight, page: 'selection',
+                          );
+                        } else {
+                          nftItemWidget = NftMint(
+                            item: model.treasuryNftsInfoSelected.bunch.values.toList()[index],
+                            frameHeight: secondPartHeight,
+                          );
+                        }
+                        return nftItemWidget;
+                      },
                     ),
                   ),
-
-                  SizedBox(
-                    height: secondPartHeight - 58,
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: PageView.builder(
-                        onPageChanged: (number) {
-                          interfaceServices.treasuryPageCountUpdate(number + 1);
-                        },
-                        itemCount: model.treasuryNftsInfoSelected.bunch.length,
-                        controller: pageController,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          late Widget nftItemWidget;
-                          if (model.treasuryNftsInfoSelected.bunch.values.toList()[index].nft) {
-                            nftItemWidget = NftItem(
-                              item: model.treasuryNftsInfoSelected.bunch.values.toList()[index],
-                              frameHeight: secondPartHeight, page: 'selection',
-                            );
-                          } else {
-                            nftItemWidget = NftMint(
-                              item: model.treasuryNftsInfoSelected.bunch.values.toList()[index],
-                              frameHeight: secondPartHeight,
-                            );
-                          }
-                          return nftItemWidget;
-                        },
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           );
         }
     );
-
-
-    final double maxStaticDialogWidth = interfaceServices.maxStaticDialogWidth;
-    const double myPadding = 8.0;
-
-    const List<Widget> filter = <Widget>[
-      Text('Tags'),
-      Text('Both'),
-      Text('Nft\'s')
-    ];
-
 
     final Widget body = LayoutBuilder(
         builder: (context, constraints) {
@@ -583,77 +566,93 @@ class _MainTagsPageState extends State<MainTagsPage> {
         }
     );
 
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
-      body: body,
-      floatingActionButtonAnimator: NoScalingAnimation(),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
-      floatingActionButton: Consumer<CollectionServices>(
-        builder: (context, model, child) {
-          late bool splitScreen = false;
-          if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
-            splitScreen = true;
+    return LayoutBuilder(
+        builder: (ctx, constraints) {
+          final double myMaxWidth = constraints.maxWidth;
+          if (myMaxWidth >= maxStaticDialogWidth) {
+            // actualFieldWidth = maxStaticInternalDialogWidth;
+            safeAreaWidth = (myMaxWidth - maxStaticDialogWidth) / 2;
           }
-          return AnimatedContainer(
-            // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
-            padding: EdgeInsets.only(right: 13, left: 46, bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 300.0 : 0),
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeInOutQuart,
-            child: TagsFAB(
 
-              inactive: false,
-              expand: false,
-              buttonName: 'Apply',
-              buttonColorRequired: Colors.lightBlue.shade300,
-              widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
-              callback: () {
-                searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
-                if (widget.page == 'audit') {
-                  if (widget.tabIndex == 0) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                  } else if (widget.tabIndex == 1) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                  } else if (widget.tabIndex == 2) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                  } else if (widget.tabIndex == 3) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-                      tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+          return SafeArea(
+            minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
+            child: Scaffold(
+              // resizeToAvoidBottomInset: false,
+              backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+              body: body,
+              floatingActionButtonAnimator: NoScalingAnimation(),
+              // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
+              floatingActionButton: Consumer<CollectionServices>(
+                builder: (context, model, child) {
+                  late bool splitScreen = false;
+                  if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
+                    splitScreen = true;
                   }
-                } else if (widget.page == 'tasks') {
-                  tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                } else if (widget.page == 'customer') {
-                  if (widget.tabIndex == 0) {
-                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
-                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                  } else if (widget.tabIndex == 1) {
-                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
-                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                  } else if (widget.tabIndex == 2) {
-                    tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
-                        tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                  }
-                } else if (widget.page == 'performer') {
-                  if (widget.tabIndex == 0) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                  } else if (widget.tabIndex == 1) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                  } else if (widget.tabIndex == 2) {
-                    tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                        tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 13, left: 46),
+                    // AnimatedCOntainer needs to show button 'Apply' over Tag Info:
+                    child: AnimatedContainer(
+                      padding: EdgeInsets.only(bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 300.0 : 0),
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeInOutQuart,
+                      child: TaskDialogFAB(
+
+                        inactive: false,
+                        expand: true,
+                        buttonName: 'Apply',
+                        buttonColorRequired: Colors.lightBlue.shade300,
+                        widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
+                        callback: () {
+                          searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
+                          if (widget.page == 'audit') {
+                            if (widget.tabIndex == 0) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                            } else if (widget.tabIndex == 1) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                            } else if (widget.tabIndex == 2) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                            } else if (widget.tabIndex == 3) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                            }
+                          } else if (widget.page == 'tasks') {
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                          } else if (widget.page == 'customer') {
+                            if (widget.tabIndex == 0) {
+                              tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
+                                  tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            } else if (widget.tabIndex == 1) {
+                              tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
+                                  tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            } else if (widget.tabIndex == 2) {
+                              tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
+                                  tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            }
+                          } else if (widget.page == 'performer') {
+                            if (widget.tabIndex == 0) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
+                                  tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            } else if (widget.tabIndex == 1) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
+                                  tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            } else if (widget.tabIndex == 2) {
+                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
+                                  tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            }
+                          }
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  );
                 }
-                Navigator.pop(context);
-              },
+              ),
             ),
           );
-        }
-      ),
+      }
     );
   }
 }

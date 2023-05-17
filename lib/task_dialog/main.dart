@@ -182,6 +182,11 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
       return Container(
         color: DodaoTheme.of(context).taskBackgroundColor,
+        // decoration: BoxDecoration(
+        //   borderRadius: DodaoTheme.of(context).borderRadius,
+        //   border: DodaoTheme.of(context).borderGradient,
+        // ),
+        // color: Colors.redAccent,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             height: statusBarHeight,

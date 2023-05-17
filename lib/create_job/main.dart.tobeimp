@@ -366,7 +366,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                 const Spacer(),
                                 const Padding(
                                   padding: EdgeInsets.all(6.0),
-                                  child: TagCallButton(
+                                  child: TagOpenContainerButton(
                                     page: 'create',
                                     tabIndex: 0,
                                   ),

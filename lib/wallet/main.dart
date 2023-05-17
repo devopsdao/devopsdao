@@ -400,13 +400,16 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                   ),
                 ),
               ),
+
               const Spacer(),
+              if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
               ChooseWalletButton(
                 active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
                 buttonFunction: 'metamask',
                 borderRadius: widget.borderRadius,
                 buttonWidth: innerPaddingWidth,
               ),
+              if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
               const SizedBox(height: 12),
               ChooseWalletButton(
                 active: true,
@@ -837,6 +840,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
             }
           }
         },
+
         child: Container(
           padding: const EdgeInsets.all(0.0),
           height: 50.0, //MediaQuery.of(context).size.width * .08,

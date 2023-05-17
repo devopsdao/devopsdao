@@ -7,10 +7,10 @@ import '../../blockchain/interface.dart';
 import '../../config/theme.dart';
 import 'main.dart';
 
-class TagCallButton extends StatelessWidget {
+class TagOpenContainerButton extends StatelessWidget {
   final String page;
   final int tabIndex;
-  const TagCallButton({Key? key, required this.page, required this.tabIndex}) : super(key: key);
+  const TagOpenContainerButton({Key? key, required this.page, required this.tabIndex}) : super(key: key);
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 

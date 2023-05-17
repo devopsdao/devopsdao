@@ -179,7 +179,7 @@ class _AccountsPageState extends State<AccountsPage> {
                               ),
                         ),
                       ),
-                      const TagCallButton(
+                      const TagOpenContainerButton(
                         page: 'tasks',
                         tabIndex: 0,
                       ),

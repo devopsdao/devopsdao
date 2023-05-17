@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
+import '../widgets/loading.dart';
 import '../widgets/tags/search_services.dart';
 
 class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
@@ -44,6 +45,8 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
                 },
                 icon: const Icon(Icons.search),
               ),
+              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
+                const LoadButtonIndicator(),
             ]
         );
       },

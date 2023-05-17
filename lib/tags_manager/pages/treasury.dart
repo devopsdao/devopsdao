@@ -101,7 +101,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                     elevation: 6.0,
                     color: Colors.transparent,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 18, left: 8, right: 8),
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 10, left: 8, right: 8),
                       child: Row(
                         children: [
                           Row(

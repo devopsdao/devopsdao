@@ -116,6 +116,10 @@ class _MyAppState extends State<MyApp> {
     //   routerDelegate: beamerDelegate,
     //   routeInformationParser: BeamerParser(),
     // );
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return ChangeNotifierProvider(
       create: (_) => ModelTheme(),
       child: Consumer<ModelTheme>(

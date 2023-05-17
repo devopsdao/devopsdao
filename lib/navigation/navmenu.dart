@@ -45,9 +45,6 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     var modelTheme = context.read<ModelTheme>();
-
-
-
     return Drawer(
       child: Container(
         color:  DodaoTheme.of(context).taskBackgroundColor,

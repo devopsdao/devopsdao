@@ -106,7 +106,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       appBar: AppBarWithSearchSwitch(
         backgroundColor: DodaoTheme.of(context).background,
         titleTextStyle: Theme.of(context).textTheme.titleLarge,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         appBarBuilder: (context) {
           return AppBar(
             title: Text(
@@ -119,6 +119,9 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                 onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                 icon: const Icon(Icons.search),
               ),
+              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux' )
+                const LoadButtonIndicator(),
+
             ],
           );
         },
@@ -151,12 +154,13 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
         //   //   },
         //   //   icon: const Icon(Icons.search)
         //   // ),
-        //   // LoadButtonIndicator(),
+        //   LoadButtonIndicator(),
         // ],
         centerTitle: false,
         elevation: 2,
       ),
       // backgroundColor: const Color(0xFF1E2429),
+
       floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
       body: Container(
         width: double.infinity,
@@ -239,7 +243,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                   //             ),
                   //       ),
                   //     ),
-                  //     const TagCallButton(
+                  //     const TagOpenContainerButton(
                   //       page: 'tasks',
                   //       tabIndex: 0,
                   //     ),

@@ -29,11 +29,13 @@ class NftItem extends StatelessWidget {
     final bool selected = item.selected;
     return InkWell(
       child: Card(
-          elevation: 2,
+
+          elevation: 4,
           color: Colors.grey[700],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: DodaoTheme.of(context).borderRadius,
           ),
+          margin: const EdgeInsets.only(left: 4, right: 4, bottom: 8.0),
           child: Padding(
             padding: padding,
             child: Column(
@@ -51,7 +53,7 @@ class NftItem extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image.asset(
                             'assets/images/logo.png',
-                            height: frameHeight - 153,
+                            height: frameHeight - 162,
                             filterQuality: FilterQuality.medium,
                             isAntiAlias: true,
                           ),

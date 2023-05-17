@@ -113,9 +113,9 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
+                            children: [
                               Icon(Icons.image),
                               Text('From Gallery'),
                             ],
@@ -132,9 +132,9 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
+                            children: [
                               Icon(Icons.camera),
                               Text('From Camera'),
                             ],
@@ -161,7 +161,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
             elevation: 6.0,
             // color: Colors.transparent,
             child: Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 18, left: 8, right: 8),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 10, left: 8, right: 8),
               child: Row(
                 children: [
                   const Spacer(),
@@ -197,7 +197,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
           //Body:
           Container(
             alignment: Alignment.topLeft,
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 0.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

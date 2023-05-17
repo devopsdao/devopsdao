@@ -98,8 +98,8 @@ class CreateJobSkeleton extends StatefulWidget {
 class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProviderStateMixin {
   late AnimationController animationController = AnimationController(
     vsync: this,
-    duration: Duration(milliseconds: 200),
-    reverseDuration: Duration(milliseconds: 200),
+    duration: const Duration(milliseconds: 200),
+    reverseDuration: const Duration(milliseconds: 200),
   );
 
   TextEditingController? titleFieldController;
@@ -189,8 +189,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     interface.mainDialogContext = context;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false, backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       // resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Container(
         height: screenHeightSize,
         alignment: Alignment.topCenter,
@@ -383,7 +383,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                 const Spacer(),
                                 const Padding(
                                   padding: EdgeInsets.all(6.0),
-                                  child: TagCallButton(
+                                  // add tags:
+                                  child: TagOpenContainerButton(
                                     page: 'create',
                                     tabIndex: 0,
                                   ),
@@ -682,12 +683,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           // }
 
           var submitButton = TaskDialogFAB(
-              inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ? true : false,
+            //githubLinkController!.text.isNotEmpty ||
+              inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ||  ((!validGithubUri || !validUri) && githubLinkController!.text.isNotEmpty) ? true : false,
               expand: true,
               buttonName: 'Submit',
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: buttonWidth,
-              // keyboardActive: keyboardSize == 0 ? false : true;
               callback: () {
                 final List<String> tags = [];
                 final List<BigInt> tokenId = [];
@@ -950,8 +951,8 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.circular(6),
               // ),
-              child: Row(
-                children: const <Widget>[
+              child: const Row(
+                children: <Widget>[
                   Expanded(
                     child: Icon(
                       Icons.close,

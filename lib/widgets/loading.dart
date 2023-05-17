@@ -84,44 +84,26 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
 
     return Row(
       children: [
-        // Text(taskLoadedState.toString()),
-        // if (tasksServices.isLoadingBackground)
-        //   Badge(
-        //     // position: BadgePosition.topEnd(top: 10, end: 10),
-        //     badgeContent: Container(
-        //       width: 18,
-        //       height: 18,
-        //       alignment: Alignment.center,
-        //       child: Text(
-        //         taskLoadedState.toString(),
-        //         style: const TextStyle(
-        //             fontWeight: FontWeight.bold, color: Colors.white),
-        //       ),
-        //     ),
-        //     badgeColor: DodaoTheme.of(context).maximumBlueGreen,
-        //     animationDuration: const Duration(milliseconds: 300),
-        //     animationType: BadgeAnimationType.scale,
-        //     shape: BadgeShape.circle,
-        //     borderRadius: BorderRadius.circular(5),
-        //   ),
         FlutterFlowIconButton(
           borderColor: Colors.transparent,
           borderRadius: 30,
-          borderWidth: 1,
-          buttonSize: 60,
+          // borderWidth: 1,
+          buttonSize: 40,
           icon: tasksServices.isLoadingBackground
               ? LoadingAnimationWidget.threeRotatingDots(
-                  color: Colors.white,
-                  size: 30,
+                  color: DodaoTheme.of(context).primaryText,
+                  size: 24,
                 )
-              : const Icon(
-                  Icons.refresh,
-                  color: Colors.white,
-                  size: 30,
+              : Icon(
+                  Icons.refresh_outlined,
+                  color: DodaoTheme.of(context).primaryText,
+                  // size: 24,
                 ),
           onPressed: () async {
-            tasksServices.isLoadingBackground = true;
-            tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+            if (tasksServices.publicAddress != null) {
+              tasksServices.isLoadingBackground = true;
+              tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+            }
           },
         ),
       ],
