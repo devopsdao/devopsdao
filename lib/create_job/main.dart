@@ -449,9 +449,9 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                   decoration: InputDecoration(
                                     labelText: validGithubUri
                                         ? validUri
-                                            ? 'GitHub repository link:'
-                                            : 'Invalid URI'
-                                        : 'Please input a link to Github repository',
+                                            ? 'GitHub repository URL:'
+                                            : 'Invalid URL'
+                                        : 'Please input Github repository URL',
                                     labelStyle: Theme.of(context)
                                         .textTheme
                                         .bodyMedium
@@ -683,8 +683,11 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           // }
 
           var submitButton = TaskDialogFAB(
-            //githubLinkController!.text.isNotEmpty ||
-              inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ||  ((!validGithubUri || !validUri) && githubLinkController!.text.isNotEmpty) ? true : false,
+              //githubLinkController!.text.isNotEmpty ||
+              inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ||
+                      ((!validGithubUri || !validUri) && githubLinkController!.text.isNotEmpty)
+                  ? true
+                  : false,
               expand: true,
               buttonName: 'Submit',
               buttonColorRequired: Colors.lightBlue.shade300,
@@ -740,8 +743,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   uri = '';
                 }
 
-                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, uri,
-                    interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
+                tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, uri, interface.tokensEntered, nanoId, tags,
+                    tokenIds, tokenAmounts, tokenContracts);
                 // Navigator.pop(context);
                 interface.createJobPageContext = context;
                 showDialog(

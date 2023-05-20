@@ -1530,7 +1530,7 @@ class TasksServices extends ChangeNotifier {
       // print('Task loaded: ${task.title}');
       var taskObject = Task(
           // nanoId: task[0],
-          nanoId: task[1].toString(),
+          nanoId: task[0].toString(),
           createTime: DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
           taskType: task[2],
           title: task[3],
@@ -1581,7 +1581,7 @@ class TasksServices extends ChangeNotifier {
       // print('Task loaded: ${task.title}');
       var taskObject = Task(
           // nanoId: task[0],
-          nanoId: task[0][1].toString(),
+          nanoId: task[0][0].toString(),
           createTime: DateTime.fromMillisecondsSinceEpoch(task[0][1].toInt() * 1000),
           taskType: task[0][2],
           title: task[0][3],
