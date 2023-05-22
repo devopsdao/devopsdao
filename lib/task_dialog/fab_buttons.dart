@@ -93,9 +93,9 @@ class SetsOfFabButtons extends StatelessWidget {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
-          buttonName: 'Review',
+          buttonName: 'Submit for Review',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
+          widthSize: buttonWidthLong,
           callback: () {
             task.justLoaded = false;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
