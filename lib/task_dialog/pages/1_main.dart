@@ -982,7 +982,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     // late List response2 = [];
                                     late String status = '';
                                     late Color statusColor = Colors.yellow.shade800;
-                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '') {
+                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null ||
+                                        tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '') {
                                       status = '';
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
                                         'checking') {
@@ -1084,25 +1085,26 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               ),
                                             )),
                                             TextSpan(
-                                                text: !tasksServices.transactionStatuses.containsKey(task.nanoId)
+                                                text: tasksServices.transactionStatuses[task.nanoId] == null ||
+                                                        tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null
                                                     ? 'check not initialized'
-                                                    : tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']!['witnetPostResult'],
+                                                    : tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']?['witnetPostResult'],
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: (() {
-                                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
                                                         'initialized request') {
                                                       return Colors.yellow.shade900;
-                                                    } else if (tasksServices.transactionStatuses[task.nanoId]
-                                                            ?['postWitnetRequest']!['witnetPostResult'] ==
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']
+                                                            ?['witnetPostResult'] ==
                                                         'request mined') {
                                                       return Colors.yellow.shade900;
-                                                    } else if (tasksServices.transactionStatuses[task.nanoId]
-                                                            ?['postWitnetRequest']!['witnetPostResult'] ==
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']
+                                                            ?['witnetPostResult'] ==
                                                         'request failed') {
                                                       return Colors.redAccent;
-                                                    } else if (tasksServices.transactionStatuses[task.nanoId]
-                                                            ?['postWitnetRequest']!['witnetPostResult'] ==
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']
+                                                            ?['witnetPostResult'] ==
                                                         'result available') {
                                                       return Colors.green;
                                                     } else {
@@ -1110,7 +1112,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                     }
                                                   }()),
                                                 )),
-                                            if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                            if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
                                                 'initialized request')
                                               WidgetSpan(
                                                 child: Container(
@@ -1126,9 +1128,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           ])),
                                         ),
 
-                                        if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                        if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
                                                 'request mined' ||
-                                            tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetPostResult'] ==
+                                            tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
                                                 'result available')
                                           Padding(
                                             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
