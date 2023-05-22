@@ -114,7 +114,8 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if ((task.taskState == "review" && fromPage == 'performer') &&
-          (tasksServices.transactionStatuses[task.nanoId] == null ||
+          (
+              tasksServices.transactionStatuses[task.nanoId] == null ||
               tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null ||
               tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] != "closed") &&
           task.repository.isNotEmpty) {
@@ -151,10 +152,12 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Complete Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
-          callback: () {
+          callback: () async {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
-            tasksServices.saveSuccessfulWitnetResult(task.taskAddress);
+            task.justLoaded = false;
+            tasksServices.saveSuccessfulWitnetResult(task.taskAddress, task.nanoId);
+            Navigator.pop(context);
             showDialog(
                 barrierDismissible: false,
                 context: context,
