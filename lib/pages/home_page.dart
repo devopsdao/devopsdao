@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:jovial_svg/jovial_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../blockchain/interface.dart';
@@ -88,6 +89,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     ),
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _controller = SidebarXController(selectedIndex: 0, extended: true);
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
@@ -140,7 +142,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     return Scaffold(
         key: scaffoldKey,
-        drawer: const NavDrawer(),
+        // drawer: const NavDrawer(),
+        drawer: SideBar(controller: _controller),
         appBar: AppBar(
           // backgroundColor: Colors.black,
           // automaticallyImplyLeading: false,
@@ -167,26 +170,27 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   ),
                   child: InkWell(
-                      highlightColor: Colors.white,
-                      onTap: () async {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const WalletPageTop(),
-                        );
-                      },
-                      child: tasksServices.walletConnected && tasksServices.publicAddress != null
-                          ? Text(
-                              '${tasksServices.publicAddress.toString().substring(0, 4)}'
-                              '...'
-                              '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
-                              // textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 14, color: Colors.white),
-                            )
-                          : const Text(
-                              'Connect wallet',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 14, color: Colors.white),
-                            )),
+                    highlightColor: Colors.white,
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const WalletPageTop(),
+                      );
+                    },
+                    child: tasksServices.walletConnected && tasksServices.publicAddress != null
+                      ? Text(
+                          '${tasksServices.publicAddress.toString().substring(0, 4)}'
+                          '...'
+                          '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
+                          // textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 14, color: Colors.white),
+                        )
+                      : const Text(
+                          'Connect wallet',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        )
+                  ),
                 ),
               ),
             ),

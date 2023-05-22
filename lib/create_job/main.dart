@@ -666,7 +666,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
         padding: const EdgeInsets.only(right: 13, left: 46),
         child: Builder(builder: (context) {
           final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
-          final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
+          final double buttonWidthShort = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
+          final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 150; // Keyboard is here?
 
           for (var e in searchServices.createTagsList.entries) {
             if (e.value.bunch.values.first.nft) {
@@ -688,7 +689,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               expand: true,
               buttonName: 'Submit',
               buttonColorRequired: Colors.lightBlue.shade300,
-              widthSize: buttonWidth,
+              widthSize: buttonWidthShort,
               callback: () {
                 final List<String> tags = [];
                 final List<BigInt> tokenId = [];
@@ -758,7 +759,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             expand: true,
             buttonName: 'Approve(Nft)',
             buttonColorRequired: Colors.lightBlue.shade300,
-            widthSize: buttonWidth,
+            widthSize: buttonWidthLong,
             // keyboardActive: keyboardSize == 0 ? false : true;
             callback: () async {
               // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
@@ -794,7 +795,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             expand: true,
             buttonName: 'Approve(Token)',
             buttonColorRequired: Colors.lightBlue.shade300,
-            widthSize: buttonWidth,
+            widthSize: buttonWidthLong,
             callback: () async {
               // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
               tokenApproved = true;

@@ -96,7 +96,7 @@ class _NavBarPageState extends State<NavBarPage> {
               FontAwesomeIcons.penRuler,
               size: 24,
             ),
-            label: 'Audit',
+            label: 'Auditor',
           ),
         if (tasksServices.roleNfts['governor'] > 0)
           const NavigationDestination(

@@ -32,7 +32,7 @@ class GetMore extends StatelessWidget {
         //     color: Colors.white,
         //     child: const TagManagerPage()
         // );
-        return TagManagerPage();
+        return const TagManagerPage();
       },
       closedElevation: 0,
       closedShape: const RoundedRectangleBorder(

@@ -36,6 +36,9 @@ abstract class DodaoTheme {
   late Color walletBackgroundColor;
   late Color nftInfoBackgroundColor;
   late Color nftCardBackgroundColor;
+  late Color menuButtonColor;
+  late Color menuButtonBorder;
+  late Color menuButtonSelectedBorder;
 
   late Color primaryText;
   late Color revertedPrimaryTextColor;
@@ -126,6 +129,9 @@ class LightModeTheme extends DodaoTheme {
   late Color walletBackgroundColor = Colors.grey.shade100;
   late Color nftInfoBackgroundColor = Colors.grey.shade200;
   late Color nftCardBackgroundColor = Colors.grey.shade600;
+  late Color menuButtonColor = Colors.grey.shade300;
+  late Color menuButtonBorder = Colors.grey.shade400;
+  late Color menuButtonSelectedBorder = Colors.grey.shade500;
 
   late Color primaryText = const Color(0xFF101213);
   late Color revertedPrimaryTextColor = Colors.black;
@@ -280,6 +286,9 @@ class DarkModeTheme extends DodaoTheme {
   late Color walletBackgroundColor = const Color(0xFF302D34);
   late Color nftInfoBackgroundColor = const Color(0xFF302D34);
   late Color nftCardBackgroundColor = Colors.grey.shade700;
+  late Color menuButtonColor = Colors.grey.shade700;
+  late Color menuButtonBorder = Colors.grey.shade700;
+  late Color menuButtonSelectedBorder = Colors.grey.shade600;
 
   late Color primaryText = const Color(0xFFFFFFFF);
   late Color revertedPrimaryTextColor = Colors.white;

@@ -30,7 +30,7 @@ class SetsOfFabButtons extends StatelessWidget {
     // String message = interface.taskMessage.text;
 
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
-    final double buttonWidthWide = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
+    final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
 
     return Builder(builder: (context) {
       // ##################### ACTION BUTTONS PART ######################## //
@@ -70,7 +70,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Start the task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthWide,
+          widthSize: buttonWidthLong,
           callback: () {
             task.justLoaded = false;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
@@ -123,7 +123,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Check merge',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthWide,
+          widthSize: buttonWidthLong,
           callback: () {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
@@ -150,7 +150,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Complete Task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthWide,
+          widthSize: buttonWidthLong,
           callback: () {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
@@ -200,7 +200,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Sign Review',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthWide,
+          widthSize: buttonWidthLong,
           callback: () {
             task.justLoaded = false;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,

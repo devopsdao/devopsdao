@@ -76,6 +76,7 @@ dependencies:
   scan: ^1.6.0
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
+  sidebarx: ^0.15.0
   simple_markdown_editor_plus: ^0.2.6
   throttling: ^1.0.0
   timeago: ^3.3.0
