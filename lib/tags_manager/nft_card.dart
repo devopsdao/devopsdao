@@ -29,8 +29,9 @@ class NftMint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
+    var searchServices = Provider.of<SearchServices>(context, listen: false);
     var collectionServices = context.watch<CollectionServices>();
-    final String collectionName = collectionServices.mintNftTagSelected.name;
+    final String collectionName = item.name;
 
     return InkWell(
       child: Card(
@@ -101,7 +102,7 @@ class NftMint extends StatelessWidget {
                                       //         }
                                       //       }
                                       //     : null,
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (tasksServices.publicAddress != null) {
                                           final List<EthereumAddress> address = [tasksServices.publicAddress!];
                                           final List<BigInt> quantities = [BigInt.from(1)];
@@ -114,8 +115,9 @@ class NftMint extends StatelessWidget {
                                                 taskName: 'mintNonFungible',
                                               ));
 
-                                          tasksServices.mintNonFungibleByName(collectionName, address, quantities);
-
+                                          await tasksServices.mintNonFungibleByName(collectionName, address, quantities);
+                                          await tasksServices.collectMyTokens();
+                                          searchServices.refreshLists('selection');
                                         }
                                       },
                                       child: Text(
