@@ -3312,8 +3312,8 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> saveSuccessfulWitnetResult(EthereumAddress taskAddress) async {
-    transactionStatuses['saveLastWitnetResult'] = {
+  Future<dynamic> saveSuccessfulWitnetResult(EthereumAddress taskAddress, String nanoId) async {
+    transactionStatuses[nanoId] = {
       'saveLastWitnetResult': {'status': 'pending', 'txn': 'initial'}
     };
     var creds;
@@ -3328,10 +3328,10 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(from: senderAddress, maxGas: 2000000);
 
     String txn = await witnetFacet.saveSuccessfulResult(taskAddress, credentials: creds, transaction: transaction);
-    transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['status'] = 'confirmed';
-    transactionStatuses['saveLastWitnetResult']!['saveLastWitnetResult']!['txn'] = txn;
+    transactionStatuses[nanoId]!['saveLastWitnetResult']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['saveLastWitnetResult']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'saveLastWitnetResult', 'saveLastWitnetResult');
+    tellMeHasItMined(txn, 'saveLastWitnetResult', nanoId);
     return txn;
   }
 
