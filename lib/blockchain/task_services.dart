@@ -1390,6 +1390,7 @@ class TasksServices extends ChangeNotifier {
         taskAction = '${taskAction}_$messageNanoId';
       }
 
+      //handle rejection when postWitnetRequest was already posted, check for this taskAction and allow status==false
       if (transactionReceipt.status == true) {
         transactionStatuses[nanoId]![taskAction]!['status'] = 'minted';
         transactionStatuses[nanoId]![taskAction]!['txn'] = hash;
@@ -1401,6 +1402,7 @@ class TasksServices extends ChangeNotifier {
     } else {
       isLoadingBackground = false;
     }
+    isLoadingBackground = false;
     notifyListeners();
   }
 
@@ -2764,6 +2766,10 @@ class TasksServices extends ChangeNotifier {
     } else {
       txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     }
+    if (txn.length != 66) {
+      Task task = await loadOneTask(contractAddress);
+      await refreshTask(task);
+    }
     // txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     isLoading = false;
     // isLoadingBackground = true;
@@ -2811,6 +2817,10 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
     // }
     txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+    if (txn.length != 66) {
+      Task task = await loadOneTask(contractAddress);
+      await refreshTask(task);
+    }
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -2870,6 +2880,10 @@ class TasksServices extends ChangeNotifier {
     // }
     txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
         credentials: creds, transaction: transaction);
+    if (txn.length != 66) {
+      Task task = await loadOneTask(contractAddress);
+      await refreshTask(task);
+    }
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -2917,6 +2931,10 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
     // }
     txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
+    if (txn.length != 66) {
+      Task task = await loadOneTask(contractAddress);
+      await refreshTask(task);
+    }
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -2957,6 +2975,10 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
     // }
     txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+    if (txn.length != 66) {
+      Task task = await loadOneTask(contractAddress);
+      await refreshTask(task);
+    }
     isLoading = false;
     // isLoadingBackground = true;
     // lastTxn = txn;
@@ -3005,6 +3027,10 @@ class TasksServices extends ChangeNotifier {
       // gasPrice: gasPrice
     );
     txn = await taskContract.transferToaddress(publicAddress!, chain, credentials: creds, transaction: transaction);
+    if (txn.length != 66) {
+      Task task = await loadOneTask(contractAddress);
+      await refreshTask(task);
+    }
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
@@ -3313,9 +3339,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<dynamic> saveSuccessfulWitnetResult(EthereumAddress taskAddress, String nanoId) async {
-    transactionStatuses[nanoId] = {
-      'saveLastWitnetResult': {'status': 'pending', 'txn': 'initial'}
-    };
+    transactionStatuses[nanoId]!['saveLastWitnetResult'] = {'status': 'pending', 'txn': 'initial'};
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
