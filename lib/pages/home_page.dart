@@ -89,7 +89,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     ),
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
+  final _controller = SidebarXController(selectedIndex:0, extended: true);
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 

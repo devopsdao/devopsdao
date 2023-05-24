@@ -668,6 +668,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
           final double buttonWidthShort = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
           final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 150; // Keyboard is here?
+          late bool activeSubmitButton = true;
 
           for (var e in searchServices.createTagsList.entries) {
             if (e.value.bunch.values.first.nft) {
@@ -686,14 +687,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           var submitButton = TaskDialogFAB(
               //githubLinkController!.text.isNotEmpty ||
               inactive: (descriptionController!.text.isEmpty || titleFieldController!.text.isEmpty) ||
-                      ((!validGithubUri || !validUri) && githubLinkController!.text.isNotEmpty)
-                  ? true
-                  : false,
+                      ((!validGithubUri || !validUri) && githubLinkController!.text.isNotEmpty) || !activeSubmitButton
+                  ? true : false,
               expand: true,
               buttonName: 'Submit',
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: buttonWidthShort,
               callback: () {
+                activeSubmitButton = false;
                 final List<String> tags = [];
                 final List<BigInt> tokenId = [];
                 final List<BigInt> amounts = [];
@@ -757,6 +758,14 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                         ));
               });
 
+          var submitButtonInactive = TaskDialogFAB(
+              inactive: true,
+              expand: true,
+              buttonName: 'Submit',
+              buttonColorRequired: Colors.lightBlue.shade300,
+              widthSize: buttonWidthShort,
+              callback: () {});
+
           var approveButtonERC1155 = TaskDialogFAB(
             inactive: false,
             expand: true,
@@ -818,7 +827,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           );
 
           var errorButton = TaskDialogFAB(
-            inactive: false,
+            inactive: true,
             expand: true,
             buttonName: 'Error',
             buttonColorRequired: Colors.lightBlue.shade300,
@@ -842,7 +851,11 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           //   return approveButtonERC20;
           // }
 
-          else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
+          else if (
+            !activeSubmitButton
+          ) {
+            return submitButtonInactive;
+          } else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
             interface.tokenSelected == '';
             nftDetected = false;
             return submitButton;
