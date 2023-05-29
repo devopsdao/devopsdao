@@ -39,7 +39,7 @@ class _BadgeTabState extends State<BadgeTab> {
           child: Text(
             ' ${widget.taskCount > 0 ? ' ${widget.tabText}' : widget.tabText}',
             softWrap: false,
-            overflow: TextOverflow.fade,
+            overflow: TextOverflow.ellipsis,
             maxLines: 1,
             textAlign: TextAlign.center,
           ),

@@ -72,7 +72,7 @@ class NftItem extends StatelessWidget {
                                   textAlign: TextAlign.start,
                                   softWrap: false,
                                   maxLines: 1,
-                                  overflow: TextOverflow.fade,
+                                  overflow: TextOverflow.ellipsis,
                                   text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
                                     fontFamily: 'Inter',
                                     color: Colors.white,
@@ -114,7 +114,7 @@ class NftItem extends StatelessWidget {
                                       textAlign: TextAlign.start,
                                       softWrap: false,
                                       maxLines: 1,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                       text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
                                         fontFamily: 'Inter',
                                         color: Colors.white,
@@ -154,7 +154,7 @@ class NftItem extends StatelessWidget {
                                       textAlign: TextAlign.start,
                                       softWrap: false,
                                       maxLines: 2,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                     text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
                                       fontFamily: 'Inter',
                                       color: Colors.white,
