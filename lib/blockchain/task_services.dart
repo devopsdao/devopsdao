@@ -332,7 +332,7 @@ class TasksServices extends ChangeNotifier {
       chainId = 1287;
     }
 
-    isDeviceConnected = false;
+    isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
 
     // if (platform != 'web') {
     final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
