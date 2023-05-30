@@ -56,8 +56,7 @@ import '../wallet/ethereum_walletconnect_transaction.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-// import 'package:device_info_plus/device_info_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart'; // import 'package:device_info_plus/device_info_plus.dart';
 import 'package:browser_detector/browser_detector.dart' hide Platform;
 
 import 'package:package_info_plus/package_info_plus.dart';
@@ -335,14 +334,16 @@ class TasksServices extends ChangeNotifier {
 
     isDeviceConnected = false;
 
-    if (platform != 'web') {
-      final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-        if (result != ConnectivityResult.none) {
-          isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
-        }
-      });
-    }
+    // if (platform != 'web') {
+    final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        print('connectivity: ${result}');
+        isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
+        print('isDeviceConnected: ${isDeviceConnected}');
+        // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
+      }
+    });
+    // }
 
     await connectRPC(chainId);
     await startup();
