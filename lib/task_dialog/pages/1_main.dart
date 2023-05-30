@@ -909,7 +909,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       ]),
 
                                       softWrap: false,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       // RichText(
                                       //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
@@ -925,7 +925,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       //   TextSpan(
                                       //       text: "dodao.dev/#/tasks/${task.taskAddress}",
                                       //       style: const TextStyle(
-                                      //         overflow: TextOverflow.fade,
+                                      //         overflow: TextOverflow.ellipsis,
                                       //         )
                                       //       // style: const TextStyle(fontWeight: FontWeight.w700)
                                       //   ),
