@@ -1,5 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
@@ -70,7 +71,6 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
       var searchServices = context.read<SearchServices>();
       searchServices.selectTagListOnTasksPages(page: 'performer', initial: true);
     });
-
   }
 
   @override
@@ -99,23 +99,21 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
 
     void resetFilters() async {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerParticipate,
-            tagsMap: searchServices.performerTagsList);
+        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerParticipate, tagsMap: searchServices.performerTagsList);
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerProgress,
-            tagsMap: searchServices.performerTagsList);
+        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerProgress, tagsMap: searchServices.performerTagsList);
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerComplete,
-            tagsMap: searchServices.performerTagsList);
+        tasksServices.resetFilter(taskList: tasksServices.tasksPerformerComplete, tagsMap: searchServices.performerTagsList);
       }
     }
+
     if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
 
     return Scaffold(
       key: scaffoldKey,
-      drawer: const NavDrawer(),
+      drawer: SideBar(controller: SidebarXController(selectedIndex: 3, extended: true)),
       appBar: OurAppBar(
         title: 'Performer',
         tabIndex: tabIndex,
@@ -316,14 +314,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                             children: model.performerTagsList.entries.map((e) {
                               return WrappedChip(
                                 key: ValueKey(e.value),
-                                item: MapEntry(
-                                    e.key,
-                                    NftCollection(
-                                        selected: false,
-                                        name: e.value.name,
-                                        bunch: e.value.bunch
-                                    )
-                                ),
+                                item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
                                 page: 'performer',
                                 tabIndex: tabIndex,
                                 selected: e.value.selected,
@@ -370,7 +361,7 @@ class MyPerformerTabWidget extends StatefulWidget {
 }
 
 class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
-  late bool justLoaded = true;
+  late bool loadingIndicator = false;
 
   @override
   Widget build(BuildContext context) {

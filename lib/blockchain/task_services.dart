@@ -330,7 +330,7 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 80001;
+      chainId = 1287;
     }
 
     isDeviceConnected = false;
@@ -1555,7 +1555,7 @@ class TasksServices extends ChangeNotifier {
           auditors: task[19],
           messages: task[20],
           taskAddress: taskAddress,
-          justLoaded: true,
+          loadingIndicator: false,
           tokenNames: task[0][8],
           tokenBalances: [ethBalanceToken],
 
@@ -1606,7 +1606,7 @@ class TasksServices extends ChangeNotifier {
           auditors: task[0][20],
           messages: task[0][21],
           taskAddress: taskAddresses[i],
-          justLoaded: true,
+          loadingIndicator: false,
           tokenNames: task[1],
           tokenBalances: tokenValues,
 
@@ -2768,7 +2768,7 @@ class TasksServices extends ChangeNotifier {
     }
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     // txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
@@ -2820,7 +2820,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -2884,7 +2884,7 @@ class TasksServices extends ChangeNotifier {
         credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -2936,7 +2936,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -2981,7 +2981,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -3034,7 +3034,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.transferToaddress(publicAddress!, chain, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;

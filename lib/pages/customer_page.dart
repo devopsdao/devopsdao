@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
@@ -26,7 +27,6 @@ import '../widgets/tags/wrapped_chip.dart';
 import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
-
 
 class CustomerPageWidget extends StatefulWidget {
   // static final beamLocation = BeamPage(key: ValueKey('Home'), child: CustomerPageWidget());
@@ -67,12 +67,11 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             // barrierDismissible: false,
-          context: context,
-          builder: (context) => TaskDialogBeamer(
-            taskAddress: widget.taskAddress,
-            fromPage: 'customer',
-          )
-        );
+            context: context,
+            builder: (context) => TaskDialogBeamer(
+                  taskAddress: widget.taskAddress,
+                  fromPage: 'customer',
+                ));
       });
     }
 
@@ -107,23 +106,21 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     }
     void resetFilters() async {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(taskList:tasksServices.tasksCustomerSelection,
-            tagsMap: searchServices.customerTagsList);
+        tasksServices.resetFilter(taskList: tasksServices.tasksCustomerSelection, tagsMap: searchServices.customerTagsList);
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(taskList:tasksServices.tasksCustomerProgress,
-            tagsMap: searchServices.customerTagsList);
+        tasksServices.resetFilter(taskList: tasksServices.tasksCustomerProgress, tagsMap: searchServices.customerTagsList);
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(taskList:tasksServices.tasksCustomerComplete,
-            tagsMap: searchServices.customerTagsList);
+        tasksServices.resetFilter(taskList: tasksServices.tasksCustomerComplete, tagsMap: searchServices.customerTagsList);
       }
     }
+
     if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
 
     return Scaffold(
         key: scaffoldKey,
-        drawer: const NavDrawer(),
+        drawer: SideBar(controller: SidebarXController(selectedIndex: 2, extended: true)),
         appBar: OurAppBar(
           title: 'Customer',
           tabIndex: tabIndex,
@@ -151,7 +148,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
           height: double.infinity,
           // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
           alignment: Alignment.center,
-          decoration:  const BoxDecoration(
+          decoration: const BoxDecoration(
             // gradient: LinearGradient(
             //   colors: [Colors.black, Colors.black, Colors.black],
             //   stops: [0, 0.5, 1],
@@ -299,14 +296,7 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                                   children: model.customerTagsList.entries.map((e) {
                                     return WrappedChip(
                                       key: ValueKey(e.value),
-                                      item: MapEntry(
-                                          e.key,
-                                          NftCollection(
-                                              selected: false,
-                                              name: e.value.name,
-                                              bunch: e.value.bunch
-                                          )
-                                      ),
+                                      item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
                                       page: 'customer',
                                       selected: e.value.selected,
                                       tabIndex: tabIndex,
@@ -400,7 +390,7 @@ class mySubmitterTabWidget extends StatefulWidget {
 }
 
 class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
-  late bool justLoaded = true;
+  late bool loadingIndicator = false;
   bool enableRatingButton = false;
   double ratingScore = 0;
 

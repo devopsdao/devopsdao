@@ -45,22 +45,21 @@ class _NavDrawerState extends State<NavDrawer> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var modelTheme = context.read<ModelTheme>();
     return Drawer(
       child: Container(
-        color:  DodaoTheme.of(context).taskBackgroundColor,
+        color: DodaoTheme.of(context).taskBackgroundColor,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                  color: Colors.black,
-                  // image: DecorationImage(
-                  //     fit: BoxFit.fill,
-                  //     image: AssetImage('assets/images/cover.jpg'))
+                color: Colors.black,
+                // image: DecorationImage(
+                //     fit: BoxFit.fill,
+                //     image: AssetImage('assets/images/cover.jpg'))
               ),
               child: Container(
                 alignment: Alignment.topLeft,
@@ -71,90 +70,85 @@ class _NavDrawerState extends State<NavDrawer> {
                       'Dodao',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
-                    Builder(
-                      builder: (context) {
+                    Builder(builder: (context) {
+                      // return AnimateIcons(
+                      //   startIcon:Icons.wb_sunny,
+                      //   endIcon: Icons.nightlight_round,
+                      //   size: 28.0,
+                      //   controller: controller,
+                      //   // startTooltip: 'Icons.add_circle',
+                      //   // endTooltip: 'Icons.add_circle_outline',
+                      //   // add this for splashColor, default is Colors.transparent means no click effect
+                      //   // splashColor: Colors.blueAccent.shade100.withAlpha(50),
+                      //   // add this to specify a custom splashRadius
+                      //   // default is Material.defaultSplashRadius (35)
+                      //   splashRadius: 24,
+                      //   onStartIconPress: () {
+                      //     Future.delayed(const Duration(milliseconds: 501)).whenComplete(() {
+                      //       modelTheme.isDark = false;
+                      //       setState(() {
+                      //         light = modelTheme.isDark ? false : true;
+                      //       });
+                      //     });
+                      //     // themeNotifier.isDark
+                      //     //           ? themeNotifier.isDark = false
+                      //     //           : themeNotifier.isDark = true;
+                      //     return true;
+                      //   },
+                      //   onEndIconPress: () {
+                      //     Future.delayed(const Duration(milliseconds: 501)).whenComplete(() {
+                      //       modelTheme.isDark = true;
+                      //       setState(() {
+                      //         light = modelTheme.isDark ? false : true;
+                      //       });
+                      //     });
+                      //     // themeNotifier.isDark
+                      //     //     ? themeNotifier.isDark = false
+                      //     //     : themeNotifier.isDark = true;
+                      //     return true;
+                      //   },
+                      //   duration: const Duration(milliseconds: 500),
+                      //   startIconColor: Colors.white,
+                      //   endIconColor: Colors.white,
+                      //   clockwise: false,
+                      // );
 
-                        // return AnimateIcons(
-                        //   startIcon:Icons.wb_sunny,
-                        //   endIcon: Icons.nightlight_round,
-                        //   size: 28.0,
-                        //   controller: controller,
-                        //   // startTooltip: 'Icons.add_circle',
-                        //   // endTooltip: 'Icons.add_circle_outline',
-                        //   // add this for splashColor, default is Colors.transparent means no click effect
-                        //   // splashColor: Colors.blueAccent.shade100.withAlpha(50),
-                        //   // add this to specify a custom splashRadius
-                        //   // default is Material.defaultSplashRadius (35)
-                        //   splashRadius: 24,
-                        //   onStartIconPress: () {
-                        //     Future.delayed(const Duration(milliseconds: 501)).whenComplete(() {
-                        //       modelTheme.isDark = false;
-                        //       setState(() {
-                        //         light = modelTheme.isDark ? false : true;
-                        //       });
-                        //     });
-                        //     // themeNotifier.isDark
-                        //     //           ? themeNotifier.isDark = false
-                        //     //           : themeNotifier.isDark = true;
-                        //     return true;
-                        //   },
-                        //   onEndIconPress: () {
-                        //     Future.delayed(const Duration(milliseconds: 501)).whenComplete(() {
-                        //       modelTheme.isDark = true;
-                        //       setState(() {
-                        //         light = modelTheme.isDark ? false : true;
-                        //       });
-                        //     });
-                        //     // themeNotifier.isDark
-                        //     //     ? themeNotifier.isDark = false
-                        //     //     : themeNotifier.isDark = true;
-                        //     return true;
-                        //   },
-                        //   duration: const Duration(milliseconds: 500),
-                        //   startIconColor: Colors.white,
-                        //   endIconColor: Colors.white,
-                        //   clockwise: false,
-                        // );
-
-                        const Duration duration = Duration(milliseconds: 450);
-                        return AnimatedIconButton(
-                          // animationController: animationController,
-                          size: 28,
-                          onPressed: () {
-                          },
-                          duration: duration,
-                          initialIcon: modelTheme.isDark ? 1 : 0,
-                          icons: <AnimatedIconItem>[
-                            AnimatedIconItem(
-                              icon: const Icon(
-                                Icons.nightlight_round,
-                                color: Colors.white,
-                                // size: 30,
-                              ),
-                              onPressed: () {
-                                Future.delayed(duration).whenComplete(() {
-                                  modelTheme.isDark = true;
-                                });
-                              },
-                              // backgroundColor: Colors.white,
+                      const Duration duration = Duration(milliseconds: 450);
+                      return AnimatedIconButton(
+                        // animationController: animationController,
+                        size: 28,
+                        onPressed: () {},
+                        duration: duration,
+                        initialIcon: modelTheme.isDark ? 1 : 0,
+                        icons: <AnimatedIconItem>[
+                          AnimatedIconItem(
+                            icon: const Icon(
+                              Icons.nightlight_round,
+                              color: Colors.white,
+                              // size: 30,
                             ),
-                            AnimatedIconItem(
-                              icon: const Icon(
-                                Icons.light_mode,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                Future.delayed(duration).whenComplete(() {
-                                  modelTheme.isDark = false;
-                                });
-                              },
-                              // backgroundColor: Colors.white,
+                            onPressed: () {
+                              Future.delayed(duration).whenComplete(() {
+                                modelTheme.isDark = true;
+                              });
+                            },
+                            // backgroundColor: Colors.white,
+                          ),
+                          AnimatedIconItem(
+                            icon: const Icon(
+                              Icons.light_mode,
+                              color: Colors.white,
                             ),
-
-                          ],
-                        );
-                      }
-                    )
+                            onPressed: () {
+                              Future.delayed(duration).whenComplete(() {
+                                modelTheme.isDark = false;
+                              });
+                            },
+                            // backgroundColor: Colors.white,
+                          ),
+                        ],
+                      );
+                    })
                   ],
                 ),
               ),
@@ -198,10 +192,7 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 }
 
-
 class SideBar extends StatelessWidget {
-
-
   const SideBar({
     Key? key,
     required SidebarXController controller,
@@ -235,7 +226,7 @@ class SideBar extends StatelessWidget {
         selectedItemDecoration: BoxDecoration(
           borderRadius: DodaoTheme.of(context).borderRadius,
           border: Border.all(
-            color:  DodaoTheme.of(context).menuButtonSelectedBorder.withOpacity(0.0),
+            color: DodaoTheme.of(context).menuButtonSelectedBorder.withOpacity(0.0),
           ),
           gradient: const LinearGradient(
             colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
@@ -268,64 +259,63 @@ class SideBar extends StatelessWidget {
       ),
       footerDivider: Divider(color: DodaoTheme.of(context).primaryText.withOpacity(0.3), height: 1),
       headerBuilder: (context, extended) {
+        final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
         return Column(
           children: [
             SizedBox(
               height: 105,
               child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: AnimatedOpacity(
-                  opacity: extended ? 1.0 : 0.0,
-                  curve: !extended ? Curves.easeOutCirc : Curves.easeInExpo,
-                  duration: const Duration(milliseconds: 450),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset('assets/images/logo.png', filterQuality: FilterQuality.medium,),
-                      Builder(
-                          builder: (context) {
-                            const Duration duration = Duration(milliseconds: 450);
-                            return AnimatedIconButton(
-                              // animationController: animationController,
-                              size: 28,
-                              onPressed: () {
-                              },
-                              duration: duration,
-                              initialIcon: modelTheme.isDark ? 1 : 0,
-                              icons: <AnimatedIconItem>[
-                                AnimatedIconItem(
-                                  icon: const Icon(
-                                    Icons.nightlight_round,
-                                    color: Colors.black87,
-                                  ),
-                                  onPressed: () {
-                                    Future.delayed(duration).whenComplete(() {
-                                      modelTheme.isDark = true;
-                                    });
-                                  },
-                                  // backgroundColor: Colors.white,
+                  padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 4.0, top: statusBarHeight),
+                  child: AnimatedOpacity(
+                    opacity: extended ? 1.0 : 0.0,
+                    curve: !extended ? Curves.easeOutCirc : Curves.easeInExpo,
+                    duration: const Duration(milliseconds: 450),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          'assets/images/logo.png',
+                          filterQuality: FilterQuality.medium,
+                        ),
+                        Builder(builder: (context) {
+                          const Duration duration = Duration(milliseconds: 450);
+                          return AnimatedIconButton(
+                            // animationController: animationController,
+                            size: 28,
+                            onPressed: () {},
+                            duration: duration,
+                            initialIcon: modelTheme.isDark ? 1 : 0,
+                            icons: <AnimatedIconItem>[
+                              AnimatedIconItem(
+                                icon: const Icon(
+                                  Icons.nightlight_round,
+                                  color: Colors.black87,
                                 ),
-                                AnimatedIconItem(
-                                  icon: const Icon(
-                                    Icons.light_mode,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    Future.delayed(duration).whenComplete(() {
-                                      modelTheme.isDark = false;
-                                    });
-                                  },
-                                  // backgroundColor: Colors.white,
+                                onPressed: () {
+                                  Future.delayed(duration).whenComplete(() {
+                                    modelTheme.isDark = true;
+                                  });
+                                },
+                                // backgroundColor: Colors.white,
+                              ),
+                              AnimatedIconItem(
+                                icon: const Icon(
+                                  Icons.light_mode,
+                                  color: Colors.white,
                                 ),
-
-                              ],
-                            );
-                          }
-                      )
-                    ],
-                  ),
-                )
-              ),
+                                onPressed: () {
+                                  Future.delayed(duration).whenComplete(() {
+                                    modelTheme.isDark = false;
+                                  });
+                                },
+                                // backgroundColor: Colors.white,
+                              ),
+                            ],
+                          );
+                        })
+                      ],
+                    ),
+                  )),
             ),
           ],
         );
@@ -333,36 +323,34 @@ class SideBar extends StatelessWidget {
       footerBuilder: (context, extended) {
         return Column(
           children: [
-            if(extended)
-            Container(
-                padding: const EdgeInsets.only(top: 13.0, bottom: 12),
-                alignment: Alignment.center,
-                child: InkWell(
-                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Icon(
-                        Icons.library_books_outlined,
-                        color: DodaoTheme.of(context).primaryText,
-                        size: 18,
-                      ),
-                      Text(
-                        ' docs.dodao.dev',
-                        style: DodaoTheme.of(context)
-                            .bodyText3
-                            .override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText, fontSize: 12),
-                      ),
-                    ]),
-                    onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
-            if(extended)
-            Text(
-              tasksServices.browserPlatform ??
-                'v${tasksServices.version}-${tasksServices.buildNumber};\nPlatform: ${tasksServices.platform};\nBrowser: ${tasksServices.browserPlatform}',
-              style: TextStyle(
-                height: 2,
-                fontWeight: FontWeight.bold,
-                color: DodaoTheme.of(context).primaryText,
-                fontSize: 10,
-              )
-            ),
+            if (extended)
+              Container(
+                  padding: const EdgeInsets.only(top: 13.0, bottom: 12),
+                  alignment: Alignment.center,
+                  child: InkWell(
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Icon(
+                          Icons.library_books_outlined,
+                          color: DodaoTheme.of(context).primaryText,
+                          size: 18,
+                        ),
+                        Text(
+                          ' docs.dodao.dev',
+                          style:
+                              DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText, fontSize: 12),
+                        ),
+                      ]),
+                      onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
+            if (extended)
+              Text(
+                  tasksServices.browserPlatform ??
+                      'v${tasksServices.version}-${tasksServices.buildNumber};\nPlatform: ${tasksServices.platform};\nBrowser: ${tasksServices.browserPlatform}',
+                  style: TextStyle(
+                    height: 2,
+                    fontWeight: FontWeight.bold,
+                    color: DodaoTheme.of(context).primaryText,
+                    fontSize: 10,
+                  )),
           ],
         );
       },
@@ -396,21 +384,21 @@ class SideBar extends StatelessWidget {
           },
         ),
         if (tasksServices.roleNfts['auditor'] > 0)
-        SidebarXItem(
-          icon: Icons.engineering_rounded,
-          label: 'Auditor',
-          onTap: () {
-            context.beamToNamed('/auditor');
-          },
-        ),
+          SidebarXItem(
+            icon: Icons.engineering_rounded,
+            label: 'Auditor',
+            onTap: () {
+              context.beamToNamed('/auditor');
+            },
+          ),
         if (tasksServices.roleNfts['governor'] > 0)
-        SidebarXItem(
-          icon: Icons.engineering_rounded,
-          label: 'Accounts',
-          onTap: () {
-            context.beamToNamed('/accounts');
-          },
-        ),
+          SidebarXItem(
+            icon: Icons.engineering_rounded,
+            label: 'Accounts',
+            onTap: () {
+              context.beamToNamed('/accounts');
+            },
+          ),
         SidebarXItem(
           icon: Icons.token_outlined,
           label: 'NFT Manager',
