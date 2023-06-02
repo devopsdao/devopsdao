@@ -10,6 +10,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_open_container.dart';
+import '../widgets/tags_on_page_open_container.dart';
 import '/blockchain/task_services.dart';
 import '/widgets/loading.dart';
 import '/config/flutter_flow_animations.dart';
@@ -115,6 +116,39 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             ),
             actions: [
               // AppBarSearchButton(),
+              // Container(
+              //   // width: 150,
+              //   height: 30,
+              //   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+              //
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(16),
+              //     gradient: const LinearGradient(
+              //       colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+              //       stops: [0.1, 0.5, 1],
+              //     ),
+              //   ),
+              //   child: InkWell(
+              //       highlightColor: Colors.white,
+              //       onTap: () async {
+              //         OpenAddTags(
+              //           fontSize: 14,
+              //           page: 'tasks',
+              //           tabIndex: 0,
+              //         );
+              //       },
+              //       child: const Text(
+              //         '#Tags',
+              //         textAlign: TextAlign.center,
+              //         style: TextStyle(fontSize: 14, color: Colors.white),
+              //       )
+              //   ),
+              //
+              // ),
+              const OpenMyAddTags(
+                page: 'tasks',
+                tabIndex: 0,
+              ),
               IconButton(
                 onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                 icon: const Icon(Icons.search),
@@ -191,64 +225,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
               // print(constraints.minWidth);
               return Column(
                 children: [
-                  // Row(
-                  //   children: [
-                  //     Container(
-                  //       width: constraints.minWidth - 70,
-                  //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                  //       decoration: const BoxDecoration(
-                  //           // color: Colors.white70,
-                  //           // borderRadius: BorderRadius.circular(8),
-                  //           ),
-                  //       child: TextField(
-                  //         controller: _searchKeywordController,
-                  //         onChanged: (searchKeyword) {
-                  //           tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword,
-                  //               tagsMap: searchServices.tasksTagsList );
-                  //         },
-                  //         decoration: const InputDecoration(
-                  //           hintText: '[Find task by Title...]',
-                  //           hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                  //           labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                  //           labelText: 'Search',
-                  //           suffixIcon: Icon(
-                  //             Icons.search,
-                  //             color: Colors.white,
-                  //           ),
-                  //           enabledBorder: UnderlineInputBorder(
-                  //             borderSide: BorderSide(
-                  //               color: Colors.white,
-                  //               width: 1,
-                  //             ),
-                  //             borderRadius: BorderRadius.only(
-                  //               topLeft: Radius.circular(4.0),
-                  //               topRight: Radius.circular(4.0),
-                  //             ),
-                  //           ),
-                  //           focusedBorder: UnderlineInputBorder(
-                  //             borderSide: BorderSide(
-                  //               color: Colors.white,
-                  //               width: 1,
-                  //             ),
-                  //             borderRadius: BorderRadius.only(
-                  //               topLeft: Radius.circular(4.0),
-                  //               topRight: Radius.circular(4.0),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         style: DodaoTheme.of(context).bodyText1.override(
-                  //               fontFamily: 'Inter',
-                  //               color: Colors.white,
-                  //               lineHeight: 2,
-                  //             ),
-                  //       ),
-                  //     ),
-                  //     const TagOpenContainerButton(
-                  //       page: 'tasks',
-                  //       tabIndex: 0,
-                  //     ),
-                  //   ],
-                  // ),
                   Consumer<SearchServices>(builder: (context, model, child) {
                     localTagsList = model.tasksTagsList.entries.map((e) => e.value.name).toList();
                     // tasksServices.runFilter(
@@ -324,8 +300,9 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                     scrollDirection: Axis.vertical,
                                     itemCount: tasksServices.filterResults.values.toList().length,
                                     itemBuilder: (context, index) {
-                                      return Padding(
-                                          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                      return Container(
+                                          padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+
                                           child: TaskTransition(
                                             fromPage: 'tasks',
                                             task: tasksServices.filterResults.values.toList()[index],

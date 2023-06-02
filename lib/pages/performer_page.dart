@@ -391,7 +391,7 @@ class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
           itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                 child: TaskTransition(
                   fromPage: 'performer',
                   task: tasksServices.filterResults.values.toList()[index],

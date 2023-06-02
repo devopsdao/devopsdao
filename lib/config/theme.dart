@@ -84,7 +84,7 @@ abstract class DodaoTheme {
 
   final BorderRadius borderRadius = BorderRadius.circular(18.0);
   final BorderRadius borderRadiusSmallIcon = BorderRadius.circular(10.0);
-  final double elevation = 7;
+  final double elevation = 6;
   final EdgeInsets inputEdge =  const EdgeInsets.only(top: 6.0, bottom: 6.0, right: 12, left: 12);
 
   late LinearGradient gradient;
@@ -182,7 +182,7 @@ class LightModeTheme extends DodaoTheme {
 
   late GradientBoxBorder borderGradient = const GradientBoxBorder(
     gradient: LinearGradient(
-      colors: [Color(0xFFE8E8E8), Color(0xFFE8E8E8)],
+      colors: [Color(0xFFC7C7C7), Color(0xFFC7C7C7)],
       begin: Alignment.topCenter, end: Alignment.bottomCenter,
     ),
     width: 1,

@@ -168,7 +168,7 @@ class _MyAppState extends State<MyApp> {
               bodyMedium: TextStyle(fontSize: 15, color: DodaoTheme.of(context).secondaryText),
               bodySmall: TextStyle(fontSize: 12, color: DodaoTheme.of(context).secondaryText),
               titleLarge: const TextStyle(fontSize: 22, color: Colors.black),
-              titleMedium: const TextStyle(fontSize: 20, color: Colors.black)
+              titleMedium: const TextStyle(fontSize: 18, color: Colors.black)
             ),
 
             elevatedButtonTheme: ElevatedButtonThemeData(
@@ -222,7 +222,7 @@ class _MyAppState extends State<MyApp> {
                 bodyMedium: TextStyle(fontSize: 14, color: Colors.white70),
                 bodySmall: TextStyle(fontSize: 12, color: Colors.white70),
                 titleLarge: TextStyle(fontSize: 22, color: Colors.white),
-                titleMedium: TextStyle(fontSize: 20, color: Colors.white),
+                titleMedium: TextStyle(fontSize: 18, color: Colors.white),
 
             ),
             textSelectionTheme: const TextSelectionThemeData(

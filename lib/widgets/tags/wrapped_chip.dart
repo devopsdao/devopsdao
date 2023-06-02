@@ -727,13 +727,11 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                       SizedBox(
                           height: containerMainHeight,
                           child: OpenAddTags(
-                          iconSize: iconSize,
-                          textColor: textColor,
-                          fontSize: fontSize,
-                          page: widget.page,
-                          tabIndex: widget.tabIndex,
+                            fontSize: fontSize,
+                            page: widget.page,
+                            tabIndex: widget.tabIndex,
+                          ),
                         ),
-                      ),
 
                     // Close button (will be not visible if item.selected false)
                     Flexible(

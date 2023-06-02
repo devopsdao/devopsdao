@@ -222,7 +222,7 @@ class _AccountsPageState extends State<AccountsPage> {
                               itemCount: tasksServices.accountsData.values.toList().length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                                     child: ClickOnAccount(
                                       fromPage: 'accounts',
                                       index: index,

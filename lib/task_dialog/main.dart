@@ -18,12 +18,12 @@ import 'shimmer.dart';
 class TaskDialogFuture extends StatefulWidget {
   final String fromPage;
   final EthereumAddress? taskAddress;
-  final bool shimmerEnabled;
+  // final bool shimmerEnabled;
   const TaskDialogFuture({
     Key? key,
     required this.fromPage,
     this.taskAddress,
-    required this.shimmerEnabled,
+    // required this.shimmerEnabled,
   }) : super(key: key);
 
   @override
@@ -198,17 +198,23 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
           SizedBox(
             height: screenHeightSize - statusBarHeight,
             width: interface.maxStaticDialogWidth,
-            child:
-              widget.isLoading == false
-              ? TaskDialogPages(
-                  task: task,
-                  fromPage: widget.fromPage,
-                  screenHeightSize: screenHeightSize,
-                  screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
-                )
-              : ShimmeredTaskPages(
-                  task: task,
-                ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              switchInCurve: Curves.easeInQuint,
+              switchOutCurve: Curves.easeOutQuint,
+              child: !widget.isLoading
+                  ? TaskDialogPages(
+                key: const Key("normal"),
+                task: task,
+                fromPage: widget.fromPage,
+                screenHeightSize: screenHeightSize,
+                screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
+              )
+                  : ShimmeredTaskPages(
+                key: const Key("loading"),
+                task: task,
+              ),
+            )
           ),
         ]),
       );

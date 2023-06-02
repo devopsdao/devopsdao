@@ -141,8 +141,8 @@ class _WalletPageTopState extends State<WalletPageTop> {
                                 padding: const EdgeInsets.all(0.0),
                                 height: 30,
                                 width: 30,
-                                child: Row(
-                                  children: const <Widget>[
+                                child: const Row(
+                                  children: <Widget>[
                                     Expanded(
                                       child: Icon(
                                         Icons.arrow_back,

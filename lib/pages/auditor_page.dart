@@ -414,7 +414,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
           itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                 child: TaskTransition(
                   fromPage: 'auditor',
                   task: tasksServices.filterResults.values.toList()[index],

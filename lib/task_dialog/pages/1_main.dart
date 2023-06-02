@@ -123,22 +123,27 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       );
                       final textHeight = TextPainter(text: text, maxLines: 5, textDirection: ui.TextDirection.ltr);
                       final oneLineHeight = TextPainter(text: text, maxLines: 1, textDirection: ui.TextDirection.ltr);
-                      textHeight.layout(maxWidth: constraints.maxWidth);
-                      oneLineHeight.layout(maxWidth: constraints.maxWidth);
+                      textHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth );
+                      oneLineHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth  );
                       final numLines = textHeight.computeLineMetrics().length;
+                      // print('numlines: ' + numLines.toString());
+                      // print('constraints.maxWidth: ' + constraints.maxWidth.toString());
+                      // print('constraints.minWidth: ' + constraints.minWidth.toString());
+                      //
+                      // print('textHeight: ' + textHeight.height.toString());
 
                       // final textHeight =TextPainter(text:span,maxLines: 3,textDirection: TextDirection.ltr);
                       // textHeight.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
                       // print(tp.didExceedMaxLines);
-                      return LimitedBox(
-                        maxHeight:
-                            textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 12.0, 0.0),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child: LimitedBox(
+                              maxHeight:
+                              textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
                               child: Row(
                                 children: [
                                   Expanded(
@@ -148,82 +153,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         // padding: const EdgeInsets.all(3),
                                         child: RichText(maxLines: 5, text: text)),
                                   ),
-
-                                  // Container(
-                                  //   width: 54,
-                                  //   padding: const EdgeInsets.all(4.0),
-                                  //   child: Material(
-                                  //     elevation: 7,
-                                  //     borderRadius: DodaoTheme.of(context).borderRadius,
-                                  //     color: Colors.lightBlue.shade600,
-                                  //     child: InkWell(
-                                  //       onTap: () {
-                                  //         interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description'] ?? 99,
-                                  //             duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                  //       },
-                                  //       child: Padding(
-                                  //         padding: const EdgeInsets.all(6.0),
-                                  //         child: Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-
-                                  // Container(
-                                  //   width: 38,
-                                  //   height: 38,
-                                  //   // padding: const EdgeInsets.all(2.0),
-                                  //   decoration: BoxDecoration(
-                                  //     gradient: DodaoTheme.of(context).smallButtonGradient,
-                                  //     borderRadius: DodaoTheme.of(context).borderRadius,
-                                  //     // boxShadow: [
-                                  //     //   BoxShadow(
-                                  //     //     color: Colors.grey.withOpacity(0.5),
-                                  //     //     spreadRadius: 5,
-                                  //     //     blurRadius: 7,
-                                  //     //     offset: Offset(0, 3), // changes position of shadow
-                                  //     //   ),
-                                  //     // ],
-                                  //
-                                  //   ),
-                                  //   child: IconButton(
-                                  //     icon: const Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
-                                  //     tooltip: 'Go to next page',
-                                  //     onPressed: () {
-                                  //       interface.dialogPagesController.animateToPage(
-                                  //           interface.dialogCurrentState['pages']['description'] ?? 99,
-                                  //           duration: const Duration(milliseconds: 400),
-                                  //           curve: Curves.ease
-                                  //       );
-                                  //     },
-                                  //   ),
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: ,
-                                  // ),
                                   if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
-                                    // Container(
-                                    //   width: 54,
-                                    //   padding: const EdgeInsets.all(4.0),
-                                    //   child: Material(
-                                    //     elevation: 9,
-                                    //     borderRadius: BorderRadius.circular(6),
-                                    //     color: Colors.lightBlue.shade600,
-                                    //     child: InkWell(
-                                    //       onTap: () {
-                                    //         interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
-                                    //             duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                    //       },
-                                    //       child: Container(
-                                    //         padding: EdgeInsets.all(6.0),
-                                    //         decoration: BoxDecoration(
-                                    //           borderRadius: BorderRadius.circular(6),
-                                    //         ),
-                                    //         child: Icon(Icons.chat_outlined, size: 22, color: Colors.white),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     Container(
                                       width: 36,
                                       height: 36,
@@ -243,33 +173,33 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 ],
                               ),
                             ),
-                            if (textHeight.didExceedMaxLines)
-                              Container(
-                                  alignment: Alignment.center,
-                                  height: 14,
-                                  width: constraints.maxWidth,
-                                  decoration: BoxDecoration(
-                                    gradient: DodaoTheme.of(context).smallButtonGradient,
-                                    borderRadius: BorderRadius.only(
-                                      bottomRight: DodaoTheme.of(context).borderRadius.bottomRight,
-                                      bottomLeft: DodaoTheme.of(context).borderRadius.bottomLeft,
-                                    ),
-                                    // borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                          ),
+                          if (textHeight.didExceedMaxLines)
+                            Container(
+                                alignment: Alignment.center,
+                                height: 14,
+                                width: constraints.maxWidth,
+                                decoration: BoxDecoration(
+                                  gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: DodaoTheme.of(context).borderRadius.bottomRight,
+                                    bottomLeft: DodaoTheme.of(context).borderRadius.bottomLeft,
                                   ),
-                                  child: RichText(
-                                      text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'Read more ',
-                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7, color: Colors.white),
-                                      ),
-                                      const WidgetSpan(
-                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                      ),
-                                    ],
-                                  ))),
-                          ],
-                        ),
+                                  // borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                ),
+                                child: RichText(
+                                    text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Read more ',
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7, color: Colors.white),
+                                    ),
+                                    const WidgetSpan(
+                                      child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                    ),
+                                  ],
+                                ))),
+                        ],
                       );
                     }),
                   ),

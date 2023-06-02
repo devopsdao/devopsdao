@@ -626,10 +626,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                   child: Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(8.0),
-                                    child: const Row(
+                                    child: Row(
                                       // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                                       // mainAxisSize: MainAxisSize.max,
-                                      children: [
+                                      children: const [
                                         Padding(
                                           padding: EdgeInsets.only(right: 12.0),
                                           child: Icon(Icons.new_releases, size: 35, color: Colors.lightGreen),
@@ -968,8 +968,8 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.circular(6),
               // ),
-              child: const Row(
-                children: <Widget>[
+              child: Row(
+                children: const <Widget>[
                   Expanded(
                     child: Icon(
                       Icons.close,

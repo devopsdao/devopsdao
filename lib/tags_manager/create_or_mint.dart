@@ -113,9 +113,9 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
-                          child: const Row(
+                          child:  Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
+                            children: const [
                               Icon(Icons.image),
                               Text('From Gallery'),
                             ],
@@ -132,9 +132,9 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
+                            children: const [
                               Icon(Icons.camera),
                               Text('From Camera'),
                             ],

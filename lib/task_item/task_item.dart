@@ -47,83 +47,72 @@ class _TaskItemState extends State<TaskItem> {
       taskCount = task.auditors.length;
     }
 
-    late LinearGradient gradient;
-    late GradientBoxBorder gradientBorder;
-
-    if (task.taskState == "agreed" || task.taskState == "new") {
-      gradient = const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, stops: [
-        0,
-        1
-      ], colors: [
-        Color(0xFFFFC344),
-        Color(0xFFFF8911),
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFFFF8911), Color(0xFFF51179)]),
-        width: 2,
-      );
-    } else if (task.taskState == "review") {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFFFFC344), Color(0xFFFF8911)]),
-        width: 2,
-      );
-    } else if (task.taskState == "progress") {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFE817D7)]),
-        width: 2,
-      );
-    } else if (task.taskState == "canceled") {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFFE817D7), Color(0xFF6F1494)]),
-        width: 2,
-      );
-    } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFF6F1494), Color(0xFF17A3F5)]),
-        width: 2,
-      );
-    } else {
-      gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-        Colors.green.shade800,
-        Colors.yellow.shade600,
-      ]);
-      gradientBorder = const GradientBoxBorder(
-        gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFFF8911)]),
-        width: 2,
-      );
-    }
+    // late LinearGradient gradient;
+    // late GradientBoxBorder gradientBorder;
+    //
+    // if (task.taskState == "agreed" || task.taskState == "new") {
+    //   gradient = const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, stops: [
+    //     0,
+    //     1
+    //   ], colors: [
+    //     Color(0xFFFFC344),
+    //     Color(0xFFFF8911),
+    //   ]);
+    //   gradientBorder = const GradientBoxBorder(
+    //     gradient: LinearGradient(colors: [Color(0xFFFF8911), Color(0xFFF51179)]),
+    //     width: 2,
+    //   );
+    // } else if (task.taskState == "review") {
+    //   gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
+    //     Colors.green.shade800,
+    //     Colors.yellow.shade600,
+    //   ]);
+    //   gradientBorder = const GradientBoxBorder(
+    //     gradient: LinearGradient(colors: [Color(0xFFFFC344), Color(0xFFFF8911)]),
+    //     width: 2,
+    //   );
+    // } else if (task.taskState == "progress") {
+    //   gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
+    //     Colors.green.shade800,
+    //     Colors.yellow.shade600,
+    //   ]);
+    //   gradientBorder = const GradientBoxBorder(
+    //     gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFE817D7)]),
+    //     width: 2,
+    //   );
+    // } else if (task.taskState == "canceled") {
+    //   gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
+    //     Colors.green.shade800,
+    //     Colors.yellow.shade600,
+    //   ]);
+    //   gradientBorder = const GradientBoxBorder(
+    //     gradient: LinearGradient(colors: [Color(0xFFE817D7), Color(0xFF6F1494)]),
+    //     width: 2,
+    //   );
+    // } else if (task.taskState == "audit" && widget.fromPage != 'auditor') {
+    //   gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
+    //     Colors.green.shade800,
+    //     Colors.yellow.shade600,
+    //   ]);
+    //   gradientBorder = const GradientBoxBorder(
+    //     gradient: LinearGradient(colors: [Color(0xFF6F1494), Color(0xFF17A3F5)]),
+    //     width: 2,
+    //   );
+    // } else {
+    //   gradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
+    //     Colors.green.shade800,
+    //     Colors.yellow.shade600,
+    //   ]);
+    //   gradientBorder = const GradientBoxBorder(
+    //     gradient: LinearGradient(colors: [Color(0xFFF51179), Color(0xFFFF8911)]),
+    //     width: 2,
+    //   );
+    // }
 
     return Container(
-      // width: double.infinity,
-      // height: 86,
       decoration: BoxDecoration(
-        border: gradientBorder,
-        color: Colors.transparent,
-        // gradient: gradient,
-        // boxShadow: const [
-        //   BoxShadow(
-        //     blurRadius: 5,
-        //     color: Color(0x4D000000),
-        //     offset: Offset(0, 2),
-        //   )
-        // ],
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: DodaoTheme.of(context).borderRadius,
+        border: DodaoTheme.of(context).borderGradient,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -164,7 +153,7 @@ class _TaskItemState extends State<TaskItem> {
                         flex: 7,
                         child: Text(
                           task.title,
-                          style: DodaoTheme.of(context).subtitle1.override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText),
+                          style: Theme.of(context).textTheme.titleMedium,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -176,7 +165,7 @@ class _TaskItemState extends State<TaskItem> {
                           flex: 3,
                           child: Text(
                             task.taskState,
-                            style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
+                            style: Theme.of(context).textTheme.titleMedium,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -190,7 +179,7 @@ class _TaskItemState extends State<TaskItem> {
                       Expanded(
                         child: Text(
                           task.description,
-                          style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
+                          style: Theme.of(context).textTheme.bodyMedium,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -198,50 +187,49 @@ class _TaskItemState extends State<TaskItem> {
                       )
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(child: LayoutBuilder(builder: (context, constraints) {
-                        final double width = constraints.maxWidth - 66;
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      final double width = constraints.maxWidth - 66;
 
-                        final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
-                        for (int i = 0; i < task.tokenNames.length; i++) {
-                          // for(int j=0; j < task.tokenBalances[i].length; j++){
-                          //   // if (task.tokenBalances[i][j] >  ) {
-                          //   //
-                          //   // }
-                          // }
+                      final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                      for (int i = 0; i < task.tokenNames.length; i++) {
+                        // for(int j=0; j < task.tokenBalances[i].length; j++){
+                        //   // if (task.tokenBalances[i][j] >  ) {
+                        //   //
+                        //   // }
+                        // }
 
-                          for (var e in task.tokenNames[i]) {
-                            // if (task.tokenBalances[i]) {}
-                            if (task.tokenNames[i].first == 'ETH') {
-                              tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                        for (var e in task.tokenNames[i]) {
+                          // if (task.tokenBalances[i]) {}
+                          if (task.tokenNames[i].first == 'ETH') {
+                            tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                          } else {
+                            if (task.tokenBalances[i] == 0) {
+                              tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
                             } else {
-                              if (task.tokenBalances[i] == 0) {
-                                tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
-                              } else {
-                                tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
-                              }
+                              tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
                             }
                           }
                         }
-                        // for (var tn in task.tokenNames) {}
+                      }
+                      // for (var tn in task.tokenNames) {}
 
-                        return SizedBox(
-                          width: width,
-                          child: Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: tags.map((e) {
-                                return WrappedChipSmall(
-                                  key: ValueKey(e),
-                                  theme: 'small-black',
-                                  item: e,
-                                  page: 'items',
-                                );
-                              }).toList()),
-                        );
-                      }))
-                    ],
+                      return SizedBox(
+                        width: width,
+                        child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: tags.map((e) {
+                              return WrappedChipSmall(
+                                key: ValueKey(e),
+                                theme: 'small-black',
+                                item: e,
+                                page: 'items',
+                              );
+                            }).toList()),
+                      );
+                    }),
                   ),
                   Row(
                     children: [
@@ -332,7 +320,7 @@ class _TaskItemState extends State<TaskItem> {
                 animationDuration: const Duration(milliseconds: 300),
                 animationType: Badges.BadgeAnimationType.fade,
                 shape: Badges.BadgeShape.square,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(10),
                 // child: Icon(Icons.settings),
               ),
             ),

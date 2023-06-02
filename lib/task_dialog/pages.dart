@@ -37,12 +37,22 @@ class TaskDialogPages extends StatefulWidget {
   _TaskDialogPagesState createState() => _TaskDialogPagesState();
 }
 
-class _TaskDialogPagesState extends State<TaskDialogPages> {
+class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderStateMixin {
+  // late AnimationController animationController;
 
   late bool initDone;
   @override
   void initState() {
     super.initState();
+
+    // animationController = AnimationController(
+    //   duration: const Duration(milliseconds: 220),
+    //   value: 0,
+    //   lowerBound: 0,
+    //   upperBound: 1,
+    //   vsync: this,
+    // );
+    // animationController.forward();
     initDone = true;
   }
 
@@ -72,7 +82,6 @@ class _TaskDialogPagesState extends State<TaskDialogPages> {
     //   interface.dialogPageNum = 0;
     //   interface.dialogPagesController = PageController(initialPage: 0);
     // }
-
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerPaddingWidth = dialogConstraints.maxWidth - 50;
       // print (dialogConstraints.maxWidth);

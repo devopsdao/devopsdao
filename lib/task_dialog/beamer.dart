@@ -66,7 +66,7 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
-        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: true),
+        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress),
       )
     );
   }
