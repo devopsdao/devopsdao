@@ -126,7 +126,11 @@ class _SelectionPageState extends State<SelectionPage> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                image: const DecorationImage(image: AssetImage("assets/images/logo.png"), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight,),
+                image: const DecorationImage(
+                  image: AssetImage("assets/images/logo.png"),
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.bottomRight,
+                ),
                 borderRadius: DodaoTheme.of(context).borderRadius,
               ),
             ),
@@ -138,9 +142,7 @@ class _SelectionPageState extends State<SelectionPage> {
                   maxLines: 10,
                   softWrap: true,
                   text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                    TextSpan(
-                        text: '${interface.selectedUser['address']} \n \n',
-                        style: Theme.of(context).textTheme.bodySmall),
+                    TextSpan(text: '${interface.selectedUser['address']} \n \n', style: Theme.of(context).textTheme.bodySmall),
                     const TextSpan(
                         text: 'Wallet nickname \n',
                         style: TextStyle(
@@ -217,7 +219,7 @@ class _SelectionPageState extends State<SelectionPage> {
                         return AnimatedContainer(
                           // color: Colors.amber,
                           duration: const Duration(milliseconds: 300),
-                          height: walletSelected ? heightLeft  : layoutHeight,
+                          height: walletSelected ? heightLeft : layoutHeight,
                           curve: Curves.fastOutSlowIn,
                           child: contractorList,
                         );
@@ -276,7 +278,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 //         buttonColorRequired: Colors.lightBlue.shade600,
                 //         callback: () {
                 //           setState(() {
-                //             task.justLoaded = false;
+                //             task.loadingIndicator = true;
                 //           });
                 //           late String status;
                 //           if (interface.dialogCurrentState['name'] == 'customer-new') {
@@ -328,7 +330,7 @@ class _SelectionPageState extends State<SelectionPage> {
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
           callback: () {
             setState(() {
-              task.justLoaded = false;
+              task.loadingIndicator = true;
             });
             late String status;
             if (interface.dialogCurrentState['name'] == 'customer-new') {

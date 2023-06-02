@@ -1,5 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
@@ -103,17 +104,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      drawer: const NavDrawer(),
+      drawer: SideBar(controller: SidebarXController(selectedIndex: 1, extended: true)),
       appBar: AppBarWithSearchSwitch(
         backgroundColor: DodaoTheme.of(context).background,
         titleTextStyle: Theme.of(context).textTheme.titleLarge,
         automaticallyImplyLeading: true,
         appBarBuilder: (context) {
           return AppBar(
-            title: Text(
-                'Job Exchange',
-                style: Theme.of(context).textTheme.titleLarge
-            ),
+            title: Text('Job Exchange', style: Theme.of(context).textTheme.titleLarge),
             actions: [
               // AppBarSearchButton(),
               // Container(
@@ -153,29 +151,21 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                 onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                 icon: const Icon(Icons.search),
               ),
-              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux' )
-                const LoadButtonIndicator(),
-
+              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
             ],
           );
         },
         keepAppBarColors: false,
-        searchInputDecoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: Theme.of(context).textTheme.titleMedium
-          // suffixIcon: Icon(
-          //   Icons.tag,
-          //   color: Colors.grey[300],
-          // ),
+        searchInputDecoration: InputDecoration(border: InputBorder.none, hintText: 'Search', hintStyle: Theme.of(context).textTheme.titleMedium
+            // suffixIcon: Icon(
+            //   Icons.tag,
+            //   color: Colors.grey[300],
+            // ),
 
-        ),
+            ),
 
         onChanged: (searchKeyword) {
-          tasksServices.runFilter(
-              taskList: tasksServices.tasksNew,
-              tagsMap: searchServices.tasksTagsList,
-              enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchKeyword);
         },
         customTextEditingController: searchServices.searchKeywordController,
         // actions: [
@@ -243,18 +233,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                 key: ValueKey(e.value),
                                 item: MapEntry(
                                     e.key,
-                                    NftCollection(
-                                      selected: false,
-                                      name: e.value.name,
-                                      bunch: e.value.bunch
-                                      // {
-                                      //   BigInt.from(0) : TokenItem(
-                                      //     name: e.value.name,
-                                      //     collection: true,
-                                      //   )
-                                      // },
-                                    )
-                                ),
+                                    NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch
+                                        // {
+                                        //   BigInt.from(0) : TokenItem(
+                                        //     name: e.value.name,
+                                        //     collection: true,
+                                        //   )
+                                        // },
+                                        )),
                                 page: 'tasks',
                                 selected: e.value.selected,
                                 tabIndex: 0,

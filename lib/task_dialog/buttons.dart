@@ -59,7 +59,7 @@
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {
-//                   task.justLoaded = false;
+//                   task.loadingIndicator = true;
 //                 });
 //                 tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
 //                 Navigator.pop(context);
@@ -84,7 +84,7 @@
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {
-//                   task.justLoaded = false;
+//                   task.loadingIndicator = true;
 //                 });
 //                 tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
 //                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
@@ -109,7 +109,7 @@
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {
-//                   task.justLoaded = false;
+//                   task.loadingIndicator = true;
 //                 });
 //                 tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
 //                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
@@ -140,7 +140,7 @@
 //                   tasksServices.myNotifyListeners();
 //                 });
 //                 // setState(() {
-//                 //   task.justLoaded = false;
+//                 //   task.loadingIndicator = true;
 //                 // });
 //                 // tasksServices.taskStateChange(
 //                 //     task.taskAddress, task.performer, 'review', task.nanoId,
@@ -167,7 +167,7 @@
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {
-//                   task.justLoaded = false;
+//                   task.loadingIndicator = true;
 //                 });
 //                 tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
 //                 Navigator.pop(context);
@@ -234,7 +234,7 @@
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {
-//                   task.justLoaded = false;
+//                   task.loadingIndicator = true;
 //                 });
 //                 tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
 //                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
@@ -261,7 +261,7 @@
 //                 (task.rating == 0)
 //                     ? () {
 //                         setState(() {
-//                           task.justLoaded = false;
+//                           task.loadingIndicator = true;
 //                         });
 //                         // tasksServices.rateTask(
 //                         //     task.taskAddress, ratingScore, task.nanoId);
@@ -287,7 +287,7 @@
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {
-//                   task.justLoaded = false;
+//                   task.loadingIndicator = true;
 //                 });
 //                 tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId,
 //                     message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
@@ -320,7 +320,7 @@
 //           //     buttonColorRequired: Colors.lightBlue.shade600,
 //           //     callback: () {
 //           //       setState(() {
-//           //         task.justLoaded = false;
+//           //         task.loadingIndicator = true;
 //           //       });
 //           //       tasksServices.taskAuditDecision(
 //           //           task.taskAddress, 'performer', task.nanoId,

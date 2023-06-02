@@ -10,11 +10,7 @@ import '../../widgets/wallet_action_dialog.dart';
 
 class AuditorDecision extends StatefulWidget {
   final Task task;
-  const AuditorDecision(
-      {Key? key,
-        required this.task
-      })
-      : super(key: key);
+  const AuditorDecision({Key? key, required this.task}) : super(key: key);
 
   @override
   _AuditorDecisionState createState() => _AuditorDecisionState();
@@ -42,20 +38,16 @@ class _AuditorDecisionState extends State<AuditorDecision> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-
     final Task task = widget.task;
 
     title = 'Auditor\'s decision';
     warningText = 'Please choose in whose favor your decision is:';
 
-
     return Dialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: SizedBox(
         height: 440,
         width: 350,
-
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -69,15 +61,10 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                       //     .apply(fontSizeFactor: 1.1),
                       children: <TextSpan>[
                         TextSpan(
-                          style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
                           text: title,
                         ),
-
-                      ])
-              ),
+                      ])),
               Container(
                 padding: const EdgeInsets.all(10.0),
                 child: const Icon(
@@ -88,21 +75,12 @@ class _AuditorDecisionState extends State<AuditorDecision> {
               ),
               RichText(
                   textAlign: TextAlign.center,
-                  text: TextSpan(
-                      style: DefaultTextStyle
-                          .of(context)
-                          .style
-                          .apply(fontSizeFactor: 1.1),
-                      children: <TextSpan>[
-                        TextSpan(
-
-                          text: warningText,
-                        ),
-
-                      ])
-              ),
+                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.1), children: <TextSpan>[
+                    TextSpan(
+                      text: warningText,
+                    ),
+                  ])),
               const Spacer(),
-
               TextFormField(
                 controller: messageController,
                 // onChanged: (_) => EasyDebounce.debounce(
@@ -146,21 +124,18 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                     ),
                   ),
                   labelText: interface.dialogCurrentState['labelMessage'],
-                  labelStyle: const TextStyle(
-                      fontSize: 17.0, color: Colors.black54),
+                  labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
                   hintText: '[Enter your message here..]',
-                  hintStyle: const TextStyle(
-                      fontSize: 14.0, color: Colors.black54),
+                  hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
                   // focusedBorder: const UnderlineInputBorder(
                   //   borderSide: BorderSide.none,
                   // ),
-
                 ),
                 style: DodaoTheme.of(context).bodyText1.override(
-                  fontFamily: 'Inter',
-                  color: Colors.black87,
-                  lineHeight: null,
-                ),
+                      fontFamily: 'Inter',
+                      color: Colors.black87,
+                      lineHeight: null,
+                    ),
                 minLines: 2,
                 maxLines: 3,
               ),
@@ -174,10 +149,9 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                         Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
                         setState(() {
-                          task.justLoaded = false;
+                          task.loadingIndicator = true;
                         });
-                        tasksServices.taskAuditDecision(
-                            task.taskAddress, 'customer', task.nanoId,
+                        tasksServices.taskAuditDecision(task.taskAddress, 'customer', task.nanoId,
                             message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
 
                         interface.emptyTaskMessage();
@@ -185,11 +159,9 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                             barrierDismissible: false,
                             context: context,
                             builder: (context) => WalletActionDialog(
-                              nanoId: task.nanoId,
-                              taskName: 'taskAuditDecision',
-                            ));
-
-
+                                  nanoId: task.nanoId,
+                                  taskName: 'taskAuditDecision',
+                                ));
                       },
                       child: Container(
                         margin: const EdgeInsets.all(0.0),
@@ -216,29 +188,29 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16,),
+                  const SizedBox(
+                    width: 16,
+                  ),
                   Expanded(
                     child: InkWell(
-
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
                         setState(() {
-                          task.justLoaded = false;
+                          task.loadingIndicator = true;
                         });
-                        tasksServices.taskAuditDecision(
-                            task.taskAddress, 'performer', task.nanoId,
+                        tasksServices.taskAuditDecision(task.taskAddress, 'performer', task.nanoId,
                             message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
                         interface.emptyTaskMessage();
                         showDialog(
                             barrierDismissible: false,
                             context: context,
                             builder: (context) => WalletActionDialog(
-                              nanoId: task.nanoId,
-                              taskName: 'taskAuditDecision',
-                            ));
+                                  nanoId: task.nanoId,
+                                  taskName: 'taskAuditDecision',
+                                ));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(0.0),
@@ -247,7 +219,12 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           gradient: const LinearGradient(
-                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange,   Colors.purpleAccent,],
+                            colors: [
+                              Color(0xfffadb00),
+                              Colors.deepOrangeAccent,
+                              Colors.deepOrange,
+                              Colors.purpleAccent,
+                            ],
                             stops: [0, 0.2, 0.5, 1],
                           ),
                         ),

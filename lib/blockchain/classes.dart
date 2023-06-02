@@ -26,7 +26,7 @@ class Task {
   final EthereumAddress taskAddress;
   final List<dynamic> tokenNames;
   final List<dynamic> tokenBalances;
-  late bool justLoaded;
+  late bool loadingIndicator;
   final String transport;
 
   Task({
@@ -55,7 +55,7 @@ class Task {
     required this.taskAddress,
     required this.tokenNames,
     required this.tokenBalances,
-    required this.justLoaded,
+    required this.loadingIndicator,
     required this.transport,
   });
 }

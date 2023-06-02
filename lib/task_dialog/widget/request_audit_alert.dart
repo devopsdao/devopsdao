@@ -54,7 +54,9 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
     }
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
+      shape: RoundedRectangleBorder(
+        borderRadius: DodaoTheme.of(context).borderRadius,
+      ),
       child: SizedBox(
         height: 440,
         width: 350,
@@ -193,7 +195,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         interface.emptyTaskMessage();
 
                         setState(() {
-                          task.justLoaded = false;
+                          task.loadingIndicator = true;
                         });
                         tasksServices.taskStateChange(task.taskAddress, task.performer, 'audit', task.nanoId,
                             message: messageController!.text.isEmpty ? null : messageController!.text);

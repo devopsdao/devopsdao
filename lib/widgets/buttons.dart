@@ -36,7 +36,7 @@ class _WithdrawButtonState extends State<WithdrawButton> {
         onPressed: _buttonState
             ? () {
                 setState(() {
-                  widget.object.justLoaded = false;
+                  widget.object.loadingIndicator = true;
                 });
                 tasksServices.withdrawToChain(widget.object.taskAddress, widget.object.nanoId);
                 Navigator.pop(context);

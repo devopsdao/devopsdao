@@ -1,5 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
@@ -66,9 +67,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
             builder: (context) {
               // interface.mainDialogContext = context;
               return TaskDialogBeamer(
-                  taskAddress: widget.taskAddress,
-                  fromPage: 'auditor',
-                );
+                taskAddress: widget.taskAddress,
+                fromPage: 'auditor',
+              );
             });
       });
     }
@@ -111,19 +112,28 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
     void resetFilters() async {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditPending,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditPending,
+          tagsMap: searchServices.auditorTagsList,
+        );
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditApplied,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditApplied,
+          tagsMap: searchServices.auditorTagsList,
+        );
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditWorkingOn,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditWorkingOn,
+          tagsMap: searchServices.auditorTagsList,
+        );
       } else if (tabIndex == 3) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditComplete,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditComplete,
+          tagsMap: searchServices.auditorTagsList,
+        );
       }
     }
+
     if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
@@ -132,7 +142,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
     return Scaffold(
       key: scaffoldKey,
-      drawer: const NavDrawer(),
+      drawer: SideBar(controller: SidebarXController(selectedIndex: 4, extended: true)),
       appBar: AppBarWithSearchSwitch(
         // automaticallyImplyLeading: false,
         appBarBuilder: (context) {
@@ -140,10 +150,10 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
             title: Text(
               'Auditor',
               style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
             ),
             actions: [
               // AppBarSearchButton(),
@@ -151,8 +161,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                 icon: const Icon(Icons.search),
               ),
-              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
-                const LoadButtonIndicator(),
+              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
             ],
           );
         },
@@ -164,31 +173,39 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
           //   Icons.tag,
           //   color: Colors.grey[300],
           // ),
-
         ),
 
         onChanged: (searchKeyword) {
           if (tabIndex == 0) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditPending,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           } else if (tabIndex == 1) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditApplied,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           } else if (tabIndex == 2) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditWorkingOn,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           } else if (tabIndex == 3) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditComplete,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           }
         },
         customTextEditingController: searchServices.searchKeywordController,
         centerTitle: false,
         elevation: 2,
       ),
-
-
-
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -339,14 +356,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                             children: model.auditorTagsList.entries.map((e) {
                               return WrappedChip(
                                 key: ValueKey(e.value),
-                                item: MapEntry(
-                                    e.key,
-                                    NftCollection(
-                                        selected: false,
-                                        name: e.value.name,
-                                        bunch: e.value.bunch
-                                    )
-                                ),
+                                item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
                                 page: 'auditor',
                                 selected: e.value.selected,
                                 tabIndex: tabIndex,
@@ -391,7 +401,7 @@ class PendingTabWidget extends StatefulWidget {
 }
 
 class _PendingTabWidgetState extends State<PendingTabWidget> {
-  late bool justLoaded = true;
+  late bool loadingIndicator = false;
   // late Map<EthereumAddress, Task> obj;
 
   @override

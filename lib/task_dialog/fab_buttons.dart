@@ -47,7 +47,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -72,7 +72,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
@@ -97,7 +97,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
@@ -114,8 +114,7 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if ((task.taskState == "review" && fromPage == 'performer') &&
-          (
-              tasksServices.transactionStatuses[task.nanoId] == null ||
+          (tasksServices.transactionStatuses[task.nanoId] == null ||
               tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null ||
               tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] != "closed") &&
           task.repository.isNotEmpty) {
@@ -155,7 +154,7 @@ class SetsOfFabButtons extends StatelessWidget {
           callback: () async {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.saveSuccessfulWitnetResult(task.taskAddress, task.nanoId);
             Navigator.pop(context);
             showDialog(
@@ -181,7 +180,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -205,7 +204,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             // context.beamToNamed('/customer');
@@ -232,7 +231,7 @@ class SetsOfFabButtons extends StatelessWidget {
           callback: () {
             (task.rating == 0)
                 ? () {
-                    task.justLoaded = false;
+                    task.loadingIndicator = true;
                     // tasksServices.rateTask(
                     //     task.taskAddress, ratingScore, task.nanoId);
                     Navigator.pop(context);
@@ -258,7 +257,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();

@@ -56,8 +56,7 @@ import '../wallet/ethereum_walletconnect_transaction.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-// import 'package:device_info_plus/device_info_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart'; // import 'package:device_info_plus/device_info_plus.dart';
 import 'package:browser_detector/browser_detector.dart' hide Platform;
 
 import 'package:package_info_plus/package_info_plus.dart';
@@ -330,19 +329,21 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 80001;
+      chainId = 1287;
     }
 
-    isDeviceConnected = false;
+    isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
 
-    if (platform != 'web') {
-      final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-        if (result != ConnectivityResult.none) {
-          isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
-        }
-      });
-    }
+    // if (platform != 'web') {
+    final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        print('connectivity: ${result}');
+        isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
+        print('isDeviceConnected: ${isDeviceConnected}');
+        // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
+      }
+    });
+    // }
 
     await connectRPC(chainId);
     await startup();
@@ -1555,7 +1556,7 @@ class TasksServices extends ChangeNotifier {
           auditors: task[19],
           messages: task[20],
           taskAddress: taskAddress,
-          justLoaded: true,
+          loadingIndicator: false,
           tokenNames: task[0][8],
           tokenBalances: [ethBalanceToken],
 
@@ -1606,7 +1607,7 @@ class TasksServices extends ChangeNotifier {
           auditors: task[0][20],
           messages: task[0][21],
           taskAddress: taskAddresses[i],
-          justLoaded: true,
+          loadingIndicator: false,
           tokenNames: task[1],
           tokenBalances: tokenValues,
 
@@ -2768,7 +2769,7 @@ class TasksServices extends ChangeNotifier {
     }
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     // txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
@@ -2820,7 +2821,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -2884,7 +2885,7 @@ class TasksServices extends ChangeNotifier {
         credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -2936,7 +2937,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -2981,7 +2982,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;
@@ -3034,7 +3035,7 @@ class TasksServices extends ChangeNotifier {
     txn = await taskContract.transferToaddress(publicAddress!, chain, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.justLoaded = true;
+      tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
     }
     isLoading = false;

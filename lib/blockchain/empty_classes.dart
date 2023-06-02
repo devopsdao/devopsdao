@@ -30,7 +30,7 @@ class EmptyClasses extends ChangeNotifier {
       auditors: [],
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-      justLoaded: true,
+      loadingIndicator: false,
       tokenNames: [],
       tokenBalances: [],
       transport: '');
@@ -60,7 +60,7 @@ class EmptyClasses extends ChangeNotifier {
       auditors: [],
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-      justLoaded: true,
+      loadingIndicator: false,
       tokenBalances: [],
       transport: '');
 

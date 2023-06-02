@@ -291,11 +291,8 @@ class _TaskItemState extends State<TaskItem> {
           // *********** BADGE ************ //
 
           if ((task.taskState == "new" || task.taskState == "audit") &&
-              (widget.fromPage == 'performer' ||
-                  widget.fromPage == 'customer' ||
-                  widget.fromPage == 'auditor' ||
-                  (widget.fromPage == 'tasks')) && taskCount != 0
-          )
+              (widget.fromPage == 'performer' || widget.fromPage == 'customer' || widget.fromPage == 'auditor' || (widget.fromPage == 'tasks')) &&
+              taskCount != 0)
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
               child: Badges.Badge(
@@ -324,7 +321,7 @@ class _TaskItemState extends State<TaskItem> {
                 // child: Icon(Icons.settings),
               ),
             ),
-          if (task.justLoaded == false)
+          if (task.loadingIndicator == true)
             const Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
               child: CircularProgressIndicator(),

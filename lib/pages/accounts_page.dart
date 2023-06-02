@@ -1,4 +1,5 @@
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../account_dialog/account_transition_effect.dart';
 import '../blockchain/classes.dart';
@@ -77,7 +78,7 @@ class _AccountsPageState extends State<AccountsPage> {
     // }
     return Scaffold(
       key: scaffoldKey,
-      drawer: const NavDrawer(),
+      drawer: SideBar(controller: SidebarXController(selectedIndex: 5, extended: true)),
       appBar: AppBar(
         // automaticallyImplyLeading: false,
         title: Column(
@@ -137,10 +138,7 @@ class _AccountsPageState extends State<AccountsPage> {
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
                             // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.name).toList();
-                            tasksServices.runFilter(
-                                taskList: tasksServices.tasksNew,
-                                enteredKeyword: searchKeyword,
-                                tagsMap: {});
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword, tagsMap: {});
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -192,17 +190,11 @@ class _AccountsPageState extends State<AccountsPage> {
                         children: model.tasksTagsList.entries.map((e) {
                           return WrappedChip(
                             key: ValueKey(e.value),
-                            item: MapEntry(
-                                e.key,
-                                NftCollection(
-                                    selected: false,
-                                    name: e.value.name,
-                                    bunch: e.value.bunch
-                                )
-                            ),
+                            item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
                             page: 'accounts',
                             selected: e.value.selected,
-                            wrapperRole: WrapperRole.onPages,);
+                            wrapperRole: WrapperRole.onPages,
+                          );
                         }).toList());
                   }),
                   Expanded(
