@@ -337,9 +337,9 @@ class TasksServices extends ChangeNotifier {
     // if (platform != 'web') {
     final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
       if (result != ConnectivityResult.none) {
-        print('connectivity: ${result}');
+        // print('connectivity: ${result}');
         isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
-        print('isDeviceConnected: ${isDeviceConnected}');
+        // print('isDeviceConnected: ${isDeviceConnected}');
         // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
       }
     });
