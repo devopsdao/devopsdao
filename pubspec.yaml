@@ -72,6 +72,7 @@ dependencies:
   qr_flutter: ^4.0.0
   rate_limiter: ^1.0.0
   rive: ^0.10.1
+  rive_splash_screen: ^0.1.1
   scan: ^1.6.0
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0
