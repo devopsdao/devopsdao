@@ -81,23 +81,23 @@ class OpenMyAddTags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
-        transitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 450),
         transitionType: _transitionType,
+        openElevation: 0,
+        closedElevation: 0,
         openBuilder: (BuildContext context, VoidCallback _) {
           return Container(
-              color: Colors.white,
+              color: DodaoTheme.of(context).taskBackgroundColor,
               child: MainTagsPage(page: page, tabIndex: tabIndex)
           );
         },
-        closedElevation: 0,
+        middleColor: Colors.red,
         closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(1.0),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(40)),
         ),
-        openElevation: 2,
-        // openColor: Colors.transparent,
+        openColor: DodaoTheme.of(context).taskBackgroundColor,
         closedColor: Colors.transparent,
+
         closedBuilder: (BuildContext context, VoidCallback openContainer) {
           return Container(
             height: 30,

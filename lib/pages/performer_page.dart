@@ -226,7 +226,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> {
                         // ),
                         child: BadgeTab(
                           taskCount: tasksServices.tasksPerformerComplete.length,
-                          tabText: 'Complete',
+                          tabText: 'Completed',
                         ),
                       ),
                     ],

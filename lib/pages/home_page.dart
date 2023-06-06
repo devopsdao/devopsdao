@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:jovial_svg/jovial_svg.dart';
 import 'package:provider/provider.dart';
@@ -143,9 +144,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
         key: scaffoldKey,
         // drawer: const NavDrawer(),
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
         drawer: SideBar(controller: SidebarXController(selectedIndex: 0, extended: true)),
         appBar: AppBar(
-          // backgroundColor: Colors.black,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           // automaticallyImplyLeading: false,
           title: Row(
             mainAxisSize: MainAxisSize.max,
@@ -224,7 +228,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
           ],
           centerTitle: false,
-          elevation: 2,
         ),
         // backgroundColor: Colors.black,
         floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
@@ -234,22 +237,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
             alignment: Alignment.center,
             decoration: const BoxDecoration(
-              // gradient: LinearGradient(
-              //   // colors: [Colors.black, Colors.black, Colors.black],
-              //   colors: [Colors.black, Colors.black, Colors.green],
-              //   stops: [0, 0.5, 1],
-              //   begin: AlignmentDirectional(1, -1),
-              //   end: AlignmentDirectional(-1, 1),
-              // ),
-              // color: Colors.black,
-
               image: DecorationImage(
                 image: AssetImage(
-                  "assets/images/background.png",
+                  "assets/images/Background_new.png",
                 ),
-                fit: BoxFit.cover,
+
+                fit: BoxFit.none,
+                // centerSlice: Rect.fromLTRB(1.0, 1.0, 0.0, 1.0),
                 filterQuality: FilterQuality.medium,
+                scale: 1,
               ),
+              shape: BoxShape.rectangle,
             ),
             child: SingleChildScrollView(
               child: Container(
@@ -397,13 +395,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         ),
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: Container(
+                          child: BlurryContainer(
                             width: fullWidth,
-                            decoration: BoxDecoration(
-                              color: DodaoTheme.of(context).transparentCloud,
-                              borderRadius: BorderRadius.circular(8),
-                              shape: BoxShape.rectangle,
-                            ),
+                            blur: 3,
+                            color: DodaoTheme.of(context).transparentCloud,
+                            // decoration: BoxDecoration(
+                            //   color: DodaoTheme.of(context).transparentCloud,
+                            //   borderRadius: BorderRadius.circular(8),
+                            //   shape: BoxShape.rectangle,
+                            // ),
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                               child: LayoutBuilder(builder: (context, constraints) {
@@ -481,13 +481,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         ),
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: Container(
+                          child: BlurryContainer(
                             width: fullWidth,
-                            decoration: BoxDecoration(
-                              color: DodaoTheme.of(context).transparentCloud,
-                              borderRadius: BorderRadius.circular(8),
-                              shape: BoxShape.rectangle,
-                            ),
+                            color: DodaoTheme.of(context).transparentCloud,
+                            blur: 2,
+                            // decoration: BoxDecoration(
+                            //   color: DodaoTheme.of(context).transparentCloud,
+                            //   borderRadius: BorderRadius.circular(8),
+                            //   shape: BoxShape.rectangle,
+                            // ),
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
                               child: Column(

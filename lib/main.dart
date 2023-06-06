@@ -149,7 +149,12 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
 
             appBarTheme: const AppBarTheme(
-              // backgroundColor: Colors.black,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  // statusBarColor: Colors.white,
+                  statusBarIconBrightness: Brightness.dark,
+                  statusBarBrightness: Brightness.light,
+                  // systemNavigationBarColor: Colors.white,
+                ),
                 color: Colors.white,
                 surfaceTintColor: Colors.white
             ),
@@ -181,7 +186,6 @@ class _MyAppState extends State<MyApp> {
           ),
 
           // ******************* Dark
-
           darkTheme: ThemeData(
 
             fontFamily: GoogleFonts.inter().fontFamily,
@@ -191,11 +195,11 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
 
             appBarTheme: const AppBarTheme(
-                // systemOverlayStyle: SystemUiOverlayStyle(
-                //     statusBarColor: Colors.white,
-                //     statusBarBrightness: Brightness.light,
-                //     systemNavigationBarColor: Colors.white,
-                // ),
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarIconBrightness: Brightness.light,
+                  statusBarBrightness: Brightness.dark,
+                    // systemNavigationBarColor: Colors.white,
+                ),
               // backgroundColor: Colors.black,
                 color: Colors.black,
                 surfaceTintColor: Colors.black,

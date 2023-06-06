@@ -258,7 +258,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                       Tab(
                         child: BadgeTab(
                           taskCount: tasksServices.tasksAuditComplete.length,
-                          tabText: 'Complete',
+                          tabText: 'Completed',
                         ),
                       ),
                     ],

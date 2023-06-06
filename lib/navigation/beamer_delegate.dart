@@ -2,7 +2,9 @@
 
 import 'package:beamer/beamer.dart';
 import 'package:dodao/pages/auditor_page.dart';
+import 'package:sidebarx/sidebarx.dart';
 import 'package:webthree/webthree.dart';
+import 'appbar.dart';
 import 'authenticator.dart';
 // import '../../screens.dart';
 import '../index.dart';
@@ -10,6 +12,7 @@ import '../index.dart';
 import 'package:flutter/material.dart';
 
 import 'navbar.dart';
+import 'navmenu.dart';
 
 // import './screens.dart';
 

@@ -23,26 +23,26 @@ class _BadgeTabState extends State<BadgeTab> {
           //   flex: 1,
           //   child:
           Badges.Badge(
+            shape: Badges.BadgeShape.square,
+            borderRadius: BorderRadius.circular(4),
+            animationType: Badges.BadgeAnimationType.fade,
             badgeContent: Container(
-              width: 9,
-              height: 11,
+              width: 8,
+              height: 10,
               alignment: Alignment.center,
               child: Text(widget.taskCount.toString(),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 9,
+                      fontSize: 8,
                       color: Colors.white)),
             ),
           ),
-        Expanded(
-          flex: 1,
-          child: Text(
-            ' ${widget.taskCount > 0 ? ' ${widget.tabText}' : widget.tabText}',
-            softWrap: false,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          ' ${widget.taskCount > 0 ? ' ${widget.tabText}' : widget.tabText}',
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          textAlign: TextAlign.center,
         )
       ],
     );

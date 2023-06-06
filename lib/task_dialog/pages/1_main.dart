@@ -155,6 +155,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   ),
                                   if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
                                     Container(
+                                      margin:const EdgeInsets.only(top: 6.0, bottom: 6.0),
                                       width: 36,
                                       height: 36,
                                       decoration: BoxDecoration(

@@ -118,263 +118,274 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       resetFilters();
     }
 
-    return Scaffold(
-        key: scaffoldKey,
-        drawer: SideBar(controller: SidebarXController(selectedIndex: 2, extended: true)),
-        appBar: OurAppBar(
-          title: 'Customer',
-          tabIndex: tabIndex,
+    return Stack(
+      children: [
+        Image.asset(
+          "assets/images/Background_new.png",
+          fit: BoxFit.none,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          filterQuality: FilterQuality.medium,
+          alignment: Alignment.topRight,
+          scale: 1.0,
         ),
-        // backgroundColor: const Color(0xFF1E2429),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () async {
-        //     await Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => CreateJobWidget(),
-        //       ),
-        //     );
-        //   },
-        //   backgroundColor: DodaoTheme.of(context).maximumBlueGreen,
-        //   elevation: 8,
-        //   child: Icon(
-        //     Icons.add,
-        //     color: Colors.white,
-        //     size: 28,
-        //   ),
-        // ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            // gradient: LinearGradient(
-            //   colors: [Colors.black, Colors.black, Colors.black],
-            //   stops: [0, 0.5, 1],
-            //   begin: AlignmentDirectional(1, -1),
-            //   end: AlignmentDirectional(-1, 1),
-            // ),
-            // image: DecorationImage(
-            //   image: SvgProvider.Svg('assets/images/background-from-png.svg'),
-            //   fit: BoxFit.fitHeight,
-            // ),
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.png"),
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.medium,
+        Scaffold(
+            // extendBodyBehindAppBar: true,
+            resizeToAvoidBottomInset: false,
+            key: scaffoldKey,
+            drawer: SideBar(controller: SidebarXController(selectedIndex: 2, extended: true)),
+            appBar: OurAppBar(
+              title: 'Customer',
+              tabIndex: tabIndex,
             ),
-          ),
-          child: SizedBox(
-            width: interface.maxStaticGlobalWidth,
-            child: DefaultTabController(
-                length: 3,
-                initialIndex: tabIndex,
-                child: Builder(builder: (BuildContext context) {
-                  // final TabController controller = DefaultTabController.of(context)!;
-                  // controller.addListener(() {
-                  //   // print(controller.index);
-                  //   // changeTab(controller.index);
-                  //   if (!controller.indexIsChanging) {
-                  //     // print(controller.index);
-                  //   }
-                  // });
-                  return LayoutBuilder(builder: (context, constraints) {
-                    return Column(
-                      children: [
-                        TabBar(
-                          labelColor: DodaoTheme.of(context).primaryText,
-                          labelStyle: Theme.of(context).textTheme.bodyMedium,
-                          indicatorColor: DodaoTheme.of(context).tabIndicator,
-                          indicatorWeight: 3,
-                          // isScrollable: true,
-                          onTap: (index) {
-                            // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
-                            searchServices.searchKeywordController.clear();
-                            tabIndex = index;
-                            resetFilters();
-                          },
-                          tabs: [
-                            Tab(
-                              child: BadgeTab(
-                                taskCount: tasksServices.tasksCustomerSelection.length,
-                                tabText: 'Selection',
-                              ),
-                            ),
-                            Tab(
-                              child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
-                            ),
-                            Tab(
-                              child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Complete'),
-                            ),
-                          ],
-                        ),
-                        // Row(
-                        //   children: [
-                        //     Container(
-                        //       width: constraints.minWidth - 70,
-                        //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        //
-                        //       // child: TextField(
-                        //       //   controller: _searchKeywordController,
-                        //       //   onChanged: (searchKeyword) {
-                        //       //     if (tabIndex == 0) {
-                        //       //       tasksServices.runFilter(
-                        //       //           taskList: tasksServices.tasksCustomerSelection,
-                        //       //           enteredKeyword: searchKeyword,
-                        //       //           tagsMap: searchServices.customerTagsList );
-                        //       //     } else if (tabIndex == 1) {
-                        //       //       tasksServices.runFilter(
-                        //       //           taskList: tasksServices.tasksCustomerProgress,
-                        //       //           enteredKeyword: searchKeyword,
-                        //       //           tagsMap: searchServices.customerTagsList );
-                        //       //     } else if (tabIndex == 2) {
-                        //       //       tasksServices.runFilter(
-                        //       //           taskList: tasksServices.tasksCustomerComplete,
-                        //       //           enteredKeyword: searchKeyword,
-                        //       //           tagsMap: searchServices.customerTagsList );
-                        //       //     }
-                        //       //   },
-                        //       //   decoration: const InputDecoration(
-                        //       //     hintText: '[Find task by Title...]',
-                        //       //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                        //       //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                        //       //     labelText: 'Search',
-                        //       //     suffixIcon: Icon(
-                        //       //       Icons.search,
-                        //       //       color: Colors.white,
-                        //       //     ),
-                        //       //     enabledBorder: UnderlineInputBorder(
-                        //       //       borderSide: BorderSide(
-                        //       //         color: Colors.white,
-                        //       //         width: 1,
-                        //       //       ),
-                        //       //       borderRadius: BorderRadius.only(
-                        //       //         topLeft: Radius.circular(4.0),
-                        //       //         topRight: Radius.circular(4.0),
-                        //       //       ),
-                        //       //     ),
-                        //       //     focusedBorder: UnderlineInputBorder(
-                        //       //       borderSide: BorderSide(
-                        //       //         color: Colors.white,
-                        //       //         width: 1,
-                        //       //       ),
-                        //       //       borderRadius: BorderRadius.only(
-                        //       //         topLeft: Radius.circular(4.0),
-                        //       //         topRight: Radius.circular(4.0),
-                        //       //       ),
-                        //       //     ),
-                        //       //   ),
-                        //       //   style: DodaoTheme.of(context).bodyText1.override(
-                        //       //         fontFamily: 'Inter',
-                        //       //         color: Colors.white,
-                        //       //         lineHeight: 2,
-                        //       //       ),
-                        //       // ),
-                        //     ),
-                        //
-                        //   ],
-                        // ),
-                        Consumer<SearchServices>(builder: (context, model, child) {
-                          // localTagsList = model.customerTagsList.entries.map((e) => e.value.name).toList();
-                          // if (model.ready) {
-                          //   tasksServices.runFilter(
-                          //     tasksServices.tasksNew,
-                          //     enteredKeyword: _searchKeywordController.text,
-                          //     tagsList: localTagsList
-                          //   );
-                          //   model.ready = false;
-                          // }
-
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
-                            child: Container(
-                              alignment: Alignment.topLeft,
-                              child: Wrap(
-                                  // alignment: WrapAlignment.start,
-                                  direction: Axis.horizontal,
-                                  children: model.customerTagsList.entries.map((e) {
-                                    return WrappedChip(
-                                      key: ValueKey(e.value),
-                                      item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
-                                      page: 'customer',
-                                      selected: e.value.selected,
-                                      tabIndex: tabIndex,
-                                      wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
-                                    );
-                                  }).toList()),
-                            ),
-                          );
-                        }),
-                        tasksServices.isLoading
-                            ? const LoadIndicator()
-                            : Expanded(
-                                child: NotificationListener(
-                                  onNotification: (scrollNotification) {
-                                    // changeTab(tabIndex);
-                                    // late int index = 0;
-                                    if (scrollNotification is ScrollUpdateNotification) {
-                                      late double tabWidth = MediaQuery.of(context).size.width;
-                                      late double metrics = scrollNotification.metrics.pixels;
-                                      // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
-                                      // setState(() {
-                                      //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
-                                      //     print('first');
-                                      //     debounceChangeTab0.throttle(() {
-                                      //       changeTab(0, metrics);
-                                      //     });
-                                      //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
-                                      //           (metrics < tabWidth + (tabWidth / 5)) &&
-                                      //           prevMetrics < metrics) ||
-                                      //       (metrics > tabWidth &&
-                                      //           metrics < tabWidth * 2 - (tabWidth / 5) &&
-                                      //           tabIndex == 2 &&
-                                      //           prevMetrics > metrics)) {
-                                      //     print('second');
-                                      //     debounceChangeTab1.throttle(() {
-                                      //       changeTab(1, metrics);
-                                      //     });
-                                      //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
-                                      //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
-                                      //     print('third');
-                                      //     debounceChangeTab2.throttle(() {
-                                      //       changeTab(2, metrics);
-                                      //     });
-                                      //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
-                                      //     print('forth');
-                                      //     debounceChangeTab3.throttle(() {
-                                      //       changeTab(3, metrics);
-                                      //     });
-                                      //   }
-                                      // });
-                                      // print(tabIndex);
-                                    }
-                                    return false;
-                                  },
-                                  child: const TabBarView(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    children: [
-                                      mySubmitterTabWidget(
-                                        tabName: 'selection',
-                                      ), //new
-                                      mySubmitterTabWidget(
-                                        tabName: 'progress',
-                                      ), //agreed
-                                      mySubmitterTabWidget(
-                                        tabName: 'complete',
-                                      ), //completed & canceled
-                                    ],
+            backgroundColor: Colors.transparent,
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () async {
+            //     await Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => CreateJobWidget(),
+            //       ),
+            //     );
+            //   },
+            //   backgroundColor: DodaoTheme.of(context).maximumBlueGreen,
+            //   elevation: 8,
+            //   child: Icon(
+            //     Icons.add,
+            //     color: Colors.white,
+            //     size: 28,
+            //   ),
+            // ),
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+              alignment: Alignment.center,
+              // decoration: const BoxDecoration(
+              //   // gradient: LinearGradient(
+              //   //   colors: [Colors.black, Colors.black, Colors.black],
+              //   //   stops: [0, 0.5, 1],
+              //   //   begin: AlignmentDirectional(1, -1),
+              //   //   end: AlignmentDirectional(-1, 1),
+              //   // ),
+              //   // image: DecorationImage(
+              //   //   image: SvgProvider.Svg('assets/images/background-from-png.svg'),
+              //   //   fit: BoxFit.fitHeight,
+              //   // ),
+              //
+              // ),
+              child: SizedBox(
+                width: interface.maxStaticGlobalWidth,
+                child: DefaultTabController(
+                    length: 3,
+                    initialIndex: tabIndex,
+                    child: Builder(builder: (BuildContext context) {
+                      // final TabController controller = DefaultTabController.of(context)!;
+                      // controller.addListener(() {
+                      //   // print(controller.index);
+                      //   // changeTab(controller.index);
+                      //   if (!controller.indexIsChanging) {
+                      //     // print(controller.index);
+                      //   }
+                      // });
+                      return LayoutBuilder(builder: (context, constraints) {
+                        return Column(
+                          children: [
+                            TabBar(
+                              labelColor: DodaoTheme.of(context).primaryText,
+                              labelStyle: Theme.of(context).textTheme.bodyMedium,
+                              indicatorColor: DodaoTheme.of(context).tabIndicator,
+                              indicatorWeight: 3,
+                              // isScrollable: true,
+                              onTap: (index) {
+                                // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
+                                searchServices.searchKeywordController.clear();
+                                tabIndex = index;
+                                resetFilters();
+                              },
+                              tabs: [
+                                Tab(
+                                  child: BadgeTab(
+                                    taskCount: tasksServices.tasksCustomerSelection.length,
+                                    tabText: 'Selection',
                                   ),
                                 ),
-                              ),
-                      ],
-                    );
-                  });
-                })),
-          ),
-        )
-        // .animated([animationsMap['containerOnPageLoadAnimation']!]),
-        );
+                                Tab(
+                                  child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
+                                ),
+                                Tab(
+                                  child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Completed'),
+                                ),
+                              ],
+                            ),
+                            // Row(
+                            //   children: [
+                            //     Container(
+                            //       width: constraints.minWidth - 70,
+                            //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                            //
+                            //       // child: TextField(
+                            //       //   controller: _searchKeywordController,
+                            //       //   onChanged: (searchKeyword) {
+                            //       //     if (tabIndex == 0) {
+                            //       //       tasksServices.runFilter(
+                            //       //           taskList: tasksServices.tasksCustomerSelection,
+                            //       //           enteredKeyword: searchKeyword,
+                            //       //           tagsMap: searchServices.customerTagsList );
+                            //       //     } else if (tabIndex == 1) {
+                            //       //       tasksServices.runFilter(
+                            //       //           taskList: tasksServices.tasksCustomerProgress,
+                            //       //           enteredKeyword: searchKeyword,
+                            //       //           tagsMap: searchServices.customerTagsList );
+                            //       //     } else if (tabIndex == 2) {
+                            //       //       tasksServices.runFilter(
+                            //       //           taskList: tasksServices.tasksCustomerComplete,
+                            //       //           enteredKeyword: searchKeyword,
+                            //       //           tagsMap: searchServices.customerTagsList );
+                            //       //     }
+                            //       //   },
+                            //       //   decoration: const InputDecoration(
+                            //       //     hintText: '[Find task by Title...]',
+                            //       //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
+                            //       //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
+                            //       //     labelText: 'Search',
+                            //       //     suffixIcon: Icon(
+                            //       //       Icons.search,
+                            //       //       color: Colors.white,
+                            //       //     ),
+                            //       //     enabledBorder: UnderlineInputBorder(
+                            //       //       borderSide: BorderSide(
+                            //       //         color: Colors.white,
+                            //       //         width: 1,
+                            //       //       ),
+                            //       //       borderRadius: BorderRadius.only(
+                            //       //         topLeft: Radius.circular(4.0),
+                            //       //         topRight: Radius.circular(4.0),
+                            //       //       ),
+                            //       //     ),
+                            //       //     focusedBorder: UnderlineInputBorder(
+                            //       //       borderSide: BorderSide(
+                            //       //         color: Colors.white,
+                            //       //         width: 1,
+                            //       //       ),
+                            //       //       borderRadius: BorderRadius.only(
+                            //       //         topLeft: Radius.circular(4.0),
+                            //       //         topRight: Radius.circular(4.0),
+                            //       //       ),
+                            //       //     ),
+                            //       //   ),
+                            //       //   style: DodaoTheme.of(context).bodyText1.override(
+                            //       //         fontFamily: 'Inter',
+                            //       //         color: Colors.white,
+                            //       //         lineHeight: 2,
+                            //       //       ),
+                            //       // ),
+                            //     ),
+                            //
+                            //   ],
+                            // ),
+                            Consumer<SearchServices>(builder: (context, model, child) {
+                              // localTagsList = model.customerTagsList.entries.map((e) => e.value.name).toList();
+                              // if (model.ready) {
+                              //   tasksServices.runFilter(
+                              //     tasksServices.tasksNew,
+                              //     enteredKeyword: _searchKeywordController.text,
+                              //     tagsList: localTagsList
+                              //   );
+                              //   model.ready = false;
+                              // }
+
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
+                                child: Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                      // alignment: WrapAlignment.start,
+                                      direction: Axis.horizontal,
+                                      children: model.customerTagsList.entries.map((e) {
+                                        return WrappedChip(
+                                          key: ValueKey(e.value),
+                                          item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
+                                          page: 'customer',
+                                          selected: e.value.selected,
+                                          tabIndex: tabIndex,
+                                          wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                                        );
+                                      }).toList()),
+                                ),
+                              );
+                            }),
+                            tasksServices.isLoading
+                                ? const LoadIndicator()
+                                : Expanded(
+                                    child: NotificationListener(
+                                      onNotification: (scrollNotification) {
+                                        // changeTab(tabIndex);
+                                        // late int index = 0;
+                                        if (scrollNotification is ScrollUpdateNotification) {
+                                          late double tabWidth = MediaQuery.of(context).size.width;
+                                          late double metrics = scrollNotification.metrics.pixels;
+                                          // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
+                                          // setState(() {
+                                          //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
+                                          //     print('first');
+                                          //     debounceChangeTab0.throttle(() {
+                                          //       changeTab(0, metrics);
+                                          //     });
+                                          //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
+                                          //           (metrics < tabWidth + (tabWidth / 5)) &&
+                                          //           prevMetrics < metrics) ||
+                                          //       (metrics > tabWidth &&
+                                          //           metrics < tabWidth * 2 - (tabWidth / 5) &&
+                                          //           tabIndex == 2 &&
+                                          //           prevMetrics > metrics)) {
+                                          //     print('second');
+                                          //     debounceChangeTab1.throttle(() {
+                                          //       changeTab(1, metrics);
+                                          //     });
+                                          //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
+                                          //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
+                                          //     print('third');
+                                          //     debounceChangeTab2.throttle(() {
+                                          //       changeTab(2, metrics);
+                                          //     });
+                                          //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
+                                          //     print('forth');
+                                          //     debounceChangeTab3.throttle(() {
+                                          //       changeTab(3, metrics);
+                                          //     });
+                                          //   }
+                                          // });
+                                          // print(tabIndex);
+                                        }
+                                        return false;
+                                      },
+                                      child: const TabBarView(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        children: [
+                                          mySubmitterTabWidget(
+                                            tabName: 'selection',
+                                          ), //new
+                                          mySubmitterTabWidget(
+                                            tabName: 'progress',
+                                          ), //agreed
+                                          mySubmitterTabWidget(
+                                            tabName: 'complete',
+                                          ), //completed & canceled
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        );
+                      });
+                    })),
+              ),
+            )
+            // .animated([animationsMap['containerOnPageLoadAnimation']!]),
+            ),
+      ],
+    );
   }
 }
 

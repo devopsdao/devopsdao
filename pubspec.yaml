@@ -31,6 +31,7 @@ dependencies:
   badges: ^2.0.3
   beamer:
     path: ../beamer/package
+  blurrycontainer: ^1.0.2
   browser_detector: ^2.0.0
   cached_network_image: ^3.2.1
   collection: ^1.16.0

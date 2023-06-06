@@ -123,7 +123,7 @@ abstract class DodaoTheme {
 }
 
 class LightModeTheme extends DodaoTheme {
-  late Color transparentCloud = Colors.black26;
+  late Color transparentCloud = Colors.black12;
   late Color background = Colors.white;
   late Color taskBackgroundColor = Colors.white;
   late Color walletBackgroundColor = Colors.grey.shade100;
@@ -182,7 +182,7 @@ class LightModeTheme extends DodaoTheme {
 
   late GradientBoxBorder borderGradient = const GradientBoxBorder(
     gradient: LinearGradient(
-      colors: [Color(0xFFC7C7C7), Color(0xFFC7C7C7)],
+      colors: [Color(0xFFD2D2D2), Color(0xFFD2D2D2)],
       begin: Alignment.topCenter, end: Alignment.bottomCenter,
     ),
     width: 1,
