@@ -397,7 +397,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                           child: BlurryContainer(
                             width: fullWidth,
-                            blur: 3,
+                            blur: 4,
                             color: DodaoTheme.of(context).transparentCloud,
                             // decoration: BoxDecoration(
                             //   color: DodaoTheme.of(context).transparentCloud,
@@ -484,7 +484,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: BlurryContainer(
                             width: fullWidth,
                             color: DodaoTheme.of(context).transparentCloud,
-                            blur: 2,
+                            blur: 4,
                             // decoration: BoxDecoration(
                             //   color: DodaoTheme.of(context).transparentCloud,
                             //   borderRadius: BorderRadius.circular(8),

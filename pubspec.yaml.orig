@@ -70,10 +70,14 @@ dependencies:
   package_info_plus: ^3.0.1
   page_transition: ^2.0.9
   provider: ^6.0.2
-  qr_flutter: ^4.1.0
+  qr_flutter: ^4.0.0
   rate_limiter: ^1.0.0
+<<<<<<< HEAD
   rive: ^0.11.2
+=======
+  rive: ^0.10.1
   rive_splash_screen: ^0.1.1
+>>>>>>> 973930a05ecc9afc85ef2a8fd29f43e2a696d319
   scan: ^1.6.0
   shared_preferences: ^2.0.15
   shimmer: ^2.0.0

@@ -673,7 +673,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                         ])),
                                                   const Spacer(),
                                                   if (_displayUri.isNotEmpty)
-                                                    QrImage(
+                                                    QrImageView(
                                                       data: _displayUri,
                                                       size: 230,
                                                       gapless: false,
