@@ -15,36 +15,45 @@ class BadgeTab extends StatefulWidget {
 class _BadgeTabState extends State<BadgeTab> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (widget.taskCount > 0)
-          // Expanded(
-          //   flex: 1,
-          //   child:
-          Badges.Badge(
-            shape: Badges.BadgeShape.square,
-            borderRadius: BorderRadius.circular(4),
-            animationType: Badges.BadgeAnimationType.fade,
-            badgeContent: Container(
-              width: 8,
-              height: 10,
-              alignment: Alignment.center,
-              child: Text(widget.taskCount.toString(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 8,
-                      color: Colors.white)),
+    return Padding(
+      padding: const EdgeInsets.only(left: 6, right: 10.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 100),
+              child: Text(
+                ' ${widget.taskCount > 0 ? ' ${widget.tabText}' : widget.tabText}',
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        Text(
-          ' ${widget.taskCount > 0 ? ' ${widget.tabText}' : widget.tabText}',
-          softWrap: false,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          textAlign: TextAlign.center,
-        )
-      ],
+          if (widget.taskCount > 0)
+            Container(
+              padding: const EdgeInsets.only(left: 6, right: 0.0),
+              child: Badges.Badge(
+                shape: Badges.BadgeShape.circle,
+                borderRadius: BorderRadius.circular(4),
+                animationType: Badges.BadgeAnimationType.fade,
+                badgeContent: Container(
+                  width: 8,
+                  height: 10,
+                  alignment: Alignment.center,
+                  child: Text(widget.taskCount.toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 8,
+                      color: Colors.white)
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

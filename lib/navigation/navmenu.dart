@@ -208,8 +208,8 @@ class SideBar extends StatelessWidget {
     return SidebarX(
       controller: _controller,
       theme: SidebarXTheme(
-        padding: const EdgeInsets.only(left: 6, right: 6),
-        margin: const EdgeInsets.all(10),
+        // padding: const EdgeInsets.only(left: 6, right: 6),
+        // margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: DodaoTheme.of(context).background,
           borderRadius: BorderRadius.circular(20),
@@ -273,10 +273,10 @@ class SideBar extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          filterQuality: FilterQuality.medium,
-                        ),
+                        // Image.asset(
+                        //   'assets/images/logo.png',
+                        //   filterQuality: FilterQuality.medium,
+                        // ),
                         Builder(builder: (context) {
                           const Duration duration = Duration(milliseconds: 450);
                           return AnimatedIconButton(

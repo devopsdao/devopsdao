@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
+import 'package:dodao/main.dart';
 import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -38,7 +39,7 @@ class CustomerPageWidget extends StatefulWidget {
   _CustomerPageWidgetState createState() => _CustomerPageWidgetState();
 }
 
-class _CustomerPageWidgetState extends State<CustomerPageWidget>
+class _CustomerPageWidgetState extends State<CustomerPageWidget>  with SingleTickerProviderStateMixin
 // with TickerProviderStateMixin
 {
   List<String> localTagsList = [];
@@ -58,6 +59,11 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     ),
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final colors = [const Color(0xFFF62BAD), const Color(0xFFF75D21)  , const Color(
+      0xFF448AF7)];
+  late Color indicatorColor = colors[0];
+  late TabController _controller;
 
   @override
   void initState() {
@@ -80,6 +86,14 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
       var searchServices = context.read<SearchServices>();
       searchServices.selectTagListOnTasksPages(page: 'customer', initial: true);
     });
+
+    _controller = TabController(length: 3, vsync: this)
+      ..addListener(() {
+        setState(() {
+          indicatorColor = colors[_controller.index];
+        });
+      });
+    indicatorColor = colors[0];
   }
 
   @override
@@ -94,8 +108,14 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
     var tasksServices = context.watch<TasksServices>();
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
+    var modelTheme = context.read<ModelTheme>();
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
+
+    late bool desktopWidth = false;
+    if (MediaQuery.of(context).size.width > 700) {
+      desktopWidth = true;
+    }
 
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
@@ -120,15 +140,28 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
 
     return Stack(
       children: [
+        if (!desktopWidth)
         Image.asset(
-          "assets/images/Background_new.png",
+          "assets/images/background_cat_pink.png",
           fit: BoxFit.none,
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           filterQuality: FilterQuality.medium,
-          alignment: Alignment.topRight,
+          alignment: Alignment.center,
           scale: 1.0,
+          opacity: modelTheme.isDark ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(1),
         ),
+        if (desktopWidth)
+          Image.asset(
+            "assets/images/background_cat_pink_big.png",
+            fit: BoxFit.none,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            filterQuality: FilterQuality.medium,
+            alignment: Alignment.center,
+            scale: 1.0,
+            opacity: modelTheme.isDark ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(1),
+          ),
         Scaffold(
             // extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
@@ -191,32 +224,47 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
                       return LayoutBuilder(builder: (context, constraints) {
                         return Column(
                           children: [
-                            TabBar(
-                              labelColor: DodaoTheme.of(context).primaryText,
-                              labelStyle: Theme.of(context).textTheme.bodyMedium,
-                              indicatorColor: DodaoTheme.of(context).tabIndicator,
-                              indicatorWeight: 3,
-                              // isScrollable: true,
-                              onTap: (index) {
-                                // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
-                                searchServices.searchKeywordController.clear();
-                                tabIndex = index;
-                                resetFilters();
-                              },
-                              tabs: [
-                                Tab(
-                                  child: BadgeTab(
-                                    taskCount: tasksServices.tasksCustomerSelection.length,
-                                    tabText: 'Selection',
+                            SizedBox(
+                              height: 30,
+                              child: TabBar(
+                                controller: _controller,
+                                indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: indicatorColor,
+                                ),
+                                overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                        (Set<MaterialState> states) {
+                                      // Use the default focused overlay color
+                                      return states.contains(MaterialState.focused) ? null : Colors.transparent;
+                                    }
+                                ),
+                                dividerColor: Colors.transparent,
+                                labelColor: Colors.white,
+                                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                                // indicatorColor: DodaoTheme.of(context).tabIndicator,
+                                indicatorWeight: 1,
+                                // isScrollable: true,
+                                onTap: (index) {
+                                  // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
+                                  searchServices.searchKeywordController.clear();
+                                  tabIndex = index;
+                                  resetFilters();
+                                },
+                                tabs: [
+                                  Tab(
+                                    child: BadgeTab(
+                                      taskCount: tasksServices.tasksCustomerSelection.length,
+                                      tabText: 'Selection',
+                                    ),
                                   ),
-                                ),
-                                Tab(
-                                  child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
-                                ),
-                                Tab(
-                                  child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Completed'),
-                                ),
-                              ],
+                                  Tab(
+                                    child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
+                                  ),
+                                  Tab(
+                                    child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Completed'),
+                                  ),
+                                ],
+                              ),
                             ),
                             // Row(
                             //   children: [

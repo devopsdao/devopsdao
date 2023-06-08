@@ -131,6 +131,8 @@ class _MyAppState extends State<MyApp> {
             name: 'assets/rive_animations/cat-blinking.riv',
             until: () => Future.delayed(const Duration(seconds: 1)),
             startAnimation: 'Opening one eye',
+            width: 230,
+            height: 230,
             next: (context) => MaterialApp.router(
               routerDelegate: beamerDelegate,
               routeInformationParser: BeamerParser(),
