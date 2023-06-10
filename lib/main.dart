@@ -131,14 +131,16 @@ class _MyAppState extends State<MyApp> {
             name: 'assets/rive_animations/cat-blinking.riv',
             until: () => Future.delayed(const Duration(seconds: 1)),
             startAnimation: 'Opening one eye',
-            width: 230,
-            height: 230,
+            width: 210,
+            height: 210,
+
             next: (context) => MaterialApp.router(
               routerDelegate: beamerDelegate,
               routeInformationParser: BeamerParser(),
               backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
               debugShowCheckedModeBanner: false,
               title: 'dodao.dev',
+
 
               localizationsDelegates: const [
                 FFLocalizationsDelegate(),
@@ -199,7 +201,6 @@ class _MyAppState extends State<MyApp> {
               // ******************* Dark
 
               darkTheme: ThemeData(
-
                 fontFamily: GoogleFonts.inter().fontFamily,
                 brightness: Brightness.dark,
                 scaffoldBackgroundColor: Colors.black,

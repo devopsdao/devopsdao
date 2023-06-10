@@ -38,6 +38,7 @@ dependencies:
   connectivity_plus: ^4.0.1
   convert: ^3.1.1
   cupertino_icons: ^1.0.0
+  custom_refresh_indicator: ^2.0.1
   easy_debounce: ^2.0.2+1
   eth_sig_util: ^0.0.9
   flutter:

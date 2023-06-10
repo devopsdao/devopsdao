@@ -212,6 +212,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
                               child: BadgeTab(
                                 taskCount: tasksServices.tasksPerformerParticipate.length,
                                 tabText: 'Applied',
+                                index: 0,
                               ),
                             ),
                             Tab(
@@ -221,6 +222,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
                               child: BadgeTab(
                                 taskCount: tasksServices.tasksPerformerProgress.length,
                                 tabText: 'Working',
+                                index: 1,
                               ),
                             ),
                             Tab(
@@ -230,6 +232,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
                               child: BadgeTab(
                                 taskCount: tasksServices.tasksPerformerComplete.length,
                                 tabText: 'Completed',
+                                index: 2,
                               ),
                             ),
                           ],
@@ -330,10 +333,11 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
                       }),
                       tasksServices.isLoading
                           ? const LoadIndicator()
-                          : const Expanded(
+                          : Expanded(
                               child: TabBarView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: [
+                                physics: const NeverScrollableScrollPhysics(),
+                                controller: _controller,
+                                children: const [
                                   MyPerformerTabWidget(
                                     tabName: 'applied',
                                   ),

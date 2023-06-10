@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 class BadgeTab extends StatefulWidget {
   final int taskCount;
+  final int index;
   final String tabText;
-  const BadgeTab({Key? key, required this.taskCount, required this.tabText})
+  const BadgeTab({Key? key, required this.taskCount, required this.tabText, this.index = 3})
       : super(key: key);
 
   @override
@@ -13,6 +14,13 @@ class BadgeTab extends StatefulWidget {
 }
 
 class _BadgeTabState extends State<BadgeTab> {
+  final colors = [
+    Colors.pink.shade400,
+    Colors.orange.shade900,
+    Colors.blueAccent.shade700,
+    Colors.green.shade700
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,6 +47,7 @@ class _BadgeTabState extends State<BadgeTab> {
                 shape: Badges.BadgeShape.circle,
                 borderRadius: BorderRadius.circular(4),
                 animationType: Badges.BadgeAnimationType.fade,
+                badgeColor: colors[widget.index],
                 badgeContent: Container(
                   width: 8,
                   height: 10,
