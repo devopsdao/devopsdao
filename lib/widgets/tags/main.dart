@@ -574,81 +574,84 @@ class _MainTagsPageState extends State<MainTagsPage> {
             safeAreaWidth = (myMaxWidth - maxStaticDialogWidth) / 2;
           }
 
-          return SafeArea(
-            minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
-            child: Scaffold(
-              // resizeToAvoidBottomInset: false,
-              backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
-              body: body,
-              floatingActionButtonAnimator: NoScalingAnimation(),
-              // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
-              floatingActionButton: Consumer<CollectionServices>(
-                builder: (context, model, child) {
-                  late bool splitScreen = false;
-                  if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
-                    splitScreen = true;
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 13, left: 46),
-                    // AnimatedCOntainer needs to show button 'Apply' over Tag Info:
-                    child: AnimatedContainer(
-                      padding: EdgeInsets.only(bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 300.0 : 0),
-                      duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeInOutQuart,
-                      child: TaskDialogFAB(
+          return Container(
+            color: DodaoTheme.of(context).taskBackgroundColor,
+            child: SafeArea(
+              minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
+              child: Scaffold(
+                // resizeToAvoidBottomInset: false,
+                backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+                body: body,
+                floatingActionButtonAnimator: NoScalingAnimation(),
+                // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
+                floatingActionButton: Consumer<CollectionServices>(
+                  builder: (context, model, child) {
+                    late bool splitScreen = false;
+                    if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
+                      splitScreen = true;
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 13, left: 46),
+                      // AnimatedCOntainer needs to show button 'Apply' over Tag Info:
+                      child: AnimatedContainer(
+                        padding: EdgeInsets.only(bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0)? 300.0 : 0),
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.easeInOutQuart,
+                        child: TaskDialogFAB(
 
-                        inactive: false,
-                        expand: true,
-                        buttonName: 'Apply',
-                        buttonColorRequired: Colors.lightBlue.shade300,
-                        widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
-                        callback: () {
-                          searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
-                          if (widget.page == 'audit') {
-                            if (widget.tabIndex == 0) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                            } else if (widget.tabIndex == 1) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                            } else if (widget.tabIndex == 2) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
-                            } else if (widget.tabIndex == 3) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-                                tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                          inactive: false,
+                          expand: true,
+                          buttonName: 'Apply',
+                          buttonColorRequired: Colors.lightBlue.shade300,
+                          widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen )? 600 : 120, // Keyboard shown?
+                          callback: () {
+                            searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
+                            if (widget.page == 'audit') {
+                              if (widget.tabIndex == 0) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
+                                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                              } else if (widget.tabIndex == 1) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
+                                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                              } else if (widget.tabIndex == 2) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
+                                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                              } else if (widget.tabIndex == 3) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
+                                  tagsMap: searchServices.auditorTagsList, enteredKeyword: searchServices.searchKeywordController.text, );
+                              }
+                            } else if (widget.page == 'tasks') {
+                              tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                            } else if (widget.page == 'customer') {
+                              if (widget.tabIndex == 0) {
+                                tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
+                                    tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                              } else if (widget.tabIndex == 1) {
+                                tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
+                                    tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                              } else if (widget.tabIndex == 2) {
+                                tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
+                                    tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                              }
+                            } else if (widget.page == 'performer') {
+                              if (widget.tabIndex == 0) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
+                                    tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                              } else if (widget.tabIndex == 1) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
+                                    tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                              } else if (widget.tabIndex == 2) {
+                                tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
+                                    tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
+                              }
                             }
-                          } else if (widget.page == 'tasks') {
-                            tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                          } else if (widget.page == 'customer') {
-                            if (widget.tabIndex == 0) {
-                              tasksServices.runFilter(taskList:tasksServices.tasksCustomerSelection,
-                                  tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                            } else if (widget.tabIndex == 1) {
-                              tasksServices.runFilter(taskList:tasksServices.tasksCustomerProgress,
-                                  tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                            } else if (widget.tabIndex == 2) {
-                              tasksServices.runFilter(taskList:tasksServices.tasksCustomerComplete,
-                                  tagsMap: searchServices.customerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                            }
-                          } else if (widget.page == 'performer') {
-                            if (widget.tabIndex == 0) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-                                  tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                            } else if (widget.tabIndex == 1) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-                                  tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                            } else if (widget.tabIndex == 2) {
-                              tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-                                  tagsMap: searchServices.performerTagsList, enteredKeyword: searchServices.searchKeywordController.text);
-                            }
-                          }
-                          Navigator.pop(context);
-                        },
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }
+                ),
               ),
             ),
           );

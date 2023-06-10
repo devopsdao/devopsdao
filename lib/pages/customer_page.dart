@@ -1,7 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dodao/main.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/interface.dart';
@@ -39,8 +41,8 @@ class CustomerPageWidget extends StatefulWidget {
   _CustomerPageWidgetState createState() => _CustomerPageWidgetState();
 }
 
-class _CustomerPageWidgetState extends State<CustomerPageWidget>  with SingleTickerProviderStateMixin
-// with TickerProviderStateMixin
+class _CustomerPageWidgetState extends State<CustomerPageWidget>
+with TickerProviderStateMixin
 {
   List<String> localTagsList = [];
   final animationsMap = {
@@ -86,13 +88,13 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>  with SingleTic
       var searchServices = context.read<SearchServices>();
       searchServices.selectTagListOnTasksPages(page: 'customer', initial: true);
     });
-
     _controller = TabController(length: 3, vsync: this)
       ..addListener(() {
         setState(() {
           indicatorColor = colors[_controller.index];
         });
       });
+
     indicatorColor = colors[0];
   }
 
@@ -255,13 +257,22 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>  with SingleTic
                                     child: BadgeTab(
                                       taskCount: tasksServices.tasksCustomerSelection.length,
                                       tabText: 'Selection',
+                                      index: 0,
                                     ),
                                   ),
                                   Tab(
-                                    child: BadgeTab(taskCount: tasksServices.tasksCustomerProgress.length, tabText: 'Progress'),
+                                    child: BadgeTab(
+                                      taskCount: tasksServices.tasksCustomerProgress.length,
+                                      tabText: 'Progress',
+                                      index: 1,
+                                    ),
                                   ),
                                   Tab(
-                                    child: BadgeTab(taskCount: tasksServices.tasksCustomerComplete.length, tabText: 'Completed'),
+                                    child: BadgeTab(
+                                      taskCount: tasksServices.tasksCustomerComplete.length,
+                                      tabText: 'Completed',
+                                      index: 2,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -408,9 +419,10 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>  with SingleTic
                                         }
                                         return false;
                                       },
-                                      child: const TabBarView(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        children: [
+                                      child: TabBarView(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        controller: _controller,
+                                        children: const [
                                           mySubmitterTabWidget(
                                             tabName: 'selection',
                                           ), //new
@@ -497,12 +509,39 @@ class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
             selector: (_, model) => model.filterResults,
             builder: (_, filter, __) {
               List objList = filter.values.toList();
+              late double offsetToArmed = 200;
               return Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                  child: RefreshIndicator(
+                  child: CustomRefreshIndicator(
+                    offsetToArmed: offsetToArmed,
                     onRefresh: () async {
                       tasksServices.isLoadingBackground = true;
                       tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
+                    },
+                    builder: (BuildContext context, Widget child, IndicatorController controller) {
+                      return AnimatedBuilder(
+                          animation: controller,
+                          builder: (context, child) {
+                            return Stack(
+
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: offsetToArmed * controller.value,
+                                  child: const RiveAnimation.asset(
+                                    'assets/rive_animations/paw.riv',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Transform.translate(
+
+                                  offset: Offset(0.0, offsetToArmed * controller.value),
+                                  child: child,
+                                )
+                              ],
+                            );
+                          },
+                          child: child);
                     },
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
