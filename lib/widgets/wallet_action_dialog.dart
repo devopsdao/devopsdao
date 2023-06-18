@@ -97,12 +97,14 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
-        Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.beamToNamed('/customer');
-          });
-        });
 
+        Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
+          Navigator.pop(context);
+          Navigator.pop(interface.createJobPageContext);
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   context.beamToNamed('/customer');
+          // });
+        });
       }
 
 
@@ -118,10 +120,13 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       } else if (status == 'minted') {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
-        Future.delayed(const Duration(milliseconds: 1500)).whenComplete(() {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.beamToNamed('/customer');
-          });
+
+        Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
+          Navigator.pop(context);
+          Navigator.pop(interface.createJobPageContext);
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   context.beamToNamed('/customer');
+          // });
         });
       }
     } else if (widget.taskName == 'createNFT') {
@@ -155,7 +160,14 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         // transactionStagesPending = 'done';
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
+
+        Future.delayed(const Duration(milliseconds: 200)).whenComplete(() async {
+          await tasksServices.collectMyTokens();
+          searchServices.refreshLists('selection');
+        });
+
       }
+
     } else if (widget.taskName == 'postWitnetRequest') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';

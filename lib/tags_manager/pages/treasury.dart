@@ -50,7 +50,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
       // tasksServices.collectMyTokens();
       await tasksServices.collectMyTokens();
       Future.delayed(
-        const Duration(milliseconds: 200), () {
+        const Duration(milliseconds: 100), () {
           searchServices.refreshLists('treasury');
           searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
         }

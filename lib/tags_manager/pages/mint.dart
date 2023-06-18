@@ -51,7 +51,7 @@ class _MintWidget extends State<MintWidget> {
 
       await tasksServices.collectMyTokens();
       Future.delayed(
-        const Duration(milliseconds: 200), () {
+        const Duration(milliseconds: 100), () {
           searchServices.refreshLists('mint');
         }
       );

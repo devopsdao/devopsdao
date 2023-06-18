@@ -34,8 +34,8 @@ class ChatWidget extends StatefulWidget {
   final TasksServices tasksServices;
   const ChatWidget({super.key, required this.task,
     // required this.account,
-    required this.tasksServices});
-
+    required this.tasksServices
+  });
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
 }
@@ -60,27 +60,39 @@ class _ChatWidgetState extends State<ChatWidget> {
       logged = true;
     }
 
-    return Chat(
+    return LayoutBuilder(builder: (context, constraints) {
+      final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+      final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
+      final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+      final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+        return Chat(
+          disableKeyboardDetection: true,
+          messages: _messages,
+          customBottomWidget: !logged ? const NotLoggedInput() : null,
+          // onAttachmentPressed: _handleAttachmentPressed,
+          // onMessageTap: _handleMessageTap,
+          // onPreviewDataFetched: _handlePreviewDataFetched,
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+          onSendPressed: _handleSendPressed,
+          showUserAvatars: false,
+          showUserNames: true,
 
-      messages: _messages,
-      customBottomWidget: !logged ? const NotLoggedInput() : null,
-      // onAttachmentPressed: _handleAttachmentPressed,
-      // onMessageTap: _handleMessageTap,
-      // onPreviewDataFetched: _handlePreviewDataFetched,
-      onSendPressed: _handleSendPressed,
-      showUserAvatars: false,
-      showUserNames: true,
-      user: types.User(id: tasksServices.publicAddress.toString()),
-      inputOptions: const InputOptions(
-        // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-      ),
 
-      theme: DefaultChatTheme(
-        backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
-        inputBackgroundColor: Colors.black87,
-        inputBorderRadius: DodaoTheme.of(context).borderRadius,
+          user: types.User(id: tasksServices.publicAddress.toString()),
+          inputOptions: const InputOptions(
+            // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
+          ),
 
-      ),
+          theme: DefaultChatTheme(
+            // inputPadding: EdgeInsets.fromLTRB(24, 20, 24, 20),
+            // inputMargin: EdgeInsets.fromLTRB(24, 20, 24, 20),
+            backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+            inputBackgroundColor: Colors.black87,
+            inputBorderRadius: DodaoTheme.of(context).borderRadius,
+
+          ),
+        );
+      }
     );
   }
 
@@ -370,8 +382,8 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Row(
-          children: const <Widget>[
+        child: const Row(
+          children: <Widget>[
             Text(
               'Please connect your wallet',
               textAlign: TextAlign.center,

@@ -164,8 +164,8 @@ class LightModeTheme extends DodaoTheme {
   late Color buttonDisabledColor = Colors.white;
   late Color buttonDisabledBackgroundColor = Colors.grey.shade300;
 
-  late Color shimmerBaseColor = Colors.white;
-  late Color shimmerHighlightColor = Colors.grey.shade700;
+  late Color shimmerBaseColor = Colors.grey.shade200;
+  late Color shimmerHighlightColor = Colors.grey.shade500;
 
   late Color createTaskButton = const Color(0xFFCDBEE4);
 

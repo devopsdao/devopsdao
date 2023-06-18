@@ -7,15 +7,18 @@ import '../config/theme.dart';
 import '../wallet/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/search_services.dart';
+import '../widgets/tags_on_page_open_container.dart';
 
 class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
   final String title;
   final int tabIndex;
+  final String page;
   // final BuildContext passedContext;
   const OurAppBar({
     Key? key,
     required this.title,
     required this.tabIndex,
+    required this.page
     // required this.passedContext,
   }) : super(key: key);
 
@@ -41,6 +44,10 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             actions: [
+              OpenMyAddTags(
+                page: page,
+                tabIndex: tabIndex,
+              ),
               IconButton(
                 onPressed: () {
                   AppBarWithSearchSwitch.of(context)?.startSearch();

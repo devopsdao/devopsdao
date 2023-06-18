@@ -51,7 +51,7 @@ class _TopUpPageState extends State<TopUpPage> {
 
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
-    print(widget.screenHeightSize);
+    // print(widget.screenHeightSize);
 
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageControllerForTopup!.text = interface.taskTopupMessage;

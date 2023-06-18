@@ -113,6 +113,37 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           child: ListBody(children: <Widget>[
                             GestureDetector(
                               onTap: () async {
+                                Clipboard.setData(ClipboardData(text: task.taskAddress.toString())).then((_) {
+                                  Flushbar(
+                                      icon: Icon(
+                                        Icons.copy,
+                                        size: 20,
+                                        color: DodaoTheme.of(context).flushTextColor,
+                                      ),
+                                      message: '${task.taskAddress} copied to your clipboard!',
+                                      duration: const Duration(seconds: 2),
+                                      backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                                      shouldIconPulse: false)
+                                      .show(context);
+                                });
+                              },
+                              child: RichText(
+                                  text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
+                                    WidgetSpan(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.copy,
+                                            size: 16,
+                                            color: DodaoTheme.of(context).secondaryText,
+                                          ),
+                                        )),
+                                    const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
+                                    TextSpan(text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
+                                  ])),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
                                 Clipboard.setData(ClipboardData(text: task.contractOwner.toString())).then((_) {
                                   Flushbar(
                                           icon: Icon(
@@ -141,37 +172,6 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                 const TextSpan(text: 'Contract owner: \n', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
                                 TextSpan(
                                     text: task.contractOwner.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
-                              ])),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                Clipboard.setData(ClipboardData(text: task.taskAddress.toString())).then((_) {
-                                  Flushbar(
-                                          icon: Icon(
-                                            Icons.copy,
-                                            size: 20,
-                                            color: DodaoTheme.of(context).flushTextColor,
-                                          ),
-                                          message: '${task.taskAddress} copied to your clipboard!',
-                                          duration: const Duration(seconds: 2),
-                                          backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
-                                          shouldIconPulse: false)
-                                      .show(context);
-                                });
-                              },
-                              child: RichText(
-                                  text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
-                                WidgetSpan(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 5.0),
-                                    child: Icon(
-                                      Icons.copy,
-                                      size: 16,
-                                      color: DodaoTheme.of(context).secondaryText,
-                                    ),
-                                )),
-                                const TextSpan(text: 'Contract address: \n', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                                TextSpan(text: task.taskAddress.toString(), style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7))
                               ])),
                             ),
                             if (task.performer != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))

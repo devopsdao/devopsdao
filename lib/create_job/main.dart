@@ -317,7 +317,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                               ),
                             ),
                             style: Theme.of(context).textTheme.bodyMedium,
-                            minLines: 1,
+                            minLines: 3,
                             maxLines: 10,
                             keyboardType: TextInputType.multiline,
                             onChanged: (text) {

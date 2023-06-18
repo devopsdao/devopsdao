@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:sidebarx/sidebarx.dart';
 
+import '../blockchain/empty_classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
@@ -16,6 +17,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/search_filter_route.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
@@ -66,10 +68,13 @@ with TickerProviderStateMixin
       0xFF448AF7)];
   late Color indicatorColor = colors[0];
   late TabController _controller;
+  final GlobalKey<CustomRefreshIndicatorState> indicator = GlobalKey<CustomRefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
+
+
 
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -80,6 +85,8 @@ with TickerProviderStateMixin
                   taskAddress: widget.taskAddress,
                   fromPage: 'customer',
                 ));
+
+
       });
     }
 
@@ -111,6 +118,7 @@ with TickerProviderStateMixin
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
+
 
     Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
 
@@ -171,6 +179,7 @@ with TickerProviderStateMixin
             drawer: SideBar(controller: SidebarXController(selectedIndex: 2, extended: true)),
             appBar: OurAppBar(
               title: 'Customer',
+              page: 'customer',
               tabIndex: tabIndex,
             ),
             backgroundColor: Colors.transparent,
@@ -423,15 +432,9 @@ with TickerProviderStateMixin
                                         physics: const NeverScrollableScrollPhysics(),
                                         controller: _controller,
                                         children: const [
-                                          mySubmitterTabWidget(
-                                            tabName: 'selection',
-                                          ), //new
-                                          mySubmitterTabWidget(
-                                            tabName: 'progress',
-                                          ), //agreed
-                                          mySubmitterTabWidget(
-                                            tabName: 'complete',
-                                          ), //completed & canceled
+                                          PawRefreshAndTasksList(pageName: 'customer',), //new
+                                          PawRefreshAndTasksList(pageName: 'customer',), //agreed
+                                          PawRefreshAndTasksList(pageName: 'customer',), //completed & canceled
                                         ],
                                       ),
                                     ),
@@ -446,141 +449,5 @@ with TickerProviderStateMixin
             ),
       ],
     );
-  }
-}
-
-class mySubmitterTabWidget extends StatefulWidget {
-  final String tabName;
-  const mySubmitterTabWidget({
-    Key? key,
-    required this.tabName,
-  }) : super(key: key);
-
-  @override
-  _mySubmitterTabWidgetState createState() => _mySubmitterTabWidgetState();
-}
-
-class _mySubmitterTabWidgetState extends State<mySubmitterTabWidget> {
-  late bool loadingIndicator = false;
-  bool enableRatingButton = false;
-  double ratingScore = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    // List objList = tasksServices.filterResults.values.toList();
-    // TODO: implement build
-    return
-
-        // Selector<InterfaceServices, int>(
-        //   selector: (_, model) {
-        //     return model.dialogPageNum;
-        //   },
-        //   builder: (context, dialogPageNum, child) {
-        //     late String page = interface.dialogCurrentState['pages'].entries
-        //         .firstWhere((element) => element.value == dialogPageNum)
-        //         .key;
-        //     return Row(
-        //       children: <Widget>[
-        //         if (page == 'topup')
-        //           const Expanded(
-        //             child: Icon(
-        //               Icons.arrow_forward,
-        //               size: 30,
-        //             ),
-        //           ),
-        //         if (page.toString() == 'main')
-        //           const Expanded(
-        //             child: Center(),
-        //           ),
-        //         if (page == 'description' || page == 'widgets.chat' || page == 'select')
-        //           const Expanded(
-        //             child: Icon(
-        //               Icons.arrow_back,
-        //               size: 30,
-        //             ),
-        //           ),
-        //       ],
-        //     );
-        //   },
-        // ),
-
-        Selector<TasksServices, Map<EthereumAddress, Task>>(
-            selector: (_, model) => model.filterResults,
-            builder: (_, filter, __) {
-              List objList = filter.values.toList();
-              late double offsetToArmed = 200;
-              return Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                  child: CustomRefreshIndicator(
-                    offsetToArmed: offsetToArmed,
-                    onRefresh: () async {
-                      tasksServices.isLoadingBackground = true;
-                      tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
-                    },
-                    builder: (BuildContext context, Widget child, IndicatorController controller) {
-                      return AnimatedBuilder(
-                          animation: controller,
-                          builder: (context, child) {
-                            return Stack(
-
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: offsetToArmed * controller.value,
-                                  child: const RiveAnimation.asset(
-                                    'assets/rive_animations/paw.riv',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Transform.translate(
-
-                                  offset: Offset(0.0, offsetToArmed * controller.value),
-                                  child: child,
-                                )
-                              ],
-                            );
-                          },
-                          child: child);
-                    },
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.vertical,
-                      itemCount: objList.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                            child: TaskTransition(
-                              fromPage: 'customer',
-                              task: tasksServices.filterResults.values.toList()[index],
-                            )
-
-                            // InkWell(
-                            //     onTap: () {
-                            //       // setState(() {
-                            //       //   // Toggle light when tapped.
-                            //       // });
-                            //
-                            //       if (tasksServices.filterResults.values.toList().elementAt(index) != null) {
-                            //         showDialog(
-                            //             context: context,
-                            //             builder: (context) =>
-                            //                 TaskInformationDialog(fromPage: 'customer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                            //         final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
-                            //         RouteInformation routeInfo = RouteInformation(location: '/customer/$taskAddress');
-                            //         Beamer.of(context).updateRouteInformation(routeInfo);
-                            //         // context.popToNamed('/customer/$taskAddress');
-                            //         // context.beamToNamed('/customer/$taskAddress');
-                            //       }
-                            //     },
-                            //     child: TaskItem(
-                            //       fromPage: 'customer',
-                            //       object: objList[index],
-                            //     )),
-                            );
-                      },
-                    ),
-                  ));
-            });
   }
 }
