@@ -24,6 +24,7 @@ import '../widget/rate_widget.dart';
 
 class MainTaskPage extends StatefulWidget {
   final double innerPaddingWidth;
+  final double screenHeightSize;
   final Task task;
   final double borderRadius;
   final String fromPage;
@@ -31,6 +32,7 @@ class MainTaskPage extends StatefulWidget {
   const MainTaskPage({
     Key? key,
     required this.innerPaddingWidth,
+    required this.screenHeightSize,
     required this.task,
     required this.borderRadius,
     required this.fromPage,

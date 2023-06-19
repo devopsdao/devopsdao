@@ -1427,7 +1427,8 @@ class TasksServices extends ChangeNotifier {
     // tagsList ??= [];
     filterResults.clear();
     // searchKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty && (tagsList.length == 1 && tagsList.first == '#')) {
+    // if (enteredKeyword.isEmpty && (tagsList.length == 1 && tagsList.first == '#')) {
+    if (enteredKeyword.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
       // for (EthereumAddress taskAddress in taskList.keys) {
@@ -1472,7 +1473,8 @@ class TasksServices extends ChangeNotifier {
       // final filterResultsTagsNFT = Map.from(taskList)
       //   ..removeWhere((taskAddress, task) => task.tagsNFT.toSet.intersection(tagsList!.toSet().length == 0));
 
-      if (tagsList.isNotEmpty && (tagsList.length != 1)) {
+      // if (tagsList.isNotEmpty && (tagsList.length != 1)) {
+      if (tagsList.isNotEmpty) {
         Map<EthereumAddress, Task> filterResultsTags = filterResultsSearch;
         for (var tag in tagsList) {
           if (tag != '#') {
@@ -1498,7 +1500,8 @@ class TasksServices extends ChangeNotifier {
     // taskList = Map.fromEntries(
     //     taskList.entries.where((entry) => tagsList.contains(entry.value.name))
     // );
-    if (tagsList.isNotEmpty && (tagsList.length != 1)) {
+    // if (tagsList.isNotEmpty && (tagsList.length != 1)) {
+    if (tagsList.isNotEmpty) {
       Map<EthereumAddress, Task> filterResultsTags = taskList;
       for (var tag in tagsList) {
         if (tag != '#') {

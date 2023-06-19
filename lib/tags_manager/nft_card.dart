@@ -116,8 +116,7 @@ class NftMint extends StatelessWidget {
                                               ));
 
                                           await tasksServices.mintNonFungibleByName(collectionName, address, quantities);
-                                          await tasksServices.collectMyTokens();
-                                          searchServices.refreshLists('selection');
+
                                         }
                                       },
                                       child: Text(
@@ -128,11 +127,9 @@ class NftMint extends StatelessWidget {
                                   ),
                                 ],
                               )
-
                             ],
                           )
                       ),
-
                     ],
                   );
                 }),

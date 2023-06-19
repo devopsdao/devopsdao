@@ -13,6 +13,7 @@ import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
+import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/tag_open_container.dart';
@@ -148,6 +149,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
           drawer: SideBar(controller: SidebarXController(selectedIndex: 3, extended: true)),
           appBar: OurAppBar(
             title: 'Performer',
+            page: 'performer',
             tabIndex: tabIndex,
           ),
 
@@ -338,15 +340,9 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
                                 physics: const NeverScrollableScrollPhysics(),
                                 controller: _controller,
                                 children: const [
-                                  MyPerformerTabWidget(
-                                    tabName: 'applied',
-                                  ),
-                                  MyPerformerTabWidget(
-                                    tabName: 'working',
-                                  ),
-                                  MyPerformerTabWidget(
-                                    tabName: 'complete',
-                                  ),
+                                  PawRefreshAndTasksList(pageName: 'performer',),
+                                  PawRefreshAndTasksList(pageName: 'performer',),
+                                  PawRefreshAndTasksList(pageName: 'performer',),
                                 ],
                               ),
                             ),
@@ -361,61 +357,61 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
     );
   }
 }
-
-class MyPerformerTabWidget extends StatefulWidget {
-  final String tabName;
-  const MyPerformerTabWidget({Key? key, required this.tabName}) : super(key: key);
-
-  @override
-  _MyPerformerTabWidget createState() => _MyPerformerTabWidget();
-}
-
-class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
-  late bool loadingIndicator = false;
-
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
-    List objList = tasksServices.filterResults.values.toList();
-
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-      child: RefreshIndicator(
-        onRefresh: () async {
-          tasksServices.isLoadingBackground = true;
-          tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
-        },
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          scrollDirection: Axis.vertical,
-          itemCount: objList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                child: TaskTransition(
-                  fromPage: 'performer',
-                  task: tasksServices.filterResults.values.toList()[index],
-                )
-
-                // InkWell(
-                //     onTap: () {
-                //       showDialog(
-                //           context: context,
-                //           builder: (context) =>
-                //               TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
-                //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
-                //       RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
-                //       Beamer.of(context).updateRouteInformation(routeInfo);
-                //     },
-                //     child: TaskItem(
-                //       fromPage: 'performer',
-                //       object: objList[index],
-                //     )),
-                );
-          },
-        ),
-      ),
-    );
-  }
-}
+//
+// class MyPerformerTabWidget extends StatefulWidget {
+//   final String tabName;
+//   const MyPerformerTabWidget({Key? key, required this.tabName}) : super(key: key);
+//
+//   @override
+//   _MyPerformerTabWidget createState() => _MyPerformerTabWidget();
+// }
+//
+// class _MyPerformerTabWidget extends State<MyPerformerTabWidget> {
+//   late bool loadingIndicator = false;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var tasksServices = context.watch<TasksServices>();
+//     var interface = context.watch<InterfaceServices>();
+//     List objList = tasksServices.filterResults.values.toList();
+//
+//     return Padding(
+//       padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+//       child: RefreshIndicator(
+//         onRefresh: () async {
+//           tasksServices.isLoadingBackground = true;
+//           tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
+//         },
+//         child: ListView.builder(
+//           padding: EdgeInsets.zero,
+//           scrollDirection: Axis.vertical,
+//           itemCount: objList.length,
+//           itemBuilder: (context, index) {
+//             return Padding(
+//                 padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+//                 child: TaskTransition(
+//                   fromPage: 'performer',
+//                   task: tasksServices.filterResults.values.toList()[index],
+//                 )
+//
+//                 // InkWell(
+//                 //     onTap: () {
+//                 //       showDialog(
+//                 //           context: context,
+//                 //           builder: (context) =>
+//                 //               TaskInformationDialog(fromPage: 'performer', taskAddress: objList[index].taskAddress, shimmerEnabled: false));
+//                 //       final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
+//                 //       RouteInformation routeInfo = RouteInformation(location: '/performer/$taskAddress');
+//                 //       Beamer.of(context).updateRouteInformation(routeInfo);
+//                 //     },
+//                 //     child: TaskItem(
+//                 //       fromPage: 'performer',
+//                 //       object: objList[index],
+//                 //     )),
+//                 );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -1,9 +1,12 @@
 import 'package:badges/badges.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:dodao/widgets/paw_indicator_with_tasks_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/flutter_flow_icon_button.dart';
 
@@ -77,9 +80,17 @@ class LoadButtonIndicator extends StatefulWidget {
 }
 
 class _LoadButtonIndicator extends State<LoadButtonIndicator> {
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
+    // var interface = context.watch<InterfaceServices>();
     late int taskLoadedState = tasksServices.tasksLoaded;
 
     return Row(
@@ -100,6 +111,7 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
                   // size: 24,
                 ),
           onPressed: () async {
+            // interface.runPaw();
             if (tasksServices.publicAddress != null) {
               tasksServices.isLoadingBackground = true;
               tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);

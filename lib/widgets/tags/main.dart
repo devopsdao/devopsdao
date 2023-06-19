@@ -53,7 +53,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
       //refresh NFT "selection" list
       await tasksServices.collectMyTokens();
       Future.delayed(
-        const Duration(milliseconds: 200), () {
+        const Duration(milliseconds: 100), () {
             searchServices.refreshLists('selection');
             searchServices.refreshLists('treasury');
         }

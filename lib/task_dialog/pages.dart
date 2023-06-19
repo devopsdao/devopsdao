@@ -102,6 +102,7 @@ class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderSt
             if (interface.dialogCurrentState['pages'].containsKey('empty')) const Center(),
             if (interface.dialogCurrentState['pages'].containsKey('main'))
               MainTaskPage(
+                screenHeightSize: widget.screenHeightSize,
                 innerPaddingWidth: innerPaddingWidth,
                 task: task,
                 borderRadius: interface.borderRadius,
@@ -122,7 +123,11 @@ class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderSt
               ),
 
             if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
-              ChatPage(task: task, innerPaddingWidth: innerPaddingWidth)
+              ChatPage(
+                task: task,
+                innerPaddingWidth: innerPaddingWidth,
+                screenHeightSize: widget.screenHeightSize,
+              )
           ],
         );
     });

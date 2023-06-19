@@ -9,6 +9,7 @@ import '../main.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
+import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_open_container.dart';
@@ -174,10 +175,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                   //   ),
                   //
                   // ),
-                  // const OpenMyAddTags(
-                  //   page: 'tasks',
-                  //   tabIndex: 0,
-                  // ),
+                  const OpenMyAddTags(
+                    page: 'tasks',
+                    tabIndex: 0,
+                  ),
                   IconButton(
                     onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                     icon: const Icon(Icons.search),
@@ -302,32 +303,33 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
                       tasksServices.isLoading
                           ? const LoadIndicator()
-                          : Expanded(
+                          : const Expanded(
                               child: TabBarView(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                    child: RefreshIndicator(
-                                      onRefresh: () async {
-                                        tasksServices.isLoadingBackground = true;
-                                        tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
-                                      },
-                                      child: ListView.builder(
-                                        padding: EdgeInsets.zero,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: tasksServices.filterResults.values.toList().length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-
-                                              child: TaskTransition(
-                                                fromPage: 'tasks',
-                                                task: tasksServices.filterResults.values.toList()[index],
-                                              ));
-                                        },
-                                      ),
-                                    ),
-                                  ),
+                                  PawRefreshAndTasksList(pageName: 'tasks',),
+                                  // Padding(
+                                  //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                                  //   child: RefreshIndicator(
+                                  //     onRefresh: () async {
+                                  //       tasksServices.isLoadingBackground = true;
+                                  //       // tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+                                  //     },
+                                  //     child: ListView.builder(
+                                  //       padding: EdgeInsets.zero,
+                                  //       scrollDirection: Axis.vertical,
+                                  //       itemCount: tasksServices.filterResults.values.toList().length,
+                                  //       itemBuilder: (context, index) {
+                                  //         return Container(
+                                  //             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                                  //
+                                  //             child: TaskTransition(
+                                  //               fromPage: 'tasks',
+                                  //               task: tasksServices.filterResults.values.toList()[index],
+                                  //             ));
+                                  //       },
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

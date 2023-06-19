@@ -58,7 +58,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                         if (page == 'topup')
                           const Expanded(
                             child: Icon(
-                              Icons.arrow_forward,
+                              Icons.arrow_back,
                               size: 30,
                             ),
                           ),
@@ -148,8 +148,8 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
               padding: const EdgeInsets.all(0.0),
               height: 30,
               width: 30,
-              child: Row(
-                children: const <Widget>[
+              child: const Row(
+                children: <Widget>[
                   Expanded(
                     child: Icon(
                       Icons.close,

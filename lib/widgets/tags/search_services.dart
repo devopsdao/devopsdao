@@ -121,17 +121,17 @@ class SearchServices extends ChangeNotifier {
     // pages, "Initial:false" - from the tag selection page/
 
     final Map<String, NftCollection> defaultTagAddNew = {
-      '#' : NftCollection(name: '#', bunch: {
-        BigInt.from(0): TokenItem(
-            collection: false, name: "#", icon: "", nft: false, selected: false)
-      })
+      // '#' : NftCollection(name: '#', bunch: {
+      //   BigInt.from(0): TokenItem(
+      //       collection: false, name: "#", icon: "", nft: false, selected: false)
+      // })
     };
 
 
     late Map<String, NftCollection> list = {};
 
     // exclude create(add new task) page to add # tag:
-    if (page != 'create') { list = defaultTagAddNew; }
+    // if (page != 'create') { list = defaultTagAddNew; }
 
     selectionPageFilterResults.entries.map((e) {
       // ...TagsList store tags on pages, it is ok to pass only first value from bunch

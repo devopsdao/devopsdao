@@ -1,8 +1,10 @@
 // import 'package:js/js.dart';
 
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
 import '../task_dialog/states.dart';
+import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/tags_old.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:jovial_svg/jovial_svg.dart';
@@ -63,7 +65,21 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  // late double boxKeyboardHeight = 0;
+  // late double boxKeyboardHeightNoKeyboard = 0;
+  // Future updateBoxKeyboardHeight() async {
+  //   boxKeyboardHeight = boxKeyboardHeightNoKeyboard;
+  //   notifyListeners();
+  // }
+
+
   late Map<String, dynamic> dialogCurrentState;
+
+  // final GlobalKey<PawRefreshAndTasksListState> indicator = GlobalKey<PawRefreshAndTasksListState>();
+  // Future runPaw() async {
+  //   indicator.currentState!.runPaw();
+  //   // notifyListeners();
+  // }
 
   // selected Performer or Auditor in participants_list.dart:
   late Map<String, String> selectedUser = {};
