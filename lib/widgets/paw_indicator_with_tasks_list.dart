@@ -1,4 +1,3 @@
-
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +11,7 @@ import '../task_item/task_item.dart';
 
 class PawRefreshAndTasksList extends StatefulWidget {
   final String pageName;
-  const PawRefreshAndTasksList({Key? key, required this.pageName }) : super(key: key);
+  const PawRefreshAndTasksList({Key? key, required this.pageName}) : super(key: key);
 
   @override
   PawRefreshAndTasksListState createState() => PawRefreshAndTasksListState();
@@ -77,11 +76,17 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
           onRefresh: () async {
             tasksServices.isLoadingBackground = true;
             if (widget.pageName == 'customer') {
-              await tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
+              if (tasksServices.publicAddress != null) {
+                await tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
+              }
             } else if (widget.pageName == 'performer') {
-              tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
+              if (tasksServices.publicAddress != null) {
+                await tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
+              }
             } else if (widget.pageName == 'tasks') {
-
+              if (tasksServices.publicAddress != null) {
+                await tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+              }
             }
             _hitBump();
           },
@@ -91,14 +96,9 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                 builder: (context, child) {
                   List shimmeredTasks = [];
                   if (objList.length <= 1) {
-                    shimmeredTasks = [
-                      emptyClasses.tasksForShimmer.values.toList().first
-                    ];
+                    shimmeredTasks = [emptyClasses.tasksForShimmer.values.toList().first];
                   } else if (objList.length == 2) {
-                    shimmeredTasks = [
-                      emptyClasses.tasksForShimmer.values.toList().first,
-                      emptyClasses.tasksForShimmer.values.toList().last
-                    ];
+                    shimmeredTasks = [emptyClasses.tasksForShimmer.values.toList().first, emptyClasses.tasksForShimmer.values.toList().last];
                   } else if (objList.length >= 3) {
                     shimmeredTasks = emptyClasses.tasksForShimmer.values.toList();
                   }
@@ -118,27 +118,26 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                       ),
                       Transform.translate(
                         offset: Offset(0.0, offsetToArmed * controller.value),
-                        child: controller.isLoading || controller.isComplete ? ListView.builder(
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.vertical,
-                          itemCount: shimmeredTasks.length,
-                          itemBuilder: (context, index) {
-
-                            return Container(
-                                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                                child: TaskItemShimmer(
-                                  fromPage: widget.pageName,
-                                  task: shimmeredTasks[index],
-                                )
-                            );
-                          },
-                        ) : child,
+                        child: controller.isLoading || controller.isComplete
+                            ? ListView.builder(
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.vertical,
+                                itemCount: shimmeredTasks.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                                      child: TaskItemShimmer(
+                                        fromPage: widget.pageName,
+                                        task: shimmeredTasks[index],
+                                      ));
+                                },
+                              )
+                            : child,
                       )
                     ],
                   );
                 },
-                child: child
-            );
+                child: child);
           },
           child: ListView.builder(
             padding: EdgeInsets.zero,
@@ -150,8 +149,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                   child: TaskTransition(
                     fromPage: widget.pageName,
                     task: tasksServices.filterResults.values.toList()[index],
-                  )
-              );
+                  ));
             },
           ),
         ));
