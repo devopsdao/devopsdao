@@ -233,7 +233,7 @@ class TasksServices extends ChangeNotifier {
   EthereumAddress? publicAddressMM;
   var wallectConnectTransaction;
 
-  var wallectConnectTransactionV2;
+  var walletConnectClient;
 
   var walletConnectState;
   bool walletConnected = false;
@@ -242,7 +242,7 @@ class TasksServices extends ChangeNotifier {
   bool mmAvailable = false;
   String walletConnectUri = '';
   String walletConnectSessionUri = '';
-  var walletConnectSession;
+  // var walletConnectSession;
   // bool walletConnectActionApproved = false;
   late Map<String, dynamic> roleNfts = {'auditor': 0, 'governor': 0};
 
@@ -417,10 +417,11 @@ class TasksServices extends ChangeNotifier {
     // await wallectConnectTransaction?.initSession();
     // await wallectConnectTransaction?.removeSession();
 
-    if (wallectConnectTransactionV2 == null) {
-      wallectConnectTransactionV2 = EthereumWallectConnectTransactionV2();
+    if (walletConnectClient == null) {
+      walletConnectClient = WalletConnectClient();
     }
-    // await wallectConnectTransactionV2?.initSession();
+
+    // await walletConnectClient?.initSession();
 
     _web3client = Web3Client(
       _rpcUrl,
@@ -528,142 +529,37 @@ class TasksServices extends ChangeNotifier {
   Future<void> connectWalletWCv2(bool refresh) async {
     print('async');
     if (wallectConnectTransaction != null) {
-      // var _walletConnect = await wallectConnectTransactionV2._initWalletConnect();
+      // var _walletConnect = await walletConnectClient._initWalletConnect();
 
       if (walletConnected == false) {
         print("disconnected");
         walletConnectUri = '';
         walletConnectSessionUri = '';
       }
+
+      await walletConnectClient.initWalletConnect();
       // Subscribe to events
-      // wcClient.on('onSessionConnect', (session) {
-      //   walletConnectSession = session;
-      //   walletConnectState = TransactionState.connected;
-      //   walletConnected = true;
-      //   walletConnectedWC = true;
-      //   closeWalletDialog = true;
-      //   () async {
-      //     if (hardhatDebug == false) {
-      //       credentials = await wallectConnectTransaction?.getCredentials();
-      //       chainId = session.chainId;
-      //       if (allowedChainIds.contains(chainId) ||
-      //           chainId == chainIdAxelar ||
-      //           chainId == chainIdHyperlane ||
-      //           chainId == chainIdLayerzero ||
-      //           chainId == chainIdWormhole) {
-      //         validChainID = true;
-      //         validChainIDWC = true;
-      //         await connectRPC(chainId);
-      //         await startup();
-      //         await collectMyTokens();
-      //       } else {
-      //         validChainID = false;
-      //         validChainIDWC = false;
-      //         await switchNetworkWC();
-      //       }
-      //       publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
-      //       publicAddress = publicAddressWC;
-      //     } else {
-      //       chainId = 31337;
-      //       validChainID = true;
-      //     }
-      //     List<EthereumAddress> taskList = await getTaskListFull();
-      //     await fetchTasksBatch(taskList);
-
-      //     myBalance();
-      //     // isLoading = true;
-      //   }();
-      //   notifyListeners();
-      // });
-      // wcClient.onSessionConnect('session_request', (payload) {
-      //   print(payload);
-      // });
-      // wcClient.onSessionConnect('session_update', (payload) {
-      //   print(payload);
-      //   if (payload.approved == true) {
-      //     // walletConnectActionApproved = true;
-      //     // notifyListeners();
-      //   }
-      // });
-      // wcClient.onSessionConnect('disconnect', (session) async {
-      //   print(session);
-      //   walletConnectState = TransactionState.disconnected;
-      //   walletConnected = false;
-      //   walletConnectedWC = false;
-      //   publicAddress = null;
-      //   publicAddressWC = null;
-      //   validChainID = false;
-      //   validChainIDWC = false;
-      //   ethBalance = 0;
-      //   ethBalanceToken = 0;
-      //   pendingBalance = 0;
-      //   pendingBalanceToken = 0;
-      //   walletConnectUri = '';
-      //   walletConnectSessionUri = '';
-      //   List<EthereumAddress> taskList = await getTaskListFull();
-      //   await fetchTasksBatch(taskList);
-
-      //   await connectWalletWC(true);
-      //   notifyListeners();
-      // });
-      var resp = await wallectConnectTransactionV2?.createSession(
-          // onDisplayUri: (uri) => {
-          //   walletConnectSessionUri = uri.split("?").first,
-          //   (platform == 'mobile' || browserPlatform == 'android' || browserPlatform == 'ios') && !refresh
-          //       ? {launchURL(uri), walletConnectUri = uri}
-          //       : walletConnectUri = uri,
-          //   notifyListeners()
-          // },
-          );
-
-      // print(wallectConnectTransactionV2.deepLinkUrl);
-
-      // Uri? uri = resp.uri;
-      walletConnectUri = wallectConnectTransactionV2.deepLinkUrl;
-      print(walletConnectUri);
-      notifyListeners();
-
-      final SessionData session = await resp.session.future;
-
-      // if (session == null) {
-      //   print('Unable to connect');
-      //   walletConnectState = TransactionState.failed;
-      // } else if (walletConnected == true) {
-      //   if (hardhatDebug == false) {
-      //     credentials = await wallectConnectTransaction?.getCredentials();
-      //   }
-      //   publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
-      //   publicAddress = publicAddressWC;
-      // } else {
-      //   walletConnectState = TransactionState.failed;
-      // }
-    } else {
-      print("not initialized");
-      print(walletConnectState);
-    }
-  }
-
-  Future<void> connectWalletWC(bool refresh) async {
-    print('async');
-    if (wallectConnectTransaction != null) {
-      var connector = await wallectConnectTransaction.initWalletConnect();
-
-      if (walletConnected == false) {
-        print("disconnected");
-        walletConnectUri = '';
-        walletConnectSessionUri = '';
-      }
-      // Subscribe to events
-      connector.on('connect', (session) {
-        walletConnectSession = session;
+      // walletConnectClient._walletConnect.on('onSessionConnect');
+      walletConnectClient.walletConnect.onSessionConnect.subscribe((sessionConnect) {
+        // walletConnectSession = session;
         walletConnectState = TransactionState.connected;
         walletConnected = true;
         walletConnectedWC = true;
         closeWalletDialog = true;
         () async {
           if (hardhatDebug == false) {
-            credentials = await wallectConnectTransaction?.getCredentials();
-            chainId = session.chainId;
+            credentials = WalletConnectEthereumCredentialsV2(
+              wcClient: walletConnectClient.walletConnect,
+              session: sessionConnect.session,
+            );
+            chainId = int.parse(NamespaceUtils.getChainFromAccount(
+              sessionConnect.session.namespaces.values.first.accounts.first,
+            ).split(":").last);
+            publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
+              sessionConnect.session.namespaces.values.first.accounts.first,
+            ));
+            publicAddress = publicAddressWC;
+
             if (allowedChainIds.contains(chainId) ||
                 chainId == chainIdAxelar ||
                 chainId == chainIdHyperlane ||
@@ -679,8 +575,6 @@ class TasksServices extends ChangeNotifier {
               validChainIDWC = false;
               await switchNetworkWC();
             }
-            publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
-            publicAddress = publicAddressWC;
           } else {
             chainId = 31337;
             validChainID = true;
@@ -693,18 +587,18 @@ class TasksServices extends ChangeNotifier {
         }();
         notifyListeners();
       });
-      connector.on('session_request', (payload) {
-        print(payload);
-      });
-      connector.on('session_update', (payload) {
-        print(payload);
-        if (payload.approved == true) {
-          // walletConnectActionApproved = true;
-          // notifyListeners();
-        }
-      });
-      connector.on('disconnect', (session) async {
-        print(session);
+      // wcClient.onSessionConnect('session_request', (payload) {
+      //   print(payload);
+      // });
+      // wcClient.onSessionConnect('session_update', (payload) {
+      //   print(payload);
+      //   if (payload.approved == true) {
+      //     // walletConnectActionApproved = true;
+      //     // notifyListeners();
+      //   }
+      // });
+      walletConnectClient.walletConnect.onSessionDelete.subscribe((sessionConnect) async {
+        // print(sessionConnect);
         walletConnectState = TransactionState.disconnected;
         walletConnected = false;
         walletConnectedWC = false;
@@ -721,36 +615,184 @@ class TasksServices extends ChangeNotifier {
         List<EthereumAddress> taskList = await getTaskListFull();
         await fetchTasksBatch(taskList);
 
-        await connectWalletWC(true);
+        await connectWalletWCv2(true);
         notifyListeners();
       });
-      final SessionStatus? session = await wallectConnectTransaction?.connect(
-        onDisplayUri: (uri) => {
-          walletConnectSessionUri = uri.split("?").first,
-          (platform == 'mobile' || browserPlatform == 'android' || browserPlatform == 'ios') && !refresh
-              ? {launchURL(uri), walletConnectUri = uri}
-              : walletConnectUri = uri,
-          notifyListeners()
-        },
-      );
 
-      if (session == null) {
-        print('Unable to connect');
-        walletConnectState = TransactionState.failed;
-      } else if (walletConnected == true) {
-        if (hardhatDebug == false) {
-          credentials = await wallectConnectTransaction?.getCredentials();
-        }
-        publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
-        publicAddress = publicAddressWC;
-      } else {
-        walletConnectState = TransactionState.failed;
-      }
+      walletConnectClient.walletConnect.onSessionExpire.subscribe((sessionConnect) async {
+        // print(sessionConnect);
+        walletConnectState = TransactionState.disconnected;
+        walletConnected = false;
+        walletConnectedWC = false;
+        publicAddress = null;
+        publicAddressWC = null;
+        validChainID = false;
+        validChainIDWC = false;
+        ethBalance = 0;
+        ethBalanceToken = 0;
+        pendingBalance = 0;
+        pendingBalanceToken = 0;
+        walletConnectUri = '';
+        walletConnectSessionUri = '';
+        List<EthereumAddress> taskList = await getTaskListFull();
+        await fetchTasksBatch(taskList);
+
+        await connectWalletWCv2(true);
+        notifyListeners();
+      });
+
+      var connectResponse = await walletConnectClient?.createSession(
+          // onDisplayUri: (uri) => {
+          //   walletConnectSessionUri = uri.split("?").first,
+          //   (platform == 'mobile' || browserPlatform == 'android' || browserPlatform == 'ios') && !refresh
+          //       ? {launchURL(uri), walletConnectUri = uri}
+          //       : walletConnectUri = uri,
+          //   notifyListeners()
+          // },
+          );
+
+      final Uri? uri = connectResponse.uri;
+
+      final String encodedUrl = Uri.encodeComponent('$uri');
+
+      walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+      notifyListeners();
+
+      // SessionData session = await connectResponse.session.future;
+
+      // publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
+      //   session.namespaces.values.first.accounts.first,
+      // ));
+      // publicAddress = publicAddressWC;
+
+      // chainId = int.parse(NamespaceUtils.getChainFromAccount(
+      //   session.namespaces.values.first.accounts.first,
+      // ).split(":").last);
+
+      // credentials = WalletConnectEthereumCredentialsV2(
+      //   wcClient: walletConnectClient.walletConnect,
+      //   session: session,
+      // );
+
+      // print(walletConnectClient.deepLinkUrl);
+
+      // Uri? uri = resp.uri;
+      // walletConnectUri = walletConnectClient.deepLinkUrl;
+      print(walletConnectUri);
     } else {
       print("not initialized");
       print(walletConnectState);
     }
   }
+
+  // Future<void> connectWalletWC(bool refresh) async {
+  //   print('async');
+  //   if (wallectConnectTransaction != null) {
+  //     var connector = await wallectConnectTransaction.initWalletConnect();
+
+  //     if (walletConnected == false) {
+  //       print("disconnected");
+  //       walletConnectUri = '';
+  //       walletConnectSessionUri = '';
+  //     }
+  //     // Subscribe to events
+  //     connector.on('connect', (session) {
+  //       walletConnectSession = session;
+  //       walletConnectState = TransactionState.connected;
+  //       walletConnected = true;
+  //       walletConnectedWC = true;
+  //       closeWalletDialog = true;
+  //       () async {
+  //         if (hardhatDebug == false) {
+  //           credentials = await wallectConnectTransaction?.getCredentials();
+  //           chainId = session.chainId;
+  //           if (allowedChainIds.contains(chainId) ||
+  //               chainId == chainIdAxelar ||
+  //               chainId == chainIdHyperlane ||
+  //               chainId == chainIdLayerzero ||
+  //               chainId == chainIdWormhole) {
+  //             validChainID = true;
+  //             validChainIDWC = true;
+  //             await connectRPC(chainId);
+  //             await startup();
+  //             await collectMyTokens();
+  //           } else {
+  //             validChainID = false;
+  //             validChainIDWC = false;
+  //             await switchNetworkWC();
+  //           }
+  //           publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
+  //           publicAddress = publicAddressWC;
+  //         } else {
+  //           chainId = 31337;
+  //           validChainID = true;
+  //         }
+  //         List<EthereumAddress> taskList = await getTaskListFull();
+  //         await fetchTasksBatch(taskList);
+
+  //         myBalance();
+  //         // isLoading = true;
+  //       }();
+  //       notifyListeners();
+  //     });
+  //     connector.on('session_request', (payload) {
+  //       print(payload);
+  //     });
+  //     connector.on('session_update', (payload) {
+  //       print(payload);
+  //       if (payload.approved == true) {
+  //         // walletConnectActionApproved = true;
+  //         // notifyListeners();
+  //       }
+  //     });
+  //     connector.on('disconnect', (session) async {
+  //       print(session);
+  //       walletConnectState = TransactionState.disconnected;
+  //       walletConnected = false;
+  //       walletConnectedWC = false;
+  //       publicAddress = null;
+  //       publicAddressWC = null;
+  //       validChainID = false;
+  //       validChainIDWC = false;
+  //       ethBalance = 0;
+  //       ethBalanceToken = 0;
+  //       pendingBalance = 0;
+  //       pendingBalanceToken = 0;
+  //       walletConnectUri = '';
+  //       walletConnectSessionUri = '';
+  //       List<EthereumAddress> taskList = await getTaskListFull();
+  //       await fetchTasksBatch(taskList);
+
+  //       await connectWalletWC(true);
+  //       notifyListeners();
+  //     });
+  //     final SessionStatus? session = await wallectConnectTransaction?.connect(
+  //       onDisplayUri: (uri) => {
+  //         walletConnectSessionUri = uri.split("?").first,
+  //         (platform == 'mobile' || browserPlatform == 'android' || browserPlatform == 'ios') && !refresh
+  //             ? {launchURL(uri), walletConnectUri = uri}
+  //             : walletConnectUri = uri,
+  //         notifyListeners()
+  //       },
+  //     );
+
+  //     if (session == null) {
+  //       print('Unable to connect');
+  //       walletConnectState = TransactionState.failed;
+  //     } else if (walletConnected == true) {
+  //       if (hardhatDebug == false) {
+  //         credentials = await wallectConnectTransaction?.getCredentials();
+  //       }
+  //       publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
+  //       publicAddress = publicAddressWC;
+  //     } else {
+  //       walletConnectState = TransactionState.failed;
+  //     }
+  //   } else {
+  //     print("not initialized");
+  //     print(walletConnectState);
+  //   }
+  // }
 
   Future<void> connectWalletMM() async {
     if (platform == 'web' && window.ethereum != null) {
@@ -1115,8 +1157,8 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> disconnectWC() async {
-    await wallectConnectTransaction?.disconnect();
+  Future<void> disconnectWCv2() async {
+    await walletConnectClient?.disconnect();
     walletConnected = false;
     walletConnectedWC = false;
     publicAddress = null;
@@ -1131,9 +1173,29 @@ class TasksServices extends ChangeNotifier {
     walletConnectSessionUri = '';
     List<EthereumAddress> taskList = await getTaskListFull();
     await fetchTasksBatch(taskList);
-    connectWalletWC(true);
+    connectWalletWCv2(true);
     notifyListeners();
   }
+
+  // Future<void> disconnectWC() async {
+  //   await wallectConnectTransaction?.disconnect();
+  //   walletConnected = false;
+  //   walletConnectedWC = false;
+  //   publicAddress = null;
+  //   publicAddressWC = null;
+  //   validChainID = false;
+  //   validChainIDWC = false;
+  //   ethBalance = 0;
+  //   ethBalanceToken = 0;
+  //   pendingBalance = 0;
+  //   pendingBalanceToken = 0;
+  //   walletConnectUri = '';
+  //   walletConnectSessionUri = '';
+  //   List<EthereumAddress> taskList = await getTaskListFull();
+  //   await fetchTasksBatch(taskList);
+  //   connectWalletWC(true);
+  //   notifyListeners();
+  // }
 
   // Future<void> disconnectWalletMM() {
   //   final eth = window.ethereum;
@@ -1512,7 +1574,7 @@ class TasksServices extends ChangeNotifier {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt = await web3GetTransactionReceipt(hash);
       while (transactionReceipt == null) {
-        Future.delayed(const Duration(milliseconds: 1000));
+        Future.delayed(const Duration(milliseconds: 3000));
         transactionReceipt = await web3GetTransactionReceipt(hash);
       }
       if (messageNanoId != '') {

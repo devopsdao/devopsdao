@@ -930,7 +930,7 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
                   // ? null
                   : null;
             } else if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC) {
-              tasksServices.initComplete ? {await tasksServices.disconnectWC()} : null;
+              tasksServices.initComplete ? {await tasksServices.disconnectWCv2()} : null;
               // buttonName = 'Refresh QR';
             }
             // if(buttonText == 'Disconnect') {

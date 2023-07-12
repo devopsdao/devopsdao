@@ -3,80 +3,34 @@ import 'dart:typed_data';
 // import 'walletconnect_provider.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
 // import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';
-import 'package:webthree/src/crypto/secp256k1.dart';
+import 'package:web3dart/crypto.dart';
+// import 'package:webthree/src/crypto/secp256k1.dart';
 import 'package:webthree/webthree.dart';
 
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 
-class WalletConnectV2 {
-  // WalletConnectEthereumCredentials({required this.provider});
-
-  // final EthereumWalletConnectProvider provider;
-
-  @override
-  Future<EthereumAddress> extractAddress() {
-    // TODO: implement extractAddress
-    throw UnimplementedError();
-  }
-
-  // @override
-  // Future<String> sendTransaction(Transaction transaction) async {
-  //   String hash = 'failed';
-  //   if (provider.connector.connected && !provider.connector.bridgeConnected) {
-  //     print('Attempt to recover');
-  //     provider.connector.reconnect();
-  //   }
-  //   try {
-  //     hash = await provider.sendTransaction(
-  //       from: transaction.from!.hex,
-  //       to: transaction.to?.hex,
-  //       data: transaction.data,
-  //       // maxFeePerGas: transaction.maxFeePerGas?.getInWei,
-  //       // maxPriorityFeePerGas: transaction.maxFeePerGas?.getInWei,
-  //       // maxGas: transaction.maxFeePerGas,
-  //       gas: transaction.maxGas,
-  //       gasPrice: transaction.gasPrice?.getInWei,
-  //       value: transaction.value?.getInWei,
-  //       nonce: transaction.nonce,
-  //     );
-  //   } catch (e) {
-  //     print(e.toString());
-  //     if (e.toString() == 'JSON-RPC error -32000: User rejected the transaction') {
-  //       hash = 'rejected';
-  //     }
-  //   }
-
-  //   return hash;
-  // }
-
-  @override
-  Future<MsgSignature> signToSignature(Uint8List payload, {int? chainId, bool isEIP1559 = false}) {
-    // TODO: implement signToSignature
-    throw UnimplementedError();
-  }
-}
-
-class EthereumWallectConnectTransactionV2 {
+class WalletConnectClient {
   // late final Web3App wcClient;
 
   // Future<void> initSession() async {
   //   wcClient = await initWalletConnect();
   // }
 
-  static Web3App? _walletConnect;
+  Web3App? walletConnect;
 
-  Future<void> _initWalletConnect() async {
-    _walletConnect = await Web3App.createInstance(
-      projectId: 'c4f79cc821944d9680842e34466bfb',
+  Future<void> initWalletConnect() async {
+    walletConnect = await Web3App.createInstance(
+      projectId: '98a940d6677c21307eaa65e2290a7882',
       metadata: const PairingMetadata(
-        name: 'Flutter WalletConnect',
-        description: 'Flutter WalletConnect Dapp Example',
+        name: 'dodao.dev',
+        description: 'Decentralzied marketplace for coders and art-creators',
         url: 'https://walletconnect.com/',
         icons: [
           'https://walletconnect.com/walletconnect-logo.png',
         ],
       ),
     );
+    print(walletConnect);
   }
 
   static const String launchError = 'Metamask wallet not installed';
@@ -88,7 +42,9 @@ class EthereumWallectConnectTransactionV2 {
 
   String get deepLinkUrl => 'metamask://wc?uri=$_url';
 
-  Future<String?> createSession() async {
+  String? _pairingTopic;
+
+  Future<ConnectResponse?> createSession() async {
     // final bool isInstalled = await metamaskIsInstalled();
     final bool isInstalled = true;
 
@@ -96,11 +52,11 @@ class EthereumWallectConnectTransactionV2 {
       return Future.error(launchError);
     }
 
-    if (_walletConnect == null) {
-      await _initWalletConnect();
+    if (walletConnect == null) {
+      await initWalletConnect();
     }
 
-    final ConnectResponse connectResponse = await _walletConnect!.connect(
+    final ConnectResponse connectResponse = await walletConnect!.connect(
       requiredNamespaces: {
         kShortChainId: const RequiredNamespace(
           chains: [kFullChainId],
@@ -116,72 +72,88 @@ class EthereumWallectConnectTransactionV2 {
         ),
       },
     );
-
     final Uri? uri = connectResponse.uri;
+    _url = Uri.encodeComponent('$uri');
 
-    if (uri != null) {
-      final String encodedUrl = Uri.encodeComponent('$uri');
+    _pairingTopic = connectResponse.pairingTopic;
 
-      _url = encodedUrl;
+    return connectResponse;
 
-      // await launchUrlString(
-      //   deepLinkUrl,
-      //   mode: LaunchMode.externalApplication,
-      // );
+    //
 
-      _sessionData = await connectResponse.session.future;
+    // if (uri != null) {
+    //   final String encodedUrl = Uri.encodeComponent('$uri');
 
-      final String account = NamespaceUtils.getAccount(
-        _sessionData!.namespaces.values.first.accounts.first,
-      );
+    //   _url = encodedUrl;
 
-      return account;
-    }
+    //   // await launchUrlString(
+    //   //   deepLinkUrl,
+    //   //   mode: LaunchMode.externalApplication,
+    //   // );
 
-    return null;
+    //   // _sessionData = await connectResponse.session.future;
+
+    //   // final String account = NamespaceUtils.getAccount(
+    //   //   _sessionData!.namespaces.values.first.accounts.first,
+    //   // );
+
+    //   // return account;
+    // }
+
+    // return null;
   }
-  // @override
-  // Future<void> disconnect() async {
-  //   if (connector.connected) {
-  //     await connector.killSession();
-  //   }
-  //   await sessionStorage.removeSession();
-  // }
 
   // @override
-  // Future<void> removeSession() async {
-  //   await sessionStorage.removeSession();
-  // }
+  Future<void> disconnect() async {
+    if (_pairingTopic != null) {
+      await walletConnect?.disconnectSession(
+        topic: _pairingTopic!,
+        reason: Errors.getSdkError(Errors.USER_DISCONNECTED),
+      );
+    }
+  }
 
-  // Future<void> switchNetwork(String chainId) async {
-  //   final params = <String, dynamic>{
-  //     'chainId': chainId,
-  //   };
-  //   final response = await connector.sendCustomRequest(method: 'wallet_switchEthereumChain', params: [params]);
-  //   print(response);
+  Future<void> switchNetwork(String chainId) async {
+    final params = <String, dynamic>{
+      'chainId': chainId,
+    };
+    final response = await walletConnect!.request(
+        topic: _pairingTopic!,
+        chainId: 'eip155:80001',
+        request: SessionRequestParams(
+          method: 'wallet_switchEthereumChain',
+          params: [params],
+        ));
+    // return session;
+  }
 
-  //   // return session;
-  // }
+  Future<void> addNetwork(String chainId) async {
+    final params = <String, dynamic>{
+      'chainId': '0x507',
+      'chainName': 'Moonbase alpha',
+      'nativeCurrency': <String, dynamic>{
+        'name': 'DEV',
+        'symbol': 'DEV',
+        'decimals': 18,
+      },
+      'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
+      'blockExplorerUrls': ['https://moonbase.moonscan.io'],
+      'iconUrls': [''],
+    };
 
-  // Future<void> addNetwork(String chainId) async {
-  //   final params = <String, dynamic>{
-  //     'chainId': '0x507',
-  //     'chainName': 'Moonbase alpha',
-  //     'nativeCurrency': <String, dynamic>{
-  //       'name': 'DEV',
-  //       'symbol': 'DEV',
-  //       'decimals': 18,
-  //     },
-  //     'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
-  //     'blockExplorerUrls': ['https://moonbase.moonscan.io'],
-  //     'iconUrls': [''],
-  //   };
+    final response = await walletConnect!.request(
+        topic: _pairingTopic!,
+        chainId: 'eip155:80001',
+        request: SessionRequestParams(
+          method: 'wallet_addEthereumChain',
+          params: [params],
+        ));
 
-  //   final response = await connector.sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
-  //   print(response);
+    // final response = await connector.sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
+    print(response);
 
-  //   // return session;
-  // }
+    // return session;
+  }
 
   // Future<int> getChainId() async {
   //   // final params = <String, dynamic>{
@@ -244,4 +216,54 @@ class EthereumWallectConnectTransactionV2 {
   //   // TODO: implement signTransactions
   //   throw UnimplementedError();
   // }
+}
+
+class WalletConnectEthereumCredentialsV2 extends CustomTransactionSender {
+  WalletConnectEthereumCredentialsV2({required this.wcClient, required this.session});
+
+  final Web3App wcClient;
+  final SessionData session;
+
+  @override
+  Future<String> sendTransaction(Transaction transaction) async {
+    final from = await extractAddress();
+    final signResponse = await wcClient.request(
+      topic: session.topic,
+      chainId: 'eip155:80001',
+      request: SessionRequestParams(
+        method: 'eth_sendTransaction',
+        params: [
+          {
+            'from': from.hex,
+            'to': transaction.to?.hex,
+            // 'gas': '0x${transaction.maxGas!.toRadixString(16)}',
+            // 'gasPrice': '0x${transaction.gasPrice?.getInWei.toRadixString(16) ?? '0'}',
+            'value': '0x${transaction.value?.getInWei.toRadixString(16) ?? '0'}',
+            'data': transaction.data != null ? bytesToHex(transaction.data!) : null,
+            'nonce': transaction.nonce,
+          }
+        ],
+      ),
+    );
+
+    return signResponse.toString();
+  }
+
+  @override
+  EthereumAddress get address => EthereumAddress.fromHex(session.namespaces.values.first.accounts.first.split(':').last);
+
+  @override
+  Future<EthereumAddress> extractAddress() => Future(() => EthereumAddress.fromHex(session.namespaces.values.first.accounts.first.split(':').last));
+
+  @override
+  MsgSignature signToEcSignature(Uint8List payload, {int? chainId, bool isEIP1559 = false}) {
+    // TODO: implement signToEcSignature
+    throw UnimplementedError();
+  }
+
+  @override
+  signToSignature(Uint8List payload, {int? chainId, bool isEIP1559 = false}) {
+    // TODO: implement signToSignature
+    throw UnimplementedError();
+  }
 }
