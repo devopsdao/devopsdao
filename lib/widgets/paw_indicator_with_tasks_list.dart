@@ -27,9 +27,9 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   @override
   void initState() {
     super.initState();
-    // Future.delayed(const Duration(milliseconds: 300)).then((_) {
-    //   indicator.currentState!.refresh( );
-    // });
+    Future.delayed(const Duration(milliseconds: 300)).then((_) {
+      indicator.currentState!.refresh( );
+    });
     // _controller = SimpleAnimation('idle');
   }
 
@@ -76,9 +76,9 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
           completeStateDuration: const Duration(milliseconds: 1500),
           onRefresh: () async {
             tasksServices.isLoadingBackground = true;
-            if (widget.pageName == 'customer') {
+            if (widget.pageName == 'customer' && tasksServices.publicAddress != null) {
               await tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
-            } else if (widget.pageName == 'performer') {
+            } else if (widget.pageName == 'performer' && tasksServices.publicAddress != null) {
               tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
             } else if (widget.pageName == 'tasks') {
 

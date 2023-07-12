@@ -434,20 +434,20 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                 ),
                 secondChild: Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: Material(
-                    elevation: DodaoTheme.of(context).elevation,
-                    borderRadius: DodaoTheme.of(context).borderRadius,
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: DodaoTheme.of(context).borderRadius,
-                      ),
-                      child: TransportSelection(
-                        screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
-                      ),
-                    ),
-                  ),
+                  // child: Material(
+                  //   elevation: DodaoTheme.of(context).elevation,
+                  //   borderRadius: DodaoTheme.of(context).borderRadius,
+                  //   child: Container(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     width: innerPaddingWidth,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: DodaoTheme.of(context).borderRadius,
+                  //     ),
+                  //     child: TransportSelection(
+                  //       screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
+                  //     ),
+                  //   ),
+                  // ),
                 ),
                 crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
@@ -696,8 +696,10 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 ],
                                               ),
                                             ),
-                                            secondChild: TransportSelection(
-                                              screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
+                                            secondChild: Center(
+                                              // child: TransportSelection(
+                                              //   screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
+                                              // ),
                                             ),
                                             // crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                             crossFadeState: true ? CrossFadeState.showFirst : CrossFadeState.showSecond,

@@ -15,9 +15,9 @@ class BadgeTab extends StatefulWidget {
 
 class _BadgeTabState extends State<BadgeTab> {
   final colors = [
-    Color(0xFFF67FC5),
-    Color(0xFFF89771),
-    Color(0xFF87B5FA),
+    const Color(0xFFF67FC5),
+    const Color(0xFFF89771),
+    const Color(0xFF87B5FA),
     Colors.green.shade700
   ];
 

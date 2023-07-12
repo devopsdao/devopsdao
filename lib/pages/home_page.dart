@@ -11,6 +11,7 @@ import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../navigation/navmenu.dart';
+import '../widgets/home_statistics.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';
 import '../config/flutter_flow_icon_button.dart';
@@ -129,14 +130,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       desktopWidth = true;
     }
 
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Stack(
       children: [
         if (!desktopWidth)
         Image.asset(
           "assets/images/background_part_top.png",
           fit: BoxFit.none,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: height,
+          width: width,
           filterQuality: FilterQuality.medium,
           alignment: Alignment.topRight,
           scale: 1.0,
@@ -145,8 +149,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         Image.asset(
           "assets/images/background_part_bottom.png",
           fit: BoxFit.none,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: height,
+          width: width,
           filterQuality: FilterQuality.medium,
           alignment: Alignment.bottomLeft,
           scale: 1.0,
@@ -155,8 +159,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           Image.asset(
             "assets/images/background_part_top_big.png",
             fit: BoxFit.none,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height: height,
+            width: width,
             filterQuality: FilterQuality.medium,
             alignment: Alignment.topRight,
             scale: 0.8,
@@ -165,8 +169,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           Image.asset(
             "assets/images/background_part_bottom_big.png",
             fit: BoxFit.none,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height: height,
+            width: width,
             filterQuality: FilterQuality.medium,
             alignment: Alignment.bottomLeft,
             scale: 0.8,
@@ -246,7 +250,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 alignment: Alignment.center,
                 child: Container(
                     padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                    width: interface.maxStaticInternalDialogWidth,
+                    width: interface.maxStaticDialogWidth,
                     child: LayoutBuilder(builder: (context, constraints) {
                       // final double halfWidth = constraints.maxWidth / 2 - 8;
                       // final double fullWidth = constraints.maxWidth;
@@ -280,90 +284,97 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       padding: const EdgeInsetsDirectional.fromSTEB(22, 12, 22, 12),
                                       child: LayoutBuilder(builder: (context, constraints) {
                                         // final double width = constraints.maxWidth - 66;
-                                        List<TokenItem> tags = [];
-                                        if (tasksServices.roleNfts['auditor'] > 0) {
-                                          tags.add(TokenItem(collection: true, name: "Auditor", icon: ""));
-                                        }
-                                        if (tasksServices.roleNfts['governor'] > 0) {
-                                          tags.add(TokenItem(collection: true, name: "Governor", icon: ""));
-                                        }
-                                        tags.add(TokenItem(collection: true, name: "Get more...", icon: ""));
+                                        // List<TokenItem> tags = [];
+                                        // if (tasksServices.roleNfts['auditor'] > 0) {
+                                        //   tags.add(TokenItem(collection: true, name: "Auditor", icon: ""));
+                                        // }
+                                        // if (tasksServices.roleNfts['governor'] > 0) {
+                                        //   tags.add(TokenItem(collection: true, name: "Governor", icon: ""));
+                                        // }
+                                        // tags.add(TokenItem(collection: true, name: "Get more...", icon: ""));
 
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 22),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text('In your wallet:',
-                                                          style: Theme.of(context).textTheme.bodyMedium),
-                                                      Text('${tasksServices.ethBalance} ${tasksServices.chainTicker}',
-                                                          style: Theme.of(context).textTheme.bodyLarge),
-                                                      Text('${tasksServices.ethBalanceToken} USDC',
-                                                          style: Theme.of(context).textTheme.bodyLarge),
-                                                    ],
-                                                  ),
-                                                ),
-                                                // const Spacer(),
-                                                Padding(
-                                                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 22),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text('Pending:',
-                                                          style: Theme.of(context).textTheme.bodyMedium),
-                                                      Text('${tasksServices.pendingBalance} ${tasksServices.chainTicker}',
-                                                          style: Theme.of(context).textTheme.bodyLarge),
-                                                      Text('${tasksServices.pendingBalanceToken} USDC',
-                                                          style: Theme.of(context).textTheme.bodyLarge),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Text('Your Nft\'s:',
-                                                style: Theme.of(context).textTheme.bodyMedium),
-                                            SizedBox(
-                                              // width: width,
-                                              child: Wrap(
-                                                  alignment: WrapAlignment.start,
-                                                  direction: Axis.horizontal,
-                                                  children: tags.map((e) {
-                                                    return WrappedChip(
-                                                      key: ValueKey(e),
-                                                      item: MapEntry(
-                                                          e.name,
-                                                          NftCollection(
-                                                            selected: false,
-                                                            name: e.name,
-                                                            bunch: {BigInt.from(0): TokenItem(name: e.name, collection: true)},
-                                                          )),
-                                                      page: 'home',
-                                                      selected: e.selected,
-                                                      wrapperRole: e.name == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
-                                                    );
-                                                  }).toList()),
-                                            ),
-                                          ],
-                                        );
+                                        return const HomeStatistics();
+
+
+                                        // return Column(
+                                        //   mainAxisSize: MainAxisSize.max,
+                                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                                        //   children: [
+                                        //     Row(
+                                        //       mainAxisSize: MainAxisSize.max,
+                                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        //       children: [
+                                        //         Padding(
+                                        //           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 22),
+                                        //           child: Column(
+                                        //             mainAxisSize: MainAxisSize.max,
+                                        //             mainAxisAlignment: MainAxisAlignment.center,
+                                        //             crossAxisAlignment: CrossAxisAlignment.start,
+                                        //             children: [
+                                        //               Text('In your wallet:',
+                                        //                   style: Theme.of(context).textTheme.bodyMedium),
+                                        //               Text('${tasksServices.ethBalance} ${tasksServices.chainTicker}',
+                                        //                   style: Theme.of(context).textTheme.bodyLarge),
+                                        //               Text('${tasksServices.ethBalanceToken} USDC',
+                                        //                   style: Theme.of(context).textTheme.bodyLarge),
+                                        //             ],
+                                        //           ),
+                                        //         ),
+                                        //         // const Spacer(),
+                                        //         Padding(
+                                        //           padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 22),
+                                        //           child: Column(
+                                        //             mainAxisSize: MainAxisSize.max,
+                                        //             mainAxisAlignment: MainAxisAlignment.center,
+                                        //             crossAxisAlignment: CrossAxisAlignment.start,
+                                        //             children: [
+                                        //               Text('Pending:',
+                                        //                   style: Theme.of(context).textTheme.bodyMedium),
+                                        //               Text('${tasksServices.pendingBalance} ${tasksServices.chainTicker}',
+                                        //                   style: Theme.of(context).textTheme.bodyLarge),
+                                        //               Text('${tasksServices.pendingBalanceToken} USDC',
+                                        //                   style: Theme.of(context).textTheme.bodyLarge),
+                                        //             ],
+                                        //           ),
+                                        //         ),
+                                        //       ],
+                                        //     ),
+                                        //     Text('Your Nft\'s:',
+                                        //         style: Theme.of(context).textTheme.bodyMedium),
+                                        //     SizedBox(
+                                        //       // width: width,
+                                        //       child: Wrap(
+                                        //           alignment: WrapAlignment.start,
+                                        //           direction: Axis.horizontal,
+                                        //           children: tags.map((e) {
+                                        //             return WrappedChip(
+                                        //               key: ValueKey(e),
+                                        //               item: MapEntry(
+                                        //                   e.name,
+                                        //                   NftCollection(
+                                        //                     selected: false,
+                                        //                     name: e.name,
+                                        //                     bunch: {BigInt.from(0): TokenItem(name: e.name, collection: true)},
+                                        //                   )),
+                                        //               page: 'home',
+                                        //               selected: e.selected,
+                                        //               wrapperRole: e.name == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
+                                        //             );
+                                        //           }).toList()),
+                                        //     ),
+                                        //   ],
+                                        // );
+
+
+
+
                                       }),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 16,),
                                 BlurryContainer(
-                                  width: interface.maxStaticInternalDialogWidth,
+                                  width: interface.maxStaticDialogWidth,
                                   color: DodaoTheme.of(context).transparentCloud,
                                   blur: 4,
                                   padding: const EdgeInsets.all(0.5),

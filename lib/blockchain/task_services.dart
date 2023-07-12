@@ -1300,12 +1300,13 @@ class TasksServices extends ChangeNotifier {
 
       final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
         {},
-        (Map<String, List<BigInt>> acc, entry) {
-          final key = entry.value;
-          final value = entry.key;
-          acc.putIfAbsent(key, () => []).add(value);
-          return acc;
-        },
+        (
+          Map<String, List<BigInt>> acc, entry) {
+            final key = entry.value;
+            final value = entry.key;
+            acc.putIfAbsent(key, () => []).add(value);
+            return acc;
+          },
       );
       resultNftsMap.clear();
       for (var e in result.entries) {
@@ -1318,6 +1319,7 @@ class TasksServices extends ChangeNotifier {
         }
       }
     }
+    // print(resultNftsMap);
   }
 
   // EthereumAddress lastJobContract;
