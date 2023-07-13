@@ -14,9 +14,9 @@ import 'wrapped_chip.dart';
 // }
 //
 // class _TagsPageState extends State<TagsPage> {
-//   // late List<SimpleTags> selectedTagsListLocal = [];
+//   // late List<TokenItem> selectedTagsListLocal = [];
 //   // TagsValueController tags = TagsValueController([]);
-//   late List<SimpleTags> selectedListData;
+//   late List<TokenItem> selectedListData;
 //   @override
 //   void initState() {
 //     super.initState();
@@ -171,7 +171,7 @@ import 'wrapped_chip.dart';
 //                 ),
 //                 SizedBox(
 //                   height: maxHeight,
-//                   child: FilterListWidget<SimpleTags>(
+//                   child: FilterListWidget<TokenItem>(
 //                     hideSelectedTextCount: true,
 //                     themeData: FilterListThemeData(
 //                       context,
@@ -246,7 +246,6 @@ import 'wrapped_chip.dart';
 //                     choiceChipBuilderSelected: (context, item, isSelected) {
 //                       return WrappedChip(
 //                         // key: ValueKey(simpleTagsList.indexOf(item)),
-//                         theme: 'white',
 //                         item: item,
 //                           delete: false,
 //                         page: widget.page
@@ -285,7 +284,7 @@ import 'wrapped_chip.dart';
 //                                       ),
 //                                     ),
 //                                   TextSpan(
-//                                     text: item.tag,
+//                                     text: item.name,
 //                                     style: TextStyle(
 //                                       color: isSelected! ? Colors.black : Colors.black,
 //                                     )
@@ -310,7 +309,7 @@ import 'wrapped_chip.dart';
 //                     },
 //                     choiceChipLabel: (item) {
 //                       /// Used to display text on chip
-//                       return item!.tag;
+//                       return item!.name;
 //                     },
 //                     validateSelectedItem: (list, val) {
 //                       ///  identify if item is selected or not
@@ -341,61 +340,6 @@ import 'wrapped_chip.dart';
 //     );
 //   }
 // }
+//
 
-List<SimpleTags> simpleTagsList = [
-  SimpleTags(collection: true, tag: "C++", icon: ""),
-  SimpleTags(collection: true, tag: "Javascript", icon: ""),
-  SimpleTags(collection: true, tag: "Ruby", icon: ""),
-  SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
-  SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
-  SimpleTags(collection: true, tag: "JAVA", icon: ""),
-  SimpleTags(collection: true, tag: "Node.js", icon: ""),
-  SimpleTags(collection: true, tag: "C#", icon: ""),
-  SimpleTags(collection: true, tag: ".Net", icon: ""),
-  SimpleTags(collection: true, tag: "Redux", icon: ""),
-  SimpleTags(collection: true, tag: "MongoDb", icon: ""),
-  SimpleTags(collection: true, tag: "Solidity", icon: "", nft: true),
-  SimpleTags(collection: true, tag: "Kafka", icon: ""),
-  SimpleTags(collection: true, tag: "Maven", icon: ""),
-  SimpleTags(collection: true, tag: "Docker", icon: ""),
-  SimpleTags(collection: true, tag: "Jenkins", icon: ""),
-  SimpleTags(collection: true, tag: "Python", icon: ""),
-  SimpleTags(collection: true, tag: "Azure", icon: ""),
-  SimpleTags(collection: true, tag: "MS-SQL", icon: ""),
-
-  SimpleTags(collection: true, tag: "Axelar", icon: "", nft: true),
-  SimpleTags(collection: true, tag: "Hyperlane", icon: "", nft: true),
-  SimpleTags(collection: true, tag: "Diamond", icon: "", nft: true),
-  SimpleTags(collection: true, tag: "Web3", icon: "", nft: true),
-
-  SimpleTags(collection: true, tag: "Ruby on Rails", icon: ""),
-  SimpleTags(collection: true, tag: "REST", icon: ""),
-  SimpleTags(collection: true, tag: "MySQL", icon: ""),
-  SimpleTags(collection: true, tag: "pySPARK", icon: ""),
-  SimpleTags(collection: true, tag: "Pandas", icon: ""),
-  SimpleTags(collection: true, tag: "Data Scientist", icon: ""),
-  SimpleTags(collection: true, tag: "SQL like", icon: ""),
-  SimpleTags(collection: true, tag: "Rancher", icon: ""),
-  SimpleTags(collection: true, tag: "K8s", icon: ""),
-  SimpleTags(collection: true, tag: "Data Science", icon: ""),
-  SimpleTags(collection: true, tag: "Cloudera", icon: ""),
-  SimpleTags(collection: true, tag: "Suse linux", icon: ""),
-  SimpleTags(collection: true, tag: "RedHat", icon: ""),
-  SimpleTags(collection: true, tag: "Openshift", icon: ""),
-  SimpleTags(collection: true, tag: "Lambda", icon: ""),
-  SimpleTags(collection: true, tag: "GitLab CI/CD", icon: ""),
-  SimpleTags(collection: true, tag: "EC2", icon: ""),
-  SimpleTags(collection: true, tag: "Eclipse RCP", icon: ""),
-  SimpleTags(collection: true, tag: "JUnit", icon: ""),
-  SimpleTags(collection: true, tag: "SQL", icon: ""),
-  SimpleTags(collection: true, tag: "Moonbase", icon: ""),
-  SimpleTags(collection: true, tag: "Moonbase Alpha", icon: ""),
-
-  SimpleTags(collection: true, tag: "auditor", icon: ""),
-
-];
-
-final Map<String, SimpleTags> simpleTagsMap = {
-  for (var e in simpleTagsList) e.tag : e
-};
 

@@ -6,7 +6,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 import '../blockchain/accounts.dart';
 
 class DeleteItemAlert extends StatefulWidget {
@@ -206,7 +206,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         //     message: messageController!.text.isEmpty ? null : messageController!.text);
                         // showDialog(
                         //     context: context,
-                        //     builder: (context) => WalletAction(
+                        //     builder: (context) => WalletActionDialog(
                         //       nanoId: who == 'task' ? nanoId : null,
                         //       taskName: 'taskStateChange',
                         //     ));

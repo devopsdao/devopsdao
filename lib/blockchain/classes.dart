@@ -5,11 +5,13 @@ class Task {
   final DateTime createTime;
   final String taskType;
   final String title;
-  final String description;
+  late String description;
+  late String repository;
   final List<dynamic> tags;
   final List<dynamic> tagsNFT;
-  final List<dynamic> symbols;
-  final List<dynamic> amounts;
+  final List<dynamic> tokenContracts;
+  final List<dynamic> tokenIds;
+  final List<dynamic> tokenAmounts;
   final String taskState;
   final String auditState;
   final int rating;
@@ -22,9 +24,9 @@ class Task {
   final List<dynamic> auditors;
   final List<dynamic> messages;
   final EthereumAddress taskAddress;
-  final List<String> tokenNames;
-  final List<dynamic> tokenValues;
-  late bool justLoaded;
+  final List<dynamic> tokenNames;
+  final List<dynamic> tokenBalances;
+  late bool loadingIndicator;
   final String transport;
 
   Task({
@@ -33,10 +35,12 @@ class Task {
     required this.taskType,
     required this.title,
     required this.description,
+    required this.repository,
     required this.tags,
     required this.tagsNFT,
-    required this.symbols,
-    required this.amounts,
+    required this.tokenContracts,
+    required this.tokenIds,
+    required this.tokenAmounts,
     required this.taskState,
     required this.auditState,
     required this.rating,
@@ -50,32 +54,41 @@ class Task {
     required this.messages,
     required this.taskAddress,
     required this.tokenNames,
-    required this.tokenValues,
-    required this.justLoaded,
+    required this.tokenBalances,
+    required this.loadingIndicator,
     required this.transport,
   });
 }
 
-class SimpleTags {
-  final String tag;
+class TokenItem {
+  final String name;
   final String? icon;
   late bool nft;
-  final String? id;
+  late bool inactive;
+  late double balance;
+  final BigInt? id;
   late bool selected;
   late String feature;
   final bool collection;
-  SimpleTags({required this.tag, this.icon, this.nft = false, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
+  TokenItem({required this.name, this.icon, this.nft = false, this.inactive = false, this.balance = 0, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
 }
 
-class NftTagsBunch {
+class NftCollection {
+  late String name;
   late bool selected;
-  final List<SimpleTags> bunch;
-  NftTagsBunch({this.selected = false, required this.bunch});
+  final Map<BigInt, TokenItem> bunch;
+  NftCollection({required this.name, this.selected = false, required this.bunch});
 }
 
 class TagsCompare {
   late String state;
   TagsCompare({required this.state});
+}
+
+class Token {
+  final String name;
+  final bool approved;
+  Token({required this.name, required this.approved});
 }
 
 // class TaskData extends MapBase<String, TaskData> {

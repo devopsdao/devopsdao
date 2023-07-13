@@ -4,7 +4,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 
 class TagMintDialog extends StatefulWidget {
   final String tagName;
@@ -128,7 +128,7 @@ class _TagMintDialogState extends State<TagMintDialog> {
                         //     message: messageController!.text.isEmpty ? null : messageController!.text);
                         // showDialog(
                         //     context: context,
-                        //     builder: (context) => WalletAction(
+                        //     builder: (context) => WalletActionDialog(
                         //       nanoId: task.nanoId,
                         //       taskName: 'taskStateChange',
                         //     ));

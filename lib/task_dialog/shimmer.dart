@@ -1,42 +1,12 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:badges/badges.dart';
-import 'package:dodao/task_dialog/pages.dart';
-import 'package:dodao/task_dialog/pages/3_selection.dart';
-import 'package:dodao/task_dialog/widget/participants_list.dart';
-import 'package:dodao/task_dialog/widget/request_audit_alert.dart';
-import 'package:dodao/widgets/payment.dart';
-import 'package:dodao/widgets/select_menu.dart';
-import 'package:dodao/task_dialog/buttons.dart';
-import 'package:dodao/task_dialog/states.dart';
-import 'package:dodao/widgets/wallet_action.dart';
-import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:dodao/task_dialog/widget/rate_widget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:horizontal_blocked_scroll_physics/horizontal_blocked_scroll_physics.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:webthree/credentials.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
-import '../blockchain/task_services.dart';
-import '../widgets/chat/main.dart';
-
 import '../config/theme.dart';
-import '../config/flutter_flow_util.dart';
+import '../widgets/tags/wrapped_chip.dart';
 
-import 'package:beamer/beamer.dart';
-
-import 'package:flutter/services.dart';
-
-import '../widgets/data_loading_dialog.dart';
-
-import 'dart:ui' as ui;
-
-import 'main.dart';
 
 class ShimmeredTaskPages extends StatefulWidget {
   final Task task;
@@ -69,28 +39,182 @@ class _ShimmeredTaskPagesState extends State<ShimmeredTaskPages> {
               ),
               child: Column(
                 children: [
-                  // const SizedBox(height: 50),
+                  const SizedBox(height: 7),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(height: 62, width: innerPaddingWidth, color: Colors.grey[300])),
+                    child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: Shimmer.fromColors(
+                          baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                          highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                          child: Container(
+                            // height: 82,
+                            width: innerPaddingWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: DodaoTheme.of(context).borderRadius,
+                              border: DodaoTheme.of(context).borderGradient,
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: Container(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: const Text('▇▇▇▇ ▇▇▇▇▇')
+                                    ),
+                                  ),
+                                    Container(
+                                      margin:const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                      ),
+                                      child: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          )
+                      ),
+                    )
+
+
+
+
                   ),
                   // ************ Show prices and topup part ******** //
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14),
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(padding: const EdgeInsets.only(top: 14), height: 50, width: innerPaddingWidth, color: Colors.grey[300])),
+                    child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: Shimmer.fromColors(
+                          baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                          highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                          child: Container(
+                            // height: 90,
+                            width: innerPaddingWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: DodaoTheme.of(context).borderRadius,
+                              border: DodaoTheme.of(context).borderGradient,
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                              child: Container(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: const Text('▇▇▇▇ ▇▇▇▇▇▇ ▇▇▇▇▇▇▇ \n▇▇▇▇ ▇▇▇▇▇ ▇▇▇▇')
+                              ),
+                            ),
+                          )
+                      ),
+                    ),
                   ),
 
                   // ********* Text Input ************ //
-                  Shimmer.fromColors(
-                      baseColor: Colors.grey[350]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(padding: const EdgeInsets.only(top: 14), height: 70, width: innerPaddingWidth, color: Colors.grey[350]))
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 14),
+                  //   child: Material(
+                  //     elevation: DodaoTheme.of(context).elevation,
+                  //     borderRadius: DodaoTheme.of(context).borderRadius,
+                  //     child: Shimmer.fromColors(
+                  //         baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                  //         highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                  //         child: Container(
+                  //           padding: const EdgeInsets.only(top: 14),
+                  //           height: 70,
+                  //           width: innerPaddingWidth,
+                  //           // color: Colors.grey[350],
+                  //           decoration: BoxDecoration(
+                  //             borderRadius: DodaoTheme.of(context).borderRadius,
+                  //             border: DodaoTheme.of(context).borderGradient,
+                  //           ),
+                  //         )
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: Shimmer.fromColors(
+
+                          baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                          highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                          child: Container(
+                            padding: const EdgeInsets.all(14.0),
+                            width: innerPaddingWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: DodaoTheme.of(context).borderRadius,
+                              border: DodaoTheme.of(context).borderGradient,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: RichText(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                        TextSpan(text:
+                                                       '▇▇▇▇ ▇▇▇ ▇▇▇ ▇▇▇▇▇▇▇▇:'),
+                                      ])),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: LayoutBuilder(builder: (context, constraints) {
+                                    List<TokenItem> tags = [TokenItem(collection: true, name: 'empty', id: BigInt.from(0))];
+                                    if (tags.isNotEmpty) {
+                                      return SizedBox(
+                                        // width: width,
+                                        child: Wrap(
+                                            alignment: WrapAlignment.start,
+                                            direction: Axis.horizontal,
+                                            children: tags.map((e) {
+                                              return WrappedChip(
+                                                key: ValueKey(e),
+                                                item: MapEntry(
+                                                    e.name,
+                                                    NftCollection(
+                                                      selected: false,
+                                                      name: e.name,
+                                                      bunch: {
+                                                        BigInt.from(0):
+                                                        TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                                      },
+                                                    )),
+                                                page: 'tasks',
+                                                selected: e.selected,
+                                                wrapperRole: WrapperRole.selectNew,
+                                              );
+                                            }).toList()),
+                                      );
+                                    } else {
+                                      return Row(
+                                        children: <Widget>[
+                                          RichText(
+                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                                TextSpan(
+                                                    text: 'Nothing here',
+                                                    style: TextStyle(
+                                                      height: 1,
+                                                    )),
+                                              ])),
+                                        ],
+                                      );
+                                    }
+                                  }),
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

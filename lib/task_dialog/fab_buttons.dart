@@ -9,7 +9,7 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
-import '../widgets/wallet_action.dart';
+import '../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtons extends StatelessWidget {
   final Task task;
@@ -29,6 +29,9 @@ class SetsOfFabButtons extends StatelessWidget {
     var interface = context.read<InterfaceServices>();
     // String message = interface.taskMessage.text;
 
+    final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
+    final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
+
     return Builder(builder: (context) {
       // ##################### ACTION BUTTONS PART ######################## //
       // ************************ NEW (EXCHANGE) ************************** //
@@ -42,9 +45,9 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Participate',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidth,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -52,8 +55,9 @@ class SetsOfFabButtons extends StatelessWidget {
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskParticipate',
                     ));
@@ -66,9 +70,9 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Start the task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidthLong,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
@@ -77,8 +81,9 @@ class SetsOfFabButtons extends StatelessWidget {
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
@@ -88,11 +93,11 @@ class SetsOfFabButtons extends StatelessWidget {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
-          buttonName: 'Review',
+          buttonName: 'Submit for Review',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidthLong,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
@@ -100,44 +105,89 @@ class SetsOfFabButtons extends StatelessWidget {
             RouteInformation routeInfo = const RouteInformation(location: '/performer');
             Beamer.of(context).updateRouteInformation(routeInfo);
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
           },
         );
-      } else if (task.taskState == "review" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+      } else if ((task.taskState == "review" && fromPage == 'performer') &&
+          (tasksServices.transactionStatuses[task.nanoId] == null ||
+              tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null ||
+              tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] != "closed") &&
+          task.repository.isNotEmpty) {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
           buttonName: 'Check merge',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidthLong,
           callback: () {
-            interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
-            tasksServices.myNotifyListeners();
-            debounceNotifyListener.debounce(() {
-              interface.statusText = const TextSpan(text: 'Open', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
-              tasksServices.myNotifyListeners();
-            });
+            // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
+            // // tasksServices.myNotifyListeners();
+            tasksServices.postWitnetRequest(task.taskAddress, task.nanoId);
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                      nanoId: task.nanoId,
+                      taskName: 'postWitnetRequest',
+                    ));
+            // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //
+            // debounceNotifyListener.debounce(() {
+            //   interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //   tasksServices.myNotifyListeners();
+            // });
+          },
+        );
+      } else if ((task.taskState == "review" && fromPage == 'performer') &&
+          tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'closed') {
+        return TaskDialogFAB(
+          inactive: false,
+          expand: true,
+          buttonName: 'Complete Task',
+          buttonColorRequired: Colors.lightBlue.shade300,
+          widthSize: buttonWidthLong,
+          callback: () async {
+            // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
+            // // tasksServices.myNotifyListeners();
+            task.loadingIndicator = true;
+            tasksServices.saveSuccessfulWitnetResult(task.taskAddress, task.nanoId);
+            Navigator.pop(context);
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                      nanoId: task.nanoId,
+                      taskName: 'saveLastWitnetResult',
+                    ));
+            // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //
+            // debounceNotifyListener.debounce(() {
+            //   interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
+            //   tasksServices.myNotifyListeners();
+            // });
           },
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: (task.tokenValues[0] != 0 || task.tokenValues[0] != 0) ? false : true,
+          inactive: (task.tokenBalances.isNotEmpty) ? false : true,
           expand: true,
           buttonName: 'Withdraw',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidth,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'withdrawToChain',
                     ));
@@ -152,9 +202,9 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Sign Review',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidthLong,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
                 message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             // context.beamToNamed('/customer');
@@ -163,8 +213,9 @@ class SetsOfFabButtons extends StatelessWidget {
             RouteInformation routeInfo = const RouteInformation(location: '/customer');
             Beamer.of(context).updateRouteInformation(routeInfo);
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
@@ -176,18 +227,19 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Rate task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidth,
           callback: () {
             (task.rating == 0)
                 ? () {
-                    task.justLoaded = false;
+                    task.loadingIndicator = true;
                     // tasksServices.rateTask(
                     //     task.taskAddress, ratingScore, task.nanoId);
                     Navigator.pop(context);
                     interface.emptyTaskMessage();
                     showDialog(
+                        barrierDismissible: false,
                         context: context,
-                        builder: (context) => WalletAction(
+                        builder: (context) => WalletActionDialog(
                               nanoId: task.nanoId,
                               taskName: 'rateTask',
                             ));
@@ -203,15 +255,16 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Take audit',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidth,
           callback: () {
-            task.justLoaded = false;
+            task.loadingIndicator = true;
             tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskAuditParticipate',
                     ));
@@ -223,7 +276,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: interface.dialogCurrentState['mainButtonName'],
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
+          widthSize: buttonWidth,
           callback: () {
             showDialog(context: context, builder: (context) => AuditorDecision(task: task));
           },

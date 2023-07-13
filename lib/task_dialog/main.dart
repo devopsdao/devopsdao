@@ -8,9 +8,8 @@ import 'package:webthree/credentials.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
-import '../blockchain/empty_classes.dart';
-// import '../widgets/chat/accounts_page.dart';
 
+import '../config/theme.dart';
 import 'header.dart';
 import 'shimmer.dart';
 
@@ -19,12 +18,12 @@ import 'shimmer.dart';
 class TaskDialogFuture extends StatefulWidget {
   final String fromPage;
   final EthereumAddress? taskAddress;
-  final bool shimmerEnabled;
+  // final bool shimmerEnabled;
   const TaskDialogFuture({
     Key? key,
     required this.fromPage,
     this.taskAddress,
-    required this.shimmerEnabled,
+    // required this.shimmerEnabled,
   }) : super(key: key);
 
   @override
@@ -32,7 +31,7 @@ class TaskDialogFuture extends StatefulWidget {
 }
 
 class _TaskDialogFutureState extends State<TaskDialogFuture> {
-  String backgroundPicture = "assets/images/niceshape.png";
+  // String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
 
@@ -43,18 +42,30 @@ class _TaskDialogFutureState extends State<TaskDialogFuture> {
 
   @override
   Widget build(BuildContext context) {
-    late Task task;
     var tasksServices = context.read<TasksServices>();
     var emptyClasses = context.read<EmptyClasses>();
 
-    EthereumAddress? taskAddress = widget.taskAddress;
     return FutureBuilder<Task>(
-        future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
+
+        future: tasksServices.loadOneTask(widget.taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
+
           if (snapshot.connectionState == ConnectionState.done) {
-            task = snapshot.data!;
-            return TaskDialogSkeleton(fromPage: widget.fromPage, task: task, isLoading: false);
+            // print('snapshot start:');
+            // print(snapshot);
+            // print('snapshot end');
+
+            if (snapshot.hasError) {
+              emptyClasses.loadingTask.description = snapshot.error.toString();
+              return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
+            } else if (snapshot.hasData) {
+              return TaskDialogSkeleton(fromPage: widget.fromPage, task: snapshot.data!, isLoading: false);
+            } else {
+              return const Text('Empty data');
+            }
+
           }
+
           return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
         });
   }
@@ -76,7 +87,7 @@ class TaskDialogSkeleton extends StatefulWidget {
 }
 
 class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
-  String backgroundPicture = "assets/images/niceshape.png";
+  // String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
 
@@ -94,13 +105,13 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
 
     String fromPage = widget.fromPage;
 
-    if (widget.fromPage == 'customer') {
-      backgroundPicture = "assets/images/cross.png";
-    } else if (widget.fromPage == 'performer') {
-      backgroundPicture = "assets/images/cyrcle.png";
-    } else if (widget.fromPage == 'audit') {
-      backgroundPicture = "assets/images/cross.png";
-    }
+    // if (widget.fromPage == 'customer') {
+    //   backgroundPicture = "assets/images/cross.png";
+    // } else if (widget.fromPage == 'performer') {
+    //   backgroundPicture = "assets/images/cyrcle.png";
+    // } else if (widget.fromPage == 'audit') {
+    //   backgroundPicture = "assets/images/cross.png";
+    // }
 
     if (task.taskState == 'empty' || task.taskState == 'loading') {
       interface.dialogCurrentState = dialogStates['empty'];
@@ -162,18 +173,21 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       interface.dialogCurrentState = dialogStates['auditor-finished'];
     }
 
-    return Container(
-      alignment: Alignment.topCenter,
-      decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
-      ),
-      child: LayoutBuilder(builder: (context, constraints) {
-        // ****** Count Screen size with keyboard and without ***** ///
-        final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-        final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
-        final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
-        final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-        return Column(mainAxisSize: MainAxisSize.min, children: [
+    return LayoutBuilder(builder: (context, constraints) {
+      // ****** Count Screen size with keyboard and without ***** ///
+      final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+      final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
+      final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+      // print (screenHeightSize);
+      final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+      return Container(
+        color: DodaoTheme.of(context).taskBackgroundColor,
+        // decoration: BoxDecoration(
+        //   borderRadius: DodaoTheme.of(context).borderRadius,
+        //   border: DodaoTheme.of(context).borderGradient,
+        // ),
+        // color: Colors.redAccent,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             height: statusBarHeight,
           ),
@@ -183,23 +197,27 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
           ),
           SizedBox(
             height: screenHeightSize - statusBarHeight,
-            // width: constraints.maxWidth * .8,
-            // height: 550,
             width: interface.maxStaticDialogWidth,
-
-            child: widget.isLoading == false
-                ? TaskDialogPages(
-                    task: task,
-                    fromPage: widget.fromPage,
-                    screenHeightSize: screenHeightSize,
-                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
-                  )
-                : ShimmeredTaskPages(
-                    task: task,
-                  ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              switchInCurve: Curves.easeInQuint,
+              switchOutCurve: Curves.easeOutQuint,
+              child: !widget.isLoading
+                  ? TaskDialogPages(
+                key: const Key("normal"),
+                task: task,
+                fromPage: widget.fromPage,
+                screenHeightSize: screenHeightSize,
+                screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
+              )
+                  : ShimmeredTaskPages(
+                key: const Key("loading"),
+                task: task,
+              ),
+            )
           ),
-        ]);
-      }),
-    );
+        ]),
+      );
+    });
   }
 }

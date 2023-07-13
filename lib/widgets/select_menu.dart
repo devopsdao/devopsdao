@@ -9,8 +9,8 @@ import '../blockchain/task_services.dart';
 
 const List<String> selectNetwork = <String>['Moonbase', 'Ethereum', 'Binance', 'Fantom', 'Avalanche', 'Polygon'];
 
-// const List<String> selectToken = <String>['ETH', 'WETH', 'WFTM', 'aUSDC'];
-const List<String> selectToken = <String>['ETH', 'aUSDC'];
+// const List<String> selectToken = <String>['ETH', 'WETH', 'WFTM', 'USDC'];
+const List<String> selectToken = <String>['ETH', 'USDC'];
 
 class SelectNetworkMenu extends StatefulWidget {
   final Task object;
@@ -32,10 +32,10 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
     // bool showMenu;
     String valueName = '';
 
-    if (widget.object.tokenValues[0] != 0.0) {
+    if (widget.object.tokenBalances[0] != 0.0) {
       valueName = 'ETH';
-    } else if (widget.object.tokenValues[0] != 0.0) {
-      valueName = 'aUSDC';
+    } else if (widget.object.tokenBalances[0] != 0.0) {
+      valueName = 'USDC';
     }
 
     return Column(
@@ -72,12 +72,12 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
                 dropdownValue = value;
                 // tasksServices.getGasPrice('Moonbeam', value,
                 //     tokenSymbol: dropdownValue);
-                if (widget.object.tokenValues[0] > 0) {
+                if (widget.object.tokenBalances[0] > 0) {
                   assetName = 'ETH';
-                  asset = widget.object.tokenValues[0];
-                } else if (widget.object.tokenValues[0] > 0 && dropdownValue != 'Moonbase') {
+                  asset = widget.object.tokenBalances[0];
+                } else if (widget.object.tokenBalances[0] > 0 && dropdownValue != 'Moonbase') {
                   assetName = 'uausdc';
-                  asset = widget.object.tokenValues[0];
+                  asset = widget.object.tokenBalances[0];
                   tasksServices.getTransferFee(
                       sourceChainName: 'moonbeam', destinationChainName: value.toLowerCase(), assetDenom: assetName, amountInDenom: 100000);
                 }
@@ -90,14 +90,14 @@ class _SelectNetworkMenuState extends State<SelectNetworkMenu> {
               );
             }).toList(),
           ),
-        if (valueName == 'aUSDC')
+        if (valueName == 'USDC')
           RichText(
               text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.9), children: <TextSpan>[
             if (dropdownValue != 'Moonbase')
               TextSpan(
                   text: 'Transfer fee from Moonbase via Axelar to $dropdownValue is: ${tasksServices.transferFee}',
                   style: const TextStyle(height: 1.8, fontWeight: FontWeight.bold)),
-            if (widget.object.tokenValues[0] < tasksServices.transferFee && dropdownValue != 'Moonbase')
+            if (widget.object.tokenBalances[0] < tasksServices.transferFee && dropdownValue != 'Moonbase')
               const TextSpan(
                   text: '\nFunds stored in the contract are less \nthan Axelar transaction fee: ',
                   style: TextStyle(height: 1.8, fontWeight: FontWeight.bold, color: Colors.redAccent)),

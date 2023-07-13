@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
 
-import 'manager_services.dart';
+import 'collection_services.dart';
 import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
@@ -44,18 +44,19 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    // var tasksServices = context.read<TasksServices>();
     var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
-    var managerServices = context.read<ManagerServices>();
+    var collectionServices = context.read<CollectionServices>();
 
-    start();
+    // start();
 
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         automaticallyImplyLeading: false,
         title: Column(
           mainAxisSize: MainAxisSize.max,
@@ -66,11 +67,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
               children: [
                 Text(
                   'Tags Manager',
-                  style: DodaoTheme.of(context).title2.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
             ),
@@ -80,12 +77,16 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () {
-              // searchServices.resetNFTFilter(searchServices.nftFilterResults);
-              searchServices.nftInfoSelection(
+              // searchServices.resetNFTFilter(searchServices.treasuryPageFilterResults);
+              searchServices.tagSelection(
                 unselectAll: true,
-                tagName: '',
+                tagName: '', typeSelection: 'treasury', tagKey: ''
               );
-              managerServices.clearSelectedInManager();
+              searchServices.tagSelection(
+                  unselectAll: true,
+                  tagName: '', typeSelection: 'mint', tagKey: ''
+              );
+              collectionServices.clearSelectedInManager();
               Navigator.of(context).pop(null);
             },
           ),
@@ -99,12 +100,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
+
         ),
         child: SizedBox(
             width: interface.maxStaticGlobalWidth,
@@ -112,16 +108,17 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
               children: [
                 TabBar(
                   physics: const NeverScrollableScrollPhysics(),
-                  labelColor: Colors.white,
-                  labelStyle: DodaoTheme.of(context).bodyText1,
-                  indicatorColor: const Color(0xFF47CBE4),
+                  labelStyle: Theme.of(context).textTheme.bodyMedium,
+
+                  labelColor: DodaoTheme.of(context).secondaryText,
+                  indicatorColor: DodaoTheme.of(context).tabIndicator,
                   indicatorWeight: 3,
                   // isScrollable: true,
                   controller: _controller,
                   onTap: (index) {
-                    // searchServices.resetNFTFilter(searchServices.nftFilterResults);
-                    searchServices.nftInfoSelection(unselectAll: true, tagName: '');
-                    managerServices.clearSelectedInManager();
+                    // searchServices.resetNFTFilter(searchServices.treasuryPageFilterResults);
+                    searchServices.tagSelection(unselectAll: true, tagName: '', typeSelection: 'treasury', tagKey: '');
+                    collectionServices.clearSelectedInManager();
                   },
                   tabs: const [
                     Tab(

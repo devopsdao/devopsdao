@@ -1,9 +1,11 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
@@ -60,18 +62,22 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
+            // barrierDismissible: false,
             context: context,
-            builder: (context) => TaskDialogBeamer(
-                  taskAddress: widget.taskAddress,
-                  fromPage: 'auditor',
-                ));
+            builder: (context) {
+              // interface.mainDialogContext = context;
+              return TaskDialogBeamer(
+                taskAddress: widget.taskAddress,
+                fromPage: 'auditor',
+              );
+            });
       });
     }
 
     // init customerTagsList to show tag '+' button:
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var searchServices = context.read<SearchServices>();
-      searchServices.updateTagListOnTasksPages(page: 'auditor', initial: true);
+      searchServices.selectTagListOnTasksPages(page: 'auditor', initial: true);
     });
     // _searchKeywordController.text = '';
     // _searchKeywordController.addListener(() {_changeField();});
@@ -106,19 +112,28 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
     void resetFilters() async {
       if (tabIndex == 0) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditPending,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditPending,
+          tagsMap: searchServices.auditorTagsList,
+        );
       } else if (tabIndex == 1) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditApplied,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditApplied,
+          tagsMap: searchServices.auditorTagsList,
+        );
       } else if (tabIndex == 2) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditWorkingOn,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditWorkingOn,
+          tagsMap: searchServices.auditorTagsList,
+        );
       } else if (tabIndex == 3) {
-        tasksServices.resetFilter(taskList: tasksServices.tasksAuditComplete,
-          tagsMap: searchServices.auditorTagsList, );
+        tasksServices.resetFilter(
+          taskList: tasksServices.tasksAuditComplete,
+          tagsMap: searchServices.auditorTagsList,
+        );
       }
     }
+
     if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
@@ -127,19 +142,18 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
 
     return Scaffold(
       key: scaffoldKey,
+      drawer: SideBar(controller: SidebarXController(selectedIndex: 4, extended: true)),
       appBar: AppBarWithSearchSwitch(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         appBarBuilder: (context) {
           return AppBar(
-            backgroundColor: Colors.black,
             title: Text(
               'Auditor',
               style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
             ),
             actions: [
               // AppBarSearchButton(),
@@ -147,114 +161,57 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                 icon: const Icon(Icons.search),
               ),
+              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
             ],
           );
         },
-        searchInputDecoration: InputDecoration(
+        searchInputDecoration: const InputDecoration(
           border: InputBorder.none,
           hintText: 'Search',
-          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
+          hintStyle: TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
           // suffixIcon: Icon(
           //   Icons.tag,
           //   color: Colors.grey[300],
           // ),
-
         ),
 
         onChanged: (searchKeyword) {
           if (tabIndex == 0) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditPending,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditPending,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           } else if (tabIndex == 1) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditApplied,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditApplied,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           } else if (tabIndex == 2) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditWorkingOn,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditWorkingOn,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           } else if (tabIndex == 3) {
-            tasksServices.runFilter(taskList: tasksServices.tasksAuditComplete,
-              tagsMap: searchServices.auditorTagsList, enteredKeyword: searchKeyword, );
+            tasksServices.runFilter(
+              taskList: tasksServices.tasksAuditComplete,
+              tagsMap: searchServices.auditorTagsList,
+              enteredKeyword: searchKeyword,
+            );
           }
         },
         customTextEditingController: searchServices.searchKeywordController,
-        // actions: [
-        //   // IconButton(
-        //   //   onPressed: () {
-        //   //     showSearch(
-        //   //       context: context,
-        //   //       delegate: MainSearchDelegate(),
-        //   //     );
-        //   //   },
-        //   //   icon: const Icon(Icons.search)
-        //   // ),
-        //   // LoadButtonIndicator(),
-        // ],
         centerTitle: false,
         elevation: 2,
       ),
-
-
-
-      // AppBar(
-      //   backgroundColor: Colors.black,
-      //   automaticallyImplyLeading: false,
-      //   title: Column(
-      //     mainAxisSize: MainAxisSize.max,
-      //     children: [
-      //       Row(
-      //         mainAxisSize: MainAxisSize.max,
-      //         mainAxisAlignment: MainAxisAlignment.start,
-      //         children: [
-      //           Text(
-      //             'Auditor',
-      //             style: DodaoTheme.of(context).title2.override(
-      //                   fontFamily: 'Inter',
-      //                   color: Colors.white,
-      //                   fontSize: 22,
-      //                 ),
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   actions: const [
-      //     // LoadButtonIndicator(),
-      //   ],
-      //   centerTitle: false,
-      //   elevation: 2,
-      // ),
-      backgroundColor: const Color(0xFF1E2429),
-      // floatingActionButton: _isFloatButtonVisible
-      //     ? FloatingActionButton(
-      //         onPressed: () async {
-      //           await Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => CreateJobWidget(),
-      //             ),
-      //           );
-      //         },
-      //         backgroundColor: DodaoTheme.of(context).maximumBlueGreen,
-      //         elevation: 8,
-      //         child: Icon(
-      //           Icons.add,
-      //           color: Color(0xFFFCFCFC),
-      //           size: 28,
-      //         ),
-      //       )
-      //     : null,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
@@ -270,9 +227,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
               return Column(
                 children: [
                   TabBar(
-                    labelColor: Colors.white,
-                    labelStyle: DodaoTheme.of(context).bodyText1,
-                    indicatorColor: const Color(0xFF47CBE4),
+                    labelColor: DodaoTheme.of(context).primaryText,
+                    labelStyle: Theme.of(context).textTheme.bodyMedium,
+                    indicatorColor: DodaoTheme.of(context).tabIndicator,
                     indicatorWeight: 3,
                     onTap: (index) {
                       searchServices.searchKeywordController.clear();
@@ -301,7 +258,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                       Tab(
                         child: BadgeTab(
                           taskCount: tasksServices.tasksAuditComplete.length,
-                          tabText: 'Complete',
+                          tabText: 'Completed',
                         ),
                       ),
                     ],
@@ -382,7 +339,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                   //             ),
                   //       ),
                   //     ),
-                  //     TagCallButton(
+                  //     TagOpenContainerButton(
                   //       page: 'auditor',
                   //       tabIndex: tabIndex,
                   //     ),
@@ -399,12 +356,11 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                             children: model.auditorTagsList.entries.map((e) {
                               return WrappedChip(
                                 key: ValueKey(e.value),
-                                theme: 'black',
-                                item: e.value,
+                                item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
                                 page: 'auditor',
                                 selected: e.value.selected,
                                 tabIndex: tabIndex,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
+                                wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
                               );
                             }).toList()),
                       ),
@@ -445,7 +401,7 @@ class PendingTabWidget extends StatefulWidget {
 }
 
 class _PendingTabWidgetState extends State<PendingTabWidget> {
-  late bool justLoaded = true;
+  late bool loadingIndicator = false;
   // late Map<EthereumAddress, Task> obj;
 
   @override
@@ -468,7 +424,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
           itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                 child: TaskTransition(
                   fromPage: 'auditor',
                   task: tasksServices.filterResults.values.toList()[index],

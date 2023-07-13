@@ -1,8 +1,10 @@
 // import 'package:js/js.dart';
 
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
 import '../task_dialog/states.dart';
+import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/tags_old.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:jovial_svg/jovial_svg.dart';
@@ -11,8 +13,10 @@ import 'package:jovial_svg/jovial_svg.dart';
 // import 'abi/IERC20.g.dart';
 
 class InterfaceServices extends ChangeNotifier {
-  // Payments goes here (create_job.dart.old -> payment.dart):
+
   late double tokensEntered = 0.0;
+  late String tokenSelected = '';
+
 
   // ************* Transport Images ****** //
   late Map<String, Widget> interchainImages = {
@@ -61,7 +65,21 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  // late double boxKeyboardHeight = 0;
+  // late double boxKeyboardHeightNoKeyboard = 0;
+  // Future updateBoxKeyboardHeight() async {
+  //   boxKeyboardHeight = boxKeyboardHeightNoKeyboard;
+  //   notifyListeners();
+  // }
+
+
   late Map<String, dynamic> dialogCurrentState;
+
+  // final GlobalKey<PawRefreshAndTasksListState> indicator = GlobalKey<PawRefreshAndTasksListState>();
+  // Future runPaw() async {
+  //   indicator.currentState!.runPaw();
+  //   // notifyListeners();
+  // }
 
   // selected Performer or Auditor in participants_list.dart:
   late Map<String, String> selectedUser = {};
@@ -82,6 +100,7 @@ class InterfaceServices extends ChangeNotifier {
 
   // dialog context (for closing it from outside)
   late BuildContext mainDialogContext;
+  late BuildContext createJobPageContext;
 
   late String whichWalletButtonPressed = '';
 
@@ -94,56 +113,6 @@ class InterfaceServices extends ChangeNotifier {
   // ***********  Pull request status  *********** //
 
   late TextSpan statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
-
-  // ***********  tags  ************ ////
-  // late List<SimpleTags> tempTagsList = [
-  //   SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Solidity", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Diamond", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Web3", icon: "", nft: true),
-  // ];
-  // late List<SimpleTags> tempTagsListForTask = [
-  //   SimpleTags(collection: true, tag: "Dart", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Solidity", icon: ""),
-  //   SimpleTags(collection: true, tag: "Flutter", icon: "", nft: true),
-  //   SimpleTags(collection: true, tag: "Diamond", icon: ""),
-  //   SimpleTags(collection: true, tag: "Web3", icon: ""),
-  // ];
-  // late List<SimpleTags> auditorTagsList = [];
-  // late List<SimpleTags> tasksTagsList = [];
-  // late List<SimpleTags> customerTagsList = [];
-  // late List<SimpleTags> performerTagsList = [];
-  // late List<SimpleTags> createTagsList = [];
-  // Future updateTagList(list, {required String page}) async {
-  //   if (page == 'auditor') {
-  //     auditorTagsList = list;
-  //   } else if (page == 'tasks') {
-  //     tasksTagsList = list;
-  //   } else if (page == 'customer') {
-  //     customerTagsList = list;
-  //   } else if (page == 'performer') {
-  //     performerTagsList = list;
-  //   } else if (page == 'create') {
-  //     createTagsList = list;
-  //   }
-  //   notifyListeners();
-  // }
-  //
-  // Future removeTag(tagName, {required String page}) async {
-  //   if (page == 'auditor') {
-  //     auditorTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'tasks') {
-  //     tasksTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'customer') {
-  //     customerTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'performer') {
-  //     performerTagsList.removeWhere((item) => item.tag == tagName);
-  //   } else if (page == 'create') {
-  //     createTagsList.removeWhere((item) => item.tag == tagName);
-  //   }
-  //   notifyListeners();
-  // }
 
   // **** manager treasury pageCount (to avoid screen freezing on animation)
   late int treasuryPageCount = 1;
@@ -161,14 +130,3 @@ class InterfaceServices extends ChangeNotifier {
   final double maxStaticInternalDialogWidth = 480;
   final double maxStaticGlobalWidth = 1000;
 }
-
-
-// class TagsValueController extends ValueNotifier{
-//   TagsValueController(List<SimpleTags>super.value);
-//
-//   void addTag(SimpleTags val) {
-//     value.add(val);
-//     print(value.first.tag);
-//     notifyListeners();
-//   }
-// }

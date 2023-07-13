@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webthree/credentials.dart';
@@ -23,6 +24,7 @@ import '../widget/rate_widget.dart';
 
 class MainTaskPage extends StatefulWidget {
   final double innerPaddingWidth;
+  final double screenHeightSize;
   final Task task;
   final double borderRadius;
   final String fromPage;
@@ -30,6 +32,7 @@ class MainTaskPage extends StatefulWidget {
   const MainTaskPage({
     Key? key,
     required this.innerPaddingWidth,
+    required this.screenHeightSize,
     required this.task,
     required this.borderRadius,
     required this.fromPage,
@@ -46,6 +49,15 @@ class _MainTaskPageState extends State<MainTaskPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var tasksServices = context.read<TasksServices>();
+      var interface = context.read<InterfaceServices>();
+      if (interface.dialogCurrentState['name'] == 'performer-review') {
+        tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
+        tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
+      }
+    });
+
     pullRequestController = TextEditingController();
     messageForStateController = TextEditingController();
   }
@@ -62,6 +74,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
+    // if() {
+    //
+    // }
+
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
@@ -70,8 +86,14 @@ class _MainTaskPageState extends State<MainTaskPage> {
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
 
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top: 5.0),
@@ -83,8 +105,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
             children: [
               // const SizedBox(height: 50),
               Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(widget.borderRadius),
+                elevation: DodaoTheme.of(context).elevation,
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 child: GestureDetector(
                   onTap: () {
                     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
@@ -95,31 +117,35 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     // height: MediaQuery.of(context).size.width * .08,
                     // width: MediaQuery.of(context).size.width * .57
                     width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
+                    decoration: materialMainBoxDecoration,
                     child: LayoutBuilder(builder: (context, constraints) {
                       final text = TextSpan(
                         text: task.description,
-                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                        style: Theme.of(context).textTheme.bodySmall,
                       );
                       final textHeight = TextPainter(text: text, maxLines: 5, textDirection: ui.TextDirection.ltr);
                       final oneLineHeight = TextPainter(text: text, maxLines: 1, textDirection: ui.TextDirection.ltr);
-                      textHeight.layout(maxWidth: constraints.maxWidth);
-                      oneLineHeight.layout(maxWidth: constraints.maxWidth);
+                      textHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth );
+                      oneLineHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth  );
                       final numLines = textHeight.computeLineMetrics().length;
+                      // print('numlines: ' + numLines.toString());
+                      // print('constraints.maxWidth: ' + constraints.maxWidth.toString());
+                      // print('constraints.minWidth: ' + constraints.minWidth.toString());
+                      //
+                      // print('textHeight: ' + textHeight.height.toString());
 
                       // final textHeight =TextPainter(text:span,maxLines: 3,textDirection: TextDirection.ltr);
                       // textHeight.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
                       // print(tp.didExceedMaxLines);
-                      return LimitedBox(
-                        maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * 5) + 12,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(3.0, 0.0, 8.0, 0.0),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child: LimitedBox(
+                              maxHeight:
+                              textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
                               child: Row(
                                 children: [
                                   Expanded(
@@ -129,85 +155,54 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         // padding: const EdgeInsets.all(3),
                                         child: RichText(maxLines: 5, text: text)),
                                   ),
-
-                                  Container(
-                                    width: 54,
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      elevation: 9,
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.lightBlue.shade600,
-                                      child: InkWell(
-                                        onTap: () {
-                                          interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description'] ?? 99,
-                                              duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(6.0),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          child: Icon(Icons.info_outline_rounded, size: 22, color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  // const SizedBox(
-                                  //   width: ,
-                                  // ),
                                   if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
                                     Container(
-                                      width: 54,
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Material(
-                                        elevation: 9,
-                                        borderRadius: BorderRadius.circular(6),
-                                        color: Colors.lightBlue.shade600,
-                                        child: InkWell(
-                                          onTap: () {
-                                            interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
-                                                duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(6.0),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(6),
-                                            ),
-                                            child: Icon(Icons.chat_outlined, size: 22, color: Colors.white),
-                                          ),
-                                        ),
+                                      margin:const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
+                                        tooltip: 'Go to chat page',
+                                        onPressed: () {
+                                          interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
+                                              duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                        },
                                       ),
                                     ),
                                 ],
                               ),
                             ),
-                            if (textHeight.didExceedMaxLines)
-                              Container(
-                                  alignment: Alignment.center,
-                                  height: 14,
-                                  width: constraints.maxWidth,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue.shade600,
-                                    borderRadius: const BorderRadius.only(
-                                      bottomRight: Radius.circular(8.0),
-                                      bottomLeft: Radius.circular(8.0),
-                                    ),
-                                    // borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                          ),
+                          if (textHeight.didExceedMaxLines)
+                            Container(
+                                alignment: Alignment.center,
+                                height: 14,
+                                width: constraints.maxWidth,
+                                decoration: BoxDecoration(
+                                  gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: DodaoTheme.of(context).borderRadius.bottomRight,
+                                    bottomLeft: DodaoTheme.of(context).borderRadius.bottomLeft,
                                   ),
-                                  child: RichText(
-                                      text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'Read more ',
-                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
-                                      ),
-                                      const WidgetSpan(
-                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                      ),
-                                    ],
-                                  ))),
-                          ],
-                        ),
+                                  // borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                                ),
+                                child: RichText(
+                                    text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Read more ',
+                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.7, color: Colors.white),
+                                    ),
+                                    const WidgetSpan(
+                                      child: Icon(Icons.forward, size: 13, color: Colors.white),
+                                    ),
+                                  ],
+                                ))),
+                        ],
                       );
                     }),
                   ),
@@ -231,12 +226,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //     padding: const EdgeInsets.only(top: 14.0),
               //     child: Material(
               //       elevation: 10,
-              //       borderRadius: BorderRadius.circular(widget.borderRadius),
+              //       borderRadius: DodaoTheme.of(context).borderRadius,
               //       child: Container(
               //           width: innerPaddingWidth,
               //           decoration: BoxDecoration(
               //             borderRadius:
-              //             BorderRadius.circular(widget.borderRadius),
+              //             DodaoTheme.of(context).borderRadius,
               //           ),
               //           child: Column(
               //             children: [
@@ -310,51 +305,26 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
+                        padding: const EdgeInsets.only(top: 5.0),
                         width: innerPaddingWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(widget.borderRadius),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              padding: const EdgeInsets.all(8.0),
-                              child: RichText(
-                                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                                TextSpan(text: 'Rate the task:', style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                              ])),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: const [
-                                // RatingBar.builder(
-                                //   initialRating: 4,
-                                //   minRating: 1,
-                                //   direction: Axis.horizontal,
-                                //   allowHalfRating: true,
-                                //   itemCount: 5,
-                                //   itemPadding: const EdgeInsets.symmetric(
-                                //       horizontal: 5.0),
-                                //   itemBuilder: (context, _) => const Icon(
-                                //     Icons.star,
-                                //     color: Colors.amber,
-                                //   ),
-                                //   itemSize: 30.0,
-                                //   onRatingUpdate: (rating) {
-                                //     setState(() {
-                                //       enableRatingButton = true;
-                                //     });
-                                //     ratingScore = rating;
-                                //     tasksServices.myNotifyListeners();
-                                //   },
-                                // ),
-                                RateAnimatedWidget()
-                              ]),
-                            ),
-                          ],
+                        decoration: materialMainBoxDecoration,
+                        child: Padding(
+                          padding: DodaoTheme.of(context).inputEdge,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: RichText(
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                  TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
+                                ])),
+                              ),
+                              const RateAnimatedWidget(),
+                            ],
+                          ),
                         )),
                   ),
                 ),
@@ -370,14 +340,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: ListBody(
                         children: <Widget>[
                           Row(
@@ -390,7 +358,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                   flex: 2,
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    const Text('Warning, this contract on Audit state!', style: TextStyle(height: 1.1, fontWeight: FontWeight.bold)),
+                                    const Text(
+                                      'Warning, this contract on Audit state!',
+                                    ),
                                     if (task.auditInitiator == tasksServices.publicAddress &&
                                         interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
@@ -400,8 +370,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           '${task.auditors.length == 1 ? '' : 's'}'
                                           ' waiting for your decision',
                                           style: const TextStyle(
-                                            height: 1.1,
-                                          )),
+                                              // height: 1.1,
+                                              )),
                                     if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
                                         task.auditInitiator != tasksServices.publicAddress)
                                       const Text('the auditor is expected to be selected', style: TextStyle(height: 1.1)),
@@ -442,47 +412,86 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: ListBody(
                         children: <Widget>[
                           Row(
                             children: <Widget>[
                               Container(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: const Icon(Icons.new_releases,
-                                    size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                                    size: 40, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
                               ),
                               Expanded(
                                 flex: 2,
-                                child: RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  TextSpan(
-                                      text: 'There '
-                                          '${task.participants.length == 1 ? 'is' : 'are'} '
-                                          '${task.participants.length.toString()} participant'
-                                          '${task.participants.length == 1 ? '' : 's'}'
-                                          ' waiting for your decision',
-                                      style: const TextStyle(
-                                        height: 1,
-                                      )),
-                                ])),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: RichText(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'There '
+                                            '${task.participants.length == 1 ? 'is' : 'are'} '
+                                            '${task.participants.length.toString()} participant'
+                                            '${task.participants.length == 1 ? '' : 's'}'
+                                            ' waiting for your decision',
+                                        style: const TextStyle(
+                                          height: 1,
+                                        )),
+                                  ])),
+                                ),
                               ),
-                              TaskDialogButton(
-                                padding: 6.0,
-                                inactive: false,
-                                buttonName: 'Select',
-                                buttonColorRequired: Colors.orange,
-                                callback: () {
-                                  interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
-                                      duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                },
+                              // TaskDialogButton(
+                              //   padding: 6.0,
+                              //   inactive: false,
+                              //   buttonName: 'Select',
+                              //   buttonColorRequired: Colors.orange,
+                              //   callback: () {
+                              //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                              //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                              //   },
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    gradient: DodaoTheme.of(context).smallButtonGradient,
+                                    borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                                    tooltip: 'Go to topup page',
+                                    onPressed: () {
+                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                                          duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    gradient: DodaoTheme.of(context).smallButtonGradient,
+                                    borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
+                                    tooltip: 'Go to select page',
+                                    onPressed: () {
+                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                                          duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                    },
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -500,14 +509,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: ListBody(
                         children: <Widget>[
                           Row(
@@ -520,7 +527,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Expanded(
                                 flex: 2,
                                 child: RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                                   TextSpan(
                                       text: 'Thank you for your contribution. This Task completed. You have earned: ',
                                       style: TextStyle(
@@ -538,51 +545,70 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ************ Show prices and topup part ******** //
               // if (!FocusScope.of(context).hasFocus)
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            flex: 2,
-                            child: ListBody(
-                              children: <Widget>[
-                                RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  TextSpan(
-                                      text: '${task.tokenValues[0]} ${tasksServices.chainTicker} \n',
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                  TextSpan(
-                                      text: '${task.tokenValues[0]} aUSDC',
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0, color: Colors.black87))
-                                ])),
-                              ],
-                            )),
-                        const Spacer(),
-                        if (fromPage == 'customer' || tasksServices.hardhatDebug == true)
-                          TaskDialogButton(
-                            padding: 6.0,
-                            inactive: false,
-                            buttonName: 'Topup',
-                            buttonColorRequired: Colors.lightBlue.shade600,
-                            callback: () {
-                              interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-                                  duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.only(top: 14.0),
+              //   child: Material(
+              //     elevation: DodaoTheme.of(context).elevation,
+              //     borderRadius: DodaoTheme.of(context).borderRadius,
+              //     child: Container(
+              //       padding: const EdgeInsets.all(10.0),
+              //       width: innerPaddingWidth,
+              //       decoration: materialMainBoxDecoration,
+              //       child: Row(
+              //         children: <Widget>[
+              //           Expanded(
+              //               flex: 2,
+              //               child: Padding(
+              //                 padding: const EdgeInsets.all(4.0),
+              //                 child: ListBody(
+              //                   children: <Widget>[
+              //                     // RichText(
+              //                     //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+              //                     //   TextSpan(
+              //                     //     text: '${task.tokenBalances[0]} ${tasksServices.chainTicker} \n',
+              //                     //   ),
+              //                     //   TextSpan(
+              //                     //     text: '${task.tokenBalances[0]} USDC',
+              //                     //   )
+              //                     // ])),
+              //                   ],
+              //                 ),
+              //               )),
+              //           const Spacer(),
+              //           if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') ||
+              //               tasksServices.hardhatDebug == true)
+              //             // TaskDialogButton(
+              //             //   padding: 6.0,
+              //             //   inactive: false,
+              //             //   buttonName: 'Topup',
+              //             //   buttonColorRequired: Colors.lightBlue.shade600,
+              //             //   callback: () {
+              //             //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+              //             //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
+              //             //   },
+              //             // ),
+              //
+              //             Container(
+              //               width: 36,
+              //               height: 36,
+              //               decoration: BoxDecoration(
+              //                 gradient: DodaoTheme.of(context).smallButtonGradient,
+              //                 borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+              //               ),
+              //               child: IconButton(
+              //                 icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+              //                 tooltip: 'Go to topup page',
+              //                 onPressed: () {
+              //                   interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+              //                       duration: const Duration(milliseconds: 400), curve: Curves.ease);
+              //                 },
+              //               ),
+              //             ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               // ChooseWalletButton(
               //   active: tasksServices.platform == 'mobile' ? true : false,
               //   buttonName: 'metamask',
@@ -602,63 +628,83 @@ class _MainTaskPageState extends State<MainTaskPage> {
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
                 child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(12.0),
                     width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
-                    ),
+                    decoration: materialMainBoxDecoration,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: RichText(
-                              text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87), children: <TextSpan>[
+                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                             TextSpan(text: 'Tags and NFT attached:'),
                           ])),
                         ),
-                        LayoutBuilder(builder: (context, constraints) {
-                          final double width = constraints.maxWidth - 66;
-                          List<SimpleTags> tags = task.tags.map((name) => SimpleTags(collection: true, tag: name)).toList();
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            final double width = constraints.maxWidth - 66;
+                            // print (task.tokenBalances);
+                            final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                            for (int i = 0; i < task.tokenNames.length; i++) {
+                              for (var e in task.tokenNames[i]) {
+                                if (task.tokenNames[i].first == 'ETH') {
+                                  tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                                } else {
+                                  if (task.tokenBalances[i] == 0) {
+                                    tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
+                                  } else {
+                                    tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
+                                  }
+                                }
+                              }
+                            }
 
-                          if (tags.isNotEmpty) {
-                            return SizedBox(
-                              width: width,
-                              child: Wrap(
-                                  alignment: WrapAlignment.start,
-                                  direction: Axis.horizontal,
-                                  children: tags.map((e) {
-                                    return WrappedChip(
-                                      key: ValueKey(e),
-                                      theme: 'white',
-                                      item: e,
-                                      page: 'create',
-                                      selected: e.selected,
-                                      wrapperRole: WrapperRole.selectNew,
-                                    );
-                                  }).toList()),
-                            );
-                          } else {
-                            return Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                            if (tags.isNotEmpty) {
+                              return SizedBox(
+                                width: width,
+                                child: Wrap(
+                                    alignment: WrapAlignment.start,
+                                    direction: Axis.horizontal,
+                                    children: tags.map((e) {
+                                      return WrappedChip(
+                                        key: ValueKey(e),
+                                        item: MapEntry(
+                                            e.name,
+                                            NftCollection(
+                                              selected: false,
+                                              name: e.name,
+                                              bunch: {
+                                                BigInt.from(0):
+                                                    TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                              },
+                                            )),
+                                        page: 'tasks',
+                                        selected: e.selected,
+                                        wrapperRole: WrapperRole.selectNew,
+                                      );
+                                    }).toList()),
+                              );
+                            } else {
+                              return Row(
+                                children: <Widget>[
+                                  RichText(
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                                     TextSpan(
-                                        text: 'No Tags or NFT tags attached',
+                                        text: 'Nothing here',
                                         style: TextStyle(
                                           height: 1,
                                         )),
                                   ])),
-                                ),
-                              ],
-                            );
-                          }
-                        }),
+                                ],
+                              );
+                            }
+                          }),
+                        ),
                       ],
                     ),
                   ),
@@ -674,15 +720,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
                       // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
+                      padding: DodaoTheme.of(context).inputEdge,
                       width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
+                      decoration: materialMainBoxDecoration,
                       child: TextFormField(
                         controller: messageForStateController,
                         // onChanged: (_) => EasyDebounce.debounce(
@@ -690,7 +734,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                         //   Duration(milliseconds: 2000),
                         //   () => setState(() {}),
                         // ),
-                        autofocus: false,
+                        autofocus: true,
                         obscureText: false,
                         onTapOutside: (test) {
                           FocusScope.of(context).unfocus();
@@ -712,9 +756,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           //   // splashColor: Colors.black,
                           // ) : null,
                           labelText: interface.dialogCurrentState['labelMessage'],
-                          labelStyle: const TextStyle(fontSize: 17.0, color: Colors.black54),
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           hintText: '[Enter your message here..]',
-                          hintStyle: const TextStyle(fontSize: 14.0, color: Colors.black54),
+                          hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.6),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
@@ -722,11 +766,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        style: DodaoTheme.of(context).bodyText1.override(
-                              fontFamily: 'Inter',
-                              color: Colors.black87,
-                              lineHeight: null,
-                            ),
+                        style: Theme.of(context).textTheme.bodyMedium,
                         minLines: 1,
                         maxLines: 3,
                       ),
@@ -734,58 +774,509 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   ),
                 ),
 
-              // ********* GitHub pull/request Input ************ //
-              if (interface.dialogCurrentState['name'] == 'performer-progress' ||
-                  interface.dialogCurrentState['name'] == 'performer-review' ||
+              // ********* GitHub pull/request Performer ************ //
+              if ((interface.dialogCurrentState['name'] == 'performer-progress' ||
+                      interface.dialogCurrentState['name'] == 'performer-review' ||
+                      tasksServices.hardhatDebug == true) &&
+                  task.repository.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                            // maxWidth: maxStaticInternalDialogWidth,
+                            ),
+                        child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          width: innerPaddingWidth,
+                          decoration: materialMainBoxDecoration,
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            return Column(
+                              children: <Widget>[
+                                if (interface.dialogCurrentState['name'] == 'performer-progress' ||
+                                    interface.dialogCurrentState['name'] == 'performer-review' ||
+                                    tasksServices.hardhatDebug == true)
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Create a pull request with the following name: ',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    // Clipboard.setData(ClipboardData(text: "dodao.dev/#/tasks/${task.taskAddress} task: ${task.title}")).then((_) {
+                                    Clipboard.setData(ClipboardData(text: "dodao.dev/#/tasks/${task.taskAddress}")).then((_) {
+                                      Flushbar(
+                                              icon: Icon(
+                                                Icons.copy,
+                                                size: 20,
+                                                color: DodaoTheme.of(context).flushTextColor,
+                                              ),
+                                              message: 'Pull request name: dodao.dev/#/tasks/${task.taskAddress} copied to your clipboard!',
+                                              duration: const Duration(seconds: 2),
+                                              backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                                              shouldIconPulse: false)
+                                          .show(context);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    alignment: Alignment.topLeft,
+                                    child: Text.rich(
+                                      TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                        WidgetSpan(
+                                            child: Padding(
+                                          padding: const EdgeInsets.only(right: 5.0),
+                                          child: Icon(
+                                            Icons.copy,
+                                            size: 16,
+                                            color: DodaoTheme.of(context).secondaryText,
+                                          ),
+                                        )),
+                                        TextSpan(text: "dodao.dev/#/tasks/${task.taskAddress}", style: const TextStyle(fontWeight: FontWeight.bold)
+                                            // style: const TextStyle(fontWeight: FontWeight.w700)
+                                            ),
+                                      ]),
+
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      // RichText(
+                                      //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                      //   const WidgetSpan(
+                                      //       child: Padding(
+                                      //     padding: EdgeInsets.only(right: 5.0),
+                                      //     child: Icon(
+                                      //       Icons.copy,
+                                      //       size: 16,
+                                      //       color: Colors.black26,
+                                      //     ),
+                                      //   )),
+                                      //   TextSpan(
+                                      //       text: "dodao.dev/#/tasks/${task.taskAddress}",
+                                      //       style: const TextStyle(
+                                      //         overflow: TextOverflow.ellipsis,
+                                      //         )
+                                      //       // style: const TextStyle(fontWeight: FontWeight.w700)
+                                      //   ),
+                                      // ])
+                                    ),
+                                  ),
+                                ),
+                                if (interface.dialogCurrentState['name'] == 'performer-progress' ||
+                                    interface.dialogCurrentState['name'] == 'performer-review' ||
+                                    tasksServices.hardhatDebug == true)
+                                  Column(
+                                    children: [
+                                      Container(
+                                        // padding: const EdgeInsets.only(top: 8),
+                                        alignment: Alignment.topLeft,
+                                        child: const Text('Repository to create a pull request in:'),
+                                      ),
+                                      Builder(builder: (context) {
+                                        final Uri toLaunch = Uri.parse('https://github.com/${widget.task.repository}');
+                                        // final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
+                                        return Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          alignment: Alignment.topLeft,
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              if (!await launchUrl(
+                                                toLaunch,
+                                                mode: LaunchMode.externalApplication,
+                                              )) {
+                                                throw 'Could not launch $toLaunch';
+                                              }
+                                            },
+                                            child: RichText(
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                              WidgetSpan(
+                                                  child: Padding(
+                                                padding: const EdgeInsets.only(right: 5.0),
+                                                child: Icon(
+                                                  Icons.link,
+                                                  size: 16,
+                                                  color: DodaoTheme.of(context).secondaryText,
+                                                ),
+                                              )),
+                                              TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            ])),
+                                          ),
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
+                                  Builder(builder: (context) {
+                                    // late bool response = false;
+                                    // late List response2 = [];
+                                    late String status = '';
+                                    late Color statusColor = Colors.yellow.shade800;
+                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null ||
+                                        tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '') {
+                                      status = '';
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'checking') {
+                                      status = 'checking';
+                                      statusColor = Colors.yellow.shade800;
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'Unknown error (0x30)') {
+                                      status = 'request failed'; //request failed
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'Unknown error (0x70)') {
+                                      status = 'no matching PR'; //request failed
+                                      statusColor = Colors.yellow.shade800;
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'WitnetErrorsLib: assertion failed') {
+                                      status = 'PR open, not merged';
+                                      statusColor = Colors.yellow.shade800;
+                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
+                                        'closed') {
+                                      status = 'PR merged';
+                                      statusColor = Colors.green;
+                                    }
+                                    // else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == '(unmerged)') {
+                                    //   status = 'PR open, not merged';
+                                    //   statusColor = Colors.yellow.shade800;
+                                    // }
+                                    else {
+                                      status = 'error';
+                                      statusColor = Colors.red;
+                                    }
+
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          // padding: const EdgeInsets.only(top: 8),
+                                          alignment: Alignment.topLeft,
+                                          child: const Text('Pull request status:'),
+                                        ),
+
+                                        // Row(
+                                        //   children: [
+                                        //     Padding(
+                                        //       padding: const EdgeInsets.all(4.0),
+                                        //       child: GestureDetector(
+                                        //         onTap: () async {
+                                        //           tasksServices.checkWitnetResultAvailability(task.taskAddress);
+                                        //         },
+                                        //         child: Container(
+                                        //             width: 76,
+                                        //             height: 36,
+                                        //             decoration: BoxDecoration(
+                                        //               gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        //               borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                        //             ),
+                                        //             child: const Center(
+                                        //               child: Text(
+                                        //                 'checkResult',
+                                        //                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                        //               ),
+                                        //             )),
+                                        //       ),
+                                        //     ),
+                                        //     Padding(
+                                        //       padding: const EdgeInsets.all(4.0),
+                                        //       child: GestureDetector(
+                                        //         onTap: () async {
+                                        //           await tasksServices.getLastWitnetResult(task.taskAddress);
+                                        //         },
+                                        //         child: Container(
+                                        //             width: 86,
+                                        //             height: 36,
+                                        //             decoration: BoxDecoration(
+                                        //               gradient: DodaoTheme.of(context).smallButtonGradient,
+                                        //               borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                        //             ),
+                                        //             child: const Center(
+                                        //               child: Text(
+                                        //                 'getLastWitnetResult',
+                                        //                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                        //               ),
+                                        //             )),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: RichText(
+                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                            WidgetSpan(
+                                                child: Padding(
+                                              padding: const EdgeInsets.only(right: 5.0),
+                                              child: Icon(
+                                                Icons.api,
+                                                size: 16,
+                                                color: DodaoTheme.of(context).secondaryText,
+                                              ),
+                                            )),
+                                            TextSpan(
+                                                text: tasksServices.transactionStatuses[task.nanoId] == null ||
+                                                        tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest'] == null
+                                                    ? 'check not initialized'
+                                                    : tasksServices.transactionStatuses[task.nanoId]!['postWitnetRequest']?['witnetPostResult'],
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: (() {
+                                                    if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
+                                                        'initialized request') {
+                                                      return Colors.yellow.shade900;
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']
+                                                            ?['witnetPostResult'] ==
+                                                        'request mined') {
+                                                      return Colors.yellow.shade900;
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']
+                                                            ?['witnetPostResult'] ==
+                                                        'request failed') {
+                                                      return Colors.redAccent;
+                                                    } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']
+                                                            ?['witnetPostResult'] ==
+                                                        'result available') {
+                                                      return Colors.green;
+                                                    } else {
+                                                      return DodaoTheme.of(context).primaryText;
+                                                    }
+                                                  }()),
+                                                )),
+                                            if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
+                                                'initialized request')
+                                              WidgetSpan(
+                                                child: Container(
+                                                  padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                                  // alignment: Alignment.bottomCenter,
+                                                  // height: 23,
+                                                  child: LoadingAnimationWidget.fourRotatingDots(
+                                                    size: 15,
+                                                    color: DodaoTheme.of(context).secondaryText,
+                                                  ),
+                                                ),
+                                              ),
+                                          ])),
+                                        ),
+
+                                        if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
+                                                'request mined' ||
+                                            tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetPostResult'] ==
+                                                'result available')
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                            child: RichText(
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                              WidgetSpan(
+                                                  child: Padding(
+                                                padding: const EdgeInsets.only(right: 5.0),
+                                                child: Icon(
+                                                  Icons.api,
+                                                  size: 16,
+                                                  color: DodaoTheme.of(context).secondaryText,
+                                                ),
+                                              )),
+                                              TextSpan(text: status, style: TextStyle(fontWeight: FontWeight.bold, color: statusColor)),
+                                              if (status == 'checking')
+                                                WidgetSpan(
+                                                  child: Container(
+                                                    padding: const EdgeInsets.only(left: 3.0, right: 4.0),
+                                                    // alignment: Alignment,
+                                                    // height: 20,
+                                                    child: LoadingAnimationWidget.fourRotatingDots(
+                                                      size: 15,
+                                                      color: DodaoTheme.of(context).secondaryText,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ])),
+                                          ),
+
+                                        // Container(
+                                        //   padding: const EdgeInsets.all(8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
+                                        //     WidgetSpan(
+                                        //         child: Padding(
+                                        //       padding: EdgeInsets.only(right: 5.0),
+                                        //       child: Icon(
+                                        //         Icons.api,
+                                        //         size: 16,
+                                        //         color: Colors.black26,
+                                        //       ),
+                                        //     )),
+                                        //     // TextSpan(text: response2[2], style: TextStyle(fontWeight: FontWeight.bold))
+                                        //     // interface.statusText
+                                        //   ])),
+                                        // ),
+                                        if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
+                                          Container(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            alignment: Alignment.topLeft,
+                                            child: const Text(
+                                              '* Please wait until your pull request is merged in to '
+                                              'the repository or till customer manually accepts Task completion:',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ),
+
+                                        // Container(
+                                        //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                        //           children: const [
+                                        //             WidgetSpan(
+                                        //                 child: Padding(
+                                        //                   padding: EdgeInsets.only(right: 5.0),
+                                        //                   child: Icon(
+                                        //                     Icons.api,
+                                        //                     size: 16,
+                                        //                     color: Colors.black26,
+                                        //                   ),
+                                        //                 )
+                                        //             ),
+                                        //
+                                        //             TextSpan(
+                                        //                 text: 'Open',
+                                        //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                        //             ),
+                                        //           ])),
+                                        // ),
+                                        // Container(
+                                        //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                        //           children: const [
+                                        //             WidgetSpan(
+                                        //                 child: Padding(
+                                        //                   padding: EdgeInsets.only(right: 5.0),
+                                        //                   child: Icon(
+                                        //                     Icons.api,
+                                        //                     size: 16,
+                                        //                     color: Colors.black26,
+                                        //                   ),
+                                        //                 )
+                                        //             ),
+                                        //
+                                        //             TextSpan(
+                                        //                 text: 'Closed (merged)',
+                                        //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                        //             ),
+                                        //           ])),
+                                        // ),
+                                        // Container(
+                                        //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: RichText(
+                                        //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
+                                        //           children: const [
+                                        //             WidgetSpan(
+                                        //                 child: Padding(
+                                        //                   padding: EdgeInsets.only(right: 5.0),
+                                        //                   child: Icon(
+                                        //                     Icons.api,
+                                        //                     size: 16,
+                                        //                     color: Colors.black26,
+                                        //                   ),
+                                        //                 )
+                                        //             ),
+                                        //
+                                        //             TextSpan(
+                                        //                 text: 'Closed (rejected)',
+                                        //                 style: TextStyle( fontWeight: FontWeight.bold)
+                                        //             ),
+                                        //           ])),
+                                        // )
+                                      ],
+                                    );
+                                  }),
+                              ],
+                            );
+                          }),
+                        ),
+                      )),
+                ),
+
+              // // ********* GitHub pull/request Status ************ //
+              //
+              //   Container(
+              //     padding: const EdgeInsets.only(top: 14.0),
+              //     child: Material(
+              //         elevation: DodaoTheme.of(context).elevation,
+              //         borderRadius: DodaoTheme.of(context).borderRadius,
+              //         child: ConstrainedBox(
+              //           constraints: const BoxConstraints(
+              //               // maxWidth: maxStaticInternalDialogWidth,
+              //               ),
+              //           child: Center()
+              //         )),
+              //   ),
+
+              // ********* GitHub pull/request Link Information ************ //
+              if (((interface.dialogCurrentState['name'] == 'customer-new' ||
+                          interface.dialogCurrentState['name'] == 'customer-progress' ||
+                          interface.dialogCurrentState['name'] == 'customer-agreed' ||
+                          // interface.dialogCurrentState['name'] == 'performer-new' ||
+                          interface.dialogCurrentState['name'] == 'performer-agreed') &&
+                      widget.task.repository.isNotEmpty) ||
                   tasksServices.hardhatDebug == true)
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                             // maxWidth: maxStaticInternalDialogWidth,
                             ),
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
+                          decoration: materialMainBoxDecoration,
                           child: LayoutBuilder(builder: (context, constraints) {
                             return Column(
                               children: <Widget>[
                                 Container(
                                   padding: const EdgeInsets.only(top: 8),
                                   alignment: Alignment.topLeft,
-                                  child: const Text('Create a pull request with a following name: '),
+                                  child: const Text('Repository to create a pull request in:'),
                                 ),
+
                                 // Container(
-                                //   padding: const EdgeInsets.all(5.0),
+                                //   padding: const EdgeInsets.all(8.0),
                                 //   alignment: Alignment.topLeft,
-                                //   child: Column(
-                                //     children: [
-                                //       const Text(
-                                //         '#NNX-06 Fix glitches on chat page in Task dialog',
-                                //         style: TextStyle(fontWeight: FontWeight.bold),
-                                //       ),
-                                //     ],
-                                //   ),
+                                //   child: RichText(
+                                //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                //         const WidgetSpan(
+                                //             child: Padding(
+                                //               padding: EdgeInsets.only(right: 5.0),
+                                //               child: Icon(
+                                //                 Icons.api,
+                                //                 size: 16,
+                                //                 color: Colors.black26,
+                                //               ),
+                                //             )),
+                                //         TextSpan(text: widget.task.repository, style: const TextStyle(fontWeight: FontWeight.bold))
+                                //       ])),
                                 // ),
 
                                 GestureDetector(
                                   onTap: () async {
-                                    Clipboard.setData(ClipboardData(text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog')).then((_) {
+                                    Clipboard.setData(ClipboardData(text: 'https://github.com/${widget.task.repository}')).then((_) {
                                       Flushbar(
-                                              icon: const Icon(
+                                              icon: Icon(
                                                 Icons.copy,
                                                 size: 20,
-                                                color: Colors.white,
+                                                color: DodaoTheme.of(context).secondaryText,
                                               ),
-                                              message: 'Pull request name copied to your clipboard!',
+                                              message: 'https://github.com/${widget.task.repository} copied to your clipboard!',
                                               duration: const Duration(seconds: 2),
-                                              backgroundColor: Colors.blueAccent,
+                                              backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                               shouldIconPulse: false)
                                           .show(context);
                                     });
@@ -794,240 +1285,30 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     alignment: Alignment.topLeft,
                                     child: RichText(
-                                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const [
+                                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
                                       WidgetSpan(
                                           child: Padding(
-                                        padding: EdgeInsets.only(right: 5.0),
+                                        padding: const EdgeInsets.only(right: 5.0),
                                         child: Icon(
                                           Icons.copy,
                                           size: 16,
-                                          color: Colors.black26,
+                                          color: DodaoTheme.of(context).secondaryText,
                                         ),
                                       )),
                                       TextSpan(
-                                          text: '#NNX-06 Fix glitches on widgets.chat page in Task dialog',
-                                          style: TextStyle(fontWeight: FontWeight.bold)),
+                                          text: 'https://github.com/${widget.task.repository}', style: const TextStyle(fontWeight: FontWeight.bold)),
                                     ])),
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text('In customer repository: '),
-                                ),
 
-                                Builder(builder: (context) {
-                                  final Uri toLaunch = Uri(scheme: 'https', host: 'github.com', path: '/devopsdao/webthree');
-                                  return Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.topLeft,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        if (!await launchUrl(
-                                          toLaunch,
-                                          mode: LaunchMode.externalApplication,
-                                        )) {
-                                          throw 'Could not launch $toLaunch';
-                                        }
-                                      },
-                                      child: RichText(
-                                          text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                        const WidgetSpan(
-                                            child: Padding(
-                                          padding: EdgeInsets.only(right: 5.0),
-                                          child: Icon(
-                                            Icons.link,
-                                            size: 16,
-                                            color: Colors.black26,
-                                          ),
-                                        )),
-                                        TextSpan(text: toLaunch.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-                                      ])),
-                                    ),
-                                  );
-                                }),
-
-                                // TextFormField(
-                                //   controller: pullRequestController,
-                                //   autofocus: true,
-                                //   obscureText: false,
-                                //   onTapOutside: (test) {
-                                //     FocusScope.of(context).unfocus();
-                                //   },
-                                //
-                                //   decoration: InputDecoration(
-                                //     labelText: 'Create a pull request with a following name:',
-                                //     labelStyle:
-                                //     const TextStyle(fontSize: 17.0, color: Colors.black54),
-                                //     // hintText: '[Job description...]',
-                                //     hintStyle:
-                                //     const TextStyle(fontSize: 14.0, color: Colors.black54),
-                                //     focusedBorder: const UnderlineInputBorder(
-                                //       borderSide: BorderSide.none,
-                                //     ),
-                                //     enabledBorder: const UnderlineInputBorder(
-                                //       borderSide: BorderSide.none,
-                                //     ),
-                                //     suffixIcon: IconButton(
-                                //       onPressed: () async {
-                                //         final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                                //         setState(() {
-                                //           pullRequestController!.text = '${clipboardData?.text}';
-                                //         });
-                                //       },
-                                //       icon: const Icon(Icons.content_paste_outlined),
-                                //       padding: const EdgeInsets.only(right: 12.0),
-                                //       highlightColor: Colors.grey,
-                                //       hoverColor: Colors.transparent,
-                                //       color: Colors.blueAccent,
-                                //       splashColor: Colors.black,
-                                //     ),
+                                // Container(
+                                //   padding: const EdgeInsets.only(top: 8),
+                                //   alignment: Alignment.topLeft,
+                                //   child: const Text(
+                                //     '* this ',
+                                //     style: TextStyle(fontSize: 10),
                                 //   ),
-                                //   style: DodaoTheme.of(context).bodyText1.override(
-                                //     fontFamily: 'Inter',
-                                //     color: Colors.black54,
-                                //     lineHeight: 1,
-                                //   ),
-                                //   minLines: 1,
-                                //   maxLines: 1,
-                                //   keyboardType: TextInputType.multiline,
-                                //   onChanged:  (text) {
-                                //
-                                //     // debounceNotifyListener.debounce(() {
-                                //     //   tasksServices.myNotifyListeners();
-                                //     // });
-                                //   },
                                 // ),
-                              ],
-                            );
-                          }),
-                        ),
-                      )),
-                ),
-
-              // ********* GitHub pull/request Input ************ //
-              if (interface.dialogCurrentState['name'] == 'performer-review' || tasksServices.hardhatDebug == true)
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            // maxWidth: maxStaticInternalDialogWidth,
-                            ),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          width: innerPaddingWidth,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(widget.borderRadius),
-                          ),
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            return Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text('Pull request status:'),
-                                ),
-
-                                Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  alignment: Alignment.topLeft,
-                                  child: RichText(
-                                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: [
-                                    const WidgetSpan(
-                                        child: Padding(
-                                      padding: EdgeInsets.only(right: 5.0),
-                                      child: Icon(
-                                        Icons.api,
-                                        size: 16,
-                                        color: Colors.black26,
-                                      ),
-                                    )),
-                                    interface.statusText
-                                  ])),
-                                ),
-
-                                Container(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text(
-                                    '* Please wait until your pull request is merged in to '
-                                    'the repository or till customer manually accepts Task completion:',
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                ),
-
-                                // Container(
-                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                //           children: const [
-                                //             WidgetSpan(
-                                //                 child: Padding(
-                                //                   padding: EdgeInsets.only(right: 5.0),
-                                //                   child: Icon(
-                                //                     Icons.api,
-                                //                     size: 16,
-                                //                     color: Colors.black26,
-                                //                   ),
-                                //                 )
-                                //             ),
-                                //
-                                //             TextSpan(
-                                //                 text: 'Open',
-                                //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                //             ),
-                                //           ])),
-                                // ),
-                                // Container(
-                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                //           children: const [
-                                //             WidgetSpan(
-                                //                 child: Padding(
-                                //                   padding: EdgeInsets.only(right: 5.0),
-                                //                   child: Icon(
-                                //                     Icons.api,
-                                //                     size: 16,
-                                //                     color: Colors.black26,
-                                //                   ),
-                                //                 )
-                                //             ),
-                                //
-                                //             TextSpan(
-                                //                 text: 'Closed (merged)',
-                                //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                //             ),
-                                //           ])),
-                                // ),
-                                // Container(
-                                //   padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-                                //   alignment: Alignment.topLeft,
-                                //   child: RichText(
-                                //       text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                //           children: const [
-                                //             WidgetSpan(
-                                //                 child: Padding(
-                                //                   padding: EdgeInsets.only(right: 5.0),
-                                //                   child: Icon(
-                                //                     Icons.api,
-                                //                     size: 16,
-                                //                     color: Colors.black26,
-                                //                   ),
-                                //                 )
-                                //             ),
-                                //
-                                //             TextSpan(
-                                //                 text: 'Closed (rejected)',
-                                //                 style: TextStyle( fontWeight: FontWeight.bold)
-                                //             ),
-                                //           ])),
-                                // )
                               ],
                             );
                           }),
@@ -1037,28 +1318,26 @@ class _MainTaskPageState extends State<MainTaskPage> {
 
               // ************** PERFORMER ROLE NETWORK CHOOSE *************** //
 
-              if ((task.tokenValues[0] != 0 || task.tokenValues[0] != 0) &&
-                  (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
-                // if (task.taskState == 'completed' &&
-                //     (fromPage == 'performer' ||
-                //         tasksServices.hardhatDebug == true) &&
-                //     (task.contractValue != 0 || task.contractValueToken != 0))
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    child: Container(
-                      // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerPaddingWidth,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
-                      ),
-                      child: SelectNetworkMenu(object: task),
-                    ),
-                  ),
-                ),
+              // if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0) &&
+              //     (interface.dialogCurrentState['name'] == 'performer-completed' || tasksServices.hardhatDebug == true))
+              //   // if (task.taskState == 'completed' &&
+              //   //     (fromPage == 'performer' ||
+              //   //         tasksServices.hardhatDebug == true) &&
+              //   //     (task.contractValue != 0 || task.contractValueToken != 0))
+              //   Container(
+              //     padding: const EdgeInsets.only(top: 14.0),
+              //     child: Material(
+              //       elevation: DodaoTheme.of(context).elevation,
+              //       borderRadius: DodaoTheme.of(context).borderRadius,
+              //       child: Container(
+              //         // constraints: const BoxConstraints(maxHeight: 500),
+              //         padding: const EdgeInsets.all(8.0),
+              //         width: innerPaddingWidth,
+              //         decoration: materialMainBoxDecoration,
+              //         child: SelectNetworkMenu(object: task),
+              //       ),
+              //     ),
+              //   ),
 
               // ChooseWalletButton(active: true, buttonName: 'wallet_connect', borderRadius: widget.borderRadius,),
 
@@ -1073,14 +1352,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //           padding: const EdgeInsets.only(),
               //           child: Material(
               //             elevation: 10,
-              //             borderRadius: BorderRadius.circular(widget.borderRadius),
+              //             borderRadius: DodaoTheme.of(context).borderRadius,
               //             child: Container(
               //                 // constraints: const BoxConstraints(maxHeight: 500),
               //                 padding: const EdgeInsets.all(5.0),
               //                 width: innerPaddingWidth,
-              //                 decoration: BoxDecoration(
-              //                   borderRadius: BorderRadius.circular(widget.borderRadius),
-              //                 ),
+              //                 decoration: materialMainBoxDecoration,
               //                 child: Column(
               //                   children: [
               //                     const Text('Interchain protocol:'),

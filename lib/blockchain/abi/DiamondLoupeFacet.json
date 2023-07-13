@@ -79,6 +79,25 @@
     "inputs": [
       {
         "internalType": "bytes4",
+        "name": "code",
+        "type": "bytes4"
+      }
+    ],
+    "name": "fromCode",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
         "name": "_interfaceId",
         "type": "bytes4"
       }

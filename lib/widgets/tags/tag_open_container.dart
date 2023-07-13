@@ -1,18 +1,23 @@
 import 'package:animations/animations.dart';
 import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../blockchain/interface.dart';
+import '../../config/theme.dart';
 import 'main.dart';
 
-class TagCallButton extends StatelessWidget {
+class TagOpenContainerButton extends StatelessWidget {
   final String page;
   final int tabIndex;
-  const TagCallButton({Key? key, required this.page, required this.tabIndex}) : super(key: key);
+  const TagOpenContainerButton({Key? key, required this.page, required this.tabIndex}) : super(key: key);
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   @override
   Widget build(BuildContext context) {
+    var interface = context.read<InterfaceServices>();
+
     if (page != 'create') {
       return OpenContainer(
         transitionDuration: const Duration(milliseconds: 300),
@@ -52,13 +57,15 @@ class TagCallButton extends StatelessWidget {
               ),
             ),
           );
+
+
         },
       );
     } else {
       return Material(
-          elevation: 9,
-          borderRadius: BorderRadius.circular(6),
-          color: Colors.lightBlue.shade600,
+          elevation: 0,
+          borderRadius: DodaoTheme.of(context).borderRadius,
+          color: Colors.transparent,
           child: OpenContainer(
             transitionDuration: const Duration(milliseconds: 500),
             transitionType: _transitionType,
@@ -71,15 +78,34 @@ class TagCallButton extends StatelessWidget {
                   ));
             },
             closedElevation: 0,
-            closedShape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(6.0),
-              ),
+            closedShape: RoundedRectangleBorder(
+              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
             ),
             openElevation: 2,
-            openColor: Colors.white,
-            closedColor: Colors.lightBlue.shade600,
+            openColor: DodaoTheme.of(context).background,
+            closedColor: DodaoTheme.of(context).smallButtonGradient.colors.last,
             closedBuilder: (BuildContext context, VoidCallback openContainer) {
+
+              return Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  gradient: DodaoTheme.of(context).smallButtonGradient,
+                  borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                ),
+                child: const IconButton(
+                  icon: Icon(Icons.loyalty_outlined, size: 18, color: Colors.white),
+                  tooltip: 'Add tags or NFT\'s',
+                  onPressed: null,
+                  // onPressed: () {
+                  //   interface.dialogPagesController.animateToPage(
+                  //       interface.dialogCurrentState['pages']['topup'] ?? 99,
+                  //       duration: const Duration(milliseconds: 400), curve: Curves.ease
+                  //   );
+                  // },
+                ),
+              );
+
               return InkWell(
                 // onTap: _buttonState ? widget.callback : null,
                 child: Container(

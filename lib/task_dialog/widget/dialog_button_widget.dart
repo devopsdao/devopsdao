@@ -244,7 +244,6 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
     late Widget child = FloatingActionButton.extended(
       onPressed: _buttonState ? widget.callback : null,
       backgroundColor: buttonColor,
-
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(17.0))),
       label: Text(
         widget.buttonName,

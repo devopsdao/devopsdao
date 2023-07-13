@@ -105,18 +105,6 @@
         "internalType": "string[]",
         "name": "_tags",
         "type": "string[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "string[]",
-        "name": "_symbol",
-        "type": "string[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256[]",
-        "name": "_amount",
-        "type": "uint256[]"
       }
     ],
     "name": "TaskContractCreating",
@@ -306,19 +294,29 @@
             "type": "string"
           },
           {
+            "internalType": "string",
+            "name": "repository",
+            "type": "string"
+          },
+          {
             "internalType": "string[]",
             "name": "tags",
             "type": "string[]"
           },
           {
-            "internalType": "string[]",
-            "name": "symbols",
-            "type": "string[]"
+            "internalType": "address[]",
+            "name": "tokenContracts",
+            "type": "address[]"
           },
           {
-            "internalType": "uint256[]",
-            "name": "amounts",
-            "type": "uint256[]"
+            "internalType": "uint256[][]",
+            "name": "tokenIds",
+            "type": "uint256[][]"
+          },
+          {
+            "internalType": "uint256[][]",
+            "name": "tokenAmounts",
+            "type": "uint256[][]"
           }
         ],
         "internalType": "struct TaskData",

@@ -1,14 +1,19 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../create_job/create_job_call_button.dart';
+import '../main.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
+import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_open_container.dart';
+import '../widgets/tags_on_page_open_container.dart';
 import '/blockchain/task_services.dart';
 import '/widgets/loading.dart';
 import '/config/flutter_flow_animations.dart';
@@ -62,7 +67,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     // init customerTagsList to show tag '+' button:
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var searchServices = context.read<SearchServices>();
-      searchServices.updateTagListOnTasksPages(page: 'tasks', initial: true);
+      searchServices.selectTagListOnTasksPages(page: 'tasks', initial: true);
     });
   }
 
@@ -78,6 +83,12 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
+    var modelTheme = context.read<ModelTheme>();
+
+    late bool desktopWidth = false;
+    if (MediaQuery.of(context).size.width > 700) {
+      desktopWidth = true;
+    }
 
     bool isFloatButtonVisible = false;
     if (searchServices.searchKeywordController.text.isEmpty) {
@@ -99,235 +110,237 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       });
     }
 
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBarWithSearchSwitch(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        appBarBuilder: (context) {
-          return AppBar(
-            backgroundColor: Colors.black,
-            title: Text(
-                'Job Exchange',
-              style: DodaoTheme.of(context).title2.override(
-                fontFamily: 'Inter',
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
-            actions: [
-              // AppBarSearchButton(),
-              IconButton(
-                onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
-                icon: const Icon(Icons.search),
-              ),
-            ],
-          );
-        },
-        searchInputDecoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: const TextStyle(fontFamily: 'Inter', fontSize: 18.0, color: Colors.white),
-          // suffixIcon: Icon(
-          //   Icons.tag,
-          //   color: Colors.grey[300],
-          // ),
-
-        ),
-
-        onChanged: (searchKeyword) {
-          tasksServices.runFilter(
-              taskList: tasksServices.tasksNew,
-              tagsMap: searchServices.tasksTagsList,
-              enteredKeyword: searchKeyword);
-        },
-        customTextEditingController: searchServices.searchKeywordController,
-        // actions: [
-        //   // IconButton(
-        //   //   onPressed: () {
-        //   //     showSearch(
-        //   //       context: context,
-        //   //       delegate: MainSearchDelegate(),
-        //   //     );
-        //   //   },
-        //   //   icon: const Icon(Icons.search)
-        //   // ),
-        //   // LoadButtonIndicator(),
-        // ],
-        centerTitle: false,
-        elevation: 2,
-      ),
-      backgroundColor: const Color(0xFF1E2429),
-      floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            fit: BoxFit.cover,
+    return Stack(
+      children: [
+        if (!desktopWidth)
+          Image.asset(
+            "assets/images/background_cat_orange.png",
+            fit: BoxFit.none,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             filterQuality: FilterQuality.medium,
+            alignment: Alignment.center,
+            scale: 1.0,
+            opacity: modelTheme.isDark ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(1),
           ),
-        ),
-        child: SizedBox(
-          width: interface.maxStaticGlobalWidth,
-          child: DefaultTabController(
-            length: 1,
-            initialIndex: 0,
-            child: LayoutBuilder(builder: (context, constraints) {
-              // print('max:  ${constraints.maxHeight}');
-              // print('max * : ${constraints.maxHeight * .65}');
-              // print(constraints.minWidth);
-              return Column(
-                children: [
-                  // Row(
-                  //   children: [
-                  //     Container(
-                  //       width: constraints.minWidth - 70,
-                  //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                  //       decoration: const BoxDecoration(
-                  //           // color: Colors.white70,
-                  //           // borderRadius: BorderRadius.circular(8),
-                  //           ),
-                  //       child: TextField(
-                  //         controller: _searchKeywordController,
-                  //         onChanged: (searchKeyword) {
-                  //           tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword,
-                  //               tagsMap: searchServices.tasksTagsList );
-                  //         },
-                  //         decoration: const InputDecoration(
-                  //           hintText: '[Find task by Title...]',
-                  //           hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                  //           labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                  //           labelText: 'Search',
-                  //           suffixIcon: Icon(
-                  //             Icons.search,
-                  //             color: Colors.white,
-                  //           ),
-                  //           enabledBorder: UnderlineInputBorder(
-                  //             borderSide: BorderSide(
-                  //               color: Colors.white,
-                  //               width: 1,
-                  //             ),
-                  //             borderRadius: BorderRadius.only(
-                  //               topLeft: Radius.circular(4.0),
-                  //               topRight: Radius.circular(4.0),
-                  //             ),
-                  //           ),
-                  //           focusedBorder: UnderlineInputBorder(
-                  //             borderSide: BorderSide(
-                  //               color: Colors.white,
-                  //               width: 1,
-                  //             ),
-                  //             borderRadius: BorderRadius.only(
-                  //               topLeft: Radius.circular(4.0),
-                  //               topRight: Radius.circular(4.0),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         style: DodaoTheme.of(context).bodyText1.override(
-                  //               fontFamily: 'Inter',
-                  //               color: Colors.white,
-                  //               lineHeight: 2,
-                  //             ),
-                  //       ),
+        if (desktopWidth)
+          Image.asset(
+            "assets/images/background_cat_orange_big.png",
+            fit: BoxFit.none,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            filterQuality: FilterQuality.medium,
+            alignment: Alignment.center,
+            scale: 1.0,
+            opacity: modelTheme.isDark ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(1),
+          ),
+        Scaffold(
+          key: scaffoldKey,
+          drawer: SideBar(controller: SidebarXController(selectedIndex: 1, extended: true)),
+          appBar: AppBarWithSearchSwitch(
+            backgroundColor: DodaoTheme.of(context).background,
+            titleTextStyle: Theme.of(context).textTheme.titleLarge,
+            automaticallyImplyLeading: true,
+            appBarBuilder: (context) {
+              return AppBar(
+                title: Text('Job Exchange', style: Theme.of(context).textTheme.titleLarge),
+                actions: [
+                  // AppBarSearchButton(),
+                  // Container(
+                  //   // width: 150,
+                  //   height: 30,
+                  //   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  //
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(16),
+                  //     gradient: const LinearGradient(
+                  //       colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+                  //       stops: [0.1, 0.5, 1],
                   //     ),
-                  //     const TagCallButton(
-                  //       page: 'tasks',
-                  //       tabIndex: 0,
-                  //     ),
-                  //   ],
+                  //   ),
+                  //   child: InkWell(
+                  //       highlightColor: Colors.white,
+                  //       onTap: () async {
+                  //         OpenAddTags(
+                  //           fontSize: 14,
+                  //           page: 'tasks',
+                  //           tabIndex: 0,
+                  //         );
+                  //       },
+                  //       child: const Text(
+                  //         '#Tags',
+                  //         textAlign: TextAlign.center,
+                  //         style: TextStyle(fontSize: 14, color: Colors.white),
+                  //       )
+                  //   ),
+                  //
                   // ),
-                  Consumer<SearchServices>(builder: (context, model, child) {
-                    localTagsList = model.tasksTagsList.entries.map((e) => e.value.tag).toList();
-                    // tasksServices.runFilter(
-                    //     tasksServices.tasksNew,
-                    //     enteredKeyword: _searchKeywordController.text,
-                    //     tagsList: localTagsList);
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        child: Wrap(
-                            alignment: WrapAlignment.start,
-                            direction: Axis.horizontal,
-                            children: model.tasksTagsList.entries.map((e) {
-                              return WrappedChip(
-                                key: ValueKey(e.value),
-                                theme: 'black',
-                                item: e.value,
-                                page: 'tasks',
-                                selected: e.value.selected,
-                                tabIndex: 0,
-                                wrapperRole: e.value.tag == '#' ? WrapperRole.hash : WrapperRole.onPages,
-                              );
-                            }).toList()),
-                      ),
-                    );
-                  }),
-
-                  // TabBar(
-                  //   labelColor: Colors.white,с
-                  //   labelStyle: DodaoTheme.of(context).bodyText1,
-                  //   indicatorColor: Color(0xFF47CBE4),
-                  //   indicatorWeight: 3,
-                  //   tabs: [
-                  //     Tab(
-                  //       text: 'New offers',
-                  //     ),
-                  //     // Tab(
-                  //     //   text: 'Reserved tab',
-                  //     // ),
-                  //     // Tab(
-                  //     //   text: 'Reserved tab',
-                  //     // ),
-                  //   ],
-                  // ),
-
-                  tasksServices.isLoading
-                      ? const LoadIndicator()
-                      : Expanded(
-                          child: TabBarView(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                child: RefreshIndicator(
-                                  onRefresh: () async {
-                                    tasksServices.isLoadingBackground = true;
-                                    tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
-                                  },
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: tasksServices.filterResults.values.toList().length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                                          child: TaskTransition(
-                                            fromPage: 'tasks',
-                                            task: tasksServices.filterResults.values.toList()[index],
-                                          ));
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                  const OpenMyAddTags(
+                    page: 'tasks',
+                    tabIndex: 0,
+                  ),
+                  IconButton(
+                    onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
+                    icon: const Icon(Icons.search),
+                  ),
+                  if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
                 ],
               );
-            }),
+            },
+            keepAppBarColors: false,
+            searchInputDecoration: InputDecoration(border: InputBorder.none, hintText: 'Search', hintStyle: Theme.of(context).textTheme.titleMedium
+                // suffixIcon: Icon(
+                //   Icons.tag,
+                //   color: Colors.grey[300],
+                // ),
+
+                ),
+
+            onChanged: (searchKeyword) {
+              tasksServices.runFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList, enteredKeyword: searchKeyword);
+            },
+            customTextEditingController: searchServices.searchKeywordController,
+            // actions: [
+            //   // IconButton(
+            //   //   onPressed: () {
+            //   //     showSearch(
+            //   //       context: context,
+            //   //       delegate: MainSearchDelegate(),
+            //   //     );
+            //   //   },
+            //   //   icon: const Icon(Icons.search)
+            //   // ),
+            //   LoadButtonIndicator(),
+            // ],
+            centerTitle: false,
+            elevation: 2,
+          ),
+          backgroundColor: Colors.transparent,
+
+          floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+            alignment: Alignment.center,
+            // decoration: const BoxDecoration(
+            //   // gradient: LinearGradient(
+            //   //   colors: [Colors.black, Colors.black, Colors.black],
+            //   //   stops: [0, 0.5, 1],
+            //   //   begin: AlignmentDirectional(1, -1),
+            //   //   end: AlignmentDirectional(-1, 1),
+            //   // ),
+            //   image: DecorationImage(
+            //     image: AssetImage("assets/images/background.png"),
+            //     fit: BoxFit.cover,
+            //     filterQuality: FilterQuality.medium,
+            //   ),
+            // ),
+            child: SizedBox(
+              width: interface.maxStaticGlobalWidth,
+              child: DefaultTabController(
+                length: 1,
+                initialIndex: 0,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  // print('max:  ${constraints.maxHeight}');
+                  // print('max * : ${constraints.maxHeight * .65}');
+                  // print(constraints.minWidth);
+                  return Column(
+                    children: [
+                      Consumer<SearchServices>(builder: (context, model, child) {
+                        localTagsList = model.tasksTagsList.entries.map((e) => e.value.name).toList();
+                        // tasksServices.runFilter(
+                        //     tasksServices.tasksNew,
+                        //     enteredKeyword: _searchKeywordController.text,
+                        //     tagsList: localTagsList);
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            child: Wrap(
+                                alignment: WrapAlignment.start,
+                                direction: Axis.horizontal,
+                                children: model.tasksTagsList.entries.map((e) {
+                                  return WrappedChip(
+                                    key: ValueKey(e.value),
+                                    item: MapEntry(
+                                        e.key,
+                                        NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch
+                                            // {
+                                            //   BigInt.from(0) : TokenItem(
+                                            //     name: e.value.name,
+                                            //     collection: true,
+                                            //   )
+                                            // },
+                                            )),
+                                    page: 'tasks',
+                                    selected: e.value.selected,
+                                    tabIndex: 0,
+                                    wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                                  );
+                                }).toList()),
+                          ),
+                        );
+                      }),
+
+                      // TabBar(
+                      //   labelColor: Colors.white,с
+                      //   labelStyle: Theme.of(context).textTheme.bodyMedium,
+                      //   indicatorColor: DodaoTheme.of(context).tabIndicator,
+                      //   indicatorWeight: 3,
+                      //   tabs: [
+                      //     Tab(
+                      //       text: 'New offers',
+                      //     ),
+                      //     // Tab(
+                      //     //   text: 'Reserved tab',
+                      //     // ),
+                      //     // Tab(
+                      //     //   text: 'Reserved tab',
+                      //     // ),
+                      //   ],
+                      // ),
+
+                      tasksServices.isLoading
+                          ? const LoadIndicator()
+                          : const Expanded(
+                              child: TabBarView(
+                                children: [
+                                  PawRefreshAndTasksList(pageName: 'tasks',),
+                                  // Padding(
+                                  //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                                  //   child: RefreshIndicator(
+                                  //     onRefresh: () async {
+                                  //       tasksServices.isLoadingBackground = true;
+                                  //       // tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+                                  //     },
+                                  //     child: ListView.builder(
+                                  //       padding: EdgeInsets.zero,
+                                  //       scrollDirection: Axis.vertical,
+                                  //       itemCount: tasksServices.filterResults.values.toList().length,
+                                  //       itemBuilder: (context, index) {
+                                  //         return Container(
+                                  //             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                                  //
+                                  //             child: TaskTransition(
+                                  //               fromPage: 'tasks',
+                                  //               task: tasksServices.filterResults.values.toList()[index],
+                                  //             ));
+                                  //       },
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                    ],
+                  );
+                }),
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

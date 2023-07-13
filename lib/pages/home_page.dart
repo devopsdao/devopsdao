@@ -1,14 +1,16 @@
 import 'package:animations/animations.dart';
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:jovial_svg/jovial_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
-import '../create_job/create_job.dart.old';
+import '../navigation/navmenu.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';
 import '../config/flutter_flow_icon_button.dart';
@@ -88,6 +90,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     ),
   };
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _controller = SidebarXController(selectedIndex: 0, extended: true);
 
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
@@ -115,464 +118,347 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    // tasksServices.initComplete.value = false;
-    // tasksServices.initComplete.addListener(() {
-    //   print(tasksServices.initComplete.value);
-    //   if(tasksServices.initComplete.value) {
-    //
-    //   }
-    // });
-
-    // tasksServices.validNetworkID.value = false;
-    // tasksServices.validNetworkID.addListener(() {
-    //   print(tasksServices.validNetworkID.value);
-    //   if(tasksServices.validNetworkID.value) {
-    //
-    //   }
-    // });
 
     bool isFloatButtonVisible = false;
-
     if (tasksServices.publicAddress != null && tasksServices.validChainID) {
       isFloatButtonVisible = true;
     }
 
-    return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                'Dodao',
-                style: DodaoTheme.of(context).title2.override(
-                      fontFamily: 'Inter',
-                      color: Colors.white,
-                      fontSize: 22,
-                    ),
-              ),
-            ],
+    late bool desktopWidth = false;
+    if (MediaQuery.of(context).size.width > 700) {
+      desktopWidth = true;
+    }
+
+    return Stack(
+      children: [
+        if (!desktopWidth)
+        Image.asset(
+          "assets/images/background_part_top.png",
+          fit: BoxFit.none,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          filterQuality: FilterQuality.medium,
+          alignment: Alignment.topRight,
+          scale: 1.0,
+        ),
+        if (!desktopWidth)
+        Image.asset(
+          "assets/images/background_part_bottom.png",
+          fit: BoxFit.none,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          filterQuality: FilterQuality.medium,
+          alignment: Alignment.bottomLeft,
+          scale: 1.0,
+        ),
+        if (desktopWidth)
+          Image.asset(
+            "assets/images/background_part_top_big.png",
+            fit: BoxFit.none,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            filterQuality: FilterQuality.medium,
+            alignment: Alignment.topRight,
+            scale: 0.8,
           ),
-          actions: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  // width: 150,
-                  height: 30,
-                  padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
-
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    gradient: const LinearGradient(
-                      colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
-                      stops: [0.1, 0.5, 1],
-                    ),
-                  ),
-                  child: InkWell(
-                      highlightColor: Colors.white,
-                      onTap: () async {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const WalletPageTop(),
-                        );
-                      },
-                      child: tasksServices.walletConnected && tasksServices.publicAddress != null
-                          ? Text(
-                              '${tasksServices.publicAddress.toString().substring(0, 5)}'
-                              '...'
-                              '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
-                              // textAlign: TextAlign.center,
-                              // style: const TextStyle(fontSize: 16, color: Colors.white),
-                            )
-                          : const Text(
-                              'Connect wallet',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            )),
-                ),
-              ),
-            ),
-            // FlutterFlowIconButton(
-            //   borderColor: Colors.transparent,
-            //   borderRadius: 30,
-            //   borderWidth: 1,
-            //   buttonSize: 60,
-            //   icon: const Icon(
-            //     Icons.account_balance_wallet,
-            //     color: Colors.white,
-            //     size: 30,
-            //   ),
-            //   onPressed: () async {
-            //     showDialog(
-            //       context: context,
-            //       builder: (context) => const WalletPageTop(
-            //       ),
-            //     );
-            //   },
-            // ),
-            // const LoadButtonIndicator(),
-
-            if (!tasksServices.isDeviceConnected)
-              Row(
+        if (desktopWidth)
+          Image.asset(
+            "assets/images/background_part_bottom_big.png",
+            fit: BoxFit.none,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            filterQuality: FilterQuality.medium,
+            alignment: Alignment.bottomLeft,
+            scale: 0.8,
+          ),
+        Scaffold(
+            backgroundColor: Colors.transparent,
+            key: scaffoldKey,
+            // drawer: const NavDrawer(),
+            // extendBodyBehindAppBar: true,
+            resizeToAvoidBottomInset: false,
+            drawer: SideBar(controller: SidebarXController(selectedIndex: 0, extended: true)),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              // automaticallyImplyLeading: false,
+              title: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 30,
-                    borderWidth: 1,
-                    buttonSize: 60,
-                    icon: const Icon(
-                      Icons.cloud_off,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    onPressed: () async {
-                      // tasksServices.connectWallet();
-                      // () async {
-                      //   await tasksServices.connectWallet();
-                      //   print(
-                      // }();
-                    },
-                  ),
+                  Text('Dodao', style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
-          ],
-          centerTitle: false,
-          elevation: 2,
-        ),
-        backgroundColor: const Color(0xFF1E2429),
-        floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
-        body: Container(
-            // width: double.infinity,
-            // height: double.infinity,
-            // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              // gradient: LinearGradient(
-              //   // colors: [Colors.black, Colors.black, Colors.black],
-              //   colors: [Colors.black, Colors.black, Colors.green],
-              //   stops: [0, 0.5, 1],
-              //   begin: AlignmentDirectional(1, -1),
-              //   end: AlignmentDirectional(-1, 1),
-              // ),
-              color: Colors.black,
-              // image: DecorationImage(
-              //     image: SvgProvider.Svg('assets/images/background-from-png.svg'),
-              //     fit: BoxFit.fitHeight,
-              // ),
-              image: DecorationImage(
-                image: AssetImage(
-                  "assets/images/background.png",
+              actions: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
+                    child: Container(
+                      // width: 150,
+                      height: 30,
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: const LinearGradient(
+                          colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+                          stops: [0.1, 0.5, 1],
+                        ),
+                      ),
+                      child: InkWell(
+                          highlightColor: Colors.white,
+                          onTap: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) => const WalletPageTop(),
+                            );
+                          },
+                          child: tasksServices.walletConnected && tasksServices.publicAddress != null
+                              ? Text(
+                                  '${tasksServices.publicAddress.toString().substring(0, 4)}'
+                                  '...'
+                                  '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
+                                  // textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                                )
+                              : const Text(
+                                  'Connect wallet',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 14, color: Colors.white),
+                                )),
+                    ),
+                  ),
                 ),
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.medium,
-              ),
+                if (!tasksServices.isDeviceConnected)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0.0, right: 14),
+                    child: Icon(
+                      Icons.cloud_off,
+                      color: DodaoTheme.of(context).primaryText,
+                      size: 26,
+                    ),
+                  ),
+              ],
+              centerTitle: false,
             ),
-            child: SingleChildScrollView(
-              child: Container(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                  width: interface.maxStaticGlobalWidth,
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    final double halfWidth = constraints.maxWidth / 2 - 8;
-                    final double fullWidth = constraints.maxWidth;
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        tasksServices.isLoading
-                            ? const LoadIndicator()
-                            :
-
-                            // SvgPicture.asset(
-                            //
-                            //
-                            //   'assets/images/LColor_optimized.svg',
-                            //   width: 200,
-                            //   height: 250,
-                            // ),
-
-                            Image.asset(
-                                'assets/images/LColor.png',
-                                width: 280,
-                                height: 280,
-                                filterQuality: FilterQuality.medium,
-                                // fit: BoxFit.fitHeight,
-                              ),
-                        // SvgPicture.asset(
-                        //   'assets/images/LColor-from-png2.svg',
-                        //   width: 280,
-                        //   height: 280,
-                        // ),
-                        // SvgPicture.asset(
-                        //   'assets/images/LColor-from-png2.svg',
-                        //   width: 280,
-                        //   height: 280,
-                        // ),
-                        // .animated([animationsMap['imageOnPageLoadAnimation']!]),
-                        // Padding(
-                        //   padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 16),
-                        //   child: Text(
-                        //     'Welcome to Dodao',
-                        //     style: DodaoTheme.of(context).title1.override(
-                        //       fontFamily: 'Inter',
-                        //       color: Colors.white,
-                        //       fontSize: 28,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        //   // .animated([animationsMap['textOnPageLoadAnimation']!]),
-                        // ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: halfWidth,
-                              decoration: BoxDecoration(
-                                // color: const Color(0xff31d493),
-                                borderRadius: BorderRadius.circular(22),
-                                gradient: const LinearGradient(
-                                  colors: [Colors.blueAccent, Colors.purple, Colors.purpleAccent],
-                                  stops: [0.2, 0.7, 1],
+            // backgroundColor: Colors.black,
+            floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
+            body: Align(
+                alignment: Alignment.center,
+                child: Container(
+                    padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                    width: interface.maxStaticInternalDialogWidth,
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      // final double halfWidth = constraints.maxWidth / 2 - 8;
+                      // final double fullWidth = constraints.maxWidth;
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          tasksServices.isLoading
+                              ? const LoadIndicator()
+                              : Image.asset(
+                                  'assets/images/LColor.png',
+                                  width: 250,
+                                  height: 250,
+                                  filterQuality: FilterQuality.medium,
+                                  // fit: BoxFit.fitHeight,
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(20, 12, 12, 12),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('In your wallet',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                        )),
-                                    Text('${tasksServices.ethBalance} ${tasksServices.chainTicker}',
-                                        style: const TextStyle(
-                                          height: 1.6,
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Inter',
-                                        )),
-                                    Text('${tasksServices.ethBalanceToken} aUSDC',
-                                        style: const TextStyle(
-                                          height: 1,
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Inter',
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              width: halfWidth,
-                              decoration: BoxDecoration(
-                                // color: const Color(0xffff8222),
-                                borderRadius: BorderRadius.circular(22),
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
-                                  stops: [0, 0.6, 1],
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(20, 12, 12, 12),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Pending',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                        )),
-                                    Text('${tasksServices.pendingBalance} ${tasksServices.chainTicker}',
-                                        style: const TextStyle(
-                                          height: 1.6,
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Inter',
-                                        )),
-                                    Text('${tasksServices.pendingBalanceToken} aUSDC',
-                                        style: const TextStyle(
-                                          height: 1,
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Inter',
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: Container(
-                            width: fullWidth,
-                            decoration: BoxDecoration(
-                              color: Colors.white12,
-                              borderRadius: BorderRadius.circular(8),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                              child: LayoutBuilder(builder: (context, constraints) {
-                                final double width = constraints.maxWidth - 66;
-                                List<SimpleTags> tags = [];
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                BlurryContainer(
 
-                                if (tasksServices.roleNfts['auditor'] > 0) {
-                                  tags.add(SimpleTags(collection: true, tag: "Auditor", icon: ""));
-                                }
-                                if (tasksServices.roleNfts['governor'] > 0) {
-                                  tags.add(SimpleTags(collection: true, tag: "Governor", icon: ""));
-                                }
-                                tags.add(SimpleTags(collection: true, tag: "Get more...", icon: ""));
-
-                                return Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Your Nft\'s:',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                        )),
-                                    SizedBox(
-                                      width: width,
-                                      child: Wrap(
-                                          alignment: WrapAlignment.start,
-                                          direction: Axis.horizontal,
-                                          children: tags.map((e) {
-                                            return WrappedChip(
-                                              key: ValueKey(e),
-                                              theme: 'black',
-                                              item: e,
-                                              page: 'home',
-                                              selected: e.selected,
-                                              wrapperRole: e.tag == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
-                                            );
-                                          }).toList()),
+                                  blur: 4,
+                                  color: DodaoTheme.of(context).transparentCloud,
+                                  padding: const EdgeInsets.all(0.5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: DodaoTheme.of(context).borderRadius,
+                                      border: DodaoTheme.of(context).borderGradient,
                                     ),
+                                    child: Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(22, 12, 22, 12),
+                                      child: LayoutBuilder(builder: (context, constraints) {
+                                        // final double width = constraints.maxWidth - 66;
+                                        List<TokenItem> tags = [];
+                                        if (tasksServices.roleNfts['auditor'] > 0) {
+                                          tags.add(TokenItem(collection: true, name: "Auditor", icon: ""));
+                                        }
+                                        if (tasksServices.roleNfts['governor'] > 0) {
+                                          tags.add(TokenItem(collection: true, name: "Governor", icon: ""));
+                                        }
+                                        tags.add(TokenItem(collection: true, name: "Get more...", icon: ""));
 
-                                    // SelectableText(
-                                    //   '${tasksServices.publicAddress}',
-                                    //   style: DodaoTheme.of(context)
-                                    //       .bodyText2
-                                    //       .override(
-                                    //     fontFamily: 'Inter',
-                                    //     fontSize: 11,
-                                    //     color:
-                                    //     DodaoTheme.of(context).primaryBtnText,
-                                    //   ),
-                                    // )
-
-                                    // Text(
-                                    //   'Not Connected',
-                                    //   style: DodaoTheme.of(context)
-                                    //       .bodyText2
-                                    //       .override(
-                                    //     fontFamily: 'Inter',
-                                    //     color:
-                                    //     DodaoTheme.of(context).primaryBtnText,
-                                    //   ),
-                                    // ),
-                                  ],
-                                );
-                              }),
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 22),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text('In your wallet:',
+                                                          style: Theme.of(context).textTheme.bodyMedium),
+                                                      Text('${tasksServices.ethBalance} ${tasksServices.chainTicker}',
+                                                          style: Theme.of(context).textTheme.bodyLarge),
+                                                      Text('${tasksServices.ethBalanceToken} USDC',
+                                                          style: Theme.of(context).textTheme.bodyLarge),
+                                                    ],
+                                                  ),
+                                                ),
+                                                // const Spacer(),
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 22),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text('Pending:',
+                                                          style: Theme.of(context).textTheme.bodyMedium),
+                                                      Text('${tasksServices.pendingBalance} ${tasksServices.chainTicker}',
+                                                          style: Theme.of(context).textTheme.bodyLarge),
+                                                      Text('${tasksServices.pendingBalanceToken} USDC',
+                                                          style: Theme.of(context).textTheme.bodyLarge),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Text('Your Nft\'s:',
+                                                style: Theme.of(context).textTheme.bodyMedium),
+                                            SizedBox(
+                                              // width: width,
+                                              child: Wrap(
+                                                  alignment: WrapAlignment.start,
+                                                  direction: Axis.horizontal,
+                                                  children: tags.map((e) {
+                                                    return WrappedChip(
+                                                      key: ValueKey(e),
+                                                      item: MapEntry(
+                                                          e.name,
+                                                          NftCollection(
+                                                            selected: false,
+                                                            name: e.name,
+                                                            bunch: {BigInt.from(0): TokenItem(name: e.name, collection: true)},
+                                                          )),
+                                                      page: 'home',
+                                                      selected: e.selected,
+                                                      wrapperRole: e.name == 'Get more...' ? WrapperRole.getMore : WrapperRole.onStartPage,
+                                                    );
+                                                  }).toList()),
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16,),
+                                BlurryContainer(
+                                  width: interface.maxStaticInternalDialogWidth,
+                                  color: DodaoTheme.of(context).transparentCloud,
+                                  blur: 4,
+                                  padding: const EdgeInsets.all(0.5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: DodaoTheme.of(context).borderRadius,
+                                      border: DodaoTheme.of(context).borderGradient,
+                                    ),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(22, 12, 12, 12),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Your score:',
+                                            style: Theme.of(context).textTheme.bodyMedium),
+                                        if (tasksServices.publicAddress == null)
+                                          Text(
+                                            'Not Connected',
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                          )
+                                        else if (tasksServices.scoredTaskCount == 0)
+                                          Text(
+                                            'No completed evaluated tasks',
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                          )
+                                        else
+                                          SelectableText(
+                                            '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                          )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // const SizedBox(height: 1,),
+                                Container(
+                                    padding: const EdgeInsets.only(top: 10.0, bottom: 6),
+                                    alignment: Alignment.center,
+                                    child: InkWell(
+                                        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                          Icon(
+                                            Icons.library_books_outlined,
+                                            color: DodaoTheme.of(context).secondaryText,
+                                            size: 18,
+                                          ),
+                                          Text(
+                                            ' docs.dodao.dev',
+                                            style: DodaoTheme.of(context)
+                                                .bodyText3
+                                                .override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText, fontSize: 14),
+                                          ),
+                                        ]),
+                                        onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/'))))
+                              ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: Container(
-                            width: fullWidth,
-                            decoration: BoxDecoration(
-                              color: Colors.white12,
-                              borderRadius: BorderRadius.circular(8),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Your score:',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter',
-                                      )),
-                                  if (tasksServices.publicAddress == null)
-                                    Text(
-                                      'Not Connected',
-                                      style: DodaoTheme.of(context).bodyText2.override(
-                                            fontFamily: 'Inter',
-                                            color: DodaoTheme.of(context).primaryBtnText,
-                                          ),
-                                    )
-                                  else if (tasksServices.scoredTaskCount == 0)
-                                    Text(
-                                      'No completed evaluated tasks',
-                                      style: DodaoTheme.of(context).bodyText2.override(
-                                            fontFamily: 'Inter',
-                                            color: DodaoTheme.of(context).primaryBtnText,
-                                          ),
-                                    )
-                                  else
-                                    SelectableText(
-                                      '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
-                                      style: DodaoTheme.of(context).bodyText2.override(
-                                            fontFamily: 'Inter',
-                                            fontSize: 11,
-                                            color: DodaoTheme.of(context).primaryBtnText,
-                                          ),
-                                    )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                            padding: const EdgeInsets.only(top: 13.0, bottom: 6),
-                            alignment: Alignment.center,
-                            child: InkWell(
-                                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  const Icon(
-                                    Icons.library_books_outlined,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  Text(
-                                    ' docs.dodao.dev',
-                                    style: DodaoTheme.of(context).bodyText3.override(fontFamily: 'Inter', color: Colors.grey[100], fontSize: 14),
-                                  ),
-                                ]),
-                                onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
-                        Text(
-                            tasksServices.browserPlatform ??
-                                'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
-                            style: const TextStyle(
-                              height: 2,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 10,
-                            )),
-                      ],
-                    );
-                  })),
-            )));
+
+                          // Column(
+                          //   children: [
+                          //     Container(
+                          //         padding: const EdgeInsets.only(top: 13.0, bottom: 6),
+                          //         alignment: Alignment.center,
+                          //         child: InkWell(
+                          //             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          //               Icon(
+                          //                 Icons.library_books_outlined,
+                          //                 color: DodaoTheme.of(context).primaryText,
+                          //                 size: 18,
+                          //               ),
+                          //               Text(
+                          //                 ' docs.dodao.dev',
+                          //                 style: DodaoTheme.of(context)
+                          //                     .bodyText3
+                          //                     .override(fontFamily: 'Inter', color: DodaoTheme.of(context).primaryText, fontSize: 14),
+                          //               ),
+                          //             ]),
+                          //             onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
+                          //     Text(
+                          //         tasksServices.browserPlatform ??
+                          //             'v${tasksServices.version}-${tasksServices.buildNumber}, Platform: ${tasksServices.platform}; Browser Platform: ${tasksServices.browserPlatform}',
+                          //         style: TextStyle(
+                          //           height: 2,
+                          //           fontWeight: FontWeight.bold,
+                          //           color: DodaoTheme.of(context).primaryText,
+                          //           fontSize: 10,
+                          //         )),
+                          //   ],
+                          // )
+
+
+                        ],
+                      );
+                    })))),
+      ],
+    );
   }
 }

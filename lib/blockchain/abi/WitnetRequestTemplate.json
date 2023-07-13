@@ -21,8 +21,40 @@
         "type": "string[][]"
       }
     ],
-    "name": "WitnetRequestTemplateSettled",
+    "name": "WitnetRequestBuilt",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "aggregator",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string[][]",
+        "name": "args",
+        "type": "string[][]"
+      }
+    ],
+    "name": "buildRequest",
+    "outputs": [
+      {
+        "internalType": "contract WitnetRequest",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -39,12 +71,12 @@
   },
   {
     "inputs": [],
-    "name": "getDataSources",
+    "name": "factory",
     "outputs": [
       {
-        "internalType": "bytes32[]",
+        "internalType": "contract WitnetRequestFactory",
         "name": "",
-        "type": "bytes32[]"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -52,128 +84,7 @@
   },
   {
     "inputs": [],
-    "name": "getDataSourcesCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRadonAggregatorHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRadonTallyHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getResultDataMaxSize",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getResultDataType",
-    "outputs": [
-      {
-        "internalType": "enum WitnetV2.RadonDataTypes",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "lookupDataSourceByIndex",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint8",
-            "name": "argsCount",
-            "type": "uint8"
-          },
-          {
-            "internalType": "enum WitnetV2.DataRequestMethods",
-            "name": "method",
-            "type": "uint8"
-          },
-          {
-            "internalType": "enum WitnetV2.RadonDataTypes",
-            "name": "resultDataType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "string",
-            "name": "url",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "body",
-            "type": "string"
-          },
-          {
-            "internalType": "string[2][]",
-            "name": "headers",
-            "type": "string[2][]"
-          },
-          {
-            "internalType": "bytes",
-            "name": "script",
-            "type": "bytes"
-          }
-        ],
-        "internalType": "struct WitnetV2.DataSource",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lookupRadonAggregator",
+    "name": "getRadonAggregator",
     "outputs": [
       {
         "components": [
@@ -214,8 +125,77 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRadonRetrievalByIndex",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "argsCount",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum WitnetV2.DataRequestMethods",
+            "name": "method",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum WitnetV2.RadonDataTypes",
+            "name": "resultDataType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "body",
+            "type": "string"
+          },
+          {
+            "internalType": "string[2][]",
+            "name": "headers",
+            "type": "string[2][]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "script",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct WitnetV2.RadonRetrieval",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "lookupRadonTally",
+    "name": "getRadonRetrievalsCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRadonTally",
     "outputs": [
       {
         "components": [
@@ -269,6 +249,71 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "registry",
+    "outputs": [
+      {
+        "internalType": "contract WitnetBytecodes",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "resultDataMaxSize",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "resultDataType",
+    "outputs": [
+      {
+        "internalType": "enum WitnetV2.RadonDataTypes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "retrievals",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tally",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "string[][]",
@@ -276,12 +321,12 @@
         "type": "string[][]"
       }
     ],
-    "name": "settleArgs",
+    "name": "verifyRadonRequest",
     "outputs": [
       {
-        "internalType": "contract WitnetRequest",
+        "internalType": "bytes32",
         "name": "",
-        "type": "address"
+        "type": "bytes32"
       }
     ],
     "stateMutability": "nonpayable",

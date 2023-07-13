@@ -9,7 +9,7 @@ import 'package:dodao/widgets/payment.dart';
 import 'package:dodao/widgets/select_menu.dart';
 import 'package:dodao/task_dialog/buttons.dart';
 import 'package:dodao/task_dialog/states.dart';
-import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:dodao/task_dialog/widget/rate_widget.dart';
 import 'package:flutter/gestures.dart';
@@ -58,15 +58,16 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
   @override
   Widget build(BuildContext context) {
     final String taskAddressString = widget.taskAddress.toString();
-    RouteInformation routeInfo = RouteInformation(location: '/$widget.fromPage/$taskAddressString');
+    RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}/$taskAddressString');
     Beamer.of(context).updateRouteInformation(routeInfo);
     return Scaffold(
-        body: Container(
-      width: double.infinity,
-      height: double.infinity,
-      // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-      alignment: Alignment.center,
-      child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress, shimmerEnabled: true),
-    ));
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+        alignment: Alignment.center,
+        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress),
+      )
+    );
   }
 }

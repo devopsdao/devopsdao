@@ -1,7 +1,10 @@
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../account_dialog/account_transition_effect.dart';
+import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
+import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
@@ -75,9 +78,9 @@ class _AccountsPageState extends State<AccountsPage> {
     // }
     return Scaffold(
       key: scaffoldKey,
+      drawer: SideBar(controller: SidebarXController(selectedIndex: 5, extended: true)),
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         title: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -103,18 +106,11 @@ class _AccountsPageState extends State<AccountsPage> {
         centerTitle: false,
         elevation: 2,
       ),
-      backgroundColor: const Color(0xFF1E2429),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black, Colors.black, Colors.black],
-            stops: [0, 0.5, 1],
-            begin: AlignmentDirectional(1, -1),
-            end: AlignmentDirectional(-1, 1),
-          ),
           image: DecorationImage(
             image: AssetImage("assets/images/background.png"),
             fit: BoxFit.cover,
@@ -141,11 +137,8 @@ class _AccountsPageState extends State<AccountsPage> {
                         child: TextField(
                           controller: _searchKeywordController,
                           onChanged: (searchKeyword) {
-                            // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.tag).toList();
-                            tasksServices.runFilter(
-                                taskList: tasksServices.tasksNew,
-                                enteredKeyword: searchKeyword,
-                                tagsMap: {});
+                            // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.name).toList();
+                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword, tagsMap: {});
                           },
                           decoration: const InputDecoration(
                             hintText: '[Find task by Title...]',
@@ -184,7 +177,7 @@ class _AccountsPageState extends State<AccountsPage> {
                               ),
                         ),
                       ),
-                      const TagCallButton(
+                      const TagOpenContainerButton(
                         page: 'tasks',
                         tabIndex: 0,
                       ),
@@ -197,11 +190,11 @@ class _AccountsPageState extends State<AccountsPage> {
                         children: model.tasksTagsList.entries.map((e) {
                           return WrappedChip(
                             key: ValueKey(e.value),
-                            theme: 'black',
-                            item: e.value,
+                            item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
                             page: 'accounts',
                             selected: e.value.selected,
-                            wrapperRole: WrapperRole.onPages,);
+                            wrapperRole: WrapperRole.onPages,
+                          );
                         }).toList());
                   }),
                   Expanded(
@@ -221,7 +214,7 @@ class _AccountsPageState extends State<AccountsPage> {
                               itemCount: tasksServices.accountsData.values.toList().length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                                     child: ClickOnAccount(
                                       fromPage: 'accounts',
                                       index: index,

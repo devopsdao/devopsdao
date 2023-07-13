@@ -11,71 +11,159 @@ class SearchServices extends ChangeNotifier {
   //
   late ValueNotifier<bool> searchBarStart = ValueNotifier(true);
 
-  SimpleTags defaultTagAddNew = SimpleTags(collection: false, tag: "#", icon: "", nft: false, selected: true);
 
-  Map<String, SimpleTags> tagsFilterResults = {...simpleTagsMap};
-  // Map<String, NftTagsBunch> nftFilterResults = {...nftTagsMap};
-  Map<String, SimpleTags> auditorTagsList = {};
-  Map<String, SimpleTags> tasksTagsList = {};
-  Map<String, SimpleTags> customerTagsList = {};
-  Map<String, SimpleTags> performerTagsList = {};
-  Map<String, SimpleTags> createTagsList = {};
+  Map<String, NftCollection> mintPageFilterResults = {};
+  Map<String, NftCollection> treasuryPageFilterResults = {};
+  Map<String, NftCollection> selectionPageFilterResults = {};
+  Map<String, NftCollection> selectionPageInitialCombined = {};
+  Map<String, NftCollection> auditorTagsList = {};
+  Map<String, NftCollection> tasksTagsList = {};
+  Map<String, NftCollection> customerTagsList = {};
+  Map<String, NftCollection> performerTagsList = {};
+  Map<String, NftCollection> createTagsList = {};
 
-  Map<String, NftTagsBunch> _nftFilterResults = {};
-  Map<String, NftTagsBunch> get nftFilterResults => _nftFilterResults;
-  set nftFilterResults(Map<String, NftTagsBunch> value) {
-    // print(_resultNftsMapReceived);
-    // print(resultNftsMapReceived);
-    print(nftFilterResults);
-    if (value != nftFilterResults ) {
-      _nftFilterResults = value;
+  Map<String, NftCollection> _nftBalanceMap = {};
+  Map<String, NftCollection> get nftBalanceMap => _nftBalanceMap;
+  set nftBalanceMap(Map<String, NftCollection> value) {
+    if (value != nftBalanceMap ) {
+      _nftBalanceMap = value;
       notifyListeners();
     }
+  }
+
+  Map<String, NftCollection> _nftCollectionMap = {};
+  Map<String, NftCollection> get nftCollectionMap => _nftCollectionMap;
+  set nftCollectionMap(Map<String, NftCollection> value) {
+    if (value != nftCollectionMap ) {
+      _nftCollectionMap = value;
+      notifyListeners();
+    }
+  }
+
+
+
+  Future refreshLists(String listToRefresh) async {
+    if (listToRefresh == 'mint') {
+      mintPageFilterResults.clear();
+      mintPageFilterResults = Map.from(nftCollectionMap);
+    } else if (listToRefresh == 'treasury') {
+      treasuryPageFilterResults.clear();
+      treasuryPageFilterResults = Map.from(nftBalanceMap);
+    } else if (listToRefresh == 'selection') {
+      Map<String, NftCollection> tempNfts = {};
+      if (nftCollectionMap.entries.isNotEmpty) {
+        for (var e in nftCollectionMap.entries) {
+          tempNfts['collection ${e.key}'] = NftCollection(
+            name: e.key,
+            bunch: { BigInt.from(0) : (
+              TokenItem(
+                name: e.key,
+                collection: false,
+                nft: false,
+                selected: false
+              )
+            )},
+            selected: false
+          );
+        }
+      }
+      selectionPageFilterResults = {...tempNfts, ...nftBalanceMap};
+      selectionPageInitialCombined = {...tempNfts, ...nftBalanceMap}; // initial combined copied map for tagsSearchFilter()
+    }
+    notifyListeners();
   }
 
   // experimental future. ready allow to run taskService.runFilter. to be deleted/
   late bool forbidSearchKeywordClear = false;
 
-  Future removeTagsOnPages(tagName, {required String page}) async {
+  Future removeTagOnPages(tagKey, {required String page}) async {
     if (page == 'auditor') {
-      auditorTagsList.removeWhere((key, value) => value.tag == tagName);
+      auditorTagsList.removeWhere((key, value) => key== tagKey);
     } else if (page == 'tasks') {
-      tasksTagsList.removeWhere((key, value) => value.tag == tagName);
+      tasksTagsList.removeWhere((key, value) => key == tagKey);
     } else if (page == 'customer') {
-      customerTagsList.removeWhere((key, value) => value.tag == tagName);
+      customerTagsList.removeWhere((key, value) => key == tagKey);
     } else if (page == 'performer') {
-      performerTagsList.removeWhere((key, value) => value.tag == tagName);
+      performerTagsList.removeWhere((key, value) => key == tagKey);
     } else if (page == 'create') {
-      createTagsList.removeWhere((key, value) => value.tag == tagName);
+      createTagsList.removeWhere((key, value) => key == tagKey);
     }
     // always remove from main filter list:
-    // tagsFilterResults.removeWhere((key, value) => value.tag == tagName);
-    // after remove from actual list, we need to reset tagsFilterResults to false
-    tagsFilterResults[tagName]!.selected = false;
+    // mintPageFilterResults.removeWhere((key, value) => value.tag == tagName);
+    // after remove from actual list, we need to reset mintPageFilterResults to false
+    if (page != 'create') {
+      selectionPageFilterResults[tagKey]!.selected = false;
+    }
     notifyListeners();
-    // updateTagListOnTasksPages(page: page, initial: false);
+    // selectTagListOnTasksPages(page: page, initial: false);
   }
 
-  Future updateTagListOnTasksPages({required String page, required bool initial}) async {
+  Future removeAllTagsOnPages({required String page}) async {
+    if (page == 'auditor') {
+      auditorTagsList.clear();
+    } else if (page == 'tasks') {
+      tasksTagsList.clear();
+    } else if (page == 'customer') {
+      customerTagsList.clear();
+    } else if (page == 'performer') {
+      performerTagsList.clear();
+    } else if (page == 'create') {
+      createTagsList.clear();
+    }
+    notifyListeners();
+  }
+
+  Future selectTagListOnTasksPages({required String page, required bool initial}) async {
     // we add default "defaultTagAddNew" button that is displayed on task pages.
     // "Initial" means that we do not want to update the lists if they have not
-    // been changed. Since we have only one "tagsFilterResults", we must avoid
+    // been changed. Since we have only one "mintPageFilterResults", we must avoid
     // re-recordings data from it. "Initial:true" is launched only from task
-    // pages, "Initial:false" - from the tag selection page.
+    // pages, "Initial:false" - from the tag selection page/
 
-    late Map<String, SimpleTags> list = {
-      "#" : defaultTagAddNew
+    final Map<String, NftCollection> defaultTagAddNew = {
+      // '#' : NftCollection(name: '#', bunch: {
+      //   BigInt.from(0): TokenItem(
+      //       collection: false, name: "#", icon: "", nft: false, selected: false)
+      // })
     };
-    tagsFilterResults.entries.map((e) {
+
+
+    late Map<String, NftCollection> list = {};
+
+    // exclude create(add new task) page to add # tag:
+    // if (page != 'create') { list = defaultTagAddNew; }
+
+    selectionPageFilterResults.entries.map((e) {
+      // ...TagsList store tags on pages, it is ok to pass only first value from bunch
       if (e.value.selected) {
-        list[e.value.tag] = e.value;
+        // final Map<BigInt, TokenItem> nft = {};
+        // for (var e2 in e.value.bunch.entries) {
+        //   if (e2.value.selected) {
+        //     nft[e2.key] = e2.value;
+        //   }
+        // }
+        //
+        // list[e.key]!.bunch.clear();
+        // list[e.key]!.bunch = nft;
+
+        // loop "bunch" for selected items
+        for (TokenItem n in e.value.bunch.values) {
+          // only NFTs has
+          if (n.nft) {
+            if (n.selected) {
+              list[e.key] = e.value;
+            }
+          } else {
+            list[e.key] = e.value;
+          }
+        }
       }
     }).toList();
 
     if (page == 'auditor') {
       if (initial) {
         if (auditorTagsList.isEmpty) {
-          auditorTagsList = {"#" : defaultTagAddNew};
+          auditorTagsList = defaultTagAddNew;
         }
       } else {
         auditorTagsList = list;
@@ -83,7 +171,7 @@ class SearchServices extends ChangeNotifier {
     } else if (page == 'tasks') {
       if (initial) {
         if (tasksTagsList.isEmpty) {
-          tasksTagsList = {"#" : defaultTagAddNew};
+          tasksTagsList = defaultTagAddNew;
         }
       } else {
         tasksTagsList = list;
@@ -91,7 +179,7 @@ class SearchServices extends ChangeNotifier {
     } else if (page == 'customer') {
       if (initial) {
         if (customerTagsList.isEmpty) {
-          customerTagsList = {"#" : defaultTagAddNew};
+          customerTagsList = defaultTagAddNew;
         }
       } else {
         customerTagsList = list;
@@ -99,19 +187,15 @@ class SearchServices extends ChangeNotifier {
     } else if (page == 'performer') {
       if (initial) {
         if (performerTagsList.isEmpty) {
-          performerTagsList = {"#" : defaultTagAddNew};
+          performerTagsList = defaultTagAddNew;
         }
       } else {
         performerTagsList = list;
       }
     } else if (page == 'create') {
-      if (initial) {
-        if (createTagsList.isEmpty) {
-          createTagsList = {"#" : defaultTagAddNew};
-        }
-      } else {
-        createTagsList = list;
-      }
+      createTagsList = list;
+      // clear selectionPageFilterResults to prevent appearing on pages
+      selectionPageFilterResults.clear();
     }
     // tagsListToPass = list.entries.map((e) => e.value.tag).toList();
     notifyListeners();
@@ -122,179 +206,346 @@ class SearchServices extends ChangeNotifier {
   late bool newTag = false;
 
   // Search in TAGS list
-  Future<void> tagsSearchFilter(String enteredKeyword, Map<String, SimpleTags> tagsList) async {
-    tagsFilterResults.clear();
+  Future<void> tagsSearchFilter({required String enteredKeyword, required String page}) async {
+    late Map<String, NftCollection> resultMap;
+    late Map<String, NftCollection> initialMap;
+    if (page == 'mint') {
+      resultMap = mintPageFilterResults;
+      initialMap = nftCollectionMap;
+    } else if (page == 'selection') {
+      initialMap = selectionPageInitialCombined;
+      resultMap = selectionPageFilterResults;
+    } else if (page == 'treasury') {
+      initialMap = nftBalanceMap;
+      resultMap = treasuryPageFilterResults;
+    }
+    // clear resultMap(and all associated maps) before start to write into it:
+    resultMap.clear();
     searchTagKeyword = enteredKeyword;
+
     if (enteredKeyword.isEmpty) {
-      tagsFilterResults = Map.from(tagsList);
-      // tagsFilterResults = Map.fromEntries(
-      //     tagsList.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1)
-      // );
+      resultMap = Map.from(initialMap);
       newTag = false;
     } else {
-      for (String key in tagsList.keys) {
-        if (tagsList[key]!.selected) {
-          tagsFilterResults[key] = tagsList[key]!;
+      for (String key in initialMap.keys) {
+        if (initialMap[key]!.selected) {
+          resultMap[key] = initialMap[key]!;
         }
-        if (tagsList[key]!.tag.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-          tagsFilterResults[key] = tagsList[key]!;
+        if (initialMap[key]!.name.toLowerCase().contains(enteredKeyword.toLowerCase())) {
+          resultMap[key] = initialMap[key]!;
         }
       }
+
       // show button to add new tag:
-      enteredKeyword.length > 2 ? newTag = true : newTag = false;
+      enteredKeyword.length > 1 ? newTag = true : newTag = false;
       // show button to add new tag !break used in loop:
-      for (String key in tagsList.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() == enteredKeyword.toLowerCase()) {
+      for (String key in initialMap.keys) {
+        if (resultMap[key]?.name.toLowerCase() == enteredKeyword.toLowerCase()) {
           newTag = false;
           break;
         }
       }
     }
-    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
-    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
-    //   ..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) == 0 ?
-    //   (e2.value.selected ? 1 : -1) : e2.value.tag.compareTo(e1.value.tag)));
-    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) * (e2.value.selected ? -1 : 1)));
-    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
+    // sort data:
+    resultMap = Map.fromEntries(resultMap.entries.toList()
       ..sort((e1, e2) {
         if (e2.value.selected != e1.value.selected) {
           return e2.value.selected ? 1 : -1;
         } else {
-          return e1.value.tag.compareTo(e2.value.tag);
+          return e1.value.name.compareTo(e2.value.name);
         }
       }));
 
-    notifyListeners();
-  }
 
-  Future<void> tagsAddAndUpdate(Map<String, SimpleTags> tagsList) async {
-    tagsFilterResults.clear();
-    for (String key in tagsList.keys) {
-      if (tagsList[key]!.selected) {
-        tagsFilterResults[key] = tagsList[key]!;
-      }
-    }
-    newTag = false;
-    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
-    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
-    //   ..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) == 0 ?
-    //   (e2.value.selected ? 1 : -1) : e2.value.tag.compareTo(e1.value.tag)));
-    // tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()..sort((e1, e2) => e2.value.tag.compareTo(e1.value.tag) * (e2.value.selected ? -1 : 1)));
-    tagsFilterResults = Map.fromEntries(tagsFilterResults.entries.toList()
-      ..sort((e1, e2) {
-        if (e2.value.selected != e1.value.selected) {
-          return e2.value.selected ? 1 : -1;
-        } else {
-          return e1.value.tag.compareTo(e2.value.tag);
-        }
-      }));
-    notifyListeners();
-  }
-
-  Future<void> resetTagsFilter(Map<String, SimpleTags> tagsList) async {
-    tagsFilterResults.clear();
-    tagsFilterResults = Map.from(tagsList);
-  }
-
-  Future<void> tagSelection({required String typeSelection, required String tagName, required bool unselectAll}) async {
-    if (typeSelection == 'selection') {
-      for (String key in tagsFilterResults.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() == tagName.toLowerCase()) {
-          if (tagsFilterResults[key]!.selected) {
-            tagsFilterResults[key]!.selected = false;
-          } else {
-            tagsFilterResults[key]!.selected = true;
-          }
-        }
-      }
-    } else if (typeSelection == 'mint') {
-      for (String key in tagsFilterResults.keys) {
-        if (tagsFilterResults[key]?.tag.toLowerCase() == tagName.toLowerCase()) {
-          if (tagsFilterResults[key]!.selected) {
-            tagsFilterResults[key]!.selected = false;
-          } else {
-            tagsFilterResults[key]!.selected = true;
-          }
-        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
-          tagsFilterResults[key]!.selected = false;
-        }
-      }
+    if (page == 'mint') {
+      mintPageFilterResults.clear();
+      mintPageFilterResults = resultMap;
+    } else if (page == 'selection') {
+      selectionPageFilterResults.clear();
+      selectionPageFilterResults = resultMap;
+    } else if (page == 'treasury') {
+      treasuryPageFilterResults.clear();
+      treasuryPageFilterResults = resultMap;
     }
     notifyListeners();
   }
 
-  Future<void> resetNFTFilter(Map<String, NftTagsBunch> tagsList) async {
-    nftFilterResults.clear();
-    nftFilterResults = Map.from(tagsList);
-  }
-
-  Future<void> tagsNFTFilter(String enteredKeyword, Map<String, NftTagsBunch> tagsList) async {
-    nftFilterResults.clear();
-    searchTagKeyword = enteredKeyword;
-    if (enteredKeyword.isEmpty) {
-      nftFilterResults = Map.from(tagsList);
-      newTag = false;
-    } else {
-      for (String key in tagsList.keys) {
-        if (tagsList[key]!.selected) {
-          nftFilterResults[key] = tagsList[key]!;
-        }
-        if (key.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-          nftFilterResults[key] = tagsList[key]!;
-        }
-      }
-      // show button to add new tag:
-      enteredKeyword.length > 2 ? newTag = true : newTag = false;
-      // show button to add new tag !break used in loop:
-      for (String key in tagsList.keys) {
-        if (key.toLowerCase() == enteredKeyword.toLowerCase()) {
-          newTag = false;
-          break;
-        }
-      }
-    }
-    nftFilterResults = Map.fromEntries(nftFilterResults.entries.toList()..sort((e1, e2) => e2.value.selected ? 1 : -1));
-    notifyListeners();
-  }
-
-  Future<void> nftInfoSelection({required String tagName, required bool unselectAll}) async {
-    for (String key in nftFilterResults.keys) {
-      if (key.toLowerCase() == tagName.toLowerCase()) {
-        nftFilterResults[key]!.selected = true;
-      } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
-        nftFilterResults[key]!.selected = false;
-      }
-    }
-    notifyListeners();
-  }
-
+  // Future<void> tagsNFTFilter(String enteredKeyword) async {
+  //   treasuryPageFilterResults.clear();
+  //   searchTagKeyword = enteredKeyword;
   //
-  // Future<void> runFilter(String enteredKeyword, Map<EthereumAddress, Task> taskList,
-  //     {List<String>? tagsList}) async {
-  //   filterResults.clear();
-  //   print(enteredKeyword);
-  //   // searchKeyword = enteredKeyword;
   //   if (enteredKeyword.isEmpty) {
-  //     filterResults = Map.from(taskList);
+  //     treasuryPageFilterResults = Map.from(nftBalanceMap);
+  //     newTag = false;
   //   } else {
-  //     for (String taskAddress in taskList.keys) {
-  //       if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-  //         if (taskList.isNotEmpty && taskList[taskAddress]!.tags.isNotEmpty ) {
-  //
-  //
-  //         } else {
-  //           filterResults[taskAddress] = taskList[taskAddress]!;
-  //         }
+  //     for (String key in nftBalanceMap.keys) {
+  //       if (nftBalanceMap[key]!.selected) {
+  //         treasuryPageFilterResults[key] = nftBalanceMap[key]!;
+  //       }
+  //       if (key.toLowerCase().contains(enteredKeyword.toLowerCase())) {
+  //         treasuryPageFilterResults[key] = nftBalanceMap[key]!;
+  //       }
+  //     }
+  //     // show button to add new tag:
+  //     enteredKeyword.length > 2 ? newTag = true : newTag = false;
+  //     // show button to add new tag !break used in loop:
+  //     for (String key in nftBalanceMap.keys) {
+  //       if (key.toLowerCase() == enteredKeyword.toLowerCase()) {
+  //         newTag = false;
+  //         break;
   //       }
   //     }
   //   }
-  //   // Refresh the UI
+  //   treasuryPageFilterResults = Map.fromEntries(treasuryPageFilterResults.entries.toList()..sort((e1, e2) {
+  //     return e2.value.selected ? 1 : -1;
+  //   }));
   //   notifyListeners();
   // }
+
+  Future<void> addNewTag(String newTagName, String page) async {
+    if (page == 'mint') {
+      mintPageFilterResults.clear();
+      mintPageFilterResults = Map.from(nftCollectionMap); // {...nftBalanceMap};
+      mintPageFilterResults[newTagName] = NftCollection(
+          name: newTagName,
+          bunch: { BigInt.from(0) : (
+              TokenItem(
+                  name: newTagName,
+                  collection: false,
+                  nft: false,
+                  selected: false
+              )
+          )},
+          selected: true
+      );
+      newTag = false;
+      mintPageFilterResults = Map.fromEntries(mintPageFilterResults.entries.toList()
+        ..sort((e1, e2) {
+          if (e2.value.selected != e1.value.selected) {
+            return e2.value.selected ? 1 : -1;
+          } else {
+            return e1.value.name.compareTo(e2.value.name);
+          }
+        }));
+    } else if (page == 'selection') {
+      selectionPageInitialCombined.clear();
+      selectionPageInitialCombined = Map.from(nftCollectionMap); // {...nftBalanceMap};
+      selectionPageInitialCombined[newTagName] = NftCollection(
+          name: newTagName,
+          bunch: { BigInt.from(0) : (
+              TokenItem(
+                  name: newTagName,
+                  collection: false,
+                  nft: false,
+                  selected: false
+              )
+          )},
+          selected: true
+      );
+      newTag = false;
+      selectionPageInitialCombined = Map.fromEntries(selectionPageInitialCombined.entries.toList()
+        ..sort((e1, e2) {
+          if (e2.value.selected != e1.value.selected) {
+            return e2.value.selected ? 1 : -1;
+          } else {
+            return e1.value.name.compareTo(e2.value.name);
+          }
+        }));
+    }
+    notifyListeners();
+  }
+
+  late int nfts = 0;
+  late int tags = 0;
+  Future<void> countSelection() async {
+    nfts = 0;
+    tags = 0;
+    for (MapEntry<String, NftCollection> e in selectionPageFilterResults.entries) {
+      if (e.value.bunch.values.first.nft) {
+        for (MapEntry<BigInt, TokenItem> e2 in e.value.bunch.entries) {
+          if (e2.value.selected) {
+            nfts++;
+          }
+        }
+      } else {
+        if (e.value.selected) {
+          tags++;
+        }
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> nftSelection({
+  required bool unselectAll,
+  required bool unselectAllInBunch,
+  required String nftName,
+  required BigInt nftKey
+  }) async {
+    if (!unselectAll) {
+      for (MapEntry<String, NftCollection> e in selectionPageFilterResults.entries) {
+        if (e.value.bunch.values.first.nft) {
+          for (BigInt key in e.value.bunch.keys) {
+            if (key == nftKey) {
+              final bool selected = selectionPageFilterResults[nftName]!.bunch[key]!.selected;
+              selected ? selectionPageFilterResults[nftName]!.bunch[key]!.selected = false :
+                selectionPageFilterResults[nftName]!.bunch[key]!.selected = true;
+            }
+          }
+        }
+      }
+    } else if (unselectAllInBunch) {
+      // call from tagSelection which fires when user unselect nft in 'selection' page(wrapped_chip)
+      for (MapEntry<String, NftCollection> e in selectionPageFilterResults.entries) {
+        if (e.value.bunch.values.first.nft) {
+          for (BigInt key in e.value.bunch.keys) {
+            if (key == nftKey) {
+              final bool selected = selectionPageFilterResults[nftName]!.bunch[key]!.selected;
+              selected ? selectionPageFilterResults[nftName]!.bunch[key]!.selected = false :
+              selectionPageFilterResults[nftName]!.bunch[key]!.selected = true;
+            }
+          }
+        }
+      }
+    } else {
+      for (MapEntry<String, NftCollection> e in selectionPageFilterResults.entries) {
+        if (e.value.bunch.values.first.nft) {
+          for (TokenItem v in e.value.bunch.values) {
+            if (v.selected) {
+              v.selected = false;
+            }
+          }
+        }
+      }
+    }
+    countSelection();
+  }
+
+  Future<void> specialTagSelection({
+    required String tagName,
+    required String tagKey,
+    bool unselectAll = false
+  }) async {
+    late bool nftSelected = false;
+    for (MapEntry<String, NftCollection> e in selectionPageFilterResults.entries) {
+      final Map<BigInt, TokenItem> bunch = e.value.bunch;
+
+      // tag bunch has Nft?
+      if (bunch.values.first.nft) {
+        // print('name(tag key): ${e.key}, tag selected: ${e.value.selected}');
+        for (var v in bunch.values) {
+          // print('nft name: ${val.name}, nft in bunch selected: ${val.selected}');
+          // tag bunch has selected Nft?
+          if (v.selected) {
+            nftSelected = true;
+          }
+          // unselect all nfts if tag going to unselect:
+          if (tagKey == e.key) {
+            if (e.value.selected) {
+              v.selected = false;
+            }
+          }
+        }
+        // select or unselect tapped Tag:
+        if (e.value.name == tagName) {
+
+          if (bunch.values.length < 2 && !e.value.selected) {
+            e.value.selected = true;
+            e.value.bunch.values.first.selected = true;
+            // nftSelected = true;
+          } else {
+            e.value.selected ? e.value.selected = false : e.value.selected = true;
+          }
+        }
+
+        // unselect other tags(except with nft selected):
+        if (e.value.name != tagName && !nftSelected) {
+          // print('nftSelected: $nftSelected, e.value.name ${e.value.name}');
+          e.value.selected = false;
+          nftSelected = false;
+
+        }
+
+        if (unselectAll) {
+          if (e.value.selected && !nftSelected) {
+            e.value.selected = false;
+          }
+        }
+
+
+        // if (e.value.selected && e.value.name == tagName) {
+        //   e.value.selected = false;
+        // } else if (!e.value.selected && e.value.name == tagName){
+        //   e.value.selected = true;
+        // }
+      }
+
+      nftSelected = false;
+
+    }
+    countSelection();
+  }
+
+  Future<void> tagSelection({
+    required String typeSelection,
+    required String tagName,
+    required String tagKey,
+    required bool unselectAll,
+  }) async {
+    if (typeSelection == 'selection') {
+      for (String key in selectionPageFilterResults.keys) {
+        if (key == tagKey) {
+          if (selectionPageFilterResults[key]!.selected) {
+            selectionPageFilterResults[key]!.selected = false;
+          } else {
+            selectionPageFilterResults[key]!.selected = true;
+          }
+        } else if (unselectAll) {
+          // print('unselectAll in selection');
+          selectionPageFilterResults[key]!.selected = false;
+        }
+      }
+    } else if (typeSelection == 'mint') {
+      for (String key in mintPageFilterResults.keys) {
+        if (mintPageFilterResults[key]?.name.toLowerCase() == tagName.toLowerCase()) {
+          if (mintPageFilterResults[key]!.selected) {
+            mintPageFilterResults[key]!.selected = false;
+          } else {
+            mintPageFilterResults[key]!.selected = true;
+          }
+        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
+          mintPageFilterResults[key]!.selected = false;
+        }
+      }
+    } else if (typeSelection == 'treasury') {
+      for (String key in treasuryPageFilterResults.keys) {
+        if (key.toLowerCase() == tagName.toLowerCase() && !unselectAll) {
+          treasuryPageFilterResults[key]!.selected = true;
+        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
+          treasuryPageFilterResults[key]!.selected = false;
+        }
+      }
+    }
+    // reset counter
+    countSelection();
+  }
+
+  // Future<void> combinedTagsSelection({required String typeSelection, required String tagName}) async {
+  //   // fires from wrapped_chip on 'add new Task' page.
+  //   if (typeSelection == 'selection') {
   //
-  // Future<void> resetFilter(Map<EthereumAddress, Task> taskList) async {
-  //   filterResults.clear();
-  //   filterResults = Map.from(taskList);
+  //   }
+  //   notifyListeners();
   // }
 
+  // Future<void> nftInfoSelection({required String tagName, required bool unselectAll}) async {
+  //   for (String key in treasuryPageFilterResults.keys) {
+  //     if (key.toLowerCase() == tagName.toLowerCase()) {
+  //       treasuryPageFilterResults[key]!.selected = true;
+  //     } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
+  //       treasuryPageFilterResults[key]!.selected = false;
+  //     }
+  //   }
+  //   notifyListeners();
+  // }
 }

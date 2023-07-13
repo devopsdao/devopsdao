@@ -8,7 +8,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 
-const List<String> selectToken = <String>['DEV', 'aUSDC'];
+
 
 class Payment extends StatefulWidget {
   final String purpose;
@@ -25,7 +25,8 @@ class Payment extends StatefulWidget {
 
 class _PaymentState extends State<Payment> {
   TextEditingController? valueController;
-  String dropdownValue = selectToken.first;
+  late List<String> selectToken = [];
+  late String dropdownValue;
   double _currentPriceValue = 0.0;
   double ausdcHighPrice = 25.0;
   double ausdcLowPrice = 0.0;
@@ -40,6 +41,12 @@ class _PaymentState extends State<Payment> {
   void initState() {
     super.initState();
     valueController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var tasksServices = Provider.of<TasksServices>(context, listen: false);
+      selectToken = <String>[tasksServices.chainTicker, 'USDC'];
+      dropdownValue = selectToken.first;
+    });
   }
 
   @override
@@ -57,6 +64,7 @@ class _PaymentState extends State<Payment> {
     late double borderRadius = interface.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
+      // dropdownValue = tasksServices.taskTokenSymbol;
       dropdownValue = tasksServices.chainTicker;
       minPrice = devLowPrice;
       maxPrice = devHighPrice;
@@ -78,13 +86,19 @@ class _PaymentState extends State<Payment> {
       setBlackAndWhite = Colors.black;
       setGrey = Colors.grey;
     }
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
 
     return Column(
       children: [
         Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(borderRadius),
+            elevation: DodaoTheme.of(context).elevation,
+            borderRadius: DodaoTheme.of(context).borderRadius,
             child: Container(
+              decoration: materialMainBoxDecoration,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(9.0),
               width: innerPaddingWidth,
@@ -93,12 +107,12 @@ class _PaymentState extends State<Payment> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
-                    flex: 7,
+                    flex: 8,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          // padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                           // height: widget.topConstraints.maxHeight - 200,
                           width: innerPaddingWidth,
                           decoration: BoxDecoration(
@@ -114,9 +128,9 @@ class _PaymentState extends State<Payment> {
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'Value:',
-                              labelStyle: TextStyle(fontSize: 17.0, color: setBlackAndWhite),
+                              labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Please enter Task value]',
-                              hintStyle: TextStyle(fontSize: 14.0, color: setBlackAndWhite),
+                              hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                               // enabledBorder: const UnderlineInputBorder(
                               //   borderSide: BorderSide(
                               //     color:  Colors.white,
@@ -134,11 +148,7 @@ class _PaymentState extends State<Payment> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: DodaoTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Inter',
-                                  color: setBlackAndWhite,
-                                  lineHeight: 2,
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             keyboardType: TextInputType.number,
                             onEditingComplete: () {
@@ -170,17 +180,21 @@ class _PaymentState extends State<Payment> {
                           padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 5),
                           child: SliderTheme(
                             data: SliderThemeData(
-                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 11),
-                              activeTrackColor: setBlackAndWhite,
-                              inactiveTrackColor: setBlackAndWhite,
+                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 11, elevation: 6),
+                              activeTrackColor: Colors.deepOrange,
+                              inactiveTrackColor: Colors.grey.shade600,
                               trackHeight: 5.0,
+                              thumbColor: Colors.white,
+
+
                             ),
                             child: Slider(
+
                               value: _currentPriceValue,
                               min: minPrice,
                               max: maxPrice,
                               divisions: 100,
-                              label: _currentPriceValue.toString(),
+                              // label: _currentPriceValue.toString(),
                               onChanged: (double value) {
                                 setState(() {
                                   _currentPriceValue = value;
@@ -198,7 +212,7 @@ class _PaymentState extends State<Payment> {
                     ),
                   ),
                   Flexible(
-                    flex: 3,
+                    flex: 4,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -213,49 +227,55 @@ class _PaymentState extends State<Payment> {
                           //               text: 'Select Token: ',
                           //               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
                           //         ])),
-                          DropdownButton<String>(
-                            isExpanded: true,
-                            value: dropdownValue,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            borderRadius: BorderRadius.circular(borderRadius),
-                            dropdownColor: setGrey,
-                            style: TextStyle(color: setBlackAndWhite),
-                            hint: Text('Choose token ($dropdownValue)'),
-                            underline: Container(
-                              height: 2,
-                              color: setBlackAndWhite,
+                          ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              value: dropdownValue,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              // elevation: 6,
+                              borderRadius: BorderRadius.circular(borderRadius),
+                              dropdownColor: DodaoTheme.of(context).taskBackgroundColor,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              // hint: Text('Choose token ($dropdownValue)'),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepOrange,
+                              ),
+                              onChanged: (String? value) {
+                                // This is called when the user selects an item.
+                                if (value == tasksServices.chainTicker) {
+                                  // interface.tokenSelected passing to create_job/main.dart to detect USDC token selection:
+                                  interface.tokenSelected = value!;
+                                  tasksServices.taskTokenSymbol = 'ETH';
+                                  // print('taskTokenSymbol changed to default value ${value!}');
+                                  interface.tokensEntered = 0.0;
+                                  // valueController!.text = '0.0 ${tasksServices.chainTicker}';
+                                  valueController!.text = '0.0 ${tasksServices.chainTicker}';
+                                  _currentPriceValue = 0.0;
+                                  minPrice = devLowPrice;
+                                  maxPrice = devHighPrice;
+                                } else {
+                                  interface.tokenSelected = value!;
+                                  tasksServices.taskTokenSymbol = value!;
+                                  // print('taskTokenSymbol changed to ${value!}');
+                                  interface.tokensEntered = 0.0;
+                                  valueController!.text = '0.0 USDC';
+                                  _currentPriceValue = 0.0;
+                                  minPrice = ausdcLowPrice;
+                                  maxPrice = ausdcHighPrice;
+                                }
+                                setState(() {
+                                  dropdownValue = value!;
+                                });
+                              },
+                              items: selectToken.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
-                            onChanged: (String? value) {
-                              // This is called when the user selects an item.
-                              if (value == 'ETH') {
-                                tasksServices.taskTokenSymbol = 'ETH';
-                              } else {
-                                tasksServices.taskTokenSymbol = value!;
-                              }
-                              if (value == 'ETH') {
-                                interface.tokensEntered = 0.0;
-                                valueController!.text = '0.0 ${tasksServices.chainTicker}';
-                                _currentPriceValue = 0.0;
-                                minPrice = devLowPrice;
-                                maxPrice = devHighPrice;
-                              } else {
-                                interface.tokensEntered = 0.0;
-                                valueController!.text = '0.0 aUSDC';
-                                _currentPriceValue = 0.0;
-                                minPrice = ausdcLowPrice;
-                                maxPrice = ausdcHighPrice;
-                              }
-                              setState(() {
-                                dropdownValue = value!;
-                              });
-                            },
-                            items: selectToken.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
                           ),
                         ],
                       ),

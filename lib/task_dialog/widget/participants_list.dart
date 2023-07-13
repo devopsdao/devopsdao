@@ -1,5 +1,6 @@
 import 'package:dodao/blockchain/classes.dart';
-import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/config/theme.dart';
+import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +102,7 @@ class _ParticipantListState extends State<ParticipantList> {
               child: ListTile(
                 title: Center(
                   child: RichText(
-                      text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.9), children: <TextSpan>[
+                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
                     TextSpan(
                       text: participants[index2].toString(),
                     ),
@@ -110,12 +111,12 @@ class _ParticipantListState extends State<ParticipantList> {
                 // style: TextButton.styleFrom(
                 //   textStyle: const TextStyle(fontSize: 13),
                 // ),
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
                 visualDensity: const VisualDensity(vertical: -3),
                 dense: true,
                 selected: index2 == selectedIndex,
                 // selectedColor: Colors.green,
-                selectedTileColor: Colors.blue.shade100,
+                selectedTileColor: DodaoTheme.of(context).nftInfoBackgroundColor,
                 // trailing: const Icon(
                 //   Icons.info_sharp,
                 //   color: Colors.black45,
@@ -129,7 +130,9 @@ class _ParticipantListState extends State<ParticipantList> {
                   );
                   setState(() {
                     selectedIndex = index2.toDouble();
-                    interface.selectedUser = {'address': participants[index2].toString()};
+                    interface.selectedUser = {
+                      'address': participants[index2].toString()
+                    };
                   });
                   tasksServices.myNotifyListeners();
 
@@ -142,7 +145,7 @@ class _ParticipantListState extends State<ParticipantList> {
                   //
                   // showDialog(
                   //     context: context,
-                  //     builder: (context) => WalletAction(
+                  //     builder: (context) => WalletActionDialog(
                   //           nanoId: widget.task.nanoId,
                   //           taskName: 'taskStateChange',
                   //         ));

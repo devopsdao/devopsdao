@@ -1,5 +1,5 @@
 import 'package:dodao/blockchain/classes.dart';
-import 'package:dodao/widgets/wallet_action.dart';
+import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,10 +21,10 @@ class _WithdrawButtonState extends State<WithdrawButton> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     // print(tasksServices.destinationChain);
-    if (widget.object.tokenValues[0] != 0) {
+    if (widget.object.tokenBalances[0] != 0) {
       _buttonState = true;
-    } else if (widget.object.tokenValues[0] != 0) {
-      if (widget.object.tokenValues[0] > tasksServices.transferFee || tasksServices.destinationChain == 'Moonbase') {
+    } else if (widget.object.tokenBalances[0] != 0) {
+      if (widget.object.tokenBalances[0] > tasksServices.transferFee || tasksServices.destinationChain == 'Moonbase') {
         _buttonState = true;
       } else {
         _buttonState = false;
@@ -36,14 +36,15 @@ class _WithdrawButtonState extends State<WithdrawButton> {
         onPressed: _buttonState
             ? () {
                 setState(() {
-                  widget.object.justLoaded = false;
+                  widget.object.loadingIndicator = true;
                 });
                 tasksServices.withdrawToChain(widget.object.taskAddress, widget.object.nanoId);
                 Navigator.pop(context);
 
                 showDialog(
+                    barrierDismissible: false,
                     context: context,
-                    builder: (context) => WalletAction(
+                    builder: (context) => WalletActionDialog(
                           nanoId: widget.object.nanoId,
                           taskName: 'withdrawToChain',
                         ));

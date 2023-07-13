@@ -201,6 +201,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getCreatedTokenNames",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -301,6 +314,25 @@
         "internalType": "address",
         "name": "owner",
         "type": "address"
+      }
+    ],
+    "name": "getTokenNames",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_ids",
+        "type": "uint256[]"
       }
     ],
     "name": "getTokenNames",

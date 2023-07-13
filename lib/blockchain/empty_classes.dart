@@ -12,10 +12,12 @@ class EmptyClasses extends ChangeNotifier {
       taskType: 'task[2]',
       title: 'Loading...',
       description: 'Error: loading task',
+      repository: 'https://github.com/devopsdao/dodao',
       tags: [],
       tagsNFT: [],
-      symbols: [],
-      amounts: [],
+      tokenContracts: [],
+      tokenIds: [],
+      tokenAmounts: [],
       taskState: 'loading',
       auditState: '',
       rating: 0,
@@ -28,9 +30,9 @@ class EmptyClasses extends ChangeNotifier {
       auditors: [],
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-      justLoaded: true,
+      loadingIndicator: false,
       tokenNames: [],
-      tokenValues: [],
+      tokenBalances: [],
       transport: '');
 
   final emptyTask = Task(
@@ -39,10 +41,13 @@ class EmptyClasses extends ChangeNotifier {
       taskType: 'task[2]',
       title: 'empty',
       description: 'Error: task are empty',
+      repository: 'https://github.com/devopsdao/dodao',
       tags: [],
       tagsNFT: [],
-      symbols: [],
-      amounts: [],
+      tokenNames: [],
+      tokenContracts: [],
+      tokenIds: [],
+      tokenAmounts: [],
       taskState: 'empty',
       auditState: '',
       rating: 0,
@@ -55,9 +60,8 @@ class EmptyClasses extends ChangeNotifier {
       auditors: [],
       messages: [],
       taskAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-      justLoaded: true,
-      tokenNames: [],
-      tokenValues: [],
+      loadingIndicator: false,
+      tokenBalances: [],
       transport: '');
 
   final loadingAccount = Account(
@@ -79,4 +83,110 @@ class EmptyClasses extends ChangeNotifier {
       auditParticipantTasks: [],
       customerRating: [0],
       performerRating: [0]);
+
+
+  Map<EthereumAddress, Task> tasksForShimmer = {
+    EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') : Task(
+      nanoId: '1',
+      createTime: DateTime(0, 0, 0, 0, 0, 0, 0, 0),
+      taskType: 'task[2]',
+      title: '▇ ▇▇▇▇▇▇ ▇▇▇▇▇▇▇▇▇▇',
+      description: '▇ ▇▇▇▇▇▇ ▇▇▇▇ ▇▇▇▇▇▇▇▇ ▇▇▇ ▇▇▇▇ ▇▇',
+      repository: '',
+      tags: ['▇▇▇▇▇'],
+      tagsNFT: [],
+      tokenNames: [],
+      tokenContracts: [],
+      tokenIds: [],
+      tokenAmounts: [],
+      taskState: '▇▇▇▇▇',
+      auditState: '',
+      rating: 0,
+      contractOwner:
+          EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      performer:
+          EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      auditInitiator:
+          EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      auditor:
+          EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      participants: [],
+      funders: [],
+      auditors: [],
+      messages: [],
+      taskAddress:
+          EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      loadingIndicator: false,
+      tokenBalances: ['▇▇▇▇▇'],
+      transport: ''
+    ),
+    EthereumAddress.fromHex('0x0000000000000000000000000000000000000001') : Task(
+        nanoId: '2',
+        createTime: DateTime(0, 0, 0, 0, 0, 0, 0, 0),
+        taskType: 'task[2]',
+        title: '▇▇▇▇▇▇ ▇ ▇▇▇▇ ▇▇▇ ▇ ▇▇▇▇▇▇▇ ▇▇▇',
+        description: '▇▇▇▇▇▇ ▇ ▇▇▇▇▇▇▇▇ ▇▇▇ ▇▇▇▇▇▇▇▇▇▇▇▇ ▇▇▇ ▇ ▇▇▇▇▇▇▇▇▇▇▇▇ ▇▇▇ ▇▇▇▇ ▇▇',
+        repository: '',
+        tags: [],
+        tagsNFT: [],
+        tokenNames: [],
+        tokenContracts: [],
+        tokenIds: [],
+        tokenAmounts: [],
+        taskState: '▇▇▇▇▇▇▇▇',
+        auditState: '',
+        rating: 0,
+        contractOwner:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        performer:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        auditInitiator:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        auditor:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        participants: [],
+        funders: [],
+        auditors: [],
+        messages: [],
+        taskAddress:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        loadingIndicator: false,
+        tokenBalances: ['▇▇▇▇▇'],
+        transport: ''
+    ),
+    EthereumAddress.fromHex('0x0000000000000000000000000000000000000002') : Task(
+        nanoId: '3',
+        createTime: DateTime(0, 0, 0, 0, 0, 0, 0, 0),
+        taskType: 'task[2]',
+        title: '▇▇▇ ▇▇▇▇▇▇ ▇▇▇▇',
+        description: '▇▇▇▇▇▇ ▇▇▇▇ ▇▇▇▇▇▇▇▇ ▇▇▇▇▇▇▇▇ ▇▇▇ ▇▇▇▇ ▇▇',
+        repository: '',
+        tags: ['▇▇▇▇▇','▇▇▇▇▇','▇▇▇▇▇','▇▇▇▇▇'],
+        tagsNFT: [],
+        tokenNames: [],
+        tokenContracts: [],
+        tokenIds: [],
+        tokenAmounts: [],
+        taskState: '▇▇▇▇▇',
+        auditState: '',
+        rating: 0,
+        contractOwner:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        performer:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        auditInitiator:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        auditor:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        participants: [],
+        funders: [],
+        auditors: [],
+        messages: [],
+        taskAddress:
+        EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+        loadingIndicator: false,
+        tokenBalances: ['▇▇▇▇▇'],
+        transport: ''
+    ),
+  };
 }

@@ -3,6 +3,7 @@ import 'package:dodao/blockchain/task_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:nanoid/async.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,8 @@ import 'package:uuid/uuid.dart';
 import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
+import '../../config/theme.dart';
+import '../wallet_action_dialog.dart';
 
 // void main() {
 //   initializeDateFormatting().then((_) => runApp(const MyApp()));
@@ -27,10 +30,13 @@ import '../../blockchain/classes.dart';
 
 class ChatWidget extends StatefulWidget {
   final Task task;
-  final Account account;
+  // final Account account;
   final TasksServices tasksServices;
-  const ChatWidget({super.key, required this.task, required this.account, required this.tasksServices});
-
+  const ChatWidget(
+      {super.key,
+      required this.task,
+      // required this.account,
+      required this.tasksServices});
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
 }
@@ -55,27 +61,37 @@ class _ChatWidgetState extends State<ChatWidget> {
       logged = true;
     }
 
-    return Chat(
-      messages: _messages,
-      customBottomWidget: !logged ? const NotLoggedInput() : null,
-      // onAttachmentPressed: _handleAttachmentPressed,
-      // onMessageTap: _handleMessageTap,
-      // onPreviewDataFetched: _handlePreviewDataFetched,
-      onSendPressed: _handleSendPressed,
-      showUserAvatars: false,
-      showUserNames: true,
-      user: types.User(id: tasksServices.publicAddress.toString()),
-      inputOptions: const InputOptions(
-        sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-        // inputClearMode: InputClearMode
-      ),
-      theme: const DefaultChatTheme(
-        inputBackgroundColor: Colors.black87,
-        inputBorderRadius: BorderRadius.all(
-          Radius.circular(10),
+    return LayoutBuilder(builder: (context, constraints) {
+      final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+      final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
+      final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+      final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+      return Chat(
+        // disableKeyboardDetection: true,
+        messages: _messages,
+        customBottomWidget: !logged ? const NotLoggedInput() : null,
+        // onAttachmentPressed: _handleAttachmentPressed,
+        // onMessageTap: _handleMessageTap,
+        // onPreviewDataFetched: _handlePreviewDataFetched,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: false,
+        showUserNames: true,
+
+        user: types.User(id: tasksServices.publicAddress.toString()),
+        inputOptions: const InputOptions(
+            // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
+            ),
+
+        theme: DefaultChatTheme(
+          // inputPadding: EdgeInsets.fromLTRB(24, 20, 24, 20),
+          // inputMargin: EdgeInsets.fromLTRB(24, 20, 24, 20),
+          backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+          inputBackgroundColor: Colors.black87,
+          inputBorderRadius: DodaoTheme.of(context).borderRadius,
         ),
-      ),
-    );
+      );
+    });
   }
 
   void _addMessage(types.Message message) {
@@ -234,7 +250,16 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   void _handleSendPressed(types.PartialText message) async {
     // var tasksServices = context.watch<TasksServices>();
-    await widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text);
+    final messageNanoID = await customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
+    widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text, messageNanoID);
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => WalletActionDialog(
+              nanoId: widget.task.nanoId,
+              taskName: 'sendChatMessage_$messageNanoID',
+            ));
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.task.messages[0][3].toString()),
@@ -354,8 +379,8 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Row(
-          children: const <Widget>[
+        child: const Row(
+          children: <Widget>[
             Text(
               'Please connect your wallet',
               textAlign: TextAlign.center,

@@ -113,18 +113,6 @@
         "internalType": "string[]",
         "name": "_tags",
         "type": "string[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "string[]",
-        "name": "_symbol",
-        "type": "string[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256[]",
-        "name": "_amount",
-        "type": "uint256[]"
       }
     ],
     "name": "TaskContractCreating",

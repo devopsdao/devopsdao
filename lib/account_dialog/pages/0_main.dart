@@ -11,7 +11,7 @@ import '../../widgets/my_tools.dart';
 import '../../widgets/payment.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/wrapped_chip.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 import '../widget/dialog_button_widget.dart';
 
 import 'dart:ui' as ui;
@@ -203,7 +203,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                   TextSpan(
                                       text: '?? ${tasksServices.chainTicker} \n',
                                       style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                  TextSpan(text: '?? aUSDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
+                                  TextSpan(text: '?? USDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
                                 ])),
                               ],
                             )),
@@ -250,7 +250,6 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                 //         children: model.tempTagsList.map((e) {
                                 //           return WrappedChip(
                                 //               key: ValueKey(e),
-                                //               theme: 'white',
                                 //               item: e,
                                 //               delete: true,
                                 //               page: 'create'
@@ -315,7 +314,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
             //
             // showDialog(
             //     context: context,
-            //     builder: (context) => WalletAction(
+            //     builder: (context) => WalletActionDialog(
             //       nanoId: task.nanoId,
             //       taskName: 'addTokens',
             //     ));

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:beamer/beamer.dart';
+import 'package:dodao/config/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
@@ -11,7 +12,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/my_tools.dart';
-import '../../widgets/wallet_action.dart';
+import '../../widgets/wallet_action_dialog.dart';
 import '../widget/participants_list.dart';
 
 class SelectionPage extends StatefulWidget {
@@ -56,54 +57,51 @@ class _SelectionPageState extends State<SelectionPage> {
     late double heightForInfo = 0;
 
     final Widget contractorList = Material(
-      elevation: 10,
-      borderRadius: BorderRadius.circular(interface.borderRadius),
+      elevation: DodaoTheme.of(context).elevation,
+      borderRadius: DodaoTheme.of(context).borderRadius,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           // color:  Color(0xFFF8F8F8),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
+          // color: DodaoTheme.of(context).walletBackgroundColor,
+          borderRadius: DodaoTheme.of(context).borderRadius,
+          border: DodaoTheme.of(context).borderGradient,
         ),
         child: Column(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF8F8F8),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8.0),
-                  // topLeft: Radius.circular(8.0),
-                ),
+              decoration: BoxDecoration(
+                // color: DodaoTheme.of(context).walletBackgroundColor,
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 // borderRadius: BorderRadius.all(Radius.circular(6.0)),
               ),
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 1),
                     alignment: Alignment.topLeft,
                     child: RichText(
-                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
-                      TextSpan(text: 'Choose contractor: ', style: TextStyle(height: 1, fontWeight: FontWeight.bold)),
+                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                      TextSpan(text: 'Choose contractor: ', style: Theme.of(context).textTheme.bodySmall),
                     ])),
                   ),
                   if (task.participants.isEmpty && interface.dialogCurrentState['name'] == 'customer-new')
                     RichText(
-                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                       TextSpan(
                           text: 'Participants not applied to your Task yet. ',
                           style: TextStyle(
-                            height: 2,
+                            height: 4.5,
                           )),
                     ])),
                   if (task.auditors.isEmpty &&
                       (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
                           interface.dialogCurrentState['name'] == 'performer-audit-requested'))
                     RichText(
-                        text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
+                        text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
                       TextSpan(
                           text: 'Auditors not applied to your request yet. ',
                           style: TextStyle(
-                            height: 2,
+                            height: 4.5,
                           )),
                     ])),
                 ],
@@ -127,8 +125,13 @@ class _SelectionPageState extends State<SelectionPage> {
               // padding: const EdgeInsets.only(right: 14),
               width: 100,
               height: 100,
-              decoration: const BoxDecoration(
-                image: DecorationImage(image: AssetImage("assets/images/logo.png"), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
+              decoration: BoxDecoration(
+                image: const DecorationImage(
+                  image: AssetImage("assets/images/logo.png"),
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.bottomRight,
+                ),
+                borderRadius: DodaoTheme.of(context).borderRadius,
               ),
             ),
             Container(
@@ -138,12 +141,8 @@ class _SelectionPageState extends State<SelectionPage> {
               child: RichText(
                   maxLines: 10,
                   softWrap: true,
-                  text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                    TextSpan(
-                        text: '${interface.selectedUser['address']} \n \n',
-                        style: const TextStyle(height: 1, fontSize: 12, fontWeight: FontWeight.bold
-                            // backgroundColor: Colors.black12
-                            )),
+                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                    TextSpan(text: '${interface.selectedUser['address']} \n \n', style: Theme.of(context).textTheme.bodySmall),
                     const TextSpan(
                         text: 'Wallet nickname \n',
                         style: TextStyle(
@@ -173,6 +172,7 @@ class _SelectionPageState extends State<SelectionPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Center(
         child: Container(
           alignment: Alignment.center,
@@ -237,8 +237,13 @@ class _SelectionPageState extends State<SelectionPage> {
                             expand: walletSelected,
                             child: Material(
                               elevation: 10,
-                              borderRadius: BorderRadius.circular(interface.borderRadius),
+                              borderRadius: DodaoTheme.of(context).borderRadius,
                               child: Container(
+                                decoration: BoxDecoration(
+                                  // gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  borderRadius: DodaoTheme.of(context).borderRadius,
+                                  border: DodaoTheme.of(context).borderGradient,
+                                ),
                                 height: heightForInfo,
                                 padding: const EdgeInsets.all(14),
                                 child: contractorInfo,
@@ -273,7 +278,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 //         buttonColorRequired: Colors.lightBlue.shade600,
                 //         callback: () {
                 //           setState(() {
-                //             task.justLoaded = false;
+                //             task.loadingIndicator = true;
                 //           });
                 //           late String status;
                 //           if (interface.dialogCurrentState['name'] == 'customer-new') {
@@ -295,7 +300,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 //
                 //           showDialog(
                 //             context: context,
-                //             builder: (context) => WalletAction(
+                //             builder: (context) => WalletActionDialog(
                 //               nanoId: task.nanoId,
                 //               taskName: 'taskStateChange',
                 //             )
@@ -325,7 +330,7 @@ class _SelectionPageState extends State<SelectionPage> {
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120, // Keyboard shown?
           callback: () {
             setState(() {
-              task.justLoaded = false;
+              task.loadingIndicator = true;
             });
             late String status;
             if (interface.dialogCurrentState['name'] == 'customer-new') {
@@ -342,8 +347,9 @@ class _SelectionPageState extends State<SelectionPage> {
             Beamer.of(context).updateRouteInformation(routeInfo);
 
             showDialog(
+                barrierDismissible: false,
                 context: context,
-                builder: (context) => WalletAction(
+                builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
                       taskName: 'taskStateChange',
                     ));
