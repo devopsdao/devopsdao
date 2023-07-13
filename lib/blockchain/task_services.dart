@@ -23,7 +23,7 @@ import 'package:jovial_svg/jovial_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
-import 'package:walletconnect_dart/walletconnect_dart.dart';
+// import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
 import 'abi/AccountFacet.g.dart';
@@ -231,7 +231,7 @@ class TasksServices extends ChangeNotifier {
   EthereumAddress? publicAddress;
   EthereumAddress? publicAddressWC;
   EthereumAddress? publicAddressMM;
-  var wallectConnectTransaction;
+  // var wallectConnectTransaction;
 
   var walletConnectClient;
 
@@ -411,9 +411,9 @@ class TasksServices extends ChangeNotifier {
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
-    if (wallectConnectTransaction == null) {
-      wallectConnectTransaction = EthereumWallectConnectTransaction();
-    }
+    // if (wallectConnectTransaction == null) {
+    //   wallectConnectTransaction = EthereumWallectConnectTransaction();
+    // }
     // await wallectConnectTransaction?.initSession();
     // await wallectConnectTransaction?.removeSession();
 
@@ -528,7 +528,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> connectWalletWCv2(bool refresh) async {
     print('async');
-    if (wallectConnectTransaction != null) {
+    if (walletConnectClient != null) {
       // var _walletConnect = await walletConnectClient._initWalletConnect();
 
       if (walletConnected == false) {
@@ -641,15 +641,7 @@ class TasksServices extends ChangeNotifier {
         notifyListeners();
       });
 
-      var connectResponse = await walletConnectClient?.createSession(
-          // onDisplayUri: (uri) => {
-          //   walletConnectSessionUri = uri.split("?").first,
-          //   (platform == 'mobile' || browserPlatform == 'android' || browserPlatform == 'ios') && !refresh
-          //       ? {launchURL(uri), walletConnectUri = uri}
-          //       : walletConnectUri = uri,
-          //   notifyListeners()
-          // },
-          );
+      var connectResponse = await walletConnectClient?.createSession();
 
       final Uri? uri = connectResponse.uri;
 
@@ -678,7 +670,7 @@ class TasksServices extends ChangeNotifier {
 
       // Uri? uri = resp.uri;
       // walletConnectUri = walletConnectClient.deepLinkUrl;
-      print(walletConnectUri);
+      // print(walletConnectUri);
     } else {
       print("not initialized");
       print(walletConnectState);
@@ -978,16 +970,16 @@ class TasksServices extends ChangeNotifier {
       // final params = <String, dynamic>{
       //   'chainId': '0x507',
       // };
-      var result = await wallectConnectTransaction?.switchNetwork('0x507');
+      var result = await walletConnectClient?.switchNetwork('0x507');
       // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
       chainChangeRequest = true;
     } catch (e) {
       chainChangeRequest = false;
-      WalletConnectException error = e as WalletConnectException;
+      // WalletConnectException error = e as WalletConnectException;
       print(e);
-      if (error.message == 'Unrecognized chain ID "0x507". Try adding the chain using wallet_addEthereumChain first.') {
-        addNetworkWC();
-      }
+      // if (error.message == 'Unrecognized chain ID "0x507". Try adding the chain using wallet_addEthereumChain first.') {
+      //   addNetworkWC();
+      // }
     }
     if (chainChangeRequest == true) {
       try {
@@ -1104,7 +1096,7 @@ class TasksServices extends ChangeNotifier {
       // final params = <String, dynamic>{
       //   'chainId': '0x507',
       // };
-      var result = await wallectConnectTransaction?.addNetwork('0x507');
+      var result = await walletConnectClient?.addNetwork('0x507');
       // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
       chainAddRequest = true;
     } catch (e) {
