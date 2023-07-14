@@ -8,6 +8,7 @@ import 'dart:io';
 // import 'dart:js';
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:js/js.dart' if (dart.library.io) 'package:webthree/src/browser/js_stub.dart' if (dart.library.js) 'package:js/js.dart';
 
 import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/browser/js_util_stub.dart' if (dart.library.js) 'package:js/js_util.dart';
@@ -23,6 +24,7 @@ import 'package:jovial_svg/jovial_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
@@ -521,6 +523,13 @@ class TasksServices extends ChangeNotifier {
   //   _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane["Diamond"]);
   // }
 
+  Future<bool> metamaskIsInstalled() async {
+    return await LaunchApp.isAppInstalled(
+      iosUrlScheme: 'metamask://',
+      androidPackageName: 'io.metamask',
+    );
+  }
+
   bool validChainID = false;
   bool validChainIDWC = false;
   bool validChainIDMM = false;
@@ -615,7 +624,7 @@ class TasksServices extends ChangeNotifier {
         List<EthereumAddress> taskList = await getTaskListFull();
         await fetchTasksBatch(taskList);
 
-        await connectWalletWCv2(true);
+        // await connectWalletWCv2(true);
         notifyListeners();
       });
 
@@ -637,7 +646,7 @@ class TasksServices extends ChangeNotifier {
         List<EthereumAddress> taskList = await getTaskListFull();
         await fetchTasksBatch(taskList);
 
-        await connectWalletWCv2(true);
+        // await connectWalletWCv2(true);
         notifyListeners();
       });
 
@@ -649,6 +658,13 @@ class TasksServices extends ChangeNotifier {
 
       walletConnectUri = 'metamask://wc?uri=$encodedUrl';
       notifyListeners();
+
+      // final bool isInstalled = await metamaskIsInstalled();
+
+      await launchUrlString(
+        walletConnectUri,
+        mode: LaunchMode.externalApplication,
+      );
 
       // SessionData session = await connectResponse.session.future;
 
