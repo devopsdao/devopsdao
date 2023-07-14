@@ -3250,7 +3250,7 @@ class TasksServices extends ChangeNotifier {
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
   }
 
-  Future<void> getWalletBalances(publicAddress) async {
+  Future<void> getAccountBalances(publicAddress) async {
     Map<String, EthereumAddress> whitelistedContracts = getWhitelistedContracts(chainId);
     List<String> whitelistedContractNames = whitelistedContracts.keys.toList();
     List<EthereumAddress> whitelistedContractAddresses = whitelistedContracts.values.toList();
