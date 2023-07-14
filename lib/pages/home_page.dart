@@ -33,63 +33,70 @@ class HomePageWidget extends StatefulWidget {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-    'columnOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 100,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-    'imageOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      delay: 1100,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        scale: 0.4,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        scale: 1,
-        opacity: 1,
-      ),
-    ),
-    'textOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      delay: 1100,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: const Offset(0, 70),
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: const Offset(0, 0),
-        opacity: 1,
-      ),
-    ),
-  };
+  // final animationsMap = {
+  //   'containerOnPageLoadAnimation': AnimationInfo(
+  //     trigger: AnimationTrigger.onPageLoad,
+  //     duration: 1000,
+  //     delay: 1000,
+  //     hideBeforeAnimating: false,
+  //     fadeIn: false, // changed to false(orig from FLOW true)
+  //     initialState: AnimationState(
+  //       opacity: 0,
+  //     ),
+  //     finalState: AnimationState(
+  //       opacity: 1,
+  //     ),
+  //   ),
+  //   'columnOnPageLoadAnimation': AnimationInfo(
+  //     trigger: AnimationTrigger.onPageLoad,
+  //     duration: 100,
+  //     hideBeforeAnimating: false,
+  //     fadeIn: true,
+  //     initialState: AnimationState(
+  //       opacity: 0,
+  //     ),
+  //     finalState: AnimationState(
+  //       opacity: 1,
+  //     ),
+  //   ),
+  //   'imageOnPageLoadAnimation': AnimationInfo(
+  //     trigger: AnimationTrigger.onPageLoad,
+  //     duration: 600,
+  //     delay: 1100,
+  //     hideBeforeAnimating: false,
+  //     fadeIn: true,
+  //     initialState: AnimationState(
+  //       scale: 0.4,
+  //       opacity: 0,
+  //     ),
+  //     finalState: AnimationState(
+  //       scale: 1,
+  //       opacity: 1,
+  //     ),
+  //   ),
+  //   'textOnPageLoadAnimation': AnimationInfo(
+  //     trigger: AnimationTrigger.onPageLoad,
+  //     duration: 600,
+  //     delay: 1100,
+  //     hideBeforeAnimating: false,
+  //     fadeIn: true,
+  //     initialState: AnimationState(
+  //       offset: const Offset(0, 70),
+  //       opacity: 0,
+  //     ),
+  //     finalState: AnimationState(
+  //       offset: const Offset(0, 0),
+  //       opacity: 1,
+  //     ),
+  //   ),
+  // };
+
+  late Image networkLogoImage = Image.asset(
+    'assets/images/net_icon_eth.png',
+    height: 24,
+    filterQuality: FilterQuality.medium,
+  );
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
 
@@ -132,6 +139,27 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    if (tasksServices.chainTicker == 'DEV') {
+      networkLogoImage = Image.asset(
+        'assets/images/net_icon_moonbeam.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (tasksServices.chainTicker == 'FTM') {
+      networkLogoImage = Image.asset(
+        'assets/images/net_icon_fantom.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (tasksServices.chainTicker == 'MATIC') {
+      networkLogoImage = Image.asset(
+        'assets/images/net_icon_mumbai_polygon.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    }
+
 
     return Stack(
       children: [
@@ -217,13 +245,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             );
                           },
                           child: tasksServices.walletConnected && tasksServices.publicAddress != null
-                              ? Text(
-                                  '${tasksServices.publicAddress.toString().substring(0, 4)}'
-                                  '...'
-                                  '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
-                                  // textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 14, color: Colors.white),
-                                )
+                              ? Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: networkLogoImage,
+                                  ),
+                                  Text(
+                                      '${tasksServices.publicAddress.toString().substring(0, 4)}'
+                                      '...'
+                                      '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
+                                      // textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                                    ),
+                                ],
+                              )
                               : const Text(
                                   'Connect wallet',
                                   textAlign: TextAlign.center,

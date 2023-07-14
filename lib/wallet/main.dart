@@ -109,182 +109,175 @@ class _WalletPageTopState extends State<WalletPageTop> {
         final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
         return Dialog(
           insetPadding: const EdgeInsets.all(20),
-          shape:  RoundedRectangleBorder(
-              borderRadius: DodaoTheme.of(context).borderRadius,
+          shape: RoundedRectangleBorder(
+            borderRadius: DodaoTheme.of(context).borderRadius,
           ),
           backgroundColor: DodaoTheme.of(context).walletBackgroundColor,
-
           child: Container(
             decoration: BoxDecoration(
               borderRadius: DodaoTheme.of(context).borderRadius,
               color: DodaoTheme.of(context).walletBackgroundColor,
             ),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
-                  width: 400,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 30,
-                        child: !disableBackButton
-                          ? InkWell(
-                              onTap: () {
-                                interface.controller.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                              },
-                              borderRadius: DodaoTheme.of(context).borderRadius,
-                              child: Container(
-                                padding: const EdgeInsets.all(0.0),
-                                height: 30,
-                                width: 30,
-                                child: const Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Icon(
-                                        Icons.arrow_back,
-                                        size: 30,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : null,
-                      ),
-                      const Spacer(),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Connect Wallet',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      // InkWell(
-                      //   onTap: () {
-                      //
-                      //     showDialog(context: context, builder: (context) => Dialog(
-                      //       shape: const RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                      //         child: SizedBox(
-                      //           height: 100,
-                      //           width: 350,
-                      //           child: Padding(
-                      //               padding: const EdgeInsets.all(30.0),
-                      //             child: DropdownButton(
-                      //               isExpanded: true,
-                      //               value: dropdownValue,
-                      //               hint: Text('Choose transport ($dropdownValue)'),
-                      //               items: const [
-                      //                 DropdownMenuItem(value: 'axelar', child: Text('axelar')),
-                      //                 DropdownMenuItem(value: 'hyperlane', child: Text('hyperlane')),
-                      //                 DropdownMenuItem(value: 'layerzero', child: Text('layerzero')),
-                      //                 DropdownMenuItem(value: 'wormhole', child: Text('wormhole')),
-                      //               ],
-                      //               underline: Container(
-                      //                 height: 2,
-                      //                 color: Colors.black26,
-                      //               ),
-                      //               onChanged: (String? value) {
-                      //                 tasksServices.interchainSelected = value!;
-                      //                 setState(() {
-                      //                   dropdownValue = value!;
-                      //                 });
-                      //                 Navigator.pop(context);
-                      //
-                      //               },
-                      //             )
-                      //           ),
-                      //         )
-                      //       )
-                      //     );
-                      //   },
-                      //   borderRadius: BorderRadius.circular(16),
-                      //   child: Container(
-                      //     padding: const EdgeInsets.all(0.0),
-                      //     height: 30,
-                      //     width: 30,
-                      //     // decoration: BoxDecoration(
-                      //     //   borderRadius: BorderRadius.circular(6),
-                      //     // ),
-                      //     child: Row(
-                      //       children: const <Widget>[
-                      //
-                      //         Expanded(
-                      //           child: Icon(
-                      //             Icons.info_outline_rounded,
-                      //             size: 30,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      InkWell(
-                        onTap: () {
-                          if (tasksServices.walletConnectedMM) {
-                            interface.pageWalletViewNumber = 1;
-                          } else if (tasksServices.walletConnectedWC) {
-                            interface.pageWalletViewNumber = 2;
-                          } else {
-                            interface.pageWalletViewNumber = 0;
-                          }
-                          //
-                          Navigator.pop(context);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(0.0),
-                          height: 30,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
+                    width: 400,
+                    child: Row(
+                      children: [
+                        SizedBox(
                           width: 30,
-                          // decoration: BoxDecoration(
-                          //   borderRadius: BorderRadius.circular(6),
-                          // ),
-                          child: Row(
-                            children: const <Widget>[
-                              Expanded(
-                                child: Icon(
-                                  Icons.close,
-                                  size: 30,
-                                ),
+                          child: !disableBackButton
+                              ? InkWell(
+                                  onTap: () {
+                                    interface.controller.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                  },
+                                  borderRadius: DodaoTheme.of(context).borderRadius,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(0.0),
+                                    height: 30,
+                                    width: 30,
+                                    child: const Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Icon(
+                                            Icons.arrow_back,
+                                            size: 30,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                        const Spacer(),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Connect Wallet',
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: screenHeightSize,
-                  // width: constraints.maxWidth * .8,
-                  // height: 550,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    borderRadius: DodaoTheme.of(context).borderRadius,
-                    image: DecorationImage(
-                      image: AssetImage(backgroundPicture),
-                      fit: BoxFit.cover,
-                        opacity: 0.6
-
+                        const Spacer(),
+                        // InkWell(
+                        //   onTap: () {
+                        //
+                        //     showDialog(context: context, builder: (context) => Dialog(
+                        //       shape: const RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                        //         child: SizedBox(
+                        //           height: 100,
+                        //           width: 350,
+                        //           child: Padding(
+                        //               padding: const EdgeInsets.all(30.0),
+                        //             child: DropdownButton(
+                        //               isExpanded: true,
+                        //               value: dropdownValue,
+                        //               hint: Text('Choose transport ($dropdownValue)'),
+                        //               items: const [
+                        //                 DropdownMenuItem(value: 'axelar', child: Text('axelar')),
+                        //                 DropdownMenuItem(value: 'hyperlane', child: Text('hyperlane')),
+                        //                 DropdownMenuItem(value: 'layerzero', child: Text('layerzero')),
+                        //                 DropdownMenuItem(value: 'wormhole', child: Text('wormhole')),
+                        //               ],
+                        //               underline: Container(
+                        //                 height: 2,
+                        //                 color: Colors.black26,
+                        //               ),
+                        //               onChanged: (String? value) {
+                        //                 tasksServices.interchainSelected = value!;
+                        //                 setState(() {
+                        //                   dropdownValue = value!;
+                        //                 });
+                        //                 Navigator.pop(context);
+                        //
+                        //               },
+                        //             )
+                        //           ),
+                        //         )
+                        //       )
+                        //     );
+                        //   },
+                        //   borderRadius: BorderRadius.circular(16),
+                        //   child: Container(
+                        //     padding: const EdgeInsets.all(0.0),
+                        //     height: 30,
+                        //     width: 30,
+                        //     // decoration: BoxDecoration(
+                        //     //   borderRadius: BorderRadius.circular(6),
+                        //     // ),
+                        //     child: Row(
+                        //       children: const <Widget>[
+                        //
+                        //         Expanded(
+                        //           child: Icon(
+                        //             Icons.info_outline_rounded,
+                        //             size: 30,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        InkWell(
+                          onTap: () {
+                            if (tasksServices.walletConnectedMM) {
+                              interface.pageWalletViewNumber = 1;
+                            } else if (tasksServices.walletConnectedWC) {
+                              interface.pageWalletViewNumber = 2;
+                            } else {
+                              interface.pageWalletViewNumber = 0;
+                            }
+                            //
+                            Navigator.pop(context);
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.all(0.0),
+                            height: 30,
+                            width: 30,
+                            // decoration: BoxDecoration(
+                            //   borderRadius: BorderRadius.circular(6),
+                            // ),
+                            child: Row(
+                              children: const <Widget>[
+                                Expanded(
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 30,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: WalletPagesMiddle(
-                    borderRadius: borderRadius,
-                    screenHeightSize: screenHeightSize,
-                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
+                  Container(
+                    height: screenHeightSize,
+                    // width: constraints.maxWidth * .8,
+                    // height: 550,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.cover, opacity: 0.6),
+                    ),
+                    child: WalletPagesMiddle(
+                      borderRadius: borderRadius,
+                      screenHeightSize: screenHeightSize,
+                      screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
+                    ),
                   ),
-                ),
-                // Container(height: 10),
-              ]
-            ),
+                  // Container(height: 10),
+                ]),
           ),
         );
       });
@@ -331,6 +324,7 @@ class WalletPagesMiddle extends StatefulWidget {
 
 class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
   String _displayUri = '';
+  late String _networkUsed = '';
   int defaultTab = 0;
   late String dropdownValue = 'axelar';
   @override
@@ -359,6 +353,14 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
       defaultTab = 0;
     }
 
+    if (tasksServices.chainTicker == 'DEV') {
+      _networkUsed = 'to Moonbeam network';
+    } else if (tasksServices.chainTicker == 'FTM') {
+      _networkUsed = 'to Fantom network';
+    } else if (tasksServices.chainTicker == 'MATIC') {
+      _networkUsed = 'to Mumbai network';
+    }
+
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerPaddingWidth = dialogConstraints.maxWidth - 60;
       return PageView(
@@ -378,39 +380,32 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
               // const Spacer(),
               Material(
                 color: DodaoTheme.of(context).walletBackgroundColor,
-
                 elevation: DodaoTheme.of(context).elevation,
                 borderRadius: DodaoTheme.of(context).borderRadius,
                 child: Container(
-
                   padding: const EdgeInsets.all(16.0),
                   // height: MediaQuery.of(context).size.width * .08,
                   // width: MediaQuery.of(context).size.width * .57
                   width: innerPaddingWidth,
                   decoration: BoxDecoration(
                     color: DodaoTheme.of(context).walletBackgroundColor,
-
                     borderRadius: DodaoTheme.of(context).borderRadius,
                     border: DodaoTheme.of(context).borderGradient,
                   ),
-                  child: Text(
-                    'By connecting a wallet, you agree to Terms of Service and Privacy Policy.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium
-                  ),
+                  child: Text('By connecting a wallet, you agree to Terms of Service and Privacy Policy.',
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
                 ),
               ),
 
               const Spacer(),
               if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
-              ChooseWalletButton(
-                active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
-                buttonFunction: 'metamask',
-                borderRadius: widget.borderRadius,
-                buttonWidth: innerPaddingWidth,
-              ),
-              if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
-              const SizedBox(height: 12),
+                ChooseWalletButton(
+                  active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
+                  buttonFunction: 'metamask',
+                  borderRadius: widget.borderRadius,
+                  buttonWidth: innerPaddingWidth,
+                ),
+              if (tasksServices.platform == 'web' && tasksServices.mmAvailable) const SizedBox(height: 12),
               ChooseWalletButton(
                 active: true,
                 buttonFunction: 'wallet_connect',
@@ -608,7 +603,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                             Padding(
                                               padding: const EdgeInsets.only(bottom: 14.0),
                                               child: Text(
-                                                tasksServices.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
+                                                tasksServices.walletConnectedWC ? 'Wallet connected $_networkUsed' : 'Wallet disconnected',
                                                 style: Theme.of(context).textTheme.bodySmall,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -633,12 +628,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           children: [
                                             const SizedBox(height: 22),
                                             RichText(
-                                                text: TextSpan(
-                                                    style: Theme.of(context).textTheme.bodyMedium,
-                                                    children: const <TextSpan>[
-                                                  TextSpan(
-                                                      text: 'Connect to Desktop Wallet'),
-                                                ])),
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+                                              TextSpan(text: 'Connect to Desktop Wallet'),
+                                            ])),
                                             const Spacer(),
                                             const WalletConnectButton(
                                               buttonFunction: 'wallet_connect',
@@ -665,19 +657,16 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 children: [
                                                   if (_displayUri.isNotEmpty)
                                                     RichText(
-                                                        text: TextSpan(
-                                                            style: Theme.of(context).textTheme.bodyMedium,
-                                                            children: const <TextSpan>[
-                                                          TextSpan(
-                                                              text: 'Scan QR code'),
-                                                        ])),
+                                                        text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+                                                      TextSpan(text: 'Scan QR code'),
+                                                    ])),
                                                   const Spacer(),
                                                   if (_displayUri.isNotEmpty)
                                                     QrImageView(
                                                       data: _displayUri,
                                                       size: 230,
                                                       gapless: false,
-                                                      backgroundColor: Colors.white ,
+                                                      backgroundColor: Colors.white,
                                                     ),
                                                   const Spacer(),
                                                   if (!tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
@@ -743,7 +732,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           Padding(
                                             padding: const EdgeInsets.only(bottom: 14.0),
                                             child: Text(
-                                              tasksServices.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
+                                              tasksServices.walletConnectedWC ? 'Wallet connected $_networkUsed' : 'Wallet disconnected',
                                               style: Theme.of(context).textTheme.bodyMedium,
                                               textAlign: TextAlign.center,
                                             ),
@@ -838,11 +827,10 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
             if (widget.buttonFunction == 'metamask') {
               tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
             } else if (widget.buttonFunction == 'wallet_connect') {
-              tasksServices.initComplete ? tasksServices.connectWalletWC(false) : null;
+              tasksServices.initComplete ? tasksServices.connectWalletWCv2(false) : null;
             }
           }
         },
-
         child: Container(
           padding: const EdgeInsets.all(0.0),
           height: 50.0, //MediaQuery.of(context).size.width * .08,
@@ -868,11 +856,11 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
                     child: Container(padding: const EdgeInsets.all(9.0), child: customIcon));
               }),
               Expanded(
-                child: Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge?.apply(color: DodaoTheme.of(context).secondaryText,)
-                ),
+                child: Text(name,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge?.apply(
+                          color: DodaoTheme.of(context).secondaryText,
+                        )),
               ),
             ],
           ),
@@ -946,14 +934,14 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             }
           } else if (widget.buttonFunction == 'wallet_connect') {
             if (!tasksServices.walletConnectedWC) {
-              tasksServices.initComplete ? await tasksServices.connectWalletWC(false) : null;
+              tasksServices.initComplete ? await tasksServices.connectWalletWCv2(false) : null;
             } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC) {
               tasksServices.initComplete
                   ? await tasksServices.switchNetworkWC()
                   // ? null
                   : null;
             } else if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC) {
-              tasksServices.initComplete ? {await tasksServices.disconnectWC()} : null;
+              tasksServices.initComplete ? {await tasksServices.disconnectWCv2()} : null;
               // buttonName = 'Refresh QR';
             }
             // if(buttonText == 'Disconnect') {

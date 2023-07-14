@@ -32,10 +32,11 @@ class ChatWidget extends StatefulWidget {
   final Task task;
   // final Account account;
   final TasksServices tasksServices;
-  const ChatWidget({super.key, required this.task,
-    // required this.account,
-    required this.tasksServices
-  });
+  const ChatWidget(
+      {super.key,
+      required this.task,
+      // required this.account,
+      required this.tasksServices});
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
 }
@@ -65,35 +66,32 @@ class _ChatWidgetState extends State<ChatWidget> {
       final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-        return Chat(
-          disableKeyboardDetection: true,
-          messages: _messages,
-          customBottomWidget: !logged ? const NotLoggedInput() : null,
-          // onAttachmentPressed: _handleAttachmentPressed,
-          // onMessageTap: _handleMessageTap,
-          // onPreviewDataFetched: _handlePreviewDataFetched,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: false,
-          showUserNames: true,
+      return Chat(
+        // disableKeyboardDetection: true,
+        messages: _messages,
+        customBottomWidget: !logged ? const NotLoggedInput() : null,
+        // onAttachmentPressed: _handleAttachmentPressed,
+        // onMessageTap: _handleMessageTap,
+        // onPreviewDataFetched: _handlePreviewDataFetched,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: false,
+        showUserNames: true,
 
-
-          user: types.User(id: tasksServices.publicAddress.toString()),
-          inputOptions: const InputOptions(
+        user: types.User(id: tasksServices.publicAddress.toString()),
+        inputOptions: const InputOptions(
             // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-          ),
+            ),
 
-          theme: DefaultChatTheme(
-            // inputPadding: EdgeInsets.fromLTRB(24, 20, 24, 20),
-            // inputMargin: EdgeInsets.fromLTRB(24, 20, 24, 20),
-            backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
-            inputBackgroundColor: Colors.black87,
-            inputBorderRadius: DodaoTheme.of(context).borderRadius,
-
-          ),
-        );
-      }
-    );
+        theme: DefaultChatTheme(
+          // inputPadding: EdgeInsets.fromLTRB(24, 20, 24, 20),
+          // inputMargin: EdgeInsets.fromLTRB(24, 20, 24, 20),
+          backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+          inputBackgroundColor: Colors.black87,
+          inputBorderRadius: DodaoTheme.of(context).borderRadius,
+        ),
+      );
+    });
   }
 
   void _addMessage(types.Message message) {
@@ -256,13 +254,12 @@ class _ChatWidgetState extends State<ChatWidget> {
     widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text, messageNanoID);
 
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => WalletActionDialog(
-        nanoId: widget.task.nanoId,
-        taskName: 'sendChatMessage_$messageNanoID',
-      )
-    );
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => WalletActionDialog(
+              nanoId: widget.task.nanoId,
+              taskName: 'sendChatMessage_$messageNanoID',
+            ));
 
     final textMessage = types.TextMessage(
       author: types.User(id: widget.task.messages[0][3].toString()),

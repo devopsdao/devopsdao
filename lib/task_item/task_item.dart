@@ -187,7 +187,6 @@ class _TaskItemState extends State<TaskItem> {
                   padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
                   child: LayoutBuilder(builder: (context, constraints) {
                     final double width = constraints.maxWidth - 66;
-
                     final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
                     for (int i = 0; i < task.tokenNames.length; i++) {
                       // for(int j=0; j < task.tokenBalances[i].length; j++){
