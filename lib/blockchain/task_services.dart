@@ -27,6 +27,7 @@ import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'abi/TaskCreateFacet.g.dart';
+import 'abi/IERC1155Enumerable.g.dart';
 import 'abi/TaskDataFacet.g.dart';
 import 'abi/AccountFacet.g.dart';
 import 'abi/TokenFacet.g.dart';
@@ -3247,6 +3248,95 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'withdrawToChain', nanoId);
+  }
+
+  Future<void> getWalletBalances(publicAddress) async {
+    Map<String, EthereumAddress> whitelistedContracts = getWhitelistedContracts(chainId);
+    List<String> whitelistedContractNames = whitelistedContracts.keys.toList();
+    List<EthereumAddress> whitelistedContractAddresses = whitelistedContracts.values.toList();
+
+    await getTokenBalances(whitelistedContractAddresses, [publicAddress]);
+  }
+
+  Map<String, EthereumAddress> getWhitelistedContracts(int chainId) {
+    isLoadingBackground = true;
+    Map<int, Map<String, EthereumAddress>> tokenContracts = {
+      1287: {
+        'ETH': EthereumAddress.fromHex("0x0"),
+        'USDC': EthereumAddress.fromHex("0x0"),
+        'USDT': EthereumAddress.fromHex("0x0"),
+        'dodao': EthereumAddress.fromHex("0x0")
+      },
+      4002: {
+        'ETH': EthereumAddress.fromHex("0x0"),
+        'USDC': EthereumAddress.fromHex("0x0"),
+        'USDT': EthereumAddress.fromHex("0x0"),
+        'dodao': EthereumAddress.fromHex("0x0")
+      },
+      80001: {
+        'ETH': EthereumAddress.fromHex("0x0"),
+        'USDC': EthereumAddress.fromHex("0x0"),
+        'USDT': EthereumAddress.fromHex("0x0"),
+        'dodao': EthereumAddress.fromHex("0x0")
+      },
+      280: {
+        'ETH': EthereumAddress.fromHex("0x0"),
+        'USDC': EthereumAddress.fromHex("0x0"),
+        'USDT': EthereumAddress.fromHex("0x0"),
+        'dodao': EthereumAddress.fromHex("0x0")
+      }
+    };
+    isLoadingBackground = false;
+    if (tokenContracts[chainId] != null) {
+      return tokenContracts[chainId]!;
+    } else {
+      return {'ETH': EthereumAddress.fromHex("0x0")};
+    }
+  }
+
+  Future<List<List<BigInt>>> getTokenBalances(List<EthereumAddress> tokenContracts, List<EthereumAddress> addresses) async {
+    isLoadingBackground = true;
+    List<List<BigInt>> balances = [];
+
+    for (var i = 0; i < tokenContracts.length; i++) {
+      if (tokenContracts[i] == EthereumAddress.fromHex("0x0")) {
+        for (var idx = 0; idx < addresses.length; idx++) {
+          final EtherAmount balance = await web3GetBalance(addresses[i]);
+          final BigInt weiBalance = balance.getInWei;
+          balances[i][idx] = weiBalance;
+        }
+      }
+      var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+      //check if ERC-1155
+      var erc1155InterfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
+      var erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
+      var erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
+      if (await ierc165.supportsInterface(Uint8List.fromList(erc1155InterfaceID)) == true) {
+        var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        // var ierc1155Enumberable = IERC1155Enumerable(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        var tokenDataFacet = TokenDataFacet(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        for (int idx = 0; idx < addresses.length; idx++) {
+          // List<BigInt> tokenIds = await ierc1155Enumberable.tokensByAccount(addresses[idx]);
+          List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[idx]);
+          if (tokenIds.length > 0) {
+            balances[i] = await ierc1155.balanceOfBatch(addresses, tokenIds);
+          }
+        }
+      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc20InterfaceID)) == true) {
+        var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        for (int idx = 0; idx < addresses.length; idx++) {
+          balances[i][idx] = await ierc20.balanceOf(addresses[i]);
+        }
+      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc721InterfaceID)) == true) {
+        var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        for (int idx = 0; idx < addresses.length; idx++) {
+          balances[i][idx] = await ierc721.balanceOf(addresses[i]);
+        }
+      }
+    }
+
+    isLoadingBackground = false;
+    return balances;
   }
 
   Future<List<String>> getCreatedTokenNames() async {
