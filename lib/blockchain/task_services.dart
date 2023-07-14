@@ -3265,25 +3265,25 @@ class TasksServices extends ChangeNotifier {
         'ETH': EthereumAddress.fromHex("0x0"),
         'USDC': EthereumAddress.fromHex("0x0"),
         'USDT': EthereumAddress.fromHex("0x0"),
-        'dodao': EthereumAddress.fromHex("0x0")
+        'dodao': _contractAddress
       },
       4002: {
         'ETH': EthereumAddress.fromHex("0x0"),
         'USDC': EthereumAddress.fromHex("0x0"),
         'USDT': EthereumAddress.fromHex("0x0"),
-        'dodao': EthereumAddress.fromHex("0x0")
+        'dodao': _contractAddress
       },
       80001: {
         'ETH': EthereumAddress.fromHex("0x0"),
         'USDC': EthereumAddress.fromHex("0x0"),
         'USDT': EthereumAddress.fromHex("0x0"),
-        'dodao': EthereumAddress.fromHex("0x0")
+        'dodao': _contractAddress
       },
       280: {
         'ETH': EthereumAddress.fromHex("0x0"),
         'USDC': EthereumAddress.fromHex("0x0"),
         'USDT': EthereumAddress.fromHex("0x0"),
-        'dodao': EthereumAddress.fromHex("0x0")
+        'dodao': _contractAddress
       }
     };
     isLoadingBackground = false;
