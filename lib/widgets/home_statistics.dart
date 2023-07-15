@@ -5,9 +5,11 @@ import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/wrapped_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
+import '../config/theme.dart';
 import 'badgetab.dart';
 
 
@@ -54,13 +56,14 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     var searchServices = context.read<SearchServices>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
+          if(tasksServices.walletConnected && tasksServices.publicAddress != null)
           SizedBox(
             height: 30,
             child: TabBar(
@@ -106,6 +109,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
               ],
             ),
           ),
+          if(tasksServices.walletConnected && tasksServices.publicAddress != null)
           SizedBox(
             height: 150,
             child: TabBarView(
@@ -127,49 +131,81 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                           return TokenItem(collection: true, name: name);
                         }).toList();
                         for (int i = 0; i < snapshot.data.length; i++) {
-                          for (var e in snapshot.data[i]) {
-                            if (snapshot.data[i].first == 'ETH') {
-                              tags.add(TokenItem(collection: true, nft: false, balance: snapshot.data.tokenBalances[i], name: e.toString()));
-                            } else {
-                              if (snapshot.data.tokenBalances[i] == 0) {
-                                tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
-                              } else {
-                                tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
-                              }
-                            }
-                          }
+                          // for (var e in snapshot.data[i]) {
+                          //   if (snapshot.data[i].first == 'ETH') {
+                          //     tags.add(TokenItem(collection: true, nft: false, balance: snapshot.data.tokenBalances[i], name: e.toString()));
+                          //   } else {
+                          //     if (snapshot.data.tokenBalances[i] == 0) {
+                          //       tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
+                          //     } else {
+                          //       tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
+                          //     }
+                          //   }
+                          // }
                         }
-                        return Column(
-                          children: [
-                            Wrap(
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: tags.map((e) {
-                                return WrappedChip(
-                                  key: ValueKey(e),
-                                  item: MapEntry(
-                                      e.name,
-                                      NftCollection(
-                                        selected: false,
-                                        name: e.name,
-                                        bunch: {
-                                          BigInt.from(0):
-                                          TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
-                                        },
-                                      )),
-                                  page: 'tasks',
-                                  // startScale: false,
-                                  selected: e.selected,
-                                  wrapperRole: WrapperRole.selectNew,
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
+                          child: Wrap(
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: tags.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e),
+                                item: MapEntry(
+                                    e.name,
+                                    NftCollection(
+                                      selected: false,
+                                      name: e.name,
+                                      bunch: {
+                                        BigInt.from(0):
+                                        TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                      },
+                                    )),
+                                page: 'tasks',
+                                // startScale: false,
+                                selected: e.selected,
+                                wrapperRole: WrapperRole.selectNew,
+                              );
+                            }).toList(),
+                          ),
                         );
                       } else {
-                        return const Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Center(child: Text('Loading')),
+                        return Shimmer.fromColors(
+
+                            baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                            highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
+                              child: LayoutBuilder(builder: (context, constraints) {
+                                List<TokenItem> tags = [
+                                  TokenItem(collection: true, name: 'empty', id: BigInt.from(0)),
+                                  TokenItem(collection: true, name: 'empty123', id: BigInt.from(0)),
+                                  TokenItem(collection: true, name: 'empt', id: BigInt.from(0)),
+                                ];
+                                return Wrap(
+                                  alignment: WrapAlignment.start,
+                                  direction: Axis.horizontal,
+                                  children: tags.map((e) {
+                                    return WrappedChip(
+                                      key: ValueKey(e),
+                                      item: MapEntry(
+                                          e.name,
+                                          NftCollection(
+                                            selected: false,
+                                            name: e.name,
+                                            bunch: {
+                                              BigInt.from(0):
+                                              TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                            },
+                                          )),
+                                      page: 'tasks',
+                                      selected: e.selected,
+                                      wrapperRole: WrapperRole.selectNew,
+                                    );
+                                  }).toList()
+                                );
+                              }),
+                            )
                         );
                       }
                     },
@@ -201,6 +237,13 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
               ],
             ),
           ),
+            if(!tasksServices.walletConnected)
+              SizedBox(
+                height: 200,
+                child: Center(
+                  child: Text('Please connect your wallet')
+                ),
+              )
         ],
       ),
     );

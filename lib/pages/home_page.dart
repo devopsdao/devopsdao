@@ -223,7 +223,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               actions: [
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
+                    padding: const EdgeInsets.only(left: 2.0, right: 14, top: 8, bottom: 8),
                     child: Container(
                       // width: 150,
                       height: 30,
@@ -247,17 +247,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: tasksServices.walletConnected && tasksServices.publicAddress != null
                               ? Row(
                                 children: [
+                                  networkLogoImage,
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: networkLogoImage,
+                                    padding: const EdgeInsets.only(left: 4.0),
+                                    child: Text(
+                                        // '${tasksServices.publicAddress.toString().substring(0, 4)}'
+                                        '..'
+                                        '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
+                                        // textAlign: TextAlign.center,
+                                        style: const TextStyle(fontSize: 14, color: Colors.white),
+                                      ),
                                   ),
-                                  Text(
-                                      '${tasksServices.publicAddress.toString().substring(0, 4)}'
-                                      '...'
-                                      '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
-                                      // textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 14, color: Colors.white),
-                                    ),
                                 ],
                               )
                               : const Text(
