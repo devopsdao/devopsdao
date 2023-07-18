@@ -6,6 +6,7 @@ import 'package:dodao/widgets/tags/wrapped_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:webthree/credentials.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
@@ -26,6 +27,8 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   late Color indicatorColor = colors[0];
   late TabController tabBarController;
   final double tabPadding = 12;
+
+  late Map<String, EthereumAddress> whiteList;
 
   @override
   void initState() {
@@ -58,6 +61,11 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var searchServices = context.read<SearchServices>();
+
+    if (tasksServices.publicAddress != null) {
+      whiteList = tasksServices.getWhitelistedContracts(tasksServices.chainId);
+      tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteList);
+    }
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
@@ -122,7 +130,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                   height: 100,
                   alignment: Alignment.topLeft,
                   child: FutureBuilder(
-                    future: tasksServices.publicAddress != null ? tasksServices.getTokenNames(tasksServices.publicAddress!) : null,
+                    future: tasksServices.publicAddress != null ? tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteList) : null,
 
                     // tasksServices.publicAddress != null ? tasksServices.getTokenNames(tasksServices.publicAddress!) : null,
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -238,7 +246,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
             ),
           ),
             if(!tasksServices.walletConnected)
-              SizedBox(
+              const SizedBox(
                 height: 200,
                 child: Center(
                   child: Text('Please connect your wallet')

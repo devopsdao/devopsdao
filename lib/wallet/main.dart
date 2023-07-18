@@ -327,7 +327,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
   late String _networkUsed = '';
   late Image networkLogoImage = Image.asset(
     'assets/images/net_icon_eth.png',
-    height: 60,
+    height: 80,
     filterQuality: FilterQuality.medium,
   );
 
@@ -363,21 +363,21 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
       _networkUsed = 'to Moonbeam network';
       networkLogoImage = Image.asset(
         'assets/images/net_icon_moonbeam.png',
-        height: 60,
+        height: 80,
         filterQuality: FilterQuality.medium,
       );
     } else if (tasksServices.chainTicker == 'FTM') {
       _networkUsed = 'to Fantom network';
       networkLogoImage = Image.asset(
         'assets/images/net_icon_fantom.png',
-        height: 60,
+        height: 80,
         filterQuality: FilterQuality.medium,
       );
     } else if (tasksServices.chainTicker == 'MATIC') {
       _networkUsed = 'to Mumbai network';
       networkLogoImage = Image.asset(
         'assets/images/net_icon_mumbai_polygon.png',
-        height: 60,
+        height: 80,
         filterQuality: FilterQuality.medium,
       );
     }

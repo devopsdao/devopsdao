@@ -3257,34 +3257,46 @@ class TasksServices extends ChangeNotifier {
     List<String> whitelistedContractNames = whitelistedContracts.keys.toList();
     List<EthereumAddress> whitelistedContractAddresses = whitelistedContracts.values.toList();
 
-    await getTokenBalances(whitelistedContractAddresses, [publicAddress]);
+    await getTokenBalances(whitelistedContractAddresses, [publicAddress] as Map<String, EthereumAddress>);
   }
 
   Map<String, EthereumAddress> getWhitelistedContracts(int chainId) {
     isLoadingBackground = true;
     Map<int, Map<String, EthereumAddress>> tokenContracts = {
       1287: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       },
       4002: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       },
       80001: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       },
       280: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       }
     };
@@ -3292,18 +3304,20 @@ class TasksServices extends ChangeNotifier {
     if (tokenContracts[chainId] != null) {
       return tokenContracts[chainId]!;
     } else {
-      return {'ETH': EthereumAddress.fromHex("0x0")};
+      // return {'ETH': EthereumAddress.fromHex("0x0")};
+      return {'ETH': zeroAddress};
     }
   }
 
-  Future<List<List<BigInt>>> getTokenBalances(List<EthereumAddress> tokenContracts, List<EthereumAddress> addresses) async {
+  Future<List<List<BigInt>>> getTokenBalances(List<EthereumAddress> tokenContracts, Map<String, EthereumAddress> addresses) async {
     isLoadingBackground = true;
     List<List<BigInt>> balances = [];
 
     for (var i = 0; i < tokenContracts.length; i++) {
-      if (tokenContracts[i] == EthereumAddress.fromHex("0x0")) {
+      // if (tokenContracts[i] == EthereumAddress.fromHex("0x0")) {
+      if (tokenContracts[i] == zeroAddress) {
         for (var idx = 0; idx < addresses.length; idx++) {
-          final EtherAmount balance = await web3GetBalance(addresses[i]);
+          final EtherAmount balance = await web3GetBalance(addresses[i]!);
           final BigInt weiBalance = balance.getInWei;
           balances[i][idx] = weiBalance;
         }
@@ -3319,20 +3333,20 @@ class TasksServices extends ChangeNotifier {
         var tokenDataFacet = TokenDataFacet(address: tokenContracts[i], client: _web3client, chainId: chainId);
         for (int idx = 0; idx < addresses.length; idx++) {
           // List<BigInt> tokenIds = await ierc1155Enumberable.tokensByAccount(addresses[idx]);
-          List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[idx]);
+          List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[idx]!);
           if (tokenIds.length > 0) {
-            balances[i] = await ierc1155.balanceOfBatch(addresses, tokenIds);
+            balances[i] = await ierc1155.balanceOfBatch(addresses as List<EthereumAddress>, tokenIds);
           }
         }
       } else if (await ierc165.supportsInterface(Uint8List.fromList(erc20InterfaceID)) == true) {
         var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
         for (int idx = 0; idx < addresses.length; idx++) {
-          balances[i][idx] = await ierc20.balanceOf(addresses[i]);
+          balances[i][idx] = await ierc20.balanceOf(addresses[i]!);
         }
       } else if (await ierc165.supportsInterface(Uint8List.fromList(erc721InterfaceID)) == true) {
         var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
         for (int idx = 0; idx < addresses.length; idx++) {
-          balances[i][idx] = await ierc721.balanceOf(addresses[i]);
+          balances[i][idx] = await ierc721.balanceOf(addresses[i]!);
         }
       }
     }
