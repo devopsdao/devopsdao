@@ -132,7 +132,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                   height: 100,
                   alignment: Alignment.topLeft,
                   child: FutureBuilder(
-                    future: tasksServices.publicAddress != null ? tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteListContractAddresses) : null,
+                    future: tasksServices.publicAddress != null ? tasksServices.getTokenBalances(whiteListContractAddresses, [tasksServices.publicAddress!]) : null,
 
                     // tasksServices.publicAddress != null ? tasksServices.getTokenNames(tasksServices.publicAddress!) : null,
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
