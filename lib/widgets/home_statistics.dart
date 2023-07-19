@@ -29,6 +29,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   final double tabPadding = 12;
 
   late Map<String, EthereumAddress> whiteList;
+  late List<EthereumAddress> whiteListContractAddresses = whiteList.values.toList();
 
   @override
   void initState() {
@@ -64,7 +65,8 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
 
     if (tasksServices.publicAddress != null) {
       whiteList = tasksServices.getWhitelistedContracts(tasksServices.chainId);
-      tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteList);
+
+      // tasksServices.getTokenBalances(whiteListContractAddresses,[tasksServices.publicAddress!]);
     }
 
     return Padding(
@@ -130,7 +132,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                   height: 100,
                   alignment: Alignment.topLeft,
                   child: FutureBuilder(
-                    future: tasksServices.publicAddress != null ? tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteList) : null,
+                    future: tasksServices.publicAddress != null ? tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteListContractAddresses) : null,
 
                     // tasksServices.publicAddress != null ? tasksServices.getTokenNames(tasksServices.publicAddress!) : null,
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
