@@ -3264,27 +3264,39 @@ class TasksServices extends ChangeNotifier {
     isLoadingBackground = true;
     Map<int, Map<String, EthereumAddress>> tokenContracts = {
       1287: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       },
       4002: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       },
       80001: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       },
       280: {
-        'ETH': EthereumAddress.fromHex("0x0"),
-        'USDC': EthereumAddress.fromHex("0x0"),
-        'USDT': EthereumAddress.fromHex("0x0"),
+        // 'ETH': EthereumAddress.fromHex("0x0"),
+        // 'USDC': EthereumAddress.fromHex("0x0"),
+        // 'USDT': EthereumAddress.fromHex("0x0"),
+        'ETH': zeroAddress,
+        'USDC': zeroAddress,
+        'USDT': zeroAddress,
         'dodao': _contractAddress
       }
     };
@@ -3292,16 +3304,22 @@ class TasksServices extends ChangeNotifier {
     if (tokenContracts[chainId] != null) {
       return tokenContracts[chainId]!;
     } else {
-      return {'ETH': EthereumAddress.fromHex("0x0")};
+      // return {'ETH': EthereumAddress.fromHex("0x0")};
+      return {'ETH': zeroAddress};
     }
   }
 
   Future<List<List<BigInt>>> getTokenBalances(List<EthereumAddress> tokenContracts, List<EthereumAddress> addresses) async {
     isLoadingBackground = true;
     List<List<BigInt>> balances = [];
+    // for (var i = 0; i < tokenContracts.length; i++) {
+    //   balances[i] = [BigInt.from(0)];
+    // }
 
     for (var i = 0; i < tokenContracts.length; i++) {
-      if (tokenContracts[i] == EthereumAddress.fromHex("0x0")) {
+      balances.add([BigInt.from(0)]);
+      // if (tokenContracts[i] == EthereumAddress.fromHex("0x0")) {
+      if (tokenContracts[i] == zeroAddress) {
         for (var idx = 0; idx < addresses.length; idx++) {
           final EtherAmount balance = await web3GetBalance(addresses[i]);
           final BigInt weiBalance = balance.getInWei;
