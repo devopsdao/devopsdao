@@ -28,6 +28,11 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   late TabController tabBarController;
   final double tabPadding = 12;
 
+<<<<<<< HEAD
+  late Map<String, EthereumAddress> whiteList;
+  late Future<List<List<BigInt>>> result;
+=======
+>>>>>>> c03c6d05d2fd2914c2b0322a122bd15df479e67a
 
   @override
   void initState() {
@@ -61,6 +66,15 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
     var tasksServices = context.watch<TasksServices>();
     var searchServices = context.read<SearchServices>();
 
+<<<<<<< HEAD
+    if (tasksServices.publicAddress != null) {
+      whiteList = tasksServices.getWhitelistedContracts(tasksServices.chainId);
+      // result = tasksServices.getTokenBalances([tasksServices.publicAddress!], whiteList);
+      // print(result);
+    }
+
+=======
+>>>>>>> c03c6d05d2fd2914c2b0322a122bd15df479e67a
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: Column(
