@@ -35,7 +35,7 @@ class WalletConnectClient {
 
   static const String launchError = 'Metamask wallet not installed';
   static const String kShortChainId = 'eip155';
-  static const String kFullChainId = 'eip155:80001';
+  static const String kFullChainId = 'eip155:4002';
 
   static String? _url;
   static SessionData? _sessionData;
@@ -119,7 +119,7 @@ class WalletConnectClient {
     };
     final response = await walletConnect!.request(
         topic: _pairingTopic!,
-        chainId: 'eip155:80001',
+        chainId: 'eip155:4002',
         request: SessionRequestParams(
           method: 'wallet_switchEthereumChain',
           params: [params],
@@ -143,7 +143,7 @@ class WalletConnectClient {
 
     final response = await walletConnect!.request(
         topic: _pairingTopic!,
-        chainId: 'eip155:80001',
+        chainId: 'eip155:4002',
         request: SessionRequestParams(
           method: 'wallet_addEthereumChain',
           params: [params],
@@ -229,7 +229,7 @@ class WalletConnectEthereumCredentialsV2 extends CustomTransactionSender {
     final from = await extractAddress();
     final signResponse = await wcClient.request(
       topic: session.topic,
-      chainId: 'eip155:80001',
+      chainId: 'eip155:4002',
       request: SessionRequestParams(
         method: 'eth_sendTransaction',
         params: [

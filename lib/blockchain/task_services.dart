@@ -1383,8 +1383,8 @@ class TasksServices extends ChangeNotifier {
     await monitorEvents();
     notifyListeners();
 
-    List<EthereumAddress> accountsList = await getAccountsList();
-    accountsData = await getAccountsData(accountsList);
+    // List<EthereumAddress> accountsList = await getAccountsList();
+    // accountsData = await getAccountsData(accountsList);
     isLoadingBackground = false;
 
     // fees = await _web3client.getGasInEIP1559();
@@ -1868,7 +1868,7 @@ class TasksServices extends ChangeNotifier {
 
     return tasksDateMap;
   }
-
+  /// todo function for dashboard:
   Future<Map<String, Map<String, int>>> getTasksStats(Map<EthereumAddress, Task> tasks) async {
     late List createTimeList = [];
     late List taskTypeList = [];
@@ -2471,7 +2471,7 @@ class TasksServices extends ChangeNotifier {
     await myBalance();
     notifyListeners();
   }
-
+  /// todo choose performer with about data:
   Future<Map<String, Account>> getAccountsData(List<EthereumAddress> accountsList) async {
     List accountsDataList = await accountFacet.getAccountsData(accountsList);
 
@@ -2489,7 +2489,7 @@ class TasksServices extends ChangeNotifier {
     }
     return accountsData;
   }
-
+  /// todo accounts for governor:
   Future<List<EthereumAddress>> getAccountsList() async {
     isLoadingBackground = true;
     List<EthereumAddress> accountsList = await accountFacet.getAccountsList();
@@ -3353,7 +3353,7 @@ class TasksServices extends ChangeNotifier {
         }
       }
     }
-
+    print(balances);
     isLoadingBackground = false;
     return balances;
   }
