@@ -1500,13 +1500,12 @@ class TasksServices extends ChangeNotifier {
 
       final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
         {},
-        (
-          Map<String, List<BigInt>> acc, entry) {
-            final key = entry.value;
-            final value = entry.key;
-            acc.putIfAbsent(key, () => []).add(value);
-            return acc;
-          },
+        (Map<String, List<BigInt>> acc, entry) {
+          final key = entry.value;
+          final value = entry.key;
+          acc.putIfAbsent(key, () => []).add(value);
+          return acc;
+        },
       );
       resultNftsMap.clear();
       for (var e in result.entries) {
@@ -3321,9 +3320,9 @@ class TasksServices extends ChangeNotifier {
       // if (tokenContracts[i] == EthereumAddress.fromHex("0x0")) {
       if (tokenContracts[i] == zeroAddress) {
         for (var idx = 0; idx < addresses.length; idx++) {
-          final EtherAmount balance = await web3GetBalance(addresses[i]);
-          final BigInt weiBalance = balance.getInWei;
-          balances[i][idx] = weiBalance;
+          // final EtherAmount balance = await web3GetBalance(addresses[i]);
+          // final BigInt weiBalance = balance.getInWei;
+          // balances[i][idx] = weiBalance;
         }
       }
       var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
