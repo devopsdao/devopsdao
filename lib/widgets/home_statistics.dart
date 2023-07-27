@@ -39,7 +39,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
 
       // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
       // tasksServices.collectMyTokens();
-      await tasksServices.collectMyTokens();
+      // await tasksServices.collectMyTokens();
       // Future.delayed(
       //     const Duration(milliseconds: 100), () {
       //   searchServices.refreshLists('treasury');
@@ -58,7 +58,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
     var searchServices = context.read<SearchServices>();
 
     return Padding(
@@ -128,9 +128,24 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                     // tasksServices.publicAddress != null ? tasksServices.getTokenNames(tasksServices.publicAddress!) : null,
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-                        final List<TokenItem> tags = snapshot.data.map<TokenItem>((name) {
-                          return TokenItem(collection: true, name: name);
-                        }).toList();
+                        // final List<TokenItem> tags = snapshot.data.map<TokenItem>((name) {
+                        //   return TokenItem(collection: true, name: name);
+                        // }).toList();
+                        final List<TokenItem> tags = [];
+                        // for (final values in snapshot.data) {
+                        //   for (final value in values) {
+                        //     tags.add(
+                        //         TokenItem(collection: true, name: value.key)
+                        //     );
+                        //   }
+                        // }
+                        for (var idx = 0; idx < snapshot.data.length; idx++) {
+                          var list = snapshot.data.values.toList();
+                          // print(list[idx].keys);
+                          tags.add(
+                              TokenItem(collection: true, name: list[idx].keys.first.toString(), balance: list[idx].values.first.toDouble())
+                          );
+                        }
                         for (int i = 0; i < snapshot.data.length; i++) {
                           // for (var e in snapshot.data[i]) {
                           //   if (snapshot.data[i].first == 'ETH') {

@@ -109,12 +109,14 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                       SizedBox(
                         width: double.infinity,
                         height: offsetToArmed * controller.value,
-                        child: RiveAnimation.asset(
-                          'assets/rive_animations/paw.riv',
-                          fit: BoxFit.cover,
-                          stateMachines: ['State Machine 1'],
-                          // controllers: [_controller],
-                          onInit: _onRiveInit,
+                        child: SizedBox(
+                          child: RiveAnimation.asset(
+                            'assets/rive_animations/paw.riv',
+                            fit: BoxFit.fitHeight,
+                            stateMachines: ['State Machine 1'],
+                            // controllers: [_controller],
+                            onInit: _onRiveInit,
+                          ),
                         ),
                       ),
                       Transform.translate(
