@@ -7,12 +7,15 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../../widgets/badge-small-colored.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/payment.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 import '../../widgets/wallet_action_dialog.dart';
 import '../widget/dialog_button_widget.dart';
+
+import 'package:badges/badges.dart' as Badges;
 
 import 'dart:ui' as ui;
 
@@ -54,17 +57,48 @@ class _AccountMainPageState extends State<AccountMainPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    final double innerPaddingWidth = widget.innerPaddingWidth;
-    final Account account = widget.account;
-    print(widget.screenHeightSize);
-
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double innerPaddingWidth = widget.innerPaddingWidth;
+
+    final BoxDecoration materialMainBoxDecoration = BoxDecoration(
+      borderRadius: DodaoTheme.of(context).borderRadius,
+      border: DodaoTheme.of(context).borderGradient,
+    );
+
 
     //here we save the values, so that they are not lost when we go to other pages, they will reset on close or topup button:
     messageForStateController!.text = interface.taskMessage;
 
+
+    // Widget badgeWidget(count, color) {
+    //   return Badges.Badge(
+    //     badgeStyle: Badges.BadgeStyle(
+    //       badgeColor: color,
+    //       elevation: 0,
+    //       shape: Badges.BadgeShape.circle,
+    //       borderRadius: BorderRadius.circular(4),
+    //     ),
+    //     badgeAnimation: const Badges.BadgeAnimation.fade(
+    //       // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+    //       // curve: Curves.easeInCubic,
+    //     ),
+    //     badgeContent: Container(
+    //       width: 8,
+    //       height: 10,
+    //       alignment: Alignment.center,
+    //       child: Text(count,
+    //           style: const TextStyle(
+    //               fontWeight: FontWeight.bold,
+    //               fontSize: 8,
+    //               color: Colors.white)
+    //       ),
+    //     ),
+    //   );
+    // }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top: 5.0),
@@ -74,217 +108,196 @@ class _AccountMainPageState extends State<AccountMainPage> {
           ),
           child: Column(
             children: [
-              // const SizedBox(height: 50),
+
+              //////// General information about Account:
               Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(interface.borderRadius),
+                elevation: DodaoTheme.of(context).elevation,
+                borderRadius: DodaoTheme.of(context).borderRadius,
                 child: GestureDetector(
                   onTap: () {
                     // interface.accountsDialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
                     //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
                   },
                   child: Container(
-                    // height: MediaQuery.of(context).size.width * .08,
-                    // width: MediaQuery.of(context).size.width * .57
+                    padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
                     width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
-                    ),
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      final text = TextSpan(
-                        text: account.about,
-                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                      );
-                      final textHeight = TextPainter(text: text, maxLines: 5, textDirection: ui.TextDirection.ltr);
-                      final oneLineHeight = TextPainter(text: text, maxLines: 1, textDirection: ui.TextDirection.ltr);
-                      textHeight.layout(maxWidth: constraints.maxWidth);
-                      oneLineHeight.layout(maxWidth: constraints.maxWidth);
-                      final numLines = textHeight.computeLineMetrics().length;
+                    decoration: materialMainBoxDecoration,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('General information:', style: DodaoTheme.of(context).bodyText2,),
+                        Text(
+                          widget.account.nickName.isNotEmpty ? widget.account.nickName : 'Nameless',
+                          style: DodaoTheme.of(context).bodyText3,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        Text(
+                          widget.account.about.isNotEmpty ? widget.account.about : 'About info not filled',
+                          style: DodaoTheme.of(context).bodyText3,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        Text(
+                          widget.account.walletAddress.toString(),
+                          style: DodaoTheme.of(context).bodyText3,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    )
+                  ),
+                ),
+              ),
 
-                      // final textHeight =TextPainter(text:span,maxLines: 3,textDirection: TextDirection.ltr);
-                      // textHeight.layout(maxWidth: MediaQuery.of(context).size.width); // equals the parent screen width
-                      // print(tp.didExceedMaxLines);
-                      return LimitedBox(
-                        maxHeight: textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * 5) + 12,
+              /////// Activities:
+              Container(
+                padding: const EdgeInsets.only(top: 14.0),
+                child: Material(
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
+                  child: GestureDetector(
+                    onTap: () {
+                      // interface.accountsDialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
+                      //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                        width: innerPaddingWidth,
+                        decoration: materialMainBoxDecoration,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(3.0, 0.0, 8.0, 0.0),
-                              child: Row(
+                            Text('Activities:', style: DodaoTheme.of(context).bodyText2,),
+                            
+                            SizedBox(
+                              height: 80,
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    flex: 6,
-                                    child: Container(
-                                        padding: const EdgeInsets.all(6.0),
-                                        // padding: const EdgeInsets.all(3),
-                                        child: RichText(maxLines: 5, text: text)),
-                                  ),
-                                  Container(
-                                    width: 54,
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      elevation: 9,
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.lightBlue.shade600,
-                                      child: InkWell(
-                                        onTap: () {
-                                          interface.accountsDialogPagesController
-                                              .animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(6.0),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(6),
-                                          ),
-                                          child: Icon(Icons.arrow_forward_ios_rounded, size: 22, color: Colors.white),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      children: [
+                                        BadgeSmallColored(count: widget.account.customerTasks.length, color: Colors.lightBlue,),
+                                        Text(
+                                          ' - Created: ',
+                                          style: DodaoTheme.of(context).bodyText3,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                      ),
+
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      children: [
+                                        BadgeSmallColored(count: widget.account.participantTasks.length, color: Colors.amber,),
+                                        Text(
+                                          ' - Participated',
+                                          style: DodaoTheme.of(context).bodyText3,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      children: [
+                                        BadgeSmallColored(count: widget.account.auditParticipantTasks.length, color: Colors.redAccent,),
+                                        Text(
+                                          ' - Audit requested',
+                                          style: DodaoTheme.of(context).bodyText3,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                    ),
+                  ),
+                ),
+              ),
+
+              /////// Scores:
+              Container(
+                padding: const EdgeInsets.only(top: 14.0),
+                child: Material(
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
+                  child: GestureDetector(
+                    onTap: () {
+                      // interface.accountsDialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
+                      //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                        width: innerPaddingWidth,
+                        decoration: materialMainBoxDecoration,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Scores:', style: DodaoTheme.of(context).bodyText2,),
+                            Container(
+                              height: 55,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      children: [
+                                        BadgeSmallColored(count: widget.account.customerRating.length, color: Colors.deepPurpleAccent,),
+                                        Text(
+                                          ' - Customer rating: ',
+                                          style: DodaoTheme.of(context).bodyText3,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      children: [
+                                        BadgeSmallColored(count: widget.account.performerRating.length, color: Colors.deepPurple,),
+                                        Text(
+                                          ' - Performer rating: ',
+                                          style: DodaoTheme.of(context).bodyText3,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                            if (textHeight.didExceedMaxLines)
-                              Container(
-                                  alignment: Alignment.center,
-                                  height: 14,
-                                  width: constraints.maxWidth,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue.shade600,
-                                    borderRadius: const BorderRadius.only(
-                                      bottomRight: Radius.circular(8.0),
-                                      bottomLeft: Radius.circular(8.0),
-                                    ),
-                                    // borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                                  ),
-                                  child: RichText(
-                                      text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'Read more ',
-                                        style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 0.8, color: Colors.white),
-                                      ),
-                                      const WidgetSpan(
-                                        child: Icon(Icons.forward, size: 13, color: Colors.white),
-                                      ),
-                                    ],
-                                  ))),
+                            )
                           ],
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              ),
-
-              // ************ Show prices and topup part ******** //
-              // if (!FocusScope.of(context).hasFocus)
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            flex: 2,
-                            child: ListBody(
-                              children: <Widget>[
-                                RichText(
-                                    text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: <TextSpan>[
-                                  TextSpan(
-                                      text: '?? ${tasksServices.chainTicker} \n',
-                                      style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0)),
-                                  TextSpan(text: '?? USDC', style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0))
-                                ])),
-                              ],
-                            )),
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // ************ TAGS *********** //
-              Container(
-                padding: const EdgeInsets.only(top: 14.0),
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: RichText(
-                              text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87), children: <TextSpan>[
-                            TextSpan(text: 'NFT collection:'),
-                          ])),
-                        ),
-                        LayoutBuilder(builder: (context, constraints) {
-                          final double width = constraints.maxWidth - 66;
-                          return Row(
-                            children: <Widget>[
-                              Consumer<SearchServices>(builder: (context, model, child) {
-                                // if (model.tempTagsList.isNotEmpty) {
-                                //   return SizedBox(
-                                //     width: width,
-                                //     child: Wrap(
-                                //         alignment: WrapAlignment.start,
-                                //         direction: Axis.horizontal,
-                                //         children: model.tempTagsList.map((e) {
-                                //           return WrappedChip(
-                                //               key: ValueKey(e),
-                                //               item: e,
-                                //               delete: true,
-                                //               page: 'create'
-                                //           );
-                                //         }).toList()),
-                                //   );
-                                // } else {
-                                return Row(
-                                  children: <Widget>[
-                                    // Container(
-                                    //   padding: const EdgeInsets.all(2.0),
-                                    //   child: const Icon(Icons.new_releases,
-                                    //       size: 45, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
-                                    // ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: RichText(
-                                          text: TextSpan(
-                                              style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0),
-                                              children: const <TextSpan>[
-                                            TextSpan(
-                                                text: 'Empty :(',
-                                                style: TextStyle(
-                                                  height: 1,
-                                                )),
-                                          ])),
-                                    ),
-                                  ],
-                                );
-                                // }
-                              }),
-                            ],
-                          );
-                        }),
-                      ],
+                        )
                     ),
                   ),
                 ),

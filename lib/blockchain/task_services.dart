@@ -193,7 +193,7 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerProgress = {};
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
-  Map<String, Account> accountsData = {};
+  // Map<String, Account> accountsData = {};
 
   Map<String, int> statsCreateTimeListCounts = {};
   Map<String, int> statsTaskTypeListCounts = {};
@@ -2477,9 +2477,9 @@ class TasksServices extends ChangeNotifier {
   Future<Map<String, Account>> getAccountsData(List<EthereumAddress> accountsList) async {
     List accountsDataList = await accountFacet.getAccountsData(accountsList);
 
-    Map<String, Account> accountsData = {};
+    late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
-      accountsData[accountData[0].toString()] = Account(
+      myAccountsData[accountData[0].toString()] = Account(
           walletAddress: accountData[0],
           nickName: accountData[1].toString(),
           about: accountData[2].toString(),
@@ -2489,7 +2489,9 @@ class TasksServices extends ChangeNotifier {
           customerRating: accountData[6].cast<int>(),
           performerRating: accountData[7].cast<int>());
     }
-    return accountsData;
+    notifyListeners();
+    // accountsData = myAccountsData;
+    return myAccountsData;
   }
 
   /// todo accounts for governor:

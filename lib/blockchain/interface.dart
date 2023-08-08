@@ -2,12 +2,15 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:webthree/credentials.dart';
 
 import '../task_dialog/states.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/tags_old.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:jovial_svg/jovial_svg.dart';
+
+import 'accounts.dart';
 
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
@@ -82,10 +85,19 @@ class InterfaceServices extends ChangeNotifier {
   // }
 
   // selected Performer or Auditor in participants_list.dart:
-  late Map<String, String> selectedUser = {};
+  late Account selectedUser = Account(
+      nickName: 'not selected',
+      about: 'empty',
+      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      customerTasks:[],
+      participantTasks: [],
+      auditParticipantTasks: [],
+      customerRating: [],
+      performerRating: []
+  );
   // participants_list.dart & 3_selection.dart & auditor
-  final double tileHeight = 34;
-  final double heightForInfo = 140;
+  final double tileHeight = 36;
+  final double participantInfoHeight = 165;
 
   // Input text on accounts_page.dart
   late String taskMessage = '';

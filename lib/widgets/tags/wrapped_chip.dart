@@ -647,21 +647,26 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                           height: containerMainHeight,
                           width: 18,
                           child: Badges.Badge(
+                            badgeStyle: Badges.BadgeStyle(
+                              badgeColor: nftColor,
+                              elevation: 1,
+                              shape: Badges.BadgeShape.circle,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            badgeAnimation: const Badges.BadgeAnimation.fade(
+                              disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
+                              // curve: Curves.easeInCubic,
+                            ),
                             // position: BadgePosition.topEnd(top: 10, end: 10),
-                            elevation: 1,
                             badgeContent: Container(
                               // width: 8,
                               // height: 8,
                               alignment: Alignment.center,
                               child: Text(numOfNFTs.toString(), style: TextStyle(fontWeight: FontWeight.w700, color: animationColor.value, fontSize: 12)),
                             ),
-                            badgeColor: nftColor,
                             // badgeColor: Colors.white,
                             // animationDuration: const Duration(milliseconds: 600),
                             // animationType: Badges.BadgeAnimationType.fade,
-                            toAnimate: false,
-                            shape: Badges.BadgeShape.circle,
-                            borderRadius: BorderRadius.circular(14),
                             // child: Icon(Icons.settings),
                           ),
 

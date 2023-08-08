@@ -113,7 +113,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                           child: RiveAnimation.asset(
                             'assets/rive_animations/paw.riv',
                             fit: BoxFit.fitHeight,
-                            stateMachines: ['State Machine 1'],
+                            stateMachines: const ['State Machine 1'],
                             // controllers: [_controller],
                             onInit: _onRiveInit,
                           ),
@@ -148,11 +148,12 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
             itemCount: objList.length,
             itemBuilder: (context, index) {
               return Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                  child: TaskTransition(
-                    fromPage: widget.pageName,
-                    task: tasksServices.filterResults.values.toList()[index],
-                  ));
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                child: TaskTransition(
+                  fromPage: widget.pageName,
+                  task: objList[index],
+                )
+              );
             },
           ),
         ));

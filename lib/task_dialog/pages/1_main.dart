@@ -74,10 +74,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    // if() {
-    //
-    // }
-
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;

@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import '../blockchain/accounts.dart';
 import '../config/theme.dart';
 import '../task_item/delete_item_alert.dart';
+import 'package:badges/badges.dart' as Badges;
+
+import 'badge-small-colored.dart';
 
 class AccountItem extends StatefulWidget {
   // final int taskCount;
   final String fromPage;
-  final Account object;
+  final Account account;
   const AccountItem(
       {Key? key,
         required this.fromPage,
-        required this.object})
+        required this.account})
       : super(key: key);
 
   @override
@@ -20,17 +23,41 @@ class AccountItem extends StatefulWidget {
 
 class _AccountItemState extends State<AccountItem> {
   final bool isAdministrator = false;
-  late Account account;
-
 
   @override
   Widget build(BuildContext context) {
-    account = widget.object;
+
+    // Widget badgeWidget(count, color) {
+    //   return Badges.Badge(
+    //     badgeStyle: Badges.BadgeStyle(
+    //       badgeColor: color,
+    //       elevation: 0,
+    //       shape: Badges.BadgeShape.circle,
+    //       borderRadius: BorderRadius.circular(4),
+    //     ),
+    //     badgeAnimation: const Badges.BadgeAnimation.fade(
+    //       // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+    //       // curve: Curves.easeInCubic,
+    //     ),
+    //     badgeContent: Container(
+    //       width: 8,
+    //       height: 10,
+    //       alignment: Alignment.center,
+    //       child: Text(count,
+    //           style: const TextStyle(
+    //               fontWeight: FontWeight.bold,
+    //               fontSize: 8,
+    //               color: Colors.white)
+    //       ),
+    //     ),
+    //   );
+    // }
+
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: DodaoTheme.of(context).borderRadius,
+        border: DodaoTheme.of(context).borderGradient,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -51,7 +78,7 @@ class _AccountItemState extends State<AccountItem> {
                 onTap: () {
                   setState(() {
                     showDialog(context: context, builder: (context) =>
-                        DeleteItemAlert(account: account));
+                        DeleteItemAlert(account: widget.account));
                   });
                 },
               ),
@@ -61,30 +88,16 @@ class _AccountItemState extends State<AccountItem> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 8, 8),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 14, 8),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisSize: MainAxisSize.max,
+                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     children: [
                       Expanded(
-                        flex: 7,
                         child: Text(
-                          account.walletAddress.toString(),
-                          style: DodaoTheme.of(context).subtitle1,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          account.nickName,
+                          widget.account.nickName.isNotEmpty ? widget.account.nickName : 'Nameless',
                           style: DodaoTheme.of(context).bodyText2,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -93,15 +106,66 @@ class _AccountItemState extends State<AccountItem> {
                       )
                     ],
                   ),
+
+
+                  /////// numbers and bags:
+                  Center(
+                    child: Row(
+                      // // mainAxisSize: MainAxisSize.max,
+                      // mainAxisSize: MainAxisSize.max,
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Created: ',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            BadgeSmallColored(count: widget.account.customerTasks.length, color: Colors.lightBlue,),
+                          ],
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'Participated: ',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            BadgeSmallColored(count: widget.account.participantTasks.length, color: Colors.amber,),
+                          ],
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'Audit requested: ',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            BadgeSmallColored(count: widget.account.auditParticipantTasks.length, color: Colors.redAccent,),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  ///// Account wallet address:
                   Row(
                     children: [
                       Expanded(
-                        flex: 7,
+                        flex: 5,
                         child: Text(
-                          account.about,
-                          // DateFormat('MM/dd/yyyy, hh:mm a')
-                          //     .format(task.createTime),
-                          style: DodaoTheme.of(context).bodyText2,
+                          widget.account.walletAddress.toString(),
+                          style: DodaoTheme.of(context).bodyText3,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,

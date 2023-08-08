@@ -29,7 +29,6 @@ class _DialogHeaderState extends State<DialogHeader> {
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    final Account account = widget.account;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -134,8 +133,8 @@ class _DialogHeaderState extends State<DialogHeader> {
                                   ),
                                 )),
                             TextSpan(
-                              text: account.nickName,
-                              style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),
+                              text: widget.account.nickName.isNotEmpty ? widget.account.nickName : 'Nameless',
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ],
                         ),
@@ -145,7 +144,7 @@ class _DialogHeaderState extends State<DialogHeader> {
                 ),
                 onTap: () async {
                   Clipboard.setData(
-                      ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${account.walletAddress.toString()}'))
+                      ClipboardData(text: widget.account.walletAddress.toString()))
                       .then((_) {
                     Flushbar(
                         icon: Icon(
@@ -153,7 +152,7 @@ class _DialogHeaderState extends State<DialogHeader> {
                           size: 20,
                           color: DodaoTheme.of(context).flushTextColor,
                         ),
-                        message: 'Task URL copied to your clipboard!',
+                        message: 'Account wallet address copied to your clipboard!',
                         duration: const Duration(seconds: 2),
                         backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                         shouldIconPulse: false)

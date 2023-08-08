@@ -178,7 +178,6 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
       final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
-      // print (screenHeightSize);
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
       return Container(
         color: DodaoTheme.of(context).taskBackgroundColor,

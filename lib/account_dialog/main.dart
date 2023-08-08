@@ -9,18 +9,20 @@ import '../blockchain/accounts.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
+import '../config/theme.dart';
+import '../widgets/badge-small-colored.dart';
 import 'header.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class AccountFuture extends StatefulWidget {
   final String fromPage;
-  final EthereumAddress? taskAddress;
+  final Account account;
   final bool shimmerEnabled;
   const AccountFuture({
     Key? key,
     required this.fromPage,
-    this.taskAddress,
+    required this.account,
     required this.shimmerEnabled,
   }) : super(key: key);
 
@@ -43,35 +45,43 @@ class _AccountFutureState extends State<AccountFuture> {
     late Account account;
     var tasksServices = context.read<TasksServices>();
 
-    EthereumAddress? taskAddress = widget.taskAddress;
-    return FutureBuilder<Account>(
-        future: null,
+    return FutureBuilder<Map<String, Account>>(
+        future: tasksServices.getAccountsData(
+          [widget.account.walletAddress]
+        ),
         // future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
-        builder: (BuildContext context, AsyncSnapshot<Account> snapshot) {
-          // if (snapshot.connectionState == ConnectionState.done) {
-          // if (true) {
-          //   account = tasksServices.accountsData['2']!;
-          //   return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: false);
-          // }
+        builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot) {
+
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              snapshot.error.toString();
+              return Text(snapshot.error.toString());
+            } else if (snapshot.hasData) {
+              return AccountDialogSkeleton(fromPage: widget.fromPage, object: snapshot.data!.values.first, isLoading: false);
+            } else {
+              return const Text('Empty data');
+            }
+          }
           account = Account(
-              nickName: 'Loading ...',
-              about: 'Loading ...',
+              nickName: ' ',
+              about: ' ',
               walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
               customerTasks: [],
               participantTasks: [],
               auditParticipantTasks: [],
               customerRating: [0],
               performerRating: [0]);
-          return AccountSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
+          return AccountDialogSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
         });
   }
 }
 
-class AccountSkeleton extends StatefulWidget {
+class AccountDialogSkeleton extends StatefulWidget {
   final String fromPage;
   final Account object;
   final bool isLoading;
-  const AccountSkeleton({
+  const AccountDialogSkeleton({
     Key? key,
     required this.object,
     required this.fromPage,
@@ -79,10 +89,10 @@ class AccountSkeleton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AccountSkeletonState createState() => _AccountSkeletonState();
+  _AccountDialogSkeletonState createState() => _AccountDialogSkeletonState();
 }
 
-class _AccountSkeletonState extends State<AccountSkeleton> {
+class _AccountDialogSkeletonState extends State<AccountDialogSkeleton> {
   String backgroundPicture = "assets/images/niceshape.png";
 
   late Map<String, dynamic> dialogState;
@@ -98,48 +108,47 @@ class _AccountSkeletonState extends State<AccountSkeleton> {
     // var tasksServices = context.read<TasksServices>();
 
     final account = widget.object;
-    String fromPage = widget.fromPage;
     backgroundPicture = "assets/images/cyrcle.png";
 
-    return Container(
-      alignment: Alignment.topCenter,
-      decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.scaleDown, alignment: Alignment.bottomRight),
-      ),
-      child: LayoutBuilder(builder: (context, constraints) {
-        // ****** Count Screen size with keyboard and without ***** ///
-        final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-        final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
-        final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
-        final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-        return Column(mainAxisSize: MainAxisSize.min, children: [
+    return LayoutBuilder(builder: (context, constraints) {
+      // ****** Count Screen size with keyboard and without ***** ///
+      final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+      final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
+      final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+      final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+      return Container(
+        color: DodaoTheme.of(context).taskBackgroundColor,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             height: statusBarHeight,
           ),
           DialogHeader(
             account: account,
-            fromPage: fromPage,
+            fromPage: widget.fromPage,
           ),
           SizedBox(
             height: screenHeightSize - statusBarHeight,
-            // width: constraints.maxWidth * .8,
-            // height: 550,
             width: interface.maxStaticDialogWidth,
-
-            child: widget.isLoading == false
-                ? AccountPages(
-                    account: account,
-                    fromPage: widget.fromPage,
-                    screenHeightSize: screenHeightSize,
-                    screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
-                  )
-                : ShimmeredPages(
-                    object: account,
-                  ),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              switchInCurve: Curves.easeInQuint,
+              switchOutCurve: Curves.easeOutQuint,
+              child: widget.isLoading == false
+                  ? AccountDialogPages(
+                key: const Key("normal"),
+                account: account,
+                fromPage: widget.fromPage,
+                screenHeightSize: screenHeightSize,
+                screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
+              )
+                  : ShimmeredPages(
+                object: account,
+              ),
+            )
           ),
-        ]);
-      }),
-    );
+        ]),
+      );
+    });
   }
 }
 
@@ -172,25 +181,180 @@ class ShimmeredPages extends StatelessWidget {
                 // const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(height: 62, width: innerPaddingWidth, color: Colors.grey[300])),
+                  child: Material(
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
+                    child: Shimmer.fromColors(
+                        baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                        highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                        child: Container(
+                          // height: 90,
+                          width: innerPaddingWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child: Container(
+                                padding: const EdgeInsets.all(4),
+                                child: const Text('▇▇▇▇▇ ▇▇▇▇▇▇▇: \n▇▇▇▇ ▇▇▇▇▇▇▇ \n▇▇▇▇ ▇▇▇▇ \n▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇')
+                            ),
+                          ),
+                        )
+                    ),
+                  ),
                 ),
                 // ************ Show prices and topup part ******** //
                 Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(padding: const EdgeInsets.only(top: 14), height: 50, width: innerPaddingWidth, color: Colors.grey[300])),
-                ),
+                  child: Material(
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
+                    child: Shimmer.fromColors(
+                        baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                        highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                        child: Container(
+                          // height: 90,
+                          width: innerPaddingWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    padding: const EdgeInsets.all(4),
+                                    child: const Text('▇▇▇▇▇▇▇▇:')
+                                ),
+                                SizedBox(
+                                  height: 80,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Row(
+                                          children: [
+                                            const BadgeSmallColored(count: 0, color: Colors.lightBlue,),
+                                            Text(
+                                              ' - ▇▇▇▇▇▇',
+                                              style: DodaoTheme.of(context).bodyText3,
+                                              softWrap: false,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
 
-                // ********* Text Input ************ //
-                Shimmer.fromColors(
-                    baseColor: Colors.grey[350]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(padding: const EdgeInsets.only(top: 14), height: 70, width: innerPaddingWidth, color: Colors.grey[350]))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Row(
+                                          children: [
+                                            const BadgeSmallColored(count:0, color: Colors.amber,),
+                                            Text(
+                                              ' - ▇▇▇▇▇▇▇▇▇',
+                                              style: DodaoTheme.of(context).bodyText3,
+                                              softWrap: false,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Row(
+                                          children: [
+                                            const BadgeSmallColored(count: 0, color: Colors.redAccent,),
+                                            Text(
+                                              ' - ▇▇▇▇ ▇▇▇▇▇▇▇▇▇',
+                                              style: DodaoTheme.of(context).bodyText3,
+                                              softWrap: false,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+                  child: Material(
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
+                    child: Shimmer.fromColors(
+                        baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                        highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                        child: Container(
+                          // height: 90,
+                          width: innerPaddingWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            border: DodaoTheme.of(context).borderGradient,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    padding: const EdgeInsets.all(4),
+                                    child: const Text('▇▇▇▇▇▇▇▇:')
+                                ),
+                                SizedBox(
+                                  height: 60,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Row(
+                                          children: [
+                                            BadgeSmallColored(count: 0, color: Colors.lightBlue,),
+                                            Text(
+                                              ' - ▇▇▇▇▇▇▇ ▇▇▇▇▇',
+                                              style: DodaoTheme.of(context).bodyText3,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Row(
+                                          children: [
+                                            BadgeSmallColored(count:0, color: Colors.amber,),
+                                            Text(
+                                              ' - ▇▇▇▇▇▇ ▇▇▇▇▇▇',
+                                              style: DodaoTheme.of(context).bodyText3,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -199,24 +363,24 @@ class ShimmeredPages extends StatelessWidget {
     });
   }
 }
-
-class AccountBeamer extends StatelessWidget {
-  final String fromPage;
-  final EthereumAddress? taskAddress;
-  const AccountBeamer({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final String taskAddressString = taskAddress.toString();
-    RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
-    Beamer.of(context).updateRouteInformation(routeInfo);
-    return Scaffold(
-        body: Container(
-      width: double.infinity,
-      height: double.infinity,
-      // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-      alignment: Alignment.center,
-      child: AccountFuture(fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true),
-    ));
-  }
-}
+//
+// class AccountBeamer extends StatelessWidget {
+//   final String fromPage;
+//   final EthereumAddress? taskAddress;
+//   const AccountBeamer({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final String taskAddressString = taskAddress.toString();
+//     RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
+//     Beamer.of(context).updateRouteInformation(routeInfo);
+//     return Scaffold(
+//         body: Container(
+//       width: double.infinity,
+//       height: double.infinity,
+//       // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+//       alignment: Alignment.center,
+//       child: AccountFuture(fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true),
+//     ));
+//   }
+// }

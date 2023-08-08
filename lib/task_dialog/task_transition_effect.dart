@@ -35,7 +35,7 @@ class TaskTransition extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 400),
       closedColor: DodaoTheme.of(context).taskBackgroundColor,
       closedElevation: DodaoTheme.of(context).elevation,
-      closedShape: RoundedRectangleBorder(
+      closedShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(18)),
       ),
       closedBuilder: (BuildContext context, VoidCallback openContainer) {

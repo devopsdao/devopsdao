@@ -365,7 +365,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
                           const Text('Tags selected: '),
                           Badges.Badge(
                             // position: BadgePosition.topEnd(top: 10, end: 10),
-                            elevation: 0,
                             badgeContent: Container(
                               width: 14,
                               height: 14,
@@ -376,13 +375,19 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 // style: Theme.of(context).textTheme.bodySmall?.apply(color: DodaoTheme.of(context).primaryText),
                               ),
                             ),
-                            badgeColor: DodaoTheme.of(context).tabIndicator,
                             // badgeColor: Colors.white,
                             // animationDuration: const Duration(milliseconds: 600),
                             // animationType: Badges.BadgeAnimationType.fade,
-                            toAnimate: false,
-                            shape: Badges.BadgeShape.square,
-                            borderRadius: BorderRadius.circular(6),
+                            badgeAnimation: const Badges.BadgeAnimation.slide(
+                            // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+                            // curve: Curves.easeInCubic,
+                            ),
+                            badgeStyle: Badges.BadgeStyle(
+                              badgeColor: DodaoTheme.of(context).tabIndicator,
+                              elevation: 0,
+                              shape: Badges.BadgeShape.square,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                             // child: Icon(Icons.settings),
                           ),
                         ],
@@ -391,7 +396,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         children: [
                           const Text('Nft\'s selected: '),
                           Badges.Badge(
-                            elevation: 0,
                             badgeContent: Container(
                               width: 14,
                               height: 14,
@@ -401,10 +405,12 @@ class _MainTagsPageState extends State<MainTagsPage> {
                                 style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),
                               ),
                             ),
-                            badgeColor: DodaoTheme.of(context).tabIndicator,
-                            toAnimate: false,
-                            shape: Badges.BadgeShape.square,
-                            borderRadius: BorderRadius.circular(6),
+                            badgeStyle: Badges.BadgeStyle(
+                              badgeColor: DodaoTheme.of(context).tabIndicator,
+                              elevation: 0,
+                              shape: Badges.BadgeShape.square,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
                         ],
                       ),

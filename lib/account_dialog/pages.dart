@@ -13,18 +13,16 @@ import '../widgets/chat/main.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
-class AccountPages extends StatelessWidget {
+class AccountDialogPages extends StatelessWidget {
   final Account account;
   final String fromPage;
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
-  // bool shimmerEnabled;
 
-  const AccountPages({
+  const AccountDialogPages({
     Key? key,
     required this.account,
     required this.fromPage,
-    // required this.shimmerEnabled,
     required this.screenHeightSize,
     required this.screenHeightSizeNoKeyboard,
   }) : super(key: key);

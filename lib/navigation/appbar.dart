@@ -44,6 +44,7 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             actions: [
+              if (page != 'accounts' && page != 'auditor')
               OpenMyAddTags(
                 page: page,
                 tabIndex: tabIndex,
