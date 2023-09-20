@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../blockchain/classes.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/flutter_flow_util.dart';
 import '../config/theme.dart';
@@ -39,7 +40,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    // var interface = context.watch<InterfaceServices>();
+
     task = widget.object;
 
     if (task.taskState == "new") {

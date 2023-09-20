@@ -344,17 +344,13 @@ class _SelectionPageState extends State<SelectionPage> {
 
                   return Column(
                     children: <Widget>[
-                      Builder(builder: (context) {
-                        // print('ofset' + selectionScrollController!.offset.toString());
-
-                        return AnimatedContainer(
-                          // color: Colors.amber,
-                          duration: const Duration(milliseconds:250),
-                          height: heightOfAllParticipant,
-                          curve: Curves.fastOutSlowIn,
-                          child: contractorList,
-                        );
-                      }),
+                      AnimatedContainer(
+                        // color: Colors.amber,
+                        duration: const Duration(milliseconds:250),
+                        height: heightOfAllParticipant,
+                        curve: Curves.fastOutSlowIn,
+                        child: contractorList,
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 14.0)),
                       AnimatedContainer(
                         // color: Colors.amber,

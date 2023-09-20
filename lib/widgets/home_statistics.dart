@@ -1,6 +1,9 @@
 // import 'dart:ffi';
 
 // import 'package:flutter/cupertino.dart';
+import 'dart:math';
+
+import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/wrapped_chip.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +36,8 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      var searchServices = Provider.of<SearchServices>(context, listen: false);
-      var tasksServices = Provider.of<TasksServices>(context, listen: false);
+      // var searchServices = Provider.of<SearchServices>(context, listen: false);
+      // var tasksServices = Provider.of<TasksServices>(context, listen: false);
       // searchServices.tagSelection(typeSelection: 'treasury', tagName: '', unselectAll: true, tagKey: '');
 
       // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
@@ -58,8 +61,9 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-    var searchServices = context.read<SearchServices>();
+    var tasksServices = context.watch <TasksServices>();
+    // var searchServices = context.read<SearchServices>();
+    // var notify = context.watch<MyNotifyListener>();
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
@@ -118,54 +122,52 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
               physics: const NeverScrollableScrollPhysics(),
               controller: tabBarController,
               children: [
-                // if (tasksServices.publicAddress != null)
                 Container(
                   padding: const EdgeInsets.only(top: 4.0, right: 8.0, left: 8.0, bottom: 4.0),
                   height: 100,
                   alignment: Alignment.topLeft,
                   child: FutureBuilder(
                     future: tasksServices.publicAddress != null ? tasksServices.getAccountBalances(tasksServices.publicAddress!) : null,
-                    // tasksServices.publicAddress != null ? tasksServices.getTokenNames(tasksServices.publicAddress!) : null,
+                    initialData: tasksServices.initialBalances,
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-                        // final List<TokenItem> tags = snapshot.data.map<TokenItem>((name) {
-                        //   return TokenItem(collection: true, name: name);
-                        // }).toList();
+                      if (snapshot.error != null) {
+                        print('FutureBuilder error in HomeStatistics:');
+                        print(snapshot.error);
+                      }
+
+                      if (tasksServices.initialBalances.isNotEmpty) {
                         final List<TokenItem> tags = [];
-                        // for (final values in snapshot.data) {
-                        //   for (final value in values) {
-                        //     tags.add(
-                        //         TokenItem(collection: true, name: value.key)
-                        //     );
-                        //   }
-                        // }
-                        for (var idx = 0; idx < snapshot.data.length; idx++) {
-                          var list = snapshot.data.values.toList();
-                          // print(list[idx].keys);
-                          tags.add(
-                              TokenItem(collection: true, name: list[idx].keys.first.toString(), balance: list[idx].values.first.toDouble())
-                          );
+                        late bool nft = false;
+
+                        if (snapshot.data != null) {
+                          for (var element in snapshot.data.entries) {
+                            if (element.key == tasksServices.tokenContractKeyName ) {
+                              nft = true;
+                            }
+
+
+                            element.value.forEach((k,v) {
+                              final double myBalance;
+                              if (nft) {
+                                myBalance = v.toDouble();
+                              } else {
+                                final ethBalancePrecise = v.toDouble() / pow(10, 18);
+                                myBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+                              }
+                              tags.add(
+                                  TokenItem(collection: true, name: k.toString(), balance: myBalance, nft: nft)
+                              );
+                            });
+                          }
                         }
-                        for (int i = 0; i < snapshot.data.length; i++) {
-                          // for (var e in snapshot.data[i]) {
-                          //   if (snapshot.data[i].first == 'ETH') {
-                          //     tags.add(TokenItem(collection: true, nft: false, balance: snapshot.data.tokenBalances[i], name: e.toString()));
-                          //   } else {
-                          //     if (snapshot.data.tokenBalances[i] == 0) {
-                          //       tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
-                          //     } else {
-                          //       tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
-                          //     }
-                          //   }
-                          // }
-                        }
+
                         return Padding(
                           padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
                           child: Wrap(
                             alignment: WrapAlignment.start,
                             direction: Axis.horizontal,
                             children: tags.map((e) {
-                              return WrappedChip(
+                              return HomeWrappedChip(
                                 key: ValueKey(e),
                                 item: MapEntry(
                                     e.name,
@@ -173,21 +175,20 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                                       selected: false,
                                       name: e.name,
                                       bunch: {
-                                        BigInt.from(0):
-                                        TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                        BigInt.from(e.balance):
+                                        TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true, type: 'myNft')
                                       },
                                     )),
-                                page: 'tasks',
-                                // startScale: false,
-                                selected: e.selected,
-                                wrapperRole: WrapperRole.selectNew,
+                                nft: e.nft,
+                                balance: e.balance,
+                                completed: e.selected,
+                                type: e.type!,
                               );
                             }).toList(),
                           ),
                         );
                       } else {
                         return Shimmer.fromColors(
-
                             baseColor: DodaoTheme.of(context).shimmerBaseColor,
                             highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
                             child: Padding(
@@ -226,29 +227,166 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                       }
                     },
                   )
-                  // Builder(
-                  //   builder: (context) {
-                  //     // final List<TokenItem> tags = tasksServices.resultNftsMap.map((name) => TokenItem(collection: true, name: name)).toList();
-                  //     // for (int i = 0; i < tasksServices.resultNftsMap.length; i++) {
-                  //     //   for (var e in tasksServices.resultNftsMap[i]) {
-                  //     //     if (task.tokenNames[i].first == 'ETH') {
-                  //     //       tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
-                  //     //     } else {
-                  //     //       if (task.tokenBalances[i] == 0) {
-                  //     //         tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
-                  //     //       } else {
-                  //     //         tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
-                  //     //       }
-                  //     //     }
-                  //     //   }
-                  //     // }
-                  //     tasksServices.getTokenNames(tasksServices.publicAddress!);
-                  //
-                  //   }
-                  // ),
+
                 ),
                 Container(
+                    padding: const EdgeInsets.only(top: 4.0, right: 8.0, left: 8.0, bottom: 4.0),
+                    height: 100,
+                    alignment: Alignment.topLeft,
+                    child:
+                  Builder(
+                    builder: (context) {
+                      late bool nft;
+                      final List<TokenItem> tags = [];
 
+                      // ############### collect and combine Performer Progress task:
+                      late Map<String, BigInt> combinedPerformerProgress = {};
+                      late List<String> combinedPerformerProgressNftNames = [];
+                      late List<BigInt> combinedPerformerProgressNftBalance = [];
+
+                      for (var element in tasksServices.tasksPerformerProgress.entries) {
+                        for (var i = 0; i < element.value.tokenNames.length; i++) {
+                          combinedPerformerProgressNftNames.addAll(element.value.tokenNames[i].cast<String>());
+                          combinedPerformerProgressNftBalance.addAll(element.value.tokenAmounts[i].cast<BigInt>());
+                        }
+                      }
+                      for (int i2 = 0; i2 < combinedPerformerProgressNftNames.length; i2++) {
+                        final BigInt num = combinedPerformerProgressNftBalance[i2];
+                        if(!combinedPerformerProgress.containsKey(combinedPerformerProgressNftNames[i2])) {
+                          combinedPerformerProgress[combinedPerformerProgressNftNames[i2]] = num;
+                        } else {
+                          combinedPerformerProgress[combinedPerformerProgressNftNames[i2]] = num + combinedPerformerProgress[combinedPerformerProgressNftNames[i2]]!;
+                        }
+                      }
+                      // baikova ana vlad
+                      combinedPerformerProgress.forEach((key, value) {
+                        late double myBalance;
+                        myBalance = value.toDouble();
+                        if (key != tasksServices.taskTokenSymbol) {
+                          nft = true;
+                        } else {
+                          nft = false;
+                          final ethBalancePrecise = value.toDouble() / pow(10, 18);
+                          myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
+                        }
+                        tags.add(
+                            TokenItem(collection: true, name: key, balance: myBalance, nft: nft, type: 'performerPending')
+                        );
+                      });
+
+                      // ############### collect and combine Customer Progress task:
+                      late Map<String, BigInt> combinedCustomerProgress = {};
+                      late List<String> combinedCustomerProgressNftNames = [];
+                      late List<BigInt> combinedCustomerProgressNftBalance = [];
+
+                      late Map<EthereumAddress, Task> tasksCustomerProgress = {
+                        ...tasksServices.tasksCustomerProgress,
+                        ...tasksServices.tasksCustomerSelection
+                      };
+
+                      for (var element in tasksCustomerProgress.entries) {
+                        for (var i = 0; i < element.value.tokenNames.length; i++) {
+                          combinedCustomerProgressNftNames.addAll(element.value.tokenNames[i].cast<String>());
+                          combinedCustomerProgressNftBalance.addAll(element.value.tokenAmounts[i].cast<BigInt>());
+                        }
+                      }
+                      for (int i2 = 0; i2 < combinedCustomerProgressNftNames.length; i2++) {
+                        final BigInt num = combinedCustomerProgressNftBalance[i2];
+                        if(!combinedCustomerProgress.containsKey(combinedCustomerProgressNftNames[i2])) {
+                          combinedCustomerProgress[combinedCustomerProgressNftNames[i2]] = num;
+                        } else {
+                          combinedCustomerProgress[combinedCustomerProgressNftNames[i2]] = num + combinedCustomerProgress[combinedCustomerProgressNftNames[i2]]!;
+                        }
+                      }
+
+                      combinedCustomerProgress.forEach((key, value) {
+                        late double myBalance;
+                        myBalance = value.toDouble();
+                        if (key != tasksServices.taskTokenSymbol) {
+                          nft = true;
+                        } else {
+                          nft = false;
+                          final ethBalancePrecise = value.toDouble() / pow(10, 18);
+                          myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
+                        }
+                        tags.add(
+                            TokenItem(collection: true, name: key, balance: myBalance, nft: nft, type: 'customerPending')
+                        );
+                      });
+
+                      // ############### collect and combine Completed task:
+                      late Map<String, double> combinedCompleted = {};
+                      late List<String> combinedCompletedNftNames = [];
+                      late List<BigInt> combinedCompletedNftAmounts = [];
+                      late List<double> combinedCompletedNftBalance = [];
+
+                      for (var element in tasksServices.tasksPerformerComplete.entries) {
+                        for (var i = 0; i < element.value.tokenNames.length; i++) {
+                          combinedCompletedNftNames.addAll(element.value.tokenNames[i].cast<String>());
+                          combinedCompletedNftAmounts.addAll(element.value.tokenAmounts[i].cast<BigInt>());
+
+                        }
+                        combinedCompletedNftBalance.addAll(element.value.tokenBalances.cast<double>());
+                      }
+                      // print(combinedCompletedNftAmounts);
+                      // print(combinedCompletedNftBalance);
+                      for (int i2 = 0; i2 < combinedCompletedNftNames.length; i2++) {
+                        late double num = 1;
+                        if (combinedCompletedNftBalance[i2] != 0) {
+                          if(!combinedCompleted.containsKey(combinedCompletedNftNames[i2])) {
+                            combinedCompleted[combinedCompletedNftNames[i2]] = num;
+                          } else {
+                            combinedCompleted[combinedCompletedNftNames[i2]] = num + combinedCompleted[combinedCompletedNftNames[i2]]!;
+                          }
+                        }
+                      }
+                      // print(combinedCompleted);
+
+                      combinedCompleted.forEach((key, value) {
+                        late double myBalance;
+                        myBalance = value.toDouble();
+                        if (key != tasksServices.taskTokenSymbol) {
+                          nft = true;
+                        } else {
+                          nft = false;
+                          // final ethBalancePrecise = value.toDouble() / pow(10, 18);
+                          // myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
+                        }
+                        tags.add(
+                            TokenItem(collection: true, name: key, balance: myBalance, nft: nft, selected: true, type: 'performerComplete')
+                        );
+                      });
+
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
+                        child: Wrap(
+                          alignment: WrapAlignment.start,
+                          direction: Axis.horizontal,
+                          children: tags.map((e) {
+
+
+                            return HomeWrappedChip(
+                              key: ValueKey(e),
+                              item: MapEntry(
+                                  e.name,
+                                  NftCollection(
+                                    selected: e.selected,
+                                    name: e.name,
+                                    bunch: {
+                                      BigInt.from(e.balance):
+                                      TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                    },
+                                  )),
+                              nft: e.nft,
+                              balance: e.balance,
+                              completed: e.selected,
+                              type: e.type!,
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    }
+                  ),
                 ),
               ],
             ),

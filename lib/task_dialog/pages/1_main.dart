@@ -105,7 +105,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                 borderRadius: DodaoTheme.of(context).borderRadius,
                 child: GestureDetector(
                   onTap: () {
-                    interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
+                    interface.  dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
                         duration: const Duration(milliseconds: 300), curve: Curves.ease);
                     // tasksServices.myNotifyListeners();
                   },

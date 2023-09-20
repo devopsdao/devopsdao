@@ -285,8 +285,8 @@ class _MainTagsPageState extends State<MainTagsPage> {
                         padding: const EdgeInsets.all(0.0),
                         height: 30,
                         width: 30,
-                        child: Row(
-                          children: const <Widget>[
+                        child: const Row(
+                          children: <Widget>[
                             Expanded(
                               child: Icon(
                                 Icons.close,
@@ -308,58 +308,6 @@ class _MainTagsPageState extends State<MainTagsPage> {
                     // crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // SegmentedButton<ItemFilter>(
-                      //   segments: const <ButtonSegment<ItemFilter>>[
-                      //     ButtonSegment<ItemFilter>(
-                      //         value: ItemFilter.tags,
-                      //         label: Text('Tags'),
-                      //         icon: Icon(Icons.calendar_view_day)),
-                      //     ButtonSegment<ItemFilter>(
-                      //         value: ItemFilter.both,
-                      //         label: Text('Both'),
-                      //         icon: Icon(Icons.calendar_view_week)),
-                      //     ButtonSegment<ItemFilter>(
-                      //         value: ItemFilter.nfts,
-                      //         label: Text('Nft\'s'),
-                      //         icon: Icon(Icons.calendar_view_month)),
-                      //   ],
-                      //   selected: <ItemFilter>{itemFilter},
-                      //   onSelectionChanged: (Set<ItemFilter> newSelection) {
-                      //     setState(() {
-                      //       itemFilter = newSelection.first;
-                      //     });
-                      //   },
-                      // ),
-                      // Expanded(child: Center()),
-                      // Container(),
-                      // ToggleButtons(
-                      //   direction: Axis.horizontal,
-                      //   onPressed: (int index) {
-                      //     setState(() {
-                      //       // The button that is tapped is set to true, and the others to false.
-                      //       for (int i = 0; i < selectedFilter.length; i++) {
-                      //         setState(() {
-                      //
-                      //           selectedFilter[i] = i == index;
-                      //
-                      //         });
-                      //       }
-                      //     });
-                      //   },
-                      //   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      //   borderWidth: 2,
-                      //   selectedBorderColor: DodaoTheme.of(context).tabIndicator,
-                      //   selectedColor: DodaoTheme.of(context).primaryText,
-                      //   fillColor: DodaoTheme.of(context).tabIndicator,
-                      //   color: DodaoTheme.of(context).secondaryText,
-                      //   borderColor: DodaoTheme.of(context).tabIndicator,
-                      //   constraints: const BoxConstraints(
-                      //     minHeight: 30.0,
-                      //     minWidth: 60.0,
-                      //   ),
-                      //   isSelected: selectedFilter,
-                      //   children: filter,
-                      // ),
                       Row(
                         children: [
                           const Text('Tags selected: '),

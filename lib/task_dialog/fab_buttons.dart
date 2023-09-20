@@ -26,11 +26,20 @@ class SetsOfFabButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
     // String message = interface.taskMessage.text;
 
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
     final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
+
+    late bool emptyBalance = true;
+
+    for (var balance in task.tokenBalances) {
+      if (balance != 0) {
+        emptyBalance = false;
+        break;
+      }
+    }
 
     return Builder(builder: (context) {
       // ##################### ACTION BUTTONS PART ######################## //
@@ -174,7 +183,7 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: (task.tokenBalances.isNotEmpty) ? false : true,
+          inactive: (emptyBalance) ? true : false,
           expand: true,
           buttonName: 'Withdraw',
           buttonColorRequired: Colors.lightBlue.shade300,
@@ -223,28 +232,24 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       } else if (task.taskState == 'completed' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: false,
+          inactive: interface.rating == 0.0 ? true : false,
           expand: true,
           buttonName: 'Rate task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
-            (task.rating == 0)
-                ? () {
-                    task.loadingIndicator = true;
-                    // tasksServices.rateTask(
-                    //     task.taskAddress, ratingScore, task.nanoId);
-                    Navigator.pop(context);
-                    interface.emptyTaskMessage();
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => WalletActionDialog(
-                              nanoId: task.nanoId,
-                              taskName: 'rateTask',
-                            ));
-                  }
-                : null;
+            task.loadingIndicator = true;
+            tasksServices.addCustomerRating(
+                task.taskAddress, interface.rating, task.nanoId);
+            Navigator.pop(context);
+            interface.emptyTaskMessage();
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                  nanoId: task.nanoId,
+                  taskName: 'rateTask',
+                ));
           },
         );
       }

@@ -65,7 +65,7 @@ class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderSt
     String fromPage = widget.fromPage;
 
     // init first page in dialog:
-    if (interface.dialogCurrentState['pages']['main'] != null && initDone == true) {
+    if (interface.dialogCurrentState['pages']['main'] != null && initDone == true && fromPage != 'last-activities') {
       initDone = false;
       interface.dialogPageNum = interface.dialogCurrentState['pages']['main'];
       interface.dialogPagesController = PageController(initialPage: interface.dialogCurrentState['pages']['main']);

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../blockchain/accounts.dart';
+import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../task_item/delete_item_alert.dart';
 import 'package:badges/badges.dart' as Badges;
@@ -26,7 +28,7 @@ class _AccountItemState extends State<AccountItem> {
 
   @override
   Widget build(BuildContext context) {
-
+    var tasksServices = context.read<TasksServices>();
     // Widget badgeWidget(count, color) {
     //   return Badges.Badge(
     //     badgeStyle: Badges.BadgeStyle(
@@ -62,7 +64,7 @@ class _AccountItemState extends State<AccountItem> {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          if (true)
+          if (tasksServices.publicAddress != widget.account.walletAddress) // forbid to ban yourself
             SizedBox(
               width: 50,
               height: 80,
@@ -106,7 +108,6 @@ class _AccountItemState extends State<AccountItem> {
                       )
                     ],
                   ),
-
 
                   /////// numbers and bags:
                   Center(

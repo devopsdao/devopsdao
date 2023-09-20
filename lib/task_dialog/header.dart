@@ -138,6 +138,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
             onTap: () {
               interface.dialogPageNum = interface.dialogCurrentState['pages']['main']; // reset page to *main*
               interface.selectedUser = emptyClasses.emptyAccount; // reset
+              interface.rating = 0.0; // reset rating score
               Navigator.pop(context);
               interface.emptyTaskMessage();
               RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');

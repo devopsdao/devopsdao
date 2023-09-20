@@ -90,8 +90,6 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    // var interface = context.watch<InterfaceServices>();
-    late int taskLoadedState = tasksServices.tasksLoaded;
 
     return Row(
       children: [

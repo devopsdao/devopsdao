@@ -201,6 +201,10 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         // Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
 
+                        if (widget.account != null) {
+                          tasksServices.addAccountToBlacklist(widget.account!.walletAddress);
+                        }
+
                         // tasksServices.taskStateChange(
                         //     task.taskAddress, task.performer, 'audit', task.nanoId,
                         //     message: messageController!.text.isEmpty ? null : messageController!.text);

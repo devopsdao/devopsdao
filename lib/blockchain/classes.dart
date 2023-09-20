@@ -63,14 +63,15 @@ class Task {
 class TokenItem {
   final String name;
   final String? icon;
+  final String? type;
   late bool nft;
   late bool inactive;
   late double balance;
   final BigInt? id;
   late bool selected;
   late String feature;
-  final bool collection;
-  TokenItem({required this.name, this.icon, this.nft = false, this.inactive = false, this.balance = 0, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
+  late bool collection;
+  TokenItem({required this.name, this.icon, this.type = 'myNft', this.nft = false, this.inactive = false, this.balance = 0, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
 }
 
 class NftCollection {

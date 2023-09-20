@@ -46,6 +46,13 @@ class InterfaceServices extends ChangeNotifier {
     )
   };
 
+  // *********** Rating set (rate_widget <-> fab_buttons) ********** //
+  late double rating = 0.0;
+  Future updateRatingValue(number) async {
+    rating = number;
+    notifyListeners();
+  }
+
   //  *************** Wallet ***************//
   late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/accounts_page.dart
@@ -57,6 +64,41 @@ class InterfaceServices extends ChangeNotifier {
   Future updateAccountsDialogPageNum(number) async {
     accountsDialogPageNum = number;
     notifyListeners();
+  }
+ 
+
+  Widget networkLogo(networkName, color) {
+    const double iconSize = 20;
+    var networkLogoImage;
+    if (networkName == 'DEV') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_moonbeam.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (networkName == 'FTM') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_fantom.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (networkName == 'MATIC') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_mumbai_polygon.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (networkName == 'auditor') {
+      return networkLogoImage = Icon(Icons.star_border_purple500, size: iconSize, color: color);
+    } else if (networkName == 'governor') {
+      return networkLogoImage = Icon(Icons.star_border_purple500, size: iconSize, color: color);
+    } else {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_eth.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    }
   }
 
   //  ************ task_dialog **************//

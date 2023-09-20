@@ -48,3 +48,42 @@ class BadgeSmallColored extends StatelessWidget {
     );
   }
 }
+class BadgeWideColored extends StatelessWidget {
+  final Color color;
+  final String name;
+  final double width;
+
+  const BadgeWideColored(
+      {Key? key,
+        required this.color,
+        required this.name,
+        required this.width,
+      }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Badges.Badge(
+      badgeStyle: Badges.BadgeStyle(
+        badgeColor: color,
+        elevation: 0,
+        shape: Badges.BadgeShape.square,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      badgeAnimation: const Badges.BadgeAnimation.fade(
+      ),
+      badgeContent: Container(
+        width: width,
+        height: 10,
+        alignment: Alignment.center,
+        child: Text(name.toString(),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 8,
+                color: Colors.white
+            )
+        ),
+      ),
+    );
+  }
+}

@@ -28,12 +28,25 @@ Map<String, dynamic> dialogStates = {
       'description' : 1
     },
   },
-  'tasks-new-not-logged' : {
-    'name' : 'tasks-new-not-logged',
+  'last-activities' : {
+    'name' : 'last-activities',
     'mainButtonName' : '',
     'secondButtonName' : '',
     'labelMessage' : '',
     'secondLabelMessage': '',
+    'pages' : {
+      'main': 0,
+      'description' : 1
+    },
+  },
+  'tasks-new-not-logged' : {
+    'name' : 'tasks-new-not-logged',
+    'mainButtonName': '',
+    'secondButtonName' : '',
+    'selectButtonName' : '',
+    'labelMessage': '',
+    'secondLabelMessage': '',
+    'selectLabelMessage': '',
     'pages' : {
       'main': 0,
       'description' : 1

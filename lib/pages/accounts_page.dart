@@ -42,7 +42,6 @@ class _AccountsPageState extends State<AccountsPage> {
       });
     }
     getAccountsList();
-
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
     //   var tasksServices = context.read<TasksServices>();
     //   accountsAddressList = await tasksServices.getAccountsList();
@@ -53,8 +52,10 @@ class _AccountsPageState extends State<AccountsPage> {
   Future<void> getAccountsList() async {
     final tasksServices = Provider.of<TasksServices>(context, listen: false);
     accountsList = await tasksServices.getAccountsData(await tasksServices.getAccountsList());
+
     setState((){
       accountsList = accountsList;
+
     });
   }
 
@@ -94,7 +95,7 @@ class _AccountsPageState extends State<AccountsPage> {
     //       context: context,
     //       builder: (context) => TaskDialogBeamer(index: widget.index!));
     // }
-    print('dfs ' + accountsList.values.toList().length.toString());
+    // print('dfs ' + accountsList.values.toList().length.toString());
     return Scaffold(
       key: scaffoldKey,
       drawer: SideBar(controller: SidebarXController(selectedIndex: tasksServices.roleNfts['governor'] > 0 ? 4 : 5, extended: true)),

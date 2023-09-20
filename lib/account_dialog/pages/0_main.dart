@@ -1,6 +1,8 @@
+import 'package:dodao/account_dialog/widget/last_activities_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webthree/credentials.dart';
 
 import '../../blockchain/accounts.dart';
 import '../../blockchain/interface.dart';
@@ -13,6 +15,7 @@ import '../../widgets/payment.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 import '../../widgets/wallet_action_dialog.dart';
+import '../fab_buttons.dart';
 import '../widget/dialog_button_widget.dart';
 
 import 'package:badges/badges.dart' as Badges;
@@ -51,6 +54,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
     messageForStateController!.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +123,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                     //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
                   },
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                    padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
                     width: innerPaddingWidth,
                     decoration: materialMainBoxDecoration,
                     child: Column(
@@ -166,7 +170,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                       //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
                     },
                     child: Container(
-                        padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                        padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
                         width: innerPaddingWidth,
                         decoration: materialMainBoxDecoration,
                         child: Column(
@@ -249,7 +253,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                       //     duration: const Duration(milliseconds: 300), curve: Curves.ease);
                     },
                     child: Container(
-                        padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                        padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
                         width: innerPaddingWidth,
                         decoration: materialMainBoxDecoration,
                         child: Column(
@@ -302,6 +306,56 @@ class _AccountMainPageState extends State<AccountMainPage> {
                   ),
                 ),
               ),
+
+
+              /////// Last activities:
+              Container(
+                padding: const EdgeInsets.only(top: 14.0),
+                child: Material(
+                  color:  DodaoTheme.of(context).taskBackgroundColor,
+                  elevation: DodaoTheme.of(context).elevation,
+                  borderRadius: DodaoTheme.of(context).borderRadius,
+                  child: Container(
+                      padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
+                      width: innerPaddingWidth,
+                      decoration: materialMainBoxDecoration,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Last Activities:', style: DodaoTheme.of(context).bodyText2,),
+                          Builder(
+                            builder: (context) {
+                              // Collect paddings of all participant addresses
+                              const double participantPaddingSize = 2.0;
+                              const double doubledPaddingSize = participantPaddingSize * 2;
+                              late double heightOfAllParticipant = (interface.tileHeight + doubledPaddingSize) * (
+                                  widget.account.participantTasks.length + widget.account.customerTasks.length + widget.account.auditParticipantTasks.length);
+
+                              // If address LIST empty set default height:
+                              if (widget.account.participantTasks.length + widget.account.customerTasks.length + widget.account.auditParticipantTasks.length == 0) {
+                                heightOfAllParticipant = 55;
+                              }
+                              return SizedBox(
+                                height: heightOfAllParticipant,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: LastActivitiesList(
+                                        account: widget.account,
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              );
+                            }
+                          )
+                        ],
+                      )
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -310,29 +364,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
       floatingActionButton: Padding(
         // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.only(right: 13, left: 46),
-        child: TaskDialogFAB(
-          inactive: true,
-          expand: true,
-          buttonName: 'Do we need actions here?',
-          buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160, // Keyboard shown?
-          callback: () {
-            // tasksServices.addTokens(
-            //   task.taskAddress,
-            //   interface.tokensEntered, task.nanoId,
-            //   // message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-            // );
-            // Navigator.pop(context);
-            // interface.emptyTaskMessage();
-            //
-            // showDialog(
-            //     context: context,
-            //     builder: (context) => WalletActionDialog(
-            //       nanoId: task.nanoId,
-            //       taskName: 'addTokens',
-            //     ));
-          },
-        ),
+        child: tasksServices.roleNfts['governor'] > 0 ? SetsOfFabButtonsForAccountDialog(account: widget.account,) : null,
       ),
     );
   }

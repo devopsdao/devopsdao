@@ -91,12 +91,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   //   ),
   // };
 
-  late Image networkLogoImage = Image.asset(
-    'assets/images/net_icon_eth.png',
-    height: 24,
-    filterQuality: FilterQuality.medium,
-  );
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
 
@@ -139,26 +133,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
-    if (tasksServices.chainTicker == 'DEV') {
-      networkLogoImage = Image.asset(
-        'assets/images/net_icon_moonbeam.png',
-        height: 24,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (tasksServices.chainTicker == 'FTM') {
-      networkLogoImage = Image.asset(
-        'assets/images/net_icon_fantom.png',
-        height: 24,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (tasksServices.chainTicker == 'MATIC') {
-      networkLogoImage = Image.asset(
-        'assets/images/net_icon_mumbai_polygon.png',
-        height: 24,
-        filterQuality: FilterQuality.medium,
-      );
-    }
 
 
     return Stack(
@@ -247,7 +221,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: tasksServices.walletConnected && tasksServices.publicAddress != null
                               ? Row(
                                 children: [
-                                  networkLogoImage,
+                                  interface.networkLogo(tasksServices.chainTicker, Colors.white),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 4.0),
                                     child: Text(

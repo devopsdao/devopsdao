@@ -63,7 +63,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     var emptyClasses = context.read<EmptyClasses>();
     List objList = tasksServices.filterResults.values.toList();

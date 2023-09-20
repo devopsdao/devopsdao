@@ -115,6 +115,8 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
 
     if (task.taskState == 'empty' || task.taskState == 'loading') {
       interface.dialogCurrentState = dialogStates['empty'];
+    } else if (fromPage == 'last-activities') {
+      interface.dialogCurrentState = dialogStates['last-activities'];
     } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
       interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];
     } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.validChainID) {
