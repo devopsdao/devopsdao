@@ -63,7 +63,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     var emptyClasses = context.read<EmptyClasses>();
     List objList = tasksServices.filterResults.values.toList();
@@ -109,12 +109,14 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                       SizedBox(
                         width: double.infinity,
                         height: offsetToArmed * controller.value,
-                        child: RiveAnimation.asset(
-                          'assets/rive_animations/paw.riv',
-                          fit: BoxFit.cover,
-                          stateMachines: ['State Machine 1'],
-                          // controllers: [_controller],
-                          onInit: _onRiveInit,
+                        child: SizedBox(
+                          child: RiveAnimation.asset(
+                            'assets/rive_animations/paw.riv',
+                            fit: BoxFit.fitHeight,
+                            stateMachines: const ['State Machine 1'],
+                            // controllers: [_controller],
+                            onInit: _onRiveInit,
+                          ),
                         ),
                       ),
                       Transform.translate(
@@ -146,11 +148,12 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
             itemCount: objList.length,
             itemBuilder: (context, index) {
               return Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                  child: TaskTransition(
-                    fromPage: widget.pageName,
-                    task: tasksServices.filterResults.values.toList()[index],
-                  ));
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                child: TaskTransition(
+                  fromPage: widget.pageName,
+                  task: objList[index],
+                )
+              );
             },
           ),
         ));

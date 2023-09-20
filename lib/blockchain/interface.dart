@@ -2,12 +2,15 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:webthree/credentials.dart';
 
 import '../task_dialog/states.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/tags_old.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:jovial_svg/jovial_svg.dart';
+
+import 'accounts.dart';
 
 // import 'Factory.g.dart';
 // import 'abi/IERC20.g.dart';
@@ -43,6 +46,13 @@ class InterfaceServices extends ChangeNotifier {
     )
   };
 
+  // *********** Rating set (rate_widget <-> fab_buttons) ********** //
+  late double rating = 0.0;
+  Future updateRatingValue(number) async {
+    rating = number;
+    notifyListeners();
+  }
+
   //  *************** Wallet ***************//
   late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/accounts_page.dart
@@ -54,6 +64,41 @@ class InterfaceServices extends ChangeNotifier {
   Future updateAccountsDialogPageNum(number) async {
     accountsDialogPageNum = number;
     notifyListeners();
+  }
+ 
+
+  Widget networkLogo(networkName, color) {
+    const double iconSize = 20;
+    var networkLogoImage;
+    if (networkName == 'DEV') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_moonbeam.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (networkName == 'FTM') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_fantom.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (networkName == 'MATIC') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_mumbai_polygon.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (networkName == 'auditor') {
+      return networkLogoImage = Icon(Icons.star_border_purple500, size: iconSize, color: color);
+    } else if (networkName == 'governor') {
+      return networkLogoImage = Icon(Icons.star_border_purple500, size: iconSize, color: color);
+    } else {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_eth.png',
+        height: 24,
+        filterQuality: FilterQuality.medium,
+      );
+    }
   }
 
   //  ************ task_dialog **************//
@@ -82,10 +127,19 @@ class InterfaceServices extends ChangeNotifier {
   // }
 
   // selected Performer or Auditor in participants_list.dart:
-  late Map<String, String> selectedUser = {};
+  late Account selectedUser = Account(
+      nickName: 'not selected',
+      about: 'empty',
+      walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
+      customerTasks:[],
+      participantTasks: [],
+      auditParticipantTasks: [],
+      customerRating: [],
+      performerRating: []
+  );
   // participants_list.dart & 3_selection.dart & auditor
-  final double tileHeight = 34;
-  final double heightForInfo = 140;
+  final double tileHeight = 36;
+  final double participantInfoHeight = 165;
 
   // Input text on accounts_page.dart
   late String taskMessage = '';

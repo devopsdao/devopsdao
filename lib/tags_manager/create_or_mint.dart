@@ -17,7 +17,6 @@ import 'package:webthree/credentials.dart';
 
 import '../widgets/wallet_action_dialog.dart';
 import 'collection_services.dart';
-import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
 class CreateOrMint extends StatefulWidget {
@@ -57,12 +56,13 @@ class _CreateOrMintState extends State<CreateOrMint> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    // var interface = context.read<InterfaceServices>();
-    var searchServices = context.read<SearchServices>();
+    var searchServices = context.watch<SearchServices>();
     var collectionServices = context.watch<CollectionServices>();
 
     collectionExist = collectionServices.mintNftTagSelected.collection;
     collectionExist = widget.item.collection;
+
+    print('collectionExist: $collectionExist');
 
     if (collectionExist) {
       stageUpload = Status.done;
@@ -323,7 +323,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed: (!collectionExist ) ? () {
+                            onPressed: (!collectionExist ) ? () async {
                               // collectionServices.clearSelectedInManager();
                               showDialog(
                                   barrierDismissible: false,
@@ -333,8 +333,14 @@ class _CreateOrMintState extends State<CreateOrMint> {
                                         taskName: 'createNFT',
                                         page: 'create_collection',
                                       ));
-                              tasksServices.createNft('example.com', collectionName, true);
-                              collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
+                              String createNftReceipt = await tasksServices.createNft('example.com', collectionName, true);
+                              print('createNftReceipt: $createNftReceipt');
+                              if (createNftReceipt.length == 66) {
+                                collectionServices.mintNftTagSelected.collection = true;
+                                collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
+
+                              }
+
                               // searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                             } : null,
                             child: Text(

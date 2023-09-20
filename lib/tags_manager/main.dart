@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
 
 import 'collection_services.dart';
-import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
 class TagManagerPage extends StatefulWidget {

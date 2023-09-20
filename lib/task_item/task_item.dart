@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../blockchain/classes.dart';
 
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/flutter_flow_util.dart';
 import '../config/theme.dart';
@@ -39,7 +40,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    // var interface = context.watch<InterfaceServices>();
+
     task = widget.object;
 
     if (task.taskState == "new") {
@@ -298,21 +299,26 @@ class _TaskItemState extends State<TaskItem> {
                 alignment: Alignment.center,
                 child: Text(taskCount.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13)),
               ),
-              badgeColor: (() {
-                if (task.taskState == "new") {
+              badgeStyle: Badges.BadgeStyle(
+                badgeColor: (() {
+                  if (task.taskState == "new") {
                   return Colors.redAccent;
-                } else if (task.taskState == "audit" && widget.fromPage != "auditor") {
+                  } else if (task.taskState == "audit" && widget.fromPage != "auditor") {
                   return Colors.blueGrey;
-                } else if (widget.fromPage == "auditor") {
+                  } else if (widget.fromPage == "auditor") {
                   return Colors.green;
-                } else {
+                  } else {
                   return Colors.white;
-                }
-              }()),
-              animationDuration: const Duration(milliseconds: 300),
-              animationType: Badges.BadgeAnimationType.fade,
-              shape: Badges.BadgeShape.square,
-              borderRadius: BorderRadius.circular(10),
+                  }
+                }()),
+                elevation: 0,
+                shape: Badges.BadgeShape.square,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              badgeAnimation: const Badges.BadgeAnimation.fade(
+                disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
+                // curve: Curves.easeInCubic,
+              ),
               // child: Icon(Icons.settings),
             ),
           ),
@@ -513,21 +519,27 @@ class TaskItemShimmer extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(taskCount.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13)),
               ),
-              badgeColor: (() {
-                if (task.taskState == "new") {
-                  return Colors.redAccent;
-                } else if (task.taskState == "audit" && fromPage != "auditor") {
-                  return Colors.blueGrey;
-                } else if (fromPage == "auditor") {
-                  return Colors.green;
-                } else {
-                  return Colors.white;
-                }
-              }()),
-              animationDuration: const Duration(milliseconds: 300),
-              animationType: Badges.BadgeAnimationType.fade,
-              shape: Badges.BadgeShape.square,
-              borderRadius: BorderRadius.circular(10),
+
+              badgeStyle: Badges.BadgeStyle(
+                badgeColor: (() {
+                  if (task.taskState == "new") {
+                    return Colors.redAccent;
+                  } else if (task.taskState == "audit" && fromPage != "auditor") {
+                    return Colors.blueGrey;
+                  } else if (fromPage == "auditor") {
+                    return Colors.green;
+                  } else {
+                    return Colors.white;
+                  }
+                }()),
+                elevation: 0,
+                shape: Badges.BadgeShape.square,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              badgeAnimation: const Badges.BadgeAnimation.fade(
+                disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
+                // curve: Curves.easeInCubic,
+              ),
               // child: Icon(Icons.settings),
             ),
           ),

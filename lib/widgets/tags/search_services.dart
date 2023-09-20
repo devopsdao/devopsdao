@@ -4,8 +4,6 @@ import 'package:dodao/blockchain/classes.dart';
 import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../tags_manager/nft_templorary.dart';
-
 class SearchServices extends ChangeNotifier {
   final searchKeywordController = TextEditingController();
   //
@@ -240,7 +238,7 @@ class SearchServices extends ChangeNotifier {
       enteredKeyword.length > 1 ? newTag = true : newTag = false;
       // show button to add new tag !break used in loop:
       for (String key in initialMap.keys) {
-        if (resultMap[key]?.name.toLowerCase() == enteredKeyword.toLowerCase()) {
+        if (resultMap[key]?.name == enteredKeyword) {
           newTag = false;
           break;
         }
@@ -269,38 +267,6 @@ class SearchServices extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  // Future<void> tagsNFTFilter(String enteredKeyword) async {
-  //   treasuryPageFilterResults.clear();
-  //   searchTagKeyword = enteredKeyword;
-  //
-  //   if (enteredKeyword.isEmpty) {
-  //     treasuryPageFilterResults = Map.from(nftBalanceMap);
-  //     newTag = false;
-  //   } else {
-  //     for (String key in nftBalanceMap.keys) {
-  //       if (nftBalanceMap[key]!.selected) {
-  //         treasuryPageFilterResults[key] = nftBalanceMap[key]!;
-  //       }
-  //       if (key.toLowerCase().contains(enteredKeyword.toLowerCase())) {
-  //         treasuryPageFilterResults[key] = nftBalanceMap[key]!;
-  //       }
-  //     }
-  //     // show button to add new tag:
-  //     enteredKeyword.length > 2 ? newTag = true : newTag = false;
-  //     // show button to add new tag !break used in loop:
-  //     for (String key in nftBalanceMap.keys) {
-  //       if (key.toLowerCase() == enteredKeyword.toLowerCase()) {
-  //         newTag = false;
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   treasuryPageFilterResults = Map.fromEntries(treasuryPageFilterResults.entries.toList()..sort((e1, e2) {
-  //     return e2.value.selected ? 1 : -1;
-  //   }));
-  //   notifyListeners();
-  // }
 
   Future<void> addNewTag(String newTagName, String page) async {
     if (page == 'mint') {

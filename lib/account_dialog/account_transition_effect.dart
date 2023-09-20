@@ -5,56 +5,105 @@ import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
 
 import '../blockchain/accounts.dart';
+import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../config/theme.dart';
+import '../task_dialog/contractor_info.dart';
 import '../widgets/account_item.dart';
 import '../widgets/data_loading_dialog.dart';
 import '../task_item/task_item.dart';
 import 'main.dart';
 
-class ClickOnAccount extends StatelessWidget {
+class ClickOnAccountFromIndexedList extends StatelessWidget {
   final String fromPage;
-  final int index;
-  const ClickOnAccount({
+  // final int index;
+  final Account account;
+  const ClickOnAccountFromIndexedList({
     Key? key,
     required this.fromPage,
-    required this.index,
+    // required this.index,
+    required this.account,
   }) : super(key: key);
 
-  final ContainerTransitionType _transitionType2 = ContainerTransitionType.fadeThrough;
+  @override
+  Widget build(BuildContext context) {
+    return OpenContainer(
+      transitionType: ContainerTransitionType.fadeThrough,
+      openColor: DodaoTheme.of(context).taskBackgroundColor,
+      openElevation: DodaoTheme.of(context).elevation,
+      openBuilder: (BuildContext context, VoidCallback _) {
+        // RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
+        // Beamer.of(context).updateRouteInformation(routeInfo);
+        return AccountFuture(
+          fromPage: fromPage,
+          account: account,
+          shimmerEnabled: true,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 400),
+      closedColor: DodaoTheme.of(context).taskBackgroundColor,
+      closedElevation: DodaoTheme.of(context).elevation,
+      closedShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(18)),
+      ),
+      closedBuilder: (BuildContext context, VoidCallback openContainer) {
+          return AccountItem(
+            fromPage: fromPage,
+            account: account,
+          );
+        }
+      // },
+    );
+  }
+}
+
+class ClickOnAccount extends StatelessWidget {
+  // final String fromPage;
+  final int index;
+  // final Map<String, Account> accountsList;
+  const ClickOnAccount({
+    Key? key,
+    // required this.fromPage,
+    required this.index,
+    // required this.accountsList,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // final String fromPage = fromPage;
     // final int index = index;
-
-    var tasksServices = context.watch<TasksServices>();
+    var interface = context.read<InterfaceServices>();
     return OpenContainer(
-      transitionType: _transitionType2,
+      transitionType: ContainerTransitionType.fadeThrough,
+      openColor: DodaoTheme.of(context).taskBackgroundColor,
+      openElevation: DodaoTheme.of(context).elevation,
+      // transitionType: _transitionType2,
       openBuilder: (BuildContext context, VoidCallback _) {
-        final String taskAddress = tasksServices.accountsData.values.toList()[index].walletAddress.toString();
-        RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
-        Beamer.of(context).updateRouteInformation(routeInfo);
+        // final String taskAddress = accountsList.values.toList()[index].walletAddress.toString();
+        // RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
+        // Beamer.of(context).updateRouteInformation(routeInfo);
         return AccountFuture(
-          fromPage: fromPage,
-          taskAddress: tasksServices.accountsData.values.toList()[index].walletAddress,
+          fromPage: 'participants',
+          account: interface.selectedUser,
           shimmerEnabled: true,
         );
       },
-      transitionDuration: const Duration(milliseconds: 400),
-      closedElevation: 0,
+      transitionDuration: const Duration(milliseconds: 300),
+      closedColor: DodaoTheme.of(context).taskBackgroundColor,
+      closedElevation: DodaoTheme.of(context).elevation,
       closedShape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(18)),
       ),
-      openElevation: 0,
-      closedColor: Colors.white,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
-        return AccountItem(
-          fromPage: fromPage,
-          object: tasksServices.accountsData.values.toList()[index],
+
+        return const Padding(
+          padding: EdgeInsets.all(12.0),
+          child: ContractorInfo(
+            // account: interface.selectedUser,
+          ),
         );
       },
     );
   }
 }
+

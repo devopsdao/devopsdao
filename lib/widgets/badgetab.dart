@@ -2,6 +2,8 @@ import 'package:badges/badges.dart' as Badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../config/theme.dart';
+
 class BadgeTab extends StatefulWidget {
   final int taskCount;
   final int index;
@@ -44,10 +46,16 @@ class _BadgeTabState extends State<BadgeTab> {
             Container(
               padding: const EdgeInsets.only(left: 6, right: 0.0),
               child: Badges.Badge(
-                shape: Badges.BadgeShape.circle,
-                borderRadius: BorderRadius.circular(4),
-                animationType: Badges.BadgeAnimationType.fade,
-                badgeColor: colors[widget.index],
+                badgeStyle: Badges.BadgeStyle(
+                  badgeColor: colors[widget.index],
+                  elevation: 0,
+                  shape: Badges.BadgeShape.circle,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                badgeAnimation: const Badges.BadgeAnimation.fade(
+                  // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+                  // curve: Curves.easeInCubic,
+                ),
                 badgeContent: Container(
                   width: 8,
                   height: 10,

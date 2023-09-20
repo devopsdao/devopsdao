@@ -39,7 +39,9 @@ class _NavBarPageState extends State<NavBarPage> {
       // '/tasks/1': const TasksPageWidget(),
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
+      if (tasksServices.roleNfts['auditor'] > 0)
       '/auditor': const HomePageWidget(),
+      if (tasksServices.roleNfts['governor'] > 0)
       '/accounts': const HomePageWidget(),
       // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),

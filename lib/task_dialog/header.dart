@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../blockchain/empty_classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import 'package:beamer/beamer.dart';
@@ -25,6 +26,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
+    var emptyClasses = context.read<EmptyClasses>();
     final Task task = widget.task;
 
     return Container(
@@ -135,7 +137,8 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
           InkWell(
             onTap: () {
               interface.dialogPageNum = interface.dialogCurrentState['pages']['main']; // reset page to *main*
-              interface.selectedUser = {}; // reset
+              interface.selectedUser = emptyClasses.emptyAccount; // reset
+              interface.rating = 0.0; // reset rating score
               Navigator.pop(context);
               interface.emptyTaskMessage();
               RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');

@@ -16,7 +16,6 @@ import '../../widgets/tags/wrapped_chip.dart';
 
 import '../collection_services.dart';
 import '../create_or_mint.dart';
-import '../nft_templorary.dart';
 
 enum Status {
   done,
@@ -69,9 +68,9 @@ class _MintWidget extends State<MintWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var searchServices = context.read<SearchServices>();
-    var collectionServices = context.read<CollectionServices>();
-    var tasksServices = context.read<TasksServices>();
+    var searchServices = context.watch<SearchServices>();
+    var collectionServices = context.watch<CollectionServices>();
+    // var tasksServices = context.read<TasksServices>();
 
     return LayoutBuilder(
         builder: (context, constraints) {
@@ -95,7 +94,7 @@ class _MintWidget extends State<MintWidget> {
                       return TextFormField(
                         controller: searchServices.searchKeywordController,
                         onChanged: (searchKeyword) {
-                          model.tagsSearchFilter( page: 'mint', enteredKeyword: searchKeyword,);
+                          model.tagsSearchFilter(page: 'mint', enteredKeyword: searchKeyword,);
                         },
                         autofocus: true,
                         obscureText: false,
