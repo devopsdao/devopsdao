@@ -51,7 +51,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "taskAddress",
+        "name": "accountAddress",
         "type": "address"
       }
     ],
@@ -143,6 +143,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "contractAccountFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address[]",
@@ -217,10 +230,23 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getRawAccountsList",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "taskAddress",
+        "name": "accountAddress",
         "type": "address"
       }
     ],
