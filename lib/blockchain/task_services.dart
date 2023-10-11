@@ -564,10 +564,10 @@ class TasksServices extends ChangeNotifier {
               session: sessionConnect.session,
             );
             chainId = int.parse(NamespaceUtils.getChainFromAccount(
-              sessionConnect.session.namespaces.values.first.accounts.first,
+              sessionConnect.session.namespaces.values.first.accounts.last,
             ).split(":").last);
             publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
-              sessionConnect.session.namespaces.values.first.accounts.first,
+              sessionConnect.session.namespaces.values.first.accounts.last,
             ));
             publicAddress = publicAddressWC;
 
@@ -652,7 +652,7 @@ class TasksServices extends ChangeNotifier {
         notifyListeners();
       });
 
-      var connectResponse = await walletConnectClient?.createSession();
+      var connectResponse = await walletConnectClient?.createSession(chainId);
 
       final Uri? uri = connectResponse.uri;
 

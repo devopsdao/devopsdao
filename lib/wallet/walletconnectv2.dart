@@ -35,7 +35,7 @@ class WalletConnectClient {
 
   static const String launchError = 'Metamask wallet not installed';
   static const String kShortChainId = 'eip155';
-  static const String kFullChainId = 'eip155:1287';
+  late String kFullChainId;
 
   static String? _url;
   static SessionData? _sessionData;
@@ -44,7 +44,8 @@ class WalletConnectClient {
 
   String? _pairingTopic;
 
-  Future<ConnectResponse?> createSession() async {
+  Future<ConnectResponse?> createSession(int chainId) async {
+    kFullChainId = 'eip155:$chainId';
     // final bool isInstalled = await metamaskIsInstalled();
     final bool isInstalled = true;
 
@@ -58,7 +59,7 @@ class WalletConnectClient {
 
     final ConnectResponse connectResponse = await walletConnect!.connect(
       requiredNamespaces: {
-        kShortChainId: const RequiredNamespace(
+        kShortChainId: RequiredNamespace(
           chains: [kFullChainId],
           methods: [
             'eth_sign',
@@ -119,7 +120,7 @@ class WalletConnectClient {
     };
     final response = await walletConnect!.request(
         topic: _pairingTopic!,
-        chainId: 'eip155:1287',
+        chainId: 'eip155:$chainId',
         request: SessionRequestParams(
           method: 'wallet_switchEthereumChain',
           params: [params],
@@ -226,10 +227,14 @@ class WalletConnectEthereumCredentialsV2 extends CustomTransactionSender {
 
   @override
   Future<String> sendTransaction(Transaction transaction) async {
+    int chainId = int.parse(NamespaceUtils.getChainFromAccount(
+      session.namespaces.values.first.accounts.last,
+    ).split(":").last);
+    // int chainId = this.session.namespaces.
     final from = await extractAddress();
     final signResponse = await wcClient.request(
       topic: session.topic,
-      chainId: 'eip155:1287',
+      chainId: 'eip155:$chainId',
       request: SessionRequestParams(
         method: 'eth_sendTransaction',
         params: [
