@@ -297,7 +297,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //     ),
               //   ),
 
-              if (interface.dialogCurrentState['name'] == 'customer-completed' || tasksServices.hardhatDebug == true)
+              if (interface.dialogCurrentState['name'] == 'performer-completed' || (
+                  interface.dialogCurrentState['name'] == 'customer-review' ||
+                      tasksServices.hardhatDebug == true)
+              )
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(

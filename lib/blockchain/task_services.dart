@@ -3225,9 +3225,60 @@ class TasksServices extends ChangeNotifier {
   }
 
   String destinationChain = 'Moonbase';
-  Future<void> withdrawToChain(EthereumAddress contractAddress, String nanoId) async {
+  // Future<void> withdrawToChain(EthereumAddress contractAddress, String nanoId) async {
+  //   transactionStatuses[nanoId] = {
+  //     'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
+  //   };
+  //   late String txn;
+  //   String chain = 'Moonbase';
+  //   TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
+  //   //should send value now?!
+  //   var creds;
+  //   var senderAddress;
+  //   if (hardhatDebug == true) {
+  //     creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
+  //     senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
+  //   } else {
+  //     creds = credentials;
+  //     senderAddress = publicAddress;
+  //   }
+  //
+  //   // BigInt estimatedGas = await _web3client.estimateGas(
+  //   //     sender: publicAddress,
+  //   //     to: contractAddress,
+  //   //     amountOfGas: fees['medium'].estimatedGas,
+  //   //     maxFeePerGas: fees['medium'].maxFeePerGas,
+  //   //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
+  //
+  //   int price = 15;
+  //   int priceInGwei = (price).toInt();
+  //   EtherAmount gasPrice = EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
+  //
+  //   final transaction = Transaction(
+  //     from: senderAddress,
+  //     // maxFeePerGas: fees['medium'].maxFeePerGas,
+  //     // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
+  //     // maxGas: estimatedGas.toInt(),
+  //     // gasPrice: gasPrice
+  //   );
+  //   txn = await taskContract.transferToaddress(publicAddress!, chain, credentials: creds, transaction: transaction);
+  //   if (txn.length != 66) {
+  //     Task task = await loadOneTask(contractAddress);
+  //     tasks[contractAddress]!.loadingIndicator = false;
+  //     await refreshTask(task);
+  //   }
+  //   isLoading = false;
+  //   // isLoadingBackground = true;
+  //   lastTxn = txn;
+  //   transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
+  //   transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
+  //   notifyListeners();destinationChain
+  //   tellMeHasItMined(txn, 'withdrawToChain', nanoId);
+  // }
+
+  Future<void> withdrawAndRate(EthereumAddress contractAddress, String nanoId, BigInt rateScore) async {
     transactionStatuses[nanoId] = {
-      'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
+      'withdrawAndRate': {'status': 'pending', 'txn': 'initial'}
     };
     late String txn;
     String chain = 'Moonbase';
@@ -3261,7 +3312,7 @@ class TasksServices extends ChangeNotifier {
       // maxGas: estimatedGas.toInt(),
       // gasPrice: gasPrice
     );
-    txn = await taskContract.transferToaddress(publicAddress!, chain, credentials: creds, transaction: transaction);
+    txn = await taskContract.withdrawAndRate(contractAddress, senderAddress, chain, rateScore, credentials: creds, transaction: transaction);
     if (txn.length != 66) {
       Task task = await loadOneTask(contractAddress);
       tasks[contractAddress]!.loadingIndicator = false;
@@ -3270,61 +3321,10 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     // isLoadingBackground = true;
     lastTxn = txn;
-    transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
+    transactionStatuses[nanoId]!['withdrawAndRate']!['status'] = 'confirmed';
+    transactionStatuses[nanoId]!['withdrawAndRate']!['txn'] = txn;
     notifyListeners();
-    tellMeHasItMined(txn, 'withdrawToChain', nanoId);
-  }
-
-  Future<void> withdrawAndRate(EthereumAddress contractAddress, String nanoId) async {
-    transactionStatuses[nanoId] = {
-      'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
-    };
-    late String txn;
-    String chain = 'Moonbase';
-    TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
-    //should send value now?!
-    var creds;
-    var senderAddress;
-    if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
-    } else {
-      creds = credentials;
-      senderAddress = publicAddress;
-    }
-
-    // BigInt estimatedGas = await _web3client.estimateGas(
-    //     sender: publicAddress,
-    //     to: contractAddress,
-    //     amountOfGas: fees['medium'].estimatedGas,
-    //     maxFeePerGas: fees['medium'].maxFeePerGas,
-    //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
-
-    int price = 15;
-    int priceInGwei = (price).toInt();
-    EtherAmount gasPrice = EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
-
-    final transaction = Transaction(
-      from: senderAddress,
-      // maxFeePerGas: fees['medium'].maxFeePerGas,
-      // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
-      // maxGas: estimatedGas.toInt(),
-      // gasPrice: gasPrice
-    );
-    txn = await taskContract.withdrawAndRate(publicAddress!, chain, credentials: creds, transaction: transaction);
-    if (txn.length != 66) {
-      Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
-    }
-    isLoading = false;
-    // isLoadingBackground = true;
-    lastTxn = txn;
-    transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
-    notifyListeners();
-    tellMeHasItMined(txn, 'withdrawToChain', nanoId);
+    tellMeHasItMined(txn, 'withdrawAndRate', nanoId);
   }
 
   Future<Map<String, Map<String, BigInt>>> getAccountBalances(publicAddress) {
@@ -3670,56 +3670,56 @@ class TasksServices extends ChangeNotifier {
     String txn = await tokenFacet.safeBatchTransferFrom(senderAddress, to, ids, amounts, data, credentials: creds, transaction: transaction);
     return txn;
   }
-
-  Future<String> addCustomerRating(EthereumAddress taskAddresses, double rating, String nanoId) async {
-    print('addCustomerRating');
-    transactionStatuses[nanoId] = {
-      'addCustomerRating': {'status': 'pending', 'txn': 'initial'}
-    };
-    var creds;
-    var senderAddress;
-    if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
-    } else {
-      creds = credentials;
-      senderAddress = publicAddress;
-    }
-    final transaction = Transaction(
-      from: senderAddress,
-    );
-    String txn = await accountFacet.addCustomerRating(senderAddress, taskAddresses, BigInt.from(rating), credentials: creds, transaction: transaction);
-    transactionStatuses[nanoId]!['addCustomerRating']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['addCustomerRating']!['txn'] = txn;
-    notifyListeners();
-    tellMeHasItMined(txn, 'addCustomerRating', nanoId);
-    return txn;
-  }
-
-  Future<String> addPerformerRating(EthereumAddress taskAddresses, BigInt rating, String nanoId) async {
-    print('addPerformerRating');
-    transactionStatuses[nanoId] = {
-      'addPerformerRating': {'status': 'pending', 'txn': 'initial'}
-    };
-    var creds;
-    var senderAddress;
-    if (hardhatDebug == true) {
-      creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
-      senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
-    } else {
-      creds = credentials;
-      senderAddress = publicAddress;
-    }
-    final transaction = Transaction(
-      from: senderAddress,
-    );
-    String txn = await accountFacet.addPerformerRating(senderAddress, taskAddresses, rating, credentials: creds, transaction: transaction);
-    transactionStatuses[nanoId]!['addPerformerRating']!['status'] = 'confirmed';
-    transactionStatuses[nanoId]!['addPerformerRating']!['txn'] = txn;
-    notifyListeners();
-    tellMeHasItMined(txn, 'addPerformerRating', nanoId);
-    return txn;
-  }
+  //
+  // Future<String> addCustomerRating(EthereumAddress taskAddresses, double rating, String nanoId) async {
+  //   print('addCustomerRating');
+  //   transactionStatuses[nanoId] = {
+  //     'addCustomerRating': {'status': 'pending', 'txn': 'initial'}
+  //   };
+  //   var creds;
+  //   var senderAddress;
+  //   if (hardhatDebug == true) {
+  //     creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+  //     senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+  //   } else {
+  //     creds = credentials;
+  //     senderAddress = publicAddress;
+  //   }
+  //   final transaction = Transaction(
+  //     from: senderAddress,
+  //   );
+  //   String txn = await accountFacet.addCustomerRating(senderAddress, taskAddresses, BigInt.from(rating), credentials: creds, transaction: transaction);
+  //   transactionStatuses[nanoId]!['addCustomerRating']!['status'] = 'confirmed';
+  //   transactionStatuses[nanoId]!['addCustomerRating']!['txn'] = txn;
+  //   notifyListeners();
+  //   tellMeHasItMined(txn, 'addCustomerRating', nanoId);
+  //   return txn;
+  // }
+  //
+  // Future<String> addPerformerRating(EthereumAddress taskAddresses, BigInt rating, String nanoId) async {
+  //   print('addPerformerRating');
+  //   transactionStatuses[nanoId] = {
+  //     'addPerformerRating': {'status': 'pending', 'txn': 'initial'}
+  //   };
+  //   var creds;
+  //   var senderAddress;
+  //   if (hardhatDebug == true) {
+  //     creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+  //     senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+  //   } else {
+  //     creds = credentials;
+  //     senderAddress = publicAddress;
+  //   }
+  //   final transaction = Transaction(
+  //     from: senderAddress,
+  //   );
+  //   String txn = await accountFacet.addPerformerRating(senderAddress, taskAddresses, rating, credentials: creds, transaction: transaction);
+  //   transactionStatuses[nanoId]!['addPerformerRating']!['status'] = 'confirmed';
+  //   transactionStatuses[nanoId]!['addPerformerRating']!['txn'] = txn;
+  //   notifyListeners();
+  //   tellMeHasItMined(txn, 'addPerformerRating', nanoId);
+  //   return txn;
+  // }
 
   late String witnetPostResult = 'check not initialized';
   late bool witnetAvailabilityResult = false;
