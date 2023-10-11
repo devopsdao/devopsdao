@@ -183,14 +183,14 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: (emptyBalance) ? true : false,
+          inactive: interface.rating == 0.0 ? true : false,
           expand: true,
-          buttonName: 'Withdraw',
+          buttonName: 'Withdraw & Rate Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
             task.loadingIndicator = true;
-            tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
+            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
@@ -198,7 +198,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'withdrawToChain',
+                      taskName: 'withdrawAndRate',
                     ));
           },
           task: task,
@@ -207,9 +207,9 @@ class SetsOfFabButtons extends StatelessWidget {
       // *********************** CUSTOMER BUTTONS *********************** //
       else if (task.taskState == 'review' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: false,
+          inactive: interface.rating == 0.0 ? true : false,
           expand: true,
-          buttonName: 'Sign Review',
+          buttonName: 'Sign Review & Rate',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
           callback: () {
@@ -234,13 +234,12 @@ class SetsOfFabButtons extends StatelessWidget {
         return TaskDialogFAB(
           inactive: interface.rating == 0.0 ? true : false,
           expand: true,
-          buttonName: 'Rate task',
+          buttonName: 'Withdraw & Rate Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
             task.loadingIndicator = true;
-            tasksServices.addCustomerRating(
-                task.taskAddress, interface.rating, task.nanoId);
+            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
@@ -248,7 +247,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                   nanoId: task.nanoId,
-                  taskName: 'rateTask',
+                  taskName: 'withdrawAndRate',
                 ));
           },
         );
