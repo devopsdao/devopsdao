@@ -176,7 +176,7 @@ class GetTaskException implements Exception {
 
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
-  bool hardhatLive = true;
+  bool hardhatLive = false;
   int liveAccount = 0; // choose hardhat account(wallet) to use;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};

@@ -576,10 +576,9 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                         children: [
                                           // const SizedBox(height: 22),
                                           AnimatedCrossFade(
+                                            crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                             duration: const Duration(milliseconds: 500),
-                                            // firstCurve: Curves.easeInQuart,
-                                            // secondCurve: Curves.easeInQuart,
-                                            sizeCurve: Curves.easeInOutQuart  ,
+                                            sizeCurve: Curves.easeInOutQuart,
                                             firstChild: SizedBox(
                                               height: widget.screenHeightSizeNoKeyboard - 190,
                                               child: Column(
@@ -611,7 +610,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   // if (_displayUri.isEmpty)
-                                                  // if (_displayUri.isEmpty)
+                                                  if (!tasksServices.validChainIDWC && !tasksServices.walletConnectedWC)
                                                     Padding(
                                                       padding: const EdgeInsets.all(8.0),
                                                       child: RichText(
@@ -619,6 +618,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                             TextSpan(text: 'QR requested, please wait'),
                                                           ])),
                                                     ),
+                                                  if (!tasksServices.validChainIDWC && !tasksServices.walletConnectedWC)
                                                     Container(
                                                       padding: const EdgeInsets.all(15.0),
                                                       color: Colors.white,
@@ -641,7 +641,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                         bottom: 26,
                                                       ),
                                                       child: Text(
-                                                        'Wrong network, please connect to Moonbase Alpha',
+                                                        'Wrong network, please connect to one of the networks:',
                                                         style: Theme.of(context).textTheme.bodyMedium,
                                                         textAlign: TextAlign.center,
                                                       ),
@@ -649,8 +649,6 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                 ],
                                               ),
                                             ),
-                                            crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            // crossFadeState:  CrossFadeState.showFirst,
                                           ),
                                           const Spacer(),
                                           Padding(
