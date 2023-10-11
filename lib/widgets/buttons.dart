@@ -38,7 +38,7 @@ class _WithdrawButtonState extends State<WithdrawButton> {
                 setState(() {
                   widget.object.loadingIndicator = true;
                 });
-                tasksServices.withdrawToChain(widget.object.taskAddress, widget.object.nanoId);
+                tasksServices.withdrawAndRate(widget.object.taskAddress, widget.object.nanoId, BigInt.from(5));
                 Navigator.pop(context);
 
                 showDialog(
