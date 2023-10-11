@@ -35,7 +35,7 @@ dependencies:
   browser_detector: ^2.0.0
   cached_network_image: ^3.2.1
   collection: ^1.16.0
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^5.0.0
   convert: ^3.1.1
   cupertino_icons: ^1.0.0
   custom_refresh_indicator: ^2.0.1
@@ -49,7 +49,7 @@ dependencies:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
   flutter_secure_storage_linux: ^1.1.0
-  flutter_svg: ^1.0.1
+  flutter_svg: ^2.0.7
   flutter_svg_provider: ^1.0.3
   font_awesome_flutter: ^10.4.0
   g_json: ^4.1.0
@@ -59,7 +59,7 @@ dependencies:
   html: ^0.15.0
   http: ^0.13.4
   icons_animate: ^0.0.2
-  image_picker: ^0.8.6+4
+  image_picker: ^1.0.4
   internet_connection_checker_plus: ^1.0.1
   intl: ^0.18.0
   jovial_svg: ^1.1.9
@@ -68,7 +68,7 @@ dependencies:
   linked_scroll_controller: ^0.2.0
   loading_animation_widget: null
   nanoid: ^1.0.0
-  package_info_plus: ^4.0.2
+  package_info_plus: ^5.0.0
   page_transition: ^2.0.9
   provider: ^6.0.2
   qr_flutter: ^4.1.0
@@ -78,7 +78,7 @@ dependencies:
   scan: ^1.6.0
   shared_preferences: ^2.0.15
   shimmer: ^3.0.0
-  sidebarx: ^0.15.0
+  sidebarx: ^0.16.2
   simple_markdown_editor_plus: ^0.2.6
   throttling: ^1.0.0
   timeago: ^3.3.0
@@ -86,7 +86,7 @@ dependencies:
   url_launcher: ^6.1.12
   wallet_connect: ^1.0.4
   walletconnect_dart: ^0.0.11
-  walletconnect_flutter_v2: ^2.0.12
+  walletconnect_flutter_v2: ^2.1.4
   walletconnect_secure_storage: ^1.0.0
   web_socket_channel: ^2.4.0
   webthree: ^2.5.7+2

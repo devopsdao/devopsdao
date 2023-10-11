@@ -177,7 +177,7 @@ class GetTaskException implements Exception {
 class TasksServices extends ChangeNotifier {
   bool hardhatDebug = false;
   bool hardhatLive = true;
-  int liveAccount = 0 ; // choose hardhat account(wallet) to use;
+  int liveAccount = 0; // choose hardhat account(wallet) to use;
   Map<EthereumAddress, Task> tasks = {};
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
@@ -2473,7 +2473,7 @@ class TasksServices extends ChangeNotifier {
     await myBalance();
     notifyListeners();
   }
-  
+
   Future<String> addAccountToBlacklist(EthereumAddress accountAddress) async {
     transactionStatuses['addAccountToBlacklist'] = {
       'addAccountToBlacklist': {'status': 'pending', 'txn': 'initial'}
@@ -2499,15 +2499,14 @@ class TasksServices extends ChangeNotifier {
     late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
       myAccountsData[accountData[0].toString()] = Account(
-        walletAddress: accountData[0],
-        nickName: accountData[1].toString(),
-        about: accountData[2].toString(),
-        customerTasks: accountData[3].cast<EthereumAddress>(),
-        participantTasks: accountData[4].cast<EthereumAddress>(),
-        auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
-        customerRating: accountData[6].cast<int>(),
-        performerRating: accountData[7].cast<int>()
-      );
+          walletAddress: accountData[0],
+          nickName: accountData[1].toString(),
+          about: accountData[2].toString(),
+          customerTasks: accountData[3].cast<EthereumAddress>(),
+          participantTasks: accountData[4].cast<EthereumAddress>(),
+          auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
+          customerRating: accountData[6].cast<int>(),
+          performerRating: accountData[7].cast<int>());
     }
     notifyListeners();
     // accountsData = myAccountsData;
@@ -3429,9 +3428,8 @@ class TasksServices extends ChangeNotifier {
                 // combined.addAll(
                 //     {tokenNames[idx3].toString(): balanceOf[idx3]});
 
-
                 final BigInt num = balanceOf[idx3];
-                if(!combined.containsKey(tokenNames[idx3])) {
+                if (!combined.containsKey(tokenNames[idx3])) {
                   combined[tokenNames[idx3]] = num;
                 } else {
                   combined[tokenNames[idx3]] = num + combined[tokenNames[idx3]]!;
@@ -3458,7 +3456,6 @@ class TasksServices extends ChangeNotifier {
     initialBalances = balances;
     return balances;
   }
-
 
   //
   // Future<List<List<BigInt>>> getTokenBalances(List<EthereumAddress> tokenContracts, List<EthereumAddress> addresses) async {
@@ -3688,7 +3685,8 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    String txn = await accountFacet.addCustomerRating(senderAddress, taskAddresses, BigInt.from(rating), credentials: creds, transaction: transaction);
+    String txn =
+        await accountFacet.addCustomerRating(senderAddress, taskAddresses, BigInt.from(rating), credentials: creds, transaction: transaction);
     transactionStatuses[nanoId]!['addCustomerRating']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['addCustomerRating']!['txn'] = txn;
     notifyListeners();
