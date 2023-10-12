@@ -279,8 +279,11 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlZksync;
   late String _wsUrlZksync;
 
+  late String _rpcUrlTanssi;
+  late String _wsUrlTanssi;
+
   int chainId = 0;
-  List allowedChainIds = [1287, 4002, 280, 80001];
+  List allowedChainIds = [1287, 4002, 280, 80001, 855456];
   Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH'};
   late String chainTicker = 'ETH';
 
@@ -390,6 +393,10 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'ETH';
       _rpcUrl = 'https://zksync2-testnet.zksync.dev';
       _wsUrl = 'wss://zksync2-testnet.zksync.dev';
+    } else if (chainId == 855456) {
+      chainTicker = 'DODAO';
+      _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+      _wsUrl = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
     }
 
     // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -412,6 +419,9 @@ class TasksServices extends ChangeNotifier {
 
     _rpcUrlZksync = 'https://zksync2-testnet.zksync.dev';
     _wsUrlZksync = 'wss://zksync2-testnet.zksync.dev';
+
+    _rpcUrlTanssi = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    _wsUrlTanssi = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
