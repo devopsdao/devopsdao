@@ -221,7 +221,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: tasksServices.walletConnected && tasksServices.publicAddress != null
                               ? Row(
                                 children: [
-                                  interface.networkLogo(tasksServices.chainTicker, Colors.white),
+                                  interface.networkLogo(tasksServices.chainId, Colors.white, 24),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 4.0),
                                     child: Text(

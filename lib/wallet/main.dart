@@ -1,7 +1,9 @@
 import 'package:dodao/blockchain/notify_listener.dart';
+import 'package:dodao/wallet/widgets/network_selection.dart';
 import 'package:dodao/wallet/widgets/transport_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import '../blockchain/interface.dart';
 import '../config/theme.dart';
@@ -42,18 +44,9 @@ class WalletPageTop extends StatefulWidget {
 }
 
 class _WalletPageTopState extends State<WalletPageTop> {
-  String txId = '';
   String _displayUri = '';
   var session;
   String backgroundPicture = "assets/images/logo_half.png";
-
-  static const _networks = ['Ethereum (Ropsten)', 'Algorand (Testnet)'];
-  NetworkType? _network = NetworkType.ethereum;
-  // TransactionState _state = TransactionState.disconnected;
-  // TransactionState _state2 = TransactionState.disconnected;
-  // WallectConnectTransaction? _wallectConnectTransaction = EthereumWallectConnectTransaction();
-  late WallectConnectTransaction? _wallectConnectTransaction;
-
   bool disableBackButton = true;
 
   @override
@@ -88,19 +81,11 @@ class _WalletPageTopState extends State<WalletPageTop> {
         disableBackButton = false;
       }
     }
-    //
-    // _displayUri = tasksServices.walletConnectUri;
-    //
-    // if (tasksServices.walletConnectedWC) {
-    //   tasksServices.walletConnectUri = '';
-    // }
 
     if (tasksServices.closeWalletDialog) {
       Navigator.pop(context);
       tasksServices.closeWalletDialog = false;
     }
-
-    // int page = interface.pageWalletViewNumber;
 
     return LayoutBuilder(builder: (context, constraints) {
       return StatefulBuilder(builder: (context, setState) {
@@ -223,25 +208,6 @@ class _WalletPageTopState extends State<WalletPageTop> {
       });
     });
   }
-
-  void _changeNetworks(String? network) {
-    if (network == null) return;
-    final newNetworkIndex = _networks.indexOf(network);
-    final newNetwork = NetworkType.values[newNetworkIndex];
-
-    switch (newNetwork) {
-      case NetworkType.algorand:
-        _wallectConnectTransaction = AlgorandWalletConnectTransaction();
-        break;
-      case NetworkType.ethereum:
-        _wallectConnectTransaction = EthereumWallectConnectTransaction();
-        break;
-    }
-
-    setState(
-      () => _network = newNetwork,
-    );
-  }
 }
 
 class WalletPagesMiddle extends StatefulWidget {
@@ -264,12 +230,6 @@ class WalletPagesMiddle extends StatefulWidget {
 
 class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
   String _displayUri = '';
-  late String _networkUsed = '';
-  late Image networkLogoImage = Image.asset(
-    'assets/images/net_icon_eth.png',
-    height: 80,
-    filterQuality: FilterQuality.medium,
-  );
 
   int defaultTab = 0;
   late String dropdownValue = 'axelar';
@@ -299,28 +259,6 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
       defaultTab = 0;
     }
 
-    if (tasksServices.chainTicker == 'DEV') {
-      _networkUsed = 'to Moonbeam network';
-      networkLogoImage = Image.asset(
-        'assets/images/net_icon_moonbeam.png',
-        height: 80,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (tasksServices.chainTicker == 'FTM') {
-      _networkUsed = 'to Fantom network';
-      networkLogoImage = Image.asset(
-        'assets/images/net_icon_fantom.png',
-        height: 80,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (tasksServices.chainTicker == 'MATIC') {
-      _networkUsed = 'to Mumbai network';
-      networkLogoImage = Image.asset(
-        'assets/images/net_icon_mumbai_polygon.png',
-        height: 80,
-        filterQuality: FilterQuality.medium,
-      );
-    }
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerPaddingWidth = dialogConstraints.maxWidth - 60;
@@ -390,20 +328,6 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                 ),
                 secondChild: const Padding(
                   padding: EdgeInsets.all(18.0),
-                  // child: Material(
-                  //   elevation: DodaoTheme.of(context).elevation,
-                  //   borderRadius: DodaoTheme.of(context).borderRadius,
-                  //   child: Container(
-                  //     padding: const EdgeInsets.all(8.0),
-                  //     width: innerPaddingWidth,
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: DodaoTheme.of(context).borderRadius,
-                  //     ),
-                  //     child: TransportSelection(
-                  //       screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard - 100,
-                  //     ),
-                  //   ),
-                  // ),
                 ),
                 crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               ),
@@ -474,7 +398,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                             border: DodaoTheme.of(context).borderGradient,
                           ),
                           child: DefaultTabController(
-                            length: 2,
+                            length: 3,
                             initialIndex: defaultTab,
                             child: Column(
                               children: [
@@ -509,6 +433,10 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                         width: 120,
                                         child: Tab(child: Text('QR Code')),
                                       ),
+                                      const SizedBox(
+                                        width: 120,
+                                        child: Icon(Icons.settings),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -529,7 +457,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                             Padding(
                                               padding: const EdgeInsets.only(bottom: 14.0),
                                               child: Text(
-                                                tasksServices.walletConnectedWC ? 'Wallet connected $_networkUsed' : 'Wallet disconnected',
+                                                tasksServices.walletConnectedWC ? 'Wallet connected to ${tasksServices.allowedChainIds.values.contains(tasksServices.chainId)}' : 'Wallet disconnected',
                                                 style: Theme.of(context).textTheme.bodySmall,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -634,18 +562,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                                         )
                                                     ),
                                                   if (!tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(
-                                                        left: 16,
-                                                        right: 16,
-                                                        bottom: 26,
-                                                      ),
-                                                      child: Text(
-                                                        'Wrong network, please connect to one of the networks:',
-                                                        style: Theme.of(context).textTheme.bodyMedium,
-                                                        textAlign: TextAlign.center,
-                                                      ),
-                                                    )
+                                                  const NetworkSelection()
                                                 ],
                                               ),
                                             ),
@@ -654,7 +571,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           Padding(
                                             padding: const EdgeInsets.only(bottom: 14.0),
                                             child: Text(
-                                              tasksServices.walletConnectedWC ? 'Wallet connected $_networkUsed' : 'Wallet disconnected',
+                                              tasksServices.walletConnectedWC ? 'Wallet connected ${tasksServices.allowedChainIds.values.contains(tasksServices.chainId)}' : 'Wallet disconnected',
                                               style: Theme.of(context).textTheme.bodyMedium,
                                               textAlign: TextAlign.center,
                                             ),
@@ -674,6 +591,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           const SizedBox(height: 22),
                                         ],
                                       ),
+                                      Container(),
                                     ],
                                   ),
                                 ),
@@ -804,13 +722,11 @@ class WalletConnectButton extends StatefulWidget {
   final String buttonName;
   final VoidCallback callback;
 
-  // final double borderRadius;
   const WalletConnectButton({
     Key? key,
     required this.buttonFunction,
     this.buttonName = '',
     required this.callback,
-    // required this.borderRadius
   }) : super(key: key);
 
   @override
@@ -818,15 +734,14 @@ class WalletConnectButton extends StatefulWidget {
 }
 
 class _WalletConnectButtonState extends State<WalletConnectButton> {
-  // late String assetName;
-  // late Color buttonColor = Colors.black26;
-  // late int page = 0;
 
   @override
   Widget build(BuildContext context) {
-    // var interface = context.watch<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-    late String buttonText = 'name not set';
+    late String buttonText = '';
+
+    int networkSelected = interface.networkSelected;
 
     if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC && widget.buttonFunction == 'wallet_connect') {
       buttonText = 'Disconnect';

@@ -79,39 +79,6 @@ class _TopUpPageState extends State<TopUpPage> {
               children: [
                 Payment(
                     purpose: 'topup', innerPaddingWidth: innerPaddingWidth),
-                // const Spacer(),
-                // Container(
-                //   padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                //   width: innerPaddingWidth + 8,
-                //   child: Row(
-                //     // direction: Axis.horizontal,
-                //     // crossAxisAlignment: WrapCrossAlignment.start,
-                //     children: [
-                //       TaskDialogButton(
-                //         // padding: 8.0,
-                //         inactive: interface.tokensEntered == 0.0 ? true : false,
-                //         buttonName: 'Topup contract',
-                //         buttonColorRequired: Colors.lightBlue.shade600,
-                //         callback: () {
-                //           tasksServices.addTokens(
-                //             task.taskAddress,
-                //             interface.tokensEntered, task.nanoId,
-                //             // message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
-                //           );
-                //           Navigator.pop(context);
-                //           interface.emptyTaskMessage();
-                //
-                //           showDialog(
-                //               context: context,
-                //               builder: (context) => WalletActionDialog(
-                //                 nanoId: task.nanoId,
-                //                 taskName: 'addTokens',
-                //               ));
-                //         },
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
