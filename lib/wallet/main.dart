@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import '../blockchain/interface.dart';
 import '../config/theme.dart';
+import 'activities/pairings_page.dart';
 import 'algorand_walletconnect_transaction.dart';
 import 'ethereum_walletconnect_transaction.dart';
 import 'walletconnect_provider.dart';
@@ -233,6 +234,7 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
 
   int defaultTab = 0;
   late String dropdownValue = 'axelar';
+
   @override
   void initState() {
     super.initState();
@@ -591,7 +593,16 @@ class _WalletPagesMiddleState extends State<WalletPagesMiddle> {
                                           const SizedBox(height: 22),
                                         ],
                                       ),
-                                      Container(),
+                                        Column(
+                                          children: [
+                                            if (tasksServices.walletConnectedWC)
+                                              PairingsPage(
+                                                  web3App: tasksServices.walletConnectClient.walletConnect
+                                              ),
+                                            if (!tasksServices.walletConnectedWC)
+                                              Center(child: Text('not connected'),),
+                                          ],
+                                        )
                                     ],
                                   ),
                                 ),
@@ -626,7 +637,6 @@ class ChooseWalletButton extends StatefulWidget {
 
 class _ChooseWalletButtonState extends State<ChooseWalletButton> {
   // TransactionState _state2 = TransactionState.disconnected;
-
   late String assetName;
   late Color buttonColor = Colors.grey.shade600;
   late int page = 0;
@@ -737,11 +747,8 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
     late String buttonText = '';
-
-    int networkSelected = interface.networkSelected;
 
     if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC && widget.buttonFunction == 'wallet_connect') {
       buttonText = 'Disconnect';
@@ -766,10 +773,6 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
       child: InkWell(
         onTap: () async {
           widget.callback();
-          // controller.jumpToPage(page);
-          // interface.controller.animateToPage(page,
-          //     duration: const Duration(milliseconds: 300),
-          //     curve: Curves.easeIn);
           if (widget.buttonFunction == 'metamask') {
             if (!tasksServices.walletConnectedMM) {
               tasksServices.initComplete ? await tasksServices.connectWalletMM() : null;

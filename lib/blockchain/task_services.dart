@@ -548,7 +548,7 @@ class TasksServices extends ChangeNotifier {
     print('async');
     if (walletConnectClient != null) {
       // var _walletConnect = await walletConnectClient._initWalletConnect();
-
+ 
       if (walletConnected == false) {
         print("disconnected");
         walletConnectUri = '';

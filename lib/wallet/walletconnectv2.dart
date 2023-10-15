@@ -30,7 +30,7 @@ class WalletConnectClient {
         ],
       ),
     );
-    print(walletConnect);
+    // print(walletConnect);
   }
 
   static const String launchError = 'Metamask wallet not installed';
