@@ -284,7 +284,7 @@ class TasksServices extends ChangeNotifier {
 
   int chainId = 0;
   List allowedChainIds = [1287, 4002, 280, 80001, 855456];
-  Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH'};
+  Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH', 855456: 'DODAO'};
   late String chainTicker = 'ETH';
 
   int chainIdAxelar = 80001;
