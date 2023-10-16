@@ -967,7 +967,7 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
     late EdgeInsets centerTextPadding = const EdgeInsets.only(left: 6.0, right: 6.0);
 
     var textSize = calcTextSize(
-        !widget.nft ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
+        !widget.nft ? "${widget.item.value.bunch.values.first.balance}  $tagName" : tagName,
         DodaoTheme.of(context).bodyText3.override(
           fontFamily: 'Inter',
           color: textColor,
@@ -1012,7 +1012,7 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
               child: SizedBox(
                 height: containerMainHeight,
                 width: 18,
-                child: interface.networkLogo(tagName, nftColor),
+                child: interface.chipIcon(tagName, nftColor, 20, tasksServices.chainId),
               ),
             ),
           if (specialNft)
@@ -1021,7 +1021,7 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
               child: SizedBox(
                 height: containerMainHeight,
                 width: 18,
-                child: interface.networkLogo(tagName.toLowerCase(), nftColor),
+                child: interface.chipIcon(tagName.toLowerCase(), nftColor, 20,tasksServices.chainId),
               ),
             ),
           if (showNftNumber)

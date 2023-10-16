@@ -57,6 +57,7 @@ class InterfaceServices extends ChangeNotifier {
   late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/accounts_page.dart
   late PageController controller = PageController(initialPage: 0);
+  late int networkSelected = 0;
 
   //  ************ accounts_dialog **************//
   late PageController accountsDialogPagesController = PageController(initialPage: 0);
@@ -65,37 +66,95 @@ class InterfaceServices extends ChangeNotifier {
     accountsDialogPageNum = number;
     notifyListeners();
   }
+
+
  
 
-  Widget networkLogo(networkName, color) {
-    const double iconSize = 20;
+  Widget networkLogo(chainId, Color color, double height) {
     var networkLogoImage;
-    if (networkName == 'DEV') {
+    if (chainId == 1287) {
       return networkLogoImage = Image.asset(
         'assets/images/net_icon_moonbeam.png',
-        height: 24,
+        height: height,
         filterQuality: FilterQuality.medium,
       );
-    } else if (networkName == 'FTM') {
+    } else if (chainId == 4002) {
       return networkLogoImage = Image.asset(
         'assets/images/net_icon_fantom.png',
-        height: 24,
+        height: height,
         filterQuality: FilterQuality.medium,
       );
-    } else if (networkName == 'MATIC') {
+    } else if (chainId == 80001) {
       return networkLogoImage = Image.asset(
         'assets/images/net_icon_mumbai_polygon.png',
-        height: 24,
+        height: height,
         filterQuality: FilterQuality.medium,
       );
-    } else if (networkName == 'auditor') {
-      return networkLogoImage = Icon(Icons.star_border_purple500, size: iconSize, color: color);
-    } else if (networkName == 'governor') {
-      return networkLogoImage = Icon(Icons.star_border_purple500, size: iconSize, color: color);
+    } else if (chainId == 855456) {
+      return networkLogoImage = Image.asset(
+        'assets/images/logo.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (chainId == 280) {
+      return networkLogoImage = Image.asset(
+        'assets/images/zksync.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
     } else {
       return networkLogoImage = Image.asset(
         'assets/images/net_icon_eth.png',
-        height: 24,
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    }
+  }
+
+  Widget chipIcon(String roleOrCoin, Color color, double height, chainId) {
+    var networkLogoImage;
+    if (roleOrCoin == 'auditor') {
+    return networkLogoImage = Icon(
+        Icons.star_border_purple500, size: height, color: color
+      );
+    } else if (roleOrCoin == 'governor') {
+    return networkLogoImage = Icon(
+        Icons.star_border_purple500, size: height, color: color
+      );
+    } else if (roleOrCoin == 'DEV') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_moonbeam.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (roleOrCoin == 'FTM') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_fantom.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (roleOrCoin == 'MATIC') {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_mumbai_polygon.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (roleOrCoin == 'DODAO') {
+      return networkLogoImage = Image.asset(
+        'assets/images/logo.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    } else if (roleOrCoin == 'ETH' && chainId == 280) {
+      return networkLogoImage = Image.asset(
+        'assets/images/zksync.png',
+        height: height,
+        filterQuality: FilterQuality.medium,
+      );
+    } else {
+      return networkLogoImage = Image.asset(
+        'assets/images/net_icon_eth.png',
+        height: height,
         filterQuality: FilterQuality.medium,
       );
     }

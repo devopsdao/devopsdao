@@ -138,45 +138,45 @@ class HomeAppBar extends StatelessWidget  implements PreferredSizeWidget  {
         ],
       ),
       actions: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
-            child: Container(
-              // width: 150,
-              height: 30,
-              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                gradient: const LinearGradient(
-                  colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
-                  stops: [0.1, 0.5, 1],
-                ),
-              ),
-              child: InkWell(
-                  highlightColor: Colors.white,
-                  onTap: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const WalletPageTop(),
-                    );
-                  },
-                  child: tasksServices.walletConnected && tasksServices.publicAddress != null
-                      ? Text(
-                    '${tasksServices.publicAddress.toString().substring(0, 4)}'
-                        '...'
-                        '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
-                    // textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 14, color: Colors.white),
-                  )
-                      : const Text(
-                    'Connect wallet',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Colors.white),
-                  )),
-            ),
-          ),
-        ),
+        // Center(
+        //   child: Padding(
+        //     padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
+        //     child: Container(
+        //       // width: 150,
+        //       height: 30,
+        //       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+        //
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(16),
+        //         gradient: const LinearGradient(
+        //           colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+        //           stops: [0.1, 0.5, 1],
+        //         ),
+        //       ),
+        //       child: InkWell(
+        //           highlightColor: Colors.white,
+        //           onTap: () async {
+        //             showDialog(
+        //               context: context,
+        //               builder: (context) => const WalletPageTop(),
+        //             );
+        //           },
+        //           child: tasksServices.walletConnected && tasksServices.publicAddress != null
+        //               ? Text(
+        //             '${tasksServices.publicAddress.toString().substring(0, 4)}'
+        //                 '...'
+        //                 '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
+        //             // textAlign: TextAlign.center,
+        //             style: const TextStyle(fontSize: 14, color: Colors.white),
+        //           )
+        //               : const Text(
+        //             'Connect wallet',
+        //             textAlign: TextAlign.center,
+        //             style: TextStyle(fontSize: 14, color: Colors.white),
+        //           )),
+        //     ),
+        //   ),
+        // ),
         if (!tasksServices.isDeviceConnected)
           Padding(
             padding: const EdgeInsets.only(left: 0.0, right: 14),
