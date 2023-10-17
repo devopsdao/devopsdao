@@ -76,6 +76,7 @@ dependencies:
   rive: ^0.11.2
   rive_splash_screen: ^0.1.1
   scan: ^1.6.0
+  fl_toast: ^3.2.0
   shared_preferences: ^2.0.15
   shimmer: ^3.0.0
   sidebarx: ^0.16.2

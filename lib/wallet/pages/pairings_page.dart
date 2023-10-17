@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
-import 'pairing_item.dart';
+import '../widgets/pairing_item.dart';
 
 class PairingsPage extends StatefulWidget {
   const PairingsPage({

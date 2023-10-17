@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import '../blockchain/interface.dart';
 import '../config/theme.dart';
-import 'activities/pairings_page.dart';
+import 'pages/pairings_page.dart';
 import 'algorand_walletconnect_transaction.dart';
 import 'ethereum_walletconnect_transaction.dart';
 import 'walletconnect_provider.dart';
