@@ -56,7 +56,6 @@ class InterfaceServices extends ChangeNotifier {
   //  *************** Wallet ***************//
   late int pageWalletViewNumber = 0;
   // PageView Controller for wallet/accounts_page.dart
-  late PageController controller = PageController(initialPage: 0);
   late int networkSelected = 0;
 
   //  ************ accounts_dialog **************//

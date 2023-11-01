@@ -1,10 +1,6 @@
 import 'dart:typed_data';
 
-// import 'walletconnect_provider.dart';
-// import 'package:walletconnect_dart/walletconnect_dart.dart';
-// import 'package:walletconnect_secure_storage/walletconnect_secure_storage.dart';
 import 'package:web3dart/crypto.dart';
-// import 'package:webthree/src/crypto/secp256k1.dart';
 import 'package:webthree/webthree.dart';
 
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
@@ -18,6 +14,8 @@ class WalletConnectClient {
 
   Web3App? walletConnect;
 
+
+
   Future<void> initWalletConnect() async {
     walletConnect = await Web3App.createInstance(
       projectId: '98a940d6677c21307eaa65e2290a7882',
@@ -30,8 +28,10 @@ class WalletConnectClient {
         ],
       ),
     );
-    // print(walletConnect);
+    // print('walletConnect: ${walletConnect}');
   }
+
+
 
   static const String launchError = 'Metamask wallet not installed';
   static const String kShortChainId = 'eip155';
@@ -104,12 +104,21 @@ class WalletConnectClient {
     // return null;
   }
 
-  // @override
   Future<void> disconnect() async {
     if (_pairingTopic != null) {
       await walletConnect?.disconnectSession(
         topic: _pairingTopic!,
         reason: Errors.getSdkError(Errors.USER_DISCONNECTED),
+      );
+    }
+  }
+
+  Future<void> disconnectPairings() async {
+    List<PairingInfo> pairings = [];
+    pairings = walletConnect!.pairings.getAll();
+    for (var pairing in pairings) {
+      walletConnect!.core.pairing.disconnect(
+        topic: pairing.topic,
       );
     }
   }
@@ -151,7 +160,7 @@ class WalletConnectClient {
         ));
 
     // final response = await connector.sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
-    print(response);
+    print('wc response: $response');
 
     // return session;
   }
