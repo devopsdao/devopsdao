@@ -8,6 +8,7 @@ import '../blockchain/classes.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/services.dart';
 
+import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
@@ -145,6 +146,16 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
               Beamer.of(context).updateRouteInformation(routeInfo);
 
               interface.statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
+
+              final tasksServices = Provider.of<TasksServices>(context, listen: false);
+              if (tasksServices.checkWitnetResultAvailabilityTimerTimer != null) {
+                tasksServices.checkWitnetResultAvailabilityTimerTimer!.cancel();
+                print ('timer checkWitnetResultAvailabilityTimerTimer canceled');
+              }
+              if (tasksServices.getLastWitnetResultTimerTimer != null) {
+                tasksServices.getLastWitnetResultTimerTimer!.cancel();
+                print ('timer getLastWitnetResultTimerTimer canceled');
+              }
             },
             borderRadius: BorderRadius.circular(16),
             child: Container(

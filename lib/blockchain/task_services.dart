@@ -58,7 +58,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../wallet/walletconnectv2.dart';
 
-import '../wallet/ethereum_walletconnect_transaction.dart';
+import '../wallet/to_delete/ethereum_walletconnect_transaction.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -239,7 +239,7 @@ class TasksServices extends ChangeNotifier {
 
   var walletConnectClient;
 
-  var walletConnectState;
+  // var walletConnectState;
   bool walletConnected = false;
   bool walletConnectedWC = false;
   bool walletConnectedMM = false;
@@ -555,7 +555,7 @@ class TasksServices extends ChangeNotifier {
   bool closeWalletDialog = false;
 
   Future<void> connectWalletWCv2(bool refresh) async {
-    print('async');
+    // print('async');
     if (walletConnectClient != null) {
       // var _walletConnect = await walletConnectClient._initWalletConnect();
 
@@ -570,7 +570,7 @@ class TasksServices extends ChangeNotifier {
       // walletConnectClient._walletConnect.on('onSessionConnect');
       walletConnectClient.walletConnect.onSessionConnect.subscribe((sessionConnect) {
         // walletConnectSession = session;
-        walletConnectState = TransactionState.connected;
+        // walletConnectState = TransactionState.connected;
         walletConnected = true;
         walletConnectedWC = true;
         closeWalletDialog = true;
@@ -627,7 +627,7 @@ class TasksServices extends ChangeNotifier {
       // });
       walletConnectClient.walletConnect.onSessionDelete.subscribe((sessionConnect) async {
         // print(sessionConnect);
-        walletConnectState = TransactionState.disconnected;
+        // walletConnectState = TransactionState.disconnected;
         walletConnected = false;
         walletConnectedWC = false;
         publicAddress = null;
@@ -649,7 +649,7 @@ class TasksServices extends ChangeNotifier {
 
       walletConnectClient.walletConnect.onSessionExpire.subscribe((sessionConnect) async {
         // print(sessionConnect);
-        walletConnectState = TransactionState.disconnected;
+        // walletConnectState = TransactionState.disconnected;
         walletConnected = false;
         walletConnectedWC = false;
         publicAddress = null;
@@ -708,7 +708,7 @@ class TasksServices extends ChangeNotifier {
       // print(walletConnectUri);
     } else {
       print("not initialized");
-      print(walletConnectState);
+      // print(walletConnectState);
     }
   }
 
@@ -1186,6 +1186,8 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> disconnectWCv2() async {
     await walletConnectClient?.disconnect();
+    await walletConnectClient?.disconnectPairings();
+
     walletConnected = false;
     walletConnectedWC = false;
     publicAddress = null;
@@ -3784,9 +3786,13 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
+  // timers:
+  Timer? checkWitnetResultAvailabilityTimerTimer;
+  Timer? getLastWitnetResultTimerTimer;
+
   Future checkWitnetResultAvailabilityTimer(EthereumAddress taskAddress, String nanoId) async {
-    BigInt appId = BigInt.from(100);
-    Timer.periodic(const Duration(seconds: 15), (timer) async {
+    // BigInt appId = BigInt.from(100);
+    checkWitnetResultAvailabilityTimerTimer = Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print('checkWitnetResultAvailabilityTimer: ${timer.tick}');
       bool result = await witnetFacet.checkResultAvailability(taskAddress);
       print('checkWitnetResultAvailabilityTimer: $result');
@@ -3820,7 +3826,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future checkWitnetResultAvailability(EthereumAddress taskAddress, String nanoId) async {
-    BigInt appId = BigInt.from(100);
+    // BigInt appId = BigInt.from(100);
     // print(timer.tick);
     bool result = await witnetFacet.checkResultAvailability(taskAddress);
     print('checkWitnetResultAvailability: $result');
@@ -3857,7 +3863,7 @@ class TasksServices extends ChangeNotifier {
     2 status: text(closed/(unmerged))
   */
   Future<dynamic> getLastWitnetResultTimer(EthereumAddress taskAddress, String nanoId) async {
-    Timer.periodic(const Duration(seconds: 15), (timer) async {
+    getLastWitnetResultTimerTimer = Timer.periodic(const Duration(seconds: 15), (timer) async {
       // print(timer.tick);
 
       var result = await witnetFacet.getLastResult(taskAddress);

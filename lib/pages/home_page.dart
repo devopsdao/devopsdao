@@ -215,7 +215,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           onTap: () async {
                             showDialog(
                               context: context,
-                              builder: (context) => const WalletPageTop(),
+                              builder: (context) => const WalletDialog(),
                             );
                           },
                           child: tasksServices.walletConnected && tasksServices.publicAddress != null
