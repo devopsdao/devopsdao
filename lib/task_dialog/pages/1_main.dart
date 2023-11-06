@@ -51,8 +51,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var tasksServices = context.read<TasksServices>();
-      // var interface = context.read<InterfaceServices>();
-      if ( widget.task.repository.isNotEmpty) {
+      var interface = context.read<InterfaceServices>();
+      if (interface.dialogCurrentState['name'] == 'performer-review' && widget.task.repository.isNotEmpty) {
         tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
         tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
       }
