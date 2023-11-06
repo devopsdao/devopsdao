@@ -601,7 +601,7 @@ class TasksServices extends ChangeNotifier {
             } else {
               validChainID = false;
               validChainIDWC = false;
-              await switchNetworkWC();
+              await switchNetworkWC(); // default network
             }
           } else {
             chainId = 31337;
