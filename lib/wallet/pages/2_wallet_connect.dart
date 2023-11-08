@@ -223,7 +223,8 @@ class _WalletConnectState extends State<WalletConnect> {
                                                 ),
                                               ),
 
-                                            if (!tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
+                                            // if (!tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
+                                            if (tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
                                               NetworkSelection(wConnected: true, qrSize: qrSize)
                                           ],
                                         ),
