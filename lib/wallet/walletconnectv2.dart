@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:convert/convert.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:webthree/webthree.dart';
-
+import 'package:g_json/g_json.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 
 class WalletConnectClient {
@@ -13,8 +15,6 @@ class WalletConnectClient {
   // }
 
   Web3App? walletConnect;
-
-
 
   Future<void> initWalletConnect() async {
     walletConnect = await Web3App.createInstance(
@@ -38,7 +38,7 @@ class WalletConnectClient {
   late String kFullChainId;
 
   static String? _url;
-  static SessionData? _sessionData;
+  late ConnectResponse connectResponse;
 
   String get deepLinkUrl => 'metamask://wc?uri=$_url';
 
@@ -46,18 +46,18 @@ class WalletConnectClient {
 
   Future<ConnectResponse?> createSession(int chainId) async {
     kFullChainId = 'eip155:$chainId';
-    // final bool isInstalled = await metamaskIsInstalled();
-    final bool isInstalled = true;
-
-    if (!isInstalled) {
-      return Future.error(launchError);
-    }
+    // // final bool isInstalled = await metamaskIsInstalled();
+    // final bool isInstalled = true;
+    //
+    // if (!isInstalled) {
+    //   return Future.error(launchError);
+    // }
 
     if (walletConnect == null) {
       await initWalletConnect();
     }
 
-    final ConnectResponse connectResponse = await walletConnect!.connect(
+    connectResponse = await walletConnect!.connect(
       requiredNamespaces: {
         kShortChainId: RequiredNamespace(
           chains: [kFullChainId],
@@ -79,29 +79,18 @@ class WalletConnectClient {
     _pairingTopic = connectResponse.pairingTopic;
 
     return connectResponse;
+  }
 
-    //
-
-    // if (uri != null) {
-    //   final String encodedUrl = Uri.encodeComponent('$uri');
-
-    //   _url = encodedUrl;
-
-    //   // await launchUrlString(
-    //   //   deepLinkUrl,
-    //   //   mode: LaunchMode.externalApplication,
-    //   // );
-
-    //   // _sessionData = await connectResponse.session.future;
-
-    //   // final String account = NamespaceUtils.getAccount(
-    //   //   _sessionData!.namespaces.values.first.accounts.first,
-    //   // );
-
-    //   // return account;
-    // }
-
-    // return null;
+  Future<List<PairingInfo>> checkExistedPairings() async {
+    walletConnect!.core.relayClient.connect();
+    List<PairingInfo> pairings = [];
+    pairings = walletConnect!.pairings.getAll();
+    for (var pairing in pairings) {
+      walletConnect!.core.pairing.activate(
+        topic: pairing.topic,
+      );
+    }
+    return pairings;
   }
 
   Future<void> disconnect() async {
@@ -123,16 +112,21 @@ class WalletConnectClient {
     }
   }
 
-  Future<void> switchNetwork(String chainId) async {
+  Future<void> switchNetwork(int chainId) async {
+    final SessionData sessionData = await connectResponse.session.future;
+    print('switchNetwork');
+    print('switchNetwork: $chainId , encoded to hex: ${chainId.toRadixString(16)}');
+    // print(_pairingTopic!);
+    // print(walletConnect!.pairings);
     final params = <String, dynamic>{
-      'chainId': chainId,
+      'chainId': '0x${chainId.toRadixString(16)}',
     };
     final response = await walletConnect!.request(
-        topic: _pairingTopic!,
+        topic: sessionData.topic,
         chainId: 'eip155:$chainId',
         request: SessionRequestParams(
           method: 'wallet_switchEthereumChain',
-          params: [params],
+          params: [jsonEncode(params)],
         ));
     // return session;
   }

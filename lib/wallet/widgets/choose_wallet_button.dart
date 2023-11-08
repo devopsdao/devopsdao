@@ -68,7 +68,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
             if (widget.buttonFunction == 'metamask') {
               tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
             } else if (widget.buttonFunction == 'wallet_connect') {
-              tasksServices.initComplete ? tasksServices.connectWalletWCv2(false) : null;
+              tasksServices.initComplete ? tasksServices.connectWalletWCv2(false, 0) : null;
             }
           }
         },

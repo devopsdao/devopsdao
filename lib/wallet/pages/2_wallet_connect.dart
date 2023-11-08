@@ -22,12 +22,13 @@ class WalletConnect extends StatefulWidget {
 }
 
 class _WalletConnectState extends State<WalletConnect> {
-  late String _displayUri = '';
+  // late String _displayUri = '';
   int defaultTab = 0;
+  final double qrSize = 210;
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    _displayUri = tasksServices.walletConnectUri;
+    // _displayUri = tasksServices.walletConnectUri;
 
     if (tasksServices.walletConnectedWC) {
       tasksServices.walletConnectUri = '';
@@ -56,9 +57,8 @@ class _WalletConnectState extends State<WalletConnect> {
                   elevation: DodaoTheme.of(context).elevation,
                   borderRadius: DodaoTheme.of(context).borderRadius,
                   child: Container(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.only(left: 26.0, right: 26.0, top: 10, bottom: 10),
                     height: widget.screenHeightSizeNoKeyboard - 40,
-                    // width: MediaQuery.of(context).size.width * .57
                     width: widget.innerPaddingWidth,
                     decoration: BoxDecoration(
                       borderRadius: DodaoTheme.of(context).borderRadius,
@@ -100,6 +100,8 @@ class _WalletConnectState extends State<WalletConnect> {
                           Expanded(
                             child: TabBarView(
                               children: [
+
+
                                 // *********** Wallet Connect > Mobile page ************ //
                                 if (tasksServices.platform == 'mobile' ||
                                     tasksServices.browserPlatform == 'android' ||
@@ -128,6 +130,7 @@ class _WalletConnectState extends State<WalletConnect> {
                                     ],
                                   ),
 
+
                                 // *********** Wallet Connect > Desktop page ************ //
                                 if (tasksServices.platform == 'linux' ||
                                     tasksServices.platform == 'web' &&
@@ -155,7 +158,7 @@ class _WalletConnectState extends State<WalletConnect> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     AnimatedCrossFade(
-                                      crossFadeState: _displayUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                      crossFadeState: tasksServices.walletConnectUri.isNotEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                       duration: const Duration(milliseconds: 500),
                                       sizeCurve: Curves.easeInOutQuart,
                                       firstChild: SizedBox(
@@ -165,17 +168,22 @@ class _WalletConnectState extends State<WalletConnect> {
                                           // crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(14.0),
                                               child: RichText(
                                                   text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-                                                    TextSpan(text: 'Scan QR code'),
+                                                    TextSpan(text: 'Scan QR or select network'),
                                                   ])),
                                             ),
                                             // const Spacer(),
-                                            if (_displayUri.isNotEmpty)
+                                            NetworkSelection(wConnected: false, qrSize: qrSize),
+                                            const SizedBox(
+                                                height: 8,
+                                            ),
+                                            if (tasksServices.walletConnectUri.isNotEmpty)
                                               QrImageView(
-                                                data: _displayUri,
-                                                size: 230,
+                                                padding: const EdgeInsets.all(0),
+                                                data: tasksServices.walletConnectUri,
+                                                size: qrSize,
                                                 gapless: false,
                                                 backgroundColor: Colors.white,
                                               ),
@@ -189,29 +197,34 @@ class _WalletConnectState extends State<WalletConnect> {
                                           children: [
                                             if (!tasksServices.validChainIDWC && !tasksServices.walletConnectedWC)
                                               Padding(
-                                                padding: const EdgeInsets.all(8.0),
+                                                padding: const EdgeInsets.all(14.0),
                                                 child: RichText(
                                                     text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                                                       TextSpan(text: 'QR requested, please wait'),
                                                     ])),
                                               ),
                                             if (!tasksServices.validChainIDWC && !tasksServices.walletConnectedWC)
-                                              Container(
-                                                  padding: const EdgeInsets.all(15.0),
-                                                  color: Colors.white,
-                                                  // alignment: Alignment.topRight,
-                                                  child: Shimmer.fromColors(
-                                                    baseColor: DodaoTheme.of(context).shimmerBaseColor,
-                                                    highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
-                                                    child: Container(
-                                                      height: 200,
-                                                      width: 200,
-                                                      color: Colors.white,
-                                                    ),
-                                                  )
+                                              Shimmer.fromColors(
+                                                baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                                                highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                                                child: NetworkSelection(wConnected: false, qrSize: qrSize)
                                               ),
+                                            const SizedBox(
+                                              height: 8,
+                                            ),
+                                            if (!tasksServices.validChainIDWC && !tasksServices.walletConnectedWC)
+                                              Shimmer.fromColors(
+                                                baseColor: DodaoTheme.of(context).shimmerBaseColor,
+                                                highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+                                                child: Container(
+                                                  height: qrSize,
+                                                  width: qrSize,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+
                                             if (!tasksServices.validChainIDWC && tasksServices.walletConnectedWC)
-                                              const NetworkSelection()
+                                              NetworkSelection(wConnected: true, qrSize: qrSize)
                                           ],
                                         ),
                                       ),
@@ -231,7 +244,7 @@ class _WalletConnectState extends State<WalletConnect> {
                                       callback: () {
                                         setState(() {
                                           tasksServices.walletConnectUri = ''; // reset _displayUri
-                                          _displayUri = '';
+                                          // _displayUri = '';
                                           tasksServices.myNotifyListeners();
 
                                         });
@@ -240,6 +253,7 @@ class _WalletConnectState extends State<WalletConnect> {
                                     const SizedBox(height: 22),
                                   ],
                                 ),
+
                                 Column(
                                   children: [
                                     if (tasksServices.walletConnectedWC)
@@ -247,7 +261,9 @@ class _WalletConnectState extends State<WalletConnect> {
                                           web3App: tasksServices.walletConnectClient.walletConnect
                                       ),
                                     if (!tasksServices.walletConnectedWC)
-                                      Center(child: Text('not connected'),),
+                                      const SizedBox(
+                                          height: 150,
+                                          child: Center(child: Text('Please connect your wallet'),)),
                                   ],
                                 )
                               ],

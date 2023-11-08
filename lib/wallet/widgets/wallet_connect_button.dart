@@ -60,9 +60,9 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
             }
           } else if (widget.buttonFunction == 'wallet_connect') {
             if (!tasksServices.walletConnectedWC) {
-              tasksServices.initComplete ? await tasksServices.connectWalletWCv2(false) : null;
+              tasksServices.initComplete ? await tasksServices.connectWalletWCv2(false, 0) : null;
             } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC) {
-              tasksServices.initComplete ? await tasksServices.switchNetworkWC() : null;
+              tasksServices.initComplete ? await tasksServices.switchNetworkWC(tasksServices.chainId) : null;
             } else if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC) {
               tasksServices.initComplete ? {await tasksServices.disconnectWCv2()} : null;
               // buttonName = 'Refresh QR';
