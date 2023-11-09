@@ -145,8 +145,6 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
               RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');
               Beamer.of(context).updateRouteInformation(routeInfo);
 
-              interface.statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
-
               final tasksServices = Provider.of<TasksServices>(context, listen: false);
               if (tasksServices.checkWitnetResultAvailabilityTimerTimer != null) {
                 tasksServices.checkWitnetResultAvailabilityTimerTimer!.cancel();

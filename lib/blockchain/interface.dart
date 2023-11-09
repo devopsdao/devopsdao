@@ -1,19 +1,6 @@
-// import 'package:js/js.dart';
-
-import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
-
-import '../task_dialog/states.dart';
-import '../widgets/paw_indicator_with_tasks_list.dart';
-import '../widgets/tags/tags_old.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:jovial_svg/jovial_svg.dart';
-
 import 'accounts.dart';
-
-// import 'Factory.g.dart';
-// import 'abi/IERC20.g.dart';
 
 class InterfaceServices extends ChangeNotifier {
 
@@ -65,9 +52,6 @@ class InterfaceServices extends ChangeNotifier {
     accountsDialogPageNum = number;
     notifyListeners();
   }
-
-
- 
 
   Widget networkLogo(chainId, Color color, double height) {
     var networkLogoImage;
@@ -168,21 +152,7 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  // late double boxKeyboardHeight = 0;
-  // late double boxKeyboardHeightNoKeyboard = 0;
-  // Future updateBoxKeyboardHeight() async {
-  //   boxKeyboardHeight = boxKeyboardHeightNoKeyboard;
-  //   notifyListeners();
-  // }
-
-
   late Map<String, dynamic> dialogCurrentState;
-
-  // final GlobalKey<PawRefreshAndTasksListState> indicator = GlobalKey<PawRefreshAndTasksListState>();
-  // Future runPaw() async {
-  //   indicator.currentState!.runPaw();
-  //   // notifyListeners();
-  // }
 
   // selected Performer or Auditor in participants_list.dart:
   late Account selectedUser = Account(
@@ -214,17 +184,13 @@ class InterfaceServices extends ChangeNotifier {
   late BuildContext mainDialogContext;
   late BuildContext createJobPageContext;
 
-  late String whichWalletButtonPressed = '';
+  late String walletButtonPressed = '';
 
   // wallet/accounts_page.dart controller for tabs
   // late TabController walletTabController = TabController(length: 2, vsync: );
 
   // ***********  create_job_widget ************ ////
   late PageController pageViewNewTaskController = PageController(initialPage: 0);
-
-  // ***********  Pull request status  *********** //
-
-  late TextSpan statusText = const TextSpan(text: 'Not created', style: TextStyle(fontWeight: FontWeight.bold));
 
   // **** manager treasury pageCount (to avoid screen freezing on animation)
   late int treasuryPageCount = 1;
@@ -233,8 +199,7 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 
-
-  // ****** SETTINGS ******** //
+  // ****** MAIN SCREEN SETTINGS ******** //
   // border radius:
   final double borderRadius = 8.0;
   // -------------------- Sizes for Dialog window ------------------------- //

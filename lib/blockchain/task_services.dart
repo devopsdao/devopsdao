@@ -63,7 +63,8 @@ import '../wallet/to_delete/ethereum_walletconnect_transaction.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart'; // import 'package:device_info_plus/device_info_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
 import 'package:browser_detector/browser_detector.dart' hide Platform;
 
 import 'package:package_info_plus/package_info_plus.dart';
@@ -286,6 +287,7 @@ class TasksServices extends ChangeNotifier {
   late String _wsUrlTanssi;
 
   late int chainId = 0;
+  final String defaultNetwork = 'Dodao Tanssi Appchain';
   Map<String, int> allowedChainIds = {
     'Dodao Tanssi Appchain': 855456,
     'Moonbase alpha': 1287,
@@ -360,13 +362,13 @@ class TasksServices extends ChangeNotifier {
       chainId = 1287;
     }
 
-    isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
+    isDeviceConnected = await InternetConnection().hasInternetAccess;
 
     // if (platform != 'web') {
     final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
       if (result != ConnectivityResult.none) {
         // print('connectivity: ${result}');
-        isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
+        isDeviceConnected = await InternetConnection().hasInternetAccess;
         // print('isDeviceConnected: ${isDeviceConnected}');
         // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
       }

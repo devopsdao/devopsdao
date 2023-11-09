@@ -16,6 +16,7 @@ class WalletSelectConnection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    var interface = context.watch<InterfaceServices>();
 
     return Column(
       children: [
@@ -42,14 +43,25 @@ class WalletSelectConnection extends StatelessWidget {
           ChooseWalletButton(
             active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
             buttonFunction: 'metamask',
-            buttonWidth: innerPaddingWidth, pageController: pageController,
+            buttonWidth: innerPaddingWidth,
+            callback: () {
+              interface.walletButtonPressed = 'metamask';
+              pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+              tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
+            },
           ),
-        if (tasksServices.platform == 'web' && tasksServices.mmAvailable) const SizedBox(height: 12),
-          ChooseWalletButton(
-            active: true,
-            buttonFunction: 'wallet_connect',
-            buttonWidth: innerPaddingWidth, pageController: pageController,
-          ),
+        if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
+          const SizedBox(height: 12),
+        ChooseWalletButton(
+          active: true,
+          buttonFunction: 'wallet_connect',
+          buttonWidth: innerPaddingWidth,
+          callback: () {
+            interface.walletButtonPressed = 'wallet_connect';
+            pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+            tasksServices.initComplete ? tasksServices.connectWalletWCv2(false, tasksServices.allowedChainIds[tasksServices.defaultNetwork]!) : null;
+          },
+        ),
         const Spacer(),
       ],
     );

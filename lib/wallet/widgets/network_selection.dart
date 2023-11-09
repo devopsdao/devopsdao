@@ -21,7 +21,7 @@ class NetworkSelection extends StatefulWidget {
 
 class _NetworkSelectionState extends State<NetworkSelection> {
 
-  late String dropdownValue = 'Dodao Tanssi Appchain';
+
 
   late Widget networkLogoImage = Image.asset(
     'assets/images/logo.png',
@@ -33,7 +33,7 @@ class _NetworkSelectionState extends State<NetworkSelection> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-
+    late String dropdownValue = tasksServices.defaultNetwork;
 
     return Column(
       children: [
@@ -58,7 +58,7 @@ class _NetworkSelectionState extends State<NetworkSelection> {
               borderRadius: BorderRadius.circular(8),
               dropdownColor: DodaoTheme.of(context).taskBackgroundColor,
               style: Theme.of(context).textTheme.bodySmall,
-              hint: Text('Choose token ($dropdownValue)'),
+              // hint: Text('Choose token ($dropdownValue)'),
               underline: Container(
                 height: 2,
                 color: Colors.deepOrange,
