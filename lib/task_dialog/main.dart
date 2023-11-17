@@ -117,9 +117,9 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       interface.dialogCurrentState = dialogStates['empty'];
     } else if (fromPage == 'last-activities') {
       interface.dialogCurrentState = dialogStates['last-activities'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
+    } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.allowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.validChainID) {
+    } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-logged'];
     } else if (fromPage == 'customer' && task.taskState == 'new') {
       interface.dialogCurrentState = dialogStates['customer-new'];

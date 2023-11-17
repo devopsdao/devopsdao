@@ -1,7 +1,8 @@
 import 'package:dodao/wallet/pages/0_select.dart';
 import 'package:dodao/wallet/pages/1_metamask.dart';
 import 'package:dodao/wallet/pages/2_wallet_connect.dart';
-import 'package:dodao/wallet/pages/pairings_page.dart';
+import 'package:dodao/wallet/pages/2_wallet_connect_sections/pairings_section.dart';
+import 'package:dodao/wallet/walletconnectv2.dart';
 import 'package:dodao/wallet/widgets/choose_wallet_button.dart';
 import 'package:dodao/wallet/widgets/network_selection.dart';
 import 'package:dodao/wallet/widgets/wallet_connect_button.dart';
@@ -15,7 +16,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 
-class WalletDialogPages extends StatefulWidget {
+class WalletDialogPages extends StatelessWidget {
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
   final PageController pageController;
@@ -28,18 +29,6 @@ class WalletDialogPages extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _WalletDialogPagesState createState() => _WalletDialogPagesState();
-}
-
-class _WalletDialogPagesState extends State<WalletDialogPages> {
-
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
@@ -49,15 +38,15 @@ class _WalletDialogPagesState extends State<WalletDialogPages> {
       return PageView(
         scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
-        controller: widget.pageController,
+        controller: pageController,
         onPageChanged: (number) {
           interface.pageWalletViewNumber = number;
           tasksServices.myNotifyListeners();
         },
         children: <Widget>[
-          WalletSelectConnection(innerPaddingWidth: innerPaddingWidth, pageController: widget.pageController,),
+          WalletSelectConnection(innerPaddingWidth: innerPaddingWidth, pageController: pageController,),
           MetamaskPage(innerPaddingWidth: innerPaddingWidth,),
-          WalletConnect(screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard, innerPaddingWidth: innerPaddingWidth,),
+          WalletConnectController(screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard, innerPaddingWidth: innerPaddingWidth,),
         ],
       );
     });

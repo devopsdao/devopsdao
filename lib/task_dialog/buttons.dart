@@ -51,7 +51,7 @@
 //           if (fromPage == 'tasks')
 //             TaskDialogButton(
 //               inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
-//                       tasksServices.validChainID &&
+//                       tasksServices.allowedChainId &&
 //                       tasksServices.publicAddress != null
 //                   ? false
 //                   : true,

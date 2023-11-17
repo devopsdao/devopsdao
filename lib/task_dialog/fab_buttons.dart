@@ -47,7 +47,7 @@ class SetsOfFabButtons extends StatelessWidget {
       if (fromPage == 'tasks') {
         return TaskDialogFAB(
           inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
-                  tasksServices.validChainID &&
+                  tasksServices.allowedChainId &&
                   tasksServices.publicAddress != null
               ? false
               : true,

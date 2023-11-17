@@ -42,8 +42,6 @@ class InterfaceServices extends ChangeNotifier {
 
   //  *************** Wallet ***************//
   late int pageWalletViewNumber = 0;
-  // PageView Controller for wallet/accounts_page.dart
-  late int networkSelected = 0;
 
   //  ************ accounts_dialog **************//
   late PageController accountsDialogPagesController = PageController(initialPage: 0);
@@ -53,46 +51,7 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Widget networkLogo(chainId, Color color, double height) {
-    var networkLogoImage;
-    if (chainId == 1287) {
-      return networkLogoImage = Image.asset(
-        'assets/images/net_icon_moonbeam.png',
-        height: height,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (chainId == 4002) {
-      return networkLogoImage = Image.asset(
-        'assets/images/net_icon_fantom.png',
-        height: height,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (chainId == 80001) {
-      return networkLogoImage = Image.asset(
-        'assets/images/net_icon_mumbai_polygon.png',
-        height: height,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (chainId == 855456) {
-      return networkLogoImage = Image.asset(
-        'assets/images/logo.png',
-        height: height,
-        filterQuality: FilterQuality.medium,
-      );
-    } else if (chainId == 280) {
-      return networkLogoImage = Image.asset(
-        'assets/images/zksync.png',
-        height: height,
-        filterQuality: FilterQuality.medium,
-      );
-    } else {
-      return networkLogoImage = Image.asset(
-        'assets/images/net_icon_eth.png',
-        height: height,
-        filterQuality: FilterQuality.medium,
-      );
-    }
-  }
+
 
   Widget chipIcon(String roleOrCoin, Color color, double height, chainId) {
     var networkLogoImage;

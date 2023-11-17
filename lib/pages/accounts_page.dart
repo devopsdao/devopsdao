@@ -75,7 +75,7 @@ class _AccountsPageState extends State<AccountsPage> {
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: {});
     }
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       isFloatButtonVisible = true;
     }
 

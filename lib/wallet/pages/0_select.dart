@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../wallet_service.dart';
 import '../widgets/choose_wallet_button.dart';
 
 class WalletSelectConnection extends StatelessWidget {
@@ -17,6 +18,8 @@ class WalletSelectConnection extends StatelessWidget {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    WalletProvider walletProvider = context.watch<WalletProvider>();
+
 
     return Column(
       children: [
@@ -41,25 +44,25 @@ class WalletSelectConnection extends StatelessWidget {
         const Spacer(),
         if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
           ChooseWalletButton(
-            active: tasksServices.platform == 'web' && tasksServices.mmAvailable ? true : false,
+            active: tasksServices.platform == 'web' && tasksServices.mmAvailable && walletProvider.initComplete ? true : false,
             buttonFunction: 'metamask',
             buttonWidth: innerPaddingWidth,
             callback: () {
               interface.walletButtonPressed = 'metamask';
               pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-              tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
+              walletProvider.initComplete ? tasksServices.connectWalletMM() : null;
             },
           ),
         if (tasksServices.platform == 'web' && tasksServices.mmAvailable)
           const SizedBox(height: 12),
         ChooseWalletButton(
-          active: true,
+          active: walletProvider.initComplete ? true : false,
           buttonFunction: 'wallet_connect',
           buttonWidth: innerPaddingWidth,
           callback: () {
             interface.walletButtonPressed = 'wallet_connect';
-            pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
-            tasksServices.initComplete ? tasksServices.connectWalletWCv2(false, tasksServices.allowedChainIds[tasksServices.defaultNetwork]!) : null;
+            pageController.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+            // walletProvider.initComplete ? tasksServices.connectWalletWCv2(false, tasksServices.allowedChainIds[tasksServices.defaultNetworkName]!) : null;
           },
         ),
         const Spacer(),
