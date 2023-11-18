@@ -10,12 +10,13 @@ class ChooseWalletButton extends StatefulWidget {
   final double buttonWidth;
   final bool active;
   final String buttonFunction;
-  final PageController pageController;
+  final VoidCallback callback;
   const ChooseWalletButton({Key? key,
     required this.active,
     required this.buttonFunction,
     required this.buttonWidth,
-    required this.pageController})
+    required this.callback,
+  })
       : super(key: key);
 
   @override
@@ -25,25 +26,20 @@ class ChooseWalletButton extends StatefulWidget {
 class _ChooseWalletButtonState extends State<ChooseWalletButton> {
   late String assetName;
   late Color buttonColor = Colors.grey.shade600;
-  late int page = 0;
   late Widget customIcon;
   late Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
-    var tasksServices = context.watch<TasksServices>();
     late String name;
     if (widget.buttonFunction == 'metamask') {
       name = 'Metamask';
       assetName = 'assets/images/metamask-icon2.svg';
       buttonColor = Colors.teal.shade700;
-      page = 1;
     } else if (widget.buttonFunction == 'wallet_connect') {
       name = 'Wallet Connect';
       assetName = 'assets/images/wc_logo.svg';
       buttonColor = Colors.purple.shade700;
-      page = 2;
     }
     if (widget.active) {
       customIcon = SvgPicture.asset(
@@ -61,17 +57,7 @@ class _ChooseWalletButtonState extends State<ChooseWalletButton> {
       elevation: DodaoTheme.of(context).elevation,
       borderRadius: DodaoTheme.of(context).borderRadius,
       child: InkWell(
-        onTap: () {
-          if (widget.active) {
-            interface.whichWalletButtonPressed = widget.buttonFunction;
-            widget.pageController.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-            if (widget.buttonFunction == 'metamask') {
-              tasksServices.initComplete ? tasksServices.connectWalletMM() : null;
-            } else if (widget.buttonFunction == 'wallet_connect') {
-              tasksServices.initComplete ? tasksServices.connectWalletWCv2(false) : null;
-            }
-          }
-        },
+        onTap: widget.active ? widget.callback : null,
         child: Container(
           padding: const EdgeInsets.all(0.0),
           height: 50.0, //MediaQuery.of(context).size.width * .08,

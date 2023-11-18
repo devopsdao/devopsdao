@@ -1,6 +1,7 @@
 import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/tags_manager/collection_services.dart';
+import 'package:dodao/wallet/wallet_service.dart';
 import 'package:dodao/widgets/tags/main.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +44,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
+        ChangeNotifierProvider(create: (context) => WalletProvider()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {

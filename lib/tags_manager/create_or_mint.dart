@@ -62,8 +62,6 @@ class _CreateOrMintState extends State<CreateOrMint> {
     collectionExist = collectionServices.mintNftTagSelected.collection;
     collectionExist = widget.item.collection;
 
-    print('collectionExist: $collectionExist');
-
     if (collectionExist) {
       stageUpload = Status.done;
       stageFeatures = Status.done;

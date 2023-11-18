@@ -1,254 +1,334 @@
 import 'dart:typed_data';
 
+import 'package:dodao/wallet/pages/2_wallet_connect.dart';
+import 'package:dodao/wallet/wallet_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:webthree/webthree.dart';
-
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-class WalletConnectClient {
-  // late final Web3App wcClient;
-
-  // Future<void> initSession() async {
-  //   wcClient = await initWalletConnect();
-  // }
-
-  Web3App? walletConnect;
+import '../blockchain/task_services.dart';
 
 
 
-  Future<void> initWalletConnect() async {
-    walletConnect = await Web3App.createInstance(
-      projectId: '98a940d6677c21307eaa65e2290a7882',
-      metadata: const PairingMetadata(
-        name: 'dodao.dev',
-        description: 'Decentralzied marketplace for coders and art-creators',
-        url: 'https://walletconnect.com/',
-        icons: [
-          'https://walletconnect.com/walletconnect-logo.png',
-        ],
-      ),
-    );
-    // print('walletConnect: ${walletConnect}');
+
+class WalletConnectController extends StatefulWidget {
+  final double innerPaddingWidth;
+  final double screenHeightSizeNoKeyboard;
+
+  const WalletConnectController({
+    Key? key,
+    required this.innerPaddingWidth,
+    required this.screenHeightSizeNoKeyboard,
+  }) : super(key: key);
+
+  @override
+  _WalletConnectControllerState createState() => _WalletConnectControllerState();
+}
+
+class _WalletConnectControllerState extends State<WalletConnectController> {
+
+
+  @override
+  void initState() {
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
+    // initial network name set:
+    if (walletProvider.chainNameOnApp.isEmpty) {
+      walletProvider.selectedChainNameMenu = tasksServices.defaultNetworkName;
+      walletProvider.chainNameOnApp = tasksServices.defaultNetworkName;
+    }
+
+    if (!tasksServices.walletConnected) {
+      connectWallet();
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // var interface = context.watch<InterfaceServices>();
+    // var tasksServices = context.watch<TasksServices>();
+    // WalletProvider walletProvider = context.read<WalletProvider>();
+
+    return LayoutBuilder(builder: (ctx, dialogConstraints) {
+      return WalletConnect(
+        screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
+        innerPaddingWidth: widget.innerPaddingWidth,
+        callConnectWallet: connectWallet,
+        callDisconnectWallet: disconnectWCv2,
+      );
+    });
   }
 
 
+  Future<void> connectWallet() async {
+    log.fine('walletconnectv2.dart -> connectWallet() start');
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
-  static const String launchError = 'Metamask wallet not installed';
-  static const String kShortChainId = 'eip155';
-  late String kFullChainId;
-
-  static String? _url;
-  static SessionData? _sessionData;
-
-  String get deepLinkUrl => 'metamask://wc?uri=$_url';
-
-  String? _pairingTopic;
-
-  Future<ConnectResponse?> createSession(int chainId) async {
-    kFullChainId = 'eip155:$chainId';
-    // final bool isInstalled = await metamaskIsInstalled();
-    final bool isInstalled = true;
-
-    if (!isInstalled) {
-      return Future.error(launchError);
+    if (tasksServices.walletConnected == false) {
+      log.fine("walletconnectv2.dart -> walletConnected = false, remove value in walletConnectUri & walletConnectSessionUri");
+      walletProvider.walletConnectUri = '';
+      tasksServices.walletConnectSessionUri = '';
     }
-
-    if (walletConnect == null) {
-      await initWalletConnect();
-    }
-
-    final ConnectResponse connectResponse = await walletConnect!.connect(
-      requiredNamespaces: {
-        kShortChainId: RequiredNamespace(
-          chains: [kFullChainId],
-          methods: [
-            'eth_sign',
-            'eth_signTransaction',
-            'eth_sendTransaction',
-          ],
-          events: [
-            'chainChanged',
-            'accountsChanged',
-          ],
-        ),
-      },
-    );
-    final Uri? uri = connectResponse.uri;
-    _url = Uri.encodeComponent('$uri');
-
-    _pairingTopic = connectResponse.pairingTopic;
-
-    return connectResponse;
-
-    //
-
-    // if (uri != null) {
-    //   final String encodedUrl = Uri.encodeComponent('$uri');
-
-    //   _url = encodedUrl;
-
-    //   // await launchUrlString(
-    //   //   deepLinkUrl,
-    //   //   mode: LaunchMode.externalApplication,
-    //   // );
-
-    //   // _sessionData = await connectResponse.session.future;
-
-    //   // final String account = NamespaceUtils.getAccount(
-    //   //   _sessionData!.namespaces.values.first.accounts.first,
-    //   // );
-
-    //   // return account;
+    // if (walletProvider.web3App == null) {
+    //   await walletProvider.initWalletConnect();
     // }
+    await walletProvider.disconnectPairings();
+    await walletProvider.unsubscribe();
 
-    // return null;
-  }
-
-  Future<void> disconnect() async {
-    if (_pairingTopic != null) {
-      await walletConnect?.disconnectSession(
-        topic: _pairingTopic!,
-        reason: Errors.getSdkError(Errors.USER_DISCONNECTED),
+    walletProvider.web3App?.onSessionDelete.subscribe((onSessionDelete) async {
+      log.fine('walletconnectv2.dart -> onSessionDelete');
+    });
+    walletProvider.web3App?.onSessionEvent.subscribe((onSessionEvent) async {
+      log.fine('walletconnectv2.dart -> onSessionEvent -> name: ${onSessionEvent?.name}');
+      log.fine('walletconnectv2.dart -> onSessionEvent -> chainId: ${onSessionEvent?.chainId}');
+      log.fine('walletconnectv2.dart -> onSessionEvent -> id: ${onSessionEvent?.id}');
+      log.fine('walletconnectv2.dart -> onSessionEvent -> data: '
+          '${onSessionEvent?.data}, tasksServices.chainId: '
+          '${tasksServices.chainId}, walletConnectedWC:'
+          '${tasksServices.walletConnectedWC}'
       );
-    }
+      if (onSessionEvent?.name == 'chainChanged' && onSessionEvent?.data != tasksServices.chainId) {
+        // await walletProvider.switchNetwork(tasksServices, onSessionEvent?.data, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
+        // tasksServices.walletConnected = false;
+        // tasksServices.walletConnectedWC = false;
+        // tasksServices.publicAddress = null;
+        // tasksServices.publicAddressWC = null;
+        // tasksServices.allowedChainId = false;
+        // walletProvider.unknownChainIdWC = false;
+        // tasksServices.ethBalance = 0;
+        // tasksServices.ethBalanceToken = 0;
+        // tasksServices.pendingBalance = 0;
+        // tasksServices.pendingBalanceToken = 0;
+        // walletProvider.walletConnectUri = '';
+        // tasksServices.walletConnectSessionUri = '';
+        // tasksServices.closeWalletDialog = true;
+        // tasksServices.chainId = onSessionEvent?.data;
+        // tasksServices.allowedChainId = true;
+        // walletProvider.unknownChainIdWC = false;
+        // walletProvider.notifyListeners();
+        // await tasksServices.connectRPC(tasksServices.chainId);
+        // await tasksServices.startup();
+        // await tasksServices.collectMyTokens();
+        // walletProvider.chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==onSessionEvent?.data, orElse: () => 'unknown');
+        // final chainIdOnApp = tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!;
+        // walletProvider.chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
+        walletProvider.setChainAndConnect(tasksServices,  onSessionEvent?.data);
+      }
+      if (
+          onSessionEvent?.name == 'accountsChanged' &&
+          onSessionEvent?.data != tasksServices.chainId &&
+          tasksServices.walletConnectedWC
+      ) {
+        // final String newAccount = onSessionEvent!.data.toString().split(":").last;
+        final EthereumAddress newAccount = EthereumAddress.fromHex(NamespaceUtils.getAccount(
+          onSessionEvent!.data.first.toString(),
+        ));
+        if (newAccount != tasksServices.publicAddress) {
+          // walletProvider.updateAccountAddress(tasksServices, newAccount);
+          // await walletProvider.switchNetwork(tasksServices, onSessionEvent?.data, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
+          tasksServices.publicAddress = newAccount;
+          tasksServices.publicAddressWC = newAccount;
+          await tasksServices.connectRPC(tasksServices.chainId);
+          await tasksServices.startup();
+          await tasksServices.collectMyTokens();
+        }
+      }
+    });
+    walletProvider.web3App?.onProposalExpire.subscribe((onProposalExpire) async {
+      log.fine('walletconnectv2.dart -> onProposalExpire');
+    });
+    walletProvider.web3App?.onSessionExtend.subscribe((onSessionExtend) async {
+      log.fine('walletconnectv2.dart -> onSessionExtend');
+    });
+    walletProvider.web3App?.onSessionPing.subscribe((onSessionPing) async {
+      log.fine('walletconnectv2.dart -> onSessionPing -> id: ${onSessionPing?.id}');
+      // log.fine('walletconnectv2.dart -> onSessionPing -> topic: ${onSessionPing?.topic}');
+    });
+    walletProvider.web3App?.onSessionUpdate.subscribe((onSessionUpdate) async {
+      log.fine('walletconnectv2.dart -> onSessionUpdate -> id: ${onSessionUpdate?.id}');
+      // log.fine('walletconnectv2.dart -> onSessionUpdate -> namespaces: ${onSessionUpdate?.namespaces}');
+      // log.fine('walletconnectv2.dart -> onSessionUpdate -> topic: ${onSessionUpdate?.topic}');
+    });
+    walletProvider.web3App?.onSessionConnect.subscribe(onSessionConnect);
+    walletProvider.web3App?.onSessionExpire.subscribe(onSessionExpire);
+
+    // /// onSessionDelete:
+    // web3App?.onSessionDelete.subscribe((sessionConnect) async {
+    //   log.fine('walletconnectv2.dart -> onSessionDelete');
+    //   // walletConnectState = TransactionState.disconnected;
+    //   await resetView();
+
+    //   List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+    //   await tasksServices.fetchTasksBatch(taskList);
+    //
+    //   // await connectWalletWCv2(true);
+    // });
+    log.fine('walletconnectv2.dart -> createSession chainId: ${tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!} , walletProvider.chainNameOnApp: ${walletProvider.chainNameOnApp}');
+    await walletProvider.createSession(tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+
+    tasksServices.notifyListeners();
+    // log.fine('walletconnectv2.dart -> connectWallet -> result walletConnectUri: ' + walletProvider.walletConnectUri);
   }
 
-  Future<void> disconnectPairings() async {
-    List<PairingInfo> pairings = [];
-    pairings = walletConnect!.pairings.getAll();
-    for (var pairing in pairings) {
-      walletConnect!.core.pairing.disconnect(
-        topic: pairing.topic,
+  Future<void> disconnectWCv2() async {
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    log.fine('walletconnectv2.dart -> disconnectWCv2');
+    await resetView();
+    await walletProvider.disconnect();
+    await walletProvider.disconnectPairings();
+    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+    await tasksServices.fetchTasksBatch(taskList);
+    connectWallet();
+  }
+
+  // void onSessionEvent(SessionEvent? args) {
+  //   TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+  //   WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+  //   log.fine('walletconnectv2.dart -> onSessionEvent -> name: ${args?.name}');
+  //   log.fine('walletconnectv2.dart -> onSessionEvent -> chainId: ${args?.chainId}');
+  //   log.fine('walletconnectv2.dart -> onSessionEvent -> data: ${args?.data}');
+  //   if (args?.name == 'chainChanged') {
+  //     // tasksServices.chainId = args?.data;
+  //     walletProvider.setChainAndConnect(tasksServices,  args?.data);
+  //     // tasksServices.notifyListeners();
+  //     // if (W3MChainPresets.chains.containsKey('${args?.data}')) {
+  //     //   final chain = W3MChainPresets.chains['${args?.data}'];
+  //     //   selectChain(chain);
+  //     // }
+  //   }
+  // }
+
+  Future<void> onSessionExpire(SessionExpire? event) async {
+    log.fine('walletconnectv2.dart -> onSessionExpire');
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
+    await resetView();
+
+    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+    await tasksServices.fetchTasksBatch(taskList);
+
+    // await connectWalletWCv2(true);
+  }
+
+  Future<void> onSessionConnect(SessionConnect? event) async {
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    tasksServices.walletConnected = true;
+    tasksServices.walletConnectedWC = true;
+
+    if (tasksServices.hardhatDebug == false) {
+      tasksServices.credentials = WalletConnectEthereumCredentialsV2(
+        wcClient: walletProvider.web3App!,
+        session: event!.session,
+        tasksServices: tasksServices,
+        walletProvider: walletProvider,
       );
+
+
+      tasksServices.publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
+        event.session.namespaces.values.first.accounts.last,
+      ));
+      final int chainIdOnWallet = int.parse(NamespaceUtils.getChainFromAccount(
+        event.session.namespaces.values.first.accounts.last,
+      ).split(":").last);
+
+      // log.fine(
+      //     'walletconnectv2.dart -> last namespace: ${event.session.namespaces.values.first.accounts.last}');
+
+      await walletProvider.registerEventHandlers(tasksServices);
+
+      tasksServices.publicAddress = tasksServices.publicAddressWC;
+
+      if (
+          tasksServices.allowedChainIds.values.contains(chainIdOnWallet) ||
+              chainIdOnWallet == tasksServices.chainIdAxelar ||
+              chainIdOnWallet == tasksServices.chainIdHyperlane ||
+              chainIdOnWallet == tasksServices.chainIdLayerzero ||
+              chainIdOnWallet == tasksServices.chainIdWormhole) {
+        // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
+      } else {
+        log.fine('walletconnectv2.dart -> selectedChainId not in tasksServices.allowedChainIds List');
+        tasksServices.allowedChainId = false;
+        walletProvider.unknownChainIdWC = true;
+        // walletProvider.walletConnectUri = '';
+        // tasksServices.walletConnectSessionUri = '';
+        tasksServices.notifyListeners();
+        // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
+        // await walletProvider.switchNetwork(tasksServices, chainIdOnWallet, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
+      }
+      await walletProvider.switchNetwork(
+          tasksServices,
+          chainIdOnWallet,
+          tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+    } else {
+      tasksServices.chainId = 31337;
+      tasksServices.allowedChainId = true;
     }
+    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+    await tasksServices.fetchTasksBatch(taskList);
+
+    tasksServices.myBalance();
+    tasksServices.notifyListeners();
   }
 
-  Future<void> switchNetwork(String chainId) async {
-    final params = <String, dynamic>{
-      'chainId': chainId,
-    };
-    final response = await walletConnect!.request(
-        topic: _pairingTopic!,
-        chainId: 'eip155:$chainId',
-        request: SessionRequestParams(
-          method: 'wallet_switchEthereumChain',
-          params: [params],
-        ));
-    // return session;
+  Future<void> resetView() async {
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    tasksServices.walletConnected = false;
+    tasksServices.walletConnectedWC = false;
+    tasksServices.publicAddress = null;
+    tasksServices.publicAddressWC = null;
+    tasksServices.allowedChainId = false;
+    walletProvider.unknownChainIdWC = false;
+    tasksServices.ethBalance = 0;
+    tasksServices.ethBalanceToken = 0;
+    tasksServices.pendingBalance = 0;
+    tasksServices.pendingBalanceToken = 0;
+    walletProvider.walletConnectUri = '';
+    tasksServices.walletConnectSessionUri = '';
+    tasksServices.notifyListeners();
   }
-
-  Future<void> addNetwork(String chainId) async {
-    final params = <String, dynamic>{
-      'chainId': '0x507',
-      'chainName': 'Moonbase alpha',
-      'nativeCurrency': <String, dynamic>{
-        'name': 'DEV',
-        'symbol': 'DEV',
-        'decimals': 18,
-      },
-      'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
-      'blockExplorerUrls': ['https://moonbase.moonscan.io'],
-      'iconUrls': [''],
-    };
-
-    final response = await walletConnect!.request(
-        topic: _pairingTopic!,
-        chainId: 'eip155:1287',
-        request: SessionRequestParams(
-          method: 'wallet_addEthereumChain',
-          params: [params],
-        ));
-
-    // final response = await connector.sendCustomRequest(method: 'wallet_addEthereumChain', params: [params]);
-    print('wc response: $response');
-
-    // return session;
-  }
-
-  // Future<int> getChainId() async {
-  //   // final params = <String, dynamic>{
-  //   //   'chainId': '0x507',
-  //   // };
-  //   final response = await connector.sendCustomRequest(method: 'eth_chainId', params: []);
-  //   print(response);
-  //   return int.parse(response);
-
-  //   // return session;
-  // }
-
-  // @override
-  // Future<String> signTransaction(SessionStatus session) async {
-  //   final sender = EthereumAddress.fromHex(session.accounts[0]);
-
-  //   final transaction = Transaction(
-  //     to: sender,
-  //     from: sender,
-  //     gasPrice: EtherAmount.inWei(BigInt.one),
-  //     maxGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 1).getValueInUnit(EtherUnit.gwei).toInt(),
-  //     value: EtherAmount.fromUnitAndValue(EtherUnit.finney, 1),
-  //   );
-
-  //   final credentials = WalletConnectEthereumCredentials(provider: provider);
-
-  //   // Sign the transaction
-  //   final txBytes = await ethereum.sendTransaction(credentials, transaction);
-
-  //   // Kill the session
-  //   connector.killSession();
-
-  //   return txBytes;
-  // }
-
-  // @override
-  // Future<String> sendTransactionWC(transaction) async {
-  //   final credentials = WalletConnectEthereumCredentials(provider: provider);
-
-  //   // Sign the transaction
-  //   final txBytes = await ethereum.sendTransaction(credentials, transaction);
-
-  //   return txBytes;
-  // }
-
-  // Future<EthereumAddress> getPublicAddress(SessionStatus session) async {
-  //   final addr = EthereumAddress.fromHex(session.accounts[0]);
-
-  //   return addr;
-  // }
-
-  // Future<WalletConnectEthereumCredentials> getCredentials() async {
-  //   final credentials = WalletConnectEthereumCredentials(provider: provider);
-
-  //   return credentials;
-  // }
-
-  // @override
-  // Future<String> signTransactions(SessionStatus session) {
-  //   // TODO: implement signTransactions
-  //   throw UnimplementedError();
-  // }
 }
 
 class WalletConnectEthereumCredentialsV2 extends CustomTransactionSender {
-  WalletConnectEthereumCredentialsV2({required this.wcClient, required this.session});
-
+  final TasksServices tasksServices;
+  final WalletProvider walletProvider;
   final Web3App wcClient;
   final SessionData session;
+  WalletConnectEthereumCredentialsV2({
+    required this.wcClient,
+    required this.session,
+    required this.tasksServices,
+    required this.walletProvider
+  });
 
   @override
   Future<String> sendTransaction(Transaction transaction) async {
-    int chainId = int.parse(NamespaceUtils.getChainFromAccount(
-      session.namespaces.values.first.accounts.last,
-    ).split(":").last);
+    // int chainId = int.parse(NamespaceUtils.getChainFromAccount(
+    //   session.namespaces.values.first.accounts.last,
+    // ).split(":").last);
+    // print('WalletConnectEthereumCredentialsV2: ${session.namespaces.values.first} ');
+    // print('WalletConnectEthereumCredentialsV2: $chainId ');
     // int chainId = this.session.namespaces.
-    final from = await extractAddress();
+    // final from = await extractAddress();
+    final from = tasksServices.publicAddress;
     final signResponse = await wcClient.request(
       topic: session.topic,
-      chainId: 'eip155:$chainId',
+      chainId: 'eip155:${tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!}',
       request: SessionRequestParams(
         method: 'eth_sendTransaction',
         params: [
           {
-            'from': from.hex,
+            'from': from?.hex,
             'to': transaction.to?.hex,
             // 'gas': '0x${transaction.maxGas!.toRadixString(16)}',
             // 'gasPrice': '0x${transaction.gasPrice?.getInWei.toRadixString(16) ?? '0'}',
@@ -259,7 +339,6 @@ class WalletConnectEthereumCredentialsV2 extends CustomTransactionSender {
         ],
       ),
     );
-
     return signResponse.toString();
   }
 

@@ -613,7 +613,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
               // ),
               // const SizedBox(height: 14),
               // if (tasksServices.publicAddress != null &&
-              //   tasksServices.validChainID &&
+              //   tasksServices.allowedChainId &&
               //   ((interface.dialogCurrentState['mainButtonName'] == 'Participate' &&
               //       fromPage == 'tasks') ||
               //       interface.dialogCurrentState['mainButtonName'] == 'Start the task' ||

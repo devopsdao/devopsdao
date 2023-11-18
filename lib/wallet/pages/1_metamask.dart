@@ -20,7 +20,7 @@ class MetamaskPage extends StatelessWidget {
     var interface = context.watch<InterfaceServices>();
 
     return  Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      if (interface.whichWalletButtonPressed == 'metamask')
+      if (interface.walletButtonPressed == 'metamask')
         AnimatedCrossFade(
           duration: const Duration(milliseconds: 300),
           firstChild: Container(
@@ -65,7 +65,7 @@ class MetamaskPage extends StatelessWidget {
           ),
         ),
       const SizedBox(height: 20),
-      if (interface.whichWalletButtonPressed == 'metamask')
+      if (interface.walletButtonPressed == 'metamask')
         WalletConnectButton(
           buttonFunction: 'metamask',
           callback: () {

@@ -305,11 +305,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                               ),
                             ],
                           )
-                        // Text(
-                        //   'Transaction has failed, please retry',
-                        //   style: Theme.of(context).textTheme.bodyText1,
-                        //   textAlign: TextAlign.center,
-                        // )
                         else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'failed' ||
                               tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'rejected')
                             Column(
@@ -367,67 +362,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                                         ),
                                     ],
                                   ),
-                                // if(widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
-                                // Row(
-                                //   children: [
-                                //     Container(
-                                //         width: 45,
-                                //         height:  45,
-                                //         child: Row(
-                                //           children: [
-                                //             if (transactionStagesWaiting == 'initial')
-                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
-                                //             else if (transactionStagesWaiting == 'loading')
-                                //               LoadingAnimationWidget.threeRotatingDots(
-                                //                 color: Colors.black54,
-                                //                 size: 30,
-                                //               )
-                                //             else if (transactionStagesWaiting == 'done')
-                                //                 Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                //           ],
-                                //         )
-                                //     ),
-                                //     Container(
-                                //       alignment: Alignment.center,
-                                //       child: Text(
-                                //         'Wait for confirmation',
-                                //         style: Theme.of(context).textTheme.bodyText1,
-                                //         textAlign: TextAlign.center,
-                                //       ),
-                                //     ),
-                                //
-                                //   ],
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     Container(
-                                //         width: 45,
-                                //         height:  45,
-                                //         child: Row(
-                                //           children: [
-                                //             if (transactionStagesPending == 'initial')
-                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
-                                //             else if (transactionStagesPending == 'loading')
-                                //               LoadingAnimationWidget.threeRotatingDots(
-                                //                 color: Colors.black54,
-                                //                 size: 30,
-                                //               )
-                                //             else if (transactionStagesPending == 'done')
-                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                //           ],
-                                //         )
-                                //     ),
-                                //     Container(
-                                //       alignment: Alignment.center,
-                                //       child: Text(
-                                //         'Confirm the transaction',
-                                //         style: Theme.of(context).textTheme.bodyText1,
-                                //         textAlign: TextAlign.center,
-                                //       ),
-                                //     ),
-                                //
-                                //   ],
-                                // ),
                                 Row(
                                   children: [
                                     Container(

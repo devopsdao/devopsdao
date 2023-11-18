@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../wallet_service.dart';
 
 class WalletConnectButton extends StatefulWidget {
   final String buttonFunction;
@@ -24,19 +25,12 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    late String buttonText = '';
+    WalletProvider walletProvider = context.read<WalletProvider>();
+    late String buttonText = widget.buttonName;
 
-    if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC && widget.buttonFunction == 'wallet_connect') {
+    if (tasksServices.walletConnectedMM && tasksServices.allowedChainIdMM && widget.buttonFunction == 'metamask') {
       buttonText = 'Disconnect';
-    } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC && widget.buttonFunction == 'wallet_connect') {
-      buttonText = 'Switch network';
-    } else if (!tasksServices.walletConnectedWC && widget.buttonFunction == 'wallet_connect' && (widget.buttonName == 'Refresh QR')) {
-      buttonText = 'Refresh QR';
-    } else if (!tasksServices.walletConnectedWC && widget.buttonFunction == 'wallet_connect' && (widget.buttonName == 'Connect')) {
-      buttonText = 'Connect';
-    } else if (tasksServices.walletConnectedMM && tasksServices.validChainIDMM && widget.buttonFunction == 'metamask') {
-      buttonText = 'Disconnect';
-    } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM && widget.buttonFunction == 'metamask') {
+    } else if (tasksServices.walletConnectedMM && !tasksServices.allowedChainIdMM && widget.buttonFunction == 'metamask') {
       buttonText = 'Switch network';
     } else if (!tasksServices.walletConnectedMM && widget.buttonFunction == 'metamask') {
       buttonText = 'Connect';
@@ -51,21 +45,12 @@ class _WalletConnectButtonState extends State<WalletConnectButton> {
           widget.callback();
           if (widget.buttonFunction == 'metamask') {
             if (!tasksServices.walletConnectedMM) {
-              tasksServices.initComplete ? await tasksServices.connectWalletMM() : null;
-            } else if (tasksServices.walletConnectedMM && !tasksServices.validChainIDMM) {
-              tasksServices.initComplete ? await tasksServices.switchNetworkMM() : null;
-            } else if (tasksServices.walletConnectedMM && tasksServices.validChainIDMM) {
-              tasksServices.initComplete ? await tasksServices.disconnectMM() : null;
+              walletProvider.initComplete ? await tasksServices.connectWalletMM() : null;
+            } else if (tasksServices.walletConnectedMM && !tasksServices.allowedChainIdMM) {
+              walletProvider.initComplete ? await tasksServices.switchNetworkMM() : null;
+            } else if (tasksServices.walletConnectedMM && tasksServices.allowedChainIdMM) {
+              walletProvider.initComplete ? await tasksServices.disconnectMM() : null;
               buttonText = 'Connect';
-            }
-          } else if (widget.buttonFunction == 'wallet_connect') {
-            if (!tasksServices.walletConnectedWC) {
-              tasksServices.initComplete ? await tasksServices.connectWalletWCv2(false) : null;
-            } else if (tasksServices.walletConnectedWC && !tasksServices.validChainIDWC) {
-              tasksServices.initComplete ? await tasksServices.switchNetworkWC() : null;
-            } else if (tasksServices.walletConnectedWC && tasksServices.validChainIDWC) {
-              tasksServices.initComplete ? {await tasksServices.disconnectWCv2()} : null;
-              // buttonName = 'Refresh QR';
             }
           }
         },

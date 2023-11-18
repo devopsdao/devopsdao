@@ -57,10 +57,11 @@ dependencies:
   gradient_borders: ^1.0.0
   horizontal_blocked_scroll_physics: ^4.0.1
   html: ^0.15.0
-  http: ^0.13.4
+#  http: ^0.13.4
+  http: ^1.1.0
   icons_animate: ^0.0.2
   image_picker: ^1.0.4
-  internet_connection_checker_plus: ^1.0.1
+  internet_connection_checker_plus: ^2.1.0
   intl: ^0.18.0
   jovial_svg: ^1.1.9
   js: ^0.6.4
@@ -68,7 +69,7 @@ dependencies:
   linked_scroll_controller: ^0.2.0
   loading_animation_widget: null
   nanoid: ^1.0.0
-  package_info_plus: ^5.0.0
+  package_info_plus: ^4.2.0
   page_transition: ^2.0.9
   provider: ^6.0.2
   qr_flutter: ^4.1.0
@@ -85,12 +86,11 @@ dependencies:
   timeago: ^3.3.0
   universal_html: ^2.0.8
   url_launcher: ^6.1.12
-  wallet_connect: ^1.0.4
-  walletconnect_dart: ^0.0.11
+#  wallet_connect: ^1.0.4
   walletconnect_flutter_v2: ^2.1.9
-  walletconnect_secure_storage: ^1.0.0
   web_socket_channel: ^2.4.0
   webthree: ^2.5.7+2
+  web3modal_flutter: ^3.0.0-beta04
   week_of_year: ^2.0.0
 #  vector_graphics: ^1.0.1
 dependency_overrides:

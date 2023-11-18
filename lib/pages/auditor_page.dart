@@ -138,7 +138,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       resetFilters();
     }
 
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {}
+    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {}
 
     return Scaffold(
       key: scaffoldKey,

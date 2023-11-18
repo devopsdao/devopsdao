@@ -11,6 +11,7 @@ import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../navigation/navmenu.dart';
+import '../wallet/wallet_service.dart';
 import '../widgets/home_statistics.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';
@@ -120,9 +121,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    WalletProvider walletProvider = context.watch<WalletProvider>();
 
     bool isFloatButtonVisible = false;
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       isFloatButtonVisible = true;
     }
 
@@ -221,7 +223,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           child: tasksServices.walletConnected && tasksServices.publicAddress != null
                               ? Row(
                                 children: [
-                                  interface.networkLogo(tasksServices.chainId, Colors.white, 24),
+                                  walletProvider.networkLogo(tasksServices.chainId, Colors.white, 24),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 4.0),
                                     child: Text(

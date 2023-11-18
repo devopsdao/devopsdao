@@ -85,7 +85,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList);
     }
 
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       isFloatButtonVisible = true;
     }
 

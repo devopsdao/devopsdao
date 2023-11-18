@@ -59,11 +59,11 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../wallet/walletconnectv2.dart';
 
-import '../wallet/to_delete/ethereum_walletconnect_transaction.dart';
 import '../wallet/main.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart'; // import 'package:device_info_plus/device_info_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
 import 'package:browser_detector/browser_detector.dart' hide Platform;
 
 import 'package:package_info_plus/package_info_plus.dart';
@@ -247,7 +247,12 @@ class TasksServices extends ChangeNotifier {
   bool walletConnectedWC = false;
   bool walletConnectedMM = false;
   bool mmAvailable = false;
-  String walletConnectUri = '';
+
+  double ethBalance = 0;
+  double ethBalanceToken = 0;
+  double pendingBalance = 0;
+  double pendingBalanceToken = 0;
+
   String walletConnectSessionUri = '';
   // var walletConnectSession;
   // bool walletConnectActionApproved = false;
@@ -285,16 +290,17 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlTanssi;
   late String _wsUrlTanssi;
 
-  int chainId = 0;
+  late int chainId = 0;
+  final String defaultNetworkName = 'Dodao Tanssi Appchain';
   Map<String, int> allowedChainIds = {
+    'Dodao Tanssi Appchain': 855456,
     'Moonbase alpha': 1287,
     'Fantom testnet': 4002,
-    'Goerli': 4002,
-    'Polygon Mumbai': 80001,
+    'Goerli': 5,
     'zkSync Era testnet': 280,
-    'Dodao Tanssi Appchain': 855456
+    'Polygon Mumbai': 80001,
   };
-  Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH', 855456: 'DODAO'};
+  // Map<int, String> chainTickers = {1287: 'DEV', 4002: 'FTM', 280: 'ETH', 855456: 'DODAO'};
   late String chainTicker = 'ETH';
 
   int chainIdAxelar = 80001;
@@ -335,7 +341,6 @@ class TasksServices extends ChangeNotifier {
     init();
   }
 
-  bool initComplete = false;
   Future<void> init() async {
     // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     // WebBrowserInfo webBrowserInfo = await deviceInfoPlugin.webBrowserInfo;
@@ -357,16 +362,16 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
     } else {
-      chainId = 1287;
+      chainId = allowedChainIds[defaultNetworkName]!;
     }
 
-    isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
+    isDeviceConnected = await InternetConnection().hasInternetAccess;
 
     // if (platform != 'web') {
     final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
       if (result != ConnectivityResult.none) {
         // print('connectivity: ${result}');
-        isDeviceConnected = await InternetConnectionCheckerPlus().hasConnection;
+        isDeviceConnected = await InternetConnection().hasInternetAccess;
         // print('isDeviceConnected: ${isDeviceConnected}');
         // await getTransferFee(sourceChainName: 'moonbeam', destinationChainName: 'ethereum', assetDenom: 'uausdc', amountInDenom: 100000);
       }
@@ -382,7 +387,6 @@ class TasksServices extends ChangeNotifier {
 
     if (platform == 'web') {}
 
-    initComplete = true;
     // testTaskCreation();
   }
 
@@ -447,9 +451,9 @@ class TasksServices extends ChangeNotifier {
     // await wallectConnectTransaction?.initSession();
     // await wallectConnectTransaction?.removeSession();
 
-    if (walletConnectClient == null) {
-      walletConnectClient = WalletConnectClient();
-    }
+    // if (walletConnectClient == null) {
+    //   walletConnectClient = WalletConnectClient();
+    // }
 
     // await walletConnectClient?.initSession();
 
@@ -558,277 +562,9 @@ class TasksServices extends ChangeNotifier {
     );
   }
 
-  bool validChainID = false;
-  bool validChainIDWC = false;
-  bool validChainIDMM = false;
+  bool allowedChainId = false;
+  bool allowedChainIdMM = false;
   bool closeWalletDialog = false;
-
-  Future<void> connectWalletWCv2(bool refresh) async {
-    // print('async');
-    if (walletConnectClient != null) {
-      // var _walletConnect = await walletConnectClient._initWalletConnect();
-
-      if (walletConnected == false) {
-        log.fine("disconnected");
-        walletConnectUri = '';
-        walletConnectSessionUri = '';
-      }
-
-      await walletConnectClient.initWalletConnect();
-      // Subscribe to events
-      // walletConnectClient._walletConnect.on('onSessionConnect');
-      walletConnectClient.walletConnect.onSessionConnect.subscribe((sessionConnect) {
-        // walletConnectSession = session;
-        // walletConnectState = TransactionState.connected;
-        walletConnected = true;
-        walletConnectedWC = true;
-        closeWalletDialog = true;
-        () async {
-          if (hardhatDebug == false) {
-            credentials = WalletConnectEthereumCredentialsV2(
-              wcClient: walletConnectClient.walletConnect,
-              session: sessionConnect.session,
-            );
-            chainId = int.parse(NamespaceUtils.getChainFromAccount(
-              sessionConnect.session.namespaces.values.first.accounts.last,
-            ).split(":").last);
-            publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
-              sessionConnect.session.namespaces.values.first.accounts.last,
-            ));
-            publicAddress = publicAddressWC;
-
-            if (allowedChainIds.values.contains(chainId) ||
-                chainId == chainIdAxelar ||
-                chainId == chainIdHyperlane ||
-                chainId == chainIdLayerzero ||
-                chainId == chainIdWormhole) {
-              validChainID = true;
-              validChainIDWC = true;
-              await connectRPC(chainId);
-              await startup();
-              await collectMyTokens();
-            } else {
-              validChainID = false;
-              validChainIDWC = false;
-              await switchNetworkWC();
-            }
-          } else {
-            chainId = 31337;
-            validChainID = true;
-          }
-          List<EthereumAddress> taskList = await getTaskListFull();
-          await fetchTasksBatch(taskList);
-
-          myBalance();
-          // isLoading = true;
-        }();
-        notifyListeners();
-      });
-      // wcClient.onSessionConnect('session_request', (payload) {
-      //   print(payload);
-      // });
-      // wcClient.onSessionConnect('session_update', (payload) {
-      //   print(payload);
-      //   if (payload.approved == true) {
-      //     // walletConnectActionApproved = true;
-      //     // notifyListeners();
-      //   }
-      // });
-      walletConnectClient.walletConnect.onSessionDelete.subscribe((sessionConnect) async {
-        // print(sessionConnect);
-        // walletConnectState = TransactionState.disconnected;
-        walletConnected = false;
-        walletConnectedWC = false;
-        publicAddress = null;
-        publicAddressWC = null;
-        validChainID = false;
-        validChainIDWC = false;
-        ethBalance = 0;
-        ethBalanceToken = 0;
-        pendingBalance = 0;
-        pendingBalanceToken = 0;
-        walletConnectUri = '';
-        walletConnectSessionUri = '';
-        List<EthereumAddress> taskList = await getTaskListFull();
-        await fetchTasksBatch(taskList);
-
-        // await connectWalletWCv2(true);
-        notifyListeners();
-      });
-
-      walletConnectClient.walletConnect.onSessionExpire.subscribe((sessionConnect) async {
-        // print(sessionConnect);
-        // walletConnectState = TransactionState.disconnected;
-        walletConnected = false;
-        walletConnectedWC = false;
-        publicAddress = null;
-        publicAddressWC = null;
-        validChainID = false;
-        validChainIDWC = false;
-        ethBalance = 0;
-        ethBalanceToken = 0;
-        pendingBalance = 0;
-        pendingBalanceToken = 0;
-        walletConnectUri = '';
-        walletConnectSessionUri = '';
-        List<EthereumAddress> taskList = await getTaskListFull();
-        await fetchTasksBatch(taskList);
-
-        // await connectWalletWCv2(true);
-        notifyListeners();
-      });
-
-      var connectResponse = await walletConnectClient?.createSession(chainId);
-
-      final Uri? uri = connectResponse.uri;
-
-      final String encodedUrl = Uri.encodeComponent('$uri');
-
-      walletConnectUri = 'metamask://wc?uri=$encodedUrl';
-      notifyListeners();
-
-      // final bool isInstalled = await metamaskIsInstalled();
-
-      await launchUrlString(
-        walletConnectUri,
-        mode: LaunchMode.externalApplication,
-      );
-
-      // SessionData session = await connectResponse.session.future;
-
-      // publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
-      //   session.namespaces.values.first.accounts.first,
-      // ));
-      // publicAddress = publicAddressWC;
-
-      // chainId = int.parse(NamespaceUtils.getChainFromAccount(
-      //   session.namespaces.values.first.accounts.first,
-      // ).split(":").last);
-
-      // credentials = WalletConnectEthereumCredentialsV2(
-      //   wcClient: walletConnectClient.walletConnect,
-      //   session: session,
-      // );
-
-      // print(walletConnectClient.deepLinkUrl);
-
-      // Uri? uri = resp.uri;
-      // walletConnectUri = walletConnectClient.deepLinkUrl;
-      // print(walletConnectUri);
-    } else {
-      log.warning("not initialized");
-      // print(walletConnectState);
-    }
-  }
-
-  // Future<void> connectWalletWC(bool refresh) async {
-  //   print('async');
-  //   if (wallectConnectTransaction != null) {
-  //     var connector = await wallectConnectTransaction.initWalletConnect();
-
-  //     if (walletConnected == false) {
-  //       print("disconnected");
-  //       walletConnectUri = '';
-  //       walletConnectSessionUri = '';
-  //     }
-  //     // Subscribe to events
-  //     connector.on('connect', (session) {
-  //       walletConnectSession = session;
-  //       walletConnectState = TransactionState.connected;
-  //       walletConnected = true;
-  //       walletConnectedWC = true;
-  //       closeWalletDialog = true;
-  //       () async {
-  //         if (hardhatDebug == false) {
-  //           credentials = await wallectConnectTransaction?.getCredentials();
-  //           chainId = session.chainId;
-  //           if (allowedChainIds.values.contains(chainId) ||
-  //               chainId == chainIdAxelar ||
-  //               chainId == chainIdHyperlane ||
-  //               chainId == chainIdLayerzero ||
-  //               chainId == chainIdWormhole) {
-  //             validChainID = true;
-  //             validChainIDWC = true;
-  //             await connectRPC(chainId);
-  //             await startup();
-  //             await collectMyTokens();
-  //           } else {
-  //             validChainID = false;
-  //             validChainIDWC = false;
-  //             await switchNetworkWC();
-  //           }
-  //           publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
-  //           publicAddress = publicAddressWC;
-  //         } else {
-  //           chainId = 31337;
-  //           validChainID = true;
-  //         }
-  //         List<EthereumAddress> taskList = await getTaskListFull();
-  //         await fetchTasksBatch(taskList);
-
-  //         myBalance();
-  //         // isLoading = true;
-  //       }();
-  //       notifyListeners();
-  //     });
-  //     connector.on('session_request', (payload) {
-  //       print(payload);
-  //     });
-  //     connector.on('session_update', (payload) {
-  //       print(payload);
-  //       if (payload.approved == true) {
-  //         // walletConnectActionApproved = true;
-  //         // notifyListeners();
-  //       }
-  //     });
-  //     connector.on('disconnect', (session) async {
-  //       print(session);
-  //       walletConnectState = TransactionState.disconnected;
-  //       walletConnected = false;
-  //       walletConnectedWC = false;
-  //       publicAddress = null;
-  //       publicAddressWC = null;
-  //       validChainID = false;
-  //       validChainIDWC = false;
-  //       ethBalance = 0;
-  //       ethBalanceToken = 0;
-  //       pendingBalance = 0;
-  //       pendingBalanceToken = 0;
-  //       walletConnectUri = '';
-  //       walletConnectSessionUri = '';
-  //       List<EthereumAddress> taskList = await getTaskListFull();
-  //       await fetchTasksBatch(taskList);
-
-  //       await connectWalletWC(true);
-  //       notifyListeners();
-  //     });
-  //     final SessionStatus? session = await wallectConnectTransaction?.connect(
-  //       onDisplayUri: (uri) => {
-  //         walletConnectSessionUri = uri.split("?").first,
-  //         (platform == 'mobile' || browserPlatform == 'android' || browserPlatform == 'ios') && !refresh
-  //             ? {launchURL(uri), walletConnectUri = uri}
-  //             : walletConnectUri = uri,
-  //         notifyListeners()
-  //       },
-  //     );
-
-  //     if (session == null) {
-  //       print('Unable to connect');
-  //       walletConnectState = TransactionState.failed;
-  //     } else if (walletConnected == true) {
-  //       if (hardhatDebug == false) {
-  //         credentials = await wallectConnectTransaction?.getCredentials();
-  //       }
-  //       publicAddressWC = await wallectConnectTransaction?.getPublicAddress(session);
-  //       publicAddress = publicAddressWC;
-  //     } else {
-  //       walletConnectState = TransactionState.failed;
-  //     }
-  //   } else {
-  //     print("not initialized");
-  //     print(walletConnectState);
-  //   }
-  // }
 
   Future<void> connectWalletMM() async {
     if (platform == 'web' && window.ethereum != null) {
@@ -871,18 +607,18 @@ class TasksServices extends ChangeNotifier {
             chainId == chainIdHyperlane ||
             chainId == chainIdLayerzero ||
             chainId == chainIdWormhole) {
-          validChainID = true;
-          validChainIDMM = true;
+          allowedChainId = true;
+          allowedChainIdMM = true;
           await connectRPC(chainId);
           await startup();
           await collectMyTokens();
         } else {
-          validChainID = false;
-          validChainIDMM = false;
+          allowedChainId = false;
+          allowedChainIdMM = false;
           log.warning('invalid chainId $chainId');
           await switchNetworkMM();
         }
-        if (walletConnected && walletConnectedMM && validChainID) {
+        if (walletConnected && walletConnectedMM && allowedChainId) {
           // fetchTasksByState("new");
           List<EthereumAddress> taskList = await getTaskListFull();
           await fetchTasksBatch(taskList);
@@ -919,13 +655,13 @@ class TasksServices extends ChangeNotifier {
       //       final chainIdHex = await eth.rawRequest('eth_chainId');
       //       int chainId = int.parse(chainIdHex);
       //       if (chainId == defaultChainId) {
-      //         validChainID = true;
+      //         allowedChainId = true;
       //       } else {
-      //         validChainID = false;
+      //         allowedChainId = false;
       //       }
       //     } else {
       //       chainId = 31337;
-      //       validChainID = true;
+      //       allowedChainId = true;
       //     }
       //     fetchTasks();
       //     myBalance();
@@ -987,69 +723,15 @@ class TasksServices extends ChangeNotifier {
           chainId == chainIdHyperlane ||
           chainId == chainIdLayerzero ||
           chainId == chainIdWormhole) {
-        validChainID = true;
-        validChainIDMM = true;
+        allowedChainId = true;
+        allowedChainIdMM = true;
         publicAddress = publicAddressMM;
         List<EthereumAddress> taskList = await getTaskListFull();
         await fetchTasksBatch(taskList);
         myBalance();
       } else {
-        validChainID = false;
-        validChainIDMM = false;
-      }
-    }
-    notifyListeners();
-  }
-
-  Future<void> switchNetworkWC() async {
-    // final eth = window.ethereum;
-    // if (eth == null) {
-    //   print('MetaMask is not available');
-    //   return;
-    // }
-    late final String chainIdHex;
-    bool chainChangeRequest = false;
-    var chainIdWC;
-    try {
-      // final params = <String, dynamic>{
-      //   'chainId': '0x507',
-      // };
-      var result = await walletConnectClient?.switchNetwork('0x507');
-      // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
-      chainChangeRequest = true;
-    } catch (e) {
-      chainChangeRequest = false;
-      // WalletConnectException error = e as WalletConnectException;
-      log.severe(e);
-      // if (error.message == 'Unrecognized chain ID "0x507". Try adding the chain using wallet_addEthereumChain first.') {
-      //   addNetworkWC();
-      // }
-    }
-    if (chainChangeRequest == true) {
-      try {
-        // chainId = walletConnectSession.chainId;
-        // chainId = await wallectConnectTransaction?.getChainId();
-        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
-      } catch (e) {
-        log.severe(e);
-      }
-      if (chainIdHex != null) {
-        chainId = int.parse(chainIdHex);
-      }
-      if (allowedChainIds.values.contains(chainId) ||
-          chainId == chainIdAxelar ||
-          chainId == chainIdHyperlane ||
-          chainId == chainIdLayerzero ||
-          chainId == chainIdWormhole) {
-        validChainID = true;
-        validChainIDWC = true;
-        publicAddress = publicAddressWC;
-        List<EthereumAddress> taskList = await getTaskListFull();
-        await fetchTasksBatch(taskList);
-        myBalance();
-      } else {
-        validChainID = false;
-        validChainIDWC = false;
+        allowedChainId = false;
+        allowedChainIdMM = false;
       }
     }
     notifyListeners();
@@ -1113,65 +795,15 @@ class TasksServices extends ChangeNotifier {
           chainId == chainIdHyperlane ||
           chainId == chainIdLayerzero ||
           chainId == chainIdWormhole) {
-        validChainID = true;
-        validChainIDMM = true;
+        allowedChainId = true;
+        allowedChainIdMM = true;
         publicAddress = publicAddressMM;
         List<EthereumAddress> taskList = await getTaskListFull();
         await fetchTasksBatch(taskList);
         myBalance();
       } else {
-        validChainID = false;
-        validChainIDMM = false;
-      }
-    }
-    notifyListeners();
-  }
-
-  Future<void> addNetworkWC() async {
-    // final eth = window.ethereum;
-    // if (eth == null) {
-    //   print('MetaMask is not available');
-    //   return;
-    // }
-    late final String chainIdHex;
-    bool chainAddRequest = false;
-    var chainIdWC;
-    try {
-      // final params = <String, dynamic>{
-      //   'chainId': '0x507',
-      // };
-      var result = await walletConnectClient?.addNetwork('0x507');
-      // await _web3client.makeRPCCall('wallet_switchEthereumChain', [params]);
-      chainAddRequest = true;
-    } catch (e) {
-      chainAddRequest = false;
-      log.severe(e);
-    }
-    if (chainAddRequest == true) {
-      try {
-        // chainId = walletConnectSession.chainId;
-        // chainId = await wallectConnectTransaction?.getChainId();
-        chainIdHex = await _web3client.makeRPCCall('eth_chainId');
-      } catch (e) {
-        log.severe(e);
-      }
-      if (chainIdHex != null) {
-        chainId = int.parse(chainIdHex);
-      }
-      if (allowedChainIds.values.contains(chainId) ||
-          chainId == chainIdAxelar ||
-          chainId == chainIdHyperlane ||
-          chainId == chainIdLayerzero ||
-          chainId == chainIdWormhole) {
-        validChainID = true;
-        validChainIDWC = true;
-        publicAddress = publicAddressWC;
-        List<EthereumAddress> taskList = await getTaskListFull();
-        await fetchTasksBatch(taskList);
-        myBalance();
-      } else {
-        validChainID = false;
-        validChainIDWC = false;
+        allowedChainId = false;
+        allowedChainIdMM = false;
       }
     }
     notifyListeners();
@@ -1182,8 +814,8 @@ class TasksServices extends ChangeNotifier {
     walletConnectedMM = false;
     publicAddress = null;
     publicAddressMM = null;
-    validChainID = false;
-    validChainIDMM = false;
+    allowedChainId = false;
+    allowedChainIdMM = false;
     ethBalance = 0;
     ethBalanceToken = 0;
     pendingBalance = 0;
@@ -1192,53 +824,6 @@ class TasksServices extends ChangeNotifier {
     await fetchTasksBatch(taskList);
     notifyListeners();
   }
-
-  Future<void> disconnectWCv2() async {
-    await walletConnectClient?.disconnect();
-    await walletConnectClient?.disconnectPairings();
-
-    walletConnected = false;
-    walletConnectedWC = false;
-    publicAddress = null;
-    publicAddressWC = null;
-    validChainID = false;
-    validChainIDWC = false;
-    ethBalance = 0;
-    ethBalanceToken = 0;
-    pendingBalance = 0;
-    pendingBalanceToken = 0;
-    walletConnectUri = '';
-    walletConnectSessionUri = '';
-    List<EthereumAddress> taskList = await getTaskListFull();
-    await fetchTasksBatch(taskList);
-    connectWalletWCv2(true);
-    notifyListeners();
-  }
-
-  // Future<void> disconnectWC() async {
-  //   await wallectConnectTransaction?.disconnect();
-  //   walletConnected = false;
-  //   walletConnectedWC = false;
-  //   publicAddress = null;
-  //   publicAddressWC = null;
-  //   validChainID = false;
-  //   validChainIDWC = false;
-  //   ethBalance = 0;
-  //   ethBalanceToken = 0;
-  //   pendingBalance = 0;
-  //   pendingBalanceToken = 0;
-  //   walletConnectUri = '';
-  //   walletConnectSessionUri = '';
-  //   List<EthereumAddress> taskList = await getTaskListFull();
-  //   await fetchTasksBatch(taskList);
-  //   connectWalletWC(true);
-  //   notifyListeners();
-  // }
-
-  // Future<void> disconnectWalletMM() {
-  //   final eth = window.ethereum;
-  //   // eth?.cancel();
-  // }
 
   Future<List<dynamic>> web3Call({
     EthereumAddress? sender,
@@ -1316,10 +901,10 @@ class TasksServices extends ChangeNotifier {
 
   // late dynamic credentials;
   late dynamic hardhatAccounts;
-  double? ethBalance = 0;
-  double? ethBalanceToken = 0;
-  double? pendingBalance = 0;
-  double? pendingBalanceToken = 0;
+  // double? ethBalance = 0;
+  // double? ethBalanceToken = 0;
+  // double? pendingBalance = 0;
+  // double? pendingBalanceToken = 0;
   int score = 0;
   int scoredTaskCount = 0;
   double myScore = 0.0;
@@ -1359,7 +944,7 @@ class TasksServices extends ChangeNotifier {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
-    print('version $version-$buildNumber');
+    // print('version $version-$buildNumber');
 
     backgroundSVG = await ScalableImage.fromSvgAsset(rootBundle, 'assets/images/red_cat_logo.svg');
 
@@ -1394,7 +979,7 @@ class TasksServices extends ChangeNotifier {
       credentials = EthPrivateKey.fromHex(hardhatAccounts[liveAccount]["key"]);
       publicAddress = EthereumAddress.fromHex(hardhatAccounts[liveAccount]["address"]);
       walletConnected = true;
-      validChainID = true;
+      allowedChainId = true;
     }
 
     thr = Debouncing(duration: const Duration(seconds: 10));
