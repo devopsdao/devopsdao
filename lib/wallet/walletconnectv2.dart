@@ -72,12 +72,6 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
     await walletProvider.setWcState(state: WCStatus.loadingQr, tasksServices: tasksServices);
-    if (tasksServices.walletConnected == false) {
-      log.fine("walletconnectv2.dart -> walletConnected = false, remove value in walletConnectUri & walletConnectSessionUri");
-      walletProvider.walletConnectUri = '';
-      tasksServices.walletConnectSessionUri = '';
-    }
-
     await walletProvider.resetView(tasksServices);
     await walletProvider.disconnectSessionsAndPairings();
     await walletProvider.unsubscribeAll();
@@ -100,7 +94,7 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
       if (onSessionEvent?.name == 'chainChanged' && onSessionEvent?.data != tasksServices.chainId) {
         walletProvider.setChainAndConnect(tasksServices,  onSessionEvent?.data);
       } else if (onSessionEvent?.name == 'chainChanged' && onSessionEvent?.data == tasksServices.chainId) {
-        // walletProvider.setChainAndConnect(tasksServices,  onSessionEvent?.data);
+        walletProvider.setChainAndConnect(tasksServices,  onSessionEvent?.data);
       }
 
       if ( onSessionEvent?.name == 'accountsChanged' &&
@@ -209,7 +203,6 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         walletProvider.unknownChainIdWC = true;
         walletProvider.setWcState(state: WCStatus.wcConnectedNetworkUnknown, tasksServices: tasksServices);
         // walletProvider.walletConnectUri = '';
-        // tasksServices.walletConnectSessionUri = '';
         // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
         // await walletProvider.switchNetwork(tasksServices, chainIdOnWallet, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
       }

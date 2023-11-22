@@ -252,7 +252,6 @@ class TasksServices extends ChangeNotifier {
   double pendingBalance = 0;
   double pendingBalanceToken = 0;
 
-  String walletConnectSessionUri = '';
   // var walletConnectSession;
   // bool walletConnectActionApproved = false;
   late Map<String, dynamic> roleNfts = {'auditor': 0, 'governor': 0};

@@ -30,11 +30,12 @@ class WcQrCodeImage extends StatefulWidget {
 
 class _WcQrCodeImageState extends State<WcQrCodeImage> {
   late Timer _qrTimeout;
-  final int _timeoutTicks = 0;
+  final int _timeoutTicks = 6;
   final int _timeoutTimeInSeconds = 30;
 
   @override
   void initState() {
+    print('wc_qr_code->timer starts at initState');
     _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
     super.initState();
   }
@@ -43,15 +44,17 @@ class _WcQrCodeImageState extends State<WcQrCodeImage> {
   void dispose() {
     if (_qrTimeout.isActive) {
       _qrTimeout.cancel();
+      print('wc_qr_code->timer cancel on dispose');
     }
-    print('wc_qr_code->timer cancel on dispose');
     super.dispose();
   }
 
-  void qrTimeout(timer) {
+  Future<void> qrTimeout(timer) async {
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
     if (timer.tick > _timeoutTicks) {
       timer.cancel();
-      setNotConnectedState();
+      await walletProvider.setWcState(state: WCStatus.wcNotConnected, tasksServices: tasksServices);
       print('wc_qr_code->timer cancel');
       return;
     } else {
@@ -60,24 +63,25 @@ class _WcQrCodeImageState extends State<WcQrCodeImage> {
     }
   }
 
-  Future<void> setNotConnectedState() async {
-    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
-    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    if (walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
-      await walletProvider.setWcState(state: WCStatus.wcNotConnected, tasksServices: tasksServices);
-    }
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
     TasksServices tasksServices = context.read<TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
-
-    if ( walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady && !_qrTimeout.isActive) {
-      print('wc_qr_code->timer start inside build');
-      _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
+    if ( walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
+      if (!_qrTimeout.isActive) {
+        print('wc_qr_code->timer start inside build');
+        _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
+      }
     }
-
+    if (tasksServices.walletConnected) {
+      if (_qrTimeout.isActive) {
+        print('wc_qr_code->timer cancel inside build, tasksServices.walletConnected: ${tasksServices.walletConnected}');
+        _qrTimeout.cancel();
+      }
+    }
 
 
     return SizedBox(
