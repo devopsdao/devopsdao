@@ -495,7 +495,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         // Navigator.pop(context);
-                        launchURL(tasksServices.walletConnectSessionUri);
+                        launchURL(tasksServices.walletConnectUri);
                         // _transactionStateToAction(context, state: _state);
                         setState(() {
 

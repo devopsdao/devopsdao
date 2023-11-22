@@ -13,7 +13,7 @@ enum WCStatus {
   loadingWc, // Pairing progress; Disconnect button :: onSessionConnect fires
   wcNotConnected, // show nothing and Connect button // !!! will be deprecated
   wcNotConnectedWithQrReady, // Ready to scan Qr message; Refresh Qr button :: should run probably after loadingQr
-  wcConnectedNetworkMatch, // connected Ok message; show network name; Close Wallet Page; Disconnect button
+  wcConnectedNetworkMatch, // connected Ok message; show network name; Disconnect button
   wcConnectedNetworkNotMatch, // Show "not match" message; connect button (switch network in next build);
   wcConnectedNetworkUnknown, // Show Unknown network message; connect button (switch network in next build);
   error, // error message; resetting views; show connect button;
@@ -143,16 +143,16 @@ class WalletProvider extends ChangeNotifier {
     // save actual network names
     chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==newChainId, orElse: () => 'unknown');
 
-    bool networkMatched = false;
+    bool networkValidAndMatched = false;
     if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
-      networkMatched = true;
+      networkValidAndMatched = true;
     }
 
     log.fine('wallet_service -> setChainAndConnect chainIdOnApp: '
         '$chainIdOnApp , newChainId(id on wallet): '
-        '$newChainId , networkMatched: '
-        '$networkMatched');
-    if (networkMatched) {
+        '$newChainId , networkValidAndMatched: '
+        '$networkValidAndMatched');
+    if (networkValidAndMatched) {
 
       tasksServices.chainId = newChainId;
       tasksServices.allowedChainId = true;
@@ -269,7 +269,6 @@ class WalletProvider extends ChangeNotifier {
     tasksServices.pendingBalance = 0.0;
     tasksServices.pendingBalanceToken = 0.0;
     walletConnectUri = '';
-    tasksServices.walletConnectSessionUri = '';
   }
 
 
