@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../tags_manager/collection_services.dart';
+import '../wallet/wallet_service.dart';
 
 class WalletActionDialog extends StatefulWidget {
   final String nanoId;
@@ -35,7 +36,8 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    TasksServices tasksServices = context.read<TasksServices>();
+    WalletProvider walletProvider = context.watch<WalletProvider>();
     var searchServices = context.read<SearchServices>();
     var collectionServices = context.read<CollectionServices>();
     var interface = context.read<InterfaceServices>();
@@ -495,7 +497,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         // Navigator.pop(context);
-                        launchURL(tasksServices.walletConnectUri);
+                        launchURL(walletProvider.walletConnectUri);
                         // _transactionStateToAction(context, state: _state);
                         setState(() {
 
