@@ -64,139 +64,119 @@ class PairingsPageState extends State<PairingsPage> {
             Text('expiry: ${expiry}'),
           ],
         ),
-        onTap: () async {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text(
-                  deletePairing,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                content: Text(
-                  pairing.topic,
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text(
-                      'Cancel',
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: const Text(
-                      'Delete',
-                    ),
-                    onPressed: () async {
-                      try {
-                        widget.web3App.core.pairing.disconnect(
-                          topic: pairing.topic,
-                        );
-                        Navigator.of(context).pop();
-                      } catch (e) {
-                        debugPrint(e.toString());
-                      }
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
+        // onTap: () async {
+        //   showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return AlertDialog(
+        //         title: const Text(
+        //           deletePairing,
+        //           style: TextStyle(
+        //             color: Colors.black,
+        //             fontSize: 26,
+        //             fontWeight: FontWeight.w600,
+        //           ),
+        //         ),
+        //         content: Text(
+        //           pairing.topic,
+        //         ),
+        //         actions: [
+        //           TextButton(
+        //             child: const Text(
+        //               'Cancel',
+        //             ),
+        //             onPressed: () {
+        //               Navigator.of(context).pop();
+        //             },
+        //           ),
+        //           TextButton(
+        //             child: const Text(
+        //               'Delete',
+        //             ),
+        //             onPressed: () async {
+        //               try {
+        //                 widget.web3App.core.pairing.disconnect(
+        //                   topic: pairing.topic,
+        //                 );
+        //                 Navigator.of(context).pop();
+        //               } catch (e) {
+        //                 debugPrint(e.toString());
+        //               }
+        //             },
+        //           ),
+        //         ],
+        //       );
+        //     },
+        //   );
+        // },
       );
     }).toList();
 
     final List<Widget> children = [
-      const SizedBox(
-        height: 30,
-      ),
-      const Text(
-        'Pairings',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
+      // const SizedBox(
+      //   height: 30,
+      // ),
+      Container(
+        padding: const EdgeInsets.only(bottom: 10, top: 20),
+        child: const Text(
+          'Pairings',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
       ),
-      const SizedBox(
-        height: 8,
-      ),
+      // const SizedBox(
+      //   height: 8,
+      // ),
     ];
     children.addAll(pairingItems);
 
     return Center(
       child: Column(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            // color: StyleConstants.primaryColor,
-            padding: const EdgeInsets.all(
-              8,
-            ),
-            constraints: const BoxConstraints(
-              maxWidth: 350,
-              maxHeight: 200
-            ),
-            child: ListView(
-              children: children
-            ),
-          ),
-          const Text(
-            'Sessions:',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
+          ListView(
+            shrinkWrap: true,
+            children: children
           ),
           Container(
-            height: 240,
-
-            constraints: const BoxConstraints(
-              maxWidth: 350,
-              minWidth: 200,
+            padding: const EdgeInsets.only(bottom: 10, top: 20),
+            child: const Text(
+              'Sessions:',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
             ),
-            // decoration: const BoxDecoration(
-            //   border: Border(
-            //     right: BorderSide(
-            //       color: Color.fromARGB(255, 180, 180, 180),
-            //     ),
-            //   ),
-            // ),
-            padding: const EdgeInsets.only(
-              top: 8,
-              bottom: 8,
-            ),
-            child: ListView.separated(
-              itemBuilder: (BuildContext context, int index) {
-                String topic = sessions[index].topic.toString().substring(sessions[index].topic.toString().length - 14);
-                String paringTopic = sessions[index].pairingTopic.toString().substring(sessions[index].pairingTopic.toString().length - 14);
-                return ListTile(
-                  title: Text(sessions[index].peer.metadata.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(sessions[index].peer.metadata.url),
-                      Text(sessions[index].peer.metadata.description),
-                      Text('topic: ..$topic'),
-                      Text('paring topic: ..$paringTopic'),
-                      // Text('${sessions[index].peer.metadata.hashCode.length - 5)}',),
-                    ],
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
-              },
-              itemCount: sessions.length,
-            ),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              String topic = sessions[index].topic.toString().substring(sessions[index].topic.toString().length - 14);
+              String paringTopic = sessions[index].pairingTopic.toString().substring(sessions[index].pairingTopic.toString().length - 14);
+              return ListTile(
+                title: Text(sessions[index].peer.metadata.name),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(sessions[index].peer.metadata.url),
+                    Text(sessions[index].peer.metadata.description),
+                    Text('topic: ..$topic'),
+                    Text('paring topic: ..$paringTopic'),
+                    // Text('${sessions[index].peer.metadata.hashCode.length - 5)}',),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const Divider();
+            },
+            itemCount: sessions.length,
           )
         ],
       ),

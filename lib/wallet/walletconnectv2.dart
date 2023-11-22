@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dodao/wallet/pages/2_wallet_connect.dart';
@@ -39,13 +40,14 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
 
     // initial network name set:
     if (walletProvider.chainNameOnApp.isEmpty) {
-      walletProvider.selectedChainNameMenu = tasksServices.defaultNetworkName;
       walletProvider.chainNameOnApp = tasksServices.defaultNetworkName;
     }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (!tasksServices.walletConnected) {
+        connectWallet();
+      }
+    });
 
-    if (!tasksServices.walletConnected) {
-      connectWallet();
-    }
     super.initState();
   }
 
@@ -60,7 +62,6 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
         innerPaddingWidth: widget.innerPaddingWidth,
         callConnectWallet: connectWallet,
-        callDisconnectWallet: disconnectWCv2,
       );
     });
   }
@@ -70,62 +71,41 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     log.fine('walletconnectv2.dart -> connectWallet() start');
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
-
+    await walletProvider.setWcState(state: WCStatus.loadingQr, tasksServices: tasksServices);
     if (tasksServices.walletConnected == false) {
       log.fine("walletconnectv2.dart -> walletConnected = false, remove value in walletConnectUri & walletConnectSessionUri");
       walletProvider.walletConnectUri = '';
       tasksServices.walletConnectSessionUri = '';
     }
-    // if (walletProvider.web3App == null) {
-    //   await walletProvider.initWalletConnect();
-    // }
-    await walletProvider.disconnectPairings();
-    await walletProvider.unsubscribe();
+
+    await walletProvider.resetView(tasksServices);
+    await walletProvider.disconnectSessionsAndPairings();
+    await walletProvider.unsubscribeAll();
+    await tasksServices.getTaskListFullThenFetchIt();
 
     walletProvider.web3App?.onSessionDelete.subscribe((onSessionDelete) async {
-      log.fine('walletconnectv2.dart -> onSessionDelete');
+      log.fine('walletconnectv2.dart -> onSessionDelete id: ${onSessionDelete?.id}');
+      log.fine('walletconnectv2.dart -> onSessionDelete topic: ${onSessionDelete?.topic}');
+      // connectWallet(); // unsubscribeAll disconnectSessionsAndPairings resetView
     });
+
     walletProvider.web3App?.onSessionEvent.subscribe((onSessionEvent) async {
-      log.fine('walletconnectv2.dart -> onSessionEvent -> name: ${onSessionEvent?.name}');
-      log.fine('walletconnectv2.dart -> onSessionEvent -> chainId: ${onSessionEvent?.chainId}');
-      log.fine('walletconnectv2.dart -> onSessionEvent -> id: ${onSessionEvent?.id}');
-      log.fine('walletconnectv2.dart -> onSessionEvent -> data: '
-          '${onSessionEvent?.data}, tasksServices.chainId: '
-          '${tasksServices.chainId}, walletConnectedWC:'
-          '${tasksServices.walletConnectedWC}'
+      log.fine('walletconnectv2.dart->onSessionEvent: ${onSessionEvent?.name}, '
+          // 'chainId: ${onSessionEvent?.chainId}, '
+          'data: ${onSessionEvent?.data} :: '
+          'local tasksServices.chainId: ${tasksServices.chainId}, '
+          'walletConnectedWC: ${tasksServices.walletConnectedWC}'
       );
+
       if (onSessionEvent?.name == 'chainChanged' && onSessionEvent?.data != tasksServices.chainId) {
-        // await walletProvider.switchNetwork(tasksServices, onSessionEvent?.data, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
-        // tasksServices.walletConnected = false;
-        // tasksServices.walletConnectedWC = false;
-        // tasksServices.publicAddress = null;
-        // tasksServices.publicAddressWC = null;
-        // tasksServices.allowedChainId = false;
-        // walletProvider.unknownChainIdWC = false;
-        // tasksServices.ethBalance = 0;
-        // tasksServices.ethBalanceToken = 0;
-        // tasksServices.pendingBalance = 0;
-        // tasksServices.pendingBalanceToken = 0;
-        // walletProvider.walletConnectUri = '';
-        // tasksServices.walletConnectSessionUri = '';
-        // tasksServices.closeWalletDialog = true;
-        // tasksServices.chainId = onSessionEvent?.data;
-        // tasksServices.allowedChainId = true;
-        // walletProvider.unknownChainIdWC = false;
-        // walletProvider.notifyListeners();
-        // await tasksServices.connectRPC(tasksServices.chainId);
-        // await tasksServices.startup();
-        // await tasksServices.collectMyTokens();
-        // walletProvider.chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==onSessionEvent?.data, orElse: () => 'unknown');
-        // final chainIdOnApp = tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!;
-        // walletProvider.chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
         walletProvider.setChainAndConnect(tasksServices,  onSessionEvent?.data);
+      } else if (onSessionEvent?.name == 'chainChanged' && onSessionEvent?.data == tasksServices.chainId) {
+        // walletProvider.setChainAndConnect(tasksServices,  onSessionEvent?.data);
       }
-      if (
-          onSessionEvent?.name == 'accountsChanged' &&
+
+      if ( onSessionEvent?.name == 'accountsChanged' &&
           onSessionEvent?.data != tasksServices.chainId &&
-          tasksServices.walletConnectedWC
-      ) {
+          tasksServices.walletConnectedWC ) {
         // final String newAccount = onSessionEvent!.data.toString().split(":").last;
         final EthereumAddress newAccount = EthereumAddress.fromHex(NamespaceUtils.getAccount(
           onSessionEvent!.data.first.toString(),
@@ -149,79 +129,40 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     });
     walletProvider.web3App?.onSessionPing.subscribe((onSessionPing) async {
       log.fine('walletconnectv2.dart -> onSessionPing -> id: ${onSessionPing?.id}');
-      // log.fine('walletconnectv2.dart -> onSessionPing -> topic: ${onSessionPing?.topic}');
     });
     walletProvider.web3App?.onSessionUpdate.subscribe((onSessionUpdate) async {
       log.fine('walletconnectv2.dart -> onSessionUpdate -> id: ${onSessionUpdate?.id}');
-      // log.fine('walletconnectv2.dart -> onSessionUpdate -> namespaces: ${onSessionUpdate?.namespaces}');
-      // log.fine('walletconnectv2.dart -> onSessionUpdate -> topic: ${onSessionUpdate?.topic}');
+    });
+    walletProvider.web3App?.onProposalExpire.subscribe((onProposalExpire) async {
+      log.fine('walletconnectv2.dart -> onProposalExpire -> params: ${onProposalExpire?.params}');
+      log.fine('walletconnectv2.dart -> onProposalExpire -> verifyUrl: ${onProposalExpire?.verifyContext?.verifyUrl}');
     });
     walletProvider.web3App?.onSessionConnect.subscribe(onSessionConnect);
     walletProvider.web3App?.onSessionExpire.subscribe(onSessionExpire);
 
-    // /// onSessionDelete:
-    // web3App?.onSessionDelete.subscribe((sessionConnect) async {
-    //   log.fine('walletconnectv2.dart -> onSessionDelete');
-    //   // walletConnectState = TransactionState.disconnected;
-    //   await resetView();
-
-    //   List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-    //   await tasksServices.fetchTasksBatch(taskList);
-    //
-    //   // await connectWalletWCv2(true);
-    // });
     log.fine('walletconnectv2.dart -> createSession chainId: ${tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!} , walletProvider.chainNameOnApp: ${walletProvider.chainNameOnApp}');
     await walletProvider.createSession(tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
-
-    tasksServices.notifyListeners();
-    // log.fine('walletconnectv2.dart -> connectWallet -> result walletConnectUri: ' + walletProvider.walletConnectUri);
+    if (walletProvider.walletConnectUri.isNotEmpty) {
+      walletProvider.setWcState(state: WCStatus.wcNotConnectedWithQrReady, tasksServices: tasksServices);
+    } else {
+      walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'WC connection error');
+      log.severe('walletconnectv2->connectWallet error: walletConnectUri is empty');
+    }
   }
-
-  Future<void> disconnectWCv2() async {
-    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
-    log.fine('walletconnectv2.dart -> disconnectWCv2');
-    await resetView();
-    await walletProvider.disconnect();
-    await walletProvider.disconnectPairings();
-    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-    await tasksServices.fetchTasksBatch(taskList);
-    connectWallet();
-  }
-
-  // void onSessionEvent(SessionEvent? args) {
-  //   TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
-  //   WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
-  //   log.fine('walletconnectv2.dart -> onSessionEvent -> name: ${args?.name}');
-  //   log.fine('walletconnectv2.dart -> onSessionEvent -> chainId: ${args?.chainId}');
-  //   log.fine('walletconnectv2.dart -> onSessionEvent -> data: ${args?.data}');
-  //   if (args?.name == 'chainChanged') {
-  //     // tasksServices.chainId = args?.data;
-  //     walletProvider.setChainAndConnect(tasksServices,  args?.data);
-  //     // tasksServices.notifyListeners();
-  //     // if (W3MChainPresets.chains.containsKey('${args?.data}')) {
-  //     //   final chain = W3MChainPresets.chains['${args?.data}'];
-  //     //   selectChain(chain);
-  //     // }
-  //   }
-  // }
 
   Future<void> onSessionExpire(SessionExpire? event) async {
     log.fine('walletconnectv2.dart -> onSessionExpire');
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
-    await resetView();
-
-    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-    await tasksServices.fetchTasksBatch(taskList);
-
-    // await connectWalletWCv2(true);
+    await walletProvider.resetView(tasksServices);
+    await tasksServices.getTaskListFullThenFetchIt();
   }
 
   Future<void> onSessionConnect(SessionConnect? event) async {
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    walletProvider.setWcState(state: WCStatus.loadingWc, tasksServices: tasksServices);
     tasksServices.walletConnected = true;
     tasksServices.walletConnectedWC = true;
 
@@ -232,7 +173,6 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         tasksServices: tasksServices,
         walletProvider: walletProvider,
       );
-
 
       tasksServices.publicAddressWC = EthereumAddress.fromHex(NamespaceUtils.getAccount(
         event.session.namespaces.values.first.accounts.last,
@@ -248,20 +188,28 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
 
       tasksServices.publicAddress = tasksServices.publicAddressWC;
 
-      if (
-          tasksServices.allowedChainIds.values.contains(chainIdOnWallet) ||
-              chainIdOnWallet == tasksServices.chainIdAxelar ||
-              chainIdOnWallet == tasksServices.chainIdHyperlane ||
-              chainIdOnWallet == tasksServices.chainIdLayerzero ||
-              chainIdOnWallet == tasksServices.chainIdWormhole) {
+      if (  tasksServices.allowedChainIds.values.contains(chainIdOnWallet) ||
+            chainIdOnWallet == tasksServices.chainIdAxelar ||
+            chainIdOnWallet == tasksServices.chainIdHyperlane ||
+            chainIdOnWallet == tasksServices.chainIdLayerzero ||
+            chainIdOnWallet == tasksServices.chainIdWormhole) {
         // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
+        tasksServices.allowedChainId = true;
+        walletProvider.unknownChainIdWC = false;
+        try {
+          await tasksServices.getTaskListFullThenFetchIt();
+        } catch (e) {
+          log.severe('walletconnectv2.dart->error: $e');
+          walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Blockchain connection error');
+          return;
+        }
       } else {
         log.fine('walletconnectv2.dart -> selectedChainId not in tasksServices.allowedChainIds List');
         tasksServices.allowedChainId = false;
         walletProvider.unknownChainIdWC = true;
+        walletProvider.setWcState(state: WCStatus.wcConnectedNetworkUnknown, tasksServices: tasksServices);
         // walletProvider.walletConnectUri = '';
         // tasksServices.walletConnectSessionUri = '';
-        tasksServices.notifyListeners();
         // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
         // await walletProvider.switchNetwork(tasksServices, chainIdOnWallet, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
       }
@@ -269,33 +217,23 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
           tasksServices,
           chainIdOnWallet,
           tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+      tasksServices.myBalance();
     } else {
       tasksServices.chainId = 31337;
       tasksServices.allowedChainId = true;
+      try {
+        await tasksServices.getTaskListFullThenFetchIt();
+      } catch (e) {
+        log.severe('walletconnectv2.dart->error: $e');
+        walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Blockchain connection error');
+        return;
+      }
+      await tasksServices.myBalance();
+      await walletProvider.setWcState(state: WCStatus.wcConnectedNetworkMatch, tasksServices: tasksServices);
+      Timer(const Duration(seconds: 2), () {
+        walletProvider.closeWalletDialog(tasksServices);
+      });
     }
-    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-    await tasksServices.fetchTasksBatch(taskList);
-
-    tasksServices.myBalance();
-    tasksServices.notifyListeners();
-  }
-
-  Future<void> resetView() async {
-    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
-    tasksServices.walletConnected = false;
-    tasksServices.walletConnectedWC = false;
-    tasksServices.publicAddress = null;
-    tasksServices.publicAddressWC = null;
-    tasksServices.allowedChainId = false;
-    walletProvider.unknownChainIdWC = false;
-    tasksServices.ethBalance = 0;
-    tasksServices.ethBalanceToken = 0;
-    tasksServices.pendingBalance = 0;
-    tasksServices.pendingBalanceToken = 0;
-    walletProvider.walletConnectUri = '';
-    tasksServices.walletConnectSessionUri = '';
-    tasksServices.notifyListeners();
   }
 }
 

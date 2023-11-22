@@ -32,10 +32,6 @@ class _NetworkSelectionState extends State<NetworkSelection> {
     var tasksServices = context.watch<TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
 
-    //Network chain matched check:
-    bool networkChainsMatched;
-    walletProvider.chainNameOnWallet == walletProvider.chainNameOnApp ? networkChainsMatched =true : networkChainsMatched =false;
-
     return Column(
       children: [
         SizedBox(
@@ -54,23 +50,19 @@ class _NetworkSelectionState extends State<NetworkSelection> {
                 height: 2,
                 color: Colors.deepOrange,
               ),
-              onChanged: (String? value)  {
-                setState(() {
-                  if (walletProvider.initComplete) {
+              onChanged: (String? value)  async {
+                if (walletProvider.initComplete) {
+                  setState(()  {
                     networkLogoImage =  walletProvider.networkLogo(tasksServices.allowedChainIds[value], Colors.white, 80);
-                    if (tasksServices.walletConnectedWC) {
-                      walletProvider.walletConnectUri = '';
-                      // tasksServices.chainId = walletProvider.chainIdOnWallet;
-                      walletProvider.switchNetwork(tasksServices,tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!, tasksServices.allowedChainIds[value]!);
-                    } else {
-                      // tasksServices.chainId = tasksServices.allowedChainIds[value]!; //change default chainId
-                      walletProvider.walletConnectUri = '';
-                      widget.callConnectWallet();
-                    }
-                    // save selected Chain and notify listeners:
-                    walletProvider.setSelectedNetworkName(value!);
+                  });
+                  if (tasksServices.walletConnectedWC) {
+                    walletProvider.switchNetwork(tasksServices,tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!, tasksServices.allowedChainIds[value]!);
+                  } else {
+                    await widget.callConnectWallet();
                   }
-                });
+                  // save selected Chain and notify listeners:
+                  await walletProvider.setSelectedNetworkName(value!);
+                }
               },
               items: tasksServices.allowedChainIds.entries.map<DropdownMenuItem<String>>(
                     (e) {
@@ -83,13 +75,9 @@ class _NetworkSelectionState extends State<NetworkSelection> {
             ),
           ),
         ),
-        if (tasksServices.walletConnectedWC && networkChainsMatched && !walletProvider.unknownChainIdWC)
-        const SizedBox(
-          height: 30,
-        ),
-        if (tasksServices.walletConnectedWC && networkChainsMatched && !walletProvider.unknownChainIdWC)
+        if (walletProvider == WCStatus.wcConnectedNetworkMatch)
           Container(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.only(top: 45.0, right: 15.0, left: 15.0, bottom: 15.0),
               height: 140,
               child: networkLogoImage
           ),

@@ -1,4 +1,5 @@
 import 'package:dodao/wallet/pages.dart';
+import 'package:dodao/wallet/wallet_service.dart';
 import 'package:flutter/material.dart';
 import '../blockchain/interface.dart';
 import '../config/theme.dart';
@@ -28,6 +29,7 @@ class _WalletDialogState extends State<WalletDialog> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    WalletProvider walletProvider = context.watch<WalletProvider>();
 
     if (tasksServices.walletConnectedWC || tasksServices.walletConnectedMM) {
       if (tasksServices.walletConnectedMM) {

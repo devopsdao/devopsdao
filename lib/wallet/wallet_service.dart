@@ -1,6 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
+import 'package:webthree/credentials.dart';
+import 'package:logging/logging.dart';
+
+
+enum WCStatus {
+  loadingQr, // Waiting for QR code. resetting views; shimmer running; Disconnect button
+  // :: Initial Start, Connect, Refresh Qr, Disconnect, On selected Network ::
+  loadingWc, // Pairing progress; Disconnect button :: onSessionConnect fires
+  wcNotConnected, // show nothing and Connect button // !!! will be deprecated
+  wcNotConnectedWithQrReady, // Ready to scan Qr message; Refresh Qr button :: should run probably after loadingQr
+  wcConnectedNetworkMatch, // connected Ok message; show network name; Close Wallet Page; Disconnect button
+  wcConnectedNetworkNotMatch, // Show "not match" message; connect button (switch network in next build);
+  wcConnectedNetworkUnknown, // Show Unknown network message; connect button (switch network in next build);
+  error, // error message; resetting views; show connect button;
+  none,
+}
 
 class WalletProvider extends ChangeNotifier {
   late Web3App? web3App;
@@ -8,11 +26,13 @@ class WalletProvider extends ChangeNotifier {
 
   late bool initComplete = false;
   late bool unknownChainIdWC = false;
-  late String selectedChainNameMenu = ''; // if empty, initially will be rewritten with tasksServices.defaultNetworkName
   late String chainNameOnApp = ''; // if empty, initially will be rewritten with tasksServices.defaultNetworkName
   late String chainNameOnWallet = '';
   late String walletConnectUri = '';
+  late String errorMessage = '';
+  late WCStatus wcCurrentState = WCStatus.loadingQr;
 
+  final log = Logger('WalletProvider');
   // late int currentSelectedChainId = 0;
   // late int chainIdOnWallet = 0;
 
@@ -25,9 +45,38 @@ class WalletProvider extends ChangeNotifier {
     initComplete = true;
     notifyListeners();
   }
-  //
+
+  Future<void> setWcState(
+      {required WCStatus state, required tasksServices, String error = ''}) async {
+    wcCurrentState = state;
+    switch (state) {
+      case WCStatus.loadingQr:
+        resetView(tasksServices);
+        break;
+      case WCStatus.loadingWc:
+        break;
+      case WCStatus.wcNotConnected:
+        break;
+      case WCStatus.wcConnectedNetworkMatch:
+        break;
+      case WCStatus.wcConnectedNetworkNotMatch:
+        break;
+      case WCStatus.wcConnectedNetworkUnknown:
+        break;
+      case WCStatus.error:
+        errorMessage = error;
+        resetView(tasksServices);
+        break;
+    }
+    notifyListeners();
+  }
+
   Future<void> setSelectedNetworkName(value) async {
     chainNameOnApp = value;
+  }
+
+  Future<void> closeWalletDialog(tasksServices) async {
+    tasksServices.closeWalletDialog = true;
     notifyListeners();
   }
 
@@ -59,50 +108,10 @@ class WalletProvider extends ChangeNotifier {
     }
   }
 
-  // 1. switchNetwork(changeTo(chainNameOnApp)) <- (3)
-  //                      changeFrom:           changeTo:
-  //    1.'Switch network'(chainNameOnWallet, chainNameOnApp)
-  //    ****.onSessionConnect_not_in_allowedlist(chainIdOnWallet(namespaces), defaultNetworkName)
-  //    3.DropdownButton_WCwc(chainNameOnWallet, dropdown value)
-  // 2. onSessionEvent(ID on wallet)
-  // 3. onSessionConnect in allowedlist(chainIdOnWallet(namespaces))
-  Future<void> setChainAndConnect(tasksServices, int newChainId) async {
-    final Map<String, int> allowedChainIds = tasksServices.allowedChainIds;
-    final chainIdOnApp = tasksServices.allowedChainIds[chainNameOnApp]!;
-    // chainIdOnWallet = chainIdOnWallet;
-    bool networkMatched = false;
-    if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
-      networkMatched = true;
-    }
-    print('wallet_service -> setChainAndConnect chainIdOnApp: '
-        '$chainIdOnApp , newChainId(id on wallet): '
-        '$newChainId , networkMatched: '
-        '$networkMatched');
-    if (networkMatched) {
-      tasksServices.closeWalletDialog = true;
-      tasksServices.chainId = newChainId;
-      tasksServices.allowedChainId = true;
-      unknownChainIdWC = false;
-      notifyListeners();
-      await tasksServices.connectRPC(tasksServices.chainId);
-      await tasksServices.startup();
-      await tasksServices.collectMyTokens();
-    }
-    // save actual network names
-    chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==newChainId, orElse: () => 'unknown');
-    // chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
-    notifyListeners();
-  }
-
-  Future<void> updateAccountAddress(taskServices, address) async {
-    final Map<String, int> chain = taskServices.allowedChainIds;
-  }
-
   Future<void> switchNetwork(tasksServices, int changeFrom, int changeTo) async {
-    // change from wallet network(changeFrom), to app network(changeTo)
     final SessionData sessionData = await connectResponse!.session.future;
-    print('wallet_service -> switchNetwork from: $changeFrom to: $changeTo, sessionData.topic: ${sessionData.topic}');
-    // print('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
+    log.fine('wallet_service -> switchNetwork from: $changeFrom to: $changeTo, sessionData.topic: ${sessionData.topic}');
+    // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
     final params = <String, dynamic>{
       'chainId': '0x${changeTo.toRadixString(16)}',
     };
@@ -114,6 +123,58 @@ class WalletProvider extends ChangeNotifier {
           params: [params],));
     setChainAndConnect(tasksServices, changeTo);
     // return session;
+  }
+
+  // 1. switchNetwork(changeTo(chainNameOnApp)) <- (3)
+  //                      changeFrom:           changeTo:
+  //    1.'Switch network'(chainNameOnWallet, chainNameOnApp)
+  //    ****.onSessionConnect_not_in_allowedlist(chainIdOnWallet(namespaces), defaultNetworkName)
+  //    3.DropdownButton_WCwc(chainNameOnWallet, dropdown value)
+  // 2. onSessionEvent(ID on wallet)
+  // 3. onSessionConnect in allowedlist(chainIdOnWallet(namespaces))
+  Future<void> setChainAndConnect(tasksServices, int newChainId) async {
+    final Map<String, int> allowedChainIds = tasksServices.allowedChainIds;
+    final chainIdOnApp = tasksServices.allowedChainIds[chainNameOnApp]!;
+
+    // change back to WCStatus.loadingWc if WCStatus.wcConnectedNetworkUnknown was set by onSessionConnect
+    if (wcCurrentState == WCStatus.wcConnectedNetworkUnknown) {
+      wcCurrentState = WCStatus.loadingWc;
+    }
+    // save actual network names
+    chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==newChainId, orElse: () => 'unknown');
+
+    bool networkMatched = false;
+    if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
+      networkMatched = true;
+    }
+
+    log.fine('wallet_service -> setChainAndConnect chainIdOnApp: '
+        '$chainIdOnApp , newChainId(id on wallet): '
+        '$newChainId , networkMatched: '
+        '$networkMatched');
+    if (networkMatched) {
+
+      tasksServices.chainId = newChainId;
+      tasksServices.allowedChainId = true;
+      notifyListeners();
+      await tasksServices.connectRPC(tasksServices.chainId);
+      try {
+        await tasksServices.startup();
+      } catch (e) {
+        log.severe('wallet_service->tasksServices.startup() error: $e');
+        await setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Blockchain connection error');
+        return;
+      }
+      await tasksServices.collectMyTokens();
+      await setWcState(state: WCStatus.wcConnectedNetworkMatch, tasksServices: tasksServices);
+
+      Timer(const Duration(seconds: 2), () {
+        closeWalletDialog(tasksServices);
+      });
+    } else {
+      await setWcState(state: WCStatus.wcConnectedNetworkNotMatch, tasksServices: tasksServices);
+    }
+   // chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
   }
 
   Future<ConnectResponse?> createSession(int chainId) async {
@@ -151,7 +212,9 @@ class WalletProvider extends ChangeNotifier {
     );
 
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
-    walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+    if (encodedUrl.isNotEmpty) {
+      walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+    }
 
     await launchUrlString(
       walletConnectUri,
@@ -160,32 +223,15 @@ class WalletProvider extends ChangeNotifier {
     return connectResponse;
   }
 
-  Future<void> disconnect() async {
-    print('wallet_service -> disconnect');
-    if (connectResponse?.pairingTopic != null) {
-      await web3App?.disconnectSession(
-        topic: connectResponse!.pairingTopic,
-        reason: Errors.getSdkError(Errors.USER_DISCONNECTED),
-      );
-    }
+  Future<void> disconnectSessionsAndPairings() async {
+    log.fine('wallet_service -> disconnect');
+    // if (connectResponse != null && connectResponse?.pairingTopic != null) {
+    //   await web3App?.disconnectSession(
+    //     topic: connectResponse!.pairingTopic,
+    //     reason: Errors.getSdkError(Errors.USER_DISCONNECTED),
+    //   );
+    // }
 
-    // disconnectAllSessions:
-    for (final SessionData session in web3App!.sessions.getAll()) {
-      // Disconnect both the pairing and session
-      await web3App!.disconnectSession(
-        topic: session.pairingTopic,
-        reason: const WalletConnectError(code: 0, message: 'User disconnected'),
-      );
-      // Disconnecting the session will produce the onSessionDisconnect callback
-      await web3App!.disconnectSession(
-        topic: session.topic,
-        reason: const WalletConnectError(code: 0, message: 'User disconnected'),
-      );
-    }
-  }
-
-  Future<void> disconnectPairings() async {
-    print('wallet_service -> disconnectPairings');
     List<PairingInfo> pairings = [];
     pairings = web3App!.pairings.getAll();
     for (var pairing in pairings) {
@@ -193,11 +239,42 @@ class WalletProvider extends ChangeNotifier {
         topic: pairing.topic,
       );
     }
+
+    // disconnectAllSessions:
+    for (final SessionData session in web3App!.sessions.getAll()) {
+      // Disconnecting the session will produce the onSessionDisconnect callback
+      await web3App!.disconnectSession(
+        topic: session.topic,
+        reason: const WalletConnectError(code: 0, message: 'User disconnected'),
+      );
+      // Disconnect both the pairing and session
+      await web3App!.disconnectSession(
+        topic: session.pairingTopic,
+        reason: const WalletConnectError(code: 0, message: 'User disconnected'),
+      );
+    }
+
+
+  }
+
+  Future<void> resetView(tasksServices) async {
+    tasksServices.walletConnected = false;
+    tasksServices.walletConnectedWC = false;
+    tasksServices.publicAddress = null;
+    tasksServices.publicAddressWC = null;
+    tasksServices.allowedChainId = false;
+    unknownChainIdWC = false;
+    tasksServices.ethBalance = 0.0;
+    tasksServices.ethBalanceToken = 0.0;
+    tasksServices.pendingBalance = 0.0;
+    tasksServices.pendingBalanceToken = 0.0;
+    walletConnectUri = '';
+    tasksServices.walletConnectSessionUri = '';
   }
 
 
-  Future<void> unsubscribe() async {
-    print('wallet_service -> unsubscribe');
+  Future<void> unsubscribeAll() async {
+    log.fine('wallet_service -> unsubscribe');
     web3App?.onSessionDelete.unsubscribeAll();
     web3App?.onSessionEvent.unsubscribeAll();
     // web3App?.onSessionEvent.unsubscribe(onSessionEvent);

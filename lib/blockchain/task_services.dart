@@ -1924,6 +1924,11 @@ class TasksServices extends ChangeNotifier {
     await fetchTasksPerformer(address);
   }
 
+  Future<void> getTaskListFullThenFetchIt() async {
+    List<EthereumAddress> taskList = await getTaskListFull();
+    await fetchTasksBatch(taskList);
+  }
+
   Future<void> fetchTasksBatch(List<EthereumAddress> taskList) async {
     isLoadingBackground = true;
     tasks.clear();
