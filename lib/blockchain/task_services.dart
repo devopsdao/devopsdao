@@ -10,9 +10,11 @@ import 'dart:math';
 import 'package:logging/logging.dart';
 import 'package:collection/collection.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
-import 'package:js/js.dart' if (dart.library.io) 'package:webthree/src/browser/js_stub.dart' if (dart.library.js) 'package:js/js.dart';
 
+import 'package:js/js.dart' if (dart.library.io) 'package:webthree/src/browser/js_stub.dart' if (dart.library.js) 'package:js/js.dart';
 import 'package:js/js_util.dart' if (dart.library.io) 'package:webthree/src/browser/js_util_stub.dart' if (dart.library.js) 'package:js/js_util.dart';
+import 'package:webthree/browser.dart';
+import 'package:webthree/webthree.dart';
 
 import 'package:week_of_year/week_of_year.dart';
 
@@ -47,10 +49,7 @@ import 'abi/IERC20.g.dart';
 import 'accounts.dart';
 import 'classes.dart';
 import "package:universal_html/html.dart" hide Platform;
-import 'package:webthree/browser.dart'
-    if (dart.library.io) 'package:webthree/src/browser/dart_wrappers_stub.dart'
-    if (dart.library.js) 'package:webthree/browser.dart';
-import 'package:webthree/webthree.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 // if (dart.library.html) 'package:web_socket_channel/web_socket_channel.dart';
@@ -696,7 +695,7 @@ class TasksServices extends ChangeNotifier {
     bool userRejected = false;
     bool chainNotAdded = false;
     try {
-      await eth.rawRequest('wallet_switchEthereumChain', params: [JSrawRequestSwitchChainParams(chainId: '0x855456')]);
+      await eth.rawRequest('wallet_switchEthereumChain', params: [JSrawRequestSwitchChainParams(chainId: '0xd0da0')]);
     } on EthereumException catch (e) {
       if (e.code == 4902) {
         await addNetworkMM();
@@ -744,7 +743,7 @@ class TasksServices extends ChangeNotifier {
     bool userRejected = false;
     try {
       final params = <String, dynamic>{
-        'chainId': '0x855456',
+        'chainId': '0xd0da0',
         'chainName': 'Dodao',
         'nativeCurrency': <String, dynamic>{
           'name': 'Dodao',
@@ -2361,26 +2360,30 @@ class TasksServices extends ChangeNotifier {
     Map<EthereumAddress, bool> tokenContractsApproved = {};
 
     for (var i = 0; i < tokenContracts.length; i++) {
-      var ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+      IERC165 ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
       //check if ERC-1155
-      var interfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
-      var erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
-      var erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
-      if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
-        var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-          txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-        }
-      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc20InterfaceID)) == true) {
-        var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
-          txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
-        }
-      } else if (await ierc165.supportsInterface(Uint8List.fromList(erc721InterfaceID)) == true) {
-        var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-          txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-        }
+      Uint8List erc1555interfaceID = Uint8List.fromList(hex.decode('d9b67a26'));
+      Uint8List erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
+      Uint8List erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
+      final bool supportsInterface = await ierc165.supportsInterface(erc1555interfaceID);
+      if (supportsInterface == true) {
+        txn = '';
+        //   var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        //   if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+        //     txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+        //   }
+        // } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
+        //   var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        //   if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
+        //     txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
+        //   }
+        // } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
+        //   var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        //   if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+        //     txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+        //   }
+      } else {
+        print('interface not supported');
       }
     }
 
