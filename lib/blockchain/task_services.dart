@@ -2366,21 +2366,20 @@ class TasksServices extends ChangeNotifier {
       Uint8List erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
       final bool supportsInterface = await ierc165.supportsInterface(erc1555interfaceID);
       if (supportsInterface == true) {
-        txn = '';
-        //   var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        //   if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-        //     txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-        //   }
-        // } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
-        //   var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        //   if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
-        //     txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
-        //   }
-        // } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
-        //   var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        //   if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-        //     txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-        //   }
+        var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+          txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+        }
+      } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
+        var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
+          txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
+        }
+      } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
+        var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+          txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+        }
       } else {
         print('interface not supported');
       }
