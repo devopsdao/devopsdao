@@ -695,17 +695,13 @@ class TasksServices extends ChangeNotifier {
     bool userRejected = false;
     bool chainNotAdded = false;
     try {
-      await eth.rawRequest('wallet_switchEthereumChain', params: [JSrawRequestSwitchChainParams(chainId: '0x507')]);
-      chainChangeRequest = true;
-    } catch (e) {
-      var error = jsObjectToMap(e);
-      if (error['code'] == 4902) {
-        chainNotAdded = true;
-        addNetworkMM();
+      await eth.rawRequest('wallet_switchEthereumChain', params: [JSrawRequestSwitchChainParams(chainId: '0x855456')]);
+    } on EthereumException catch (e) {
+      if (e.code == 4902) {
+        await addNetworkMM();
       } else {
         userRejected = true;
       }
-      // print(err);
     }
     if (!userRejected && chainChangeRequest) {
       try {
@@ -747,15 +743,15 @@ class TasksServices extends ChangeNotifier {
     bool userRejected = false;
     try {
       final params = <String, dynamic>{
-        'chainId': '0x507',
-        'chainName': 'Moonbase alpha',
+        'chainId': '0x855456',
+        'chainName': 'Dodao',
         'nativeCurrency': <String, dynamic>{
-          'name': 'DEV',
-          'symbol': 'DEV',
+          'name': 'Dodao',
+          'symbol': 'DODAO',
           'decimals': 18,
         },
-        'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
-        'blockExplorerUrls': ['https://moonbase.moonscan.io'],
+        'rpcUrls': ['https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
+        'blockExplorerUrls': ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
         'iconUrls': [''],
       };
       // await eth.rawRequest('wallet_switchEthereumChain',
