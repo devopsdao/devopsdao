@@ -2578,8 +2578,6 @@ class TasksServices extends ChangeNotifier {
     // notifyListeners();
   }
 
-
-
   Future<void> taskParticipate(EthereumAddress contractAddress, String nanoId, {String? message, BigInt? replyTo}) async {
     transactionStatuses[nanoId] = {
       'taskParticipate': {'status': 'pending', 'txn': 'initial'}
@@ -2602,28 +2600,33 @@ class TasksServices extends ChangeNotifier {
     );
     try {
       if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'axelar') {
-            txn = await axelarFacet.taskParticipateAxelar(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
-          } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
-            txn = await hyperlaneFacet.taskParticipateHyperlane(senderAddress, contractAddress, message, replyTo,
-                credentials: creds, transaction: transaction);
-          } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
-            txn = await layerzeroFacet.taskParticipateLayerzero(senderAddress, contractAddress, message, replyTo,
-                credentials: creds, transaction: transaction);
-          } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
-            txn =
-                await wormholeFacet.taskParticipateWormhole(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
-          } else {
-
-            txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
-          }
-    } on EthereumException catch (e) {
+        txn = await axelarFacet.taskParticipateAxelar(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
+      } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
+        txn = await hyperlaneFacet.taskParticipateHyperlane(senderAddress, contractAddress, message, replyTo,
+            credentials: creds, transaction: transaction);
+      } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
+        txn = await layerzeroFacet.taskParticipateLayerzero(senderAddress, contractAddress, message, replyTo,
+            credentials: creds, transaction: transaction);
+      } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
+        txn = await wormholeFacet.taskParticipateWormhole(senderAddress, contractAddress, message, replyTo,
+            credentials: creds, transaction: transaction);
+      } else {
+        txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+      }
+    } on JsonRpcError catch (e) {
       log.severe(e.code);
       // if (e.toString() == 'JsonRpcError(code: 5000, message: User rejected the transaction)') { txn = 'rejected'; } else { txn = 'failed'; }
-      if (e.code == 5000) { txn = 'rejected'; } else { txn = 'failed'; }
+      if (e.code == 5000) {
+        txn = 'rejected';
+      } else {
+        txn = 'failed';
+      }
       transactionStatuses[nanoId]!['taskParticipate']!['status'] = txn;
       final Task task = await loadOneTask(contractAddress);
       tasks[contractAddress]!.loadingIndicator = false;
       await refreshTask(task);
+    } catch (e) {
+      print(e);
     }
     if (txn.length == 66) {
       transactionStatuses[nanoId]!['taskParticipate']!['status'] = 'confirmed';
