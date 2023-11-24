@@ -3,18 +3,15 @@
 // import 'package:flutter/cupertino.dart';
 import 'dart:math';
 
-import 'package:dodao/blockchain/notify_listener.dart';
-import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/wrapped_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webthree/credentials.dart';
 
-import '../blockchain/classes.dart';
-import '../blockchain/task_services.dart';
-import '../config/theme.dart';
-import 'badgetab.dart';
+import '../../blockchain/classes.dart';
+import '../../blockchain/task_services.dart';
+import '../../config/theme.dart';
 
 
 class HomeStatistics extends StatefulWidget {
@@ -391,6 +388,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
               ],
             ),
           ),
+            
             if(!tasksServices.walletConnected)
               const SizedBox(
                 height: 200,
@@ -403,3 +401,4 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
     );
   }
 }
+

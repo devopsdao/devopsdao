@@ -177,85 +177,80 @@ class _WalletConnectState extends State<WalletConnect> {
 
     return Center(
       child: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: widget.screenHeightSizeNoKeyboard - 300,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Material(
-                  elevation: DodaoTheme.of(context).elevation,
-                  borderRadius: DodaoTheme.of(context).borderRadius,
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 26.0, right: 26.0, top: 10, bottom: 10),
-                    height: widget.screenHeightSizeNoKeyboard - 40,
-                    width: widget.innerPaddingWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: DodaoTheme.of(context).borderRadius,
-                      border: DodaoTheme.of(context).borderGradient,
-                    ),
-                    child: DefaultTabController(
-                      length: 3,
-                      initialIndex: defaultTab,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 30,
-                            child: TabBar(
-                              labelColor: DodaoTheme.of(context).secondaryText,
-                              indicatorColor: DodaoTheme.of(context).tabIndicator,
-                              unselectedLabelColor: Colors.grey,
-                              tabs: [
-                                Container(
-                                  color: Colors.transparent,
-                                  width: 120,
-                                  child: Tab(
-                                      child: Text(tasksServices.platform == 'mobile' ||
-                                          tasksServices.browserPlatform == 'android' ||
-                                          tasksServices.browserPlatform == 'ios'
-                                          ? 'Mobile'
-                                          : 'Desktop')),
-                                ),
-                                const SizedBox(
-                                  width: 120,
-                                  child: Tab(child: Text('QR Code')),
-                                ),
-                                const SizedBox(
-                                  width: 120,
-                                  child: Icon(Icons.settings),
-                                ),
-                              ],
-                            ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Material(
+                elevation: DodaoTheme.of(context).elevation,
+                borderRadius: DodaoTheme.of(context).borderRadius,
+                child: Container(
+                  padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10, bottom: 10),
+                  height: widget.screenHeightSizeNoKeyboard - 36,
+                  width: widget.innerPaddingWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: DodaoTheme.of(context).borderRadius,
+                    border: DodaoTheme.of(context).borderGradient,
+                  ),
+                  child: DefaultTabController(
+                    length: 3,
+                    initialIndex: defaultTab,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 30,
+                          child: TabBar(
+                            labelColor: DodaoTheme.of(context).secondaryText,
+                            indicatorColor: DodaoTheme.of(context).tabIndicator,
+                            unselectedLabelColor: Colors.grey,
+                            tabs: [
+                              Container(
+                                color: Colors.transparent,
+                                width: 120,
+                                child: Tab(
+                                    child: Text(tasksServices.platform == 'mobile' ||
+                                        tasksServices.browserPlatform == 'android' ||
+                                        tasksServices.browserPlatform == 'ios'
+                                        ? 'Mobile'
+                                        : 'Desktop')),
+                              ),
+                              const SizedBox(
+                                width: 120,
+                                child: Tab(child: Text('QR Code')),
+                              ),
+                              const SizedBox(
+                                width: 120,
+                                child: Icon(Icons.settings),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                // *********** Wallet Connect > Mobile tab ************ //
-                                firstTab,
-                                // *********** Wallet Connect > QR Code tab  ************ //
-                                secondTab,
-                                // *********** Wallet Connect > System info tab ************ //
-                                Column(
-                                  children: [
-                                      PairingsPage(
-                                          web3App: walletProvider.web3App!
-                                      ),
-                                  ],
-                                )
-                              ],
-                            ),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              // *********** Wallet Connect > Mobile tab ************ //
+                              firstTab,
+                              // *********** Wallet Connect > QR Code tab  ************ //
+                              secondTab,
+                              // *********** Wallet Connect > System info tab ************ //
+                              Column(
+                                children: [
+                                    PairingsPage(
+                                        web3App: walletProvider.web3App!
+                                    ),
+                                ],
+                              )
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

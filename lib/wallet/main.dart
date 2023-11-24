@@ -49,10 +49,10 @@ class _WalletDialogState extends State<WalletDialog> {
     return LayoutBuilder(builder: (context, constraints) {
       return StatefulBuilder(builder: (context, setState) {
         final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-        final double screenHeightSizeNoKeyboard = constraints.maxHeight * .7;
+        final double screenHeightSizeNoKeyboard = (constraints.maxHeight * .75);
         final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
         return Dialog(
-          insetPadding: const EdgeInsets.all(20),
+          insetPadding: const EdgeInsets.all(14),
           shape: RoundedRectangleBorder(
             borderRadius: DodaoTheme.of(context).borderRadius,
           ),
@@ -68,7 +68,7 @@ class _WalletDialogState extends State<WalletDialog> {
                   WalletDialogHeader(pageController: pageController),
                   Container(
                     height: screenHeightSize,
-                    width: 400,
+                    width: 450,
                     decoration: BoxDecoration(
                       borderRadius: DodaoTheme.of(context).borderRadius,
                       image: DecorationImage(image: AssetImage(backgroundPicture), fit: BoxFit.cover, opacity: 0.6),

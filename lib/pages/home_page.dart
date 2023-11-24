@@ -12,7 +12,7 @@ import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../navigation/navmenu.dart';
 import '../wallet/wallet_service.dart';
-import '../widgets/home_statistics.dart';
+import '../widgets/home_statistics/home_statistics.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';
 import '../config/flutter_flow_icon_button.dart';

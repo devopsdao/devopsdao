@@ -34,7 +34,7 @@ class WalletDialogPages extends StatelessWidget {
     var tasksServices = context.watch<TasksServices>();
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
-      double innerPaddingWidth = dialogConstraints.maxWidth - 60;
+      double innerPaddingWidth = dialogConstraints.maxWidth - 50;
       return PageView(
         scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
