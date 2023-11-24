@@ -302,13 +302,13 @@ class _TaskItemState extends State<TaskItem> {
               badgeStyle: Badges.BadgeStyle(
                 badgeColor: (() {
                   if (task.taskState == "new") {
-                  return Colors.redAccent;
+                    return Colors.redAccent;
                   } else if (task.taskState == "audit" && widget.fromPage != "auditor") {
-                  return Colors.blueGrey;
+                    return Colors.blueGrey;
                   } else if (widget.fromPage == "auditor") {
-                  return Colors.green;
+                    return Colors.green;
                   } else {
-                  return Colors.white;
+                    return Colors.white;
                   }
                 }()),
                 elevation: 0,
@@ -330,30 +330,26 @@ class _TaskItemState extends State<TaskItem> {
       ],
     );
 
-    return !task.loadingIndicator ? Container(
-      decoration: BoxDecoration(
-        borderRadius: DodaoTheme.of(context).borderRadius,
-        border: DodaoTheme.of(context).borderGradient,
-      ),
-      child: content,
-    ) : Shimmer.fromColors(
-      baseColor: DodaoTheme.of(context).shimmerBaseColor,
-      highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
-      child: Container(
-          decoration: BoxDecoration(
-            borderRadius: DodaoTheme.of(context).borderRadius,
-            border: DodaoTheme.of(context).borderGradient,
-          ),
-          child: content
-      ),
-    );
+    return !task.loadingIndicator
+        ? Container(
+            decoration: BoxDecoration(
+              borderRadius: DodaoTheme.of(context).borderRadius,
+              border: DodaoTheme.of(context).borderGradient,
+            ),
+            child: content,
+          )
+        : Shimmer.fromColors(
+            baseColor: DodaoTheme.of(context).shimmerBaseColor,
+            highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: DodaoTheme.of(context).borderRadius,
+                  border: DodaoTheme.of(context).borderGradient,
+                ),
+                child: content),
+          );
   }
 }
-
-
-
-
-
 
 class TaskItemShimmer extends StatelessWidget {
   late Task task;
@@ -367,7 +363,6 @@ class TaskItemShimmer extends StatelessWidget {
     required this.fromPage,
     required this.task,
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -559,8 +554,7 @@ class TaskItemShimmer extends StatelessWidget {
               borderRadius: DodaoTheme.of(context).borderRadius,
               border: DodaoTheme.of(context).borderGradient,
             ),
-            child: content
-        ),
+            child: content),
       ),
     );
   }
