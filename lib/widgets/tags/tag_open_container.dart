@@ -57,8 +57,6 @@ class TagOpenContainerButton extends StatelessWidget {
               ),
             ),
           );
-
-
         },
       );
     } else {
@@ -85,7 +83,6 @@ class TagOpenContainerButton extends StatelessWidget {
             openColor: DodaoTheme.of(context).background,
             closedColor: DodaoTheme.of(context).smallButtonGradient.colors.last,
             closedBuilder: (BuildContext context, VoidCallback openContainer) {
-
               return Container(
                 width: 36,
                 height: 36,

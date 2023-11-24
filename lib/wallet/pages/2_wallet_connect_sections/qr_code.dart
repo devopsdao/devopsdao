@@ -68,7 +68,7 @@ class _WcQrCodeState extends State<WcQrCode> {
   Widget build(BuildContext context) {
     TasksServices tasksServices = context.read<TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
-    String networkNameOnApp = tasksServices.allowedChainIds.entries.firstWhere((e) => e.key==walletProvider.chainNameOnApp).key;
+    String networkNameOnApp = tasksServices.allowedChainIds.entries.firstWhere((e) => e.key == walletProvider.chainNameOnApp).key;
     //
     // if ((
     //     walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady ||
@@ -87,16 +87,15 @@ class _WcQrCodeState extends State<WcQrCode> {
       children: [
         RichText(
             text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-              TextSpan(text: '   '),
-            ])),
+          TextSpan(text: '   '),
+        ])),
         Shimmer.fromColors(
             baseColor: DodaoTheme.of(context).shimmerBaseColor,
             highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
             child: NetworkSelection(
               qrSize: _qrSize,
-              callConnectWallet: (){},
-            )
-        ),
+              callConnectWallet: () {},
+            )),
         const SizedBox(
           height: 8,
         ),
@@ -112,11 +111,9 @@ class _WcQrCodeState extends State<WcQrCode> {
       ],
     );
 
-
     return LayoutBuilder(builder: (context, constraints) {
       return AnimatedCrossFade(
-        crossFadeState: walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady
-            ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+        crossFadeState: walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         duration: const Duration(milliseconds: 300),
         sizeCurve: Curves.easeInOutQuart,
 
@@ -124,9 +121,8 @@ class _WcQrCodeState extends State<WcQrCode> {
         firstChild: WcQrCodeImage(
           screenHeightSizeNoKeyboard: widget.screenHeightSizeNoKeyboard,
           callConnectWallet: widget.callConnectWallet,
-          qrSize:_qrSize,
+          qrSize: _qrSize,
         ),
-
 
         /////// *********** NO URL ************ /////////
         secondChild: SizedBox(
@@ -134,8 +130,7 @@ class _WcQrCodeState extends State<WcQrCode> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (walletProvider.wcCurrentState == WCStatus.loadingQr)
-                shimmer,
+              if (walletProvider.wcCurrentState == WCStatus.loadingQr) shimmer,
               if (walletProvider.wcCurrentState == WCStatus.loadingWc)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +148,7 @@ class _WcQrCodeState extends State<WcQrCode> {
                 ),
               if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch)
                 Text(
-                  'Select network in your wallet to \n$networkNameOnApp',
+                  'Select $networkNameOnApp\n network in your wallet',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -196,8 +191,7 @@ class _WcQrCodeState extends State<WcQrCode> {
                     Container(
                         padding: const EdgeInsets.all(15.0),
                         height: 140,
-                        child: walletProvider.networkLogo(tasksServices.allowedChainIds[walletProvider.chainNameOnApp], Colors.white, 80)
-                    ),
+                        child: walletProvider.networkLogo(tasksServices.allowedChainIds[walletProvider.chainNameOnApp], Colors.white, 80)),
                   ],
                 ),
             ],
@@ -207,4 +201,3 @@ class _WcQrCodeState extends State<WcQrCode> {
     });
   }
 }
-
