@@ -2584,7 +2584,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'taskParticipate': {'status': 'pending', 'txn': 'initial'}
     };
-    late String txn;
+    late String txn = '';
     message ??= 'Taking this task';
     replyTo ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
@@ -2616,9 +2616,10 @@ class TasksServices extends ChangeNotifier {
 
             txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
           }
-    } catch (e) {
-      log.severe(e);
-      if (e.toString() == 'JsonRpcError(code: 5000, message: User rejected the transaction)') { txn = 'rejected'; } else { txn = 'failed'; }
+    } on EthereumException catch (e) {
+      log.severe(e.code);
+      // if (e.toString() == 'JsonRpcError(code: 5000, message: User rejected the transaction)') { txn = 'rejected'; } else { txn = 'failed'; }
+      if (e.code == 5000) { txn = 'rejected'; } else { txn = 'failed'; }
       transactionStatuses[nanoId]!['taskParticipate']!['status'] = txn;
       final Task task = await loadOneTask(contractAddress);
       tasks[contractAddress]!.loadingIndicator = false;

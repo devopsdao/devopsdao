@@ -98,7 +98,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   // bool _flag = true;
-  late AnimationController _animationController;
+  late AnimationController fg_animationController;
 
   @override
   void initState() {
