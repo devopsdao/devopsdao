@@ -47,7 +47,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   }
 
   void runPaw() {
-    print('runPaw!!');
+    // print('runPaw!!');
     // Future.delayed(const Duration(milliseconds: 300)).then((_) {
     //   indicator2.currentState!.refresh(
     //     // draggingCurve: Curves.easeOutBack,

@@ -90,17 +90,7 @@ class TagOpenContainerButton extends StatelessWidget {
                   gradient: DodaoTheme.of(context).smallButtonGradient,
                   borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                 ),
-                child: const IconButton(
-                  icon: Icon(Icons.loyalty_outlined, size: 18, color: Colors.white),
-                  tooltip: 'Add tags or NFT\'s',
-                  onPressed: null,
-                  // onPressed: () {
-                  //   interface.dialogPagesController.animateToPage(
-                  //       interface.dialogCurrentState['pages']['topup'] ?? 99,
-                  //       duration: const Duration(milliseconds: 400), curve: Curves.ease
-                  //   );
-                  // },
-                ),
+                child: const Icon(Icons.loyalty_outlined, size: 18, color: Colors.white)
               );
 
               return InkWell(

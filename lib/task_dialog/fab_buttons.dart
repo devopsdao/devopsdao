@@ -230,28 +230,29 @@ class SetsOfFabButtons extends StatelessWidget {
                     ));
           },
         );
-      } else if (task.taskState == 'completed' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
-        return TaskDialogFAB(
-          inactive: interface.rating == 0.0 ? true : false,
-          expand: true,
-          buttonName: 'Withdraw & Rate Task',
-          buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
-          callback: () {
-            task.loadingIndicator = true;
-            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
-            Navigator.pop(context);
-            interface.emptyTaskMessage();
-            showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => WalletActionDialog(
-                  nanoId: task.nanoId,
-                  taskName: 'withdrawAndRate',
-                ));
-          },
-        );
       }
+      // else if (task.taskState == 'completed' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+      //   return TaskDialogFAB(
+      //     inactive: interface.rating == 0.0 ? true : false,
+      //     expand: true,
+      //     buttonName: 'Withdraw & Rate Task',
+      //     buttonColorRequired: Colors.lightBlue.shade300,
+      //     widthSize: buttonWidth,
+      //     callback: () {
+      //       task.loadingIndicator = true;
+      //       tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
+      //       Navigator.pop(context);
+      //       interface.emptyTaskMessage();
+      //       showDialog(
+      //           barrierDismissible: false,
+      //           context: context,
+      //           builder: (context) => WalletActionDialog(
+      //             nanoId: task.nanoId,
+      //             taskName: 'withdrawAndRate',
+      //           ));
+      //     },
+      //   );
+      // }
       // ************************* AUDITOR BUTTONS ************************ //
       else if (interface.dialogCurrentState['name'] == 'auditor-new' || tasksServices.hardhatDebug == true) {
         return TaskDialogFAB(

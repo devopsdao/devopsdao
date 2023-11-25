@@ -626,10 +626,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                   child: Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Row(
+                                    child: const Row(
                                       // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                                       // mainAxisSize: MainAxisSize.max,
-                                      children: const [
+                                      children: [
                                         Padding(
                                           padding: EdgeInsets.only(right: 12.0),
                                           child: Icon(Icons.new_releases, size: 35, color: Colors.lightGreen),
@@ -851,9 +851,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           //   return approveButtonERC20;
           // }
 
-          else if (
-            !activeSubmitButton
-          ) {
+          else if (!activeSubmitButton) {
             return submitButtonInactive;
           } else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
             interface.tokenSelected == '';

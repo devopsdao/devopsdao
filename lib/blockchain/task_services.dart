@@ -259,8 +259,7 @@ class TasksServices extends ChangeNotifier {
   // bool walletConnectActionApproved = false;
   late Map<String, dynamic> roleNfts = {'auditor': 0, 'governor': 0};
 
-  var eth;
-  String lastTxn = '';
+  // var eth;
 
   String platform = 'mobile';
   String? browserPlatform;
@@ -1212,8 +1211,6 @@ class TasksServices extends ChangeNotifier {
         // });
       }
       // await myBalance();
-    } else {
-      isLoadingBackground = false;
     }
     isLoadingBackground = false;
     notifyListeners();
@@ -2226,7 +2223,8 @@ class TasksServices extends ChangeNotifier {
   // }
 
   Future<void> approveSpend(
-      EthereumAddress _contractAddress, EthereumAddress publicAddress, BigInt amount, String nanoId, bool initial, String operationName) async {
+      EthereumAddress contractAddress, EthereumAddress publicAddress, BigInt amount, String nanoId, bool initial, String operationName) async {
+    log.info('approveSpend');
     var creds;
     var senderAddress;
     if (initial) {
@@ -2244,9 +2242,18 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    final result = await ierc20.approve(_contractAddress, amount, credentials: creds, transaction: transaction);
-    log.info('result of approveSpend: ' + result);
-    transactionStatuses[nanoId]![operationName]!['tokenApproved'] = 'approved';
+    late String result;
+    try {
+      result = await ierc20.approve(contractAddress, amount, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase(operationName, nanoId, contractAddress, e);
+    } catch (e) {
+      log.severe(e);
+    }
+    if (result.length == 66) {
+      transactionStatuses[nanoId]![operationName]!['tokenApproved'] = 'approved';
+    }
+    log.info('result of approveSpend: $result');
     notifyListeners();
     await tellMeHasItMined(result, operationName, nanoId);
 
@@ -2256,6 +2263,8 @@ class TasksServices extends ChangeNotifier {
   late bool isRequestApproved = false;
 
   Future<void> isApproved() async {
+
+    log.info('isApproved');
     isLoadingBackground = true;
     var creds;
     var senderAddress;
@@ -2290,6 +2299,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Map<EthereumAddress, bool>> isTokenApproved(tokenContracts, amounts) async {
+    log.info('isTokenApproved');
     isLoadingBackground = true;
     var creds;
     var senderAddress;
@@ -2340,13 +2350,14 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> setApprovalForAll(tokenContracts, amounts) async {
+    log.info('setApprovalForAll');
     var creds;
     var senderAddress;
 
     transactionStatuses['setApprovalForAll'] = {
       'setApprovalForAll': {'status': 'pending', 'txn': 'initial'}
     };
-    late String txn;
+    late String txn = '';
 
     if (hardhatDebug == true) {
       creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
@@ -2361,35 +2372,42 @@ class TasksServices extends ChangeNotifier {
 
     Map<EthereumAddress, bool> tokenContractsApproved = {};
 
-    for (var i = 0; i < tokenContracts.length; i++) {
-      IERC165 ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
-      //check if ERC-1155
-      Uint8List erc1555interfaceID = Uint8List.fromList(hex.decode('d9b67a26'));
-      Uint8List erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
-      Uint8List erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
-      final bool supportsInterface = await ierc165.supportsInterface(erc1555interfaceID);
-      if (supportsInterface == true) {
-        var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-          txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-        }
-      } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
-        var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
-          txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
-        }
-      } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
-        var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
-        if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-          txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-        }
-      } else {
-        print('interface not supported');
-      }
+    try {
+      for (var i = 0; i < tokenContracts.length; i++) {
+            IERC165 ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+            //check if ERC-1155
+            Uint8List erc1555interfaceID = Uint8List.fromList(hex.decode('d9b67a26'));
+            Uint8List erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
+            Uint8List erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
+            final bool supportsInterface = await ierc165.supportsInterface(erc1555interfaceID);
+            if (supportsInterface == true) {
+              var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+              if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+                txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+              }
+            } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
+              var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+              if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
+                txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
+              }
+            } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
+              var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+              if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+                txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+              }
+            } else {
+              print('interface not supported');
+            }
+          }
+    } on JsonRpcError catch (e) {
+      errorCase('setApprovalForAll', 'setApprovalForAll', contractAddress, e);
+    } catch (e) {
+      log.severe(e);
     }
-
-    transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['status'] = 'confirmed';
-    transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['tokenApproved'] = 'complete';
+    if (txn.length == 66) {
+      transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['status'] = 'confirmed';
+      transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['tokenApproved'] = 'complete';
+    }
     transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['txn'] = txn;
     notifyListeners();
     await tellMeHasItMined(txn, 'setApprovalForAll', 'setApprovalForAll');
@@ -2404,7 +2422,7 @@ class TasksServices extends ChangeNotifier {
       };
       late int priceInGwei = (price * 1000000000).toInt();
       final BigInt priceInBigInt = BigInt.from(price * 1e6);
-      late String txn;
+      late String txn = '';
       String taskType = 'public';
 
       var creds;
@@ -2423,12 +2441,7 @@ class TasksServices extends ChangeNotifier {
       // final fees = await _web3client.getGasInEIP1559(historicalBlocks: historicalBlocks);
       // final gasPrice = await _web3client.getGasPrice();
 
-      final transaction = Transaction(
-        from: senderAddress,
-        // gasPrice: gasPrice,
-        // maxFeePerGas: fees['medium']?.maxFeePerGas,
-        // maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas
-      );
+
 
       // List<String> tags = [];
       // List<List<String>> tokenNames = [
@@ -2447,6 +2460,12 @@ class TasksServices extends ChangeNotifier {
           if (await ierc165.supportsInterface(Uint8List.fromList(interfaceID)) == true) {
             var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
             if (await ierc1155.isApprovedForAll(senderAddress, _contractAddress) == false) {
+              final transaction = Transaction(
+                from: senderAddress,
+                // gasPrice: gasPrice,
+                // maxFeePerGas: fees['medium']?.maxFeePerGas,
+                // maxPriorityFeePerGas: fees['medium']?.maxPriorityFeePerGas
+              );
               isRequestApproved = true;
               await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
             }
@@ -2468,8 +2487,10 @@ class TasksServices extends ChangeNotifier {
         "tokenAmounts": tokenAmounts
       };
 
+      late Transaction transaction;
+
       if (taskTokenSymbol == 'ETH') {
-        final transaction = Transaction(
+        transaction = Transaction(
           from: senderAddress,
           value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
@@ -2477,51 +2498,56 @@ class TasksServices extends ChangeNotifier {
         // txn = await taskDataFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
         //     credentials: creds, transaction: transaction);
 
-        if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'axelar') {
-          txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
-          txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
-          txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
-          txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else {
-          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
-        }
+        // if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'axelar') {
+        //   txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
+        //   txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
+        //   txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
+        //   txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        // } else {
+        //   txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+        // }
       } else if (taskTokenSymbol == 'USDC') {
         isRequestApproved = true;
         await approveSpend(_contractAddress, publicAddress!, priceInBigInt, nanoId, false, 'createTaskContract');
-        final transaction = Transaction(
+        transaction = Transaction(
           from: senderAddress,
           // value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
         );
 
         // txn = await taskCreateFacet.createTaskContract(nanoId, taskType, title, description, taskTokenSymbol, priceInBigInt,
         //     credentials: creds, transaction: transaction);
-
-        if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'axelar') {
-          txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
-          txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
-          txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
-          txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
-        } else {
-          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
-        }
-        log.info(txn);
       }
+
+      try {
+        if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'axelar') {
+                txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+              } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
+                txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+              } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
+                txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+              } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
+                txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+              } else {
+                txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+              }
+      } on JsonRpcError catch (e) {
+        errorCase('createTaskContract', nanoId, contractAddress, e);
+      } catch (e) {
+        log.severe(e);
+      }
+      if (txn.length == 66) {
+        transactionStatuses[nanoId]!['createTaskContract']!['status'] = 'confirmed';
+      }
+
       isLoading = false;
       // isLoadingBackground = true;
-      lastTxn = txn;
-      transactionStatuses[nanoId]!['createTaskContract']!['status'] = 'confirmed';
       transactionStatuses[nanoId]!['createTaskContract']!['tokenApproved'] = 'complete';
       transactionStatuses[nanoId]!['createTaskContract']!['txn'] = txn;
       notifyListeners();
       tellMeHasItMined(txn, 'createTaskContract', nanoId);
-
-      // notifyListeners();
     }
   }
 
@@ -2532,7 +2558,7 @@ class TasksServices extends ChangeNotifier {
     message ??= 'Added $price $taskTokenSymbol to contract';
     late int priceInGwei = (price * 1000000000).toInt();
     final BigInt priceInBigInt = BigInt.from(price * 1e6);
-    late String txn;
+    late String txn = '';
 
     // message ??= 'Contract topped up for ${price.toString()} ';
 
@@ -2569,7 +2595,6 @@ class TasksServices extends ChangeNotifier {
     }
     isLoading = false;
     // isLoadingBackground = true;
-    lastTxn = txn;
     transactionStatuses[nanoId]!['addTokens']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['addTokens']!['tokenApproved'] = 'complete';
     transactionStatuses[nanoId]!['addTokens']!['txn'] = txn;
@@ -2614,19 +2639,9 @@ class TasksServices extends ChangeNotifier {
         txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
       }
     } on JsonRpcError catch (e) {
-      log.severe(e.code);
-      // if (e.toString() == 'JsonRpcError(code: 5000, message: User rejected the transaction)') { txn = 'rejected'; } else { txn = 'failed'; }
-      if (e.code == 5000) {
-        txn = 'rejected';
-      } else {
-        txn = 'failed';
-      }
-      transactionStatuses[nanoId]!['taskParticipate']!['status'] = txn;
-      final Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
+      errorCase('taskParticipate', nanoId, contractAddress, e);
     } catch (e) {
-      print(e);
+      log.severe(e);
     }
     if (txn.length == 66) {
       transactionStatuses[nanoId]!['taskParticipate']!['status'] = 'confirmed';
@@ -2641,7 +2656,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'taskAuditParticipate': {'status': 'pending', 'txn': 'initial'}
     };
-    late String txn;
+    late String txn = '';
     message ??= 'Taking task for audit';
     replyTo ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
@@ -2673,17 +2688,18 @@ class TasksServices extends ChangeNotifier {
     // } else {
     //   txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
-    if (txn.length != 66) {
-      Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
+    try {
+      txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+    }  on JsonRpcError catch (e) {
+      errorCase('taskAuditParticipate', nanoId, contractAddress, e);
+    } catch (e) {
+      log.severe(e);
     }
-    isLoading = false;
-    // isLoadingBackground = true;
-    // lastTxn = txn;
-    transactionStatuses[nanoId]!['taskAuditParticipate']!['status'] = 'confirmed';
+    if (txn.length == 66) {
+      transactionStatuses[nanoId]!['taskAuditParticipate']!['status'] = 'confirmed';
+    }
     transactionStatuses[nanoId]!['taskAuditParticipate']!['txn'] = txn;
+    isLoading = false;
     notifyListeners();
     tellMeHasItMined(txn, 'taskAuditParticipate', nanoId);
   }
@@ -2693,8 +2709,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'taskStateChange': {'status': 'pending', 'txn': 'initial'}
     };
-    // lastTxn = 'pending';
-    late String txn;
+    late String txn = '';
     // String message = 'moving this task';
     message ??= 'Changing task status to $state';
     replyTo ??= BigInt.from(0);
@@ -2736,18 +2751,18 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskStateChange(participantAddress, state, message, replyTo, score,
     //       credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
-        credentials: creds, transaction: transaction);
-    if (txn.length != 66) {
-      Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
+    try {
+      txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
+              credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('taskStateChange', nanoId, contractAddress, e);
+    } catch (e) { log.severe(e); }
+
+    if (txn.length == 66) {
+      transactionStatuses[nanoId]!['taskStateChange']!['status'] = 'confirmed';
     }
-    isLoading = false;
-    // isLoadingBackground = true;
-    lastTxn = txn;
-    transactionStatuses[nanoId]!['taskStateChange']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskStateChange']!['txn'] = txn;
+    isLoading = false;
     notifyListeners();
     tellMeHasItMined(txn, 'taskStateChange', nanoId);
   }
@@ -2757,7 +2772,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'taskAuditDecision': {'status': 'pending', 'txn': 'initial'}
     };
-    late String txn;
+    late String txn = '';
     message ??= 'Auditor decision';
     replyTo ??= BigInt.from(0);
     score ??= BigInt.from(5);
@@ -2789,16 +2804,17 @@ class TasksServices extends ChangeNotifier {
     // } else {
     //   txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
-    if (txn.length != 66) {
-      Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
+    try {
+      txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('taskAuditDecision', nanoId, contractAddress, e);
+    } catch (e) { log.severe(e); }
+
+    if (txn.length == 66) {
+      transactionStatuses[nanoId]!['taskAuditDecision']!['status'] = 'confirmed';
     }
     isLoading = false;
     // isLoadingBackground = true;
-    lastTxn = txn;
-    transactionStatuses[nanoId]!['taskAuditDecision']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['taskAuditDecision']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'taskAuditDecision', nanoId);
@@ -2808,7 +2824,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'sendChatMessage_$messageNanoID': {'status': 'pending', 'txn': 'initial'}
     };
-    late String txn;
+    late String txn = '';
     replyTo ??= BigInt.from(0);
     TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
@@ -2834,17 +2850,16 @@ class TasksServices extends ChangeNotifier {
     // } else {
     //   txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
     // }
-    txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
-    if (txn.length != 66) {
-      Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
+    try {
+      txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('sendChatMessage_$messageNanoID', nanoId, contractAddress, e);
+    } catch (e) { log.severe(e); }
+
+    if (txn.length == 66) {
+      transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] = 'confirmed';
     }
     isLoading = false;
-    // isLoadingBackground = true;
-    // lastTxn = txn;
-
-    transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'sendChatMessage', nanoId, messageNanoID);
@@ -2855,7 +2870,7 @@ class TasksServices extends ChangeNotifier {
   //   transactionStatuses[nanoId] = {
   //     'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
   //   };
-  //   late String txn;
+  //   late String txn = '';
   //   String chain = 'Moonbase';
   //   TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
   //   //should send value now?!
@@ -2895,7 +2910,6 @@ class TasksServices extends ChangeNotifier {
   //   }
   //   isLoading = false;
   //   // isLoadingBackground = true;
-  //   lastTxn = txn;
   //   transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
   //   transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
   //   notifyListeners();destinationChain
@@ -2906,7 +2920,7 @@ class TasksServices extends ChangeNotifier {
     transactionStatuses[nanoId] = {
       'withdrawAndRate': {'status': 'pending', 'txn': 'initial'}
     };
-    late String txn;
+    late String txn = '';
     String chain = 'Moonbase';
     TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
     //should send value now?!
@@ -2938,17 +2952,18 @@ class TasksServices extends ChangeNotifier {
       // maxGas: estimatedGas.toInt(),
       // gasPrice: gasPrice
     );
-    txn = await taskContract.withdrawAndRate(contractAddress, senderAddress, chain, rateScore, credentials: creds, transaction: transaction);
-    if (txn.length != 66) {
-      Task task = await loadOneTask(contractAddress);
-      tasks[contractAddress]!.loadingIndicator = false;
-      await refreshTask(task);
+    try {
+      txn = await taskContract.withdrawAndRate(contractAddress, senderAddress, chain, rateScore, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('withdrawAndRate', nanoId, contractAddress, e);
+    } catch (e) {
+      log.severe(e);
     }
-    isLoading = false;
-    // isLoadingBackground = true;
-    lastTxn = txn;
-    transactionStatuses[nanoId]!['withdrawAndRate']!['status'] = 'confirmed';
+    if (txn.length == 66) {
+      transactionStatuses[nanoId]!['withdrawAndRate']!['status'] = 'confirmed';
+    }
     transactionStatuses[nanoId]!['withdrawAndRate']!['txn'] = txn;
+    isLoading = false;
     notifyListeners();
     tellMeHasItMined(txn, 'withdrawAndRate', nanoId);
   }
@@ -2959,6 +2974,31 @@ class TasksServices extends ChangeNotifier {
     Map<String, EthereumAddress> whitelistedContractAddresses = whitelistedContracts;
 
     return getTokenBalances(whitelistedContractAddresses, [publicAddress]);
+  }
+
+  Future<void> errorCase(
+      String actionName,
+      String nanoId,
+      EthereumAddress contractAddress,
+      JsonRpcError error) async {
+    late String status;
+    if (error.code == 5000) {
+      status = 'rejected';
+    } else {
+      status = 'failed';
+    }
+    transactionStatuses[nanoId]![actionName]!['status'] = status;
+    transactionStatuses[nanoId]![actionName]!['txn'] = status;
+    if (actionName == 'setApprovalForAll' ) {
+      transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['tokenApproved'] = status;
+    } else {
+      Task task = await loadOneTask(contractAddress);
+      tasks[contractAddress]!.loadingIndicator = false;
+      await refreshTask(task);
+      isLoading = false;
+    }
+    isLoadingBackground = false;
+    notifyListeners();
   }
 
   final String tokenContractKeyName = 'dodao';
@@ -3191,9 +3231,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> createNft(String uri, String name, bool isNF) async {
-    // print('createNft');
-    // uri - exmple.com
-    // isNF - fungible or nonfungible
+    late String txn = '';
     transactionStatuses['createNFT'] = {
       'createNFT': {'status': 'pending', 'txn': 'initial'}
     };
@@ -3209,8 +3247,14 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    String txn = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
-    transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
+    try {
+      txn = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('createNFT', 'createNFT', contractAddress, e);
+    } catch (e) { log.severe(e); }
+    if (txn.length == 66) {
+      transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
+    }
     transactionStatuses['createNFT']!['createNFT']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'createNFT', 'createNFT');
@@ -3218,7 +3262,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> mintFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
-    log.info('mintFungibleByName');
+    late String txn = '';
     transactionStatuses['mintFungible'] = {
       'mintFungible': {'status': 'pending', 'txn': 'initial'}
     };
@@ -3234,8 +3278,14 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    String txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
-    transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
+    try {
+      txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('mintFungible', 'mintFungible', contractAddress, e);
+    } catch (e) { log.severe(e); }
+    if (txn.length == 66) {
+      transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
+    }
     transactionStatuses['mintFungible']!['mintFungible']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'mintFungible', 'mintFungible');
@@ -3243,7 +3293,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<String> mintNonFungibleByName(String name, List<EthereumAddress> addresses, List<BigInt> quantities) async {
-    log.info('mintNonFungibleByName');
+    late String txn = '';
     transactionStatuses['mintNonFungible'] = {
       'mintNonFungible': {'status': 'pending', 'txn': 'initial'}
     };
@@ -3259,8 +3309,14 @@ class TasksServices extends ChangeNotifier {
     final transaction = Transaction(
       from: senderAddress,
     );
-    String txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
-    transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
+    try {
+      txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
+    } on JsonRpcError catch (e) {
+      errorCase('mintNonFungible', 'mintNonFungible', contractAddress, e);
+    } catch (e) { log.severe(e); }
+    if (txn.length == 66) {
+      transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
+    }
     transactionStatuses['mintNonFungible']!['mintNonFungible']!['txn'] = txn;
     notifyListeners();
     tellMeHasItMined(txn, 'mintNonFungible', 'mintNonFungible');
@@ -3357,6 +3413,7 @@ class TasksServices extends ChangeNotifier {
   // late String saveSuccessfulWitnetResult = witnetSuccessfulResult;
 
   Future<String> postWitnetRequest(EthereumAddress taskAddress, String nanoId) async {
+    late String txn = '';
     log.info('postWitnetRequest');
     transactionStatuses[nanoId] = {
       'postWitnetRequest': {
@@ -3381,7 +3438,12 @@ class TasksServices extends ChangeNotifier {
     // maxFeePerGas: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 10000000));
 
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
-    String txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
+    try {
+      txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
+    } catch (e) { log.severe(e); }
+    if (txn.length == 66) {
+      transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
+    }
     transactionStatuses[nanoId]!['postWitnetRequest']!['status'] = 'confirmed';
     transactionStatuses[nanoId]!['postWitnetRequest']!['txn'] = txn;
     notifyListeners();

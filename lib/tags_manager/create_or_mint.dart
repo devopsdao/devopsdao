@@ -324,21 +324,20 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             onPressed: (!collectionExist ) ? () async {
                               // collectionServices.clearSelectedInManager();
                               showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) => const WalletActionDialog(
-                                        nanoId: 'createNFT',
-                                        taskName: 'createNFT',
-                                        page: 'create_collection',
-                                      ));
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) => const WalletActionDialog(
+                                  nanoId: 'createNFT',
+                                  taskName: 'createNFT',
+                                  page: 'create_collection',
+                                )
+                              );
                               String createNftReceipt = await tasksServices.createNft('example.com', collectionName, true);
-                              print('createNftReceipt: $createNftReceipt');
+                              // print('createNftReceipt: $createNftReceipt');
                               if (createNftReceipt.length == 66) {
                                 collectionServices.mintNftTagSelected.collection = true;
                                 collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
-
                               }
-
                               // searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                             } : null,
                             child: Text(

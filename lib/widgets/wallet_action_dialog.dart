@@ -1,10 +1,13 @@
 
+import 'dart:math';
+
 import 'package:dodao/config/flutter_flow_util.dart';
 import 'package:dodao/config/theme.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart' as rive;
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
@@ -28,8 +31,15 @@ class _WalletActionDialog extends State<WalletActionDialog> {
   String transactionStagesConfirmed = 'initial';
   String transactionStagesMinted = 'initial';
 
+  late String riveAssetPath;
+
   @override
   void initState() {
+    if (Random().nextInt(2) == 1) {
+      riveAssetPath = 'assets/rive_animations/clew_with_cat.riv';
+    } else {
+      riveAssetPath = 'assets/rive_animations/clew.riv';
+    }
     super.initState();
   }
 
@@ -41,10 +51,12 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     var collectionServices = context.read<CollectionServices>();
     var interface = context.read<InterfaceServices>();
 
-    final String? status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
-    final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
+
+
+    final String status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
 
     if (widget.taskName == 'createTaskContract' && tasksServices.isRequestApproved) {
+      final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
 
       if (status == 'pending') {
         if (tokenApproved == 'initial') {
@@ -240,14 +252,26 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              SizedBox(
+                height: 170,
+                width: 170,
+                child: rive.RiveAnimation.asset(
+                  riveAssetPath,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  // onInit: _onRiveInit,
+                  // artboard: 'new',
+
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
                     children: [
-                      if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'rejected')
+                      if (status == 'rejected')
                         rejected(context)
-                      else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'failed')
+                      else if (status == 'failed')
                         failed(context)
                       else
                         passed(tasksServices, context),
@@ -343,183 +367,184 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
   Column passed(TasksServices tasksServices, BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
-          Row(
-            children: [
-              Container(
-                  width: 40,
-                  height: 45,
-                  child: Row(
-                    children: [
-                      if (transactionStagesApprove == 'initial')
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    if (transactionStagesApprove == 'initial')
+                      Icon(
+                        Icons.task_alt,
+                        size: 30.0,
+                        color: DodaoTheme.of(context).iconInitial,
+                      )
+                    else if (transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
+                      LoadingAnimationWidget.threeRotatingDots(
+                        color: DodaoTheme.of(context).iconProcess,
+                        size: 30,
+                      )
+                    else if (transactionStagesApprove == 'done')
                         Icon(
                           Icons.task_alt,
                           size: 30.0,
-                          color: DodaoTheme.of(context).iconInitial,
+                          color: DodaoTheme.of(context).iconDone,
                         )
-                      else if (transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
-                        LoadingAnimationWidget.threeRotatingDots(
-                          color: DodaoTheme.of(context).iconProcess,
-                          size: 30,
-                        )
-                      else if (transactionStagesApprove == 'done')
-                          Icon(
-                            Icons.task_alt,
-                            size: 30.0,
-                            color: DodaoTheme.of(context).iconDone,
-                          )
-                    ],
-                  )),
-              if (transactionStagesApprove == 'initial')
-                Text(
-                  'Please approve token spend',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.left,
+                  ],
                 ),
-              if (transactionStagesApprove == 'loading')
-                Text(
-                  'Please approve token spend',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.left,
+                if (transactionStagesApprove == 'initial')
+                  Text(
+                    'Please approve token spend',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                if (transactionStagesApprove == 'loading')
+                  Text(
+                    'Please approve token spend',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                if (transactionStagesApprove == 'approve')
+                  Text(
+                    'Token spend approved',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                if (transactionStagesApprove == 'done')
+                  Text(
+                    'Token spend approved',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+              ],
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  if (transactionStagesConfirmed == 'initial')
+                  // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconInitial,
+                    )
+                  else if (transactionStagesConfirmed == 'loading')
+                    LoadingAnimationWidget.threeRotatingDots(
+                      color: DodaoTheme.of(context).iconProcess,
+                      size: 30,
+                    )
+                  else if (transactionStagesConfirmed == 'done')
+                      Icon(
+                        Icons.task_alt,
+                        size: 30.0,
+                        color: DodaoTheme.of(context).iconDone,
+                      )
+                ],
+              ),
+              const SizedBox(width: 10,),
+              if (transactionStagesConfirmed == 'initial' || transactionStagesConfirmed == 'loading')
+                Center(
+                  child: Text(
+                    'Please approve transaction',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              if (transactionStagesApprove == 'approve')
-                Text(
-                  'Token spend approved',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.left,
-                ),
-              if (transactionStagesApprove == 'done')
-                Text(
-                  'Token spend approved',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.left,
+              if (transactionStagesConfirmed == 'done')
+                Center(
+                  child: Text(
+                    'Transaction approved',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
             ],
           ),
-        Row(
-          children: [
-            Container(
-                width: 40,
-                height: 45,
-                child: Row(
-                  children: [
-                    if (transactionStagesConfirmed == 'initial')
-                    // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                      Icon(
-                        Icons.task_alt,
-                        size: 30.0,
-                        color: DodaoTheme.of(context).iconInitial,
-                      )
-                    else if (transactionStagesConfirmed == 'loading')
-                      LoadingAnimationWidget.threeRotatingDots(
-                        color: DodaoTheme.of(context).iconProcess,
-                        size: 30,
-                      )
-                    else if (transactionStagesConfirmed == 'done')
-                        Icon(
-                          Icons.task_alt,
-                          size: 30.0,
-                          color: DodaoTheme.of(context).iconDone,
-                        )
-                  ],
-                )),
-            if (transactionStagesConfirmed == 'initial' || transactionStagesConfirmed == 'loading')
-              Center(
-                child: Text(
-                  'Please approve transaction',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            if (transactionStagesConfirmed == 'done')
-              Center(
-                child: Text(
-                  'Transaction approved',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-          ],
         ),
-        Row(
-          children: [
-            Container(
-                width: 40,
-                height: 45,
-                child: Row(
-                  children: [
-                    if (transactionStagesMinted == 'initial')
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  if (transactionStagesMinted == 'initial')
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconInitial,
+                    )
+                  else if (transactionStagesMinted == 'loading')
+                    LoadingAnimationWidget.threeRotatingDots(
+                      color: DodaoTheme.of(context).iconProcess,
+                      size: 30,
+                    )
+                  else if (transactionStagesMinted == 'done')
                       Icon(
                         Icons.task_alt,
                         size: 30.0,
-                        color: DodaoTheme.of(context).iconInitial,
+                        color: DodaoTheme.of(context).iconDone,
                       )
-                    else if (transactionStagesMinted == 'loading')
-                      LoadingAnimationWidget.threeRotatingDots(
-                        color: DodaoTheme.of(context).iconProcess,
-                        size: 30,
-                      )
-                    else if (transactionStagesMinted == 'done')
-                        Icon(
-                          Icons.task_alt,
-                          size: 30.0,
-                          color: DodaoTheme.of(context).iconDone,
-                        )
-                  ],
-                )),
-            Text(
-              'Minted in the blockchain',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.left,
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(width: 10,),
+              Text(
+                'Minted in the blockchain',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Row failed(BuildContext context) {
-    return Row(
-        children: [
-          SizedBox(
-              width: 40,
-              height: 35,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.dangerous_outlined,
-                    size: 30.0,
-                    color: DodaoTheme.of(context).iconWrong,
-                  ),
-                ],
-              )),
-          Text(
-            'Transaction has failed, \nplease retry',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
+  Padding failed(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+          children: [
+            Icon(
+              Icons.dangerous_outlined,
+              size: 30.0,
+              color: DodaoTheme.of(context).iconWrong,
+            ),
+            const SizedBox(width: 10,),
+            Text(
+              'Transaction has failed, \nplease retry',
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+    );
   }
 
-  Row rejected(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(
+  Padding rejected(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Icon(
             Icons.dangerous_outlined,
             size: 30.0,
             color: DodaoTheme.of(context).iconWrong,
           ),
-        ),
-        Text(
-          'Transaction has been rejected',
-          style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-      ],
+          const SizedBox(width: 10,),
+          Text(
+            'Transaction has been rejected',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
