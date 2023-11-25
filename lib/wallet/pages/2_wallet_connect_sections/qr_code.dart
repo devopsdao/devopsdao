@@ -147,13 +147,13 @@ class _WcQrCodeState extends State<WcQrCode> {
                   ],
                 ),
               if (tasksServices.walletConnectedWC)
-                Container(
-                  // padding: const EdgeInsets.only(top: 40.0),
-                  child: NetworkSelection(
-                    qrSize: 0,
-                    callConnectWallet: widget.callConnectWallet,
-                  ),
-                ),
+                // Container(
+                //   // padding: const EdgeInsets.only(top: 40.0),
+                //   child: NetworkSelection(
+                //     qrSize: 0,
+                //     callConnectWallet: widget.callConnectWallet,
+                //   ),
+                // ),
               if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch)
                 Text(
                   'Select $networkNameOnApp\n network in your wallet',
