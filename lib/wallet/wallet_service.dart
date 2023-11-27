@@ -153,7 +153,7 @@ class WalletProvider extends ChangeNotifier {
     //     .request(topic: sessionData.topic, chainId: 'eip155:$changeTo', request: SessionRequestParams(method: 'eth_chainId', params: []));
     // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
 
-    setChainAndConnect(tasksServices, changeTo);
+    // setChainAndConnect(tasksServices, changeTo);
     // return session;
   }
 
@@ -201,7 +201,9 @@ class WalletProvider extends ChangeNotifier {
     }
 
     bool networkValidAndMatched = false;
-    if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
+    if (
+        // chainIdOnApp == newChainId &&
+        allowedChainIds.containsValue(newChainId)) {
       networkValidAndMatched = true;
     }
 
