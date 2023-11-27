@@ -124,36 +124,6 @@ class JSrawRequestSwitchChainParams {
   external factory JSrawRequestSwitchChainParams({String chainId});
 }
 
-@JS()
-@anonymous
-class JSrawRequestAddChainParams {
-  // external String get params;
-  external String get chainId;
-  external String get chainName;
-  external Map<String, dynamic> get nativeCurrency;
-  external List get rpcUrls;
-  external String get blockExplorerUrls;
-  external String get iconUrls;
-  //   final params = <String, dynamic>{
-  //   'chainId': '0x507',
-  //   'chainName': 'Moonbase alpha',
-  //   'nativeCurrency': <String, dynamic>{
-  //     'name': 'FTM',
-  //     'symbol': 'FTM',
-  //     'decimals': 18,
-  //   },
-  //   'rpcUrls': ['https://rpc.api.moonbase.moonbeam.network'],
-  //   'blockExplorerUrls': ['https://moonbase.moonscan.io'],
-  //   'iconUrls': [''],
-  // };
-
-  // Must have an unnamed factory constructor with named arguments.
-  external factory JSrawRequestAddChainParams(
-      {String chainId, String chainName, Map<String, dynamic> nativeCurrency, List rpcUrls, List blockExplorerUrls, List iconUrls});
-  // Must have an unnamed factory constructor with named arguments.
-  // external factory JSrawRequestAddChainParams({params});
-}
-
 @JS('JSON.stringify')
 external String stringify(Object obj);
 
@@ -691,6 +661,7 @@ class TasksServices extends ChangeNotifier {
       log.info('MetaMask is not available');
       return;
     }
+
     late final String chainIdHex;
     bool chainChangeRequest = false;
     bool userRejected = false;
@@ -703,6 +674,14 @@ class TasksServices extends ChangeNotifier {
       } else {
         userRejected = true;
       }
+    } on WebThreeRPCError catch (e) {
+      if (e.code == 4902) {
+        await addNetworkMM();
+      } else {
+        userRejected = true;
+      }
+    } catch (e) {
+      print(e);
     }
     if (!userRejected && chainChangeRequest) {
       try {
@@ -736,6 +715,15 @@ class TasksServices extends ChangeNotifier {
   Future<void> addNetworkMM() async {
     final eth = window.ethereum;
     if (eth == null) {
+      log.info('MetaMask compatible wallet is not available');
+      return;
+    }
+    bool addBlockExplorer = true;
+    if (eth.isTrust == true) {
+      //TrustWallet does not support Tanssi block explorer due to url with a query
+      addBlockExplorer = false;
+    }
+    if (eth == null) {
       log.info('MetaMask is not available');
       return;
     }
@@ -743,31 +731,27 @@ class TasksServices extends ChangeNotifier {
     bool chainAddRequest = false;
     bool userRejected = false;
     try {
-      final params = <String, dynamic>{
+      final params = {
         'chainId': '0xd0da0',
         'chainName': 'Dodao',
-        'nativeCurrency': <String, dynamic>{
+        'nativeCurrency': {
           'name': 'Dodao',
           'symbol': 'DODAO',
           'decimals': 18,
         },
         'rpcUrls': ['https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
-        'blockExplorerUrls': ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
-        'iconUrls': [''],
+        'iconUrls': ['https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy'],
       };
-      // await eth.rawRequest('wallet_switchEthereumChain',
-      //     params: [JSrawRequestAddChainParams(params: params)]);
-      await eth.rawRequest('wallet_addEthereumChain', params: [
-        // JSrawRequestAddChainParams(
-        //   chainId: params['chainId'],
-        //   nativeCurrency: params['nativeCurrency'],
-        //   rpcUrls: params['rpcUrls'],
-        //   chainName: params['chainName'],
-        //   blockExplorerUrls: params['blockExplorerUrls'],
-        //   // iconUrls: params['iconUrls']
-        // )
-        mapToJsObject(params)
-      ]);
+      if (addBlockExplorer) {
+        params['blockExplorerUrls'] = ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'];
+      }
+
+      try {
+        await eth.rawRequest('wallet_addEthereumChain', params: jsify([params]));
+      } catch (e) {
+        print(e);
+      }
+
       chainAddRequest = true;
     } catch (e) {
       userRejected = true;
@@ -2246,7 +2230,9 @@ class TasksServices extends ChangeNotifier {
     try {
       result = await ierc20.approve(contractAddress, amount, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase(operationName, nanoId, contractAddress, e);
+      errorCase(operationName, nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase(operationName, nanoId, contractAddress, e.code);
     } catch (e) {
       log.severe(e);
     }
@@ -2263,7 +2249,6 @@ class TasksServices extends ChangeNotifier {
   late bool isRequestApproved = false;
 
   Future<void> isApproved() async {
-
     log.info('isApproved');
     isLoadingBackground = true;
     var creds;
@@ -2374,33 +2359,35 @@ class TasksServices extends ChangeNotifier {
 
     try {
       for (var i = 0; i < tokenContracts.length; i++) {
-            IERC165 ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
-            //check if ERC-1155
-            Uint8List erc1555interfaceID = Uint8List.fromList(hex.decode('d9b67a26'));
-            Uint8List erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
-            Uint8List erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
-            final bool supportsInterface = await ierc165.supportsInterface(erc1555interfaceID);
-            if (supportsInterface == true) {
-              var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
-              if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-                txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-              }
-            } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
-              var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
-              if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
-                txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
-              }
-            } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
-              var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
-              if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
-                txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
-              }
-            } else {
-              print('interface not supported');
-            }
+        IERC165 ierc165 = IERC165(address: tokenContracts[i], client: _web3client, chainId: chainId);
+        //check if ERC-1155
+        Uint8List erc1555interfaceID = Uint8List.fromList(hex.decode('d9b67a26'));
+        Uint8List erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
+        Uint8List erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
+        final bool supportsInterface = await ierc165.supportsInterface(erc1555interfaceID);
+        if (supportsInterface == true) {
+          var ierc1155 = IERC1155(address: tokenContracts[i], client: _web3client, chainId: chainId);
+          if (await ierc1155.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+            txn = await ierc1155.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
           }
+        } else if (await ierc165.supportsInterface(erc20InterfaceID) == true) {
+          var ierc20 = IERC20(address: tokenContracts[i], client: _web3client, chainId: chainId);
+          if (await ierc20.allowance(senderAddress, tokenContracts[i]) < amounts[i]) {
+            txn = await ierc20.approve(_contractAddress, amounts[i], credentials: creds, transaction: transaction);
+          }
+        } else if (await ierc165.supportsInterface(erc721InterfaceID) == true) {
+          var ierc721 = IERC721(address: tokenContracts[i], client: _web3client, chainId: chainId);
+          if (await ierc721.isApprovedForAll(senderAddress, tokenContracts[i]) == false) {
+            txn = await ierc721.setApprovalForAll(_contractAddress, true, credentials: creds, transaction: transaction);
+          }
+        } else {
+          print('interface not supported');
+        }
+      }
     } on JsonRpcError catch (e) {
-      errorCase('setApprovalForAll', 'setApprovalForAll', contractAddress, e);
+      errorCase('setApprovalForAll', 'setApprovalForAll', contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('setApprovalForAll', 'setApprovalForAll', contractAddress, e.code);
     } catch (e) {
       log.severe(e);
     }
@@ -2440,8 +2427,6 @@ class TasksServices extends ChangeNotifier {
       }
       // final fees = await _web3client.getGasInEIP1559(historicalBlocks: historicalBlocks);
       // final gasPrice = await _web3client.getGasPrice();
-
-
 
       // List<String> tags = [];
       // List<List<String>> tokenNames = [
@@ -2523,18 +2508,20 @@ class TasksServices extends ChangeNotifier {
 
       try {
         if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'axelar') {
-                txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
-              } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
-                txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
-              } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
-                txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
-              } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
-                txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
-              } else {
-                txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
-              }
+          txn = await axelarFacet.createTaskContractAxelar(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'hyperlane') {
+          txn = await hyperlaneFacet.createTaskContractHyperlane(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'layerzero') {
+          txn = await layerzeroFacet.createTaskContractLayerzero(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else if ((!allowedChainIds.values.contains(chainId) && chainId != 31337) && interchainSelected == 'wormhole') {
+          txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
+        } else {
+          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+        }
       } on JsonRpcError catch (e) {
-        errorCase('createTaskContract', nanoId, contractAddress, e);
+        errorCase('createTaskContract', nanoId, contractAddress, e.code!);
+      } on EthereumUserRejected catch (e) {
+        errorCase('createTaskContract', nanoId, contractAddress, e.code);
       } catch (e) {
         log.severe(e);
       }
@@ -2639,7 +2626,9 @@ class TasksServices extends ChangeNotifier {
         txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
       }
     } on JsonRpcError catch (e) {
-      errorCase('taskParticipate', nanoId, contractAddress, e);
+      errorCase('taskParticipate', nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('taskParticipate', nanoId, contractAddress, e.code);
     } catch (e) {
       log.severe(e);
     }
@@ -2690,8 +2679,10 @@ class TasksServices extends ChangeNotifier {
     // }
     try {
       txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
-    }  on JsonRpcError catch (e) {
-      errorCase('taskAuditParticipate', nanoId, contractAddress, e);
+    } on JsonRpcError catch (e) {
+      errorCase('taskAuditParticipate', nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('taskAuditParticipate', nanoId, contractAddress, e.code);
     } catch (e) {
       log.severe(e);
     }
@@ -2753,10 +2744,14 @@ class TasksServices extends ChangeNotifier {
     // }
     try {
       txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
-              credentials: creds, transaction: transaction);
+          credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('taskStateChange', nanoId, contractAddress, e);
-    } catch (e) { log.severe(e); }
+      errorCase('taskStateChange', nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('taskStateChange', nanoId, contractAddress, e.code);
+    } catch (e) {
+      log.severe(e);
+    }
 
     if (txn.length == 66) {
       transactionStatuses[nanoId]!['taskStateChange']!['status'] = 'confirmed';
@@ -2807,8 +2802,12 @@ class TasksServices extends ChangeNotifier {
     try {
       txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('taskAuditDecision', nanoId, contractAddress, e);
-    } catch (e) { log.severe(e); }
+      errorCase('taskAuditDecision', nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('taskAuditDecision', nanoId, contractAddress, e.code);
+    } catch (e) {
+      log.severe(e);
+    }
 
     if (txn.length == 66) {
       transactionStatuses[nanoId]!['taskAuditDecision']!['status'] = 'confirmed';
@@ -2853,8 +2852,12 @@ class TasksServices extends ChangeNotifier {
     try {
       txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('sendChatMessage_$messageNanoID', nanoId, contractAddress, e);
-    } catch (e) { log.severe(e); }
+      errorCase('sendChatMessage_$messageNanoID', nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('sendChatMessage_$messageNanoID', nanoId, contractAddress, e.code);
+    } catch (e) {
+      log.severe(e);
+    }
 
     if (txn.length == 66) {
       transactionStatuses[nanoId]!['sendChatMessage_$messageNanoID']!['status'] = 'confirmed';
@@ -2955,7 +2958,9 @@ class TasksServices extends ChangeNotifier {
     try {
       txn = await taskContract.withdrawAndRate(contractAddress, senderAddress, chain, rateScore, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('withdrawAndRate', nanoId, contractAddress, e);
+      errorCase('withdrawAndRate', nanoId, contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('withdrawAndRate', nanoId, contractAddress, e.code);
     } catch (e) {
       log.severe(e);
     }
@@ -2976,20 +2981,16 @@ class TasksServices extends ChangeNotifier {
     return getTokenBalances(whitelistedContractAddresses, [publicAddress]);
   }
 
-  Future<void> errorCase(
-      String actionName,
-      String nanoId,
-      EthereumAddress contractAddress,
-      JsonRpcError error) async {
+  Future<void> errorCase(String actionName, String nanoId, EthereumAddress contractAddress, int code) async {
     late String status;
-    if (error.code == 5000) {
+    if (code == 5000 || code == 4001) {
       status = 'rejected';
     } else {
       status = 'failed';
     }
     transactionStatuses[nanoId]![actionName]!['status'] = status;
     transactionStatuses[nanoId]![actionName]!['txn'] = status;
-    if (actionName == 'setApprovalForAll' ) {
+    if (actionName == 'setApprovalForAll') {
       transactionStatuses['setApprovalForAll']!['setApprovalForAll']!['tokenApproved'] = status;
     } else {
       Task task = await loadOneTask(contractAddress);
@@ -3250,8 +3251,12 @@ class TasksServices extends ChangeNotifier {
     try {
       txn = await tokenFacet.create(uri, name, isNF, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('createNFT', 'createNFT', contractAddress, e);
-    } catch (e) { log.severe(e); }
+      errorCase('createNFT', 'createNFT', contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('createNFT', 'createNFT', contractAddress, e.code);
+    } catch (e) {
+      log.severe(e);
+    }
     if (txn.length == 66) {
       transactionStatuses['createNFT']!['createNFT']!['status'] = 'confirmed';
     }
@@ -3281,8 +3286,12 @@ class TasksServices extends ChangeNotifier {
     try {
       txn = await tokenFacet.mintFungibleByName(name, addresses, quantities, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('mintFungible', 'mintFungible', contractAddress, e);
-    } catch (e) { log.severe(e); }
+      errorCase('mintFungible', 'mintFungible', contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('mintFungible', 'mintFungible', contractAddress, e.code);
+    } catch (e) {
+      log.severe(e);
+    }
     if (txn.length == 66) {
       transactionStatuses['mintFungible']!['mintFungible']!['status'] = 'confirmed';
     }
@@ -3312,8 +3321,12 @@ class TasksServices extends ChangeNotifier {
     try {
       txn = await tokenFacet.mintNonFungibleByName(name, addresses, credentials: creds, transaction: transaction);
     } on JsonRpcError catch (e) {
-      errorCase('mintNonFungible', 'mintNonFungible', contractAddress, e);
-    } catch (e) { log.severe(e); }
+      errorCase('mintNonFungible', 'mintNonFungible', contractAddress, e.code!);
+    } on EthereumUserRejected catch (e) {
+      errorCase('mintNonFungible', 'mintNonFungible', contractAddress, e.code);
+    } catch (e) {
+      log.severe(e);
+    }
     if (txn.length == 66) {
       transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
     }
@@ -3440,7 +3453,9 @@ class TasksServices extends ChangeNotifier {
     // List args = ["devopsdao/devopsdao-smart-contract-diamond", "preparing witnet release"];
     try {
       txn = await witnetFacet.postRequest$2(taskAddress, credentials: creds, transaction: transaction);
-    } catch (e) { log.severe(e); }
+    } catch (e) {
+      log.severe(e);
+    }
     if (txn.length == 66) {
       transactionStatuses['mintNonFungible']!['mintNonFungible']!['status'] = 'confirmed';
     }

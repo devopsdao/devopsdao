@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:dodao/config/flutter_flow_util.dart';
@@ -38,7 +37,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     if (Random().nextInt(2) == 1) {
       riveAssetPath = 'assets/rive_animations/clew_with_cat.riv';
     } else {
-      riveAssetPath = 'assets/rive_animations/clew.riv';
+      riveAssetPath = 'assets/rive_animations/clew2.riv';
     }
     super.initState();
   }
@@ -50,8 +49,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     var searchServices = context.read<SearchServices>();
     var collectionServices = context.read<CollectionServices>();
     var interface = context.read<InterfaceServices>();
-
-
 
     final String status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
 
@@ -100,9 +97,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         });
       }
 
-
       tasksServices.isRequestApproved = false;
-
     } else if (widget.taskName == 'createTaskContract') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
@@ -158,9 +153,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           await tasksServices.collectMyTokens();
           searchServices.refreshLists('selection');
         });
-
       }
-
     } else if (widget.taskName == 'postWitnetRequest') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
@@ -219,7 +212,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         // transactionStagesConfirmed = 'done';
         // transactionStagesMinted = 'done';
       }
-    } else  {
+    } else {
       if (status == 'pending') {
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';
@@ -233,20 +226,16 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
       }
     }
-    var width = MediaQuery.of(context).size.width ;
-
+    var width = MediaQuery.of(context).size.width;
 
     return Dialog(
       // title: Text('Connect your wallet'),
-      shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
+      shape: RoundedRectangleBorder(
+        borderRadius: DodaoTheme.of(context).borderRadius,
+      ),
       insetAnimationDuration: const Duration(milliseconds: 1100),
       child: Container(
-        padding: const EdgeInsets.only(
-          top: 20,
-          left: 20,
-          right: 20,
-          bottom: 20
-        ),
+        padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
         width: width < 400 ? width : 350,
         child: SingleChildScrollView(
           child: Column(
@@ -261,7 +250,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                   alignment: Alignment.center,
                   // onInit: _onRiveInit,
                   // artboard: 'new',
-
                 ),
               ),
               Row(
@@ -269,17 +257,14 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                 children: [
                   Column(
                     children: [
-                      if (status == 'rejected')
-                        rejected(context)
-                      else if (status == 'failed')
-                        failed(context)
-                      else
-                        passed(tasksServices, context),
+                      if (status == 'rejected') rejected(context) else if (status == 'failed') failed(context) else passed(tasksServices, context),
                     ],
                   ),
                 ],
               ),
-              const SizedBox( height: 15,),
+              const SizedBox(
+                height: 15,
+              ),
               Row(
                 children: [
                   Expanded(
@@ -304,7 +289,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                         decoration: BoxDecoration(
                           borderRadius: DodaoTheme.of(context).borderRadius,
                           border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
-                          ),
+                              ),
                         ),
                         child: Text(
                           'Close',
@@ -322,40 +307,38 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                     width: 16,
                   ),
                   if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
-                  Expanded(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20.0),
-                      onTap: () {
-                        // Navigator.pop(context);
-                        launchURL(walletProvider.walletConnectUri);
-                        setState(() {
-
-                        });
-                        // Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(0.0),
-                        height: 54.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: DodaoTheme.of(context).borderRadius,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
-                            stops: [0, 0.6, 1],
+                    Expanded(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20.0),
+                        onTap: () {
+                          // Navigator.pop(context);
+                          launchURL(walletProvider.walletConnectUri);
+                          setState(() {});
+                          // Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          height: 54.0,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            gradient: const LinearGradient(
+                              colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
+                              stops: [0, 0.6, 1],
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Go to wallet',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                          child: const Text(
+                            'Go to wallet',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               )
             ],
@@ -388,11 +371,11 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                         size: 30,
                       )
                     else if (transactionStagesApprove == 'done')
-                        Icon(
-                          Icons.task_alt,
-                          size: 30.0,
-                          color: DodaoTheme.of(context).iconDone,
-                        )
+                      Icon(
+                        Icons.task_alt,
+                        size: 30.0,
+                        color: DodaoTheme.of(context).iconDone,
+                      )
                   ],
                 ),
                 if (transactionStagesApprove == 'initial')
@@ -429,7 +412,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
               Stack(
                 children: [
                   if (transactionStagesConfirmed == 'initial')
-                  // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                    // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
                     Icon(
                       Icons.task_alt,
                       size: 30.0,
@@ -441,14 +424,16 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                       size: 30,
                     )
                   else if (transactionStagesConfirmed == 'done')
-                      Icon(
-                        Icons.task_alt,
-                        size: 30.0,
-                        color: DodaoTheme.of(context).iconDone,
-                      )
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconDone,
+                    )
                 ],
               ),
-              const SizedBox(width: 10,),
+              const SizedBox(
+                width: 10,
+              ),
               if (transactionStagesConfirmed == 'initial' || transactionStagesConfirmed == 'loading')
                 Center(
                   child: Text(
@@ -486,14 +471,16 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                       size: 30,
                     )
                   else if (transactionStagesMinted == 'done')
-                      Icon(
-                        Icons.task_alt,
-                        size: 30.0,
-                        color: DodaoTheme.of(context).iconDone,
-                      )
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconDone,
+                    )
                 ],
               ),
-              const SizedBox(width: 10,),
+              const SizedBox(
+                width: 10,
+              ),
               Text(
                 'Minted in the blockchain',
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -510,20 +497,22 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-          children: [
-            Icon(
-              Icons.dangerous_outlined,
-              size: 30.0,
-              color: DodaoTheme.of(context).iconWrong,
-            ),
-            const SizedBox(width: 10,),
-            Text(
-              'Transaction has failed, \nplease retry',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+        children: [
+          Icon(
+            Icons.dangerous_outlined,
+            size: 30.0,
+            color: DodaoTheme.of(context).iconWrong,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Transaction has failed, \nplease retry',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 
@@ -537,7 +526,9 @@ class _WalletActionDialog extends State<WalletActionDialog> {
             size: 30.0,
             color: DodaoTheme.of(context).iconWrong,
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(
+            width: 10,
+          ),
           Text(
             'Transaction has been rejected',
             style: Theme.of(context).textTheme.bodyMedium,

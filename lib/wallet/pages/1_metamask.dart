@@ -11,15 +11,17 @@ import '../widgets/wallet_connect_button.dart';
 class MetamaskPage extends StatelessWidget {
   final double innerPaddingWidth;
 
-  const MetamaskPage(
-      {Key? key,  required this.innerPaddingWidth, })  : super(key: key);
+  const MetamaskPage({
+    Key? key,
+    required this.innerPaddingWidth,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    return  Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       if (interface.walletButtonPressed == 'metamask')
         AnimatedCrossFade(
           duration: const Duration(milliseconds: 300),
@@ -52,7 +54,7 @@ class MetamaskPage extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      'You are now connected to Metamask, to completely disconnect please use Metamask menu --> connected sites.',
+                      'You are now connected with Metamask, to completely disconnect please use Metamask menu --> connected sites.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
@@ -68,8 +70,7 @@ class MetamaskPage extends StatelessWidget {
       if (interface.walletButtonPressed == 'metamask')
         WalletConnectButton(
           buttonFunction: 'metamask',
-          callback: () {
-          },
+          callback: () {},
         ),
       const SizedBox(height: 30),
     ]);

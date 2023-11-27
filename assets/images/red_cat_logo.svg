@@ -4,14 +4,9 @@
    width="149.32961"
    height="179.9955"
    version="1.1"
-   sodipodi:docname="red_cat_logo.svg"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   >
   <sodipodi:namedview
-     id="namedview231"
      pagecolor="#505050"
      bordercolor="#ffffff"
      borderopacity="1"
@@ -46,7 +41,6 @@
     </clipPath>
     <linearGradient
        gradientUnits="userSpaceOnUse"
-       transform="matrix(1 0 0 1 0 0)"
        id="1751"
        x1="510"
        y1="586"
@@ -484,8 +478,7 @@
          clip-path="url(#2)"
          d="m 0,586 h 1440 v 0 -135 0 H 0"
          stroke="none"
-         fill="url(#1751)"
-         style="fill:url(#1751)" />
+         fill="url(#1751)"/>
       <path
          id="path220"
          transform="matrix(1,0,0,-1,0,1024)"

@@ -6,7 +6,6 @@ import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:webthree/credentials.dart';
 import 'package:logging/logging.dart';
 
-
 enum WCStatus {
   loadingQr, // Waiting for QR code. resetting views; shimmer running; Disconnect button
   // :: Initial Start, Connect, Refresh Qr, Disconnect, On selected Network ::
@@ -46,8 +45,7 @@ class WalletProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setWcState(
-      {required WCStatus state, required tasksServices, String error = ''}) async {
+  Future<void> setWcState({required WCStatus state, required tasksServices, String error = ''}) async {
     wcCurrentState = state;
     switch (state) {
       case WCStatus.loadingQr:
@@ -94,9 +92,9 @@ class WalletProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> registerEventHandlers( taskServices) async {
+  Future<void> registerEventHandlers(taskServices) async {
     final Map<String, int> chain = taskServices.allowedChainIds;
-    for (String key in chain.keys){
+    for (String key in chain.keys) {
       web3App?.registerEventHandler(
         chainId: 'eip155:${chain[key]}',
         event: 'chainChanged',
@@ -120,8 +118,36 @@ class WalletProvider extends ChangeNotifier {
         chainId: 'eip155:$changeFrom',
         request: SessionRequestParams(
           method: 'wallet_switchEthereumChain',
-          params: [params],));
+          params: [params],
+        ));
     setChainAndConnect(tasksServices, changeTo);
+    // return session;
+  }
+
+  Future<void> addNetwork(tasksServices, int currentChainId) async {
+    final SessionData sessionData = await connectResponse!.session.future;
+    log.fine('wallet_service -> addNetwork, currentChainId: $currentChainId sessionData.topic: ${sessionData.topic}');
+    // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
+    final params = {
+      'chainId': '0xd0da0',
+      'chainName': 'Dodao',
+      'nativeCurrency': {
+        'name': 'Dodao',
+        'symbol': 'DODAO',
+        'decimals': 18,
+      },
+      'rpcUrls': ['https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
+      'blockExplorerUrls': ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
+      'iconUrls': ['https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy'],
+    };
+    await web3App!.request(
+        topic: sessionData.topic,
+        chainId: 'eip155:$currentChainId',
+        request: SessionRequestParams(
+          method: 'wallet_addEthereumChain',
+          params: [params],
+        ));
+    setChainAndConnect(tasksServices, 855456);
     // return session;
   }
 
@@ -141,7 +167,7 @@ class WalletProvider extends ChangeNotifier {
       wcCurrentState = WCStatus.loadingWc;
     }
     // save actual network names
-    chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==newChainId, orElse: () => 'unknown');
+    chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k] == newChainId, orElse: () => 'unknown');
 
     bool networkValidAndMatched = false;
     if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
@@ -153,7 +179,6 @@ class WalletProvider extends ChangeNotifier {
         '$newChainId , networkValidAndMatched: '
         '$networkValidAndMatched');
     if (networkValidAndMatched) {
-
       tasksServices.chainId = newChainId;
       tasksServices.allowedChainId = true;
       notifyListeners();
@@ -174,7 +199,7 @@ class WalletProvider extends ChangeNotifier {
     } else {
       await setWcState(state: WCStatus.wcConnectedNetworkNotMatch, tasksServices: tasksServices);
     }
-   // chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
+    // chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
   }
 
   Future<ConnectResponse?> createSession(int chainId) async {
@@ -186,7 +211,6 @@ class WalletProvider extends ChangeNotifier {
     connectResponse = await web3App!.connect(
       requiredNamespaces: {
         'eip155': RequiredNamespace(
-
           chains: [kFullChainId],
           methods: [
             'eth_sign',
@@ -253,8 +277,6 @@ class WalletProvider extends ChangeNotifier {
         reason: const WalletConnectError(code: 0, message: 'User disconnected'),
       );
     }
-
-
   }
 
   Future<void> resetView(tasksServices) async {
@@ -270,7 +292,6 @@ class WalletProvider extends ChangeNotifier {
     tasksServices.pendingBalanceToken = 0.0;
     walletConnectUri = '';
   }
-
 
   Future<void> unsubscribeAll() async {
     log.fine('wallet_service -> unsubscribe');
