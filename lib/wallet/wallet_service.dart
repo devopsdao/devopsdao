@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -113,14 +114,45 @@ class WalletProvider extends ChangeNotifier {
     final params = <String, dynamic>{
       'chainId': '0x${changeTo.toRadixString(16)}',
     };
-    await web3App!.request(
-        topic: sessionData.topic,
-        chainId: 'eip155:$changeFrom',
-        request: SessionRequestParams(
-          method: 'wallet_switchEthereumChain',
-          params: [params],
-        ));
-    setChainAndConnect(tasksServices, changeTo);
+    bool switchNetworkSuccess = true;
+    try {
+      await web3App!.request(
+          topic: sessionData.topic,
+          chainId: 'eip155:$changeFrom',
+          request: SessionRequestParams(
+            method: 'wallet_switchEthereumChain',
+            params: [params],
+          ));
+    } on JsonRpcError catch (e) {
+      if (e.message != null) {
+        final error = jsonDecode(e.message!);
+        if (error['data'] != null && error['data']['originalError'] != null && error['data']['originalError']['code'] != null) {
+          if (error['data']['originalError']['code'] == 4902) {
+            try {
+              await addNetwork(tasksServices, changeFrom);
+            } on JsonRpcError catch (e) {
+              if (e.message != null) {
+                final error = jsonDecode(e.message!);
+                if (error['code'] != 4001) {
+                  print(error);
+                }
+              }
+              print(e);
+            } catch (e) {
+              print(e);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    // final chainId = await web3App!
+    //     .request(topic: sessionData.topic, chainId: 'eip155:$changeFrom', request: SessionRequestParams(method: 'eth_chainId', params: []));
+    // // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+
+    // setChainAndConnect(tasksServices, int.parse(chainId));
     // return session;
   }
 
@@ -147,7 +179,7 @@ class WalletProvider extends ChangeNotifier {
           method: 'wallet_addEthereumChain',
           params: [params],
         ));
-    setChainAndConnect(tasksServices, 855456);
+    // setChainAndConnect(tasksServices, 855456);
     // return session;
   }
 
@@ -202,48 +234,58 @@ class WalletProvider extends ChangeNotifier {
     // chainNameOnApp = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k]==chainIdOnApp, orElse: () => 'unknown');
   }
 
-  Future<ConnectResponse?> createSession(int chainId) async {
+  Future<ConnectResponse?> createSession(tasksServices, int chainId) async {
     final String kFullChainId = 'eip155:$chainId';
 
     // if (walletProvider.web3App == null) {
     //   await walletProvider.initWalletConnect();
     // }
-    connectResponse = await web3App!.connect(
-      requiredNamespaces: {
-        'eip155': RequiredNamespace(
-          chains: [kFullChainId],
-          methods: [
-            'eth_sign',
-            'eth_signTransaction',
-            'eth_sendTransaction',
-          ],
-          events: [
-            'chainChanged',
-            'accountsChanged',
-          ],
-        ),
-      },
-      optionalNamespaces: {
-        'eip155': RequiredNamespace(
-          methods: [
-            'wallet_switchEthereumChain',
-            'wallet_addEthereumChain',
-          ],
-          chains: [kFullChainId],
-          events: [],
-        ),
-      },
-    );
+
+    try {
+      connectResponse = await web3App!.connect(
+        requiredNamespaces: {
+          'eip155': RequiredNamespace(
+            chains: [kFullChainId],
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: [kFullChainId],
+            events: [],
+          ),
+        },
+      );
+    } on JsonRpcError catch (e) {
+      if (e.message != null) {
+        final error = jsonDecode(e.message!);
+        if (error['code'] != 4001) {
+          print(error);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
 
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
     if (encodedUrl.isNotEmpty) {
       walletConnectUri = 'metamask://wc?uri=$encodedUrl';
     }
-
-    await launchUrlString(
-      walletConnectUri,
-      mode: LaunchMode.externalApplication,
-    );
+    if (tasksServices.platform == 'mobile') {
+      await launchUrlString(
+        walletConnectUri,
+        mode: LaunchMode.externalApplication,
+      );
+    }
     return connectResponse;
   }
 

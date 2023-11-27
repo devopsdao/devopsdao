@@ -322,7 +322,7 @@ class TasksServices extends ChangeNotifier {
     if (browserInfo.platform.isIOS) {
       browserPlatform = 'ios';
     }
-    if (platform == 'web' && window.ethereum != null) {
+    if (platform == 'web' && window.ethereum != null && window.ethereum?.isMetaMask == true) {
       mmAvailable = true;
     }
 

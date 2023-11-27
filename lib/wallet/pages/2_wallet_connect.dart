@@ -12,11 +12,7 @@ import '2_wallet_connect_sections/qr_code.dart';
 import '../widgets/wallet_connect_button.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 
-enum WCPlatform {
-  done,
-  open,
-  await
-}
+enum WCPlatform { done, open, await }
 
 class WalletConnect extends StatefulWidget {
   final double screenHeightSizeNoKeyboard;
@@ -38,7 +34,6 @@ class _WalletConnectState extends State<WalletConnect> {
   // late String _displayUri = '';
   int defaultTab = 0;
 
-
   @override
   void initState() {
     super.initState();
@@ -59,62 +54,53 @@ class _WalletConnectState extends State<WalletConnect> {
 
     late String buttonText = '';
 
-    final Widget wcConnectButton = Builder(
-      builder: (context) {
-        if (
-            walletProvider.wcCurrentState == WCStatus.loadingQr ||
-            walletProvider.wcCurrentState == WCStatus.loadingWc ||
-            walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
-            walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch) {
-          buttonText = 'Disconnect';
-        } else if (
-            walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown ||
-            walletProvider.wcCurrentState == WCStatus.none)  {
-          buttonText = 'Switch network';
-        } else if (walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
-          buttonText = 'Refresh QR';
-        } else if (
-            walletProvider.wcCurrentState == WCStatus.wcNotConnected ||
-            walletProvider.wcCurrentState == WCStatus.error ) {
-          buttonText = 'Connect';
-        }
-        return WalletConnectButton(
-          buttonFunction: 'wallet_connect',
-          buttonName: buttonText,
-          callback: () async {
-            if (walletProvider.initComplete) {
-              // walletProvider.walletConnectUri = ''; // reset _displayUri
-              if ( // if button Refresh Qr, Connect or disconnect:
-                  walletProvider.wcCurrentState == WCStatus.wcNotConnected ||
-                  walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
-                  walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch ||
-                  walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown ||
-                  walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady ||
-                  walletProvider.wcCurrentState == WCStatus.loadingQr ||
-                  walletProvider.wcCurrentState == WCStatus.loadingWc ||
-                  walletProvider.wcCurrentState == WCStatus.error) {
-                await widget.callConnectWallet();
-              } else if ( walletProvider.wcCurrentState == WCStatus.none ) {
-                await walletProvider.switchNetwork(
-                  tasksServices,
-                  tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
-                  tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!,
-                );
-              }
-            }
-          },
-        );
+    final Widget wcConnectButton = Builder(builder: (context) {
+      if (walletProvider.wcCurrentState == WCStatus.loadingQr ||
+          walletProvider.wcCurrentState == WCStatus.loadingWc ||
+          walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
+          walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch) {
+        buttonText = 'Disconnect';
+      } else if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown || walletProvider.wcCurrentState == WCStatus.none) {
+        buttonText = 'Switch network';
+      } else if (walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
+        buttonText = 'Refresh QR';
+      } else if (walletProvider.wcCurrentState == WCStatus.wcNotConnected || walletProvider.wcCurrentState == WCStatus.error) {
+        buttonText = 'Connect';
       }
-    );
-
+      return WalletConnectButton(
+        buttonFunction: 'wallet_connect',
+        buttonName: buttonText,
+        callback: () async {
+          if (walletProvider.initComplete) {
+            // walletProvider.walletConnectUri = ''; // reset _displayUri
+            if ( // if button Refresh Qr, Connect or disconnect:
+                walletProvider.wcCurrentState == WCStatus.wcNotConnected ||
+                    walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady ||
+                    walletProvider.wcCurrentState == WCStatus.loadingQr ||
+                    walletProvider.wcCurrentState == WCStatus.loadingWc ||
+                    walletProvider.wcCurrentState == WCStatus.error) {
+              await widget.callConnectWallet();
+            } else if ( //if chain does not match
+                walletProvider.wcCurrentState == WCStatus.none ||
+                    walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
+                    walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch ||
+                    walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown) {
+              await walletProvider.switchNetwork(
+                tasksServices,
+                tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
+                tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!,
+              );
+            }
+          }
+        },
+      );
+    });
 
     //// ********************* Wallet Connect > Desktop page ************** ////
     final Widget firstTab = Stack(
       alignment: Alignment.center,
       children: [
-        if (tasksServices.platform == 'mobile' ||
-            tasksServices.browserPlatform == 'android' ||
-            tasksServices.browserPlatform == 'ios')
+        if (tasksServices.platform == 'mobile' || tasksServices.browserPlatform == 'android' || tasksServices.browserPlatform == 'ios')
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -128,6 +114,7 @@ class _WalletConnectState extends State<WalletConnect> {
                   textAlign: TextAlign.center,
                 ),
               ),
+
               /// wcConnectButton
               wcConnectButton,
               const SizedBox(height: 22),
@@ -135,18 +122,17 @@ class _WalletConnectState extends State<WalletConnect> {
           ),
         // *********** Wallet Connect > Desktop page ************ //
         if (tasksServices.platform == 'linux' ||
-            tasksServices.platform == 'web' &&
-                tasksServices.browserPlatform != 'android' &&
-                tasksServices.browserPlatform != 'ios')
+            tasksServices.platform == 'web' && tasksServices.browserPlatform != 'android' && tasksServices.browserPlatform != 'ios')
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 22),
               RichText(
                   text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-                    TextSpan(text: 'Connect to Desktop Wallet'),
-                  ])),
+                TextSpan(text: 'Connect to Desktop Wallet'),
+              ])),
               const Spacer(),
+
               /// wcConnectButton
               wcConnectButton,
               const SizedBox(height: 22),
@@ -154,7 +140,6 @@ class _WalletConnectState extends State<WalletConnect> {
           ),
       ],
     );
-
 
     //// ********************* Wallet Connect > QR Code page ************** ////
     final Widget secondTab = Column(
@@ -210,8 +195,8 @@ class _WalletConnectState extends State<WalletConnect> {
                                 width: 120,
                                 child: Tab(
                                     child: Text(tasksServices.platform == 'mobile' ||
-                                        tasksServices.browserPlatform == 'android' ||
-                                        tasksServices.browserPlatform == 'ios'
+                                            tasksServices.browserPlatform == 'android' ||
+                                            tasksServices.browserPlatform == 'ios'
                                         ? 'Mobile'
                                         : 'Desktop')),
                               ),
@@ -236,9 +221,7 @@ class _WalletConnectState extends State<WalletConnect> {
                               // *********** Wallet Connect > System info tab ************ //
                               Column(
                                 children: [
-                                    PairingsPage(
-                                        web3App: walletProvider.web3App!
-                                    ),
+                                  PairingsPage(web3App: walletProvider.web3App!),
                                 ],
                               )
                             ],

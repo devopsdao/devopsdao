@@ -127,7 +127,7 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
 
     log.fine(
         'walletconnectv2.dart -> createSession chainId: ${tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!} , walletProvider.chainNameOnApp: ${walletProvider.chainNameOnApp}');
-    await walletProvider.createSession(tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+    await walletProvider.createSession(tasksServices, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
     if (walletProvider.walletConnectUri.isNotEmpty) {
       walletProvider.setWcState(state: WCStatus.wcNotConnectedWithQrReady, tasksServices: tasksServices);
     } else {
