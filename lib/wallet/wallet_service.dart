@@ -27,6 +27,7 @@ class WalletProvider extends ChangeNotifier {
   late bool initComplete = false;
   late bool unknownChainIdWC = false;
   late String chainNameOnApp = ''; // if empty, initially will be rewritten with tasksServices.defaultNetworkName
+  late int chainIdOnWallet = 0;
   late String chainNameOnWallet = '';
   late String walletConnectUri = '';
   late String errorMessage = '';
@@ -34,7 +35,6 @@ class WalletProvider extends ChangeNotifier {
 
   final log = Logger('WalletProvider');
   // late int currentSelectedChainId = 0;
-  // late int chainIdOnWallet = 0;
 
   WalletProvider() {
     init();
@@ -107,8 +107,9 @@ class WalletProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> switchNetwork(tasksServices, int changeFrom, int changeTo) async {
+  Future<void> switchNetwork(tasksServices, int changeTo) async {
     final SessionData sessionData = await connectResponse!.session.future;
+    int changeFrom = chainIdOnWallet;
     log.fine('wallet_service -> switchNetwork from: $changeFrom to: $changeTo, sessionData.topic: ${sessionData.topic}');
     // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
     final params = <String, dynamic>{
@@ -149,10 +150,10 @@ class WalletProvider extends ChangeNotifier {
     }
 
     // final chainId = await web3App!
-    //     .request(topic: sessionData.topic, chainId: 'eip155:$changeFrom', request: SessionRequestParams(method: 'eth_chainId', params: []));
-    // // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+    //     .request(topic: sessionData.topic, chainId: 'eip155:$changeTo', request: SessionRequestParams(method: 'eth_chainId', params: []));
+    // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
 
-    // setChainAndConnect(tasksServices, int.parse(chainId));
+    setChainAndConnect(tasksServices, changeTo);
     // return session;
   }
 
@@ -198,8 +199,6 @@ class WalletProvider extends ChangeNotifier {
     if (wcCurrentState == WCStatus.wcConnectedNetworkUnknown) {
       wcCurrentState = WCStatus.loadingWc;
     }
-    // save actual network names
-    chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k] == newChainId, orElse: () => 'unknown');
 
     bool networkValidAndMatched = false;
     if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
@@ -211,6 +210,10 @@ class WalletProvider extends ChangeNotifier {
         '$newChainId , networkValidAndMatched: '
         '$networkValidAndMatched');
     if (networkValidAndMatched) {
+      // save actual network names
+      chainIdOnWallet = newChainId;
+      chainNameOnWallet =
+          tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k] == newChainId, orElse: () => 'unknown');
       tasksServices.chainId = newChainId;
       tasksServices.allowedChainId = true;
       notifyListeners();

@@ -57,10 +57,11 @@ class _WalletConnectState extends State<WalletConnect> {
     final Widget wcConnectButton = Builder(builder: (context) {
       if (walletProvider.wcCurrentState == WCStatus.loadingQr ||
           walletProvider.wcCurrentState == WCStatus.loadingWc ||
-          walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
-          walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch) {
+          walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch) {
         buttonText = 'Disconnect';
-      } else if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown || walletProvider.wcCurrentState == WCStatus.none) {
+      } else if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch ||
+          walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown ||
+          walletProvider.wcCurrentState == WCStatus.none) {
         buttonText = 'Switch network';
       } else if (walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
         buttonText = 'Refresh QR';
@@ -76,18 +77,18 @@ class _WalletConnectState extends State<WalletConnect> {
             if ( // if button Refresh Qr, Connect or disconnect:
                 walletProvider.wcCurrentState == WCStatus.wcNotConnected ||
                     walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady ||
+                    walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
                     walletProvider.wcCurrentState == WCStatus.loadingQr ||
                     walletProvider.wcCurrentState == WCStatus.loadingWc ||
                     walletProvider.wcCurrentState == WCStatus.error) {
               await widget.callConnectWallet();
             } else if ( //if chain does not match
                 walletProvider.wcCurrentState == WCStatus.none ||
-                    walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch ||
                     walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch ||
                     walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown) {
               await walletProvider.switchNetwork(
                 tasksServices,
-                tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
+                // tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
                 tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!,
               );
             }

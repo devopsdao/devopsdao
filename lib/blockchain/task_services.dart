@@ -2597,6 +2597,7 @@ class TasksServices extends ChangeNotifier {
     late String txn = '';
     message ??= 'Taking this task';
     replyTo ??= BigInt.from(0);
+    // final chainIdHex = await _web3client.makeRPCCall('eth_chainId');
     TaskContract taskContract = TaskContract(address: contractAddress, client: _web3client, chainId: chainId);
     var creds;
     var senderAddress;

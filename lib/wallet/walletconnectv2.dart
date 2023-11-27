@@ -166,6 +166,9 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
       final int chainIdOnWallet = int.parse(NamespaceUtils.getChainFromAccount(
         event.session.namespaces.values.first.accounts.last,
       ).split(":").last);
+      walletProvider.chainIdOnWallet = chainIdOnWallet;
+      walletProvider.chainNameOnWallet =
+          tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k] == chainIdOnWallet, orElse: () => 'unknown');
 
       // log.fine(
       //     'walletconnectv2.dart -> last namespace: ${event.session.namespaces.values.first.accounts.last}');
@@ -199,7 +202,10 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         // await walletProvider.switchNetwork(tasksServices, chainIdOnWallet, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
       }
       if (chainIdOnWallet != tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!) {
-        await walletProvider.switchNetwork(tasksServices, chainIdOnWallet, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+        await walletProvider.switchNetwork(
+            tasksServices,
+            //chainIdOnWallet,
+            tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
       } else {
         await walletProvider.setChainAndConnect(tasksServices, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
       }

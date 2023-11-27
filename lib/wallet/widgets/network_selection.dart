@@ -20,7 +20,6 @@ class NetworkSelection extends StatefulWidget {
 }
 
 class _NetworkSelectionState extends State<NetworkSelection> {
-
   late Widget networkLogoImage = Image.asset(
     'assets/images/logo.png',
     height: 80,
@@ -50,13 +49,16 @@ class _NetworkSelectionState extends State<NetworkSelection> {
                 height: 2,
                 color: Colors.deepOrange,
               ),
-              onChanged: (String? value)  async {
+              onChanged: (String? value) async {
                 if (walletProvider.initComplete) {
-                  setState(()  {
-                    networkLogoImage =  walletProvider.networkLogo(tasksServices.allowedChainIds[value], Colors.white, 80);
+                  setState(() {
+                    networkLogoImage = walletProvider.networkLogo(tasksServices.allowedChainIds[value], Colors.white, 80);
                   });
                   if (tasksServices.walletConnectedWC) {
-                    walletProvider.switchNetwork(tasksServices,tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!, tasksServices.allowedChainIds[value]!);
+                    walletProvider.switchNetwork(
+                        tasksServices,
+                        // tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
+                        tasksServices.allowedChainIds[value]!);
                   } else {
                     await widget.callConnectWallet();
                   }
@@ -65,7 +67,7 @@ class _NetworkSelectionState extends State<NetworkSelection> {
                 }
               },
               items: tasksServices.allowedChainIds.entries.map<DropdownMenuItem<String>>(
-                    (e) {
+                (e) {
                   return DropdownMenuItem<String>(
                     value: e.key,
                     child: Text(e.key),
@@ -76,11 +78,7 @@ class _NetworkSelectionState extends State<NetworkSelection> {
           ),
         ),
         if (walletProvider == WCStatus.wcConnectedNetworkMatch)
-          Container(
-              padding: const EdgeInsets.only(top: 45.0, right: 15.0, left: 15.0, bottom: 15.0),
-              height: 140,
-              child: networkLogoImage
-          ),
+          Container(padding: const EdgeInsets.only(top: 45.0, right: 15.0, left: 15.0, bottom: 15.0), height: 140, child: networkLogoImage),
       ],
     );
   }
