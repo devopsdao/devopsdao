@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dodao/tags_manager/pages/mint.dart';
+import 'package:dodao/nft_manager/pages/mint.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -336,7 +336,10 @@ class _CreateOrMintState extends State<CreateOrMint> {
                               // print('createNftReceipt: $createNftReceipt');
                               if (createNftReceipt.length == 66) {
                                 collectionServices.mintNftTagSelected.collection = true;
-                                collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
+                                await collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
+                                await searchServices.refreshLists('selection');
+                                await searchServices.refreshLists('treasury');
+                                await searchServices.refreshLists('filter');
                               }
                               // searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                             } : null,

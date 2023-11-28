@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:g_json/g_json.dart';
 import 'package:provider/provider.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/tags_old.dart';
@@ -11,9 +12,9 @@ import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../pages/performer_page.dart';
-import '../../tags_manager/collection_services.dart';
-import '../../tags_manager/nft_item.dart';
-import '../../tags_manager/nft_card.dart';
+import '../../nft_manager/collection_services.dart';
+import '../../nft_manager/nft_item.dart';
+import '../../nft_manager/nft_card.dart';
 import '../my_tools.dart';
 import 'wrapped_chip.dart';
 import 'package:flutter/services.dart';
@@ -45,16 +46,10 @@ class _MainTagsPageState extends State<MainTagsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      var searchServices = Provider.of<SearchServices>(context, listen: false);
-      var tasksServices = Provider.of<TasksServices>(context, listen: false);
+      SearchServices searchServices = Provider.of<SearchServices>(context, listen: false);
+      TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
       searchServices.tagSelection(typeSelection: 'selection', tagName: '', unselectAll: true, tagKey: '');
-
-      //refresh NFT "selection" list
-      await tasksServices.collectMyTokens();
-      Future.delayed(const Duration(milliseconds: 100), () {
-        searchServices.refreshLists('selection');
-        searchServices.refreshLists('treasury');
-      });
+      late Map<String, NftCollection> localFilterResults = {};
 
       // searchServices.tagsSearchFilter('', simpleTagsMap);
       if (widget.page == 'audit') {
@@ -71,11 +66,25 @@ class _MainTagsPageState extends State<MainTagsPage> {
         tagsLocalList = {};
       }
 
-      for (var e in searchServices.selectionPageFilterResults.entries) {
-        searchServices.selectionPageFilterResults[e.key]!.selected = false;
+      await tasksServices.collectMyTokens();
+
+      if (widget.page == 'create') {
+        localFilterResults = searchServices.addToNewTaskFilterResults;
+        if (searchServices.addToNewTaskFilterResults.isEmpty)  {
+          await searchServices.refreshLists('selection');
+        }
+      } else {
+        localFilterResults = searchServices.taskFilterResults;
+        if (searchServices.taskFilterResults.isEmpty)  {
+          await searchServices.refreshLists('filter');
+        }
+      }
+
+      for (var e in localFilterResults.entries) {
+        localFilterResults[e.key]!.selected = false;
         for (var e2 in tagsLocalList.entries) {
           if (e.key == e2.key) {
-            searchServices.selectionPageFilterResults[e.key]!.selected = true;
+            localFilterResults[e.key]!.selected = true;
           }
         }
       }
@@ -90,14 +99,29 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var interfaceServices = context.read<InterfaceServices>();
-    var searchServices = context.read<SearchServices>();
-    var tasksServices = context.read<TasksServices>();
-    var collectionServices = context.read<CollectionServices>();
+    InterfaceServices interfaceServices = context.read<InterfaceServices>();
+    SearchServices searchServices = context.read<SearchServices>();
+    TasksServices tasksServices = context.read<TasksServices>();
+    CollectionServices collectionServices = context.read<CollectionServices>();
 
     late Map<String, TagsCompare> tagsCompare = {};
     late String actualPage = '';
-    widget.page == 'create' ? actualPage = 'selection' : actualPage = 'filter';
+    late Map<String, NftCollection> localFilterResults = {};
+    if (widget.page == 'create') {
+      actualPage = 'selection';
+      localFilterResults = searchServices.addToNewTaskFilterResults;
+    } else {
+      actualPage = 'filter';
+      localFilterResults = searchServices.taskFilterResults;
+      // for (var e in searchServices.addToNewTaskFilterResults.entries) {
+      //   if (!e.value.bunch.entries.first.value.nft) {
+      //     late Map<BigInt, TokenItem> bunch = {};
+      //     bunch[BigInt.from(0)] = TokenItem(name: e.value.name, collection: false, nft: false, id: null);
+      //     localFilterResults[e.key] = NftCollection(bunch: bunch, selected: false, name: e.value.name);
+      //   }
+      // }
+    }
+
 
     final double maxStaticDialogWidth = interfaceServices.maxStaticDialogWidth;
     const double myPadding = 8.0;
@@ -261,7 +285,9 @@ class _MainTagsPageState extends State<MainTagsPage> {
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                 children: [
-                                  TextSpan(text: 'Tags', style: Theme.of(context).textTheme.titleLarge),
+                                  TextSpan(
+                                      text: widget.page == 'create' ? 'Add items to the Task' : 'Search Task\'s by tags',
+                                      style: Theme.of(context).textTheme.titleMedium),
                                 ],
                               ),
                             ),
@@ -273,10 +299,11 @@ class _MainTagsPageState extends State<MainTagsPage> {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: InkWell(
                       onTap: () {
-                        searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
+                        // searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
+                        searchServices.tagSelection(typeSelection: widget.page == 'create' ? 'selection' : '', tagName: '', unselectAll: true, tagKey: '');
                         searchServices.forbidSearchKeywordClear = true;
-                        searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
-                        searchServices.nftSelection(nftName: '', nftKey: BigInt.from(0), unselectAll: true, unselectAllInBunch: false);
+                        // searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
+                        // searchServices.nftSelection(nftName: '', nftKey: BigInt.from(0), unselectAll: true, unselectAllInBunch: false);
                         collectionServices.clearSelectedInManager();
                         Navigator.pop(context);
                       },
@@ -300,72 +327,73 @@ class _MainTagsPageState extends State<MainTagsPage> {
                   ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 10.0, right: 12.0, left: 12.0),
-                height: 50,
-                child: Consumer<SearchServices>(builder: (context, model, child) {
-                  return Row(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Row(
-                        children: [
-                          const Text('Tags selected: '),
-                          Badges.Badge(
-                            // position: BadgePosition.topEnd(top: 10, end: 10),
-                            badgeContent: Container(
-                              width: 14,
-                              height: 14,
-                              alignment: Alignment.center,
-                              child: Text(
-                                searchServices.tags.toString(),
-                                style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),
-                                // style: Theme.of(context).textTheme.bodySmall?.apply(color: DodaoTheme.of(context).primaryText),
-                              ),
-                            ),
-                            // badgeColor: Colors.white,
-                            // animationDuration: const Duration(milliseconds: 600),
-                            // animationType: Badges.BadgeAnimationType.fade,
-                            badgeAnimation: const Badges.BadgeAnimation.slide(
-                            // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
-                            // curve: Curves.easeInCubic,
-                            ),
-                            badgeStyle: Badges.BadgeStyle(
-                              badgeColor: DodaoTheme.of(context).tabIndicator,
-                              elevation: 0,
-                              shape: Badges.BadgeShape.square,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            // child: Icon(Icons.settings),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text('Nft\'s selected: '),
-                          Badges.Badge(
-                            badgeContent: Container(
-                              width: 14,
-                              height: 14,
-                              alignment: Alignment.center,
-                              child: Text(
-                                searchServices.nfts.toString(),
-                                style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),
-                              ),
-                            ),
-                            badgeStyle: Badges.BadgeStyle(
-                              badgeColor: DodaoTheme.of(context).tabIndicator,
-                              elevation: 0,
-                              shape: Badges.BadgeShape.square,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                }),
-              ),
+              // if (widget.page == 'create')
+              // Container(
+              //   padding: const EdgeInsets.only(top: 10.0, right: 12.0, left: 12.0),
+              //   height: 50,
+              //   child: Consumer<SearchServices>(builder: (context, model, child) {
+              //     return Row(
+              //       // crossAxisAlignment: CrossAxisAlignment.center,
+              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //       children: [
+              //         Row(
+              //           children: [
+              //             const Text('Tags selected: '),
+              //             Badges.Badge(
+              //               // position: BadgePosition.topEnd(top: 10, end: 10),
+              //               badgeContent: Container(
+              //                 width: 14,
+              //                 height: 14,
+              //                 alignment: Alignment.center,
+              //                 child: Text(
+              //                   searchServices.tags.toString(),
+              //                   style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),
+              //                   // style: Theme.of(context).textTheme.bodySmall?.apply(color: DodaoTheme.of(context).primaryText),
+              //                 ),
+              //               ),
+              //               // badgeColor: Colors.white,
+              //               // animationDuration: const Duration(milliseconds: 600),
+              //               // animationType: Badges.BadgeAnimationType.fade,
+              //               badgeAnimation: const Badges.BadgeAnimation.slide(
+              //               // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+              //               // curve: Curves.easeInCubic,
+              //               ),
+              //               badgeStyle: Badges.BadgeStyle(
+              //                 badgeColor: DodaoTheme.of(context).tabIndicator,
+              //                 elevation: 0,
+              //                 shape: Badges.BadgeShape.square,
+              //                 borderRadius: BorderRadius.circular(6),
+              //               ),
+              //               // child: Icon(Icons.settings),
+              //             ),
+              //           ],
+              //         ),
+              //         Row(
+              //           children: [
+              //             const Text('Nft\'s selected: '),
+              //             Badges.Badge(
+              //               badgeContent: Container(
+              //                 width: 14,
+              //                 height: 14,
+              //                 alignment: Alignment.center,
+              //                 child: Text(
+              //                   searchServices.nfts.toString(),
+              //                   style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.white),
+              //                 ),
+              //               ),
+              //               badgeStyle: Badges.BadgeStyle(
+              //                 badgeColor: DodaoTheme.of(context).tabIndicator,
+              //                 elevation: 0,
+              //                 shape: Badges.BadgeShape.square,
+              //                 borderRadius: BorderRadius.circular(6),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ],
+              //     );
+              //   }),
+              // ),
               Container(
                 padding: const EdgeInsets.only(top: 16.0, right: 12.0, left: 12.0),
                 height: 70,
@@ -374,7 +402,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                     controller: _searchKeywordController,
                     onChanged: (searchKeyword) {
                       model.tagsSearchFilter(
-                        page: 'selection',
+                        page: actualPage,
                         enteredKeyword: searchKeyword,
                       );
                     },
@@ -386,7 +414,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                     // },
 
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.add),
+                      // prefixIcon: const Icon(Icons.add),
                       // suffixIcon: model.newTag ? IconButton(
                       //   onPressed: () {
                       //     // NEW TAG
@@ -410,13 +438,20 @@ class _MainTagsPageState extends State<MainTagsPage> {
                           width: 2.0,
                         ),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(
+                          color: DodaoTheme.of(context).tabIndicator,
+                          width: 2.0,
+                        ),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: 'Tag name',
+                      labelText: 'Tag or Nft name',
                       labelStyle: Theme.of(context).textTheme.bodyMedium,
-                      hintText: '[Enter your tag here..]',
+                      hintText: '[Enter your tag name here..]',
                       hintStyle: Theme.of(context).textTheme.bodyMedium,
                       // hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
                       // focusedBorder: const UnderlineInputBorder(
@@ -444,7 +479,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                       return Wrap(
                           alignment: WrapAlignment.start,
                           direction: Axis.horizontal,
-                          children: searchProvider.selectionPageFilterResults.entries.map((e) {
+                          children: localFilterResults.entries.map((e) {
                             final String name = e.key;
                             if (!tagsCompare.containsKey(name)) {
                               if (e.value.selected) {

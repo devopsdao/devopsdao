@@ -1,6 +1,6 @@
 import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
-import 'package:dodao/tags_manager/collection_services.dart';
+import 'package:dodao/nft_manager/collection_services.dart';
 import 'package:dodao/wallet/wallet_service.dart';
 import 'package:dodao/widgets/tags/main.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
@@ -103,7 +103,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
   }
 

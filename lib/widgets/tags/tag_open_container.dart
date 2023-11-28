@@ -16,7 +16,6 @@ class TagOpenContainerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.read<InterfaceServices>();
 
     if (page != 'create') {
       return OpenContainer(

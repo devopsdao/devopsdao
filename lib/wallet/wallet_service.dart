@@ -112,7 +112,7 @@ class WalletProvider extends ChangeNotifier {
     int changeFrom = chainIdOnWallet;
     log.fine('wallet_service -> switchNetwork from: $changeFrom to: $changeTo, sessionData.topic: ${sessionData.topic}');
     // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
-    final params = <String, dynamic>{
+    final params = <String, dynamic> {
       'chainId': '0x${changeTo.toRadixString(16)}',
     };
     bool switchNetworkSuccess = true;
@@ -153,7 +153,7 @@ class WalletProvider extends ChangeNotifier {
     //     .request(topic: sessionData.topic, chainId: 'eip155:$changeTo', request: SessionRequestParams(method: 'eth_chainId', params: []));
     // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
 
-    setChainAndConnect(tasksServices, changeTo);
+    // setChainAndConnect(tasksServices, changeTo);
     // return session;
   }
 

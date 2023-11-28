@@ -10,7 +10,7 @@ import 'package:rive/rive.dart' as rive;
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
-import '../tags_manager/collection_services.dart';
+import '../nft_manager/collection_services.dart';
 import '../wallet/wallet_service.dart';
 
 class WalletActionDialog extends StatefulWidget {

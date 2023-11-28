@@ -43,7 +43,7 @@ class _CreateJobState extends State<CreateJob> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       searchServices.removeAllTagsOnPages(page: 'create');
-      // searchServices.refreshLists('selection');
+      searchServices.refreshLists('selection');
       // searchServices.tagsSearchFilter('', simpleTagsMap);
     });
   }
@@ -59,7 +59,6 @@ class _CreateJobState extends State<CreateJob> {
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
-    late String backgroundPicture = "assets/images/niceshape.png";
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final double myMaxWidth = constraints.maxWidth;
@@ -966,8 +965,8 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.circular(6),
               // ),
-              child: Row(
-                children: const <Widget>[
+              child: const Row(
+                children: <Widget>[
                   Expanded(
                     child: Icon(
                       Icons.close,

@@ -1,7 +1,9 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webthree/credentials.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../wallet/main.dart';
@@ -27,8 +29,23 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-    var searchServices = context.read<SearchServices>();
+    TasksServices tasksServices = context.read<TasksServices>();
+    SearchServices searchServices = context.read<SearchServices>();
+    late Map<EthereumAddress, Task> participate;
+    late Map<EthereumAddress, Task> progress;
+    late Map<EthereumAddress, Task> complete;
+    late Map<String, NftCollection> tagsList;
+    if(page == 'performer') {
+      participate = tasksServices.tasksPerformerParticipate;
+      progress = tasksServices.tasksPerformerProgress;
+      complete = tasksServices.tasksPerformerComplete;
+      tagsList =  searchServices.performerTagsList;
+    } else if (page == 'customer') {
+      participate = tasksServices.tasksCustomerSelection;
+      progress = tasksServices.tasksCustomerProgress;
+      complete = tasksServices.tasksCustomerComplete;
+      tagsList =  searchServices.customerTagsList;
+    }
 
     return AppBarWithSearchSwitch(
       backgroundColor: Colors.transparent,
@@ -86,14 +103,14 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
 
       onChanged: (searchKeyword) {
         if (tabIndex == 0) {
-          tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-              tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: participate,
+              tagsMap: tagsList, enteredKeyword: searchKeyword);
         } else if (tabIndex == 1) {
-          tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-              tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: progress,
+              tagsMap: tagsList, enteredKeyword: searchKeyword);
         } else if (tabIndex == 2) {
-          tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-              tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: complete,
+              tagsMap: tagsList, enteredKeyword: searchKeyword);
         }
       },
       customTextEditingController: searchServices.searchKeywordController,

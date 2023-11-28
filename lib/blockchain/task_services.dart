@@ -1214,13 +1214,16 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> runFilter(
       {required Map<EthereumAddress, Task> taskList, required String enteredKeyword, required Map<String, NftCollection> tagsMap}) async {
-    final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
+    final List<String> tagsList = tagsMap.entries.map((e) {
+      return e.value.name;
+    }).toList();
     // enteredKeyword ??= lastEnteredKeyword;
     // taskList ??= lastTaskList;
     // tagsList ??= [];
     filterResults.clear();
     // searchKeyword = enteredKeyword;
     // if (enteredKeyword.isEmpty && (tagsList.length == 1 && tagsList.first == '#')) {
+    // if (enteredKeyword.isEmpty) {
     if (enteredKeyword.isEmpty) {
       filterResults = Map.from(taskList);
     } else {
@@ -1268,6 +1271,8 @@ class TasksServices extends ChangeNotifier {
 
       // if (tagsList.isNotEmpty && (tagsList.length != 1)) {
       if (tagsList.isNotEmpty) {
+        Map<EthereumAddress, Task> filteredWithTags;
+        Map<EthereumAddress, Task> filteredWithNfts;
         Map<EthereumAddress, Task> filterResultsTags = filterResultsSearch;
         for (var tag in tagsList) {
           if (tag != '#') {
@@ -1280,7 +1285,7 @@ class TasksServices extends ChangeNotifier {
         filterResults = Map.from(filterResultsSearch);
       }
     }
-    log.info(filterResults);
+    // log.info(filterResults);
     // Refresh the UI
     notifyListeners();
   }
@@ -1295,13 +1300,19 @@ class TasksServices extends ChangeNotifier {
     // );
     // if (tagsList.isNotEmpty && (tagsList.length != 1)) {
     if (tagsList.isNotEmpty) {
+      late Map<EthereumAddress, Task> filteredWithTags;
+      late Map<EthereumAddress, Task> filteredWithNfts;
       Map<EthereumAddress, Task> filterResultsTags = taskList;
       for (var tag in tagsList) {
         if (tag != '#') {
-          filterResultsTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
+          filteredWithTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
+          filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tokenNames.first.contains(tag));
         }
       }
-      filterResults = filterResultsTags;
+      filterResults = {
+        ...filteredWithTags,
+        ...filteredWithNfts
+      };
       // filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
     } else {
       filterResults = Map.from(taskList);

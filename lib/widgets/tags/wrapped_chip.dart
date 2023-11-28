@@ -14,9 +14,9 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../tags_manager/nft_item.dart';
-import '../../tags_manager/widgets/manager_open_container.dart';
-import '../../tags_manager/collection_services.dart';
+import '../../nft_manager/nft_item.dart';
+import '../../nft_manager/widgets/manager_open_container.dart';
+import '../../nft_manager/collection_services.dart';
 import '../my_tools.dart';
 import '../tags_on_page_open_container.dart';
 import 'main.dart';
@@ -218,7 +218,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
 
     // This will show overall count of NFTs in bunch
-    if (widget.page == 'treasury' || widget.page == 'selection' || widget.page == 'filter') {
+    if (widget.page == 'treasury' || widget.page == 'selection') { // removed  || widget.page == 'filter'
       if (widget.item.value.bunch.length > 1) {
         numOfNFTs = widget.item.value.bunch.length;
       }
@@ -242,7 +242,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       if (nft) {
         for (var e in widget.item.value.bunch.values) {
           if (e.selected) {
-            print(e.selected);
+            // print(e.selected);
             selectedNftAvailable = true;
             break;
           }
@@ -514,7 +514,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
             if (!widget.selected) {
               collectionServices.updateTreasuryNft(
-                  searchServices.selectionPageFilterResults[tagName]!
+                  searchServices.addToNewTaskFilterResults[tagName]!
               );
             } else {
               collectionServices.clearSelectedInManager();
@@ -522,7 +522,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           }
         } else if(widget.page == 'filter') {
           searchServices.tagSelection(
-              typeSelection: 'selection',
+              typeSelection: 'filter',
               tagName: tagName,
               tagKey: tagKey,
               unselectAll: false
@@ -588,7 +588,8 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                     Container(
                       width: 9,
                     ),
-                    if (widget.wrapperRole == WrapperRole.selectNew  || widget.wrapperRole == WrapperRole.removeNew)
+                    if ((widget.wrapperRole == WrapperRole.selectNew  || widget.wrapperRole == WrapperRole.removeNew)
+                    && widget.page != 'filter')
                     Flexible(
                       flex: 10,
                       child: GestureDetector(
@@ -603,7 +604,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                           //   frameHeight: 300,
                           // );
                           searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
-                          collectionServices.updateTreasuryNft(searchServices.selectionPageFilterResults[tagKey]!);
+                          collectionServices.updateTreasuryNft(searchServices.addToNewTaskFilterResults[tagKey]!);
                         } : null,
                         child: Opacity(
                           opacity: animationOpacity.value,
@@ -620,7 +621,23 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         ),
                       ),
                     ),
-
+                    if (widget.page == 'filter')
+                      Flexible(
+                        flex: 10,
+                        child: Opacity(
+                          opacity: animationOpacity.value,
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 0, right:5),
+                            width: 25,
+                            child: Icon(
+                                shadows: const <Shadow>[Shadow(color: Colors.black26, blurRadius: 0.01, offset: Offset(0, 1))],
+                                Icons.check_circle_outline_rounded,
+                                size: iconSize + 3,
+                                color: nftMintColor
+                            ),
+                          ),
+                        ),
+                      ),
 
                     if (icon == 'nft' && numOfNFTs < 1)
                       Flexible(
