@@ -66,6 +66,12 @@ class WalletProvider extends ChangeNotifier {
         errorMessage = error;
         resetView(tasksServices);
         break;
+      case WCStatus.wcNotConnectedWithQrReady:
+        // TODO: Handle this case.
+        break;
+      case WCStatus.none:
+        // TODO: Handle this case.
+        break;
     }
     notifyListeners();
   }
@@ -201,7 +207,9 @@ class WalletProvider extends ChangeNotifier {
     }
 
     bool networkValidAndMatched = false;
-    if (chainIdOnApp == newChainId && allowedChainIds.containsValue(newChainId)) {
+    if (
+        // chainIdOnApp == newChainId &&
+        allowedChainIds.containsValue(newChainId)) {
       networkValidAndMatched = true;
     }
 
