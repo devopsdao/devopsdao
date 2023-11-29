@@ -33,7 +33,7 @@ class MintWidget extends StatefulWidget {
 class _MintWidget extends State<MintWidget> {
   final _searchKeywordController = TextEditingController();
   late Map<String, TagsCompare> tagsCompare = {};
-  final Duration splitDuration = const Duration(milliseconds: 300);
+  final Duration splitDuration = const Duration(milliseconds: 500);
   final Curve splitCurve = Curves.easeInOutQuart;
   final double buttonWidth = 140;
 

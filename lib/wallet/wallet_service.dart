@@ -144,18 +144,18 @@ class WalletProvider extends ChangeNotifier {
               if (e.message != null) {
                 final error = jsonDecode(e.message!);
                 if (error['code'] != 4001) {
-                  print(error);
+                  log.severe(error);
                 }
               }
-              print(e);
+              log.severe(e);
             } catch (e) {
-              print(e);
+              log.severe(e);
             }
           }
         }
       }
     } catch (e) {
-      print(e);
+      log.severe(e);
     }
 
     // final chainId = await web3App!
