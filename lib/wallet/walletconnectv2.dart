@@ -34,8 +34,8 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
     // initial network name set:
-    if (walletProvider.chainNameOnApp.isEmpty) {
-      walletProvider.chainNameOnApp = tasksServices.defaultNetworkName;
+    if (walletProvider.selectedChainNameOnApp.isEmpty) {
+      walletProvider.setSelectedNetworkName(tasksServices.defaultNetworkName);
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (!tasksServices.walletConnected) {
@@ -62,9 +62,10 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
   }
 
   Future<void> connectWallet() async {
-    log.fine('walletconnectv2.dart -> connectWallet() start');
+    log.fine('walletconnectv2.dart -> connectWallet() start.');
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
     await walletProvider.setWcState(state: WCStatus.loadingQr, tasksServices: tasksServices);
     await walletProvider.resetView(tasksServices);
     await walletProvider.disconnectSessionsAndPairings();
@@ -78,6 +79,11 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     });
 
     walletProvider.web3App?.onSessionEvent.subscribe((onSessionEvent) async {
+      if (onSessionEvent?.data == walletProvider.lastErrorOnNetworkChainId) {
+        log.warning('walletconnectv2.dart->onSessionEvent: error on this network, chain id: ${onSessionEvent?.chainId}');
+        walletProvider.lastErrorOnNetworkChainId = 0; // reset error
+        return;
+      }
       log.fine('walletconnectv2.dart->onSessionEvent: ${onSessionEvent?.name}, '
           // 'chainId: ${onSessionEvent?.chainId}, '
           'data: ${onSessionEvent?.data} :: '
@@ -97,7 +103,7 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         ));
         if (newAccount != tasksServices.publicAddress) {
           // walletProvider.updateAccountAddress(tasksServices, newAccount);
-          // await walletProvider.switchNetwork(tasksServices, onSessionEvent?.data, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
+          // await walletProvider.switchNetwork(tasksServices, onSessionEvent?.data, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!); // default network
           tasksServices.publicAddress = newAccount;
           tasksServices.publicAddressWC = newAccount;
           await tasksServices.connectRPC(tasksServices.chainId);
@@ -125,13 +131,13 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     walletProvider.web3App?.onSessionConnect.subscribe(onSessionConnect);
     walletProvider.web3App?.onSessionExpire.subscribe(onSessionExpire);
 
-    log.fine(
-        'walletconnectv2.dart -> createSession chainId: ${tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!} , walletProvider.chainNameOnApp: ${walletProvider.chainNameOnApp}');
-    await walletProvider.createSession(tasksServices, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+    // log.fine(
+    //     'walletconnectv2.dart -> createSession chainId: ${tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!} , walletProvider.selectedChainNameOnApp: ${walletProvider.selectedChainNameOnApp}');
+    await walletProvider.createSession(tasksServices, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
     if (walletProvider.walletConnectUri.isNotEmpty) {
       walletProvider.setWcState(state: WCStatus.wcNotConnectedWithQrReady, tasksServices: tasksServices);
     } else {
-      walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'WC connection error');
+      walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Opps... something went wrong, try again \nreason: WC connection error');
       log.severe('walletconnectv2->connectWallet error: walletConnectUri is empty');
     }
   }
@@ -166,10 +172,24 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
       final int chainIdOnWallet = int.parse(NamespaceUtils.getChainFromAccount(
         event.session.namespaces.values.first.accounts.last,
       ).split(":").last);
-      walletProvider.chainIdOnWallet = chainIdOnWallet;
-      walletProvider.chainNameOnWallet =
-          tasksServices.allowedChainIds.keys.firstWhere((k) => tasksServices.allowedChainIds[k] == chainIdOnWallet, orElse: () => 'unknown');
+      final chainNameOnWallet = tasksServices.allowedChainIds.keys.firstWhere((k) {
+        return tasksServices.allowedChainIds[k] == chainIdOnWallet;
+      }, orElse: () => 'unknown');
 
+      if (chainIdOnWallet == walletProvider.lastErrorOnNetworkChainId) {
+        log.warning('walletconnectv2.dart->onSessionConnect: Previously there '
+            'were error on this network '
+            'id(chainIdOnWallet): ${chainIdOnWallet} , onSessionConnect stopped');
+        walletProvider.setWcState(
+            state: WCStatus.error,
+            tasksServices: tasksServices,
+            error: 'Opps... something went wrong. \nCannot connect to '
+                '${chainNameOnWallet}, please change it and try again');
+        return;
+      }
+
+      walletProvider.chainIdOnWallet = chainIdOnWallet;
+      walletProvider.chainNameOnWallet = chainNameOnWallet;
       // log.fine(
       //     'walletconnectv2.dart -> last namespace: ${event.session.namespaces.values.first.accounts.last}');
 
@@ -182,14 +202,13 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
           chainIdOnWallet == tasksServices.chainIdHyperlane ||
           chainIdOnWallet == tasksServices.chainIdLayerzero ||
           chainIdOnWallet == tasksServices.chainIdWormhole) {
-        // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
         tasksServices.allowedChainId = true;
         walletProvider.unknownChainIdWC = false;
         try {
           await tasksServices.getTaskListFullThenFetchIt();
         } catch (e) {
           log.severe('walletconnectv2.dart->error: $e');
-          walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Blockchain connection error');
+          walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Opps... something went wrong, try again \nBlockchain connection error');
           return;
         }
       } else {
@@ -197,20 +216,21 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         tasksServices.allowedChainId = false;
         walletProvider.unknownChainIdWC = true;
         walletProvider.setWcState(state: WCStatus.wcConnectedNetworkUnknown, tasksServices: tasksServices);
-        // walletProvider.walletConnectUri = '';
-        // await walletProvider.setChainAndConnect(tasksServices, chainIdOnWallet);
-        // await walletProvider.switchNetwork(tasksServices, chainIdOnWallet, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!); // default network
       }
-      if (chainIdOnWallet != tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!) {
+      if (chainIdOnWallet != tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!) {
         await walletProvider.switchNetwork(
             tasksServices,
-            //chainIdOnWallet,
-            tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
+            tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
       } else {
-        await walletProvider.setChainAndConnect(tasksServices, tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!);
-      }
+        await walletProvider.setChainAndConnect(tasksServices, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
 
-      tasksServices.myBalance();
+        Timer(const Duration(milliseconds: 1400), () {
+          Navigator.of(context, rootNavigator: true).pop();
+          // walletProvider.closeWalletDialog(tasksServices);
+        });
+      }
+      await tasksServices.myBalance();
+
     } else {
       tasksServices.chainId = 31337;
       tasksServices.allowedChainId = true;
@@ -218,14 +238,11 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         await tasksServices.getTaskListFullThenFetchIt();
       } catch (e) {
         log.severe('walletconnectv2.dart->error: $e');
-        walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Blockchain connection error');
+        walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Opps... something went wrong, try again \nBlockchain connection error');
         return;
       }
       await tasksServices.myBalance();
       await walletProvider.setWcState(state: WCStatus.wcConnectedNetworkMatch, tasksServices: tasksServices);
-      Timer(const Duration(seconds: 2), () {
-        walletProvider.closeWalletDialog(tasksServices);
-      });
     }
   }
 }
@@ -249,7 +266,7 @@ class WalletConnectEthereumCredentialsV2 extends CustomTransactionSender {
     final from = tasksServices.publicAddress;
     final signResponse = await wcClient.request(
       topic: session.topic,
-      chainId: 'eip155:${tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!}',
+      chainId: 'eip155:${tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!}',
       request: SessionRequestParams(
         method: 'eth_sendTransaction',
         params: [

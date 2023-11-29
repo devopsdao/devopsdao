@@ -76,14 +76,7 @@ class _MintWidget extends State<MintWidget> {
         builder: (context, constraints) {
           final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
           late double maxHeight = constraints.maxHeight - statusBarHeight - 76;
-          // late double firstPartHeight = 0.0;
-          // late double secondPartHeight = 0.0;
-          // late bool splitScreen = false;
-          // if (collectionServices.treasuryNftSelected.name != 'empty') {
-          //   splitScreen = true;
-          //   firstPartHeight = maxHeight / 2;
-          //   secondPartHeight = firstPartHeight;
-          // }
+
           return Column(
             children: [
               Container(

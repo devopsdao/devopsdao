@@ -66,7 +66,7 @@ void main() async {
         ChangeNotifierProxyProvider<TasksServices, SearchServices>(
           create: (_) => SearchServices(),
           update: (_, tasksServices, searchServices) {
-            searchServices!.nftCollectionMap = tasksServices.resultInitialCollectionMap;
+            searchServices!.collectionMap = tasksServices.resultInitialCollectionMap;
             return searchServices..nftBalanceMap = tasksServices.resultNftsMap;
           },
         )

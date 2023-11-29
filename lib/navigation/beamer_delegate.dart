@@ -4,6 +4,7 @@ import 'package:beamer/beamer.dart';
 import 'package:dodao/pages/auditor_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:webthree/webthree.dart';
+import '../wallet/main.dart';
 import 'appbar.dart';
 import 'authenticator.dart';
 // import '../../screens.dart';
@@ -22,7 +23,7 @@ void createBeamerDelegate() {
   beamerDelegate = BeamerDelegate(
     transitionDelegate: const NoAnimationTransitionDelegate(),
     locationBuilder: RoutesLocationBuilder(
-      routes: {
+        routes: {
         '/home': (context, state, data) => const Scaffold(
             body: HomePageWidget(),
             bottomNavigationBar: NavBarPage(
@@ -58,6 +59,10 @@ void createBeamerDelegate() {
                 initialPage: '/accounts',
               ),
             ),
+        '/wallet': (context, state, data) => showDialog(
+            context: context,
+            builder: (context) => const WalletDialog(),
+          ),
         '/tasks/:taskAddress': (context, state, data) {
           EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(

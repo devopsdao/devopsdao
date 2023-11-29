@@ -34,12 +34,12 @@ class _NetworkSelectionState extends State<NetworkSelection> {
     return Column(
       children: [
         SizedBox(
-          width: tasksServices.walletConnectedWC ? null : widget.qrSize,
+          width: widget.qrSize,
           child: ButtonTheme(
             alignedDropdown: true,
             child: DropdownButton<String>(
               isExpanded: true,
-              value: walletProvider.chainNameOnApp,
+              value: walletProvider.selectedChainNameOnApp,
               icon: const Icon(Icons.arrow_drop_down),
               borderRadius: BorderRadius.circular(8),
               dropdownColor: DodaoTheme.of(context).taskBackgroundColor,
@@ -51,19 +51,17 @@ class _NetworkSelectionState extends State<NetworkSelection> {
               ),
               onChanged: (String? value) async {
                 if (walletProvider.initComplete) {
+                  await walletProvider.setSelectedNetworkName(value!);
                   setState(() {
                     networkLogoImage = walletProvider.networkLogo(tasksServices.allowedChainIds[value], Colors.white, 80);
                   });
                   if (tasksServices.walletConnectedWC) {
                     walletProvider.switchNetwork(
                         tasksServices,
-                        // tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
                         tasksServices.allowedChainIds[value]!);
                   } else {
                     await widget.callConnectWallet();
                   }
-                  // save selected Chain and notify listeners:
-                  await walletProvider.setSelectedNetworkName(value!);
                 }
               },
               items: tasksServices.allowedChainIds.entries.map<DropdownMenuItem<String>>(
@@ -77,8 +75,6 @@ class _NetworkSelectionState extends State<NetworkSelection> {
             ),
           ),
         ),
-        if (walletProvider == WCStatus.wcConnectedNetworkMatch)
-          Container(padding: const EdgeInsets.only(top: 45.0, right: 15.0, left: 15.0, bottom: 15.0), height: 140, child: networkLogoImage),
       ],
     );
   }

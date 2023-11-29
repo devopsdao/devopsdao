@@ -68,7 +68,7 @@ class _WcQrCodeState extends State<WcQrCode> {
   Widget build(BuildContext context) {
     TasksServices tasksServices = context.read<TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
-    String networkNameOnApp = tasksServices.allowedChainIds.entries.firstWhere((e) => e.key == walletProvider.chainNameOnApp).key;
+    // String networkNameOnApp = tasksServices.allowedChainIds.entries.firstWhere((e) => e.key == walletProvider.selectedChainNameOnApp).key;
     //
     // if ((
     //     walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady ||
@@ -136,7 +136,8 @@ class _WcQrCodeState extends State<WcQrCode> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Performing connection with \n$networkNameOnApp',
+                      // 'Performing connection with \n${walletProvider.chainNameOnWallet}',
+                      'Performing connection',
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -146,28 +147,22 @@ class _WcQrCodeState extends State<WcQrCode> {
                     )
                   ],
                 ),
-              if (tasksServices.walletConnectedWC)
-                NetworkSelection(
-                  qrSize: 0,
-                  callConnectWallet: widget.callConnectWallet,
-                ),
               if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch)
                 Text(
-                  'Select $networkNameOnApp\n network in your wallet',
+                  'Select desired network \nin your wallet',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
               if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown)
                 Text(
-                  'Unfortunately, network is not supported. \nSelect $networkNameOnApp in your wallet',
+                  'Unfortunately, network is not supported. \nSelect ${walletProvider.selectedChainNameOnApp} in your wallet',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
 
               if (walletProvider.wcCurrentState == WCStatus.error)
                 Text(
-                  'Opps... something went wrong, try again \n'
-                  '${walletProvider.errorMessage}',
+                  walletProvider.errorMessage,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -177,27 +172,27 @@ class _WcQrCodeState extends State<WcQrCode> {
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-              // if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch)
-              //   Container(
-              //     padding: const EdgeInsets.only(top: 40.0),
-              //     child: NetworkSelection(
-              //       qrSize: qrSize,
-              //       callConnectWallet: widget.callConnectWallet,
-              //     ),
-              //   ),
               if (tasksServices.walletConnectedWC && walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch)
                 Column(
                   children: [
-                    Text(
-                      'Current network: \n${networkNameOnApp}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    Container(
-                        padding: const EdgeInsets.all(15.0),
-                        height: 140,
-                        child: walletProvider.networkLogo(tasksServices.allowedChainIds[walletProvider.chainNameOnApp], Colors.white, 80)),
+                  Text(
+                    'Current network: \n${walletProvider.selectedChainNameOnApp}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(15.0),
+                    height: 140,
+                    child: walletProvider.networkLogo(
+                      tasksServices.chainId,
+                      Colors.white, 80
+                    )),
                   ],
+                ),
+              if (tasksServices.walletConnectedWC && walletProvider.wcCurrentState != WCStatus.loadingWc)
+                NetworkSelection(
+                  qrSize: _qrSize,
+                  callConnectWallet: widget.callConnectWallet,
                 ),
             ],
           ),

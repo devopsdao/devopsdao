@@ -12,6 +12,7 @@ import 'package:webthree/credentials.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../../wallet/wallet_service.dart';
 
 
 class HomeStatistics extends StatefulWidget {
@@ -27,7 +28,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   late Color indicatorColor = colors[0];
   late TabController tabBarController;
   final double tabPadding = 12;
-
+  late List<TokenItem> tags = [];
 
   @override
   void initState() {
@@ -59,8 +60,15 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch <TasksServices>();
+    WalletProvider walletProvider = context.watch<WalletProvider>();
     // var searchServices = context.read<SearchServices>();
     // var notify = context.watch<MyNotifyListener>();
+
+    if (tasksServices.walletConnected
+        || walletProvider.wcCurrentState == WCStatus.error
+    ) {
+      tags = [];
+    }
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
@@ -157,7 +165,6 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                             });
                           }
                         }
-
                         return Padding(
                           padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
                           child: Wrap(
@@ -234,7 +241,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                   Builder(
                     builder: (context) {
                       late bool nft;
-                      final List<TokenItem> tags = [];
+
 
                       // ############### collect and combine Performer Progress task:
                       late Map<String, BigInt> combinedPerformerProgress = {};

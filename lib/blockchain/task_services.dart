@@ -1056,42 +1056,14 @@ class TasksServices extends ChangeNotifier {
   late Map<String, NftCollection> resultInitialCollectionMap = {};
   late Map<String, NftCollection> resultNftsMap = {};
   Future<void> collectMyTokens() async {
+    final List<String> names = await getCreatedTokenNames();
+    for (var e in names) {
+      resultInitialCollectionMap[e] = NftCollection(bunch: {BigInt.from(0): TokenItem(name: e, collection: true)}, selected: false, name: e);
+    }
     if (publicAddress != null) {
-      // late Map<String, dynamic> resultCollectionMap;
-      // final List<EthereumAddress> shared = List.filled(resultInitialCollectionMap.entries.length, publicAddress!);
-      // final List<String> collectionList = resultInitialCollectionMap.entries.map((e) => e.key).toList();
-      // final List roleNftsBalance = await balanceOfBatchName(shared, collectionList);
-      //
-      // int keyId = 0;
-      // resultCollectionMap = resultInitialCollectionMap.map((key, value) {
-      //   // print(keyId);
-      //   int newBalance = roleNftsBalance[keyId].toInt();
-      //   late MapEntry<String, int> mapEnt = MapEntry(key, newBalance);
-      //   keyId++;
-      //   return mapEnt;
-      // });
-      //
-      // for (var e in resultCollectionMap.entries) {
-      //   if (e.value != 0) {
-      //     late Map<BigInt, TokenItem> bunch = {};
-      //     for (int i = 0; i < e.value; i++) {
-      //       bunch[BigInt.from(i)] = TokenItem(tag: e.key, collection: true, nft: true, id: BigInt.from(i));
-      //     }
-      //     resultNftsMap[e.key] = NftCollection(bunch: bunch, selected: false, tag: e.key);
-      //   }
-      // }
-
-      final List<String> names = await getCreatedTokenNames();
-      for (var e in names) {
-        resultInitialCollectionMap[e] = NftCollection(bunch: {BigInt.from(0): TokenItem(name: e, collection: true)}, selected: false, name: e);
-      }
-
       final List<String> tokenNames = await getTokenNames(publicAddress!);
       final List<BigInt> tokenIds = await getTokenIds(publicAddress!);
-      // print(tokenIds);
-      // final List<int> tokenIds = tokenIdsBI.map((bigInt) => bigInt.toInt()).toList();
       final Map<BigInt, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
-
       final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
         {},
         (Map<String, List<BigInt>> acc, entry) {
@@ -1112,7 +1084,6 @@ class TasksServices extends ChangeNotifier {
         }
       }
     }
-    // print(resultNftsMap);
   }
 
   // EthereumAddress lastJobContract;

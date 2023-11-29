@@ -98,9 +98,6 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-
-        ),
         child: SizedBox(
             width: interface.maxStaticGlobalWidth,
             child: Column(

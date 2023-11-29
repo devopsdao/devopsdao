@@ -43,7 +43,7 @@ class _WcQrCodeImageState extends State<WcQrCodeImage> {
   @override
   void dispose() {
     if (_qrTimeout.isActive) {
-      _qrTimeout.cancel();
+      cancelTimer();
       print('wc_qr_code->timer cancel on dispose');
     }
     super.dispose();
@@ -63,7 +63,9 @@ class _WcQrCodeImageState extends State<WcQrCodeImage> {
     }
   }
 
-
+    void cancelTimer() {
+      _qrTimeout.cancel();
+    }
 
 
   @override
@@ -76,12 +78,16 @@ class _WcQrCodeImageState extends State<WcQrCodeImage> {
         _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
       }
     }
-    if (tasksServices.walletConnected) {
+    if (tasksServices.walletConnected
+        || walletProvider.wcCurrentState == WCStatus.error
+        || walletProvider.wcCurrentState == WCStatus.loadingWc
+    ) {
       if (_qrTimeout.isActive) {
         print('wc_qr_code->timer cancel inside build, tasksServices.walletConnected: ${tasksServices.walletConnected}');
-        _qrTimeout.cancel();
+        cancelTimer();
       }
     }
+
 
 
     return SizedBox(

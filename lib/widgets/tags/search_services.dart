@@ -30,11 +30,11 @@ class SearchServices extends ChangeNotifier {
     }
   }
 
-  Map<String, NftCollection> _nftCollectionMap = {};
-  Map<String, NftCollection> get nftCollectionMap => _nftCollectionMap;
-  set nftCollectionMap(Map<String, NftCollection> value) {
-    if (value != nftCollectionMap ) {
-      _nftCollectionMap = value;
+  Map<String, NftCollection> _collectionMap = {};
+  Map<String, NftCollection> get collectionMap => _collectionMap;
+  set collectionMap(Map<String, NftCollection> value) {
+    if (value != collectionMap ) {
+      _collectionMap = value;
       notifyListeners();
     }
   }
@@ -44,17 +44,17 @@ class SearchServices extends ChangeNotifier {
   Future refreshLists(String listToRefresh) async {
     if (listToRefresh == 'mint') {
       mintPageFilterResults.clear();
-      mintPageFilterResults = Map.from(nftCollectionMap);
+      mintPageFilterResults = Map.from(collectionMap);
     } else if (listToRefresh == 'treasury') {
       treasuryPageFilterResults.clear();
       treasuryPageFilterResults = Map.from(nftBalanceMap);
     } else if (listToRefresh == 'filter') {
       taskFilterResults.clear();
-      taskFilterResults = Map.from(nftCollectionMap);
+      taskFilterResults = Map.from(collectionMap);
     } else if (listToRefresh == 'selection') {
       Map<String, NftCollection> tempNfts = {};
-      if (nftCollectionMap.entries.isNotEmpty) {
-        for (var e in nftCollectionMap.entries) {
+      if (collectionMap.entries.isNotEmpty) {
+        for (var e in collectionMap.entries) {
           tempNfts['collection ${e.key}'] = NftCollection(
             name: e.key,
             bunch: { BigInt.from(0) : (
@@ -210,36 +210,36 @@ class SearchServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  late String searchTagKeyword = '';
+  // late String searchTagKeyword = '';
   // this flag 'newTag' gives ability to add new Tag to List:
   late bool newTag = false;
 
   // Search in TAGS list
   Future<void> tagsSearchFilter({required String enteredKeyword, required String page}) async {
-    late Map<String, NftCollection>resultMap;
+    late Map<String, NftCollection> resultMap = {};
     late Map<String, NftCollection> initialMap;
     if (page == 'mint') {
-      resultMap = mintPageFilterResults;
-      initialMap = nftCollectionMap;
+      initialMap = collectionMap;
+      // resultMap = mintPageFilterResults;
     } else if (page == 'selection') {
       initialMap = selectionPageInitialCombined;
-      resultMap = addToNewTaskFilterResults;
+      // resultMap = addToNewTaskFilterResults;
     } else if (page == 'treasury') {
       initialMap = nftBalanceMap;
-      resultMap = treasuryPageFilterResults;
+      // resultMap = treasuryPageFilterResults;
     } else if (page == 'filter') {
-      initialMap = taskFilterResults;
-      resultMap = nftCollectionMap;
+      initialMap = collectionMap;
+      // resultMap = taskFilterResults;
     }
     // clear resultMap(and all associated maps) before start to write into it:
-    resultMap.clear();
-    searchTagKeyword = enteredKeyword;
+    // resultMap.clear();
+    // searchTagKeyword = enteredKeyword;
 
     if (enteredKeyword.isEmpty) {
       resultMap = Map.from(initialMap);
       newTag = false;
     } else {
-      for (String key in initialMap.keys) {
+      for (String key in initialMap.keys) { 
         if (initialMap[key]!.selected) {
           resultMap[key] = initialMap[key]!;
         }
@@ -248,7 +248,7 @@ class SearchServices extends ChangeNotifier {
         }
       }
 
-      // show button to add new tag:
+      // show button "add new tag":
       enteredKeyword.length > 1 ? newTag = true : newTag = false;
       // show button to add new tag !break used in loop:
       for (String key in initialMap.keys) {
@@ -288,7 +288,7 @@ class SearchServices extends ChangeNotifier {
   Future<void> addNewTag(String newTagName, String page) async {
     if (page == 'mint') {
       mintPageFilterResults.clear();
-      mintPageFilterResults = Map.from(nftCollectionMap); // {...nftBalanceMap};
+      mintPageFilterResults = Map.from(collectionMap); // {...nftBalanceMap};
       mintPageFilterResults[newTagName] = NftCollection(
           name: newTagName,
           bunch: { BigInt.from(0) : (
@@ -312,7 +312,7 @@ class SearchServices extends ChangeNotifier {
         }));
     } else if (page == 'selection') {
       // selectionPageInitialCombined.clear();
-      // selectionPageInitialCombined = Map.from(nftCollectionMap); // {...nftBalanceMap};
+      // selectionPageInitialCombined = Map.from(collectionMap); // {...nftBalanceMap};
       // selectionPageInitialCombined[newTagName] = NftCollection(
       //     name: newTagName,
       //     bunch: { BigInt.from(0) : (

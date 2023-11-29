@@ -89,7 +89,7 @@ class _WalletConnectState extends State<WalletConnect> {
               await walletProvider.switchNetwork(
                 tasksServices,
                 // tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,
-                tasksServices.allowedChainIds[walletProvider.chainNameOnApp]!,
+                tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!,
               );
             }
           }
