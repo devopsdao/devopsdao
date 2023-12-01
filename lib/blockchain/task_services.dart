@@ -398,8 +398,8 @@ class TasksServices extends ChangeNotifier {
     _rpcUrlMoonbeam = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     _wsUrlMoonbeam = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
 
-    _rpcUrlMatic = 'https://matic-mumbai.chainstacklabs.com';
-    _wsUrlMatic = 'wss://ws-matic-mumbai.chainstacklabs.com';
+    _rpcUrlMatic = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlMatic = 'wss://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
 
     _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
     _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
