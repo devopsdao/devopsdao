@@ -172,7 +172,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                   ),
                   const Spacer(),
                   InkResponse(
-                    radius: 35,
+                    radius: DodaoTheme.of(context).inkRadius,
                     containedInkWell: false,
                     onTap: () {
                       collectionServices.clearSelectedInManager();

@@ -502,27 +502,38 @@ class SearchServices extends ChangeNotifier {
         }
 
 
-        // if (taskFilterResults[key]?.name.toLowerCase() == tagName.toLowerCase()) {
-        //   if (taskFilterResults[key]!.selected) {
-        //     taskFilterResults[key]!.selected = false;
-        //   } else {
-        //     taskFilterResults[key]!.selected = true;
-        //   }
-        // } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
-        //   taskFilterResults[key]!.selected = false;
-        // }
       }
     } else if (typeSelection == 'mint') {
       for (String key in mintPageFilterResults.keys) {
-        if (mintPageFilterResults[key]?.name.toLowerCase() == tagName.toLowerCase()) {
+        if (mintPageFilterResults[key]?.name == tagName) {
           if (mintPageFilterResults[key]!.selected) {
             mintPageFilterResults[key]!.selected = false;
           } else {
             mintPageFilterResults[key]!.selected = true;
           }
-        } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
+        } else if (key != tagName || unselectAll) {
           mintPageFilterResults[key]!.selected = false;
         }
+
+        // if (mintPageFilterResults[key]?.name.toLowerCase() == tagName.toLowerCase()) {
+        //   if (mintPageFilterResults[key]!.selected) {
+        //     mintPageFilterResults[key]!.selected = false;
+        //   } else {
+        //     mintPageFilterResults[key]!.selected = true;
+        //   }
+        // } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
+        //   mintPageFilterResults[key]!.selected = false;
+        // }
+
+        // if (unselectAll) {
+        //   mintPageFilterResults[key]!.selected = false;
+        // } else {
+        //   if (mintPageFilterResults[key]!.selected) {
+        //     mintPageFilterResults[key]!.selected = false;
+        //   } else {
+        //     mintPageFilterResults[key]!.selected = true;
+        //   }
+        // }
       }
     } else if (typeSelection == 'treasury') {
       for (String key in treasuryPageFilterResults.keys) {

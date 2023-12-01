@@ -66,11 +66,16 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
                 page: page,
                 tabIndex: tabIndex,
               ),
-              IconButton(
-                onPressed: () {
+              InkResponse(
+                radius: DodaoTheme.of(context).inkRadius,
+                containedInkWell: true  ,
+                child: const Padding(
+                  padding: EdgeInsets.all(14.0),
+                  child: Icon(Icons.search),
+                ),
+                onTap: () {
                   AppBarWithSearchSwitch.of(context)?.startSearch();
                 },
-                icon: const Icon(Icons.search),
               ),
               if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
                 const LoadButtonIndicator(),

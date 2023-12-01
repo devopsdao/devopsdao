@@ -96,6 +96,7 @@ abstract class DodaoTheme {
 
   final BorderRadius borderRadius = BorderRadius.circular(18.0);
   final BorderRadius borderRadiusSmallIcon = BorderRadius.circular(10.0);
+  final double inkRadius = 27;
   final double elevation = 6;
   final EdgeInsets inputEdge =  const EdgeInsets.only(top: 6.0, bottom: 6.0, right: 12, left: 12);
 

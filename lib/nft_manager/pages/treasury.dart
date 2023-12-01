@@ -106,7 +106,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                           Row(
                             children: [
                               InkResponse(
-                                radius: 35,
+                                radius: DodaoTheme.of(context).inkRadius,
                                 containedInkWell: false  ,
                                 onTap: () {
                                   pageController.animateToPage(pageController.page!.toInt() - 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
@@ -133,7 +133,7 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                                 ),
                               ),
                               InkResponse(
-                                radius: 35,
+                                radius: DodaoTheme.of(context).inkRadius,
                                 containedInkWell: false  ,
                                 onTap: () {
                                   pageController.animateToPage(pageController.page!.toInt() + 1, duration: const Duration(milliseconds: 500), curve: Curves.ease);
@@ -156,8 +156,8 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                           ),
                           const Spacer(),
                           InkResponse(
-                            radius: 35,
-                            containedInkWell: false  ,
+                            radius: DodaoTheme.of(context).inkRadius,
+                            containedInkWell: true  ,
                             onTap: () {
                               model.clearSelectedInManager();
                               searchServices.tagSelection(

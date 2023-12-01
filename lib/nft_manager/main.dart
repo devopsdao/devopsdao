@@ -54,45 +54,7 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
-      appBar: AppBar(
-        // backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        title: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Tags Manager',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              // searchServices.resetNFTFilter(searchServices.treasuryPageFilterResults);
-              searchServices.tagSelection(
-                unselectAll: true,
-                tagName: '', typeSelection: 'treasury', tagKey: ''
-              );
-              searchServices.tagSelection(
-                  unselectAll: true,
-                  tagName: '', typeSelection: 'mint', tagKey: ''
-              );
-              collectionServices.clearSelectedInManager();
-              Navigator.of(context).pop(null);
-            },
-          ),
-        ],
-        centerTitle: false,
-        elevation: 2,
-      ),
+      appBar: NftManagerHeader(searchServices: searchServices, collectionServices: collectionServices),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -138,6 +100,70 @@ class _TagManagerPagetState extends State<TagManagerPage> with TickerProviderSta
               ],
             )),
       ),
+    );
+  }
+}
+
+class NftManagerHeader extends StatelessWidget implements PreferredSizeWidget  {
+
+
+  const NftManagerHeader({
+    super.key,
+    required this.searchServices,
+    required this.collectionServices,
+  });
+
+  @override
+  Size get preferredSize => const Size.fromHeight(56);
+
+  final SearchServices searchServices;
+  final CollectionServices collectionServices;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      // backgroundColor: Colors.black,
+      automaticallyImplyLeading: false,
+      title: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Tags Manager',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        InkResponse(
+          radius: DodaoTheme.of(context).inkRadius,
+          containedInkWell: true  ,
+          child: const Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Icon(Icons.close),
+          ),
+          onTap: () {
+            // searchServices.resetNFTFilter(searchServices.treasuryPageFilterResults);
+            searchServices.tagSelection(
+              unselectAll: true,
+              tagName: '', typeSelection: 'treasury', tagKey: ''
+            );
+            searchServices.tagSelection(
+                unselectAll: true,
+                tagName: '', typeSelection: 'mint', tagKey: ''
+            );
+            collectionServices.clearSelectedInManager();
+            Navigator.of(context).pop(null);
+          },
+        ),
+      ],
+      centerTitle: false,
+      elevation: 2,
     );
   }
 }
