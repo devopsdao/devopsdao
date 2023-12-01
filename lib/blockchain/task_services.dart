@@ -375,14 +375,14 @@ class TasksServices extends ChangeNotifier {
       _wsUrl = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     } else if (chainId == 80001) {
       chainTicker = 'MATIC';
-      _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
-      _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
+      _rpcUrl = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       // _rpcUrl = 'https://rpc-mumbai.matic.today';
       // _wsUrl = 'wss://rpc-mumbai.matic.today';
     } else if (chainId == 280) {
       chainTicker = 'ETH';
-      _rpcUrl = 'https://zksync2-testnet.zksync.dev';
-      _wsUrl = 'wss://zksync2-testnet.zksync.dev';
+      _rpcUrl = 'https://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     } else if (chainId == 855456) {
       chainTicker = 'DODAO';
       _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
@@ -1280,10 +1280,7 @@ class TasksServices extends ChangeNotifier {
           filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tokenNames.first.contains(tag));
         }
       }
-      filterResults = {
-        ...filteredWithTags,
-        ...filteredWithNfts
-      };
+      filterResults = {...filteredWithTags, ...filteredWithNfts};
       // filterResults = Map.from(taskList)..removeWhere((key, value) => value.tags.every((tag) => !tagsList.contains(tag)));
     } else {
       filterResults = Map.from(taskList);
