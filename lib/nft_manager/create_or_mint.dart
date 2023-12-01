@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dodao/tags_manager/pages/mint.dart';
+import 'package:dodao/nft_manager/pages/mint.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,6 @@ import 'package:webthree/credentials.dart';
 
 import '../widgets/wallet_action_dialog.dart';
 import 'collection_services.dart';
-import 'nft_templorary.dart';
 import 'pages/treasury.dart';
 
 class CreateOrMint extends StatefulWidget {
@@ -57,8 +56,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    // var interface = context.read<InterfaceServices>();
-    var searchServices = context.read<SearchServices>();
+    var searchServices = context.watch<SearchServices>();
     var collectionServices = context.watch<CollectionServices>();
 
     collectionExist = collectionServices.mintNftTagSelected.collection;
@@ -113,9 +111,9 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
-                          child:  Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
+                            children: [
                               Icon(Icons.image),
                               Text('From Gallery'),
                             ],
@@ -132,9 +130,9 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             stageUpload = Status.done;
                             stageFeatures = Status.open;
                           },
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
+                            children: [
                               Icon(Icons.camera),
                               Text('From Camera'),
                             ],
@@ -174,7 +172,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                   ),
                   const Spacer(),
                   InkResponse(
-                    radius: 35,
+                    radius: DodaoTheme.of(context).inkRadius,
                     containedInkWell: false,
                     onTap: () {
                       collectionServices.clearSelectedInManager();
@@ -323,18 +321,26 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             //         }
                             //       }
                             //     : null,
-                            onPressed: (!collectionExist ) ? () {
+                            onPressed: (!collectionExist ) ? () async {
                               // collectionServices.clearSelectedInManager();
                               showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) => const WalletActionDialog(
-                                        nanoId: 'createNFT',
-                                        taskName: 'createNFT',
-                                        page: 'create_collection',
-                                      ));
-                              tasksServices.createNft('example.com', collectionName, true);
-                              collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) => const WalletActionDialog(
+                                  nanoId: 'createNFT',
+                                  taskName: 'createNFT',
+                                  page: 'create_collection',
+                                )
+                              );
+                              String createNftReceipt = await tasksServices.createNft('example.com', collectionName, true);
+                              // print('createNftReceipt: $createNftReceipt');
+                              if (createNftReceipt.length == 66) {
+                                collectionServices.mintNftTagSelected.collection = true;
+                                await collectionServices.updateMintNft(collectionServices.mintNftTagSelected);
+                                await searchServices.refreshLists('selection');
+                                await searchServices.refreshLists('treasury');
+                                await searchServices.refreshLists('filter');
+                              }
                               // searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
                             } : null,
                             child: Text(

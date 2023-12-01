@@ -51,7 +51,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "taskAddress",
+        "name": "accountAddress",
         "type": "address"
       }
     ],
@@ -82,7 +82,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_sender",
+        "name": "_account",
         "type": "address"
       },
       {
@@ -123,7 +123,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_sender",
+        "name": "_account",
         "type": "address"
       },
       {
@@ -140,6 +140,19 @@
     "name": "addPerformerRating",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "contractAccountFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -217,10 +230,23 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getRawAccountsList",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "taskAddress",
+        "name": "accountAddress",
         "type": "address"
       }
     ],

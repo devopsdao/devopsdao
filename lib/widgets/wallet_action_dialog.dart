@@ -1,18 +1,17 @@
 import 'dart:math';
 
-import 'package:beamer/beamer.dart';
 import 'package:dodao/config/flutter_flow_util.dart';
 import 'package:dodao/config/theme.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:nanoid/async.dart';
 import 'package:provider/provider.dart';
-import 'package:webthree/credentials.dart';
+import 'package:rive/rive.dart' as rive;
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
-import '../tags_manager/collection_services.dart';
+import '../nft_manager/collection_services.dart';
+import '../wallet/wallet_service.dart';
 
 class WalletActionDialog extends StatefulWidget {
   final String nanoId;
@@ -31,39 +30,30 @@ class _WalletActionDialog extends State<WalletActionDialog> {
   String transactionStagesConfirmed = 'initial';
   String transactionStagesMinted = 'initial';
 
+  late String riveAssetPath;
+
   @override
   void initState() {
+    if (Random().nextInt(2) == 1) {
+      riveAssetPath = 'assets/rive_animations/clew_with_cat.riv';
+    } else {
+      riveAssetPath = 'assets/rive_animations/clew2.riv';
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    TasksServices tasksServices = context.watch<TasksServices>();
+    WalletProvider walletProvider = context.watch<WalletProvider>();
     var searchServices = context.read<SearchServices>();
     var collectionServices = context.read<CollectionServices>();
     var interface = context.read<InterfaceServices>();
 
-    // if(tasksServices.transactionStatuses[widget.nanoId] == null) {
-    //
-    // }
-    // String? statusPrint = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
-    // print('lastStatus: ' + statusPrint!);
-    // String? txnPrint = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
-    // print('statusApproved: ' + txnPrint!);
-
-    // if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH') {
-    //   transactionStagesApprove = 'approve';
-    //   transactionStagesPending = 'initial';
-    // } else {
-    //   transactionStagesPending = 'loading';
-    // }
-    // Beamer.of(interface.createJobPageContext).beamBack();
-    // Beamer.of(context).beamToNamed('/');
-
-    final String? status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
-    final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
+    final String status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
 
     if (widget.taskName == 'createTaskContract' && tasksServices.isRequestApproved) {
+      final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
 
       if (status == 'pending') {
         if (tokenApproved == 'initial') {
@@ -107,9 +97,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         });
       }
 
-
       tasksServices.isRequestApproved = false;
-
     } else if (widget.taskName == 'createTaskContract') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
@@ -165,9 +153,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           await tasksServices.collectMyTokens();
           searchServices.refreshLists('selection');
         });
-
       }
-
     } else if (widget.taskName == 'postWitnetRequest') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
@@ -212,7 +198,21 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
       }
-    }  else  {
+    } else if (widget.taskName == 'taskParticipate') {
+      if (status == 'pending') {
+        transactionStagesConfirmed = 'loading';
+        transactionStagesMinted = 'initial';
+      } else if (status == 'confirmed') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'loading';
+      } else if (status == 'minted') {
+        transactionStagesConfirmed = 'done';
+        transactionStagesMinted = 'done';
+      } else if (status == 'rejected') {
+        // transactionStagesConfirmed = 'done';
+        // transactionStagesMinted = 'done';
+      }
+    } else {
       if (status == 'pending') {
         // transactionStagesPending = 'loading';
         transactionStagesConfirmed = 'loading';
@@ -226,313 +226,45 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
       }
     }
-    var width = MediaQuery.of(context).size.width ;
-
+    var width = MediaQuery.of(context).size.width;
 
     return Dialog(
       // title: Text('Connect your wallet'),
-      shape: RoundedRectangleBorder(borderRadius: DodaoTheme.of(context).borderRadius,),
+      shape: RoundedRectangleBorder(
+        borderRadius: DodaoTheme.of(context).borderRadius,
+      ),
       insetAnimationDuration: const Duration(milliseconds: 1100),
       child: Container(
-        padding: const EdgeInsets.only(
-          top: 20,
-          left: 20,
-          right: 20,
-          bottom: 20
-        ),
+        padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
         width: width < 400 ? width : 350,
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              SizedBox(
+                height: 170,
+                width: 170,
+                child: rive.RiveAnimation.asset(
+                  riveAssetPath,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  // onInit: _onRiveInit,
+                  // artboard: 'new',
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 250,
-                    // padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'rejected')
-                          Row(
-                            children: [
-                              SizedBox(
-                                  width: 40,
-                                  height: 35,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.dangerous_outlined,
-                                        size: 30.0,
-                                        color: DodaoTheme.of(context).iconWrong,
-                                      ),
-                                    ],
-                                  )
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Transaction has been rejected',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          )
-                        // Text(
-                        //   'Transaction has been rejected',
-                        //   style: Theme.of(context).textTheme.bodyText1,
-                        //   textAlign: TextAlign.center,
-                        // )
-                        else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] == 'failed')
-                          Row(
-                            children: [
-                              SizedBox(
-                                  width: 40,
-                                  height: 35,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.dangerous_outlined,
-                                        size: 30.0,
-                                        color: DodaoTheme.of(context).iconWrong,
-                                      ),
-                                    ],
-                                  )),
-                              Container(
-                                child: Text(
-                                  'Transaction has failed, \nplease retry',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          )
-                        // Text(
-                        //   'Transaction has failed, please retry',
-                        //   style: Theme.of(context).textTheme.bodyText1,
-                        //   textAlign: TextAlign.center,
-                        // )
-                        else if (tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'failed' ||
-                              tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['txn'] != 'rejected')
-                            Column(
-                              children: [
-                                if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
-                                  Row(
-                                    children: [
-                                      Container(
-                                          width: 40,
-                                          height: 45,
-                                          child: Row(
-                                            children: [
-                                              if (transactionStagesApprove == 'initial')
-                                                Icon(
-                                                  Icons.task_alt,
-                                                  size: 30.0,
-                                                  color: DodaoTheme.of(context).iconInitial,
-                                                )
-                                              else if (transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
-                                                LoadingAnimationWidget.threeRotatingDots(
-                                                  color: DodaoTheme.of(context).iconProcess,
-                                                  size: 30,
-                                                )
-                                              else if (transactionStagesApprove == 'done')
-                                                  Icon(
-                                                    Icons.task_alt,
-                                                    size: 30.0,
-                                                    color: DodaoTheme.of(context).iconDone,
-                                                  )
-                                            ],
-                                          )),
-                                      if (transactionStagesApprove == 'initial')
-                                        Text(
-                                          'Please approve token spend',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      if (transactionStagesApprove == 'loading')
-                                        Text(
-                                          'Please approve token spend',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      if (transactionStagesApprove == 'approve')
-                                        Text(
-                                          'Token spend approved',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      if (transactionStagesApprove == 'done')
-                                        Text(
-                                          'Token spend approved',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                    ],
-                                  ),
-                                // if(widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
-                                // Row(
-                                //   children: [
-                                //     Container(
-                                //         width: 45,
-                                //         height:  45,
-                                //         child: Row(
-                                //           children: [
-                                //             if (transactionStagesWaiting == 'initial')
-                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
-                                //             else if (transactionStagesWaiting == 'loading')
-                                //               LoadingAnimationWidget.threeRotatingDots(
-                                //                 color: Colors.black54,
-                                //                 size: 30,
-                                //               )
-                                //             else if (transactionStagesWaiting == 'done')
-                                //                 Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                //           ],
-                                //         )
-                                //     ),
-                                //     Container(
-                                //       alignment: Alignment.center,
-                                //       child: Text(
-                                //         'Wait for confirmation',
-                                //         style: Theme.of(context).textTheme.bodyText1,
-                                //         textAlign: TextAlign.center,
-                                //       ),
-                                //     ),
-                                //
-                                //   ],
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     Container(
-                                //         width: 45,
-                                //         height:  45,
-                                //         child: Row(
-                                //           children: [
-                                //             if (transactionStagesPending == 'initial')
-                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.black26,)
-                                //             else if (transactionStagesPending == 'loading')
-                                //               LoadingAnimationWidget.threeRotatingDots(
-                                //                 color: Colors.black54,
-                                //                 size: 30,
-                                //               )
-                                //             else if (transactionStagesPending == 'done')
-                                //               Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                //           ],
-                                //         )
-                                //     ),
-                                //     Container(
-                                //       alignment: Alignment.center,
-                                //       child: Text(
-                                //         'Confirm the transaction',
-                                //         style: Theme.of(context).textTheme.bodyText1,
-                                //         textAlign: TextAlign.center,
-                                //       ),
-                                //     ),
-                                //
-                                //   ],
-                                // ),
-                                Row(
-                                  children: [
-                                    Container(
-                                        width: 40,
-                                        height: 45,
-                                        child: Row(
-                                          children: [
-                                            if (transactionStagesConfirmed == 'initial')
-                                            // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
-                                              Icon(
-                                                Icons.task_alt,
-                                                size: 30.0,
-                                                color: DodaoTheme.of(context).iconInitial,
-                                              )
-                                            else if (transactionStagesConfirmed == 'loading')
-                                              LoadingAnimationWidget.threeRotatingDots(
-                                                color: DodaoTheme.of(context).iconProcess,
-                                                size: 30,
-                                              )
-                                            else if (transactionStagesConfirmed == 'done')
-                                                Icon(
-                                                  Icons.task_alt,
-                                                  size: 30.0,
-                                                  color: DodaoTheme.of(context).iconDone,
-                                                )
-                                          ],
-                                        )),
-                                    if (transactionStagesConfirmed == 'initial' || transactionStagesConfirmed == 'loading')
-                                      Center(
-                                        child: Text(
-                                          'Please approve transaction',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    if (transactionStagesConfirmed == 'done')
-                                      Center(
-                                        child: Text(
-                                          'Transaction approved',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                        width: 40,
-                                        height: 45,
-                                        child: Row(
-                                          children: [
-                                            if (transactionStagesMinted == 'initial')
-                                              Icon(
-                                                Icons.task_alt,
-                                                size: 30.0,
-                                                color: DodaoTheme.of(context).iconInitial,
-                                              )
-                                            else if (transactionStagesMinted == 'loading')
-                                              LoadingAnimationWidget.threeRotatingDots(
-                                                color: DodaoTheme.of(context).iconProcess,
-                                                size: 30,
-                                              )
-                                            else if (transactionStagesMinted == 'done')
-                                                Icon(
-                                                  Icons.task_alt,
-                                                  size: 30.0,
-                                                  color: DodaoTheme.of(context).iconDone,
-                                                )
-                                          ],
-                                        )),
-                                    Text(
-                                      'Minted in the blockchain',
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      if (status == 'rejected') rejected(context) else if (status == 'failed') failed(context) else passed(tasksServices, context),
+                    ],
                   ),
                 ],
               ),
-
-              // if (tasksServices.interchainSelected.isNotEmpty)
-              // if (false)
-              //   Container(
-              //     padding: const EdgeInsets.only(top: 50.0),
-              //     child: Column(
-              //       children: [
-              //         const Text('Interchain protocol:'),
-              //         Container(
-              //           padding: const EdgeInsets.all(4.0),
-              //           // width: 128,
-              //           child: interface.interchainImages[tasksServices.interchainSelected],
-              //         ),
-              //       ],
-              //     ),
-              //   )
-              const SizedBox( height: 15,),
+              const SizedBox(
+                height: 15,
+              ),
               Row(
                 children: [
                   Expanded(
@@ -557,7 +289,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                         decoration: BoxDecoration(
                           borderRadius: DodaoTheme.of(context).borderRadius,
                           border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
-                          ),
+                              ),
                         ),
                         child: Text(
                           'Close',
@@ -575,125 +307,234 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                     width: 16,
                   ),
                   if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
-                  Expanded(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20.0),
-                      onTap: () {
-                        // Navigator.pop(context);
-                        launchURL(tasksServices.walletConnectSessionUri);
-                        // _transactionStateToAction(context, state: _state);
-                        setState(() {
-
-                        });
-                        // Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(0.0),
-                        height: 54.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: DodaoTheme.of(context).borderRadius,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
-                            stops: [0, 0.6, 1],
+                    Expanded(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20.0),
+                        onTap: () {
+                          // Navigator.pop(context);
+                          launchURL(walletProvider.walletConnectUri);
+                          setState(() {});
+                          // Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          height: 54.0,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: DodaoTheme.of(context).borderRadius,
+                            gradient: const LinearGradient(
+                              colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
+                              stops: [0, 0.6, 1],
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Go to wallet',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                          child: const Text(
+                            'Go to wallet',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  // if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
-                  //   Expanded(
-                  //     child: InkWell(
-                  //       borderRadius: BorderRadius.circular(20.0),
-                  //       onTap: () {
-                  //         // Navigator.pop(context);
-                  //         // launchURL(tasksServices.walletConnectSessionUri);
-                  //         // _transactionStateToAction(context, state: _state);
-                  //         setState(() {
-                  //           // final nanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12);
-                  //           // final List<String> tags = [];
-                  //           // final List<BigInt> tokenId = [];
-                  //           // final List<BigInt> amounts = [];
-                  //           // //final List<String> tokenNames = [];
-                  //           //
-                  //           // List<EthereumAddress> tokenContracts = [];
-                  //           //
-                  //           // late bool nftPresent = false;
-                  //           //
-                  //           // for (var e in searchServices.createTagsList.entries) {
-                  //           //   for (var e2 in e.value.bunch.entries) {
-                  //           //     if (e2.value.nft) {
-                  //           //       tokenId.add(e2.key);
-                  //           //       amounts.add(BigInt.from(1));
-                  //           //       nftPresent = true;
-                  //           //       //  tokenNames.add(e2.value.name);
-                  //           //     } else {
-                  //           //       tags.add(e.value.name);
-                  //           //     }
-                  //           //   }
-                  //           // }
-                  //           //
-                  //           // if (nftPresent) {
-                  //           //   tokenContracts.add(tasksServices.contractAddress);
-                  //           //   nftPresent = false;
-                  //           // }
-                  //           //
-                  //           // if (interface.tokensEntered != 0) {
-                  //           //   // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
-                  //           //   //  tokenNames.insert(0, tasksServices.taskTokenSymbol);
-                  //           //   tokenId.insert(0, BigInt.from(0));
-                  //           //   amounts.insert(0, BigInt.from(interface.tokensEntered * pow(10, 18)));
-                  //           //   tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
-                  //           // } else if (tokenId.isEmpty) {
-                  //           //   //  tokenNames.insert(0, 'dodao');
-                  //           //   //   amounts.insert(0, BigInt.from(0));
-                  //           // }
-                  //           //
-                  //           // List<List<BigInt>> tokenIds = [tokenId];
-                  //           // List<List<BigInt>> tokenAmounts = [amounts];
-                  //           //
-                  //           // tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, githubLinkController!.text,
-                  //           //     interface.tokensEntered, nanoId, tags, tokenIds, tokenAmounts, tokenContracts);
-                  //         });
-                  //         // Navigator.pop(context);
-                  //       },
-                  //       child: Container(
-                  //         padding: const EdgeInsets.all(0.0),
-                  //         height: 54.0,
-                  //         alignment: Alignment.center,
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: DodaoTheme.of(context).borderRadius,
-                  //           gradient: const LinearGradient(
-                  //             colors: [Color(0xfffadb00), Colors.deepOrangeAccent, Colors.deepOrange],
-                  //             stops: [0, 0.6, 1],
-                  //           ),
-                  //         ),
-                  //         child: const Text(
-                  //           'Retry',
-                  //           textAlign: TextAlign.center,
-                  //           style: TextStyle(
-                  //             color: Colors.white,
-                  //             fontWeight: FontWeight.bold,
-                  //             fontSize: 18,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   )
                 ],
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Column passed(TasksServices tasksServices, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    if (transactionStagesApprove == 'initial')
+                      Icon(
+                        Icons.task_alt,
+                        size: 30.0,
+                        color: DodaoTheme.of(context).iconInitial,
+                      )
+                    else if (transactionStagesApprove == 'loading' || transactionStagesApprove == 'approve')
+                      LoadingAnimationWidget.threeRotatingDots(
+                        color: DodaoTheme.of(context).iconProcess,
+                        size: 30,
+                      )
+                    else if (transactionStagesApprove == 'done')
+                      Icon(
+                        Icons.task_alt,
+                        size: 30.0,
+                        color: DodaoTheme.of(context).iconDone,
+                      )
+                  ],
+                ),
+                if (transactionStagesApprove == 'initial')
+                  Text(
+                    'Please approve token spend',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                if (transactionStagesApprove == 'loading')
+                  Text(
+                    'Please approve token spend',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                if (transactionStagesApprove == 'approve')
+                  Text(
+                    'Token spend approved',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+                if (transactionStagesApprove == 'done')
+                  Text(
+                    'Token spend approved',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.left,
+                  ),
+              ],
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  if (transactionStagesConfirmed == 'initial')
+                    // Icon(Icons.task_alt, size: 30.0, color: Colors.green,)
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconInitial,
+                    )
+                  else if (transactionStagesConfirmed == 'loading')
+                    LoadingAnimationWidget.threeRotatingDots(
+                      color: DodaoTheme.of(context).iconProcess,
+                      size: 30,
+                    )
+                  else if (transactionStagesConfirmed == 'done')
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconDone,
+                    )
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              if (transactionStagesConfirmed == 'initial' || transactionStagesConfirmed == 'loading')
+                Center(
+                  child: Text(
+                    'Please approve transaction',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              if (transactionStagesConfirmed == 'done')
+                Center(
+                  child: Text(
+                    'Transaction approved',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  if (transactionStagesMinted == 'initial')
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconInitial,
+                    )
+                  else if (transactionStagesMinted == 'loading')
+                    LoadingAnimationWidget.threeRotatingDots(
+                      color: DodaoTheme.of(context).iconProcess,
+                      size: 30,
+                    )
+                  else if (transactionStagesMinted == 'done')
+                    Icon(
+                      Icons.task_alt,
+                      size: 30.0,
+                      color: DodaoTheme.of(context).iconDone,
+                    )
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                'Minted in the blockchain',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding failed(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Icon(
+            Icons.dangerous_outlined,
+            size: 30.0,
+            color: DodaoTheme.of(context).iconWrong,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Transaction has failed, \nplease retry',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding rejected(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Icon(
+            Icons.dangerous_outlined,
+            size: 30.0,
+            color: DodaoTheme.of(context).iconWrong,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            'Transaction has been rejected',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

@@ -1,10 +1,14 @@
 import 'package:dodao/config/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../blockchain/classes.dart';
 
 import 'package:rive/rive.dart';
+
+import '../../blockchain/interface.dart';
+import '../../blockchain/task_services.dart';
 
 class RateAnimatedWidget extends StatefulWidget {
   final Task? task;
@@ -17,9 +21,14 @@ class RateAnimatedWidget extends StatefulWidget {
   _RateAnimatedWidgetState createState() => _RateAnimatedWidgetState();
 }
 
+double ratingNum = 0;
+
+
 class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
+
   @override
   Widget build(BuildContext context) {
+    var interface = context.read<InterfaceServices>();
 
     SMINumber? rating;
 
@@ -124,17 +133,20 @@ class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
       final StateMachineController? controller = StateMachineController.fromArtboard(
         artboard,
         'State Machine 1',
-        // onStateChange: (stateMachineName, animationName) {
-        //   print(stateMachineName);
-        //   print(animationName);
-        //   print(rating!.value);
-        // },
+        onStateChange: (stateMachineName, animationName) {
+          // print(stateMachineName);
+          // print(animationName);
+          // print(rating!.value);
+          ratingNum = rating!.value;
+        },
       );
 
       artboard.addController(controller!);
       rating = controller.findInput<double>('Rating') as SMINumber;
+      // print(controller.findInput<double>('Rating')!.value);
     }
-    void hitBump() => debugPrint("${rating?.value}");
+    // void hitBump() => debugPrint("${rating?.value}");
+
 
 
     // void hitBump() => print(this);
@@ -143,7 +155,10 @@ class _RateAnimatedWidgetState extends State<RateAnimatedWidget> {
         size: const Size.fromHeight(56),
         // constraints: const BoxConstraints.expand(),
         child: GestureDetector(
-          onTap: hitBump,
+          onTap: () {
+            interface.updateRatingValue(ratingNum);
+            // print(ratingNum);
+          },
           child: RiveAnimation.asset(
               'assets/rive_animations/rating_animation.riv',
             fit: BoxFit.contain,

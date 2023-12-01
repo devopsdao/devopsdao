@@ -1,5 +1,5 @@
 name: dodao
-description: dodao.dev
+description: docs.dodao.dev
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.0
+version: 1.4.1
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -28,19 +28,20 @@ dependencies:
   app_bar_with_search_switch: ^1.3.8
   auto_animated: ^3.1.0
   auto_size_text: 3.0.0
-  badges: ^2.0.3
+  badges: ^3.1.1
   beamer:
     path: ../beamer/package
   blurrycontainer: ^1.0.2
   browser_detector: ^2.0.0
   cached_network_image: ^3.2.1
   collection: ^1.16.0
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^5.0.0
   convert: ^3.1.1
   cupertino_icons: ^1.0.0
   custom_refresh_indicator: ^2.0.1
   easy_debounce: ^2.0.2+1
   eth_sig_util: ^0.0.9
+  external_app_launcher: ^3.1.0
   flutter:
     sdk: flutter
   flutter_chat_ui: ^1.6.6
@@ -48,7 +49,7 @@ dependencies:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
   flutter_secure_storage_linux: ^1.1.0
-  flutter_svg: ^1.0.1
+  flutter_svg: ^2.0.7
   flutter_svg_provider: ^1.0.3
   font_awesome_flutter: ^10.4.0
   g_json: ^4.1.0
@@ -56,10 +57,11 @@ dependencies:
   gradient_borders: ^1.0.0
   horizontal_blocked_scroll_physics: ^4.0.1
   html: ^0.15.0
-  http: ^0.13.4
+#  http: ^0.13.4
+  http: ^1.1.0
   icons_animate: ^0.0.2
-  image_picker: ^0.8.6+4
-  internet_connection_checker_plus: ^1.0.1
+  image_picker: ^1.0.4
+  internet_connection_checker_plus: ^2.1.0
   intl: ^0.18.0
   jovial_svg: ^1.1.9
   js: ^0.6.4
@@ -67,7 +69,7 @@ dependencies:
   linked_scroll_controller: ^0.2.0
   loading_animation_widget: null
   nanoid: ^1.0.0
-  package_info_plus: ^4.0.2
+  package_info_plus: ^4.2.0
   page_transition: ^2.0.9
   provider: ^6.0.2
   qr_flutter: ^4.1.0
@@ -75,20 +77,20 @@ dependencies:
   rive: ^0.11.2
   rive_splash_screen: ^0.1.1
   scan: ^1.6.0
+  fl_toast: ^3.2.0
   shared_preferences: ^2.0.15
   shimmer: ^3.0.0
-  sidebarx: ^0.15.0
+  sidebarx: ^0.16.2
   simple_markdown_editor_plus: ^0.2.6
   throttling: ^1.0.0
   timeago: ^3.3.0
   universal_html: ^2.0.8
-  url_launcher: ^6.1.5
-  wallet_connect: ^1.0.4
-  walletconnect_dart: ^0.0.11
-  walletconnect_flutter_v2: ^2.0.12
-  walletconnect_secure_storage: ^1.0.0
+  url_launcher: ^6.1.12
+#  wallet_connect: ^1.0.4
+  walletconnect_flutter_v2: ^2.1.9
   web_socket_channel: ^2.4.0
-  webthree: ^2.5.7+2
+  webthree: ^2.7.1
+  web3modal_flutter: ^3.0.0-beta04
   week_of_year: ^2.0.0
 #  vector_graphics: ^1.0.1
 dependency_overrides:

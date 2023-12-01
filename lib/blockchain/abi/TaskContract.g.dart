@@ -5,7 +5,7 @@ import 'package:webthree/webthree.dart' as _i1;
 import 'dart:typed_data' as _i2;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"inputs":[{"internalType":"address payable","name":"_sender","type":"address"},{"components":[{"internalType":"string","name":"nanoId","type":"string"},{"internalType":"string","name":"taskType","type":"string"},{"internalType":"string","name":"title","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"string","name":"repository","type":"string"},{"internalType":"string[]","name":"tags","type":"string[]"},{"internalType":"address[]","name":"tokenContracts","type":"address[]"},{"internalType":"uint256[][]","name":"tokenIds","type":"uint256[][]"},{"internalType":"uint256[][]","name":"tokenAmounts","type":"uint256[][]"}],"internalType":"struct TaskData","name":"_taskData","type":"tuple"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"Logs","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"LogsValue","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"TaskUpdated","type":"event"},{"inputs":[],"name":"getTaskData","outputs":[{"components":[{"internalType":"string","name":"nanoId","type":"string"},{"internalType":"uint256","name":"createTime","type":"uint256"},{"internalType":"string","name":"taskType","type":"string"},{"internalType":"string","name":"title","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"string","name":"repository","type":"string"},{"internalType":"string[]","name":"tags","type":"string[]"},{"internalType":"uint256[]","name":"tagsNFT","type":"uint256[]"},{"internalType":"address[]","name":"tokenContracts","type":"address[]"},{"internalType":"uint256[][]","name":"tokenIds","type":"uint256[][]"},{"internalType":"uint256[][]","name":"tokenAmounts","type":"uint256[][]"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"string","name":"auditState","type":"string"},{"internalType":"uint256","name":"rating","type":"uint256"},{"internalType":"address payable","name":"contractOwner","type":"address"},{"internalType":"address payable","name":"participant","type":"address"},{"internalType":"address","name":"auditInitiator","type":"address"},{"internalType":"address","name":"auditor","type":"address"},{"internalType":"address[]","name":"participants","type":"address[]"},{"internalType":"address[]","name":"funders","type":"address[]"},{"internalType":"address[]","name":"auditors","type":"address[]"},{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"address","name":"sender","type":"address"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"uint256","name":"replyTo","type":"uint256"}],"internalType":"struct Message[]","name":"messages","type":"tuple[]"},{"internalType":"address","name":"contractParent","type":"address"}],"internalType":"struct Task","name":"task","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_operator","type":"address"},{"internalType":"address","name":"_from","type":"address"},{"internalType":"uint256[]","name":"_ids","type":"uint256[]"},{"internalType":"uint256[]","name":"_values","type":"uint256[]"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"onERC1155BatchReceived","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_operator","type":"address"},{"internalType":"address","name":"_from","type":"address"},{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"onERC1155Received","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceID","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_favour","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"taskAuditDecision","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskAuditParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address payable","name":"_participant","type":"address"},{"internalType":"string","name":"_state","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"_score","type":"uint256"}],"name":"taskStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_addressToSend","type":"address"},{"internalType":"string","name":"_chain","type":"string"}],"name":"transferToaddress","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}]',
+  '[{"inputs":[{"internalType":"address payable","name":"_sender","type":"address"},{"components":[{"internalType":"string","name":"nanoId","type":"string"},{"internalType":"string","name":"taskType","type":"string"},{"internalType":"string","name":"title","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"string","name":"repository","type":"string"},{"internalType":"string[]","name":"tags","type":"string[]"},{"internalType":"address[]","name":"tokenContracts","type":"address[]"},{"internalType":"uint256[][]","name":"tokenIds","type":"uint256[][]"},{"internalType":"uint256[][]","name":"tokenAmounts","type":"uint256[][]"}],"internalType":"struct TaskData","name":"_taskData","type":"tuple"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"}],"name":"Logs","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"LogsValue","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAdr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"TaskUpdated","type":"event"},{"inputs":[],"name":"getTaskData","outputs":[{"components":[{"internalType":"string","name":"nanoId","type":"string"},{"internalType":"uint256","name":"createTime","type":"uint256"},{"internalType":"string","name":"taskType","type":"string"},{"internalType":"string","name":"title","type":"string"},{"internalType":"string","name":"description","type":"string"},{"internalType":"string","name":"repository","type":"string"},{"internalType":"string[]","name":"tags","type":"string[]"},{"internalType":"uint256[]","name":"tagsNFT","type":"uint256[]"},{"internalType":"address[]","name":"tokenContracts","type":"address[]"},{"internalType":"uint256[][]","name":"tokenIds","type":"uint256[][]"},{"internalType":"uint256[][]","name":"tokenAmounts","type":"uint256[][]"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"string","name":"auditState","type":"string"},{"internalType":"uint256","name":"rating","type":"uint256"},{"internalType":"address payable","name":"contractOwner","type":"address"},{"internalType":"address payable","name":"participant","type":"address"},{"internalType":"address","name":"auditInitiator","type":"address"},{"internalType":"address","name":"auditor","type":"address"},{"internalType":"address[]","name":"participants","type":"address[]"},{"internalType":"address[]","name":"funders","type":"address[]"},{"internalType":"address[]","name":"auditors","type":"address[]"},{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"text","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"address","name":"sender","type":"address"},{"internalType":"string","name":"taskState","type":"string"},{"internalType":"uint256","name":"replyTo","type":"uint256"}],"internalType":"struct Message[]","name":"messages","type":"tuple[]"},{"internalType":"address","name":"contractParent","type":"address"}],"internalType":"struct Task","name":"task","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"bytes","name":"","type":"bytes"}],"name":"onERC1155BatchReceived","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"bytes","name":"","type":"bytes"}],"name":"onERC1155Received","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceID","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_favour","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"taskAuditDecision","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskAuditParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"}],"name":"taskParticipate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address payable","name":"_participant","type":"address"},{"internalType":"string","name":"_state","type":"string"},{"internalType":"string","name":"_message","type":"string"},{"internalType":"uint256","name":"_replyTo","type":"uint256"},{"internalType":"uint256","name":"_score","type":"uint256"}],"name":"taskStateChange","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address payable","name":"_addressToSend","type":"address"},{"internalType":"string","name":"_chain","type":"string"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"withdrawAndRate","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}]',
   'TaskContract',
 );
 
@@ -46,22 +46,22 @@ class TaskContract extends _i1.GeneratedContract {
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
   Future<_i2.Uint8List> onERC1155BatchReceived(
-    _i1.EthereumAddress _operator,
-    _i1.EthereumAddress _from,
-    List<BigInt> _ids,
-    List<BigInt> _values,
-    _i2.Uint8List _data, {
+    _i1.EthereumAddress $param0,
+    _i1.EthereumAddress $param1,
+    List<BigInt> $param2,
+    List<BigInt> $param3,
+    _i2.Uint8List $param4, {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
     final function = self.abi.functions[2];
     assert(checkSignature(function, 'bc197c81'));
     final params = [
-      _operator,
-      _from,
-      _ids,
-      _values,
-      _data,
+      $param0,
+      $param1,
+      $param2,
+      $param3,
+      $param4,
     ];
     final response = await read(
       sender,
@@ -76,22 +76,22 @@ class TaskContract extends _i1.GeneratedContract {
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
   Future<_i2.Uint8List> onERC1155Received(
-    _i1.EthereumAddress _operator,
-    _i1.EthereumAddress _from,
-    BigInt _id,
-    BigInt _value,
-    _i2.Uint8List _data, {
+    _i1.EthereumAddress $param5,
+    _i1.EthereumAddress $param6,
+    BigInt $param7,
+    BigInt $param8,
+    _i2.Uint8List $param9, {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
     final function = self.abi.functions[3];
     assert(checkSignature(function, 'f23a6e61'));
     final params = [
-      _operator,
-      _from,
-      _id,
-      _value,
-      _data,
+      $param5,
+      $param6,
+      $param7,
+      $param8,
+      $param9,
     ];
     final response = await read(
       sender,
@@ -260,17 +260,21 @@ class TaskContract extends _i1.GeneratedContract {
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
-  Future<String> transferToaddress(
+  Future<String> withdrawAndRate(
+    _i1.EthereumAddress _sender,
     _i1.EthereumAddress _addressToSend,
-    String _chain, {
+    String _chain,
+    BigInt rating, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[10];
-    assert(checkSignature(function, 'f74657bb'));
+    assert(checkSignature(function, '7f87e575'));
     final params = [
+      _sender,
       _addressToSend,
       _chain,
+      rating,
     ];
     return write(
       credentials,

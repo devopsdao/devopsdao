@@ -1,3 +1,18 @@
+## [1.5.0] - 2023-12-01
+### Added
+- Dodao Tanssi Appchain support
+- complete rework of wallet connection with multiple blockchains support
+- tags and NFTs are available in Tasks
+- GUI rework
+
+## [1.4.0] - 2023-03-20
+### Added
+- First version of WalletConnect v2
+
+## [1.3.0] - 2023-03-20
+### Added
+- Intergrated with Witnet Oracle
+
 
 ## [1.1.3] - 2023-03-20
 ### Added

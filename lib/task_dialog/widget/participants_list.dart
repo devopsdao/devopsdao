@@ -7,8 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:beamer/beamer.dart';
 import 'package:webthree/credentials.dart';
 
+import '../../blockchain/accounts.dart';
 import '../../blockchain/interface.dart';
+import '../../blockchain/notify_listener.dart';
 import '../../blockchain/task_services.dart';
+import '../../widgets/badge-small-colored.dart';
 
 class ParticipantList extends StatefulWidget {
   final Task task;
@@ -23,15 +26,17 @@ class ParticipantList extends StatefulWidget {
 }
 
 class _ParticipantListState extends State<ParticipantList> {
-  late List participants;
+  late List participants = [];
   late String status;
   late double selectedIndex = 1990;
+  late Future<Map<String, Account>> futureParticipationList;
 
   final selectionScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    getParticipationList();
   }
 
   @override
@@ -40,14 +45,27 @@ class _ParticipantListState extends State<ParticipantList> {
     super.dispose();
   }
 
+  Future<void> getParticipationList() async {
+    final provider = Provider.of<TasksServices>(context, listen: false);
+    final participationList = provider.getAccountsData(widget.task.participants.cast<EthereumAddress>());
+    setState((){
+      futureParticipationList = participationList;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
-
+    var myNotifyListener = context.watch<MyNotifyListener>();
+    var tasksServices = context.read<TasksServices>();
+    var interface = context.read<InterfaceServices>();
+    // void getParticipantData() async {
+    //   Map<String, Account> list = await tasksServices.getAccountsData(widget.task.participants as List<EthereumAddress>);
+    //   participants = list.values.toList();
+    //   // participants = list.values.toList();
+    // }
     if (interface.dialogCurrentState['name'] == 'customer-new') {
       if (widget.task.participants != null) {
-        participants = widget.task.participants;
+        // getParticipantData();
       } else {
         participants = [];
       }
@@ -55,110 +73,111 @@ class _ParticipantListState extends State<ParticipantList> {
         interface.dialogCurrentState['name'] == 'performer-audit-requested') {
       participants = widget.task.auditors;
     }
-    // print(selectedIndex);
-
-    // participants = [
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x3333333333333333333334444444444444444341'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x3333333333333333333334444444444444444341'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //
-    //   EthereumAddress.fromHex('0x3333333333333333333334444444444444444341'),
-    //   EthereumAddress.fromHex('0x3333333333333333333355555555555523412341'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x3333333333333333333355555555555523412341'),
-    //   EthereumAddress.fromHex('0x3333333333333333333334444444444444444341'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x3333333333333333333334444444444444444341'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    //   EthereumAddress.fromHex('0x3333333333333333333355555555555523412341'),
-    //   EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-    // ];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(4),
       // scrollDirection: Axis.vertical,
       controller: selectionScrollController,
       // physics: AlwaysScrollableScrollPhysics(),
-      child: ListView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          // scrollDirection: Axis.vertical,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: participants.length,
-          itemBuilder: (context2, index2) {
-            return SizedBox(
-              height: interface.tileHeight,
-              child: ListTile(
-                title: Center(
-                  child: RichText(
-                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                    TextSpan(
-                      text: participants[index2].toString(),
-                    ),
-                  ])),
-                ),
-                // style: TextButton.styleFrom(
-                //   textStyle: const TextStyle(fontSize: 13),
-                // ),
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
-                visualDensity: const VisualDensity(vertical: -3),
-                dense: true,
-                selected: index2 == selectedIndex,
-                // selectedColor: Colors.green,
-                selectedTileColor: DodaoTheme.of(context).nftInfoBackgroundColor,
-                // trailing: const Icon(
-                //   Icons.info_sharp,
-                //   color: Colors.black45,
-                //   size: 20,
-                // ),
-                onTap: () {
-                  selectionScrollController.animateTo(
-                    (interface.tileHeight * index2) - (interface.tileHeight * 3),
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOutCirc,
-                  );
-                  setState(() {
-                    selectedIndex = index2.toDouble();
-                    interface.selectedUser = {
-                      'address': participants[index2].toString()
-                    };
+      child: FutureBuilder(
+        future: futureParticipationList,
+        builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot)  {
+          if (snapshot. connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              snapshot.error.toString();
+              return Text(snapshot.error.toString());
+            } else if (snapshot.hasData) {
+              final list = snapshot.data?.values.toList();
+              return ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  // scrollDirection: Axis.vertical,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: list?.length,
+                  itemBuilder: (context2, index2) {
+                    return Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SizedBox(
+                        height: interface.tileHeight,
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              RichText(
+                                  text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                                    TextSpan(
+                                      text:
+                                      '${list?[index2].walletAddress.toString().substring(0, 5)}...'
+                                      '${list?[index2].walletAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
+                                    ),
+                                  ]
+                                  )
+                              ),
+                              const Spacer(),
+                              RichText(
+                                  text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                                    TextSpan(
+                                      text: list![index2].nickName.isNotEmpty ?
+                                      list[index2].nickName :
+                                          'Nameless'
+                                    ),
+                                  ]
+                                  )
+                              ),
+                              const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list![index2].customerTasks.length, color: Colors.lightBlue,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].auditParticipantTasks.length, color: Colors.redAccent.shade400,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].auditParticipantTasks.length, color: Colors.red.shade800,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].customerRating.length, color: Colors.deepPurpleAccent,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].performerRating.length, color: Colors.deepPurple,),
+                              ),
+                            ],
+                          ),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+                          visualDensity: const VisualDensity(vertical: -3),
+                          dense: true,
+                          selected: index2 == selectedIndex,
+                          selectedTileColor: DodaoTheme.of(context).nftInfoBackgroundColor,
+                          onTap: () {
+                            selectionScrollController.animateTo(
+                              (interface.tileHeight * index2) - (interface.tileHeight * 3),
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOutCirc,
+                            );
+                            setState(() {
+                              selectedIndex = index2.toDouble();
+                              interface.selectedUser = list[index2];
+                            });
+                            myNotifyListener.myNotifyListeners();
+                          },
+                        ),
+                      ),
+                    );
                   });
-                  tasksServices.myNotifyListeners();
-
-                  // tasksServices.taskStateChange(widget.task.taskAddress,
-                  //     participants[index2], status, widget.task.nanoId);
-                  // Navigator.pop(context);
-                  // RouteInformation routeInfo =
-                  //     const RouteInformation(location: '/customer');
-                  // Beamer.of(context).updateRouteInformation(routeInfo);
-                  //
-                  // showDialog(
-                  //     context: context,
-                  //     builder: (context) => WalletActionDialog(
-                  //           nanoId: widget.task.nanoId,
-                  //           taskName: 'taskStateChange',
-                  //         ));
-                },
-                // child: Text(
-                //   participants[index2].toString(),
-                //   style: DefaultTextStyle.of(context)
-                //       .style
-                //       .apply(fontSizeFactor: 0.7),
-                // ),
-              ),
-            );
-          }),
+            } else {
+              return const Text('Nothing to load..');
+            }
+          }
+          return const Text('...');
+        }
+      ),
     );
   }
 }

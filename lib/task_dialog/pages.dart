@@ -16,19 +16,15 @@ import '../widgets/chat/main.dart';
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class TaskDialogPages extends StatefulWidget {
-  // final String buttonName;
   final Task task;
   final String fromPage;
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
-  // bool shimmerEnabled;
 
   const TaskDialogPages({
     Key? key,
-    // required this.buttonName,
     required this.task,
     required this.fromPage,
-    // required this.shimmerEnabled,
     required this.screenHeightSize,
     required this.screenHeightSizeNoKeyboard,
   }) : super(key: key);
@@ -65,13 +61,11 @@ class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    // var tasksServices = context.watch<TasksServices>();
-
     Task task = widget.task;
     String fromPage = widget.fromPage;
 
     // init first page in dialog:
-    if (interface.dialogCurrentState['pages']['main'] != null && initDone == true) {
+    if (interface.dialogCurrentState['pages']['main'] != null && initDone == true && fromPage != 'last-activities') {
       initDone = false;
       interface.dialogPageNum = interface.dialogCurrentState['pages']['main'];
       interface.dialogPagesController = PageController(initialPage: interface.dialogCurrentState['pages']['main']);

@@ -43,7 +43,7 @@ class _CreateJobState extends State<CreateJob> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       searchServices.removeAllTagsOnPages(page: 'create');
-      // searchServices.refreshLists('selection');
+      searchServices.refreshLists('selection');
       // searchServices.tagsSearchFilter('', simpleTagsMap);
     });
   }
@@ -59,7 +59,6 @@ class _CreateJobState extends State<CreateJob> {
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
-    late String backgroundPicture = "assets/images/niceshape.png";
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final double myMaxWidth = constraints.maxWidth;
@@ -626,10 +625,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                   child: Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Row(
+                                    child: const Row(
                                       // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                                       // mainAxisSize: MainAxisSize.max,
-                                      children: const [
+                                      children: [
                                         Padding(
                                           padding: EdgeInsets.only(right: 12.0),
                                           child: Icon(Icons.new_releases, size: 35, color: Colors.lightGreen),
@@ -851,9 +850,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           //   return approveButtonERC20;
           // }
 
-          else if (
-            !activeSubmitButton
-          ) {
+          else if (!activeSubmitButton) {
             return submitButtonInactive;
           } else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
             interface.tokenSelected == '';
@@ -968,8 +965,8 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
               // decoration: BoxDecoration(
               //   borderRadius: BorderRadius.circular(6),
               // ),
-              child: Row(
-                children: const <Widget>[
+              child: const Row(
+                children: <Widget>[
                   Expanded(
                     child: Icon(
                       Icons.close,

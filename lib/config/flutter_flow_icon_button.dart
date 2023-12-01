@@ -1,3 +1,4 @@
+import 'package:dodao/config/theme.dart';
 import 'package:flutter/material.dart';
 
 class FlutterFlowIconButton extends StatelessWidget {
@@ -42,7 +43,7 @@ class FlutterFlowIconButton extends StatelessWidget {
           child: IconButton(
             icon: icon,
             onPressed: onPressed,
-            splashRadius: buttonSize,
+            splashRadius: DodaoTheme.of(context).inkRadius,
           ),
         ),
       );

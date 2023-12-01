@@ -1,21 +1,39 @@
 # Dodao
+**Dodao.dev is a Task marketplace for Developers and Art-creators**
+
 
 deployed to Moonbase alpha: https://arweave.net/9evFw5LQKVqt6928hTOZ0kDGtPDCXEgjsNIFtjMDO8Q
 
-Dodao.dev dApp is built as an uniform platform to bring all software development processes to blockchain. It will be used as work marketplace for developers and art creators. Dodao.devusers currently have three roles:
+Dodao dApp is built as an uniform platform to bring all software development processes to blockchain. 
+
+Dodao.dev users currently have three roles:
 
    - customer
    - performer
    - auditor
 
-Customer is able to create Task contract with DEV and USDC tokens as a reward. Once Performers apply for a Task, Customer is able to select the Performer for Task implementation. After the Task is implemented the Performer applies for a Customer review. Currently all negotiations are performed off-chain via Customer selected method (such as Telegram or Discord for example). When Customer is happy with the work done, he signs the review and the Performer will be able to withdraw the tokens. If any dispute occurs an Auditor can be invited to review the task and settle it.
+Shortly, Dodao business flow is the following:
+
+* User, who is in Customers' role is able to create Task contract with native, ERC-20, ERC-1155 or ERC-721 tokens as a reward. 
+* Users who are in Perfomers' role can apply for a Task, and Customer is able to select Performer for Task implementation. 
+* After Perfomer finishes his work on a Task, they apply for Customer review. When Customer or Performer have anything to discuss, they can use in-Task chat which is recorded on the blockchain.
+* When Customer is happy with the work done, they sign a review and then Performer is able to withdraw earned tokens. 
+* If any dispute occurs an Auditor can be invited to review the task and settle it in either Customer or Performer favour.
 
 ## Tech
 
 Tech: Dart, Flutter, Fantom, Arweave, Axelar, Hyperlane, Wormhole, LayerZero, Witnet, Solidity, Walletconnect, Ethereum EIP-2535 Diamonds, EIP-1155 multi token contracts.
+Blockchains: Tanssi Dancebox Appchain(thank you [Tanssi](https://www.tanssi.network/) ❤️ for onboarding us as Appchain Pioneers!), ZkSync testnet, Moonbeam Moonbase-alpha, Polygon Mumbai, Fantom testnet, Ethereum Goerli
 
-Devopsdao dApp is built on Flutter 3 powered by Dart language. Framework optimized for fast native apps on any platform. Devopsdao is a early bird blockchain project based on Flutter, taking the advantage to be presented on major platforms. Devopsdao EIP-2539 based smart contract Diamonds are compiled with hardhat and depend on Axelar GMP SDK for cross-chain interoperability. Devopsdao web app is served from Arweave decentralized cloud. Ongoing integration with Web APIs(like Github) via Witnet. Implemented Axelar, Hyperlane, Layerzero and Wormhole smart contacts as Diamond facets to enable cross-chain features. Dodao dApp is deployed on Fantom and is available via Axelar GMP from Axelar supported blockchains. It is also available via Hyperlane, Wormhole and LayerZero bridges. For Web3 interaction we support our own WebThree library.
-## Getting Started
+Dodao dApp tech details:
+dApp is built on Flutter 3 powered by Dart language, a framework which is optimized for fast native apps on any platform. 
+EIP-2539 based smart contract Diamonds are compiled with [hardhat](https://hardhat.org) and deployed with [ethers.js](https://ethers.org)
+Web version is served from Arweave decentralized cloud.
+Github integration via [Witnet Oracle](https://witnet.io) (thank you Witnet team ❤️ for a grant!). 
+Implemented [Axelar](https://axelar.network), [Hyperlane](https://hyperlane.xyz), [Layerzero](https://layerzero.network) and [Wormhole](https://wormhole.com/) smart contacts as Diamond facets to enable cross-chain features, integration with Dodao dApp is ongoing.
+For Web3 interaction we support our own [WebThree library](github.com/devopsdao/webthree) (thank you [Archethic team](https://www.archethic.net) for contributions!).
+
+## Building
 
 Feel free to for and build it with
 
@@ -29,7 +47,7 @@ flutter build web
 
 or to build a release for all platforms and deploy to ArWeave
 ```
-cider bump patch && flutter build apk && flutter build web && arkb deploy build/web/ --force
+flutter build apk && flutter build web && arkb deploy build/web/ --force
 ```
 
 ### IMPORTANT:
@@ -45,7 +63,7 @@ dart run build_runner build
 ```
 
 
-### Getting started continued:
+### Related repositories
 
 You can find smart contract code at
 - [Dodao.dev solidity smart contract](https://github.com/devopsdao)
@@ -55,7 +73,7 @@ Dodao.dev project depends on multiple awesome libraries, one of which is maintai
 
 - [WebThree: a web3 library for dart](https://pub.dev/webthree)
 
-
+### More
 For further information about the project please visit
 [Dodao.dev website](https://docs.dodao.dev)
 and [Dodao.dev web dapp](https://dodao.dev).

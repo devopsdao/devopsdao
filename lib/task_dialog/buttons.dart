@@ -51,7 +51,7 @@
 //           if (fromPage == 'tasks')
 //             TaskDialogButton(
 //               inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
-//                       tasksServices.validChainID &&
+//                       tasksServices.allowedChainId &&
 //                       tasksServices.publicAddress != null
 //                   ? false
 //                   : true,
@@ -160,10 +160,10 @@
 //             ),
 //
 //           if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true))
-//             // WithdrawButton(object: task),
+//             // accountButton(object: task),
 //             TaskDialogButton(
 //               inactive: (task.tokenValues[0] != 0 || task.tokenValues[0] != 0) ? false : true,
-//               buttonName: 'Withdraw',
+//               buttonName: 'account',
 //               buttonColorRequired: Colors.lightBlue.shade600,
 //               callback: () {
 //                 setState(() {

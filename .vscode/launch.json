@@ -6,24 +6,24 @@
     "configurations": [
         
         
-        // {
-        //     "name": "Launch Chrome",
-        //     "request": "launch",
-        //     "type": "chrome",
-        //     "url": "http://localhost:8080",
-        //     "webRoot": "${workspaceFolder}"
-        // },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        },
 
-        // {
-        //     "name": "Flutter Web Project",
-        //     "type": "dart",
-        //     "request": "launch",
-        //     "program": "lib/accounts_page.dart",
-        //     "args": [
-        //         "-d",
-        //         "chrome"
-        //     ]
-        // },
+        {
+            "name": "Flutter Web Project",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome"
+            ]
+        },
         {
             "name": "dodao",
             "request": "launch",

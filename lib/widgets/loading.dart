@@ -32,7 +32,7 @@ class _LoadIndicator extends State<LoadIndicator> {
     // });
     return Center(
       child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
           child: Align(
               alignment: Alignment.center,
               child: Column(
@@ -90,34 +90,55 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    // var interface = context.watch<InterfaceServices>();
-    late int taskLoadedState = tasksServices.tasksLoaded;
 
     return Row(
       children: [
-        FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          // borderWidth: 1,
-          buttonSize: 40,
-          icon: tasksServices.isLoadingBackground
-              ? LoadingAnimationWidget.threeRotatingDots(
-                  color: DodaoTheme.of(context).primaryText,
-                  size: 24,
-                )
-              : Icon(
-                  Icons.refresh_outlined,
-                  color: DodaoTheme.of(context).primaryText,
-                  // size: 24,
-                ),
-          onPressed: () async {
-            // interface.runPaw();
+        InkResponse(
+          radius: DodaoTheme.of(context).inkRadius,
+          containedInkWell: true  ,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: tasksServices.isLoadingBackground
+                ? LoadingAnimationWidget.threeRotatingDots(
+              color: DodaoTheme.of(context).primaryText,
+              size: 24,
+            )
+                : Icon(
+              Icons.refresh_outlined,
+              color: DodaoTheme.of(context).primaryText,
+              // size: 24,
+            ),
+          ),
+          onTap: () {
             if (tasksServices.publicAddress != null) {
               tasksServices.isLoadingBackground = true;
               tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
             }
           },
         ),
+        // FlutterFlowIconButton(
+        //   borderColor: Colors.transparent,
+        //   borderRadius: 30,
+        //   // borderWidth: 1,
+        //   buttonSize: 40,
+        //   icon: tasksServices.isLoadingBackground
+        //       ? LoadingAnimationWidget.threeRotatingDots(
+        //           color: DodaoTheme.of(context).primaryText,
+        //           size: 24,
+        //         )
+        //       : Icon(
+        //           Icons.refresh_outlined,
+        //           color: DodaoTheme.of(context).primaryText,
+        //           // size: 24,
+        //         ),
+        //   onPressed: () async {
+        //     // interface.runPaw();
+        //     if (tasksServices.publicAddress != null) {
+        //       tasksServices.isLoadingBackground = true;
+        //       tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+        //     }
+        //   },
+        // ),
       ],
     );
   }

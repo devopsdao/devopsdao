@@ -52,7 +52,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var tasksServices = context.read<TasksServices>();
       var interface = context.read<InterfaceServices>();
-      if (interface.dialogCurrentState['name'] == 'performer-review') {
+      if (interface.dialogCurrentState['name'] == 'performer-review' && widget.task.repository.isNotEmpty) {
         tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
         tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
       }
@@ -73,10 +73,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-
-    // if() {
-    //
-    // }
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
@@ -125,8 +121,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       );
                       final textHeight = TextPainter(text: text, maxLines: 5, textDirection: ui.TextDirection.ltr);
                       final oneLineHeight = TextPainter(text: text, maxLines: 1, textDirection: ui.TextDirection.ltr);
-                      textHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth );
-                      oneLineHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth  );
+                      textHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth);
+                      oneLineHeight.layout(maxWidth: constraints.maxWidth, minWidth: constraints.minWidth);
                       final numLines = textHeight.computeLineMetrics().length;
                       // print('numlines: ' + numLines.toString());
                       // print('constraints.maxWidth: ' + constraints.maxWidth.toString());
@@ -145,7 +141,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                             child: LimitedBox(
                               maxHeight:
-                              textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
+                                  textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
                               child: Row(
                                 children: [
                                   Expanded(
@@ -157,7 +153,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   ),
                                   if (interface.dialogCurrentState['pages'].containsKey('widgets.chat'))
                                     Container(
-                                      margin:const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                                      margin: const EdgeInsets.only(top: 6.0, bottom: 6.0),
                                       width: 36,
                                       height: 36,
                                       decoration: BoxDecoration(
@@ -301,7 +297,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //     ),
               //   ),
 
-              if (interface.dialogCurrentState['name'] == 'customer-completed' || tasksServices.hardhatDebug == true)
+              if (interface.dialogCurrentState['name'] == 'performer-completed' ||
+                  (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
@@ -616,7 +613,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
               // ),
               // const SizedBox(height: 14),
               // if (tasksServices.publicAddress != null &&
-              //   tasksServices.validChainID &&
+              //   tasksServices.allowedChainId &&
               //   ((interface.dialogCurrentState['mainButtonName'] == 'Participate' &&
               //       fromPage == 'tasks') ||
               //       interface.dialogCurrentState['mainButtonName'] == 'Start the task' ||
@@ -926,11 +923,12 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         'Unknown error (0x30)') {
                                       status = 'request failed'; //request failed
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
-                                        'Unknown error (0x70)') {
+                                            'Witnet: Aggregation: tried to access a value from an array with an index (0) out of bounds.' //'Unknown error (0x70)'
+                                        ) {
                                       status = 'no matching PR'; //request failed
                                       statusColor = Colors.yellow.shade800;
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==
-                                        'WitnetErrorsLib: assertion failed') {
+                                        'Witnet: Aggregation: tried to access a value from a map with a key ("merged_at") that was not found.') {
                                       status = 'PR open, not merged';
                                       statusColor = Colors.yellow.shade800;
                                     } else if (tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] ==

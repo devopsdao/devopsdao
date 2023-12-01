@@ -27,3 +27,8 @@ Size calcTextSize(String text, TextStyle style) {
   )..layout();
   return textPainter.size;
 }
+//
+// class InvalidDataException implements Exception {
+//   final String code;
+//   InvalidDataException(this.code);
+// }

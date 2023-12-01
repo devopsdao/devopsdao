@@ -1,15 +1,14 @@
-
 import 'package:flutter/cupertino.dart';
 
 Map<String, dynamic> dialogStates = {
   // ******* TASKS NEW ********* //
-  'empty' : {
-    'name' : 'empty',
-    'mainButtonName' : '',
-    'secondButtonName' : '',
-    'labelMessage' : '',
+  'empty': {
+    'name': 'empty',
+    'mainButtonName': '',
+    'secondButtonName': '',
+    'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
       // '1' : 1,
       // '2' : 2,
@@ -17,135 +16,139 @@ Map<String, dynamic> dialogStates = {
       // '4' : 4,
     },
   },
-  'tasks-new-logged' : {
-    'name' : 'tasks-new-logged',
-    'mainButtonName' : 'Participate',
-    'secondButtonName' : '',
-    'labelMessage' : 'Why you are the best Performer?',
+  'tasks-new-logged': {
+    'name': 'tasks-new-logged',
+    'mainButtonName': 'Participate',
+    'secondButtonName': '',
+    'labelMessage': 'Why you are the best Performer?',
     'secondLabelMessage': '',
-    'pages' : {
-      'main': 0,
-      'description' : 1
-    },
+    'pages': {'main': 0, 'description': 1},
   },
-  'tasks-new-not-logged' : {
-    'name' : 'tasks-new-not-logged',
-    'mainButtonName' : '',
-    'secondButtonName' : '',
-    'labelMessage' : '',
+  'last-activities': {
+    'name': 'last-activities',
+    'mainButtonName': '',
+    'secondButtonName': '',
+    'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
-      'main': 0,
-      'description' : 1
-    },
+    'pages': {'main': 0, 'description': 1},
+  },
+  'tasks-new-not-logged': {
+    'name': 'tasks-new-not-logged',
+    'mainButtonName': '',
+    'secondButtonName': '',
+    'selectButtonName': '',
+    'labelMessage': '',
+    'secondLabelMessage': '',
+    'selectLabelMessage': '',
+    'pages': {'main': 0, 'description': 1},
   },
   // ******* CUSTOMER ********* //
-  'customer-new' : {
-    'name' : 'customer-new',
+  'customer-new': {
+    'name': 'customer-new',
     'mainButtonName': '',
-    'secondButtonName' : '',
-    'selectButtonName' : 'Select performer',
+    'secondButtonName': '',
+    'selectButtonName': 'Select performer',
     'labelMessage': '',
     'secondLabelMessage': '',
     'selectLabelMessage': 'Why you have selected this Performer?',
-    'pages' : {
+    'pages': {
       'topup': 0,
       'main': 1,
-      'description' : 2,
-      'select' : 3,
+      'description': 2,
+      'select': 3,
     },
   },
-  'customer-agreed' : {
-    'name' : 'customer-agreed',
+  'customer-agreed': {
+    'name': 'customer-agreed',
     'mainButtonName': '',
-    'secondButtonName' : 'Request audit',
+    'secondButtonName': 'Request audit',
     'labelMessage': '',
     'secondLabelMessage': 'Why are you requesting for audit?',
-    'pages' : {
+    'pages': {
       'topup': 0,
       'main': 1,
-      'description' : 2,
-      'widgets.chat' : 3,
+      'description': 2,
+      'widgets.chat': 3,
     },
   },
-  'customer-progress' : {
-    'name' : 'customer-progress',
+  'customer-progress': {
+    'name': 'customer-progress',
     'mainButtonName': '',
-    'secondButtonName' : 'Request audit',
+    'secondButtonName': 'Request audit',
     'labelMessage': '',
     'secondLabelMessage': 'Why are you requesting for audit?',
-    'pages' : {
+    'pages': {
       'topup': 0,
       'main': 1,
-      'description' : 2,
-      'widgets.chat' : 3,
+      'description': 2,
+      'widgets.chat': 3,
     },
   },
 
-  'customer-review' : {
-    'name' : 'customer-review',
+  'customer-review': {
+    'name': 'customer-review',
     'mainButtonName': 'Sign Review',
-    'secondButtonName' : 'Request audit',
-    'labelMessage': 'Write your request for review to the Performer',
+    'secondButtonName': 'Request audit',
+    'labelMessage': 'Write a review for the performed task',
     'secondLabelMessage': 'Why are you requesting for audit?',
-    'pages' : {
+    'pages': {
       'topup': 0,
       'main': 1,
-      'description' : 2,
-      'widgets.chat' : 3,
+      'description': 2,
+      'widgets.chat': 3,
     },
   },
-  'customer-completed' : {
-    'name' : 'customer-completed',
+  'customer-completed': {
+    'name': 'customer-completed',
     'mainButtonName': 'Rate',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': 'Write your thanks message to the Customer',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'customer-canceled' : {
-    'name' : 'customer-canceled',
+  'customer-canceled': {
+    'name': 'customer-canceled',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'customer-audit-requested' : {
-    'name' : 'customer-audit-requested',
+  'customer-audit-requested': {
+    'name': 'customer-audit-requested',
     'mainButtonName': '',
-    'secondButtonName' : '',
-    'selectButtonName' : 'Select auditor',
+    'secondButtonName': '',
+    'selectButtonName': 'Select auditor',
     'labelMessage': '',
     'secondLabelMessage': '',
     'selectLabelMessage': 'Why you have selected this Auditor?',
-    'pages' : {
+    'pages': {
       'topup': 0,
       'main': 1,
-      'description' : 2,
-      'select' : 3,
-      'widgets.chat' : 4,
+      'description': 2,
+      'select': 3,
+      'widgets.chat': 4,
     },
   },
-  'customer-audit-performing' : {
-    'name' : 'customer-audit-performing',
+  'customer-audit-performing': {
+    'name': 'customer-audit-performing',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'topup': 0,
       'main': 1,
-      'description' : 2,
-      'widgets.chat' : 3,
+      'description': 2,
+      'widgets.chat': 3,
     },
   },
   // 'customer-audit-finished' : {
@@ -163,102 +166,102 @@ Map<String, dynamic> dialogStates = {
   // },
 
   // ******* PERFORMER ********* //
-  'performer-new' : {
-    'name' : 'performer-new',
+  'performer-new': {
+    'name': 'performer-new',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
+      'description': 1,
     },
   },
-  'performer-agreed' : {
-    'name' : 'performer-agreed',
+  'performer-agreed': {
+    'name': 'performer-agreed',
     'mainButtonName': 'Start the task',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': 'Summarize your implementation plans',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'performer-progress' : {
-    'name' : 'performer-progress',
+  'performer-progress': {
+    'name': 'performer-progress',
     'mainButtonName': 'Review',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': 'Tell about your work to review',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'performer-review' : {
-    'name' : 'performer-review',
+  'performer-review': {
+    'name': 'performer-review',
     'mainButtonName': 'Check merge',
-    'secondButtonName' : 'Request audit',
+    'secondButtonName': 'Request audit',
     'labelMessage': '',
     'secondLabelMessage': 'Why are you requesting for audit?',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'performer-completed' : {
-    'name' : 'performer-completed',
+  'performer-completed': {
+    'name': 'performer-completed',
     'mainButtonName': 'Rate',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': 'Write your thanks message to the Customer',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'performer-canceled' : {
-    'name' : 'performer-canceled',
+  'performer-canceled': {
+    'name': 'performer-canceled',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'performer-audit-requested' : {
-    'name' : 'performer-audit-requested',
+  'performer-audit-requested': {
+    'name': 'performer-audit-requested',
     'mainButtonName': '',
-    'secondButtonName' : '',
-    'selectButtonName' : 'Select auditor',
+    'secondButtonName': '',
+    'selectButtonName': 'Select auditor',
     'labelMessage': '',
     'secondLabelMessage': '',
     'selectLabelMessage': 'Why you have selected this Auditor?',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'select' : 2,
-      'widgets.chat' : 3,
+      'description': 1,
+      'select': 2,
+      'widgets.chat': 3,
     },
   },
-  'performer-audit-performing' : {
-    'name' : 'performer-audit-performing',
+  'performer-audit-performing': {
+    'name': 'performer-audit-performing',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
   // 'performer-audit-finished' : {
@@ -274,54 +277,53 @@ Map<String, dynamic> dialogStates = {
   //   },
   // },
 
-
   // ******* AUDITOR ********* //
-  'auditor-new' : {
-    'name' : 'auditor-new',
+  'auditor-new': {
+    'name': 'auditor-new',
     'mainButtonName': 'Take audit',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': 'Tell about your audit experience',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'auditor-applied' : {
-    'name' : 'auditor-applied',
+  'auditor-applied': {
+    'name': 'auditor-applied',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'auditor-performing' : {
-    'name' : 'auditor-performing',
+  'auditor-performing': {
+    'name': 'auditor-performing',
     'mainButtonName': 'Take decision',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': 'Conclude your Audit decision reasoning',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
-  'auditor-finished' : {
-    'name' : 'auditor-finished',
+  'auditor-finished': {
+    'name': 'auditor-finished',
     'mainButtonName': '',
-    'secondButtonName' : '',
+    'secondButtonName': '',
     'labelMessage': '',
     'secondLabelMessage': '',
-    'pages' : {
+    'pages': {
       'main': 0,
-      'description' : 1,
-      'widgets.chat' : 2,
+      'description': 1,
+      'widgets.chat': 2,
     },
   },
 };

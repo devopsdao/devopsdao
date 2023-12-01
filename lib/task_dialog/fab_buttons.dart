@@ -26,11 +26,20 @@ class SetsOfFabButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    var interface = context.watch<InterfaceServices>();
     // String message = interface.taskMessage.text;
 
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
     final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
+
+    late bool emptyBalance = true;
+
+    for (var balance in task.tokenBalances) {
+      if (balance != 0) {
+        emptyBalance = false;
+        break;
+      }
+    }
 
     return Builder(builder: (context) {
       // ##################### ACTION BUTTONS PART ######################## //
@@ -38,7 +47,7 @@ class SetsOfFabButtons extends StatelessWidget {
       if (fromPage == 'tasks') {
         return TaskDialogFAB(
           inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
-                  tasksServices.validChainID &&
+                  tasksServices.allowedChainId &&
                   tasksServices.publicAddress != null
               ? false
               : true,
@@ -144,7 +153,7 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if ((task.taskState == "review" && fromPage == 'performer') &&
-          tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']!['witnetGetLastResult'][2] == 'closed') {
+          tasksServices.transactionStatuses[task.nanoId]?['postWitnetRequest']?['witnetGetLastResult'][2] == 'closed') {
         return TaskDialogFAB(
           inactive: false,
           expand: true,
@@ -174,14 +183,14 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: (task.tokenBalances.isNotEmpty) ? false : true,
+          inactive: interface.rating == 0.0 ? true : false,
           expand: true,
-          buttonName: 'Withdraw',
+          buttonName: 'Withdraw & Rate Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
             task.loadingIndicator = true;
-            tasksServices.withdrawToChain(task.taskAddress, task.nanoId);
+            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
@@ -189,7 +198,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'withdrawToChain',
+                      taskName: 'withdrawAndRate',
                     ));
           },
           task: task,
@@ -198,9 +207,9 @@ class SetsOfFabButtons extends StatelessWidget {
       // *********************** CUSTOMER BUTTONS *********************** //
       else if (task.taskState == 'review' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: false,
+          inactive: interface.rating == 0.0 ? true : false,
           expand: true,
-          buttonName: 'Sign Review',
+          buttonName: 'Sign Review & Rate',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
           callback: () {
@@ -221,33 +230,29 @@ class SetsOfFabButtons extends StatelessWidget {
                     ));
           },
         );
-      } else if (task.taskState == 'completed' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
-        return TaskDialogFAB(
-          inactive: false,
-          expand: true,
-          buttonName: 'Rate task',
-          buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
-          callback: () {
-            (task.rating == 0)
-                ? () {
-                    task.loadingIndicator = true;
-                    // tasksServices.rateTask(
-                    //     task.taskAddress, ratingScore, task.nanoId);
-                    Navigator.pop(context);
-                    interface.emptyTaskMessage();
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => WalletActionDialog(
-                              nanoId: task.nanoId,
-                              taskName: 'rateTask',
-                            ));
-                  }
-                : null;
-          },
-        );
       }
+      // else if (task.taskState == 'completed' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+      //   return TaskDialogFAB(
+      //     inactive: interface.rating == 0.0 ? true : false,
+      //     expand: true,
+      //     buttonName: 'Withdraw & Rate Task',
+      //     buttonColorRequired: Colors.lightBlue.shade300,
+      //     widthSize: buttonWidth,
+      //     callback: () {
+      //       task.loadingIndicator = true;
+      //       tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
+      //       Navigator.pop(context);
+      //       interface.emptyTaskMessage();
+      //       showDialog(
+      //           barrierDismissible: false,
+      //           context: context,
+      //           builder: (context) => WalletActionDialog(
+      //             nanoId: task.nanoId,
+      //             taskName: 'withdrawAndRate',
+      //           ));
+      //     },
+      //   );
+      // }
       // ************************* AUDITOR BUTTONS ************************ //
       else if (interface.dialogCurrentState['name'] == 'auditor-new' || tasksServices.hardhatDebug == true) {
         return TaskDialogFAB(

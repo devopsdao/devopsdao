@@ -55,6 +55,18 @@ abstract class DodaoTheme {
   late Color chipInactiveBorderColor;
   late Color chipInactiveBodyColor;
   late Color chipInactiveNftColor;
+  late Color chipCompletedTextColor;
+  late Color chipCompletedBorderColor;
+  late Color chipCompletedBodyColor;
+  late Color chipCompletedNftColor;
+  late Color chipCustomerPendingTextColor;
+  late Color chipCustomerPendingBorderColor;
+  late Color chipCustomerPendingBodyColor;
+  late Color chipCustomerPendingNftColor;
+  late Color chipPerformerPendingTextColor;
+  late Color chipPerformerPendingBorderColor;
+  late Color chipPerformerPendingBodyColor;
+  late Color chipPerformerPendingNftColor;
 
   late Color iconInitial;
   late Color iconProcess;
@@ -84,6 +96,7 @@ abstract class DodaoTheme {
 
   final BorderRadius borderRadius = BorderRadius.circular(18.0);
   final BorderRadius borderRadiusSmallIcon = BorderRadius.circular(10.0);
+  final double inkRadius = 23;
   final double elevation = 6;
   final EdgeInsets inputEdge =  const EdgeInsets.only(top: 6.0, bottom: 6.0, right: 12, left: 12);
 
@@ -148,6 +161,18 @@ class LightModeTheme extends DodaoTheme {
   late Color chipInactiveBorderColor = Colors.grey.shade300;
   late Color chipInactiveBodyColor = Colors.grey.shade300;
   late Color chipInactiveNftColor = Colors.grey.shade500;
+  late Color chipCompletedTextColor = Colors.white;
+  late Color chipCompletedBorderColor = Colors.green.shade300;
+  late Color chipCompletedBodyColor = Colors.green.shade300;
+  late Color chipCompletedNftColor = Colors.deepOrange.shade700;
+  late Color chipCustomerPendingTextColor = Colors.white;
+  late Color chipCustomerPendingBorderColor =Colors.orangeAccent.shade200;
+  late Color chipCustomerPendingBodyColor = Colors.orangeAccent.shade200;
+  late Color chipCustomerPendingNftColor = Colors.deepOrange.shade700;
+  late Color chipPerformerPendingTextColor = Colors.black;
+  late Color chipPerformerPendingBorderColor = Colors.grey.shade400;
+  late Color chipPerformerPendingBodyColor = Colors.white;
+  late Color chipPerformerPendingNftColor = Colors.deepOrange;
 
   late Color iconInitial = Colors.black12;
   late Color iconProcess = Colors.black54;
@@ -295,15 +320,27 @@ class DarkModeTheme extends DodaoTheme {
   late Color secondaryText = Colors.grey.shade400;
 
   late Color chipTextColor = Colors.grey.shade300;
-  late Color chipBodyColor = Colors.grey.shade800;
   late Color chipBorderColor = Colors.grey.shade800;
+  late Color chipBodyColor = Colors.grey.shade800;
   late Color chipNftColor = Colors.deepOrange;
   late Color chipNftMintColor = Colors.white;
   late Color chipSelectedColor = Colors.orange.shade900;
-  late Color chipInactiveTextColor = Colors.grey.shade700;
-  late Color chipInactiveBorderColor = Colors.grey.shade500;
-  late Color chipInactiveBodyColor = Colors.grey.shade500;
-  late Color chipInactiveNftColor = Colors.grey.shade700;
+  late Color chipInactiveTextColor = Colors.grey.shade500;
+  late Color chipInactiveBorderColor = Colors.grey.shade700;
+  late Color chipInactiveBodyColor = Colors.grey.shade700;
+  late Color chipInactiveNftColor = Colors.grey.shade500;
+  late Color chipCompletedTextColor = Colors.grey.shade300;
+  late Color chipCompletedBorderColor = Colors.green.shade900;
+  late Color chipCompletedBodyColor = Colors.green.shade900;
+  late Color chipCompletedNftColor = Colors.deepOrange.shade300;
+  late Color chipCustomerPendingTextColor = Colors.grey.shade300;
+  late Color chipCustomerPendingBorderColor = Colors.red.shade900;
+  late Color chipCustomerPendingBodyColor = Colors.red.shade900;
+  late Color chipCustomerPendingNftColor = Colors.deepOrange.shade300;
+  late Color chipPerformerPendingTextColor = Colors.grey.shade300;
+  late Color chipPerformerPendingBorderColor = Colors.grey.shade800;
+  late Color chipPerformerPendingBodyColor = Colors.grey.shade800;
+  late Color chipPerformerPendingNftColor = Colors.deepOrange;
 
   late Color iconInitial = Colors.white24;
   late Color iconProcess = Colors.white70;

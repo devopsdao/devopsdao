@@ -16,7 +16,6 @@ import '../../widgets/tags/wrapped_chip.dart';
 
 import '../collection_services.dart';
 import '../create_or_mint.dart';
-import '../nft_templorary.dart';
 
 enum Status {
   done,
@@ -34,7 +33,7 @@ class MintWidget extends StatefulWidget {
 class _MintWidget extends State<MintWidget> {
   final _searchKeywordController = TextEditingController();
   late Map<String, TagsCompare> tagsCompare = {};
-  final Duration splitDuration = const Duration(milliseconds: 300);
+  final Duration splitDuration = const Duration(milliseconds: 500);
   final Curve splitCurve = Curves.easeInOutQuart;
   final double buttonWidth = 140;
 
@@ -69,22 +68,15 @@ class _MintWidget extends State<MintWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var searchServices = context.read<SearchServices>();
-    var collectionServices = context.read<CollectionServices>();
-    var tasksServices = context.read<TasksServices>();
+    var searchServices = context.watch<SearchServices>();
+    var collectionServices = context.watch<CollectionServices>();
+    // var tasksServices = context.read<TasksServices>();
 
     return LayoutBuilder(
         builder: (context, constraints) {
           final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
           late double maxHeight = constraints.maxHeight - statusBarHeight - 76;
-          // late double firstPartHeight = 0.0;
-          // late double secondPartHeight = 0.0;
-          // late bool splitScreen = false;
-          // if (collectionServices.treasuryNftSelected.name != 'empty') {
-          //   splitScreen = true;
-          //   firstPartHeight = maxHeight / 2;
-          //   secondPartHeight = firstPartHeight;
-          // }
+
           return Column(
             children: [
               Container(
@@ -95,7 +87,7 @@ class _MintWidget extends State<MintWidget> {
                       return TextFormField(
                         controller: searchServices.searchKeywordController,
                         onChanged: (searchKeyword) {
-                          model.tagsSearchFilter( page: 'mint', enteredKeyword: searchKeyword,);
+                          model.tagsSearchFilter(page: 'mint', enteredKeyword: searchKeyword,);
                         },
                         autofocus: true,
                         obscureText: false,

@@ -95,7 +95,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList);
     }
 
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       isFloatButtonVisible = true;
     }
 
@@ -145,53 +145,34 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
               return AppBar(
                 title: Text('Job Exchange', style: Theme.of(context).textTheme.titleLarge),
                 actions: [
-                  // AppBarSearchButton(),
-                  // Container(
-                  //   // width: 150,
-                  //   height: 30,
-                  //   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                  //
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(16),
-                  //     gradient: const LinearGradient(
-                  //       colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
-                  //       stops: [0.1, 0.5, 1],
-                  //     ),
-                  //   ),
-                  //   child: InkWell(
-                  //       highlightColor: Colors.white,
-                  //       onTap: () async {
-                  //         OpenAddTags(
-                  //           fontSize: 14,
-                  //           page: 'tasks',
-                  //           tabIndex: 0,
-                  //         );
-                  //       },
-                  //       child: const Text(
-                  //         '#Tags',
-                  //         textAlign: TextAlign.center,
-                  //         style: TextStyle(fontSize: 14, color: Colors.white),
-                  //       )
-                  //   ),
-                  //
-                  // ),
                   const OpenMyAddTags(
                     page: 'tasks',
                     tabIndex: 0,
                   ),
-                  IconButton(
-                    onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
-                    icon: const Icon(Icons.search),
+                  InkResponse(
+                    radius: DodaoTheme.of(context).inkRadius,
+                    containedInkWell: false,
+                    onTap: AppBarWithSearchSwitch.of(context)?.startSearch,
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Icon(
+                        Icons.search,
+                        size: 24,
+                        color: DodaoTheme.of(context).secondaryText,
+                      ),
+                    ),
                   ),
                   if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
                 ],
               );
             },
             keepAppBarColors: false,
-            searchInputDecoration: InputDecoration(border: InputBorder.none, hintText: 'Search', hintStyle: Theme.of(context).textTheme.titleMedium
+            searchInputDecoration: InputDecoration(
+                border: InputBorder.none, hintText: 'Search', hintStyle: Theme.of(context).textTheme.titleMedium,
                 // suffixIcon: Icon(
                 //   Icons.tag,
                 //   color: Colors.grey[300],
+                //   size: 100,
                 // ),
 
                 ),

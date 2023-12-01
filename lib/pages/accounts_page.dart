@@ -2,8 +2,10 @@ import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../account_dialog/account_transition_effect.dart';
+import '../blockchain/accounts.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
+import '../navigation/appbar.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/tags/search_services.dart';
@@ -28,6 +30,8 @@ class _AccountsPageState extends State<AccountsPage> {
   // final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late List<EthereumAddress> accountsAddressList;
+  late Map<String, Account> accountsList = {};
 
   @override
   void initState() {
@@ -37,6 +41,22 @@ class _AccountsPageState extends State<AccountsPage> {
         showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'accounts'));
       });
     }
+    getAccountsList();
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   var tasksServices = context.read<TasksServices>();
+    //   accountsAddressList = await tasksServices.getAccountsList();
+    //   accountsList = await tasksServices.getAccountsData(accountsAddressList);
+    // });
+  }
+
+  Future<void> getAccountsList() async {
+    final tasksServices = Provider.of<TasksServices>(context, listen: false);
+    accountsList = await tasksServices.getAccountsData(await tasksServices.getAccountsList());
+
+    setState((){
+      accountsList = accountsList;
+
+    });
   }
 
   @override
@@ -49,14 +69,13 @@ class _AccountsPageState extends State<AccountsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    var tasksServices = context.read<TasksServices>();
 
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: {});
     }
-    if (tasksServices.publicAddress != null && tasksServices.validChainID) {
+    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       isFloatButtonVisible = true;
     }
 
@@ -76,35 +95,14 @@ class _AccountsPageState extends State<AccountsPage> {
     //       context: context,
     //       builder: (context) => TaskDialogBeamer(index: widget.index!));
     // }
+    // print('dfs ' + accountsList.values.toList().length.toString());
     return Scaffold(
       key: scaffoldKey,
-      drawer: SideBar(controller: SidebarXController(selectedIndex: 5, extended: true)),
-      appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        title: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Accounts',
-                  style: DodaoTheme.of(context).title2.override(
-                        fontFamily: 'Inter',
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: const [
-          // LoadButtonIndicator(),
-        ],
-        centerTitle: false,
-        elevation: 2,
+      drawer: SideBar(controller: SidebarXController(selectedIndex: tasksServices.roleNfts['governor'] > 0 ? 4 : 5, extended: true)),
+      appBar: const OurAppBar(
+        title: 'Accounts',
+        page: 'accounts',
+        tabIndex: 0,
       ),
       body: Container(
         width: double.infinity,
@@ -117,118 +115,23 @@ class _AccountsPageState extends State<AccountsPage> {
             filterQuality: FilterQuality.medium,
           ),
         ),
-        child: SizedBox(
-          width: interface.maxStaticGlobalWidth,
-          child: DefaultTabController(
-            length: 1,
-            initialIndex: 0,
-            child: LayoutBuilder(builder: (context, constraints) {
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: constraints.minWidth - 70,
-                        padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                        decoration: const BoxDecoration(
-                            // color: Colors.white70,
-                            // borderRadius: BorderRadius.circular(8),
-                            ),
-                        child: TextField(
-                          controller: _searchKeywordController,
-                          onChanged: (searchKeyword) {
-                            // final List<String> tagsList = searchServices.accounts.entries.map((e) => e.value.name).toList();
-                            tasksServices.runFilter(taskList: tasksServices.tasksNew, enteredKeyword: searchKeyword, tagsMap: {});
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '[Find task by Title...]',
-                            hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            labelText: 'Search',
-                            suffixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white,
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                          ),
-                          style: DodaoTheme.of(context).bodyText1.override(
-                                fontFamily: 'Inter',
-                                color: Colors.white,
-                                lineHeight: 2,
-                              ),
-                        ),
-                      ),
-                      const TagOpenContainerButton(
-                        page: 'tasks',
-                        tabIndex: 0,
-                      ),
-                    ],
-                  ),
-                  Consumer<SearchServices>(builder: (context, model, child) {
-                    return Wrap(
-                        alignment: WrapAlignment.start,
-                        direction: Axis.horizontal,
-                        children: model.tasksTagsList.entries.map((e) {
-                          return WrappedChip(
-                            key: ValueKey(e.value),
-                            item: MapEntry(e.key, NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch)),
-                            page: 'accounts',
-                            selected: e.value.selected,
-                            wrapperRole: WrapperRole.onPages,
-                          );
-                        }).toList());
-                  }),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              tasksServices.isLoadingBackground = true;
-                              List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-                              tasksServices.fetchTasksBatch(taskList);
-                            },
-                            child: ListView.builder(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              itemCount: tasksServices.accountsData.values.toList().length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                                    child: ClickOnAccount(
-                                      fromPage: 'accounts',
-                                      index: index,
-                                    ));
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await tasksServices.getAccountsData(await tasksServices.getAccountsList());
+          },
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.vertical,
+            itemCount: accountsList.values.toList().length,
+            itemBuilder: (context, index) {
+              return Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                  child: ClickOnAccountFromIndexedList(
+                    fromPage: 'accounts',
+                    account: accountsList.values.toList()[index],
+                  )
               );
-            }),
+            },
           ),
         ),
       ),

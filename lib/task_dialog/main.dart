@@ -115,9 +115,11 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
 
     if (task.taskState == 'empty' || task.taskState == 'loading') {
       interface.dialogCurrentState = dialogStates['empty'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.validChainID) {
+    } else if (fromPage == 'last-activities') {
+      interface.dialogCurrentState = dialogStates['last-activities'];
+    } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.allowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.validChainID) {
+    } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.allowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-logged'];
     } else if (fromPage == 'customer' && task.taskState == 'new') {
       interface.dialogCurrentState = dialogStates['customer-new'];
@@ -178,7 +180,6 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
       final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
-      // print (screenHeightSize);
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
       return Container(
         color: DodaoTheme.of(context).taskBackgroundColor,

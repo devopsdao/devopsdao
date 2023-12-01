@@ -1,5 +1,7 @@
 import 'package:dodao/blockchain/empty_classes.dart';
-import 'package:dodao/tags_manager/collection_services.dart';
+import 'package:dodao/blockchain/notify_listener.dart';
+import 'package:dodao/nft_manager/collection_services.dart';
+import 'package:dodao/wallet/wallet_service.dart';
 import 'package:dodao/widgets/tags/main.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +43,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
+        ChangeNotifierProvider(create: (context) => MyNotifyListener()),
+        ChangeNotifierProvider(create: (context) => WalletProvider()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {
@@ -62,7 +66,7 @@ void main() async {
         ChangeNotifierProxyProvider<TasksServices, SearchServices>(
           create: (_) => SearchServices(),
           update: (_, tasksServices, searchServices) {
-            searchServices!.nftCollectionMap = tasksServices.resultInitialCollectionMap;
+            searchServices!.collectionMap = tasksServices.resultInitialCollectionMap;
             return searchServices..nftBalanceMap = tasksServices.resultNftsMap;
           },
         )
@@ -99,7 +103,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
   }
 

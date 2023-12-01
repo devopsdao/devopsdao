@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../main.dart';
-import '../tags_manager/main.dart';
+import '../nft_manager/main.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key}) : super(key: key);
