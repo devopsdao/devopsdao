@@ -130,14 +130,15 @@ class _WcQrCodeState extends State<WcQrCode> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (walletProvider.wcCurrentState == WCStatus.loadingQr) shimmer,
+              if (walletProvider.wcCurrentState == WCStatus.loadingQr)
+                shimmer,
               if (walletProvider.wcCurrentState == WCStatus.loadingWc)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       // 'Performing connection with \n${walletProvider.chainNameOnWallet}',
-                      'Performing connection',
+                      'Performing connection to\n${walletProvider.selectedChainNameOnApp} \n\nCheck wallet for further information\n',
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -155,11 +156,16 @@ class _WcQrCodeState extends State<WcQrCode> {
                 ),
               if (walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown)
                 Text(
-                  'Unfortunately, network is not supported. \nSelect ${walletProvider.selectedChainNameOnApp} in your wallet',
+                  'Network on your wallet is not supported. \n Check screen for further information\n',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-
+              // if (walletProvider.wcCurrentState == WCStatus.wcNotConnectedAddNetwork)
+              //   Text(
+              //     'Check wallet screen to add new network\n',
+              //     style: Theme.of(context).textTheme.bodyMedium,
+              //     textAlign: TextAlign.center,
+              //   ),
               if (walletProvider.wcCurrentState == WCStatus.error)
                 Text(
                   walletProvider.errorMessage,
@@ -189,7 +195,10 @@ class _WcQrCodeState extends State<WcQrCode> {
                     )),
                   ],
                 ),
-              if (tasksServices.walletConnectedWC && walletProvider.wcCurrentState != WCStatus.loadingWc)
+              if (tasksServices.walletConnectedWC
+                  && walletProvider.wcCurrentState != WCStatus.loadingWc
+                  && walletProvider.wcCurrentState != WCStatus.wcNotConnectedAddNetwork
+              )
                 NetworkSelection(
                   qrSize: _qrSize,
                   callConnectWallet: widget.callConnectWallet,

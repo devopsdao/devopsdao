@@ -95,7 +95,11 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
       }
 
       if (onSessionEvent?.name == 'chainChanged') {
-        walletProvider.setChainAndConnect(tasksServices, onSessionEvent?.data);
+        if (walletProvider.preventEvent) {
+          walletProvider.preventEvent = false;
+        } else {
+          walletProvider.setChainAndConnect(tasksServices, onSessionEvent?.data);
+        }
       }
 
       if (onSessionEvent?.name == 'accountsChanged' && onSessionEvent?.data != tasksServices.chainId && tasksServices.walletConnectedWC) {
@@ -204,7 +208,8 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
           chainIdOnWallet == tasksServices.chainIdAxelar ||
           chainIdOnWallet == tasksServices.chainIdHyperlane ||
           chainIdOnWallet == tasksServices.chainIdLayerzero ||
-          chainIdOnWallet == tasksServices.chainIdWormhole) {
+          chainIdOnWallet == tasksServices.chainIdWormhole
+      ){
         tasksServices.allowedChainId = true;
         walletProvider.unknownChainIdWC = false;
         try {
@@ -214,27 +219,28 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
           log.severe('walletconnectv2.dart->error: id(chainIdOnWallet): ${chainIdOnWallet} '
               'id(tasksServices.chainId): ${tasksServices.chainId}, '
               'id(walletProvider.chainIdOnWallet): ${walletProvider.chainIdOnWallet}, '
-              'id(walletProvider.chainNameOnWallet): ${walletProvider.chainNameOnWallet} ');
+              'id(walletProvider.chainNameOnWallet): ${walletProvider.chainNameOnWallet} .');
           walletProvider.setWcState(state: WCStatus.error, tasksServices: tasksServices, error: 'Opps... something went wrong, try again \nBlockchain connection error');
-          return;
+          // return;
         }
       } else {
-        log.fine('walletconnectv2.dart -> selectedChainId not in tasksServices.allowedChainIds List');
+        log.warning('walletconnectv2.dart -> selectedChainId unknown chainId: $chainIdOnWallet.');
         tasksServices.allowedChainId = false;
         walletProvider.unknownChainIdWC = true;
-        walletProvider.setWcState(state: WCStatus.wcConnectedNetworkUnknown, tasksServices: tasksServices);
+        await walletProvider.setWcState(state: WCStatus.wcConnectedNetworkUnknown, tasksServices: tasksServices);
       }
-      if (chainIdOnWallet != tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!) {
+      if (chainIdOnWallet == tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!) {
+        await walletProvider.setChainAndConnect(tasksServices, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
+        Timer(const Duration(milliseconds: 1400), () {
+          Navigator.of(context, rootNavigator: true).pop();
+        });
+      } else {
+        // if (!tasksServices.allowedChainIds.values.contains(chainIdOnWallet)) {
+        //   walletProvider.preventEvent = true; // only prevent from unknown chainid
+        // }
         await walletProvider.switchNetwork(
             tasksServices,
             tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
-      } else {
-        await walletProvider.setChainAndConnect(tasksServices, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
-
-        Timer(const Duration(milliseconds: 1400), () {
-          Navigator.of(context, rootNavigator: true).pop();
-          // walletProvider.closeWalletDialog(tasksServices);
-        });
       }
       await tasksServices.myBalance();
 

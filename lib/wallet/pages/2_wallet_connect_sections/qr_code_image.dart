@@ -29,64 +29,64 @@ class WcQrCodeImage extends StatefulWidget {
 }
 
 class _WcQrCodeImageState extends State<WcQrCodeImage> {
-  late Timer _qrTimeout;
-  final int _timeoutTicks = 6;
-  final int _timeoutTimeInSeconds = 30;
+  // late Timer _qrTimeout;
+  // final int _timeoutTicks = 6;
+  // final int _timeoutTimeInSeconds = 230;
 
   @override
   void initState() {
-    print('wc_qr_code->timer starts at initState');
-    _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
+    // print('wc_qr_code->timer starts at initState');
+    // _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
     super.initState();
   }
 
   @override
   void dispose() {
-    if (_qrTimeout.isActive) {
-      cancelTimer();
-      print('wc_qr_code->timer cancel on dispose');
-    }
+    // if (_qrTimeout.isActive) {
+    //   cancelTimer();
+    //   print('wc_qr_code->timer cancel on dispose');
+    // }
     super.dispose();
   }
 
-  Future<void> qrTimeout(timer) async {
-    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
-    WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    if (timer.tick > _timeoutTicks) {
-      timer.cancel();
-      await walletProvider.setWcState(state: WCStatus.wcNotConnected, tasksServices: tasksServices);
-      print('wc_qr_code->timer cancel');
-      return;
-    } else {
-      print('wc_qr_code->timer tick: ${timer.tick}');
-      widget.callConnectWallet();
-    }
-  }
-
-    void cancelTimer() {
-      _qrTimeout.cancel();
-    }
+  // Future<void> qrTimeout(timer) async {
+  //   TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+  //   WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+  //   if (timer.tick > _timeoutTicks) {
+  //     timer.cancel();
+  //     await walletProvider.setWcState(state: WCStatus.wcNotConnected, tasksServices: tasksServices);
+  //     print('wc_qr_code->timer cancel');
+  //     return;
+  //   } else {
+  //     print('wc_qr_code->timer tick: ${timer.tick}');
+  //     widget.callConnectWallet();
+  //   }
+  // }
+  //
+  // void cancelTimer() {
+  //   _qrTimeout.cancel();
+  // }
 
 
   @override
   Widget build(BuildContext context) {
-    TasksServices tasksServices = context.read<TasksServices>();
+    // TasksServices tasksServices = context.read<TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
-    if ( walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
-      if (!_qrTimeout.isActive) {
-        print('wc_qr_code->timer start inside build');
-        _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
-      }
-    }
-    if (tasksServices.walletConnected
-        || walletProvider.wcCurrentState == WCStatus.error
-        || walletProvider.wcCurrentState == WCStatus.loadingWc
-    ) {
-      if (_qrTimeout.isActive) {
-        print('wc_qr_code->timer cancel inside build, tasksServices.walletConnected: ${tasksServices.walletConnected}');
-        cancelTimer();
-      }
-    }
+    // if ( walletProvider.wcCurrentState == WCStatus.wcNotConnectedWithQrReady) {
+    //   if (!_qrTimeout.isActive) {
+    //     print('wc_qr_code->timer start inside build');
+    //     _qrTimeout = Timer.periodic(Duration(seconds: _timeoutTimeInSeconds), (Timer t) => qrTimeout(t));
+    //   }
+    // }
+    // if (tasksServices.walletConnected
+    //     || walletProvider.wcCurrentState == WCStatus.error
+    //     || walletProvider.wcCurrentState == WCStatus.loadingWc
+    // ) {
+    //   if (_qrTimeout.isActive) {
+    //     print('wc_qr_code->timer cancel inside build, tasksServices.walletConnected: ${tasksServices.walletConnected}');
+    //     cancelTimer();
+    //   }
+    // }
 
 
 

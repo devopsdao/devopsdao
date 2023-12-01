@@ -86,6 +86,7 @@ class _WalletConnectState extends State<WalletConnect> {
                 walletProvider.wcCurrentState == WCStatus.none ||
                     walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkNotMatch ||
                     walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkUnknown) {
+              walletProvider.setWcState(state: WCStatus.loadingWc, tasksServices: tasksServices);
               await walletProvider.switchNetwork(
                 tasksServices,
                 // tasksServices.allowedChainIds[walletProvider.chainNameOnWallet]!,

@@ -264,7 +264,7 @@ class TasksServices extends ChangeNotifier {
   final String defaultNetworkName = 'Dodao Tanssi Appchain';
   Map<String, int> allowedChainIds = {
     'Dodao Tanssi Appchain': 855456,
-    'Moonbase alpha': 1287,
+    'Moonbase Alpha': 1287,
     'Fantom testnet': 4002,
     'Goerli': 5,
     'zkSync Era testnet': 280,

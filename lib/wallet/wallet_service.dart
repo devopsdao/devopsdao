@@ -7,12 +7,16 @@ import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:webthree/credentials.dart';
 import 'package:logging/logging.dart';
 
+import '../blockchain/chain_presets/chains_presets.dart';
+import '../blockchain/chain_presets/chains_presets.dart';
+
 enum WCStatus {
   loadingQr, // Waiting for QR code. resetting views; shimmer running; Disconnect button
   // :: Initial Start, Connect, Refresh Qr, Disconnect, On selected Network ::
   loadingWc, // Pairing progress; Disconnect button :: onSessionConnect fires
   wcNotConnected, // show nothing and Connect button // !!! will be deprecated
   wcNotConnectedWithQrReady, // Ready to scan Qr message; Refresh Qr button :: should run probably after loadingQr
+  wcNotConnectedAddNetwork,
   wcConnectedNetworkMatch, // connected Ok message; show network name; Disconnect button
   wcConnectedNetworkNotMatch, // Show "not match" message; connect button (switch network in next build);
   wcConnectedNetworkUnknown, // Show Unknown network message; connect button (switch network in next build);
@@ -26,6 +30,7 @@ class WalletProvider extends ChangeNotifier {
 
   late bool initComplete = false;
   late bool unknownChainIdWC = false;
+  late bool preventEvent = false; // sets true once in onSessionConnect, is necessary to prevent the first onSessionEvent(chainChanged)
   late String selectedChainNameOnApp = ''; // if empty, initially will be rewritten with tasksServices.defaultNetworkName
   late int chainIdOnWallet = 0;
   late int lastErrorOnNetworkChainId = 0;
@@ -119,7 +124,7 @@ class WalletProvider extends ChangeNotifier {
   Future<void> switchNetwork(tasksServices, int changeTo) async {
     final SessionData sessionData = await connectResponse!.session.future;
     int changeFrom = chainIdOnWallet;
-    // log.fine('wallet_service -> switchNetwork from: $changeFrom to: $changeTo, sessionData.topic: ${sessionData.topic}');
+    log.fine('wallet_service->switchNetwork from: $changeFrom to: $changeTo');
     // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
     final params = <String, dynamic> {
       'chainId': '0x${changeTo.toRadixString(16)}',
@@ -139,6 +144,7 @@ class WalletProvider extends ChangeNotifier {
         if (error['data'] != null && error['data']['originalError'] != null && error['data']['originalError']['code'] != null) {
           if (error['data']['originalError']['code'] == 4902) {
             try {
+
               await addNetwork(tasksServices, changeFrom);
             } on JsonRpcError catch (e) {
               if (e.message != null) {
@@ -168,20 +174,34 @@ class WalletProvider extends ChangeNotifier {
 
   Future<void> addNetwork(tasksServices, int currentChainId) async {
     final SessionData sessionData = await connectResponse!.session.future;
-    log.fine('wallet_service -> addNetwork, currentChainId: $currentChainId sessionData.topic: ${sessionData.topic}');
+    log.fine('wallet_service->addNetwork, currentChainId: $currentChainId sessionData.topic: ${sessionData.topic}');
+    // await setWcState(state: WCStatus.wcNotConnectedAddNetwork, tasksServices: tasksServices);
     // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
+    ChainInfo entry = ChainPresets.chains.entries.firstWhere((element) {
+      return element.key==tasksServices.allowedChainIds[selectedChainNameOnApp];
+    }).value;
     final params = {
-      'chainId': '0xd0da0',
-      'chainName': 'Dodao',
-      'nativeCurrency': {
-        'name': 'Dodao',
-        'symbol': 'DODAO',
-        'decimals': 18,
+      'chainId': entry.chainIdHex,
+      'chainName': entry.chainName,
+      'nativeCurrency': { //
+          'name': entry.nativeCurrency?.name,
+          'symbol': entry.nativeCurrency?.symbol,
+          'decimals': entry.nativeCurrency?.decimals,
       },
-      'rpcUrls': ['https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
-      'blockExplorerUrls': ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
-      'iconUrls': ['https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy'],
+      'rpcUrls': [entry.rpcUrl],
+      'blockExplorerUrls': [entry.blockExplorer?.url],
+      'iconUrls': [entry.iconUrl],
     };
+
+    // final int appChainId = tasksServices.allowedChainIds[selectedChainNameOnApp];
+    // final params = {
+    //   'chainId': ChainPresets.chains[appChainId]?.chainIdHex,
+    //   'chainName': ChainPresets.chains[appChainId]?.chainName,
+    //   'nativeCurrency': ChainPresets.chains[appChainId]?.nativeCurrency,
+    //   'rpcUrls': [ChainPresets.chains[appChainId]?.rpcUrl],
+    //   'blockExplorerUrls': [ChainPresets.chains[appChainId]?.blockExplorer?.url],
+    //   'iconUrls': [ChainPresets.chains[appChainId]?.iconUrl],
+    // };
     await web3App!.request(
         topic: sessionData.topic,
         chainId: 'eip155:$currentChainId',
@@ -192,6 +212,34 @@ class WalletProvider extends ChangeNotifier {
     // setChainAndConnect(tasksServices, 855456);
     // return session;
   }
+
+
+  // Future<void> addNetwork(tasksServices, int currentChainId) async {
+  //   final SessionData sessionData = await connectResponse!.session.future;
+  //   log.fine('wallet_service->addNetwork, currentChainId: $currentChainId sessionData.topic: ${sessionData.topic}');
+  //   // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
+  //   final params = {
+  //     'chainId': '0xd0da0',
+  //     'chainName': 'Dodao',
+  //     'nativeCurrency': {
+  //       'name': 'Dodao',
+  //       'symbol': 'DODAO',
+  //       'decimals': 18,
+  //     },
+  //     'rpcUrls': ['https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
+  //     'blockExplorerUrls': ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
+  //     'iconUrls': ['https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy'],
+  //   };
+  //   await web3App!.request(
+  //       topic: sessionData.topic,
+  //       chainId: 'eip155:$currentChainId',
+  //       request: SessionRequestParams(
+  //         method: 'wallet_addEthereumChain',
+  //         params: [params],
+  //       ));
+  //   // setChainAndConnect(tasksServices, 855456);
+  //   // return session;
+  // }
 
   // 1. switchNetwork(changeTo(selectedChainNameOnApp)) <- (3)
   //                      changeFrom:           changeTo:
@@ -207,7 +255,7 @@ class WalletProvider extends ChangeNotifier {
       wcCurrentState = WCStatus.loadingWc;
     }
 
-    log.fine('wallet_service -> setChainAndConnect chainId on app: '
+    log.fine('wallet_service->setChainAndConnect chainId on app: '
         '${tasksServices.allowedChainIds[selectedChainNameOnApp]!}'
         ' , will be rewritten by id on wallet): $newChainId'
         ' , allowedChainIds: ${allowedChainIds.containsValue(newChainId)}');
@@ -253,37 +301,50 @@ class WalletProvider extends ChangeNotifier {
 
     try {
       connectResponse = await web3App!.connect(
-        requiredNamespaces: {
+
+        // requiredNamespaces: {
+        //   'eip155': RequiredNamespace(
+        //     chains: [kFullChainId],
+        //     methods: [
+        //       'eth_sign',
+        //       'eth_signTransaction',
+        //       'eth_sendTransaction',
+        //     ],
+        //     events: [
+        //       'chainChanged',
+        //       'accountsChanged',
+        //     ],
+        //   ),
+        // },
+        optionalNamespaces: {
           'eip155': RequiredNamespace(
-            chains: [kFullChainId],
             methods: [
               'eth_sign',
               'eth_signTransaction',
               'eth_sendTransaction',
+              'wallet_switchEthereumChain',
+              'wallet_addEthereumChain',
+              'eth_chainId'
             ],
+            chains: [kFullChainId],
             events: [
               'chainChanged',
               'accountsChanged',
             ],
           ),
         },
-        optionalNamespaces: {
-          'eip155': RequiredNamespace(
-            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
-            chains: [kFullChainId],
-            events: [],
-          ),
-        },
+        // sessionProperties:
+
       );
     } on JsonRpcError catch (e) {
       if (e.message != null) {
         final error = jsonDecode(e.message!);
         if (error['code'] != 4001) {
-          print(error);
+          log.severe(error);
         }
       }
     } catch (e) {
-      print(e);
+      log.severe(e);
     }
 
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
