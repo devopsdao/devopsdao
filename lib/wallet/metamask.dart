@@ -122,6 +122,11 @@ class MetamaskProvider extends ChangeNotifier {
         }
         if (WalletService.walletConnected && walletConnectedMM && WalletService.allowedChainId) {
           // fetchTasksByState("new");
+          final eth = window.ethereum;
+          if (eth == null) {
+            log.info('MetaMask is not available');
+            return;
+          }
 
           await for (final value in eth.chainChanged) {
             print(value);
