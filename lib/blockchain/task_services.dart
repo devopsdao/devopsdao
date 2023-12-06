@@ -268,7 +268,7 @@ class TasksServices extends ChangeNotifier {
     'Dodao Tanssi Appchain': 855456,
     'Moonbase Alpha': 1287,
     'Fantom testnet': 4002,
-    'Goerli': 5,
+    // 'Goerli': 5,
     'zkSync Era testnet': 280,
     'Polygon Mumbai': 80001,
   };
@@ -1823,7 +1823,7 @@ class TasksServices extends ChangeNotifier {
     List<Future<void>> monitors = [];
 
     int requestBatchSize = 10;
-    int downloadBatchSize = 10;
+    int downloadBatchSize = 5;
     // int totalBatches = (totalTaskListReversed.length / batchSize).ceil();
     int batchItemCount = 0;
     tasksLoaded = 0;
