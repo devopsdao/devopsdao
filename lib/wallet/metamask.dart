@@ -52,7 +52,6 @@ class MetamaskProvider extends ChangeNotifier {
   bool walletConnectedMM = false;
   bool allowedChainIdMM = false;
 
-
   MetamaskProvider() {
     try {
       if (Platform.isAndroid || Platform.isIOS) {
@@ -123,10 +122,28 @@ class MetamaskProvider extends ChangeNotifier {
         }
         if (WalletService.walletConnected && walletConnectedMM && WalletService.allowedChainId) {
           // fetchTasksByState("new");
+
+          await for (final value in eth.chainChanged) {
+            print(value);
+          }
+          ;
+
+          await for (final value in eth.stream('accountsChanged')) {
+            print(value);
+          }
+          await for (final value in eth.stream('chainChanged')) {
+            print(value);
+          }
           print('init stream listener');
-          eth.stream('accountsChanged').listen((event) { print('accountsChanged'); });
-          eth.stream('chainChanged').listen((event) { print('accountsChanged'); });
-          eth.chainChanged.listen((event) { print('chainChanged');});
+          eth.stream('accountsChanged').listen((event) {
+            print('accountsChanged');
+          });
+          eth.stream('chainChanged').listen((event) {
+            print('accountsChanged');
+          });
+          eth.chainChanged.listen((event) {
+            print('chainChanged');
+          });
           List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
           await tasksServices.fetchTasksBatch(taskList);
 
