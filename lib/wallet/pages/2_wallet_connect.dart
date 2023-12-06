@@ -111,7 +111,7 @@ class _WalletConnectState extends State<WalletConnect> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 14.0),
                 child: Text(
-                  tasksServices.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
+                  walletProvider.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
                   style: Theme.of(context).textTheme.bodySmall,
                   textAlign: TextAlign.center,
                 ),
@@ -152,7 +152,7 @@ class _WalletConnectState extends State<WalletConnect> {
         Padding(
           padding: const EdgeInsets.only(bottom: 14.0),
           child: Text(
-            tasksServices.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
+            walletProvider.walletConnectedWC ? 'Wallet connected' : 'Wallet disconnected',
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),

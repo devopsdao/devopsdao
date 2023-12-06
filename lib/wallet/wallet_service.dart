@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dodao/wallet/wallet_model_provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:webthree/credentials.dart';
@@ -24,12 +26,144 @@ enum WCStatus {
   none,
 }
 
+//
+// class WalletStatesStorage {
+//   bool walletConnected = false;
+//   bool allowedChainId = false;
+//
+//   // late bool unknownChainIdWC = false;
+//   // late bool preventEvent = false; // sets true once in onSessionConnect, is necessary to prevent the first onSessionEvent(chainChanged)
+//   // late String selectedChainNameOnApp = ''; // if empty, initially will be rewritten with tasksServices.defaultNetworkName
+//   // late int chainIdOnWallet = 0;
+//   // late int lastErrorOnNetworkChainId = 0;
+//   // late String chainNameOnWallet = '';
+//   // late String walletConnectUri = '';
+//   // late String errorMessage = '';
+//   // late WCStatus wcCurrentState = WCStatus.loadingQr;
+//   //
+//   // /// Metamask part:
+//   // String platform = '';
+//   // var credentials;
+//   // EthereumAddress? publicAddress;
+//   // EthereumAddress? publicAddressMM;
+//   //
+//   // /// WalletConnect part:
+//   // EthereumAddress? publicAddressWC;
+// }
+
+
+// class WalletService {
+//   // Service and state storage (temporary)
+//   bool walletConnected = false;
+//   bool allowedChainId = false;
+//   Future<void> initialize() async {
+//     walletConnected = false;
+//     allowedChainId = false;
+//   }
+//
+//   void chainIdService(bool state) {
+//     allowedChainId = state;
+//
+//   }
+//
+//   void walletConnectedService(bool state) {
+//     walletConnected = state;
+//   }
+// }
+
+
+// class WalletModel extends ChangeNotifier {
+//   bool walletConnected = false;
+//
+//   late WCStatus wcCurrentState = WCStatus.loadingQr;
+//   Future<void> setWcState({required WCStatus state, required tasksServices, String error = ''}) async {
+//     wcCurrentState = state;
+//     switch (state) {
+//       case WCStatus.loadingQr:
+//         await resetView(tasksServices);
+//         break;
+//       case WCStatus.loadingWc:
+//         break;
+//       case WCStatus.wcNotConnected:
+//         break;
+//       case WCStatus.wcConnectedNetworkMatch:
+//         break;
+//       case WCStatus.wcConnectedNetworkNotMatch:
+//         break;
+//       case WCStatus.wcConnectedNetworkUnknown:
+//         break;
+//       case WCStatus.error:
+//         errorMessage = error;
+//         await resetView(tasksServices);
+//         selectedChainNameOnApp = tasksServices.defaultNetworkName;
+//         tasksServices.chainId = tasksServices.allowedChainIds[tasksServices.defaultNetworkName]!;
+//         break;
+//       case WCStatus.wcNotConnectedWithQrReady:
+//       // TODO: Handle this case.
+//         break;
+//       case WCStatus.none:
+//       // TODO: Handle this case.
+//         break;
+//     }
+//     notifyListeners();
+//   }
+//
+//   Future<void> resetView(tasksServices) async {
+//     walletConnected = false;
+//     tasksServices.walletConnectedWC = false;
+//     tasksServices.publicAddress = null;
+//     tasksServices.publicAddressWC = null;
+//     tasksServices.allowedChainId = false;
+//     unknownChainIdWC = false;
+//     chainIdOnWallet = 0;
+//     chainNameOnWallet = '';
+//     tasksServices.ethBalance = 0.0;
+//     tasksServices.ethBalanceToken = 0.0;
+//     tasksServices.pendingBalance = 0.0;
+//     tasksServices.pendingBalanceToken = 0.0;
+//     walletConnectUri = '';
+//   }
+//
+// }
+
 class WalletProvider extends ChangeNotifier {
+  //////////// *******New State Model******** //////////////////
+  final _walletService = WalletService();
+
+  var _state = WalletModelState(
+    allowedChainId: false,
+    walletConnected: false,
+  );
+  WalletModelState get state => _state;
+
+  Future<void> setAllowedChainId(bool state) async {
+    _walletService.chainIdService(state);
+    _updateState();
+  }
+
+  Future<void> setWalletConnected(bool state) async {
+    _walletService.walletConnectedService(state);
+    _updateState();
+  }
+
+  void _updateState() {
+    final allowedChainId = WalletService.allowedChainId;
+    final walletConnected = WalletService.walletConnected;
+    _state = WalletModelState(
+        walletConnected: walletConnected,
+        allowedChainId: allowedChainId,
+    );
+    notifyListeners();
+  }
+  //////////// *******New State Model END******** //////////////////
+
+
   late Web3App? web3App;
   late ConnectResponse? connectResponse;
 
   late bool initComplete = false;
   late bool unknownChainIdWC = false;
+  late bool walletConnectedWC = false;
   late bool preventEvent = false; // sets true once in onSessionConnect, is necessary to prevent the first onSessionEvent(chainChanged)
   late String selectedChainNameOnApp = ''; // if empty, initially will be rewritten with tasksServices.defaultNetworkName
   late int chainIdOnWallet = 0;
@@ -47,9 +181,11 @@ class WalletProvider extends ChangeNotifier {
   }
 
   Future<void> init() async {
+    await _walletService.initialize();
+    _updateState();
     await initWalletConnect();
     initComplete = true;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> setWcState({required WCStatus state, required tasksServices, String error = ''}) async {
@@ -78,6 +214,9 @@ class WalletProvider extends ChangeNotifier {
         // TODO: Handle this case.
         break;
       case WCStatus.none:
+        // TODO: Handle this case.
+        break;
+      case WCStatus.wcNotConnectedAddNetwork:
         // TODO: Handle this case.
         break;
     }
@@ -166,7 +305,7 @@ class WalletProvider extends ChangeNotifier {
 
     // final chainId = await web3App!
     //     .request(topic: sessionData.topic, chainId: 'eip155:$changeTo', request: SessionRequestParams(method: 'eth_chainId', params: []));
-    // chainIdHex = await _web3client.makeRPCCall('eth_chainId');
+    // chainIdHex = await web3client.makeRPCCall('eth_chainId');
 
     // setChainAndConnect(tasksServices, changeTo);
     // return session;
@@ -214,42 +353,9 @@ class WalletProvider extends ChangeNotifier {
   }
 
 
-  // Future<void> addNetwork(tasksServices, int currentChainId) async {
-  //   final SessionData sessionData = await connectResponse!.session.future;
-  //   log.fine('wallet_service->addNetwork, currentChainId: $currentChainId sessionData.topic: ${sessionData.topic}');
-  //   // log.fine('wallet_service -> switchNetwork namespaces: ${sessionData!.namespaces.values.first}');
-  //   final params = {
-  //     'chainId': '0xd0da0',
-  //     'chainName': 'Dodao',
-  //     'nativeCurrency': {
-  //       'name': 'Dodao',
-  //       'symbol': 'DODAO',
-  //       'decimals': 18,
-  //     },
-  //     'rpcUrls': ['https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
-  //     'blockExplorerUrls': ['https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network'],
-  //     'iconUrls': ['https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy'],
-  //   };
-  //   await web3App!.request(
-  //       topic: sessionData.topic,
-  //       chainId: 'eip155:$currentChainId',
-  //       request: SessionRequestParams(
-  //         method: 'wallet_addEthereumChain',
-  //         params: [params],
-  //       ));
-  //   // setChainAndConnect(tasksServices, 855456);
-  //   // return session;
-  // }
-
-  // 1. switchNetwork(changeTo(selectedChainNameOnApp)) <- (3)
-  //                      changeFrom:           changeTo:
-  //    1.'Switch network'(chainNameOnWallet, selectedChainNameOnApp)
-  //    ****.onSessionConnect_not_in_allowedlist(chainIdOnWallet(namespaces), defaultNetworkName)
-  //    3.DropdownButton_WCwc(chainNameOnWallet, dropdown value)
-  // 2. onSessionEvent(ID on wallet)
-  // 3. onSessionConnect in allowedlist(chainIdOnWallet(namespaces))
-  Future<void> setChainAndConnect(tasksServices, int newChainId) async {
+  Future<void> setChainAndConnect(tasksServices, context, int newChainId) async {
     final Map<String, int> allowedChainIds = tasksServices.allowedChainIds;
+    WalletModelProvider walletModelProvider = Provider.of<WalletModelProvider>(context, listen: false);
     // change back to WCStatus.loadingWc if WCStatus.wcConnectedNetworkUnknown was set by onSessionConnect:
     if (wcCurrentState == WCStatus.wcConnectedNetworkUnknown) {
       wcCurrentState = WCStatus.loadingWc;
@@ -267,8 +373,8 @@ class WalletProvider extends ChangeNotifier {
             return tasksServices.allowedChainIds[k] == newChainId;
           }, orElse: () => 'unknown');
       await setSelectedNetworkName(chainNameOnWallet); // update selectedChainNameOnApp with chainNameOnWallet
-      tasksServices.allowedChainId = true;
-      notifyListeners();
+      walletModelProvider.setAllowedChainId(true);
+      // notifyListeners();
       await tasksServices.connectRPC(tasksServices.chainId);
       try {
         await tasksServices.startup();
@@ -393,11 +499,11 @@ class WalletProvider extends ChangeNotifier {
   }
 
   Future<void> resetView(tasksServices) async {
-    tasksServices.walletConnected = false;
-    tasksServices.walletConnectedWC = false;
+    setWalletConnected(false);
+    walletConnectedWC = false;
     tasksServices.publicAddress = null;
     tasksServices.publicAddressWC = null;
-    tasksServices.allowedChainId = false;
+    setAllowedChainId(false);
     unknownChainIdWC = false;
     chainIdOnWallet = 0;
     chainNameOnWallet = '';

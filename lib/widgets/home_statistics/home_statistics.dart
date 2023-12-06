@@ -12,6 +12,7 @@ import 'package:webthree/credentials.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../../wallet/wallet_model_provider.dart';
 import '../../wallet/wallet_service.dart';
 
 
@@ -61,10 +62,11 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   Widget build(BuildContext context) {
     var tasksServices = context.watch <TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
+    final walletConnected = context.select((WalletModelProvider vm) => vm.state.walletConnected);
     // var searchServices = context.read<SearchServices>();
     // var notify = context.watch<MyNotifyListener>();
 
-    if (tasksServices.walletConnected
+    if (walletConnected
         || walletProvider.wcCurrentState == WCStatus.error
     ) {
       tags = [];
@@ -74,7 +76,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
       padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
-          if(tasksServices.walletConnected && tasksServices.publicAddress != null)
+          if(walletConnected && tasksServices.publicAddress != null)
           SizedBox(
             height: 30,
             child: TabBar(
@@ -120,7 +122,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
               ],
             ),
           ),
-          if(tasksServices.walletConnected && tasksServices.publicAddress != null)
+          if(walletConnected && tasksServices.publicAddress != null)
           SizedBox(
             height: 150,
             child: TabBarView(
@@ -396,7 +398,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
             ),
           ),
             
-            if(!tasksServices.walletConnected)
+            if(!walletConnected)
               const SizedBox(
                 height: 200,
                 child: Center(

@@ -9,6 +9,8 @@ import '../main.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
+import '../wallet/wallet_model_provider.dart';
+import '../wallet/wallet_service.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
@@ -84,7 +86,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var interface = context.watch<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
-
+    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
+    final walletService = WalletService();
     late bool desktopWidth = false;
     if (MediaQuery.of(context).size.width > 700) {
       desktopWidth = true;
@@ -95,7 +98,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList);
     }
 
-    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
+    if (tasksServices.publicAddress != null && WalletService.allowedChainId) {
       isFloatButtonVisible = true;
     }
 

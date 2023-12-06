@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dodao/wallet/pages/2_wallet_connect.dart';
+import 'package:dodao/wallet/wallet_model_provider.dart';
 import 'package:dodao/wallet/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -28,17 +29,21 @@ class WalletConnectController extends StatefulWidget {
 }
 
 class _WalletConnectControllerState extends State<WalletConnectController> {
+
+
   @override
   void initState() {
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    // final walletConnected = context.select((WalletModelProvider vm) => vm.state.walletConnected);
+    final _walletService = WalletService();
 
     // initial network name set:
     if (walletProvider.selectedChainNameOnApp.isEmpty) {
       walletProvider.setSelectedNetworkName(tasksServices.defaultNetworkName);
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (!tasksServices.walletConnected) {
+      if (!WalletService.walletConnected) {
         connectWallet();
       }
     });
@@ -98,11 +103,11 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         if (walletProvider.preventEvent) {
           walletProvider.preventEvent = false;
         } else {
-          walletProvider.setChainAndConnect(tasksServices, onSessionEvent?.data);
+          walletProvider.setChainAndConnect(tasksServices, context, onSessionEvent?.data);
         }
       }
 
-      if (onSessionEvent?.name == 'accountsChanged' && onSessionEvent?.data != tasksServices.chainId && tasksServices.walletConnectedWC) {
+      if (onSessionEvent?.name == 'accountsChanged' && onSessionEvent?.data != tasksServices.chainId && walletProvider.walletConnectedWC) {
         // final String newAccount = onSessionEvent!.data.toString().split(":").last;
         final EthereumAddress newAccount = EthereumAddress.fromHex(NamespaceUtils.getAccount(
           onSessionEvent!.data.first.toString(),
@@ -161,8 +166,8 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
     TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     WalletProvider walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.setWcState(state: WCStatus.loadingWc, tasksServices: tasksServices);
-    tasksServices.walletConnected = true;
-    tasksServices.walletConnectedWC = true;
+    walletProvider.setWalletConnected(true);
+    walletProvider.walletConnectedWC = true;
 
     if (tasksServices.hardhatDebug == false) {
       tasksServices.credentials = WalletConnectEthereumCredentialsV2(
@@ -210,7 +215,7 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
           chainIdOnWallet == tasksServices.chainIdLayerzero ||
           chainIdOnWallet == tasksServices.chainIdWormhole
       ){
-        tasksServices.allowedChainId = true;
+        walletProvider.setAllowedChainId(true);
         walletProvider.unknownChainIdWC = false;
         try {
           await tasksServices.getTaskListFullThenFetchIt();
@@ -225,12 +230,12 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
         }
       } else {
         log.warning('walletconnectv2.dart -> selectedChainId unknown chainId: $chainIdOnWallet.');
-        tasksServices.allowedChainId = false;
+        walletProvider.setAllowedChainId(false);
         walletProvider.unknownChainIdWC = true;
         await walletProvider.setWcState(state: WCStatus.wcConnectedNetworkUnknown, tasksServices: tasksServices);
       }
       if (chainIdOnWallet == tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!) {
-        await walletProvider.setChainAndConnect(tasksServices, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
+        await walletProvider.setChainAndConnect(tasksServices, context, tasksServices.allowedChainIds[walletProvider.selectedChainNameOnApp]!);
         Timer(const Duration(milliseconds: 1400), () {
           Navigator.of(context, rootNavigator: true).pop();
         });
@@ -246,7 +251,7 @@ class _WalletConnectControllerState extends State<WalletConnectController> {
 
     } else {
       tasksServices.chainId = 31337;
-      tasksServices.allowedChainId = true;
+      walletProvider.setAllowedChainId(true);
       try {
         await tasksServices.getTaskListFullThenFetchIt();
       } catch (e) {

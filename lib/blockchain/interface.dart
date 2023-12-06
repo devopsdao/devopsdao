@@ -143,7 +143,7 @@ class InterfaceServices extends ChangeNotifier {
   late BuildContext mainDialogContext;
   late BuildContext createJobPageContext;
 
-  late String walletButtonPressed = '';
+  late String walletButtonPressed = ''; // hide metamask page if WC pressed
 
   // wallet/accounts_page.dart controller for tabs
   // late TabController walletTabController = TabController(length: 2, vsync: );

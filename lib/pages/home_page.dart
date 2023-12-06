@@ -11,11 +11,12 @@ import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../navigation/navmenu.dart';
+import '../wallet/metamask.dart';
+import '../wallet/wallet_model_provider.dart';
 import '../wallet/wallet_service.dart';
 import '../widgets/home_statistics/home_statistics.dart';
 import '../widgets/loading.dart';
 import '../config/flutter_flow_animations.dart';
-import '../config/flutter_flow_icon_button.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -95,6 +96,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
 
+
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
 
   // bool _flag = true;
@@ -116,15 +118,20 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void dispose() {
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
+    MetamaskProvider metamaskProvider = context.watch<MetamaskProvider>();
+    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
+    // final walletConnected = context.select((WalletModelProvider vm) => vm.state.walletConnected);
+    final walletService = WalletService();
 
+    // print('allowedChainId: $allowedChainId');
+    // print('_walletService: ${_walletService.allowedChainId}');
     bool isFloatButtonVisible = false;
-    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
+    if (tasksServices.publicAddress != null && WalletService.allowedChainId) {
       isFloatButtonVisible = true;
     }
 
@@ -220,7 +227,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               builder: (context) => const WalletDialog(),
                             );
                           },
-                          child: tasksServices.walletConnected && tasksServices.publicAddress != null
+                          child: WalletService.walletConnected && tasksServices.publicAddress != null
                               ? Row(
                                 children: [
                                   walletProvider.networkLogo(tasksServices.chainId, Colors.white, 24),

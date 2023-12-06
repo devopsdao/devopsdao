@@ -5,11 +5,13 @@ import 'package:provider/provider.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../metamask.dart';
 import '../widgets/choose_wallet_button.dart';
 import '../widgets/wallet_connect_button.dart';
 
 class MetamaskPage extends StatelessWidget {
   final double innerPaddingWidth;
+
 
   const MetamaskPage({
     Key? key,
@@ -18,8 +20,18 @@ class MetamaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    MetamaskProvider metamaskProvider = context.watch<MetamaskProvider>();
+
+    late String buttonText;
+    if (metamaskProvider.walletConnectedMM && metamaskProvider.allowedChainIdMM) {
+      buttonText = 'Disconnect';
+    } else if (metamaskProvider.walletConnectedMM && !metamaskProvider.allowedChainIdMM) {
+      buttonText = 'Switch network';
+    } else if (!metamaskProvider.walletConnectedMM) {
+      buttonText = 'Connect';
+    }
 
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       if (interface.walletButtonPressed == 'metamask')
@@ -36,10 +48,10 @@ class MetamaskPage extends StatelessWidget {
           secondChild: const Padding(
             padding: EdgeInsets.all(18.0),
           ),
-          crossFadeState: !tasksServices.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          crossFadeState: !metamaskProvider.walletConnectedMM ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         ),
-      if (tasksServices.walletConnectedMM) const SizedBox(height: 20),
-      if (tasksServices.walletConnectedMM)
+      if (metamaskProvider.walletConnectedMM) const SizedBox(height: 20),
+      if (metamaskProvider.walletConnectedMM)
         Center(
           child: Material(
             elevation: DodaoTheme.of(context).elevation,
@@ -69,8 +81,17 @@ class MetamaskPage extends StatelessWidget {
       const SizedBox(height: 20),
       if (interface.walletButtonPressed == 'metamask')
         WalletConnectButton(
+          buttonName: buttonText,
           buttonFunction: 'metamask',
-          callback: () {},
+          callback: () async {
+            if (!metamaskProvider.walletConnectedMM) {
+              await metamaskProvider.connectWalletMM(context);
+            } else if (metamaskProvider.walletConnectedMM && !metamaskProvider.allowedChainIdMM) {
+              await metamaskProvider.switchNetworkMM(context);
+            } else if (metamaskProvider.walletConnectedMM && metamaskProvider.allowedChainIdMM) {
+              await metamaskProvider.disconnectMM(context);
+            }
+          },
         ),
       const SizedBox(height: 30),
     ]);

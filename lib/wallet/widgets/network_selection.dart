@@ -55,7 +55,7 @@ class _NetworkSelectionState extends State<NetworkSelection> {
                   setState(() {
                     networkLogoImage = walletProvider.networkLogo(tasksServices.allowedChainIds[value], Colors.white, 80);
                   });
-                  if (tasksServices.walletConnectedWC) {
+                  if (walletProvider.walletConnectedWC) {
                     walletProvider.setWcState(state: WCStatus.loadingWc, tasksServices: tasksServices);
                     walletProvider.switchNetwork(
                         tasksServices,

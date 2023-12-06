@@ -1,6 +1,8 @@
 import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
+import 'package:dodao/wallet/metamask.dart';
+import 'package:dodao/wallet/wallet_model_provider.dart';
 import 'package:dodao/wallet/wallet_service.dart';
 import 'package:dodao/widgets/tags/main.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
@@ -43,8 +45,9 @@ void main() async {
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
-        ChangeNotifierProvider(create: (context) => MyNotifyListener()),
+        ChangeNotifierProvider(create: (context) => MetamaskProvider()),
         ChangeNotifierProvider(create: (context) => WalletProvider()),
+        ChangeNotifierProvider(create: (context) => WalletModelProvider()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {

@@ -8,6 +8,8 @@ import 'header.dart';
 import 'package:provider/provider.dart';
 import 'package:dodao/blockchain/task_services.dart';
 
+import 'metamask.dart';
+
 class WalletDialog extends StatefulWidget {
   const WalletDialog({
     Key? key,
@@ -30,20 +32,16 @@ class _WalletDialogState extends State<WalletDialog> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
+    MetamaskProvider metamaskProvider = context.watch<MetamaskProvider>();
 
-    if (tasksServices.walletConnectedWC || tasksServices.walletConnectedMM) {
-      if (tasksServices.walletConnectedMM) {
+    if (walletProvider.walletConnectedWC || metamaskProvider.walletConnectedMM) {
+      if (metamaskProvider.walletConnectedMM) {
         pageController = PageController(initialPage: 1);
-      } else if (tasksServices.walletConnectedWC) {
+      } else if (walletProvider.walletConnectedWC) {
         pageController = PageController(initialPage: 2);
       }
     } else {
       pageController = PageController(initialPage: 0);
-    }
-
-    if (tasksServices.closeWalletDialog) {
-      Navigator.pop(context);
-      tasksServices.closeWalletDialog = false;
     }
 
     return LayoutBuilder(builder: (context, constraints) {

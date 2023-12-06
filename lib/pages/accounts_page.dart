@@ -8,6 +8,9 @@ import '../blockchain/interface.dart';
 import '../navigation/appbar.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
+import '../wallet/metamask.dart';
+import '../wallet/wallet_model_provider.dart';
+import '../wallet/wallet_service.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags/tag_open_container.dart';
@@ -48,7 +51,6 @@ class _AccountsPageState extends State<AccountsPage> {
     //   accountsList = await tasksServices.getAccountsData(accountsAddressList);
     // });
   }
-
   Future<void> getAccountsList() async {
     final tasksServices = Provider.of<TasksServices>(context, listen: false);
     accountsList = await tasksServices.getAccountsData(await tasksServices.getAccountsList());
@@ -70,12 +72,13 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-
+    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
+    // final walletService = WalletService();
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: {});
     }
-    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
+    if (tasksServices.publicAddress != null && WalletService.allowedChainId) {
       isFloatButtonVisible = true;
     }
 

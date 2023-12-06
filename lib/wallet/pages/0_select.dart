@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../metamask.dart';
 import '../wallet_service.dart';
 import '../widgets/choose_wallet_button.dart';
 
@@ -19,6 +20,7 @@ class WalletSelectConnection extends StatelessWidget {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     WalletProvider walletProvider = context.watch<WalletProvider>();
+    MetamaskProvider metamaskProvider = context.watch<MetamaskProvider>();
 
 
     return Column(
@@ -49,8 +51,8 @@ class WalletSelectConnection extends StatelessWidget {
             buttonWidth: innerPaddingWidth,
             callback: () {
               interface.walletButtonPressed = 'metamask';
-              pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-              walletProvider.initComplete ? tasksServices.connectWalletMM() : null;
+              pageController.animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+              metamaskProvider.connectWalletMM(context);
             },
           ),
         if (tasksServices.platform == 'web' && tasksServices.mmAvailable)

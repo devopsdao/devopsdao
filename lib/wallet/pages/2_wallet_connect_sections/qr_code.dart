@@ -85,10 +85,15 @@ class _WcQrCodeState extends State<WcQrCode> {
 
     final Widget shimmer = Column(
       children: [
-        RichText(
-            text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-          TextSpan(text: '   '),
-        ])),
+
+        Shimmer.fromColors(
+            baseColor: DodaoTheme.of(context).shimmerBaseColor,
+            highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+            child: RichText(
+                text: TextSpan(
+                    style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+                  TextSpan(text: 'Scan QR or select network'),
+                ])),),
         Shimmer.fromColors(
             baseColor: DodaoTheme.of(context).shimmerBaseColor,
             highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
@@ -178,7 +183,7 @@ class _WcQrCodeState extends State<WcQrCode> {
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-              if (tasksServices.walletConnectedWC && walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch)
+              if (walletProvider.walletConnectedWC && walletProvider.wcCurrentState == WCStatus.wcConnectedNetworkMatch)
                 Column(
                   children: [
                   Text(
@@ -195,7 +200,7 @@ class _WcQrCodeState extends State<WcQrCode> {
                     )),
                   ],
                 ),
-              if (tasksServices.walletConnectedWC
+              if (walletProvider.walletConnectedWC
                   && walletProvider.wcCurrentState != WCStatus.loadingWc
                   && walletProvider.wcCurrentState != WCStatus.wcNotConnectedAddNetwork
               )

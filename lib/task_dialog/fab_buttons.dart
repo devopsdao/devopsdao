@@ -9,6 +9,8 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
+import '../wallet/wallet_model_provider.dart';
+import '../wallet/wallet_service.dart';
 import '../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtons extends StatelessWidget {
@@ -28,7 +30,8 @@ class SetsOfFabButtons extends StatelessWidget {
     var tasksServices = context.read<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     // String message = interface.taskMessage.text;
-
+    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
+    final walletService = WalletService();
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
     final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
 
@@ -47,7 +50,7 @@ class SetsOfFabButtons extends StatelessWidget {
       if (fromPage == 'tasks') {
         return TaskDialogFAB(
           inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
-                  tasksServices.allowedChainId &&
+              WalletService.allowedChainId &&
                   tasksServices.publicAddress != null
               ? false
               : true,

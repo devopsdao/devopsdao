@@ -1,4 +1,5 @@
 
+import 'package:dodao/wallet/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
+import 'metamask.dart';
 
 class WalletDialogHeader extends StatefulWidget {
   late PageController pageController;
@@ -25,11 +27,12 @@ class _WalletDialogHeaderState extends State<WalletDialogHeader> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var tasksServices = context.watch<TasksServices>();
-
+    WalletProvider walletProvider = context.watch<WalletProvider>();
+    MetamaskProvider metamaskProvider = context.watch<MetamaskProvider>();
     if (interface.pageWalletViewNumber == 0) {
       disableBackButton = true;
     } else {
-      if (tasksServices.walletConnectedMM || tasksServices.walletConnectedWC) {
+      if (metamaskProvider.walletConnectedMM || walletProvider.walletConnectedWC) {
         disableBackButton = true;
       } else {
         disableBackButton = false;
@@ -79,9 +82,9 @@ class _WalletDialogHeaderState extends State<WalletDialogHeader> {
           const Spacer(),
           InkWell(
             onTap: () {
-              if (tasksServices.walletConnectedMM) {
+              if (metamaskProvider.walletConnectedMM) {
                 interface.pageWalletViewNumber = 1;
-              } else if (tasksServices.walletConnectedWC) {
+              } else if (walletProvider.walletConnectedWC) {
                 interface.pageWalletViewNumber = 2;
               } else {
                 interface.pageWalletViewNumber = 0;

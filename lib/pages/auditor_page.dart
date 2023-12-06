@@ -8,6 +8,8 @@ import '../blockchain/task_services.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
+import '../wallet/metamask.dart';
+import '../wallet/wallet_model_provider.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
@@ -97,6 +99,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
+    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
+    final walletService = WalletService();
 
     Map tabs = {
       "requested": 0,
@@ -138,7 +142,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       resetFilters();
     }
 
-    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {}
+    if (tasksServices.publicAddress != null && WalletService.allowedChainId) {}
 
     return Scaffold(
       key: scaffoldKey,

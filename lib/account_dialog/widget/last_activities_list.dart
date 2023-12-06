@@ -63,7 +63,6 @@ class LastActivitiesListState extends State<LastActivitiesList> {
 
   @override
   Widget build(BuildContext context) {
-    var myNotifyListener = context.watch<MyNotifyListener>();
     var interface = context.read<InterfaceServices>();
 
 
