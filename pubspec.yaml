@@ -89,7 +89,12 @@ dependencies:
 #  wallet_connect: ^1.0.4
   walletconnect_flutter_v2: ^2.1.9
   web_socket_channel: ^2.4.0
+<<<<<<< HEAD
   webthree: ^2.7.3
+=======
+  webthree: #^2.7.1
+    path: ../webthree
+>>>>>>> 073652002e7d671967a48622d4176c87b365840c
   web3modal_flutter: ^3.0.0-beta04
   week_of_year: ^2.0.0
 #  vector_graphics: ^1.0.1
