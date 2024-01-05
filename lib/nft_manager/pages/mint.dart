@@ -46,11 +46,13 @@ class _MintWidget extends State<MintWidget> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
-      searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
 
-      await tasksServices.collectMyTokens();
+
       Future.delayed(
-        const Duration(milliseconds: 100), () {
+        const Duration(milliseconds: 400), () async {
+        searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
+
+        await tasksServices.collectMyTokens();
           searchServices.refreshLists('mint');
         }
       );

@@ -4,13 +4,14 @@ import 'package:dodao/task_dialog/states.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
-import 'package:dodao/wallet/wallet_service.dart';
+import 'package:dodao/wallet/services/wc_service.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 
 import '../config/theme.dart';
-import '../wallet/wallet_model_provider.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
 import 'header.dart';
 import 'shimmer.dart';
 
@@ -101,8 +102,8 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
   Widget build(BuildContext context) {
     var interface = context.read<InterfaceServices>();
     var tasksServices = context.read<TasksServices>();
-    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
-    final walletService = WalletService();
+    final listenAllowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     final task = widget.task;
 
@@ -120,9 +121,9 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       interface.dialogCurrentState = dialogStates['empty'];
     } else if (fromPage == 'last-activities') {
       interface.dialogCurrentState = dialogStates['last-activities'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !WalletService.allowedChainId) {
+    } else if (fromPage == 'tasks' && listenWalletAddress == null && !listenAllowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && WalletService.allowedChainId) {
+    } else if (fromPage == 'tasks' && listenWalletAddress != null && listenAllowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-logged'];
     } else if (fromPage == 'customer' && task.taskState == 'new') {
       interface.dialogCurrentState = dialogStates['customer-new'];
@@ -159,7 +160,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
     } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       if (task.auditors.isNotEmpty) {
         for (var i = 0; i < task.auditors.length; i++) {
-          if (task.auditors[i] == tasksServices.publicAddress) {
+          if (task.auditors[i] == listenWalletAddress) {
             interface.dialogCurrentState = dialogStates['auditor-applied'];
             break;
           } else {

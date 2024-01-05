@@ -10,6 +10,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
+import '../../wallet/model_view/wallet_model.dart';
 import '../../widgets/my_tools.dart';
 import '../../widgets/select_menu.dart';
 import '../../widgets/tags/tags_old.dart';
@@ -50,11 +51,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var tasksServices = context.read<TasksServices>();
-      var interface = context.read<InterfaceServices>();
-      if (interface.dialogCurrentState['name'] == 'performer-review' && widget.task.repository.isNotEmpty) {
-        tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
-        tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
+      if (mounted) {
+        var tasksServices = context.read<TasksServices>();
+        var interface = context.read<InterfaceServices>();
+        if (interface.dialogCurrentState['name'] == 'performer-review' && widget.task.repository.isNotEmpty) {
+          tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
+          tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
+        }
       }
     });
 
@@ -73,6 +76,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
@@ -86,6 +90,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
       borderRadius: DodaoTheme.of(context).borderRadius,
       border: DodaoTheme.of(context).borderGradient,
     );
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -297,32 +302,34 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //     ),
               //   ),
 
-              if (interface.dialogCurrentState['name'] == 'performer-completed' ||
+              if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
                   (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true))
+              )
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                     elevation: DodaoTheme.of(context).elevation,
                     borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        width: innerPaddingWidth,
-                        decoration: materialMainBoxDecoration,
-                        child: Padding(
-                          padding: DodaoTheme.of(context).inputEdge,
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: RichText(
-                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                                  TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
-                                ])),
-                              ),
-                              const RateAnimatedWidget(),
-                            ],
-                          ),
-                        )),
+                      padding: const EdgeInsets.only(top: 5.0),
+                      width: innerPaddingWidth,
+                      decoration: materialMainBoxDecoration,
+                      child: Padding(
+                        padding: DodaoTheme.of(context).inputEdge,
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: RichText(
+                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
+                              ])),
+                            ),
+                            const RateAnimatedWidget(),
+                          ],
+                        ),
+                      )
+                    ),
                   ),
                 ),
 
@@ -332,7 +339,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
                   interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
                   tasksServices.hardhatDebug == true)
-                // if (task.auditInitiator == tasksServices.publicAddress &&
+                // if (task.auditInitiator == listenWalletAddress &&
                 //     interface.dialogCurrentState['pages'].containsKey('select'))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
@@ -358,7 +365,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     const Text(
                                       'Warning, this contract on Audit state!',
                                     ),
-                                    if (task.auditInitiator == tasksServices.publicAddress &&
+                                    if (task.auditInitiator == listenWalletAddress &&
                                         interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
                                           'There '
@@ -370,7 +377,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               // height: 1.1,
                                               )),
                                     if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
-                                        task.auditInitiator != tasksServices.publicAddress)
+                                        task.auditInitiator != listenWalletAddress)
                                       const Text('the auditor is expected to be selected', style: TextStyle(height: 1.1)),
                                     if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                       const Text('Your request is being resolved by: ', style: TextStyle(height: 1.1)),
@@ -382,7 +389,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             // backgroundColor: Colors.black12
                                           )),
                                   ])),
-                              if (task.auditInitiator == tasksServices.publicAddress && interface.dialogCurrentState['pages'].containsKey('select'))
+                              if (task.auditInitiator == listenWalletAddress && interface.dialogCurrentState['pages'].containsKey('select'))
                                 TaskDialogButton(
                                   padding: 6.0,
                                   inactive: false,
@@ -612,7 +619,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //   borderRadius: widget.borderRadius,
               // ),
               // const SizedBox(height: 14),
-              // if (tasksServices.publicAddress != null &&
+              // if (listenWalletAddress != null &&
               //   tasksServices.allowedChainId &&
               //   ((interface.dialogCurrentState['mainButtonName'] == 'Participate' &&
               //       fromPage == 'tasks') ||

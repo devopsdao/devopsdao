@@ -13,6 +13,8 @@ import '../config/theme.dart';
 
 import 'package:webthree/webthree.dart';
 
+import '../wallet/model_view/wallet_model.dart';
+
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
 
@@ -89,7 +91,7 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     return Row(
       children: [
         InkResponse(
@@ -109,9 +111,9 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
             ),
           ),
           onTap: () {
-            if (tasksServices.publicAddress != null) {
+            if (listenWalletAddress != null) {
               tasksServices.isLoadingBackground = true;
-              tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+              tasksServices.refreshTasksForAccount(listenWalletAddress!);
             }
           },
         ),
@@ -132,9 +134,9 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
         //         ),
         //   onPressed: () async {
         //     // interface.runPaw();
-        //     if (tasksServices.publicAddress != null) {
+        //     if (listenWalletAddress != null) {
         //       tasksServices.isLoadingBackground = true;
-        //       tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+        //       tasksServices.refreshTasksForAccount(listenWalletAddress!);
         //     }
         //   },
         // ),

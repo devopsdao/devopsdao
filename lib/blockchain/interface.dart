@@ -41,7 +41,7 @@ class InterfaceServices extends ChangeNotifier {
   }
 
   //  *************** Wallet ***************//
-  late int pageWalletViewNumber = 0;
+  late int currentWalletPage = 0;
 
   //  ************ accounts_dialog **************//
   late PageController accountsDialogPagesController = PageController(initialPage: 0);

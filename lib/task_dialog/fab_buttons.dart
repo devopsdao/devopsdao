@@ -9,8 +9,9 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
-import '../wallet/wallet_model_provider.dart';
-import '../wallet/wallet_service.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
+import '../wallet/services/wc_service.dart';
 import '../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtons extends StatelessWidget {
@@ -29,9 +30,9 @@ class SetsOfFabButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    // String message = interface.taskMessage.text;
-    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
-    final walletService = WalletService();
+    final listenAllowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
     final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
 
@@ -49,9 +50,9 @@ class SetsOfFabButtons extends StatelessWidget {
       // ************************ NEW (EXCHANGE) ************************** //
       if (fromPage == 'tasks') {
         return TaskDialogFAB(
-          inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
-              WalletService.allowedChainId &&
-                  tasksServices.publicAddress != null
+          inactive: (task.contractOwner != listenWalletAddress || tasksServices.hardhatDebug == true) &&
+              listenAllowedChainId &&
+                  listenWalletAddress != null
               ? false
               : true,
           expand: true,
@@ -207,6 +208,29 @@ class SetsOfFabButtons extends StatelessWidget {
           task: task,
         );
       }
+      // else if (task.taskState == "completed" && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+      //   return TaskDialogFAB(
+      //     inactive: false,
+      //     expand: true,
+      //     buttonName: 'Withdraw',
+      //     buttonColorRequired: Colors.lightBlue.shade300,
+      //     widthSize: buttonWidth,
+      //     callback: () {
+      //       task.loadingIndicator = true;
+      //       tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(5));
+      //       Navigator.pop(context);
+      //       interface.emptyTaskMessage();
+      //       showDialog(
+      //           barrierDismissible: false,
+      //           context: context,
+      //           builder: (context) => WalletActionDialog(
+      //             nanoId: task.nanoId,
+      //             taskName: 'withdrawAndRate',
+      //           ));
+      //     },
+      //     task: task,
+      //   );
+      // }
       // *********************** CUSTOMER BUTTONS *********************** //
       else if (task.taskState == 'review' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
@@ -234,28 +258,28 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       }
-      // else if (task.taskState == 'completed' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
-      //   return TaskDialogFAB(
-      //     inactive: interface.rating == 0.0 ? true : false,
-      //     expand: true,
-      //     buttonName: 'Withdraw & Rate Task',
-      //     buttonColorRequired: Colors.lightBlue.shade300,
-      //     widthSize: buttonWidth,
-      //     callback: () {
-      //       task.loadingIndicator = true;
-      //       tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
-      //       Navigator.pop(context);
-      //       interface.emptyTaskMessage();
-      //       showDialog(
-      //           barrierDismissible: false,
-      //           context: context,
-      //           builder: (context) => WalletActionDialog(
-      //             nanoId: task.nanoId,
-      //             taskName: 'withdrawAndRate',
-      //           ));
-      //     },
-      //   );
-      // }
+      else if (task.taskState == 'canceled' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+        return TaskDialogFAB(
+          inactive: false,
+          expand: true,
+          buttonName: 'Withdraw',
+          buttonColorRequired: Colors.lightBlue.shade300,
+          widthSize: buttonWidth,
+          callback: () {
+            task.loadingIndicator = true;
+            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(0));
+            Navigator.pop(context);
+            interface.emptyTaskMessage();
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => WalletActionDialog(
+                  nanoId: task.nanoId,
+                  taskName: 'withdrawAndRate',
+                ));
+          },
+        );
+      }
       // ************************* AUDITOR BUTTONS ************************ //
       else if (interface.dialogCurrentState['name'] == 'auditor-new' || tasksServices.hardhatDebug == true) {
         return TaskDialogFAB(

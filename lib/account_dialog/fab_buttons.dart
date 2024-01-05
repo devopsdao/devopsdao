@@ -11,6 +11,7 @@ import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../task_item/delete_item_alert.dart';
+import '../wallet/model_view/wallet_model.dart';
 import '../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
@@ -29,13 +30,11 @@ class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-    // var interface = context.read<InterfaceServices>();
-
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
     final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
 
-    if (tasksServices.publicAddress == account.walletAddress) {
+    if (listenWalletAddress == account.walletAddress) {
       inactiveButton = true;
     }
 
