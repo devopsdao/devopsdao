@@ -80,7 +80,9 @@ class MetamaskProvider extends ChangeNotifier {
       final client = Web3Client.custom(ethRPC);
       bool userRejected = false;
       try {
-        tasksServices.credentials = await eth.requestAccount();
+        final accounts = await eth.requestAccounts();
+        tasksServices.credentials = accounts[0];
+        print('got accounts');
       } catch (e) {
         userRejected = true;
         log.severe(e);
@@ -128,27 +130,45 @@ class MetamaskProvider extends ChangeNotifier {
             return;
           }
 
-          await for (final value in eth.chainChanged) {
-            print(value);
-          }
-          ;
+          // await for (final value in eth.accountsChanged) {
+          //   print(value);
+          // }
+          // ;
 
-          await for (final value in eth.stream('accountsChanged')) {
-            print(value);
-          }
-          await for (final value in eth.stream('chainChanged')) {
-            print(value);
-          }
-          print('init stream listener');
-          eth.stream('accountsChanged').listen((event) {
-            print('accountsChanged');
-          });
-          eth.stream('chainChanged').listen((event) {
-            print('accountsChanged');
-          });
-          eth.chainChanged.listen((event) {
+          // await for (final value in eth.stream('accountsChanged').cast()) {
+          //   print(value);
+          // }
+          // await for (final value in eth.stream('chainChanged').cast()) {
+          //   print(value);
+          // }
+          // print('init stream listener');
+          // eth.stream('accountsChanged').cast().listen((event) {
+          //   print('accountsChanged');
+          // });
+          // eth.stream('chainChanged').cast().listen((event) {
+          //   print('accountsChanged');
+          // });
+
+          // eth.chainChanged.asBroadcastStream();
+
+          eth.chainChanged.asBroadcastStream().listen((event) {
             print('chainChanged');
+            print(event);
           });
+
+          // eth.chainChanged.listen((event) {
+          //   print('chainChanged');
+          //   print(event);
+          // });
+
+          // await for (final value in eth.chainChanged) {
+          //   print(value);
+          // }
+
+          // eth.accountsChanged.listen((event) {
+          //   print('accountsChanged');
+          // });
+
           List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
           await tasksServices.fetchTasksBatch(taskList);
 
