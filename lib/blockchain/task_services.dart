@@ -1950,7 +1950,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Map<EthereumAddress, bool>> isTokenApproved(tokenContracts, amounts) async {
-    log.info('isTokenApproved');
+    // log.info('isTokenApproved');
     isLoadingBackground = true;
     var creds;
     var senderAddress;

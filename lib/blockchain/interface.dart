@@ -141,7 +141,6 @@ class InterfaceServices extends ChangeNotifier {
 
   // dialog context (for closing it from outside)
   late BuildContext mainDialogContext;
-  late BuildContext createJobPageContext;
 
   late String walletButtonPressed = ''; // hide metamask page if WC pressed
 
