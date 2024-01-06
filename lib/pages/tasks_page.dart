@@ -8,14 +8,13 @@ import '../create_job/create_job_call_button.dart';
 import '../main.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
-import '../task_dialog/task_transition_effect.dart';
-import '../wallet/wallet_model_provider.dart';
-import '../wallet/wallet_service.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
-import '../widgets/tags/tag_open_container.dart';
 import '../widgets/tags_on_page_open_container.dart';
+import '../widgets/utils/platform.dart';
 import '/blockchain/task_services.dart';
 import '/widgets/loading.dart';
 import '/config/flutter_flow_animations.dart';
@@ -40,21 +39,21 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   //   setState(() =>_searchKeyword = _searchKeywordController.text);
   // }
 
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
+  // final animationsMap = {
+  //   'containerOnPageLoadAnimation': AnimationInfo(
+  //     trigger: AnimationTrigger.onPageLoad,
+  //     duration: 1000,
+  //     delay: 1000,
+  //     hideBeforeAnimating: false,
+  //     fadeIn: false, // changed to false(orig from FLOW true)
+  //     initialState: AnimationState(
+  //       opacity: 0,
+  //     ),
+  //     finalState: AnimationState(
+  //       opacity: 1,
+  //     ),
+  //   ),
+  // };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -82,11 +81,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    final PlatformAndBrowser platformAndBrowser = PlatformAndBrowser();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+    final listenIsLoading = context.select((TasksServices vm) => vm.isLoading);
+    var tasksServices = context.read<TasksServices>();
+    var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
-    // final allowedChainId = context.select((WalletModelProvider vm) => vm.state.allowedChainId);
+    // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
     final walletService = WalletService();
     late bool desktopWidth = false;
     if (MediaQuery.of(context).size.width > 700) {
@@ -98,7 +100,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: searchServices.tasksTagsList);
     }
 
-    if (tasksServices.publicAddress != null && WalletService.allowedChainId) {
+    if (listenWalletAddress != null && WalletService.allowedChainId) {
       isFloatButtonVisible = true;
     }
 
@@ -165,7 +167,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       ),
                     ),
                   ),
-                  if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
+                  if (platformAndBrowser.platform == 'web' || platformAndBrowser.platform == 'linux') const LoadButtonIndicator(),
                 ],
               );
             },
@@ -205,21 +207,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
           body: Container(
             width: double.infinity,
             height: double.infinity,
-            // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
             alignment: Alignment.center,
-            // decoration: const BoxDecoration(
-            //   // gradient: LinearGradient(
-            //   //   colors: [Colors.black, Colors.black, Colors.black],
-            //   //   stops: [0, 0.5, 1],
-            //   //   begin: AlignmentDirectional(1, -1),
-            //   //   end: AlignmentDirectional(-1, 1),
-            //   // ),
-            //   image: DecorationImage(
-            //     image: AssetImage("assets/images/background.png"),
-            //     fit: BoxFit.cover,
-            //     filterQuality: FilterQuality.medium,
-            //   ),
-            // ),
             child: SizedBox(
               width: interface.maxStaticGlobalWidth,
               child: DefaultTabController(
@@ -233,36 +221,32 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                     children: [
                       Consumer<SearchServices>(builder: (context, model, child) {
                         localTagsList = model.tasksTagsList.entries.map((e) => e.value.name).toList();
-                        // tasksServices.runFilter(
-                        //     tasksServices.tasksNew,
-                        //     enteredKeyword: _searchKeywordController.text,
-                        //     tagsList: localTagsList);
                         return Padding(
                           padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                           child: Container(
                             alignment: Alignment.topLeft,
                             child: Wrap(
-                                alignment: WrapAlignment.start,
-                                direction: Axis.horizontal,
-                                children: model.tasksTagsList.entries.map((e) {
-                                  return WrappedChip(
-                                    key: ValueKey(e.value),
-                                    item: MapEntry(
-                                        e.key,
-                                        NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch
-                                            // {
-                                            //   BigInt.from(0) : TokenItem(
-                                            //     name: e.value.name,
-                                            //     collection: true,
-                                            //   )
-                                            // },
-                                            )),
-                                    page: 'tasks',
-                                    selected: e.value.selected,
-                                    tabIndex: 0,
-                                    wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
-                                  );
-                                }).toList()),
+                            alignment: WrapAlignment.start,
+                            direction: Axis.horizontal,
+                            children: model.tasksTagsList.entries.map((e) {
+                              return WrappedChip(
+                                key: ValueKey(e.value),
+                                item: MapEntry(
+                                    e.key,
+                                    NftCollection(selected: false, name: e.value.name, bunch: e.value.bunch
+                                        // {
+                                        //   BigInt.from(0) : TokenItem(
+                                        //     name: e.value.name,
+                                        //     collection: true,
+                                        //   )
+                                        // },
+                                        )),
+                                page: 'tasks',
+                                selected: e.value.selected,
+                                tabIndex: 0,
+                                wrapperRole: e.value.name == '#' ? WrapperRole.hashButton : WrapperRole.onPages,
+                              );
+                            }).toList()),
                           ),
                         );
                       }),
@@ -285,7 +269,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       //   ],
                       // ),
 
-                      tasksServices.isLoading
+                      listenIsLoading
                           ? const LoadIndicator()
                           : const Expanded(
                               child: TabBarView(
@@ -296,7 +280,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                                   //   child: RefreshIndicator(
                                   //     onRefresh: () async {
                                   //       tasksServices.isLoadingBackground = true;
-                                  //       // tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+                                  //       // tasksServices.refreshTasksForAccount(listenWalletAddress!);
                                   //     },
                                   //     child: ListView.builder(
                                   //       padding: EdgeInsets.zero,

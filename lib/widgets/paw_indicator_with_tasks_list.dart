@@ -10,6 +10,7 @@ import '../blockchain/task_services.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../task_item/task_item.dart';
 import '../task_item/task_shimmer.dart';
+import '../wallet/model_view/wallet_model.dart';
 
 class PawRefreshAndTasksList extends StatefulWidget {
   final String pageName;
@@ -44,28 +45,12 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
 
   Future<void> _hitBump() async {
     _bump?.fire();
-    // print('_hitBump _controller: ${_controller.isActive}');
-  }
-
-  void runPaw() {
-    // print('runPaw!!');
-    // Future.delayed(const Duration(milliseconds: 300)).then((_) {
-    //   indicator2.currentState!.refresh(
-    //     // draggingCurve: Curves.easeOutBack,
-    //   );
-    //
-    //   // Future.delayed(const Duration(milliseconds: 700)).then((_) {
-    //   //   indicator.currentState!.refresh(
-    //   //     // draggingCurve: Curves.easeOutBack,
-    //   //   );
-    //   // });
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
     var emptyClasses = context.read<EmptyClasses>();
     List objList = tasksServices.filterResults.values.toList();
     late double offsetToArmed = 200;
@@ -78,16 +63,16 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
           onRefresh: () async {
             tasksServices.isLoadingBackground = true;
             if (widget.pageName == 'customer') {
-              if (tasksServices.publicAddress != null) {
-                await tasksServices.fetchTasksCustomer(tasksServices.publicAddress!);
+              if (listenWalletAddress != null) {
+                await tasksServices.fetchTasksCustomer(listenWalletAddress!);
               }
             } else if (widget.pageName == 'performer') {
-              if (tasksServices.publicAddress != null) {
-                await tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
+              if (listenWalletAddress != null) {
+                await tasksServices.fetchTasksPerformer(listenWalletAddress!);
               }
             } else if (widget.pageName == 'tasks') {
-              if (tasksServices.publicAddress != null) {
-                await tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+              if (listenWalletAddress != null) {
+                await tasksServices.fetchTasksByState('new');
               }
             }
             _hitBump();

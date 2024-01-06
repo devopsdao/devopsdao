@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:badges/badges.dart' as Badges;
 import 'package:animations/animations.dart';
+import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/tag_mint_dialog.dart';
 import 'package:dodao/widgets/tags/tag_open_container.dart';
@@ -1029,7 +1030,7 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
               child: SizedBox(
                 height: containerMainHeight,
                 width: 18,
-                child: interface.chipIcon(tagName, nftColor, 20, tasksServices.chainId),
+                child: interface.chipIcon(tagName, nftColor, 20, WalletService.chainId),
               ),
             ),
           if (specialNft)
@@ -1038,7 +1039,7 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
               child: SizedBox(
                 height: containerMainHeight,
                 width: 18,
-                child: interface.chipIcon(tagName.toLowerCase(), nftColor, 20,tasksServices.chainId),
+                child: interface.chipIcon(tagName.toLowerCase(), nftColor, 20,WalletService.chainId),
               ),
             ),
           if (showNftNumber)

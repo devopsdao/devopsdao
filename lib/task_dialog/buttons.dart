@@ -50,9 +50,9 @@
 //           // ************************ NEW (EXCHANGE) ************************** //
 //           if (fromPage == 'tasks')
 //             TaskDialogButton(
-//               inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
+//               inactive: (task.contractOwner != listenWalletAddress || tasksServices.hardhatDebug == true) &&
 //                       tasksServices.allowedChainId &&
-//                       tasksServices.publicAddress != null
+//                       listenWalletAddress != null
 //                   ? false
 //                   : true,
 //               buttonName: 'Participate',

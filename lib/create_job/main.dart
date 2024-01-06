@@ -773,7 +773,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             widthSize: buttonWidthLong,
             // keyboardActive: keyboardSize == 0 ? false : true;
             callback: () async {
-              // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+              // tasksServices.approveSpend(tasksServices.contractAddress, listenWalletAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
               final List<EthereumAddress> tokenContracts = [];
               tokenContracts.add(tasksServices.contractAddress);
               tasksServices.myNotifyListeners();
@@ -808,7 +808,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             buttonColorRequired: Colors.lightBlue.shade300,
             widthSize: buttonWidthLong,
             callback: () async {
-              // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+              // tasksServices.approveSpend(tasksServices.contractAddress, listenWalletAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
               tokenApproved = true;
               tasksServices.myNotifyListeners();
               showDialog(

@@ -13,6 +13,7 @@ import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
 import '../../config/theme.dart';
+import '../../wallet/model_view/wallet_model.dart';
 import '../wallet_action_dialog.dart';
 
 // void main() {
@@ -55,9 +56,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+    // var tasksServices = context.read<TasksServices>();
 
-    if (tasksServices.publicAddress != null) {
+    if (listenWalletAddress != null) {
       logged = true;
     }
 
@@ -78,7 +80,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         showUserAvatars: false,
         showUserNames: true,
 
-        user: types.User(id: tasksServices.publicAddress.toString()),
+        user: types.User(id: listenWalletAddress.toString()),
         inputOptions: const InputOptions(
             // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
             ),
@@ -363,7 +365,6 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
 
     setState(() {});
 

@@ -263,7 +263,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
               //     fromPage == 'customer' ||
               //     tasksServices.hardhatDebug == true) &&
               //     (task.taskState == "progress" || task.taskState == "review")
-              //     // && task.contractOwner != tasksServices.publicAddress
+              //     // && task.contractOwner != listenWalletAddress
               // )
 
               if (interface.dialogCurrentState['name'] == 'customer-progress' ||

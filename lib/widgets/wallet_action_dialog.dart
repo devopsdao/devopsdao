@@ -11,7 +11,8 @@ import 'package:rive/rive.dart' as rive;
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../nft_manager/collection_services.dart';
-import '../wallet/wallet_service.dart';
+import '../wallet/model_view/wc_model.dart';
+import '../wallet/services/wc_service.dart';
 
 class WalletActionDialog extends StatefulWidget {
   final String nanoId;
@@ -45,7 +46,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
   @override
   Widget build(BuildContext context) {
     TasksServices tasksServices = context.watch<TasksServices>();
-    WalletProvider walletProvider = context.watch<WalletProvider>();
+    WCModelView wcModelView = context.watch<WCModelView>();
     var searchServices = context.read<SearchServices>();
     var collectionServices = context.read<CollectionServices>();
     var interface = context.read<InterfaceServices>();
@@ -110,8 +111,8 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
 
         Future.delayed(const Duration(milliseconds: 500)).whenComplete(() {
-          Navigator.pop(context);
-          Navigator.pop(interface.createJobPageContext);
+          // Navigator.pop(context);
+          // Navigator.pop(interface.createJobPageContext);
           // WidgetsBinding.instance.addPostFrameCallback((_) {
           //   context.beamToNamed('/customer');
           // });
@@ -312,7 +313,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                         borderRadius: BorderRadius.circular(20.0),
                         onTap: () {
                           // Navigator.pop(context);
-                          launchURL(walletProvider.walletConnectUri);
+                          launchURL(wcModelView.state.walletConnectUri);
                           setState(() {});
                           // Navigator.pop(context);
                         },

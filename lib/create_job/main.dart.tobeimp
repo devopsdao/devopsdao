@@ -795,7 +795,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               widthSize: buttonWidth,
               // keyboardActive: keyboardSize == 0 ? false : true;
               callback: () async {
-                // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+                // tasksServices.approveSpend(tasksServices.contractAddress, listenWalletAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
                 setState(() {
                   nftApproved = true;
                 });
@@ -822,7 +822,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
               buttonColorRequired: Colors.lightBlue.shade300,
               widthSize: buttonWidth,
               callback: () async {
-                // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+                // tasksServices.approveSpend(tasksServices.contractAddress, listenWalletAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
                 tokenApproved = true;
                 tasksServices.myNotifyListeners();
                 showDialog(

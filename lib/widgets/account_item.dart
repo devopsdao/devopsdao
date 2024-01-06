@@ -7,6 +7,7 @@ import '../config/theme.dart';
 import '../task_item/delete_item_alert.dart';
 import 'package:badges/badges.dart' as Badges;
 
+import '../wallet/model_view/wallet_model.dart';
 import 'badge-small-colored.dart';
 
 class AccountItem extends StatefulWidget {
@@ -28,7 +29,7 @@ class _AccountItemState extends State<AccountItem> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     // Widget badgeWidget(count, color) {
     //   return Badges.Badge(
     //     badgeStyle: Badges.BadgeStyle(
@@ -64,7 +65,7 @@ class _AccountItemState extends State<AccountItem> {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          if (tasksServices.publicAddress != widget.account.walletAddress) // forbid to ban yourself
+          if (listenWalletAddress != widget.account.walletAddress) // forbid to ban you
             SizedBox(
               width: 50,
               height: 80,
