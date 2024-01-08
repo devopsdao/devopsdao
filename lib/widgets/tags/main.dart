@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
 
-import '../../account_dialog/widget/dialog_button_widget.dart';
+import '../../account_dialog/widget/widget/dialog_button_widget.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';

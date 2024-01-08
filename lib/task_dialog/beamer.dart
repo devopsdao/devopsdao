@@ -11,7 +11,7 @@ import 'package:dodao/task_dialog/buttons.dart';
 import 'package:dodao/task_dialog/states.dart';
 import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:dodao/task_dialog/widget/rate_widget.dart';
+import 'package:dodao/task_dialog/pages/1_main/rate_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -66,7 +66,7 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
-        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress),
+        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress!),
       )
     );
   }

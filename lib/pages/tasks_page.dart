@@ -148,7 +148,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             automaticallyImplyLeading: true,
             appBarBuilder: (context) {
               return AppBar(
-                title: Text('Job Exchange', style: Theme.of(context).textTheme.titleLarge),
+                title: Text('Task Market', style: Theme.of(context).textTheme.titleLarge),
                 actions: [
                   const OpenMyAddTags(
                     page: 'tasks',

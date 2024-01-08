@@ -9,12 +9,11 @@ import 'package:provider/provider.dart';
 import 'package:beamer/beamer.dart';
 import 'package:webthree/credentials.dart';
 
-import '../../blockchain/accounts.dart';
-import '../../blockchain/interface.dart';
-import '../../blockchain/notify_listener.dart';
-import '../../blockchain/task_services.dart';
-import '../../task_dialog/main.dart';
-import '../../widgets/badge-small-colored.dart';
+import '../../../blockchain/accounts.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../task_dialog/main.dart';
+import '../../../widgets/badge-small-colored.dart';
 
 class LastActivitiesList extends StatefulWidget {
   final Account account;

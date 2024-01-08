@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
 
-import '../blockchain/accounts.dart';
-import '../blockchain/interface.dart';
-import '../blockchain/task_services.dart';
-import '../config/theme.dart';
-import '../task_dialog/contractor_info.dart';
-import '../widgets/account_item.dart';
-import '../widgets/data_loading_dialog.dart';
-import '../task_item/task_item.dart';
-import 'main.dart';
+import '../../blockchain/accounts.dart';
+import '../../blockchain/interface.dart';
+import '../../blockchain/task_services.dart';
+import '../../config/theme.dart';
+import '../../task_dialog/contractor_info.dart';
+import 'account_item.dart';
+import '../../widgets/data_loading_dialog.dart';
+import '../../task_item/task_item.dart';
+import '../../account_dialog/widget/main.dart';
 
 class ClickOnAccountFromIndexedList extends StatelessWidget {
   final String fromPage;

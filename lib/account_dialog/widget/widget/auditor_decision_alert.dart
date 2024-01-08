@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../blockchain/interface.dart';
-import '../../blockchain/classes.dart';
-import '../../blockchain/task_services.dart';
-import '../../config/theme.dart';
-import '../../widgets/wallet_action_dialog.dart';
+import '../../../blockchain/classes.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
+import '../../../widgets/wallet_action_dialog.dart';
+
 
 class AuditorDecision extends StatefulWidget {
   final Task task;

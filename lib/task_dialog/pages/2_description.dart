@@ -276,7 +276,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   child: Row(
                     children: [
                       TaskDialogButton(
-                        inactive: false,
+                        inactive: task.auditors.isNotEmpty ? true : false,
                         buttonName: 'Request audit',
                         buttonColorRequired: Colors.orangeAccent.shade700,
                         callback: () {

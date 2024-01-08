@@ -14,7 +14,7 @@ import '../config/theme.dart';
 import '../config/flutter_flow_util.dart';
 import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
-import 'delete_item_alert.dart';
+import '../widgets/delete_item_alert.dart';
 
 class TaskItem extends StatefulWidget {
   // final int taskCount;

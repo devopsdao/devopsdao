@@ -3,15 +3,10 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:webthree/credentials.dart';
-
-import '../../blockchain/accounts.dart';
-import '../../blockchain/interface.dart';
-import '../../blockchain/classes.dart';
-import '../../blockchain/task_services.dart';
-import '../../config/flutter_flow_util.dart';
-import '../../config/theme.dart';
-import '../widget/dialog_button_widget.dart';
+import '../../../blockchain/accounts.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
 
 class AccountCvPage extends StatefulWidget {
   final double screenHeightSizeNoKeyboard;

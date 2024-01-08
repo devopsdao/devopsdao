@@ -13,18 +13,33 @@ import '../config/theme.dart';
 import '../wallet/model_view/wallet_model.dart';
 import '../wallet/services/wallet_service.dart';
 import 'header.dart';
+import 'model_view/task_model_view.dart';
 import 'shimmer.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
-class TaskDialogFuture extends StatefulWidget {
+class TaskDialogFuture extends StatelessWidget {
+  const TaskDialogFuture({super.key, required this.fromPage, required this.taskAddress});
   final String fromPage;
-  final EthereumAddress? taskAddress;
+  final EthereumAddress taskAddress;
+  @override
+  Widget build(BuildContext context) {
+      return  ChangeNotifierProvider(
+        create: (_) => TaskModelView(),
+        child: _TaskDialogFuture(fromPage: fromPage, taskAddress: taskAddress,),
+      );
+  }
+}
+
+
+class _TaskDialogFuture extends StatefulWidget {
+  final String fromPage;
+  final EthereumAddress taskAddress;
   // final bool shimmerEnabled;
-  const TaskDialogFuture({
+  const _TaskDialogFuture({
     Key? key,
     required this.fromPage,
-    this.taskAddress,
+    required this.taskAddress,
     // required this.shimmerEnabled,
   }) : super(key: key);
 
@@ -32,15 +47,9 @@ class TaskDialogFuture extends StatefulWidget {
   _TaskDialogFutureState createState() => _TaskDialogFutureState();
 }
 
-class _TaskDialogFutureState extends State<TaskDialogFuture> {
-  // String backgroundPicture = "assets/images/niceshape.png";
+class _TaskDialogFutureState extends State<_TaskDialogFuture> {
 
   late Map<String, dynamic> dialogState;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

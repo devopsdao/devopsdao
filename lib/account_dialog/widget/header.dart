@@ -2,12 +2,12 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/accounts.dart';
-import '../blockchain/interface.dart';
+import '../../blockchain/accounts.dart';
+import '../../blockchain/interface.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/services.dart';
 
-import '../config/theme.dart';
+import '../../config/theme.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 

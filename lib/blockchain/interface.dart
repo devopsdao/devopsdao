@@ -33,12 +33,6 @@ class InterfaceServices extends ChangeNotifier {
     )
   };
 
-  // *********** Rating set (rate_widget <-> fab_buttons) ********** //
-  late double rating = 0.0;
-  Future updateRatingValue(number) async {
-    rating = number;
-    notifyListeners();
-  }
 
   //  *************** Wallet ***************//
   late int currentWalletPage = 0;

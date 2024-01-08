@@ -1,15 +1,11 @@
-import 'package:dodao/account_dialog/pages/0_main.dart';
-import 'package:dodao/account_dialog/pages/2_chat.dart';
-import 'package:dodao/account_dialog/pages/temp_closeup.dart';
-import 'package:dodao/account_dialog/pages/1_cv.dart';
+import 'package:dodao/account_dialog/widget/pages/0_main.dart';
+import 'package:dodao/account_dialog/widget/pages/1_cv.dart';
+import 'package:dodao/account_dialog/widget/pages/2_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/accounts.dart';
-import '../blockchain/interface.dart';
-import '../blockchain/classes.dart';
-import '../blockchain/task_services.dart';
-import '../widgets/chat/main.dart';
+import '../../blockchain/accounts.dart';
+import '../../blockchain/interface.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 

@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
 
-import '../blockchain/accounts.dart';
-import '../blockchain/interface.dart';
-import '../blockchain/classes.dart';
-import '../blockchain/task_services.dart';
-import '../task_item/delete_item_alert.dart';
-import '../wallet/model_view/wallet_model.dart';
-import '../widgets/wallet_action_dialog.dart';
+import '../../blockchain/accounts.dart';
+import '../../blockchain/interface.dart';
+import '../../blockchain/classes.dart';
+import '../../blockchain/task_services.dart';
+import '../../widgets/delete_item_alert.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import '../../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
   final Account account;

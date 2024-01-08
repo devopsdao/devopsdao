@@ -3,13 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../account_dialog/account_transition_effect.dart';
+import 'account_transition_effect.dart';
 import '../../blockchain/accounts.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../widgets/badgetab.dart';
-import '../../widgets/tags/search_services.dart';
 
 class AccountsTabs extends StatefulWidget {
   const AccountsTabs({
@@ -23,11 +22,13 @@ class AccountsTabs extends StatefulWidget {
 
 class _AccountsTabsState extends State<AccountsTabs> {
   late Map<String, Account> accountsList = {};
+  late Map<String, Account> accountsRawList = {};
   int tabIndex = 0;
 
   Future<void> getAccountsList() async {
     final tasksServices = Provider.of<TasksServices>(context, listen: false);
     accountsList = await tasksServices.getAccountsData(await tasksServices.getAccountsList());
+    accountsRawList = await tasksServices.getAccountsData(await tasksServices.getRawAccountsList());
 
     setState((){
       accountsList = accountsList;
@@ -73,7 +74,7 @@ class _AccountsTabsState extends State<AccountsTabs> {
                       tabText: 'Active',
                     ),
                   ),
-                  Tab(
+                  const Tab(
                     child: BadgeTab(
                       taskCount: 99,
                       tabText: 'Banned',

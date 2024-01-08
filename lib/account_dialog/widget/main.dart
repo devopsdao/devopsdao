@@ -1,16 +1,16 @@
 import 'package:beamer/beamer.dart';
-import 'package:dodao/account_dialog/pages.dart';
+import 'package:dodao/account_dialog/widget/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:webthree/credentials.dart';
 
-import '../blockchain/accounts.dart';
-import '../blockchain/interface.dart';
-import '../blockchain/classes.dart';
-import '../blockchain/task_services.dart';
-import '../config/theme.dart';
-import '../widgets/badge-small-colored.dart';
+import '../../blockchain/accounts.dart';
+import '../../blockchain/interface.dart';
+import '../../blockchain/classes.dart';
+import '../../blockchain/task_services.dart';
+import '../../config/theme.dart';
+import '../../widgets/badge-small-colored.dart';
 import 'header.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)

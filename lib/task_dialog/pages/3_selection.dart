@@ -8,7 +8,7 @@ import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:dodao/task_dialog/states.dart';
 import 'package:webthree/credentials.dart';
 
-import '../../account_dialog/account_transition_effect.dart';
+import '../../pages/account_page/account_transition_effect.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';

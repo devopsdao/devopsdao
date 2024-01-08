@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../blockchain/accounts.dart';
-import '../blockchain/task_services.dart';
-import '../config/theme.dart';
-import '../task_item/delete_item_alert.dart';
+import '../../blockchain/accounts.dart';
+import '../../blockchain/task_services.dart';
+import '../../config/theme.dart';
+import '../../widgets/delete_item_alert.dart';
 import 'package:badges/badges.dart' as Badges;
 
-import '../wallet/model_view/wallet_model.dart';
-import 'badge-small-colored.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import '../../widgets/badge-small-colored.dart';
 
 class AccountItem extends StatefulWidget {
   // final int taskCount;
@@ -72,6 +72,7 @@ class _AccountItemState extends State<AccountItem> {
               child: InkWell(
                 child: const Padding(
                   padding: EdgeInsets.only(left: 10.0),
+                  /// todo remove or add to blacklist
                   child: Icon(
                     Icons.close_sharp,
                     color: Colors.deepOrange,

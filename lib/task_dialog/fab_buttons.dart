@@ -13,6 +13,7 @@ import '../wallet/model_view/wallet_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
 import '../widgets/wallet_action_dialog.dart';
+import 'model_view/task_model_view.dart';
 
 class SetsOfFabButtons extends StatelessWidget {
   final Task task;
@@ -30,6 +31,8 @@ class SetsOfFabButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    var taskModelView = context.watch<TaskModelView>();
+    // final listenAllowedChainId = context.select((TaskModelView vm) => vm.state.allowedChainId);
     final listenAllowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
@@ -187,14 +190,14 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: interface.rating == 0.0 ? true : false,
+          inactive: taskModelView.state.rating == 0.0 ? true : false,
           expand: true,
           buttonName: 'Withdraw & Rate Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth,
           callback: () {
             task.loadingIndicator = true;
-            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(interface.rating));
+            tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(taskModelView.state.rating));
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(
@@ -234,7 +237,7 @@ class SetsOfFabButtons extends StatelessWidget {
       // *********************** CUSTOMER BUTTONS *********************** //
       else if (task.taskState == 'review' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: interface.rating == 0.0 ? true : false,
+          inactive: taskModelView.state.rating == 0.0 ? true : false,
           expand: true,
           buttonName: 'Sign Review & Rate',
           buttonColorRequired: Colors.lightBlue.shade300,

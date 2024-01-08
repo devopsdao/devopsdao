@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../blockchain/accounts.dart';
-import '../../blockchain/empty_classes.dart';
-import '../../blockchain/interface.dart';
-import '../../blockchain/classes.dart';
-import '../../blockchain/task_services.dart';
-import '../../widgets/chat/main.dart';
+import '../../../blockchain/accounts.dart';
+import '../../../blockchain/empty_classes.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../widgets/chat/main.dart';
 
 class AccountsChatPage extends StatelessWidget {
   final double innerPaddingWidth;

@@ -21,26 +21,26 @@ class WCSessions {
     sessionEvent(context, web3App);
     sessionConnect(context, web3App);
 
-    web3App?.onProposalExpire.subscribe((onProposalExpire) async {
-      log.fine('wc_sessions.dart -> onProposalExpire');
-    });
-    web3App?.onSessionExtend.subscribe((onSessionExtend) async {
-      log.fine('wc_sessions.dart -> onSessionExtend');
-    });
-    web3App?.onSessionPing.subscribe((onSessionPing) async {
-      log.fine('wc_sessions.dart -> onSessionPing -> id: ${onSessionPing?.id}');
-    });
-    web3App?.onSessionUpdate.subscribe((onSessionUpdate) async {
-      log.fine('wc_sessions.dart -> onSessionUpdate -> id: ${onSessionUpdate?.id}');
-    });
-    web3App?.onProposalExpire.subscribe((onProposalExpire) async {
-      log.fine('wc_sessions.dart -> onProposalExpire -> params: ${onProposalExpire?.params}');
-      log.fine('wc_sessions.dart -> onProposalExpire -> verifyUrl: ${onProposalExpire?.verifyContext?.verifyUrl}');
-    });
-    web3App?.onSessionDelete.subscribe((onSessionDelete) async {
-      log.fine('wc_sessions.dart -> onSessionDelete id: ${onSessionDelete?.id}');
-      log.fine('wc_sessions.dart -> onSessionDelete topic: ${onSessionDelete?.topic}');
-    });
+    // web3App?.onProposalExpire.subscribe((onProposalExpire) async {
+    //   log.fine('wc_sessions.dart -> onProposalExpire');
+    // });
+    // web3App?.onSessionExtend.subscribe((onSessionExtend) async {
+    //   log.fine('wc_sessions.dart -> onSessionExtend');
+    // });
+    // web3App?.onSessionPing.subscribe((onSessionPing) async {
+    //   log.fine('wc_sessions.dart -> onSessionPing -> id: ${onSessionPing?.id}');
+    // });
+    // web3App?.onSessionUpdate.subscribe((onSessionUpdate) async {
+    //   log.fine('wc_sessions.dart -> onSessionUpdate -> id: ${onSessionUpdate?.id}');
+    // });
+    // web3App?.onProposalExpire.subscribe((onProposalExpire) async {
+    //   log.fine('wc_sessions.dart -> onProposalExpire -> params: ${onProposalExpire?.params}');
+    //   log.fine('wc_sessions.dart -> onProposalExpire -> verifyUrl: ${onProposalExpire?.verifyContext?.verifyUrl}');
+    // });
+    // web3App?.onSessionDelete.subscribe((onSessionDelete) async {
+    //   log.fine('wc_sessions.dart -> onSessionDelete id: ${onSessionDelete?.id}');
+    //   log.fine('wc_sessions.dart -> onSessionDelete topic: ${onSessionDelete?.topic}');
+    // });
     // web3App?.onSessionExpire.subscribe(onSessionExpire);
   }
 

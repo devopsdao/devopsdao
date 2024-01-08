@@ -1,26 +1,19 @@
-import 'package:dodao/account_dialog/widget/last_activities_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webthree/credentials.dart';
 
-import '../../blockchain/accounts.dart';
-import '../../blockchain/interface.dart';
-import '../../blockchain/classes.dart';
-import '../../blockchain/task_services.dart';
-import '../../config/theme.dart';
-import '../../widgets/badge-small-colored.dart';
-import '../../widgets/my_tools.dart';
-import '../../widgets/payment.dart';
-import '../../widgets/tags/search_services.dart';
-import '../../widgets/tags/wrapped_chip.dart';
-import '../../widgets/wallet_action_dialog.dart';
-import '../fab_buttons.dart';
-import '../widget/dialog_button_widget.dart';
+import '../../../blockchain/accounts.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
+import '../../../widgets/badge-small-colored.dart';
+import '../../../widgets/my_tools.dart';
 
 import 'package:badges/badges.dart' as Badges;
 
 import 'dart:ui' as ui;
+
+import '../fab_buttons.dart';
+import '../widget/last_activities_list.dart';
 
 class AccountMainPage extends StatefulWidget {
   final double screenHeightSizeNoKeyboard;
