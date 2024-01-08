@@ -91,7 +91,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
       border: DodaoTheme.of(context).borderGradient,
     );
 
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
@@ -303,33 +302,31 @@ class _MainTaskPageState extends State<MainTaskPage> {
               //   ),
 
               if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
-                  (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true))
-              )
+                  (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true)))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                     elevation: DodaoTheme.of(context).elevation,
                     borderRadius: DodaoTheme.of(context).borderRadius,
                     child: Container(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      width: innerPaddingWidth,
-                      decoration: materialMainBoxDecoration,
-                      child: Padding(
-                        padding: DodaoTheme.of(context).inputEdge,
-                        child: Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: RichText(
-                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                                TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
-                              ])),
-                            ),
-                            const RateAnimatedWidget(),
-                          ],
-                        ),
-                      )
-                    ),
+                        padding: const EdgeInsets.only(top: 5.0),
+                        width: innerPaddingWidth,
+                        decoration: materialMainBoxDecoration,
+                        child: Padding(
+                          padding: DodaoTheme.of(context).inputEdge,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: RichText(
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                  TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
+                                ])),
+                              ),
+                              const RateAnimatedWidget(),
+                            ],
+                          ),
+                        )),
                   ),
                 ),
 
@@ -365,14 +362,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     const Text(
                                       'Warning, this contract on Audit state!',
                                     ),
-                                    if (task.auditInitiator == listenWalletAddress &&
-                                        interface.dialogCurrentState['pages'].containsKey('select'))
+                                    if (task.auditInitiator == listenWalletAddress && interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
                                           'There '
                                           '${task.auditors.length == 1 ? 'is' : 'are'} '
                                           '${task.auditors.length.toString()} auditor'
                                           '${task.auditors.length == 1 ? '' : 's'}'
-                                          ' waiting for your decision',
+                                          ' waiting to be selected',
                                           style: const TextStyle(
                                               // height: 1.1,
                                               )),
@@ -442,7 +438,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             '${task.participants.length == 1 ? 'is' : 'are'} '
                                             '${task.participants.length.toString()} participant'
                                             '${task.participants.length == 1 ? '' : 's'}'
-                                            ' waiting for your decision',
+                                            ' waiting to be selected',
                                         style: const TextStyle(
                                           height: 1,
                                         )),
@@ -469,10 +465,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
-                                    tooltip: 'Go to topup page',
+                                    icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
+                                    tooltip: 'Go to select page',
                                     onPressed: () {
-                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
                                           duration: const Duration(milliseconds: 400), curve: Curves.ease);
                                     },
                                   ),
@@ -488,10 +484,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
-                                    tooltip: 'Go to select page',
+                                    icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                                    tooltip: 'Go to topup page',
                                     onPressed: () {
-                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
                                           duration: const Duration(milliseconds: 400), curve: Curves.ease);
                                     },
                                   ),
