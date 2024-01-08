@@ -244,8 +244,6 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlTanssi;
   late String _wsUrlTanssi;
 
-
-
   // late int chainId = 0;
   // final String defaultNetwork = 'Dodao Tanssi Appchain';
   // Map<String, int> allowedChainIds = {
@@ -741,7 +739,8 @@ class TasksServices extends ChangeNotifier {
       }
 
       final Map<BigInt, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
-      final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold({},
+      final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
+        {},
         (Map<String, List<BigInt>> acc, entry) {
           final key = entry.value;
           final value = entry.key;
@@ -874,10 +873,9 @@ class TasksServices extends ChangeNotifier {
     // if (enteredKeyword.isEmpty) {
 
     if (true) {
-    // if (enteredKeyword.isEmpty) {
-    //   filterResults = Map.from(taskList);
-    // } else {
-
+      // if (enteredKeyword.isEmpty) {
+      //   filterResults = Map.from(taskList);
+      // } else {
 
       // for (EthereumAddress taskAddress in taskList.keys) {
       //   if (taskList[taskAddress]!.title.toLowerCase().contains(enteredKeyword.toLowerCase())) {
@@ -929,17 +927,18 @@ class TasksServices extends ChangeNotifier {
         for (var tag in tagsList) {
           filteredWithTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
           // filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tokenNames.last.contains(tag));
-          filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) {
-            bool result = false;
-            for (var nftNameList in value.tokenNames) {
-              for (var nftName in nftNameList) {
-                if (nftName == tag) {
-                  result = true;
+          filteredWithNfts = Map.from(filterResultsTags)
+            ..removeWhere((key, value) {
+              bool result = false;
+              for (var nftNameList in value.tokenNames) {
+                for (var nftName in nftNameList) {
+                  if (nftName == tag) {
+                    result = true;
+                  }
                 }
               }
-            }
-            return !result;
-          });
+              return !result;
+            });
         }
         filterResults = {...filteredWithTags, ...filteredWithNfts};
         // filterResults = Map.from(filterResultsTags);
@@ -1010,15 +1009,16 @@ class TasksServices extends ChangeNotifier {
           tokenAmounts: task[0][11],
           taskState: task[10],
           auditState: task[11],
-          rating: task[12].toInt(),
-          contractOwner: task[13],
-          performer: task[14],
-          auditInitiator: task[15],
-          auditor: task[16],
-          participants: task[17],
-          funders: task[18],
-          auditors: task[19],
-          messages: task[20],
+          performerRating: task[12].toInt(),
+          customerRating: task[13].toInt(),
+          contractOwner: task[14],
+          performer: task[15],
+          auditInitiator: task[16],
+          auditor: task[17],
+          participants: task[18],
+          funders: task[19],
+          auditors: task[20],
+          messages: task[21],
           taskAddress: taskAddress,
           loadingIndicator: false,
           tokenNames: task[0][8],
@@ -1061,15 +1061,16 @@ class TasksServices extends ChangeNotifier {
           tokenAmounts: task[0][10],
           taskState: task[0][11],
           auditState: task[0][12],
-          rating: task[0][13].toInt(),
-          contractOwner: task[0][14],
-          performer: task[0][15],
-          auditInitiator: task[0][16],
-          auditor: task[0][17],
-          participants: task[0][18],
-          funders: task[0][19],
-          auditors: task[0][20],
-          messages: task[0][21],
+          performerRating: task[0][13].toInt(),
+          customerRating: task[14].toInt(),
+          contractOwner: task[0][15],
+          performer: task[0][16],
+          auditInitiator: task[0][17],
+          auditor: task[0][18],
+          participants: task[0][19],
+          funders: task[0][20],
+          auditors: task[0][21],
+          messages: task[0][22],
           taskAddress: taskAddresses[i],
           loadingIndicator: false,
           tokenNames: task[1],
@@ -1137,7 +1138,8 @@ class TasksServices extends ChangeNotifier {
     late List tagsNFTList = [];
     late List taskStateList = [];
     late List auditStateList = [];
-    late List ratingList = [];
+    late List performerRatingList = [];
+    late List customerRatingList = [];
     late List contractOwnerList = [];
     late List performerList = [];
     late List participantsList = [];
@@ -1157,7 +1159,8 @@ class TasksServices extends ChangeNotifier {
       tagsNFTList.addAll(task.tagsNFT);
       taskStateList.add(task.taskState);
       auditStateList.add(task.auditState);
-      ratingList.add(task.rating);
+      performerRatingList.add(task.performerRating);
+      customerRatingList.add(task.customerRating);
       contractOwnerList.add(task.contractOwner);
       performerList.add(task.performer);
       participantsList.addAll(task.participants);
@@ -1182,7 +1185,8 @@ class TasksServices extends ChangeNotifier {
     stats['statsTagsNFTListCounts'] = countOccurences(tagsNFTList);
     stats['statsTaskStateListCounts'] = countOccurences(taskStateList);
     stats['statsAuditStateListCounts'] = countOccurences(auditStateList);
-    stats['statsRatingListCounts'] = countOccurences(ratingList);
+    stats['statsPerformerRatingListCounts'] = countOccurences(performerRatingList);
+    stats['statsCustomerRatingListCounts'] = countOccurences(customerRatingList);
     stats['statsContractOwnerListCounts'] = countOccurences(contractOwnerList);
     stats['statsPerformerListCounts'] = countOccurences(performerList);
     stats['statsParticipantsListCounts'] = countOccurences(participantsList);
@@ -1251,8 +1255,8 @@ class TasksServices extends ChangeNotifier {
       //   }
       // }
       // add all scored Task for calculation:
-      if (task.rating != 0) {
-        score = score + task.rating;
+      if (task.performerRating != 0) {
+        score = score + task.performerRating;
         scoredTaskCount++;
       }
     }
@@ -1788,10 +1792,9 @@ class TasksServices extends ChangeNotifier {
           participantTasks: accountData[4].cast<EthereumAddress>(),
           auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
           customerRating: accountData[6].cast<int>(),
-          performerRating: accountData[7].cast<int>()
-      );
+          performerRating: accountData[7].cast<int>());
     }
-    notifyListeners(  );
+    notifyListeners();
     return myAccountsData;
   }
 
@@ -2262,7 +2265,7 @@ class TasksServices extends ChangeNotifier {
         value: EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei),
       );
 
-      txn = await web3Transaction(credentials, transaction, chainId: WalletService.chainId );
+      txn = await web3Transaction(credentials, transaction, chainId: WalletService.chainId);
       log.info(txn);
     } else if (taskTokenSymbol == 'USDC') {
       final transaction = Transaction(
@@ -2291,7 +2294,7 @@ class TasksServices extends ChangeNotifier {
     message ??= 'Taking this task';
     replyTo ??= BigInt.from(0);
     // final chainIdHex = await web3client.makeRPCCall('eth_chainId');
-    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId );
+    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId);
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2305,15 +2308,15 @@ class TasksServices extends ChangeNotifier {
       from: senderAddress,
     );
     try {
-      if ((!_walletService.checkAllowedChainId() && WalletService.chainId  != 31337) && interchainSelected == 'axelar') {
+      if ((!_walletService.checkAllowedChainId() && WalletService.chainId != 31337) && interchainSelected == 'axelar') {
         txn = await axelarFacet.taskParticipateAxelar(senderAddress, contractAddress, message, replyTo, credentials: creds, transaction: transaction);
-      } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId  != 31337) && interchainSelected == 'hyperlane') {
+      } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId != 31337) && interchainSelected == 'hyperlane') {
         txn = await hyperlaneFacet.taskParticipateHyperlane(senderAddress, contractAddress, message, replyTo,
             credentials: creds, transaction: transaction);
-      } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId  != 31337) && interchainSelected == 'layerzero') {
+      } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId != 31337) && interchainSelected == 'layerzero') {
         txn = await layerzeroFacet.taskParticipateLayerzero(senderAddress, contractAddress, message, replyTo,
             credentials: creds, transaction: transaction);
-      } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId  != 31337) && interchainSelected == 'wormhole') {
+      } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId != 31337) && interchainSelected == 'wormhole') {
         txn = await wormholeFacet.taskParticipateWormhole(senderAddress, contractAddress, message, replyTo,
             credentials: creds, transaction: transaction);
       } else {
@@ -2342,7 +2345,7 @@ class TasksServices extends ChangeNotifier {
     late String txn = '';
     message ??= 'Taking task for audit';
     replyTo ??= BigInt.from(0);
-    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId );
+    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId);
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2399,7 +2402,7 @@ class TasksServices extends ChangeNotifier {
     message ??= 'Changing task status to $state';
     replyTo ??= BigInt.from(0);
     score ??= BigInt.from(5);
-    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId );
+    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId);
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2465,7 +2468,7 @@ class TasksServices extends ChangeNotifier {
     message ??= 'Auditor decision';
     replyTo ??= BigInt.from(0);
     score ??= BigInt.from(5);
-    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId );
+    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId);
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2519,7 +2522,7 @@ class TasksServices extends ChangeNotifier {
     };
     late String txn = '';
     replyTo ??= BigInt.from(0);
-    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId );
+    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId);
     var creds;
     var senderAddress;
     if (hardhatDebug == true) {
@@ -2619,7 +2622,7 @@ class TasksServices extends ChangeNotifier {
     };
     late String txn = '';
     String chain = 'Moonbase';
-    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId );
+    TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: WalletService.chainId);
     //should send value now?!
     var creds;
     var senderAddress;

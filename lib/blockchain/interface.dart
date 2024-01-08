@@ -3,10 +3,8 @@ import 'package:webthree/credentials.dart';
 import 'accounts.dart';
 
 class InterfaceServices extends ChangeNotifier {
-
   late double tokensEntered = 0.0;
   late String tokenSelected = '';
-
 
   // ************* Transport Images ****** //
   late Map<String, Widget> interchainImages = {
@@ -33,7 +31,6 @@ class InterfaceServices extends ChangeNotifier {
     )
   };
 
-
   //  *************** Wallet ***************//
   late int currentWalletPage = 0;
 
@@ -45,18 +42,12 @@ class InterfaceServices extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Widget chipIcon(String roleOrCoin, Color color, double height, chainId) {
     var networkLogoImage;
     if (roleOrCoin == 'auditor') {
-    return networkLogoImage = Icon(
-        Icons.star_border_purple500, size: height, color: color
-      );
+      return networkLogoImage = Icon(Icons.star_border_purple500, size: height, color: color);
     } else if (roleOrCoin == 'governor') {
-    return networkLogoImage = Icon(
-        Icons.star_border_purple500, size: height, color: color
-      );
+      return networkLogoImage = Icon(Icons.star_border_purple500, size: height, color: color);
     } else if (roleOrCoin == 'DEV') {
       return networkLogoImage = Image.asset(
         'assets/images/net_icon_moonbeam.png',
@@ -112,12 +103,11 @@ class InterfaceServices extends ChangeNotifier {
       nickName: 'not selected',
       about: 'empty',
       walletAddress: EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'),
-      customerTasks:[],
+      customerTasks: [],
       participantTasks: [],
       auditParticipantTasks: [],
-      customerRating: [],
-      performerRating: []
-  );
+      performerRating: [],
+      customerRating: []);
   // participants_list.dart & 3_selection.dart & auditor
   final double tileHeight = 36;
   final double participantInfoHeight = 165;

@@ -7,8 +7,8 @@ class Stats {
   final List<EthereumAddress> customerTasks;
   final List<EthereumAddress> participantTasks;
   final List<EthereumAddress> auditParticipantTasks;
-  final int customerRating;
   final int performerRating;
+  final int customerRating;
 
   Stats(
       {required this.nickName,
@@ -17,6 +17,6 @@ class Stats {
       required this.customerTasks,
       required this.participantTasks,
       required this.auditParticipantTasks,
-      required this.customerRating,
-      required this.performerRating});
+      required this.performerRating,
+      required this.customerRating});
 }
