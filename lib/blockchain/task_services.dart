@@ -1062,7 +1062,7 @@ class TasksServices extends ChangeNotifier {
           taskState: task[0][11],
           auditState: task[0][12],
           performerRating: task[0][13].toInt(),
-          customerRating: task[14].toInt(),
+          customerRating: task[0][14].toInt(),
           contractOwner: task[0][15],
           performer: task[0][16],
           auditInitiator: task[0][17],
