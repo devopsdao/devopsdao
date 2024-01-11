@@ -59,7 +59,7 @@ class _ParticipantListState extends State<ParticipantList> {
         interface.dialogCurrentState['name'] == 'performer-audit-requested') {
       participants = widget.task.auditors;
     }
-    final participationList = provider.getAccountsData(participants.cast<EthereumAddress>());
+    final participationList = provider.getAccountsData(requestedAccountsList: participants.cast<EthereumAddress>());
     setState((){
       futureParticipationList = participationList;
     });

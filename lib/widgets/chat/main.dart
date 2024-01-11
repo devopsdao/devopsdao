@@ -260,7 +260,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         context: context,
         builder: (context) => WalletActionDialog(
               nanoId: widget.task.nanoId,
-              taskName: 'sendChatMessage_$messageNanoID',
+              actionName: 'sendChatMessage_$messageNanoID',
             ));
 
     final textMessage = types.TextMessage(

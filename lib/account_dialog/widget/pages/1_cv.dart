@@ -11,7 +11,6 @@ import '../../../config/theme.dart';
 class AccountCvPage extends StatefulWidget {
   final double screenHeightSizeNoKeyboard;
   final double innerPaddingWidth;
-  final String fromPage;
   final Account account;
 
 
@@ -20,7 +19,6 @@ class AccountCvPage extends StatefulWidget {
         required this.screenHeightSizeNoKeyboard,
         required this.innerPaddingWidth,
         required this.account,
-        required this.fromPage,
       })
       : super(key: key);
 
@@ -34,7 +32,7 @@ class _AccountCvPageState extends State<AccountCvPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var interface = context.read<InterfaceServices>();
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;

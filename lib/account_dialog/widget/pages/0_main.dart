@@ -20,9 +20,11 @@ class AccountMainPage extends StatefulWidget {
   final double innerPaddingWidth;
   final double screenHeightSize;
   final Account account;
+  final String accountRole;
 
   const AccountMainPage({
     Key? key,
+    required this.accountRole,
     required this.screenHeightSizeNoKeyboard,
     required this.innerPaddingWidth,
     required this.screenHeightSize,
@@ -182,7 +184,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                       children: [
                                         BadgeSmallColored(count: widget.account.customerTasks.length, color: Colors.lightBlue,),
                                         Text(
-                                          ' - Created: ',
+                                          ' - Created ',
                                           style: DodaoTheme.of(context).bodyText3,
                                           softWrap: false,
                                           overflow: TextOverflow.ellipsis,
@@ -264,7 +266,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                       children: [
                                         BadgeSmallColored(count: widget.account.customerRating.length, color: Colors.deepPurpleAccent,),
                                         Text(
-                                          ' - Customer rating: ',
+                                          ' - Customer rating ',
                                           style: DodaoTheme.of(context).bodyText3,
                                           softWrap: false,
                                           overflow: TextOverflow.ellipsis,
@@ -280,7 +282,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
                                       children: [
                                         BadgeSmallColored(count: widget.account.performerRating.length, color: Colors.deepPurple,),
                                         Text(
-                                          ' - Performer rating: ',
+                                          ' - Performer rating',
                                           style: DodaoTheme.of(context).bodyText3,
                                           softWrap: false,
                                           overflow: TextOverflow.ellipsis,
@@ -357,7 +359,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
       floatingActionButton: Padding(
         // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.only(right: 13, left: 46),
-        child: tasksServices.roleNfts['governor'] > 0 ? SetsOfFabButtonsForAccountDialog(account: widget.account,) : null,
+        child: tasksServices.roleNfts['governor'] > 0 ? SetsOfFabButtonsForAccountDialog(account: widget.account, accountRole: widget.accountRole) : null,
       ),
     );
   }

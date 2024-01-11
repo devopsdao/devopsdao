@@ -46,7 +46,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: widget.object.nanoId,
-//                           taskName: 'withdrawToChain',
+//                           actionName: 'withdrawToChain',
 //                         ));
 //               }
 //             : null,

@@ -13,12 +13,12 @@ import '../../config/theme.dart';
 
 class DialogHeader extends StatefulWidget {
   final Account account;
-  final String fromPage;
+  final String accountRole;
 
   const DialogHeader({
     Key? key,
     required this.account,
-    required this.fromPage
+    required this.accountRole
   }) : super(key: key);
 
   @override
@@ -167,7 +167,8 @@ class _DialogHeaderState extends State<DialogHeader> {
               // interface.selectedUser = {}; // reset
               Navigator.pop(context);
               // interface.emptyTaskMessage();
-              RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');
+              /// need to be fixed:
+              RouteInformation routeInfo = RouteInformation(location: '/${widget.accountRole}');
               Beamer.of(context).updateRouteInformation(routeInfo);
 
               // interface.statusText = const TextSpan(
@@ -180,8 +181,8 @@ class _DialogHeaderState extends State<DialogHeader> {
               padding: const EdgeInsets.all(0.0),
               height: 30,
               width: 30,
-              child: Row(
-                children: const <Widget>[
+              child: const Row(
+                children: <Widget>[
                   Expanded(
                     child: Icon(
                       Icons.close,

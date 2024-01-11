@@ -159,7 +159,7 @@ class _TopUpPageState extends State<TopUpPage> {
                 context: context,
                 builder: (context) => WalletActionDialog(
                   nanoId: task.nanoId,
-                  taskName: 'addTokens',
+                  actionName: 'addTokens',
                 ));
           },
         ),

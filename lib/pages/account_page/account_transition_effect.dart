@@ -15,12 +15,12 @@ import '../../task_item/task_item.dart';
 import '../../account_dialog/widget/main.dart';
 
 class ClickOnAccountFromIndexedList extends StatelessWidget {
-  final String fromPage;
+  final String tabName;
   // final int index;
   final Account account;
   const ClickOnAccountFromIndexedList({
     Key? key,
-    required this.fromPage,
+    required this.tabName,
     // required this.index,
     required this.account,
   }) : super(key: key);
@@ -35,7 +35,7 @@ class ClickOnAccountFromIndexedList extends StatelessWidget {
         // RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
         // Beamer.of(context).updateRouteInformation(routeInfo);
         return AccountFuture(
-          fromPage: fromPage,
+          accountRole: tabName,
           account: account,
           shimmerEnabled: true,
         );
@@ -48,7 +48,7 @@ class ClickOnAccountFromIndexedList extends StatelessWidget {
       ),
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
           return AccountItem(
-            fromPage: fromPage,
+            tabName: tabName,
             account: account,
           );
         }
@@ -83,7 +83,7 @@ class ClickOnAccount extends StatelessWidget {
         // RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddress');
         // Beamer.of(context).updateRouteInformation(routeInfo);
         return AccountFuture(
-          fromPage: 'participants',
+          accountRole: 'participants',
           account: interface.selectedUser,
           shimmerEnabled: true,
         );

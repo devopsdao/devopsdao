@@ -204,7 +204,7 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                             context: context,
                             builder: (context) => WalletActionDialog(
                                   nanoId: task.nanoId,
-                                  taskName: 'taskStateChange',
+                                  actionName: 'taskStateChange',
                                 ));
                       },
                       child: Container(

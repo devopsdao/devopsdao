@@ -114,7 +114,7 @@ class _TaskItemState extends State<TaskItem> {
     final content = Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        if (tasksServices.roleNfts['governor'] > 0)
+        if (tasksServices.roleNfts['governor'] > 0 && task.taskState == 'new')
           SizedBox(
             width: 50,
             height: 80,
@@ -251,44 +251,6 @@ class _TaskItemState extends State<TaskItem> {
                         maxLines: 1,
                       ),
                     ),
-                    // Spacer(),
-                    // if (task.tokenBalances[0] != 0)
-                    //   Expanded(
-                    //     flex: 3,
-                    //     child: Text(
-                    //       '${task.tokenBalances[0]} ${tasksServices.chainTicker}',
-                    //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                    //       softWrap: false,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       maxLines: 1,
-                    //       textAlign: TextAlign.end,
-                    //     ),
-                    //   ),
-                    // if (task.tokenValues[0] != 0)
-                    //   Expanded(
-                    //     flex: 3,
-                    //     child: Text(
-                    //       '${task.tokenValues[0]} USDC',
-                    //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                    //       softWrap: false,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       maxLines: 1,
-                    //       textAlign: TextAlign.end,
-                    //     ),
-                    //   ),
-                    // if (task.tokenBalances[0] == 0 && task.tokenBalances[0] == 0)
-                    //   Expanded(
-                    //     flex: 3,
-                    //     child: Text(
-                    //       // 'Has no money',
-                    //       '',
-                    //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                    //       softWrap: false,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       maxLines: 1,
-                    //       textAlign: TextAlign.end,
-                    //     ),
-                    //   ),
                   ],
                 ),
               ],
@@ -334,11 +296,6 @@ class _TaskItemState extends State<TaskItem> {
               // child: Icon(Icons.settings),
             ),
           ),
-        // if (task.loadingIndicator == true)
-        //   const Padding(
-        //     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-        //     child: CircularProgressIndicator(),
-        //   ),
       ],
     );
 

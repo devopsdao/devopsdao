@@ -330,7 +330,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                                 context: context,
                                 builder: (context) => const WalletActionDialog(
                                   nanoId: 'createNFT',
-                                  taskName: 'createNFT',
+                                  actionName: 'createNFT',
                                   page: 'create_collection',
                                 )
                               );
@@ -387,7 +387,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                                     context: context,
                                     builder: (context) => const WalletActionDialog(
                                       nanoId: 'mintNonFungible',
-                                      taskName: 'mintNonFungible',
+                                      actionName: 'mintNonFungible',
                                     )
                                 );
 

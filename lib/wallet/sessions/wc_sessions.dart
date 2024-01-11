@@ -78,8 +78,7 @@ class WCSessions {
         ));
         if (newAccount != walletModel.state.walletAddress) {
           String pageName = beamerDelegate.currentPages.first.key.toString();
-          print(pageName);
-          if(pageName == '[</auditor>]' || pageName == '[</governor>]') {
+          if(pageName == '[</auditor>]' || pageName == '[</accounts>]') {
             beamerDelegate.beamToNamed('/home');
           }
           tasksServices.publicAddress = newAccount;

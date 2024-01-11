@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:dodao/account_dialog/widget/widget/ban_and_restore_account.dart';
 import 'package:dodao/task_dialog/widget/auditor_decision_alert.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,11 +17,12 @@ import '../../widgets/wallet_action_dialog.dart';
 
 class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
   final Account account;
-
+  final String accountRole;
   // final String fromPage;
 
   SetsOfFabButtonsForAccountDialog({
     Key? key,
+    required this.accountRole,
     required this.account,
     // required this.fromPage,
   }) : super(key: key);
@@ -41,7 +43,7 @@ class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
     return Builder(builder: (context) {
       // ##################### Ban Action part ######################## //
       // ************************ BAN user ************************** //
-      if (true) {
+      if (accountRole == 'active') {
         return TaskDialogFAB(
           inactive: inactiveButton,
           expand: true,
@@ -50,10 +52,10 @@ class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
           widthSize: MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160, // Keyboard shown?
           callback: () {
               showDialog(context: context, builder: (context) =>
-                  DeleteItemAlert(account: account));
+                  BanRestoreAccount(account: account, role: accountRole,));
           },
         );
-      } else if (false) {
+      } else if (accountRole == 'banned') {
         // ********************** remove Ban ************************* //
         return TaskDialogFAB(
           inactive: false,
@@ -62,7 +64,8 @@ class SetsOfFabButtonsForAccountDialog extends StatelessWidget {
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong,
           callback: () {
-
+            showDialog(context: context, builder: (context) =>
+                BanRestoreAccount(account: account, role: accountRole,));
           },
         );
       } else {

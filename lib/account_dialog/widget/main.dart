@@ -16,12 +16,12 @@ import 'header.dart';
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
 class AccountFuture extends StatefulWidget {
-  final String fromPage;
+  final String accountRole;
   final Account account;
   final bool shimmerEnabled;
   const AccountFuture({
     Key? key,
-    required this.fromPage,
+    required this.accountRole,
     required this.account,
     required this.shimmerEnabled,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class _AccountFutureState extends State<AccountFuture> {
 
     return FutureBuilder<Map<String, Account>>(
         future: tasksServices.getAccountsData(
-          [widget.account.walletAddress]
+          requestedAccountsList: [widget.account.walletAddress]
         ),
         // future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot) {
@@ -58,7 +58,7 @@ class _AccountFutureState extends State<AccountFuture> {
               snapshot.error.toString();
               return Text(snapshot.error.toString());
             } else if (snapshot.hasData) {
-              return AccountDialogSkeleton(fromPage: widget.fromPage, object: snapshot.data!.values.first, isLoading: false);
+              return AccountDialogSkeleton(accountRole: widget.accountRole, object: snapshot.data!.values.first, isLoading: false);
             } else {
               return const Text('Empty data');
             }
@@ -72,19 +72,19 @@ class _AccountFutureState extends State<AccountFuture> {
               auditParticipantTasks: [],
               customerRating: [0],
               performerRating: [0]);
-          return AccountDialogSkeleton(fromPage: widget.fromPage, object: account, isLoading: true);
+          return AccountDialogSkeleton(accountRole: widget.accountRole, object: account, isLoading: true);
         });
   }
 }
 
 class AccountDialogSkeleton extends StatefulWidget {
-  final String fromPage;
+  final String accountRole;
   final Account object;
   final bool isLoading;
   const AccountDialogSkeleton({
     Key? key,
     required this.object,
-    required this.fromPage,
+    required this.accountRole,
     required this.isLoading,
   }) : super(key: key);
 
@@ -124,7 +124,7 @@ class _AccountDialogSkeletonState extends State<AccountDialogSkeleton> {
           ),
           DialogHeader(
             account: account,
-            fromPage: widget.fromPage,
+            accountRole: widget.accountRole,
           ),
           SizedBox(
             height: screenHeightSize - statusBarHeight,
@@ -137,7 +137,7 @@ class _AccountDialogSkeletonState extends State<AccountDialogSkeleton> {
                   ? AccountDialogPages(
                 key: const Key("normal"),
                 account: account,
-                fromPage: widget.fromPage,
+                accountRole: widget.accountRole,
                 screenHeightSize: screenHeightSize,
                 screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
               )
@@ -363,24 +363,3 @@ class ShimmeredPages extends StatelessWidget {
     });
   }
 }
-//
-// class AccountBeamer extends StatelessWidget {
-//   final String fromPage;
-//   final EthereumAddress? taskAddress;
-//   const AccountBeamer({Key? key, this.taskAddress, required this.fromPage}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final String taskAddressString = taskAddress.toString();
-//     RouteInformation routeInfo = RouteInformation(location: '/$fromPage/$taskAddressString');
-//     Beamer.of(context).updateRouteInformation(routeInfo);
-//     return Scaffold(
-//         body: Container(
-//       width: double.infinity,
-//       height: double.infinity,
-//       // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-//       alignment: Alignment.center,
-//       child: AccountFuture(fromPage: fromPage, taskAddress: taskAddress, shimmerEnabled: true),
-//     ));
-//   }
-// }

@@ -113,7 +113,7 @@ class NftMint extends StatelessWidget {
                                               context: context,
                                               builder: (context) => const WalletActionDialog(
                                                 nanoId: 'mintNonFungible',
-                                                taskName: 'mintNonFungible',
+                                                actionName: 'mintNonFungible',
                                               ));
 
                                           await tasksServices.mintNonFungibleByName(collectionName, address, quantities);

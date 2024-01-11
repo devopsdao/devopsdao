@@ -75,7 +75,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'taskParticipate',
+                      actionName: 'taskParticipate',
                     ));
           },
         );
@@ -101,7 +101,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
+                      actionName: 'taskStateChange',
                     ));
           },
         );
@@ -125,7 +125,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
+                      actionName: 'taskStateChange',
                     ));
           },
         );
@@ -149,7 +149,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'postWitnetRequest',
+                      actionName: 'postWitnetRequest',
                     ));
             // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
             //
@@ -178,7 +178,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'saveLastWitnetResult',
+                      actionName: 'saveLastWitnetResult',
                     ));
             // interface.statusText = TextSpan(text: response.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black));
             //
@@ -205,7 +205,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'withdrawAndRate',
+                      actionName: 'withdrawAndRate',
                     ));
           },
           task: task,
@@ -228,7 +228,7 @@ class SetsOfFabButtons extends StatelessWidget {
       //           context: context,
       //           builder: (context) => WalletActionDialog(
       //             nanoId: task.nanoId,
-      //             taskName: 'withdrawAndRate',
+      //             actionName: 'withdrawAndRate',
       //           ));
       //     },
       //     task: task,
@@ -256,7 +256,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'taskStateChange',
+                      actionName: 'taskStateChange',
                     ));
           },
         );
@@ -278,7 +278,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                   nanoId: task.nanoId,
-                  taskName: 'withdrawAndRate',
+                  actionName: 'withdrawAndRate',
                 ));
           },
         );
@@ -301,7 +301,7 @@ class SetsOfFabButtons extends StatelessWidget {
                 context: context,
                 builder: (context) => WalletActionDialog(
                       nanoId: task.nanoId,
-                      taskName: 'taskAuditParticipate',
+                      actionName: 'taskAuditParticipate',
                     ));
           },
         );

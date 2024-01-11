@@ -1062,7 +1062,7 @@ class TasksServices extends ChangeNotifier {
           taskState: task[0][11],
           auditState: task[0][12],
           performerRating: task[0][13].toInt(),
-          customerRating: task[14].toInt(),
+          customerRating: task[0][14].toInt(),
           contractOwner: task[0][15],
           performer: task[0][16],
           auditInitiator: task[0][17],
@@ -1778,9 +1778,21 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  /// todo choose performer with about data:
-  Future<Map<String, Account>> getAccountsData(List<EthereumAddress> accountsList) async {
-    final List accountsDataList = await accountFacet.getAccountsData(accountsList);
+  Future<Map<String, Account>> getAccountsData(
+      {required List<EthereumAddress> requestedAccountsList, String defaultListType = ''}) async {
+    final List<EthereumAddress> accountsList;
+    final List accountsDataList;
+    if (defaultListType == 'regular_list') {
+      accountsList = await accountFacet.getAccountsList();
+    } else if (defaultListType == 'black_list') {
+      accountsList = await accountFacet.getAccountsBlacklist();
+    } else if (defaultListType == 'raw_list') {
+      accountsList = await accountFacet.getRawAccountsList();
+    } else {
+      accountsList = requestedAccountsList;
+    }
+
+    accountsDataList = await accountFacet.getAccountsData(accountsList);
 
     late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
@@ -1796,21 +1808,6 @@ class TasksServices extends ChangeNotifier {
     }
     notifyListeners();
     return myAccountsData;
-  }
-
-  /// todo accounts for governor:
-  Future<List<EthereumAddress>> getAccountsList() async {
-    // isLoadingBackground = true;
-    List<EthereumAddress> accountsList = await accountFacet.getAccountsList();
-    // isLoadingBackground = false;
-    return accountsList;
-  }
-
-  Future<List<EthereumAddress>> getRawAccountsList() async {
-    // isLoadingBackground = true;
-    List<EthereumAddress> accountsList = await accountFacet.getRawAccountsList();
-    // isLoadingBackground = false;
-    return accountsList;
   }
 
   Future<List<EthereumAddress>> getTaskListFull() async {
@@ -2234,6 +2231,44 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
+  Future<void> addTaskToBlackList(EthereumAddress taskAddress, String nanoId, ) async {
+    if (taskTokenSymbol != '') {
+      transactionStatuses[nanoId] = {
+        'addTaskToBlackList': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
+      };
+      late String txn = '';
+
+      var creds;
+      var senderAddress;
+      if (hardhatDebug == true) {
+        creds = EthPrivateKey.fromHex(hardhatAccounts[0]["key"]);
+        senderAddress = EthereumAddress.fromHex(hardhatAccounts[0]["address"]);
+      } else {
+        creds = credentials;
+        senderAddress = publicAddress;
+      }
+
+      try {
+        txn = await taskDataFacet.addTaskToBlacklist(taskAddress, credentials: creds);
+      } on JsonRpcError catch (e) {
+        errorCase('addTaskToBlackList', nanoId, contractAddress, e.code!);
+      } on EthereumUserRejected catch (e) {
+        errorCase('addTaskToBlackList', nanoId, contractAddress, e.code);
+      } catch (e) {
+        log.severe(e);
+      }
+      if (txn.length == 66) {
+        transactionStatuses[nanoId]!['addTaskToBlackList']!['status'] = 'confirmed';
+      }
+
+      isLoading = false;
+      transactionStatuses[nanoId]!['addTaskToBlackList']!['tokenApproved'] = 'complete';
+      transactionStatuses[nanoId]!['addTaskToBlackList']!['txn'] = txn;
+      notifyListeners();
+      tellMeHasItMined(txn, 'addTaskToBlackList', nanoId);
+    }
+  }
+
   Future<void> addTokens(EthereumAddress addressToSend, double price, String nanoId, {String? message}) async {
     transactionStatuses[nanoId] = {
       'addTokens': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'}
@@ -2566,55 +2601,6 @@ class TasksServices extends ChangeNotifier {
   }
 
   String destinationChain = 'Moonbase';
-  // Future<void> withdrawToChain(EthereumAddress contractAddress, String nanoId) async {
-  //   transactionStatuses[nanoId] = {
-  //     'withdrawToChain': {'status': 'pending', 'txn': 'initial'}
-  //   };
-  //   late String txn = '';
-  //   String chain = 'Moonbase';
-  //   TaskContract taskContract = TaskContract(address: contractAddress, client: web3client, chainId: chainId);
-  //   //should send value now?!
-  //   var creds;
-  //   var senderAddress;
-  //   if (hardhatDebug == true) {
-  //     creds = EthPrivateKey.fromHex(hardhatAccounts[1]["key"]);
-  //     senderAddress = EthereumAddress.fromHex(hardhatAccounts[1]["address"]);
-  //   } else {
-  //     creds = credentials;
-  //     senderAddress = publicAddress;
-  //   }
-  //
-  //   // BigInt estimatedGas = await web3client.estimateGas(
-  //   //     sender: publicAddress,
-  //   //     to: contractAddress,
-  //   //     amountOfGas: fees['medium'].estimatedGas,
-  //   //     maxFeePerGas: fees['medium'].maxFeePerGas,
-  //   //     maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas);
-  //
-  //   int price = 15;
-  //   int priceInGwei = (price).toInt();
-  //   EtherAmount gasPrice = EtherAmount.fromUnitAndValue(EtherUnit.gwei, priceInGwei);
-  //
-  //   final transaction = Transaction(
-  //     from: senderAddress,
-  //     // maxFeePerGas: fees['medium'].maxFeePerGas,
-  //     // maxPriorityFeePerGas: fees['medium'].maxPriorityFeePerGas,
-  //     // maxGas: estimatedGas.toInt(),
-  //     // gasPrice: gasPrice
-  //   );
-  //   txn = await taskContract.transferToaddress(publicAddress!, chain, credentials: creds, transaction: transaction);
-  //   if (txn.length != 66) {
-  //     Task task = await loadOneTask(contractAddress);
-  //     tasks[contractAddress]!.loadingIndicator = false;
-  //     await refreshTask(task);
-  //   }
-  //   isLoading = false;
-  //   // isLoadingBackground = true;
-  //   transactionStatuses[nanoId]!['withdrawToChain']!['status'] = 'confirmed';
-  //   transactionStatuses[nanoId]!['withdrawToChain']!['txn'] = txn;
-  //   notifyListeners();destinationChain
-  //   tellMeHasItMined(txn, 'withdrawToChain', nanoId);
-  // }
 
   Future<void> withdrawAndRate(EthereumAddress contractAddress, String nanoId, BigInt rateScore) async {
     transactionStatuses[nanoId] = {

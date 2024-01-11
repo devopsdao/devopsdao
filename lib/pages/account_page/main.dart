@@ -22,17 +22,13 @@ class AccountsTabs extends StatefulWidget {
 
 class _AccountsTabsState extends State<AccountsTabs> {
   late Map<String, Account> accountsList = {};
-  late Map<String, Account> accountsRawList = {};
+  late Map<String, Account> accountsBlackList = {};
   int tabIndex = 0;
 
   Future<void> getAccountsList() async {
     final tasksServices = Provider.of<TasksServices>(context, listen: false);
-    accountsList = await tasksServices.getAccountsData(await tasksServices.getAccountsList());
-    accountsRawList = await tasksServices.getAccountsData(await tasksServices.getRawAccountsList());
-
-    setState((){
-      accountsList = accountsList;
-    });
+    accountsList = await tasksServices.getAccountsData(defaultListType: 'regular_list', requestedAccountsList: []);
+    accountsBlackList = await tasksServices.getAccountsData(defaultListType: 'black_list', requestedAccountsList: []);
   }
 
   @override
@@ -62,10 +58,15 @@ class _AccountsTabsState extends State<AccountsTabs> {
                 labelStyle: Theme.of(context).textTheme.bodyMedium,
                 indicatorColor: DodaoTheme.of(context).tabIndicator,
                 indicatorWeight: 3,
-                onTap: (index) {
+                onTap: (index) async {
                   // searchServices.searchKeywordController.clear();
                   tabIndex = index;
-                  // resetFilters();
+                  if (tabIndex == 0) {
+                    accountsList = await tasksServices.getAccountsData(defaultListType: 'regular_list', requestedAccountsList: []);
+                  } else if (tabIndex == 1) {
+                    accountsBlackList = await tasksServices.getAccountsData(defaultListType: 'black_list', requestedAccountsList: []);
+                  }
+                  setState(() { });
                 },
                 tabs: [
                   Tab(
@@ -74,9 +75,9 @@ class _AccountsTabsState extends State<AccountsTabs> {
                       tabText: 'Active',
                     ),
                   ),
-                  const Tab(
+                  Tab(
                     child: BadgeTab(
-                      taskCount: 99,
+                      taskCount: accountsBlackList.length,
                       tabText: 'Banned',
                     ),
                   ),
@@ -91,7 +92,7 @@ class _AccountsTabsState extends State<AccountsTabs> {
                   children: [
                     RefreshIndicator(
                       onRefresh: () async {
-                        await tasksServices.getAccountsData(await tasksServices.getAccountsList());
+                        await tasksServices.getAccountsData(defaultListType: 'regular_list', requestedAccountsList: []);
                       },
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
@@ -101,7 +102,7 @@ class _AccountsTabsState extends State<AccountsTabs> {
                           return Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                               child: ClickOnAccountFromIndexedList(
-                                fromPage: 'accounts',
+                                tabName: 'active',
                                 account: accountsList.values.toList()[index],
                               )
                           );
@@ -110,18 +111,18 @@ class _AccountsTabsState extends State<AccountsTabs> {
                     ),
                     RefreshIndicator(
                       onRefresh: () async {
-                        await tasksServices.getAccountsData(await tasksServices.getAccountsList());
+                        await tasksServices.getAccountsData(defaultListType: 'black_list', requestedAccountsList: []);
                       },
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
                         scrollDirection: Axis.vertical,
-                        itemCount: accountsList.values.toList().length,
+                        itemCount: accountsBlackList.values.toList().length,
                         itemBuilder: (context, index) {
                           return Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
                               child: ClickOnAccountFromIndexedList(
-                                fromPage: 'accounts',
-                                account: accountsList.values.toList()[index],
+                                tabName: 'banned',
+                                account: accountsBlackList.values.toList()[index],
                               )
                           );
                         },

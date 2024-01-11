@@ -35,28 +35,8 @@ class AuditorPageWidget extends StatefulWidget {
 }
 
 class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProviderStateMixin {
-  // String _searchKeyword = '';
   int tabIndex = 0;
 
-  // _changeField() {
-  //   setState(() =>_searchKeyword = _searchKeywordController.text);
-  // }
-
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -82,17 +62,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       var searchServices = context.read<SearchServices>();
       searchServices.selectTagListOnTasksPages(page: 'auditor', initial: true);
     });
-    // _searchKeywordController.text = '';
-    // _searchKeywordController.addListener(() {_changeField();});
-    // startPageLoadAnimations(
-    //   animationsMap.values.where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-    //   this,
-    // );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

@@ -160,7 +160,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                             context: context,
                             builder: (context) => WalletActionDialog(
                                   nanoId: task.nanoId,
-                                  taskName: 'taskAuditDecision',
+                                  actionName: 'taskAuditDecision',
                                 ));
                       },
                       child: Container(
@@ -209,7 +209,7 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                             context: context,
                             builder: (context) => WalletActionDialog(
                                   nanoId: task.nanoId,
-                                  taskName: 'taskAuditDecision',
+                                  actionName: 'taskAuditDecision',
                                 ));
                       },
                       child: Container(

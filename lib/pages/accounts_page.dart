@@ -36,11 +36,6 @@ class _AccountsPageState extends State<AccountsPage> {
         showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'accounts'));
       });
     }
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   var tasksServices = context.read<TasksServices>();
-    //   accountsAddressList = await tasksServices.getAccountsList();
-    //   accountsList = await tasksServices.getAccountsData(accountsAddressList);
-    // });
   }
 
 
@@ -65,24 +60,6 @@ class _AccountsPageState extends State<AccountsPage> {
     if (listenWalletAddress != null && WalletService.allowedChainId) {
       isFloatButtonVisible = true;
     }
-    //
-    // void deleteItem(String id) async {
-    //   setState(() {
-    //     deleteItems.add(id);
-    //   });
-    //   Future.delayed(const Duration(milliseconds: 350)).whenComplete(() {
-    //     setState(() {
-    //       deleteItems.removeWhere((i) => i == id);
-    //     });
-    //   });
-    // }
-
-    // if (widget.index != null) {
-    //   showDialog(
-    //       context: context,
-    //       builder: (context) => TaskDialogBeamer(index: widget.index!));
-    // }
-    // print('dfs ' + accountsList.values.toList().length.toString());
     return Scaffold(
       key: scaffoldKey,
       drawer: SideBar(controller: SidebarXController(selectedIndex: tasksServices.roleNfts['governor'] > 0 ? 4 : 5, extended: true)),

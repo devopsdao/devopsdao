@@ -750,7 +750,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                     context: context,
                     builder: (context) => WalletActionDialog(
                           nanoId: nanoId,
-                          taskName: 'createTaskContract',
+                          actionName: 'createTaskContract',
                         ));
               });
 
@@ -779,7 +779,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   context: context,
                   builder: (context) => const WalletActionDialog(
                         nanoId: 'setApprovalForAll',
-                        taskName: 'setApprovalForAll',
+                        actionName: 'setApprovalForAll',
                       ));
               await tasksServices.setApprovalForAll(tokenContracts, [
                 [0]
@@ -813,7 +813,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   context: context,
                   builder: (context) => WalletActionDialog(
                         nanoId: nanoId,
-                        taskName: 'createTaskContract',
+                        actionName: 'createTaskContract',
                       ));
 
               // List<EthereumAddress> addrList = [tasksServices.contractAddress];

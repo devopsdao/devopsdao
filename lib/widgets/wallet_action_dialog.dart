@@ -17,9 +17,9 @@ import '../wallet/services/wc_service.dart';
 
 class WalletActionDialog extends StatefulWidget {
   final String nanoId;
-  final String taskName;
+  final String actionName;
   final String page;
-  const WalletActionDialog({Key? key, required this.nanoId, required this.taskName, this.page = ''}) : super(key: key);
+  const WalletActionDialog({Key? key, required this.nanoId, required this.actionName, this.page = ''}) : super(key: key);
 
   @override
   _WalletActionDialog createState() => _WalletActionDialog();
@@ -51,10 +51,10 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     var searchServices = context.read<SearchServices>();
     var collectionServices = context.read<CollectionServices>();
 
-    final String status = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['status'];
+    final String status = tasksServices.transactionStatuses[widget.nanoId]?[widget.actionName]?['status'];
 
-    if (widget.taskName == 'createTaskContract' && tasksServices.isRequestApproved) {
-      final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.taskName]?['tokenApproved'];
+    if (widget.actionName == 'createTaskContract' && tasksServices.isRequestApproved) {
+      final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.actionName]?['tokenApproved'];
 
       if (status == 'pending') {
         if (tokenApproved == 'initial') {
@@ -81,7 +81,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       }
 
       tasksServices.isRequestApproved = false;
-    } else if (widget.taskName == 'createTaskContract') {
+    } else if (widget.actionName == 'createTaskContract') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
@@ -99,7 +99,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           }
         });
       }
-    } else if (widget.taskName == 'createNFT') {
+    } else if (widget.actionName == 'createNFT') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
@@ -118,7 +118,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           if (mounted) {Navigator.pop(context);}
         });
       }
-    } else if (widget.taskName == 'mintNonFungible') {
+    } else if (widget.actionName == 'mintNonFungible') {
       if (status == 'pending') {
         // transactionStagesApprove = 'done';
         transactionStagesConfirmed = 'loading';
@@ -140,7 +140,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           searchServices.refreshLists('selection');
         });
       }
-    } else if (widget.taskName == 'postWitnetRequest') {
+    } else if (widget.actionName == 'postWitnetRequest') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
@@ -154,7 +154,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           if (mounted) {Navigator.pop(context);}
         });
       }
-    } else if (widget.taskName == 'taskStateChange') {
+    } else if (widget.actionName == 'taskStateChange') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
@@ -169,7 +169,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
         });
       }
-    } else if (widget.taskName == 'saveLastWitnetResult') {
+    } else if (widget.actionName == 'saveLastWitnetResult') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
@@ -183,7 +183,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           if (mounted) {Navigator.pop(context);}
         });
       }
-    } else if (widget.taskName == 'setApprovalForAll') {
+    } else if (widget.actionName == 'setApprovalForAll') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
@@ -197,7 +197,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           if (mounted) {Navigator.pop(context);}
         });
       }
-    } else if (widget.taskName == 'taskParticipate') {
+    } else if (widget.actionName == 'taskParticipate') {
       if (status == 'pending') {
         transactionStagesConfirmed = 'loading';
         transactionStagesMinted = 'initial';
@@ -357,7 +357,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.taskName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
+        if (widget.actionName == 'createTaskContract' && tasksServices.taskTokenSymbol != 'ETH')
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

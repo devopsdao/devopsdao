@@ -11,14 +11,14 @@ import '../../blockchain/interface.dart';
 
 class AccountDialogPages extends StatelessWidget {
   final Account account;
-  final String fromPage;
   final double screenHeightSize;
   final double screenHeightSizeNoKeyboard;
+  final String accountRole;
 
   const AccountDialogPages({
     Key? key,
+    required this.accountRole,
     required this.account,
-    required this.fromPage,
     required this.screenHeightSize,
     required this.screenHeightSizeNoKeyboard,
   }) : super(key: key);
@@ -41,13 +41,8 @@ class AccountDialogPages extends StatelessWidget {
             screenHeightSize: screenHeightSize,
             innerPaddingWidth: innerPaddingWidth,
             account: account,
+            accountRole: accountRole,
           ),
-          // AccountCloseUpPage(
-          //   innerPaddingWidth: innerPaddingWidth,
-          //   account: account,
-          //   borderRadius: interface.borderRadius,
-          //   fromPage: fromPage,
-          // ),
           AccountsChatPage(
             innerPaddingWidth: innerPaddingWidth,
             account: account,
@@ -56,13 +51,7 @@ class AccountDialogPages extends StatelessWidget {
             screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
             innerPaddingWidth: innerPaddingWidth,
             account: account,
-            fromPage: fromPage,
           ),
-
-          // if (interface.dialogCurrentState['pages'].containsKey('chat'))
-          //   ChatPage(
-          //     task: task,
-          //     innerPaddingWidth: innerPaddingWidth)
         ],
       );
     });

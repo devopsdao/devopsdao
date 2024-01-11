@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../account_dialog/widget/widget/ban_and_restore_account.dart';
 import '../../blockchain/accounts.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
@@ -12,11 +13,11 @@ import '../../widgets/badge-small-colored.dart';
 
 class AccountItem extends StatefulWidget {
   // final int taskCount;
-  final String fromPage;
+  final String tabName;
   final Account account;
   const AccountItem(
       {Key? key,
-        required this.fromPage,
+        required this.tabName,
         required this.account})
       : super(key: key);
 
@@ -30,32 +31,6 @@ class _AccountItemState extends State<AccountItem> {
   @override
   Widget build(BuildContext context) {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    // Widget badgeWidget(count, color) {
-    //   return Badges.Badge(
-    //     badgeStyle: Badges.BadgeStyle(
-    //       badgeColor: color,
-    //       elevation: 0,
-    //       shape: Badges.BadgeShape.circle,
-    //       borderRadius: BorderRadius.circular(4),
-    //     ),
-    //     badgeAnimation: const Badges.BadgeAnimation.fade(
-    //       // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
-    //       // curve: Curves.easeInCubic,
-    //     ),
-    //     badgeContent: Container(
-    //       width: 8,
-    //       height: 10,
-    //       alignment: Alignment.center,
-    //       child: Text(count,
-    //           style: const TextStyle(
-    //               fontWeight: FontWeight.bold,
-    //               fontSize: 8,
-    //               color: Colors.white)
-    //       ),
-    //     ),
-    //   );
-    // }
-
 
     return Container(
       decoration: BoxDecoration(
@@ -70,19 +45,26 @@ class _AccountItemState extends State<AccountItem> {
               width: 50,
               height: 80,
               child: InkWell(
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  /// todo remove or add to blacklist
-                  child: Icon(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+
+                  child: widget.tabName == 'active' ? const Icon(
                     Icons.close_sharp,
                     color: Colors.deepOrange,
+                    size: 36,
+                  ) : const Icon(
+                    Icons.add,
+                    color: Colors.green,
                     size: 36,
                   ),
                 ),
                 onTap: () {
                   setState(() {
+                    // showDialog(context: context, builder: (context) =>
+                    //     DeleteItemAlert(account: widget.account));
+
                     showDialog(context: context, builder: (context) =>
-                        DeleteItemAlert(account: widget.account));
+                        BanRestoreAccount(account: widget.account, role: widget.tabName,));
                   });
                 },
               ),

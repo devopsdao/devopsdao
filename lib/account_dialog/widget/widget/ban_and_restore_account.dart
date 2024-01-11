@@ -1,32 +1,31 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../blockchain/interface.dart';
-import '../../blockchain/classes.dart';
-import '../../blockchain/task_services.dart';
-import '../../config/theme.dart';
-import '../../widgets/wallet_action_dialog.dart';
-import '../blockchain/accounts.dart';
+import '../../../blockchain/accounts.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
+import '../../../widgets/wallet_action_dialog.dart';
 
-class DeleteItemAlert extends StatefulWidget {
-  final Task? task;
-  final Account? account;
-  const DeleteItemAlert({
+
+class BanRestoreAccount extends StatefulWidget {
+  final String role;
+  final Account account;
+  const BanRestoreAccount({
     Key? key,
-    this.task,
-    this.account,
+    required this.role,
+    required this.account,
   }) : super(key: key);
 
   @override
-  _DeleteItemAlertState createState() => _DeleteItemAlertState();
+  _BanRestoreAccountState createState() => _BanRestoreAccountState();
 }
 
-class _DeleteItemAlertState extends State<DeleteItemAlert> {
+class _BanRestoreAccountState extends State<BanRestoreAccount> {
   late String warningText;
   late String title;
-  late String link;
-  late String who;
 
   TextEditingController? messageController;
 
@@ -44,22 +43,18 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var tasksServices = context.read<TasksServices>();
+    var interface = context.read<InterfaceServices>();
+    final String walletAddress = widget.account.walletAddress.toString();
+    final String accountAddress = '${walletAddress.substring(0, 4)}..'
+        '${walletAddress.substring(walletAddress.length - 4)}';
+    title = 'Are you sure you want to proceed';
 
-    if (widget.task != null) {
-      final Task? object = widget.task;
-      warningText = 'Task "${object?.title}" will be deleted';
-      title = 'Are you sure you want to delete this Task?';
-      who = 'task';
-    } else if (widget.account != null) {
-      final Account? object = widget.account;
-      warningText = 'Account "${object?.nickName}" will be banned';
-      title = 'Are you sure you want to ban this account?';
-      who = 'account';
+    if (widget.role == 'active') {
+      warningText = 'Account $accountAddress will be banned';
+    } else if (widget.role == 'banned') {
+      warningText = 'Account $accountAddress will be removed from ban list';
     }
-
-    link = 'https://docs.dodao.dev/audit_process.html#customer';
 
     return Dialog(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -73,10 +68,6 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
               RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      // style: DefaultTextStyle
-                      //     .of(context)
-                      //     .style
-                      //     .apply(fontSizeFactor: 1.1),
                       children: <TextSpan>[
                         TextSpan(
                           style: const TextStyle(color: Colors.black87, fontSize: 17, fontWeight: FontWeight.bold),
@@ -85,8 +76,8 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       ])),
               Container(
                 padding: const EdgeInsets.all(10.0),
-                child: const Icon(
-                  Icons.delete_forever_outlined,
+                child: Icon(
+                  widget.role == 'active' ? Icons.delete_outline_outlined : Icons.add_circle,
                   color: Colors.black45,
                   size: 110,
                 ),
@@ -101,11 +92,6 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
               const Spacer(),
               TextFormField(
                 controller: messageController,
-                // onChanged: (_) => EasyDebounce.debounce(
-                //   'messageForStateController',
-                //   Duration(milliseconds: 2000),
-                //   () => setState(() {}),
-                // ),
                 autofocus: false,
                 obscureText: false,
                 onTapOutside: (test) {
@@ -114,19 +100,6 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                 },
 
                 decoration: InputDecoration(
-                  // suffixIcon: interface.dialogCurrentState['pages']['chat'] != null ? IconButton(
-                  //   onPressed: () {
-                  //     interface.dialogPagesController.animateToPage(
-                  //         interface.dialogCurrentState['pages']['chat'] ?? 99,
-                  //         duration: const Duration(milliseconds: 600),
-                  //         curve: Curves.ease);
-                  //   },
-                  //   icon: const Icon(Icons.chat),
-                  //   highlightColor: Colors.grey,
-                  //   hoverColor: Colors.transparent,
-                  //   color: Colors.blueAccent,
-                  //   // splashColor: Colors.black,
-                  // ) : null,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide: const BorderSide(
@@ -150,10 +123,10 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                   // ),
                 ),
                 style: DodaoTheme.of(context).bodyText1.override(
-                      fontFamily: 'Inter',
-                      color: Colors.black87,
-                      lineHeight: null,
-                    ),
+                  fontFamily: 'Inter',
+                  color: Colors.black87,
+                  lineHeight: null,
+                ),
                 minLines: 2,
                 maxLines: 3,
               ),
@@ -175,7 +148,7 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(width: 0.5, color: Colors.black54 //                   <--- border width here
-                              ),
+                          ),
                         ),
                         child: const Text(
                           'Close',
@@ -197,11 +170,14 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                       borderRadius: BorderRadius.circular(20.0),
                       onTap: () {
                         Navigator.pop(context);
-                        // Navigator.pop(interface.mainDialogContext);
                         interface.emptyTaskMessage();
 
-                        if (widget.account != null) {
-                          tasksServices.addAccountToBlacklist(widget.account!.walletAddress);
+                        if (widget.role == 'active') {
+                          tasksServices.addAccountToBlacklist(widget.account.walletAddress);
+                          Navigator.pop(context);
+                          interface.emptyTaskMessage();
+                          RouteInformation routeInfo = const RouteInformation(location: '/accounts');
+                          Beamer.of(context).updateRouteInformation(routeInfo);
                           showDialog(
                               barrierDismissible: false,
                               context: context,
@@ -209,15 +185,18 @@ class _DeleteItemAlertState extends State<DeleteItemAlert> {
                                 nanoId: 'addAccountToBlacklist',
                                 actionName: 'addAccountToBlacklist',
                               ));
-
-                        } else if (widget.task != null) {
-                          tasksServices.addTaskToBlackList(widget.task!.taskAddress, widget.task!.nanoId);
+                        } else if (widget.role == 'banned') {
+                          tasksServices.removeAccountFromBlacklist(widget.account.walletAddress);
+                          Navigator.pop(context);
+                          interface.emptyTaskMessage();
+                          RouteInformation routeInfo = const RouteInformation(location: '/accounts');
+                          Beamer.of(context).updateRouteInformation(routeInfo);
                           showDialog(
                               barrierDismissible: false,
                               context: context,
-                              builder: (context) => WalletActionDialog(
-                                nanoId: widget.task!.nanoId,
-                                actionName: 'addTaskToBlackList',
+                              builder: (context) => const WalletActionDialog(
+                                nanoId: 'removeAccountFromBlacklist',
+                                actionName: 'removeAccountFromBlacklist',
                               ));
                         }
                       },
