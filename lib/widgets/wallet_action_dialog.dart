@@ -194,7 +194,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesConfirmed = 'done';
         transactionStagesMinted = 'done';
         Future.delayed(const Duration(milliseconds: 400)).whenComplete(() {
-          if (mounted) {Navigator.pop(context);}
+          // if (mounted) {Navigator.pop(context);}
         });
       }
     } else if (widget.actionName == 'taskParticipate') {

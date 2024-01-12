@@ -4,7 +4,7 @@ import 'package:walletconnect_flutter_v2/apis/web3app/web3app.dart';
 
 import '../../../model_view/wallet_model.dart';
 import '../../../model_view/wc_model.dart';
-import '../../shared/wallet_action_button.dart';
+import '../../shared/buttons.dart';
 
 class WCActionButton extends StatefulWidget {
   const WCActionButton({
