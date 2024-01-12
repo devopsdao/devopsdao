@@ -107,7 +107,10 @@ class WcQrCodeTab extends StatelessWidget {
                   ),
 
                   if (_platform.platform == 'mobile')
-                  const GoToWalletButton(),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 12.0),
+                    child: GoToWalletButton(),
+                  ),
                 ],
               ),
             if (wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkNotMatch)
@@ -126,7 +129,10 @@ class WcQrCodeTab extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   if (_platform.platform == 'mobile')
-                    const GoToWalletButton(),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 12.0),
+                      child: GoToWalletButton(),
+                    ),
                 ],
               ),
             // if (wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedAddNetwork)

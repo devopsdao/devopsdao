@@ -68,8 +68,11 @@ class GoToWalletButton extends StatelessWidget {
       color: Colors.blueAccent,
       child: InkWell(
         onTap: () async {
-          launchURL(wcModelView.state.walletConnectUri);
+          // launchURL(wcModelView.state.walletConnectUri);
+          launchURL('metamask://');
         },
+
+
         child: Container(
           padding: const EdgeInsets.all(0.0),
           height: 38.0,

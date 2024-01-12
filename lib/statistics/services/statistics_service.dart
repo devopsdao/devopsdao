@@ -167,17 +167,19 @@ class StatisticsService {
             // List<BigInt> tokenIds = await ierc1155Enumberable.tokensByAccount(addresses[idx]);
             final List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[idx2]);
             final List<String> tokenNames = await tokenDataFacet.getTokenNames(addresses[idx2]);
-            if (tokenIds.isNotEmpty) {
-              final List<EthereumAddress> filledAddressesList = List<EthereumAddress>.filled(tokenIds.length, addresses.first);
-              final balanceOf = await ierc1155.balanceOfBatch(filledAddressesList, tokenIds);
+            final Map<BigInt, String> resultCombined = Map.fromIterables(tokenIds, tokenNames);
+
+            if (resultCombined.isNotEmpty) {
+              final List<EthereumAddress> filledAddressesList = List<EthereumAddress>.filled(resultCombined.length, addresses.first);
+              final balanceOf = await ierc1155.balanceOfBatch(filledAddressesList, resultCombined.keys.toList());
               late Map<String, BigInt> combined = {};
-              for (int idx3 = 0; idx3 < tokenNames.length; idx3++) {
+              for (int idx3 = 0; idx3 < resultCombined.length; idx3++) {
                 final BigInt num = balanceOf[idx3];
                 if (num != BigInt.from(0)) {
-                  if (!combined.containsKey(tokenNames[idx3])) {
-                    combined[tokenNames[idx3]] = num;
+                  if (!combined.containsKey(resultCombined.values.toList()[idx3])) {
+                    combined[resultCombined.values.toList()[idx3]] = num;
                   } else {
-                    combined[tokenNames[idx3]] = num + combined[tokenNames[idx3]]!;
+                    combined[resultCombined.values.toList()[idx3]] = num + combined[resultCombined.values.toList()[idx3]]!;
                   }
                 }
 
