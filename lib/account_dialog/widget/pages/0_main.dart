@@ -6,7 +6,7 @@ import '../../../blockchain/interface.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../config/theme.dart';
 import '../../../widgets/badge-small-colored.dart';
-import '../../../widgets/my_tools.dart';
+import '../../../widgets/utils/my_tools.dart';
 
 import 'package:badges/badges.dart' as Badges;
 

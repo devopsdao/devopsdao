@@ -5,7 +5,7 @@ import 'package:dodao/task_dialog/pages/3_selection.dart';
 import 'package:dodao/task_dialog/task_transition_effect.dart';
 import 'package:dodao/task_dialog/widget/participants_list.dart';
 import 'package:dodao/task_dialog/widget/request_audit_alert.dart';
-import 'package:dodao/widgets/payment.dart';
+import 'package:dodao/widgets/value_input/widget/value_input.dart';
 import 'package:dodao/widgets/select_menu.dart';
 import 'package:dodao/task_dialog/buttons.dart';
 import 'package:dodao/task_dialog/states.dart';

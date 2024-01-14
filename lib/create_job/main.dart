@@ -10,8 +10,8 @@ import 'package:webthree/credentials.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
-import '../widgets/my_tools.dart';
-import '../widgets/payment.dart';
+import '../widgets/utils/my_tools.dart';
+import '../widgets/value_input/widget/value_input.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../widgets/wallet_action_dialog.dart';
 import '../config/theme.dart';
@@ -397,7 +397,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   constraints: BoxConstraints(
                     maxWidth: maxStaticInternalDialogWidth,
                   ),
-                  child: Payment(
+                  child: ValueInput(
                     purpose: 'create',
                     innerPaddingWidth: innerPaddingWidth,
                   ),
@@ -728,7 +728,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 if (interface.tokensEntered != 0) {
                   // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
                   tokenIds.insert(0, [BigInt.from(0)]);
-                  tokenAmounts.insert(0, [BigInt.from(interface.tokensEntered * pow(10, 18))]);
+                  var rounded = roundBefore((interface.tokensEntered * pow(10, 18).toInt()).floor());
+                  tokenAmounts.insert(0, [BigInt.from(rounded)]);
                   tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
                   // tokenIds = [tokenId];
                   // tokenAmounts = [amounts];

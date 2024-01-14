@@ -12,6 +12,8 @@ import '../blockchain/task_services.dart';
 import '../config/flutter_flow_util.dart';
 import '../config/theme.dart';
 import '../config/flutter_flow_util.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
 import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/delete_item_alert.dart';
@@ -40,6 +42,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    WalletModel walletModel = context.read<WalletModel>();
 
     task = widget.object;
 
@@ -211,7 +214,8 @@ class _TaskItemState extends State<TaskItem> {
                       for (var e in task.tokenNames[i]) {
                         // if (task.tokenBalances[i]) {}
                         if (task.tokenNames[i].first == 'ETH') {
-                          tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                          final name = walletModel.getNetworkChainCurrency(walletModel.state.chainId ?? WalletService.defaultNetwork);
+                          tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: name));
                         } else {
                           if (task.tokenBalances[i] == 0) {
                             tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));

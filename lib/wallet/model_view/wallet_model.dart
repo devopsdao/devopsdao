@@ -123,6 +123,14 @@ class WalletModel extends ChangeNotifier {
     }
   }
 
+  String getNetworkChainCurrency(int id) {
+    if (id == 0) {
+      return 'unknown';
+    } else {
+      return ChainPresets.chains[id]!.nativeCurrency!.symbol;
+    }
+  }
+
   int getNetworkChainId(String networkName) {
     return _walletService.readChainIdByName(networkName);
   }

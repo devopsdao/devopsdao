@@ -166,8 +166,12 @@ class LightModeTheme extends DodaoTheme {
   late Color chipCompletedBodyColor = Colors.green.shade300;
   late Color chipCompletedNftColor = Colors.deepOrange.shade700;
   late Color chipCustomerPendingTextColor = Colors.white;
-  late Color chipCustomerPendingBorderColor =Colors.orangeAccent.shade200;
-  late Color chipCustomerPendingBodyColor = Colors.orangeAccent.shade200;
+
+  late Color chipCustomerPendingBorderColor = Colors.purpleAccent.shade700;
+  late Color chipCustomerPendingBodyColor = Colors.purpleAccent.shade700;
+
+  // late Color chipCustomerPendingBorderColor =Colors.orangeAccent.shade200;
+  // late Color chipCustomerPendingBodyColor = Colors.orangeAccent.shade200;
   late Color chipCustomerPendingNftColor = Colors.deepOrange.shade700;
   late Color chipPerformerPendingTextColor = Colors.black;
   late Color chipPerformerPendingBorderColor = Colors.grey.shade400;
@@ -334,8 +338,10 @@ class DarkModeTheme extends DodaoTheme {
   late Color chipCompletedBodyColor = Colors.green.shade900;
   late Color chipCompletedNftColor = Colors.deepOrange.shade300;
   late Color chipCustomerPendingTextColor = Colors.grey.shade300;
-  late Color chipCustomerPendingBorderColor = Colors.red.shade900;
-  late Color chipCustomerPendingBodyColor = Colors.red.shade900;
+  late Color chipCustomerPendingBorderColor = Colors.purpleAccent.shade400;
+  late Color chipCustomerPendingBodyColor = Colors.purpleAccent.shade400;
+  // late Color chipCustomerPendingBorderColor = Colors.red.shade900;
+  // late Color chipCustomerPendingBodyColor = Colors.red.shade900;
   late Color chipCustomerPendingNftColor = Colors.deepOrange.shade300;
   late Color chipPerformerPendingTextColor = Colors.grey.shade300;
   late Color chipPerformerPendingBorderColor = Colors.grey.shade800;

@@ -14,6 +14,7 @@ import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
 import '../../config/theme.dart';
 import '../../wallet/model_view/wallet_model.dart';
+import '../utils/my_tools.dart';
 import '../wallet_action_dialog.dart';
 
 // void main() {
@@ -274,10 +275,12 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   void _loadMessages() async {
     List taskMessages = [];
+    String ownerNickName = shortAddressAsNickname(widget.task.contractOwner.toString());
+
 
     Map<String, dynamic> message = {};
     Map<String, dynamic> author = {};
-    author['firstName'] = widget.task.contractOwner.toString();
+    author['firstName'] = ownerNickName;
     // author['firstName'] = 'vaso';
     author['lastName'] = '';
     author['id'] = '1';
@@ -300,9 +303,10 @@ class _ChatWidgetState extends State<ChatWidget> {
     taskMessages.add(message);
 
     for (var msg in widget.task.messages) {
+      String authorNickName = shortAddressAsNickname(msg[3].toString());
       Map<String, dynamic> message = {};
       Map<String, dynamic> author = {};
-      author['firstName'] = msg[3].toString();
+      author['firstName'] =authorNickName;
       // author['firstName'] = 'vaso';
       author['lastName'] = '';
       author['id'] = msg[3].toString();
