@@ -26,6 +26,7 @@ class PlatformAndBrowser {
     if (browserInfo.platform.isIOS) {
       browserPlatform = 'ios';
     }
+
     if (browserInfo.platform.isLinux) {
       browserPlatform = 'linux';
     }
