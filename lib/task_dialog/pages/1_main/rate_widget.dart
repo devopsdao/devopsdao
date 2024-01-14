@@ -27,9 +27,9 @@ class _RateTaskState extends State<RateTask> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var taskModelView = context.read<TaskModelView>();
-      bool result = await taskModelView.onShowRateStars(widget.task);
+      bool result = taskModelView.onShowRateStars(widget.task);
       setState(() {
         showRateTaskSection = result;
       });

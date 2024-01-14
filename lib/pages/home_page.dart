@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webthree/src/credentials/address.dart';
 
 import '../blockchain/chain_presets/chains_presets.dart';
 import '../blockchain/interface.dart';
@@ -29,6 +30,7 @@ import 'package:dodao/blockchain/task_services.dart';
 import '../wallet/widgets/main/main.dart';
 import '../widgets/tags/tags_old.dart';
 import '../widgets/tags/wrapped_chip.dart';
+import 'home_page/wallet_connect_button.dart';
 
 class HomePageWidget extends StatefulWidget {
   // final String displayUri;
@@ -148,57 +150,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 ],
               ),
               actions: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 2.0, right: 14, top: 8, bottom: 8),
-                    child: Container(
-                      // width: 150,
-                      height: 30,
-                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        gradient: const LinearGradient(
-                          colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
-                          stops: [0.1, 0.5, 1],
-                        ),
-                      ),
-                      child: InkWell(
-                          highlightColor: Colors.white,
-                          onTap: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => const WalletDialog(),
-                            );
-                            print('wallet connect closed');
-                            statisticsModel.onRequestBalances(WalletService.chainId, tasksServices);
-                          },
-                          child: walletConnected && listenWalletAddress != null
-                              ? Row(
-                                children: [
-                                  const NetworkIconImage(
-                                    height: 80,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 4.0),
-                                    child: Text(
-                                        // '${listenWalletAddress.toString().substring(0, 4)}'
-                                        '..'
-                                        '${listenWalletAddress.toString().substring(listenWalletAddress.toString().length - 5)}',
-                                        // textAlign: TextAlign.center,
-                                        style: const TextStyle(fontSize: 14, color: Colors.white),
-                                      ),
-                                  ),
-                                ],
-                              )
-                              : const Text(
-                                  'Connect wallet',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 14, color: Colors.white),
-                                )),
-                    ),
-                  ),
-                ),
+                const WalletConnectButton(),
                 if (!isDeviceConnected)
                   Padding(
                     padding: const EdgeInsets.only(left: 0.0, right: 14),

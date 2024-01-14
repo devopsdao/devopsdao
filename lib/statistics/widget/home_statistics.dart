@@ -105,7 +105,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
                   // ),
                   child: Padding(
                     padding: EdgeInsets.only(left: tabPadding, right: tabPadding),
-                    child: const Text('In your wallet'),
+                    child: const Text('Your wallet'),
                   ),
                 ),
                 Tab(

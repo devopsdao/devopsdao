@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dodao/wallet/widgets/main/pages.dart';
 import 'package:dodao/wallet/widgets/pages/2_wc/wc_qr_code_image.dart';
+import 'package:dodao/wallet/widgets/shared/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -10,9 +11,11 @@ import 'package:dodao/blockchain/task_services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../../config/flutter_flow_util.dart';
 import '../../../../config/theme.dart';
 import '../../../../pages/home_page.dart';
 import '../../../../widgets/icon_image.dart';
+import '../../../../widgets/utils/platform.dart';
 import '../../../model_view/wallet_model.dart';
 import '../../../model_view/wc_model.dart';
 import '../../../services/wallet_service.dart';
@@ -20,14 +23,16 @@ import '../../../services/wc_service.dart';
 import '../../shared/network_selection.dart';
 
 class WcQrCodeTab extends StatelessWidget {
+
   final double screenHeightSizeNoKeyboard;
   // final Function callConnectWallet;
-  const WcQrCodeTab({
+  WcQrCodeTab({
     Key? key,
     required this.screenHeightSizeNoKeyboard,
     // required this.callConnectWallet,
   }) : super(key: key);
 
+  final _platform = PlatformAndBrowser();
   final double _qrSize = 200;
 
   @override
@@ -99,7 +104,13 @@ class WcQrCodeTab extends StatelessWidget {
                   LoadingAnimationWidget.prograssiveDots(
                     size: 18,
                     color: DodaoTheme.of(context).primaryText,
-                  )
+                  ),
+
+                  if (_platform.platform == 'mobile')
+                  const Padding(
+                    padding: EdgeInsets.only(top: 12.0),
+                    child: GoToWalletButton(),
+                  ),
                 ],
               ),
             if (wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkNotMatch)
@@ -109,10 +120,20 @@ class WcQrCodeTab extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             if (wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkUnknown)
-              Text(
-                'Network on your wallet is not supported. \n Check screen for further information\n',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Network on your wallet is not supported. \n Check wallet screen for further information\n',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  if (_platform.platform == 'mobile')
+                    const Padding(
+                      padding: EdgeInsets.only(top: 12.0),
+                      child: GoToWalletButton(),
+                    ),
+                ],
               ),
             // if (wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedAddNetwork)
             //   Text(

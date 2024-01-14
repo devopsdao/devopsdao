@@ -12,14 +12,14 @@ import '../services/statistics_service.dart';
 
 
 class StatisticsModelState {
-  bool initialized = false;
   List<TokenItem> tags = [];
   Map<String, Map<String, BigInt>> initialEmptyBalance = {};
+  double valueOnWallet = 0.0; // for value_input max
 
   StatisticsModelState({
-    required this.initialized,
     required this.tags,
     required this.initialEmptyBalance,
+    required this.valueOnWallet,
   });
 }
 
@@ -27,18 +27,18 @@ class StatisticsModel extends ChangeNotifier {
   final _statisticsService = StatisticsService();
 
   var _state = StatisticsModelState(
-    initialized: false,
     tags: [],
     initialEmptyBalance: {},
+    valueOnWallet: 0.0,
   );
   StatisticsModelState get state => _state;
   StreamSubscription<List<TokenItem>>? tagSubscription;
 
   StatisticsModel() {
     StatisticsModelState(
-      initialized: false,
       tags: _statisticsService.tags,
       initialEmptyBalance: _statisticsService.initialEmptyBalance,
+      valueOnWallet: 0.0,
     );
   }
 
@@ -46,8 +46,8 @@ class StatisticsModel extends ChangeNotifier {
     tagSubscription = _statisticsService.statisticsTokenItems.listen((data) {
       _state = StatisticsModelState(
         tags: data,
-        initialized: true,
         initialEmptyBalance: _statisticsService.initialEmptyBalance,
+        valueOnWallet: data.first.balance,
       );
       notifyListeners();
     });

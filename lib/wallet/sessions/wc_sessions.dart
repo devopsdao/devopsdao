@@ -210,15 +210,36 @@ class WCSessions {
     try {
       List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
       await tasksServices.fetchTasksBatch(taskList);
-      await tasksServices.connectRPC(newChainId);
-      await tasksServices.startup();
-      await tasksServices.collectMyTokens();
-      await tasksServices.myBalance();
-      // await tasksServices.getAccountBalances(newChainId);
-      return true;
     } catch (e) {
-      log.severe('wallet_service->tasksServices.startup() error: $e');
+      log.severe('wc_sessions->initConnectAndCollectData->fetchTasksBatch error: $e');
       return false;
     }
+    try {
+      await tasksServices.connectRPC(newChainId);
+    } catch (e) {
+      log.severe('wc_sessions->initConnectAndCollectData->connectRPC error: $e');
+      return false;
+    }
+    try {
+      await tasksServices.startup();
+    } catch (e) {
+      log.severe('wc_sessions->initConnectAndCollectData->startup() error: $e');
+      return false;
+    }
+    try {
+      await tasksServices.collectMyTokens();
+      return true;
+    } catch (e) {
+      log.severe('wc_sessions->initConnectAndCollectData->collectMyTokens error: $e');
+      return false;
+    }
+    // try {
+    //   await tasksServices.myBalance();
+    //   // await tasksServices.getAccountBalances(newChainId);
+    //   return true;
+    // } catch (e) {
+    //   log.severe('wc_sessions->initConnectAndCollectData->myBalance error: $e');
+    //   return false;
+    // }
   }
 }

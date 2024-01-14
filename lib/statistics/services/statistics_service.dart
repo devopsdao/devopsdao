@@ -161,26 +161,25 @@ class StatisticsService {
         bool resultIerc = await ierc165.supportsInterface(Uint8List.fromList(erc1155InterfaceID));
         if (resultIerc == true) {
           var ierc1155 = IERC1155(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId );
-          // var ierc1155Enumberable = IERC1155Enumerable(address: tokenContracts[i], client: web3client, chainId: chainId);
           var tokenDataFacet = TokenDataFacet(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId );
-          for (int idx2 = 0; idx2 < addresses.length; idx2++) {
-            // List<BigInt> tokenIds = await ierc1155Enumberable.tokensByAccount(addresses[idx]);
-            final List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[idx2]);
-            final List<String> tokenNames = await tokenDataFacet.getTokenNames(addresses[idx2]);
-            if (tokenIds.isNotEmpty) {
-              final List<EthereumAddress> filledAddressesList = List<EthereumAddress>.filled(tokenIds.length, addresses.first);
-              final balanceOf = await ierc1155.balanceOfBatch(filledAddressesList, tokenIds);
+          for (int i = 0; i < addresses.length; i++) {
+            final List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[i]);
+            final List<String> tokenNames = await tokenDataFacet.getTokenNames(addresses[i]);
+            final Map<BigInt, String> resultCombined = Map.fromIterables(tokenIds, tokenNames);
+
+            if (resultCombined.isNotEmpty) {
+              final List<EthereumAddress> filledAddressesList = List<EthereumAddress>.filled(resultCombined.length, addresses.first);
+              final balanceOf = await ierc1155.balanceOfBatch(filledAddressesList, resultCombined.keys.toList());
               late Map<String, BigInt> combined = {};
-              for (int idx3 = 0; idx3 < tokenNames.length; idx3++) {
-                final BigInt num = balanceOf[idx3];
+              for (int idx = 0; idx < resultCombined.length; idx++) {
+                final BigInt num = balanceOf[idx];
                 if (num != BigInt.from(0)) {
-                  if (!combined.containsKey(tokenNames[idx3])) {
-                    combined[tokenNames[idx3]] = num;
+                  if (!combined.containsKey(resultCombined.values.toList()[idx])) {
+                    combined[resultCombined.values.toList()[idx]] = num;
                   } else {
-                    combined[tokenNames[idx3]] = num + combined[tokenNames[idx3]]!;
+                    combined[resultCombined.values.toList()[idx]] = num + combined[resultCombined.values.toList()[idx]]!;
                   }
                 }
-
               }
               balances[key] = combined;
             }
@@ -201,7 +200,6 @@ class StatisticsService {
     initialEmptyBalance = balances;
     return balances;
   }
-
 }
 
 

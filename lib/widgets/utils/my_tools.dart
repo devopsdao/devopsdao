@@ -27,6 +27,15 @@ Size calcTextSize(String text, TextStyle style) {
   )..layout();
   return textPainter.size;
 }
+
+roundBefore(number) {
+  return (number ~/ 100) * 100;
+}
+
+String shortAddressAsNickname(address) {
+  return '${address.toString().substring(0, 6)}...'
+      '${address.toString().substring(address.toString().length - 4)}';
+}
 //
 // class InvalidDataException implements Exception {
 //   final String code;

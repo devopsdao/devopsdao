@@ -7,6 +7,7 @@ import 'package:webthree/credentials.dart';
 
 import '../../../../blockchain/classes.dart';
 import '../../../../blockchain/task_services.dart';
+import '../../../wallet/model_view/wallet_model.dart';
 import '../../../widgets/tags/wrapped_chip.dart';
 
 
@@ -21,6 +22,7 @@ class PendingTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
+    WalletModel walletModel = context.read<WalletModel>();
     late List<TokenItem> tags = [];
 
     return Container(
@@ -52,18 +54,23 @@ class PendingTab extends StatelessWidget {
                 combinedPerformerProgress[combinedPerformerProgressNftNames[i2]] = num + combinedPerformerProgress[combinedPerformerProgressNftNames[i2]]!;
               }
             }
+
+            // incoming payment
             combinedPerformerProgress.forEach((key, value) {
               late double myBalance;
               myBalance = value.toDouble();
+              late String name = key;
               if (key != tasksServices.taskTokenSymbol) {
                 nft = true;
               } else {
                 nft = false;
+                name = walletModel.getNetworkChainCurrency(walletModel.state.chainId!);
+
                 final ethBalancePrecise = value.toDouble() / pow(10, 18);
                 myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
               }
               tags.add(
-                  TokenItem(collection: true, name: key, balance: myBalance, nft: nft, type: 'performerPending')
+                  TokenItem(collection: true, name: name, balance: myBalance, nft: nft, type: 'performerPending')
               );
             });
 
@@ -92,39 +99,60 @@ class PendingTab extends StatelessWidget {
               }
             }
 
+            //outgoing payment
             combinedCustomerProgress.forEach((key, value) {
               late double myBalance;
               myBalance = value.toDouble();
+              late String name = key;
               if (key != tasksServices.taskTokenSymbol) {
                 nft = true;
               } else {
                 nft = false;
+                name = walletModel.getNetworkChainCurrency(walletModel.state.chainId!);
                 final ethBalancePrecise = value.toDouble() / pow(10, 18);
                 myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
               }
               tags.add(
-                  TokenItem(collection: true, name: key, balance: myBalance, nft: nft, type: 'customerPending')
+                  TokenItem(collection: true, name: name, balance: myBalance, nft: nft, type: 'customerPending')
               );
             });
 
             // ############### collect and combine Completed task:
-            late Map<String, double> combinedCompleted = {};
+            late Map<String, BigInt> combinedCompleted = {};
             late List<String> combinedCompletedNftNames = [];
             late List<BigInt> combinedCompletedNftAmounts = [];
-            late List<double> combinedCompletedNftBalance = [];
+            late List<BigInt> combinedCompletedNftBalance = [];
+
+            //
+            // for (var element in tasksCustomerProgress.entries) {
+            //   for (var i = 0; i < element.value.tokenNames.length; i++) {
+            //     combinedCustomerProgressNftNames.addAll(element.value.tokenNames[i].cast<String>());
+            //     combinedCustomerProgressNftBalance.addAll(element.value.tokenAmounts[i].cast<BigInt>());
+            //   }
+            // }
+            // for (int i2 = 0; i2 < combinedCustomerProgressNftNames.length; i2++) {
+            //   final BigInt num = combinedCustomerProgressNftBalance[i2];
+            //   if(!combinedCustomerProgress.containsKey(combinedCustomerProgressNftNames[i2])) {
+            //     combinedCustomerProgress[combinedCustomerProgressNftNames[i2]] = num;
+            //   } else {
+            //     combinedCustomerProgress[combinedCustomerProgressNftNames[i2]] = num + combinedCustomerProgress[combinedCustomerProgressNftNames[i2]]!;
+            //   }
+            // }
 
             for (var element in tasksServices.tasksPerformerComplete.entries) {
+
               for (var i = 0; i < element.value.tokenNames.length; i++) {
-                combinedCompletedNftNames.addAll(element.value.tokenNames[i].cast<String>());
-                combinedCompletedNftAmounts.addAll(element.value.tokenAmounts[i].cast<BigInt>());
+                if (element.value.tokenBalances[i] != 0) {
+                  combinedCompletedNftNames.addAll(element.value.tokenNames[i].cast<String>());
+                  combinedCompletedNftBalance.addAll(element.value.tokenAmounts[i].cast<BigInt>());
+                }
 
               }
-              combinedCompletedNftBalance.addAll(element.value.tokenBalances.cast<double>());
             }
             // print(combinedCompletedNftAmounts);
             // print(combinedCompletedNftBalance);
             for (int i2 = 0; i2 < combinedCompletedNftNames.length; i2++) {
-              late double num = 1;
+              late BigInt num = combinedCompletedNftBalance[i2];
               if (combinedCompletedNftBalance[i2] != 0) {
                 if(!combinedCompleted.containsKey(combinedCompletedNftNames[i2])) {
                   combinedCompleted[combinedCompletedNftNames[i2]] = num;
@@ -135,18 +163,23 @@ class PendingTab extends StatelessWidget {
             }
             // print(combinedCompleted);
 
+
+            //ready to collect:
             combinedCompleted.forEach((key, value) {
               late double myBalance;
+              late String name = key;
               myBalance = value.toDouble();
+
               if (key != tasksServices.taskTokenSymbol) {
                 nft = true;
               } else {
                 nft = false;
-                // final ethBalancePrecise = value.toDouble() / pow(10, 18);
-                // myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
+                name = walletModel.getNetworkChainCurrency(walletModel.state.chainId!);
+                final ethBalancePrecise = value.toDouble() / pow(10, 18);
+                myBalance = (((ethBalancePrecise * 10000).floor()) / 10000);
               }
               tags.add(
-                  TokenItem(collection: true, name: key, balance: myBalance, nft: nft, selected: true, type: 'performerComplete')
+                  TokenItem(collection: true, name: name, balance: myBalance, nft: nft, selected: true, type: 'performerComplete')
               );
             });
 
