@@ -25,28 +25,18 @@ class SetsOfFabButtons extends StatelessWidget {
     required this.fromPage,
   }) : super(key: key);
 
-  late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 1700));
+  // late Debouncing debounceNotifyListener = Debouncing(duration: const Duration(milliseconds: 1700));
 
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
     var interface = context.watch<InterfaceServices>();
     var taskModelView = context.watch<TaskModelView>();
-    // final listenAllowedChainId = context.select((TaskModelView vm) => vm.state.allowedChainId);
     final listenAllowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
     final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
-
-    late bool emptyBalance = true;
-
-    for (var balance in task.tokenBalances) {
-      if (balance != 0) {
-        emptyBalance = false;
-        break;
-      }
-    }
 
     return Builder(builder: (context) {
       // ##################### ACTION BUTTONS PART ######################## //
@@ -263,7 +253,7 @@ class SetsOfFabButtons extends StatelessWidget {
       }
       else if (task.taskState == 'canceled' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: false,
+          inactive: taskModelView.onShowRateStars(task),
           expand: true,
           buttonName: 'Withdraw',
           buttonColorRequired: Colors.lightBlue.shade300,

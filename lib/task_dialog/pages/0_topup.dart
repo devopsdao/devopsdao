@@ -5,8 +5,8 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/my_tools.dart';
-import '../../widgets/payment.dart';
+import '../../widgets/utils/my_tools.dart';
+import '../../widgets/value_input/widget/value_input.dart';
 import '../../widgets/wallet_action_dialog.dart';
 import '../widget/dialog_button_widget.dart';
 
@@ -77,7 +77,7 @@ class _TopUpPageState extends State<TopUpPage> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                Payment(
+                ValueInput(
                     purpose: 'topup', innerPaddingWidth: innerPaddingWidth),
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),

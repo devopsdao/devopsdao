@@ -4,26 +4,27 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:throttling/throttling.dart';
 
-import '../blockchain/interface.dart';
-import '../blockchain/task_services.dart';
-import '../config/theme.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
+import '../../../statistics/model_view/statistics_model.dart';
 
 
 
-class Payment extends StatefulWidget {
+class ValueInput extends StatefulWidget {
   final String purpose;
   final double innerPaddingWidth;
-  const Payment({
+  const ValueInput({
     Key? key,
     required this.purpose,
     required this.innerPaddingWidth,
   }) : super(key: key);
 
   @override
-  _PaymentState createState() => _PaymentState();
+  _ValueInputState createState() => _ValueInputState();
 }
 
-class _PaymentState extends State<Payment> {
+class _ValueInputState extends State<ValueInput> {
   TextEditingController? valueController;
   late List<String> selectToken = [];
   late String dropdownValue;
@@ -43,6 +44,10 @@ class _PaymentState extends State<Payment> {
     valueController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      StatisticsModel statisticsModel = context.read<StatisticsModel>();
+      if (statisticsModel.state.valueOnWallet != 0.0) {
+        devHighPrice = statisticsModel.state.valueOnWallet;
+      }
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
       selectToken = <String>[tasksServices.chainTicker, 'USDC'];
       dropdownValue = selectToken.first;
@@ -64,7 +69,6 @@ class _PaymentState extends State<Payment> {
     late double borderRadius = interface.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
-      // dropdownValue = tasksServices.taskTokenSymbol;
       dropdownValue = tasksServices.chainTicker;
       minPrice = devLowPrice;
       maxPrice = devHighPrice;
@@ -74,18 +78,6 @@ class _PaymentState extends State<Payment> {
       maxPrice = ausdcHighPrice;
     }
 
-    late Color setBlackAndWhite;
-    late Color setGrey;
-    if (widget.purpose == 'create') {
-      setBlackAndWhite = Colors.black54;
-      setGrey = Colors.white;
-    } else if (widget.purpose == 'topup') {
-      setBlackAndWhite = Colors.black54;
-      setGrey = Colors.white;
-    } else {
-      setBlackAndWhite = Colors.black;
-      setGrey = Colors.grey;
-    }
     final BoxDecoration materialMainBoxDecoration = BoxDecoration(
       borderRadius: DodaoTheme.of(context).borderRadius,
       border: DodaoTheme.of(context).borderGradient,
@@ -131,16 +123,6 @@ class _PaymentState extends State<Payment> {
                               labelStyle: Theme.of(context).textTheme.bodyMedium,
                               hintText: '[Please enter Task value]',
                               hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
-                              // enabledBorder: const UnderlineInputBorder(
-                              //   borderSide: BorderSide(
-                              //     color:  Colors.white,
-                              //     width: 1,
-                              //   ),
-                              //   borderRadius: BorderRadius.only(
-                              //     topLeft: Radius.circular(4.0),
-                              //     topRight: Radius.circular(4.0),
-                              //   ),
-                              // ),
                               focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
@@ -165,7 +147,6 @@ class _PaymentState extends State<Payment> {
                               FocusScope.of(context).unfocus();
                             },
                             onChanged: (text) {
-                              // print('First text field: $text');
                               text.replaceAll(RegExp("[ $dropdownValue]"), "");
                               setState(() {
                                 interface.tokensEntered = double.parse(text);
@@ -193,13 +174,16 @@ class _PaymentState extends State<Payment> {
                               value: _currentPriceValue,
                               min: minPrice,
                               max: maxPrice,
-                              divisions: 100,
+                              divisions: 50,
                               // label: _currentPriceValue.toString(),
                               onChanged: (double value) {
+                                String inString = value.toStringAsFixed(6);
+                                double roundedValue = double.parse(inString);
+
                                 setState(() {
-                                  _currentPriceValue = value;
-                                  valueController!.text = '$value $dropdownValue';
-                                  interface.tokensEntered = value;
+                                  _currentPriceValue = roundedValue;
+                                  valueController!.text = '$roundedValue $dropdownValue';
+                                  interface.tokensEntered = roundedValue;
                                 });
                                 debounceNotifyListener.debounce(() {
                                   tasksServices.myNotifyListeners();
@@ -217,16 +201,6 @@ class _PaymentState extends State<Payment> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          // RichText(
-                          //     text: TextSpan(
-                          //         style: DefaultTextStyle.of(context)
-                          //             .style
-                          //             .apply(fontSizeFactor: 1.0, color: setBlackAndWhite),
-                          //         children: const <TextSpan>[
-                          //           TextSpan(
-                          //               text: 'Select Token: ',
-                          //               style: TextStyle(height: 2, fontWeight: FontWeight.bold)),
-                          //         ])),
                           ButtonTheme(
                             alignedDropdown: true,
                             child: DropdownButton<String>(

@@ -15,8 +15,6 @@ class TaskModelViewState {
 }
 
 class TaskModelView extends ChangeNotifier {
-  // TaskModelView() {
-  // }
 
   /// State update:
   var _state = TaskModelViewState(
@@ -34,7 +32,7 @@ class TaskModelView extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> onShowRateStars(Task task) async {
+  onShowRateStars(Task task) {
     bool result = false;
     for (var tokenBalances in task.tokenBalances) {
       if (tokenBalances > 0) {

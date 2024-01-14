@@ -15,7 +15,7 @@ import '../../blockchain/classes.dart';
 import '../../blockchain/notify_listener.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/badge-small-colored.dart';
-import '../../widgets/my_tools.dart';
+import '../../widgets/utils/my_tools.dart';
 import '../../widgets/wallet_action_dialog.dart';
 import '../contractor_info.dart';
 import '../widget/participants_list.dart';
@@ -244,13 +244,17 @@ class _SelectionPageState extends State<SelectionPage> {
               task.loadingIndicator = true;
             });
             late String status;
+            late String message;
             if (interface.dialogCurrentState['name'] == 'customer-new') {
               status = 'agreed';
+              message = '';
             } else if (interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
                 interface.dialogCurrentState['name'] == 'customer-audit-requested') {
               status = 'audit';
+              message = 'Selected auditor '
+                  '${shortAddressAsNickname(interface.selectedUser.walletAddress.toString())}';
             }
-            tasksServices.taskStateChange(task.taskAddress, EthereumAddress.fromHex(interface.selectedUser.walletAddress.toString()), status, task.nanoId);
+            tasksServices.taskStateChange(task.taskAddress, EthereumAddress.fromHex(interface.selectedUser.walletAddress.toString()), status, task.nanoId, message: message);
             interface.selectedUser = emptyClasses.emptyAccount; // reset
             Navigator.pop(context);
             interface.emptyTaskMessage();

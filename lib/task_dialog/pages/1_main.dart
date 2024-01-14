@@ -11,7 +11,8 @@ import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../wallet/model_view/wallet_model.dart';
-import '../../widgets/my_tools.dart';
+import '../../wallet/services/wallet_service.dart';
+import '../../widgets/utils/my_tools.dart';
 import '../../widgets/select_menu.dart';
 import '../../widgets/tags/tags_old.dart';
 import '../../widgets/tags/wrapped_chip.dart';
@@ -76,6 +77,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    WalletModel walletModel = context.read<WalletModel>();
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
@@ -436,7 +438,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   for (int i = 0; i < task.tokenNames.length; i++) {
                                     for (var e in task.tokenNames[i]) {
                                       if (task.tokenNames[i].first == 'ETH') {
-                                        tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                                        final name = walletModel.getNetworkChainCurrency(walletModel.state.chainId ?? WalletService.defaultNetwork);
+                                        tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: name));
                                       } else {
                                         if (task.tokenBalances[i] == 0) {
                                           tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));

@@ -10,7 +10,7 @@ import '../../../blockchain/interface.dart';
 import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../config/theme.dart';
-import '../../../widgets/my_tools.dart';
+import '../../../widgets/utils/my_tools.dart';
 import '../../../widgets/select_menu.dart';
 
 import 'dart:ui' as ui;

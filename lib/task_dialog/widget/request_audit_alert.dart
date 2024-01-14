@@ -46,7 +46,9 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
     title = 'Are you sure you want to start the Audit process?';
 
     if (widget.who == 'customer') {
-      warningText = 'You will have to top-up the contract with 10% from the Task price, totaling: 10 USDC. For more information:';
+      warningText = '';
+
+      // warningText = 'You will have to top-up the contract with 10% from the Task price, totaling: 10 USDC. For more information:';
       link = 'https://docs.dodao.dev/audit_process.html#customer';
     } else if (widget.who == 'performer') {
       warningText = 'Auditor will receive 10% from the funds allocated to the task, totaling: 10 USDC. For more information:';
