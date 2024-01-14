@@ -64,7 +64,7 @@ class WCService {
     if (encodedUrl.isNotEmpty) {
       walletConnectUri = 'metamask://wc?uri=$encodedUrl';
     }
-    // print(_platform.browserPlatform);
+    print(_platform.browserPlatform);
     if (_platform.platform == 'mobile'
         || _platform.browserPlatform == 'android'
         || _platform.browserPlatform == 'ios'
