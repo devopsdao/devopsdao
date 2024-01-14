@@ -1,8 +1,10 @@
 import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
-import 'package:dodao/tags_manager/collection_services.dart';
-import 'package:dodao/wallet/wallet_service.dart';
-import 'package:dodao/widgets/tags/main.dart';
+import 'package:dodao/nft_manager/collection_services.dart';
+import 'package:dodao/wallet/model_view/metamask_model.dart';
+import 'package:dodao/wallet/model_view/wallet_model.dart';
+import 'package:dodao/wallet/model_view/wc_model.dart';
+import 'package:dodao/statistics/model_view/statistics_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +29,7 @@ void main() async {
 
   await DodaoTheme.initialize();
 
-  createAuthenticator();
+  // createAuthenticator();
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
   // beamerDelegate.beamToNamed('/tasks/1');
@@ -43,8 +45,11 @@ void main() async {
         ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
+        ChangeNotifierProvider(create: (context) => MetamaskModel()),
+        ChangeNotifierProvider(create: (context) => WCModelView()),
+        ChangeNotifierProvider(create: (context) => WalletModel()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
-        ChangeNotifierProvider(create: (context) => WalletProvider()),
+        ChangeNotifierProvider(create: (_) => StatisticsModel()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {
@@ -66,7 +71,7 @@ void main() async {
         ChangeNotifierProxyProvider<TasksServices, SearchServices>(
           create: (_) => SearchServices(),
           update: (_, tasksServices, searchServices) {
-            searchServices!.nftCollectionMap = tasksServices.resultInitialCollectionMap;
+            searchServices!.collectionMap = tasksServices.resultInitialCollectionMap;
             return searchServices..nftBalanceMap = tasksServices.resultNftsMap;
           },
         )
@@ -103,7 +108,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
   }
 
@@ -139,6 +143,7 @@ class _MyAppState extends State<MyApp> {
             height: 210,
 
             next: (context) => MaterialApp.router(
+
               routerDelegate: beamerDelegate,
               routeInformationParser: BeamerParser(),
               backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
@@ -271,31 +276,6 @@ class _MyAppState extends State<MyApp> {
               ),
               // Theme mode settings:
               themeMode: themeNotifier.isDark  ? ThemeMode.dark : ThemeMode.light,
-
-
-
-
-              // SplashScreen.navigate(
-              //   name: 'intro.riv',
-              //   next: (context) => MyHomePage(title: 'Flutter Demo Home Page'),
-              //   until: () => Future.delayed(Duration(seconds: 2)),
-              //   startAnimation: 'Landing',
-              // ),
-              // home: displaySplashImage
-              //     ? Container(
-              //         color: Colors.black,
-              //         child: Center(
-              //           child: Builder(
-              //             builder: (context) => Image.asset(
-              //               'assets/images/logo.png',
-              //               width: MediaQuery.of(context).size.width * 0.6,
-              //               height: MediaQuery.of(context).size.height * 0.6,
-              //               fit: BoxFit.fitWidth,
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : NavBarPage(),
             ),
         )
 

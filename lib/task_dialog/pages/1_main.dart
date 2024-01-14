@@ -10,7 +10,9 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/my_tools.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import '../../wallet/services/wallet_service.dart';
+import '../../widgets/utils/my_tools.dart';
 import '../../widgets/select_menu.dart';
 import '../../widgets/tags/tags_old.dart';
 import '../../widgets/tags/wrapped_chip.dart';
@@ -20,7 +22,7 @@ import 'dart:ui' as ui;
 
 import '../fab_buttons.dart';
 import '../widget/dialog_button_widget.dart';
-import '../widget/rate_widget.dart';
+import '1_main/rate_widget.dart';
 
 class MainTaskPage extends StatefulWidget {
   final double innerPaddingWidth;
@@ -50,11 +52,13 @@ class _MainTaskPageState extends State<MainTaskPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var tasksServices = context.read<TasksServices>();
-      var interface = context.read<InterfaceServices>();
-      if (interface.dialogCurrentState['name'] == 'performer-review' && widget.task.repository.isNotEmpty) {
-        tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
-        tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
+      if (mounted) {
+        var tasksServices = context.read<TasksServices>();
+        var interface = context.read<InterfaceServices>();
+        if (interface.dialogCurrentState['name'] == 'performer-review' && widget.task.repository.isNotEmpty) {
+          tasksServices.checkWitnetResultAvailabilityTimer(widget.task.taskAddress, widget.task.nanoId);
+          tasksServices.checkWitnetResultAvailability(widget.task.taskAddress, widget.task.nanoId);
+        }
       }
     });
 
@@ -73,6 +77,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    WalletModel walletModel = context.read<WalletModel>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
@@ -86,6 +92,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
       borderRadius: DodaoTheme.of(context).borderRadius,
       border: DodaoTheme.of(context).borderGradient,
     );
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -204,127 +211,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   ),
                 ),
               ),
-              // const SizedBox(height: 14),
-
-              // if (
-              //   interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
-              //   interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
-              //   interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
-              //   interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
-              //   tasksServices.hardhatDebug == true
-              // )
-              //
-              // // if (task.taskState == "audit" &&
-              // //     (fromPage == 'customer' || fromPage == 'performer' ||
-              // //         tasksServices.hardhatDebug == true))
-              //
-              //   Container(
-              //     padding: const EdgeInsets.only(top: 14.0),
-              //     child: Material(
-              //       elevation: 10,
-              //       borderRadius: DodaoTheme.of(context).borderRadius,
-              //       child: Container(
-              //           width: innerPaddingWidth,
-              //           decoration: BoxDecoration(
-              //             borderRadius:
-              //             DodaoTheme.of(context).borderRadius,
-              //           ),
-              //           child: Column(
-              //             children: [
-              //               if (
-              //               interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
-              //               interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
-              //               tasksServices.hardhatDebug == true
-              //               )
-              //                 Container(
-              //                   alignment: Alignment.topLeft,
-              //                   padding: const EdgeInsets.all(8.0),
-              //                   child: RichText(
-              //                       text: TextSpan(
-              //                           style: DefaultTextStyle.of(context)
-              //                               .style
-              //                               .apply(fontSizeFactor: 1.0),
-              //                           children: const <TextSpan>[
-              //                             TextSpan(
-              //                                 text:
-              //                                 'Warning, this contract on Audit state \n'
-              //                                     'Please choose auditor: ',
-              //                                 style: TextStyle(
-              //                                     height: 2,
-              //                                     fontWeight: FontWeight.bold)),
-              //                           ])),
-              //                 ),
-              //               if (
-              //               interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
-              //               interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
-              //               tasksServices.hardhatDebug == true
-              //               )
-              //                 Container(
-              //                   alignment: Alignment.topLeft,
-              //                   padding: const EdgeInsets.all(8.0),
-              //                   child: RichText(
-              //                       text: TextSpan(
-              //                           style: DefaultTextStyle.of(context)
-              //                               .style
-              //                               .apply(fontSizeFactor: 1.0),
-              //                           children: <TextSpan>[
-              //                             const TextSpan(
-              //                                 text: 'Your request is being resolved \n'
-              //                                     'Your auditor: \n',
-              //                                 style: TextStyle(
-              //                                     height: 2,
-              //                                     fontWeight: FontWeight.bold)),
-              //                             TextSpan(
-              //                                 text: task.auditor.toString(),
-              //                                 style: DefaultTextStyle.of(context)
-              //                                     .style
-              //                                     .apply(fontSizeFactor: 0.7))
-              //                           ])),
-              //                 ),
-              //               // if (  task.auditState == "requested" ||
-              //               //         tasksServices.hardhatDebug == true)
-              //               //   Container(
-              //               //     alignment: Alignment.topLeft,
-              //               //     padding: const EdgeInsets.all(8.0),
-              //               //     child: ParticipantList(
-              //               //       listType: 'audit',
-              //               //       obj: task,
-              //               //     ),
-              //               //   ),
-              //             ],
-              //           )
-              //       ),
-              //     ),
-              //   ),
-
-              if (interface.dialogCurrentState['name'] == 'performer-completed' ||
-                  (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true))
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: DodaoTheme.of(context).elevation,
-                    borderRadius: DodaoTheme.of(context).borderRadius,
-                    child: Container(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        width: innerPaddingWidth,
-                        decoration: materialMainBoxDecoration,
-                        child: Padding(
-                          padding: DodaoTheme.of(context).inputEdge,
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: RichText(
-                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                                  TextSpan(text: 'Rate the task:', style: Theme.of(context).textTheme.bodySmall),
-                                ])),
-                              ),
-                              const RateAnimatedWidget(),
-                            ],
-                          ),
-                        )),
-                  ),
-                ),
+              if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
+                  (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true)))
+                RateTask(task: task, innerPaddingWidth: innerPaddingWidth,),
 
               // ********* auditor choose part ************ //
               if (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
@@ -332,7 +221,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   interface.dialogCurrentState['name'] == 'customer-audit-performing' ||
                   interface.dialogCurrentState['name'] == 'performer-audit-performing' ||
                   tasksServices.hardhatDebug == true)
-                // if (task.auditInitiator == tasksServices.publicAddress &&
+                // if (task.auditInitiator == listenWalletAddress &&
                 //     interface.dialogCurrentState['pages'].containsKey('select'))
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),
@@ -358,7 +247,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                     const Text(
                                       'Warning, this contract on Audit state!',
                                     ),
-                                    if (task.auditInitiator == tasksServices.publicAddress &&
+                                    if (task.auditInitiator == listenWalletAddress &&
                                         interface.dialogCurrentState['pages'].containsKey('select'))
                                       Text(
                                           'There '
@@ -370,19 +259,19 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               // height: 1.1,
                                               )),
                                     if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
-                                        task.auditInitiator != tasksServices.publicAddress)
+                                        task.auditInitiator != listenWalletAddress)
                                       const Text('the auditor is expected to be selected', style: TextStyle(height: 1.1)),
                                     if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                       const Text('Your request is being resolved by: ', style: TextStyle(height: 1.1)),
                                     if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                       Text('${task.auditor}',
                                           style: const TextStyle(
-                                            height: 1.5,
-                                            fontSize: 9,
+                                            height: 2.4,
+                                            fontSize: 10,
                                             // backgroundColor: Colors.black12
                                           )),
                                   ])),
-                              if (task.auditInitiator == tasksServices.publicAddress && interface.dialogCurrentState['pages'].containsKey('select'))
+                              if (task.auditInitiator == listenWalletAddress && interface.dialogCurrentState['pages'].containsKey('select'))
                                 TaskDialogButton(
                                   padding: 6.0,
                                   inactive: false,
@@ -415,82 +304,59 @@ class _MainTaskPageState extends State<MainTaskPage> {
                       padding: const EdgeInsets.all(8.0),
                       width: innerPaddingWidth,
                       decoration: materialMainBoxDecoration,
-                      child: ListBody(
+                      child: Row(
                         children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4.0),
-                                child: const Icon(Icons.new_releases,
-                                    size: 40, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                          Container(
+                            padding: const EdgeInsets.all(4.0),
+                            child: const Icon(Icons.new_releases,
+                                size: 40, color: Colors.lightGreen), //Icon(Icons.forward, size: 13, color: Colors.white),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                TextSpan(
+                                    text: 'There '
+                                        '${task.participants.length == 1 ? 'is' : 'are'} '
+                                        '${task.participants.length.toString()} participant'
+                                        '${task.participants.length == 1 ? '' : 's'}'
+                                        ' waiting for your decision',
+                                    style: const TextStyle(
+                                      height: 1,
+                                    )),
+                              ])),
+                            ),
+                          ),
+                          // TaskDialogButton(
+                          //   padding: 6.0,
+                          //   inactive: false,
+                          //   buttonName: 'Select',
+                          //   buttonColorRequired: Colors.orange,
+                          //   callback: () {
+                          //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                          //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                          //   },
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Container(
+                              width: 36,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                gradient: DodaoTheme.of(context).smallButtonGradient,
+                                borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                                    TextSpan(
-                                        text: 'There '
-                                            '${task.participants.length == 1 ? 'is' : 'are'} '
-                                            '${task.participants.length.toString()} participant'
-                                            '${task.participants.length == 1 ? '' : 's'}'
-                                            ' waiting for your decision',
-                                        style: const TextStyle(
-                                          height: 1,
-                                        )),
-                                  ])),
-                                ),
+                              child: IconButton(
+                                icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
+                                tooltip: 'Go to select page',
+                                onPressed: () {
+                                  interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
+                                      duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                },
                               ),
-                              // TaskDialogButton(
-                              //   padding: 6.0,
-                              //   inactive: false,
-                              //   buttonName: 'Select',
-                              //   buttonColorRequired: Colors.orange,
-                              //   callback: () {
-                              //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
-                              //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                              //   },
-                              // ),
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    gradient: DodaoTheme.of(context).smallButtonGradient,
-                                    borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
-                                    tooltip: 'Go to topup page',
-                                    onPressed: () {
-                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-                                          duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    gradient: DodaoTheme.of(context).smallButtonGradient,
-                                    borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.person_search_rounded, size: 18, color: Colors.white),
-                                    tooltip: 'Go to select page',
-                                    onPressed: () {
-                                      interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['select'] ?? 99,
-                                          duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
@@ -540,87 +406,6 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   ),
                 ),
 
-              // ************ Show prices and topup part ******** //
-              // if (!FocusScope.of(context).hasFocus)
-              // Container(
-              //   padding: const EdgeInsets.only(top: 14.0),
-              //   child: Material(
-              //     elevation: DodaoTheme.of(context).elevation,
-              //     borderRadius: DodaoTheme.of(context).borderRadius,
-              //     child: Container(
-              //       padding: const EdgeInsets.all(10.0),
-              //       width: innerPaddingWidth,
-              //       decoration: materialMainBoxDecoration,
-              //       child: Row(
-              //         children: <Widget>[
-              //           Expanded(
-              //               flex: 2,
-              //               child: Padding(
-              //                 padding: const EdgeInsets.all(4.0),
-              //                 child: ListBody(
-              //                   children: <Widget>[
-              //                     // RichText(
-              //                     //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-              //                     //   TextSpan(
-              //                     //     text: '${task.tokenBalances[0]} ${tasksServices.chainTicker} \n',
-              //                     //   ),
-              //                     //   TextSpan(
-              //                     //     text: '${task.tokenBalances[0]} USDC',
-              //                     //   )
-              //                     // ])),
-              //                   ],
-              //                 ),
-              //               )),
-              //           const Spacer(),
-              //           if ((fromPage == 'customer' && interface.dialogCurrentState['name'] != 'customer-completed') ||
-              //               tasksServices.hardhatDebug == true)
-              //             // TaskDialogButton(
-              //             //   padding: 6.0,
-              //             //   inactive: false,
-              //             //   buttonName: 'Topup',
-              //             //   buttonColorRequired: Colors.lightBlue.shade600,
-              //             //   callback: () {
-              //             //     interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-              //             //         duration: const Duration(milliseconds: 400), curve: Curves.ease);
-              //             //   },
-              //             // ),
-              //
-              //             Container(
-              //               width: 36,
-              //               height: 36,
-              //               decoration: BoxDecoration(
-              //                 gradient: DodaoTheme.of(context).smallButtonGradient,
-              //                 borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-              //               ),
-              //               child: IconButton(
-              //                 icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
-              //                 tooltip: 'Go to topup page',
-              //                 onPressed: () {
-              //                   interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-              //                       duration: const Duration(milliseconds: 400), curve: Curves.ease);
-              //                 },
-              //               ),
-              //             ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // ChooseWalletButton(
-              //   active: tasksServices.platform == 'mobile' ? true : false,
-              //   buttonName: 'metamask',
-              //   borderRadius: widget.borderRadius,
-              // ),
-              // const SizedBox(height: 14),
-              // if (tasksServices.publicAddress != null &&
-              //   tasksServices.allowedChainId &&
-              //   ((interface.dialogCurrentState['mainButtonName'] == 'Participate' &&
-              //       fromPage == 'tasks') ||
-              //       interface.dialogCurrentState['mainButtonName'] == 'Start the task' ||
-              //       interface.dialogCurrentState['mainButtonName'] == 'Review' ||
-              //       interface.dialogCurrentState['mainButtonName'] == 'In favor of' ||
-              //       interface.dialogCurrentState['mainButtonName'] == 'Sign Review'))
-
               // ************ TAGS *********** //
               Container(
                 padding: const EdgeInsets.only(top: 14.0),
@@ -631,76 +416,104 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     padding: const EdgeInsets.all(12.0),
                     width: innerPaddingWidth,
                     decoration: materialMainBoxDecoration,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: RichText(
-                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
-                            TextSpan(text: 'Tags and NFT attached:'),
-                          ])),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            final double width = constraints.maxWidth - 66;
-                            // print (task.tokenBalances);
-                            final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
-                            for (int i = 0; i < task.tokenNames.length; i++) {
-                              for (var e in task.tokenNames[i]) {
-                                if (task.tokenNames[i].first == 'ETH') {
-                                  tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
-                                } else {
-                                  if (task.tokenBalances[i] == 0) {
-                                    tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
-                                  } else {
-                                    tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: RichText(
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                  TextSpan(text: 'Tokens and Tags: '),
+                                ])),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: LayoutBuilder(builder: (context, constraints) {
+                                  final double width = constraints.maxWidth - 66;
+                                  // print (task.tokenBalances);
+                                  final List<TokenItem> tags = task.tags.map((name) => TokenItem(collection: true, name: name)).toList();
+                                  for (int i = 0; i < task.tokenNames.length; i++) {
+                                    for (var e in task.tokenNames[i]) {
+                                      if (task.tokenNames[i].first == 'ETH') {
+                                        final name = walletModel.getNetworkChainCurrency(walletModel.state.chainId ?? WalletService.defaultNetwork);
+                                        tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: name));
+                                      } else {
+                                        if (task.tokenBalances[i] == 0) {
+                                          tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
+                                        } else {
+                                          tags.add(TokenItem(collection: true, nft: true, inactive: false, name: e.toString()));
+                                        }
+                                      }
+                                    }
                                   }
-                                }
-                              }
-                            }
 
-                            if (tags.isNotEmpty) {
-                              return SizedBox(
-                                width: width,
-                                child: Wrap(
-                                    alignment: WrapAlignment.start,
-                                    direction: Axis.horizontal,
-                                    children: tags.map((e) {
-                                      return WrappedChip(
-                                        key: ValueKey(e),
-                                        item: MapEntry(
-                                            e.name,
-                                            NftCollection(
-                                              selected: false,
-                                              name: e.name,
-                                              bunch: {
-                                                BigInt.from(0):
-                                                    TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
-                                              },
-                                            )),
-                                        page: 'tasks',
-                                        selected: e.selected,
-                                        wrapperRole: WrapperRole.selectNew,
-                                      );
-                                    }).toList()),
-                              );
-                            } else {
-                              return Row(
-                                children: <Widget>[
-                                  RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
-                                    TextSpan(
-                                        text: 'Nothing here',
-                                        style: TextStyle(
-                                          height: 1,
-                                        )),
-                                  ])),
-                                ],
-                              );
-                            }
-                          }),
+                                  if (tags.isNotEmpty) {
+                                    return SizedBox(
+                                      width: width,
+                                      child: Wrap(
+                                          alignment: WrapAlignment.start,
+                                          direction: Axis.horizontal,
+                                          children: tags.map((e) {
+                                            return WrappedChip(
+                                              key: ValueKey(e),
+                                              item: MapEntry(
+                                                  e.name,
+                                                  NftCollection(
+                                                    selected: false,
+                                                    name: e.name,
+                                                    bunch: {
+                                                      BigInt.from(0):
+                                                          TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                                    },
+                                                  )),
+                                              page: 'tasks',
+                                              selected: e.selected,
+                                              wrapperRole: WrapperRole.selectNew,
+                                            );
+                                          }).toList()),
+                                    );
+                                  } else {
+                                    return Row(
+                                      children: <Widget>[
+                                        RichText(
+                                            text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                          TextSpan(
+                                              text: 'Nothing here',
+                                              style: TextStyle(
+                                                height: 1,
+                                              )),
+                                        ])),
+                                      ],
+                                    );
+                                  }
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        if (interface.dialogCurrentState['name'] == 'customer-new' || tasksServices.hardhatDebug == true)
+                        Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              gradient: DodaoTheme.of(context).smallButtonGradient,
+                              borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                              tooltip: 'Go to topup page',
+                              onPressed: () {
+                                interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                                    duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                              },
+                            ),
+                          ),
                         ),
                       ],
                     ),

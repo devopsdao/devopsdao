@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:badges/badges.dart' as Badges;
 import 'package:animations/animations.dart';
+import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:dodao/widgets/tags/tag_mint_dialog.dart';
 import 'package:dodao/widgets/tags/tag_open_container.dart';
@@ -14,10 +15,11 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../tags_manager/nft_item.dart';
-import '../../tags_manager/widgets/manager_open_container.dart';
-import '../../tags_manager/collection_services.dart';
-import '../my_tools.dart';
+import '../../nft_manager/nft_item.dart';
+import '../../nft_manager/widgets/manager_open_container.dart';
+import '../../nft_manager/collection_services.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import '../utils/my_tools.dart';
 import '../tags_on_page_open_container.dart';
 import 'main.dart';
 
@@ -154,6 +156,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     var searchServices = context.read<SearchServices>();
     var collectionServices = context.read<CollectionServices>();
     var tasksServices = context.read<TasksServices>();
+    WalletModel walletModel = context.read<WalletModel>();
 
     late String icon = 'none';
     late int numOfNFTs = 0;
@@ -218,7 +221,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
 
     // This will show overall count of NFTs in bunch
-    if (widget.page == 'treasury' || widget.page == 'selection' || widget.page == 'filter') {
+    if (widget.page == 'treasury' || widget.page == 'selection') { // removed  || widget.page == 'filter'
       if (widget.item.value.bunch.length > 1) {
         numOfNFTs = widget.item.value.bunch.length;
       }
@@ -242,7 +245,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       if (nft) {
         for (var e in widget.item.value.bunch.values) {
           if (e.selected) {
-            print(e.selected);
+            // print(e.selected);
             selectedNftAvailable = true;
             break;
           }
@@ -269,8 +272,10 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       centerTextPadding = const EdgeInsets.only(left: 1.0, right: 6.0);
     }
 
+    final tokenName = walletModel.getNetworkChainCurrency(walletModel.state.chainId ?? WalletService.defaultNetwork);
+
     var textSize = calcTextSize(
-      tagName == 'ETH' ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
+      tagName == tokenName ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
       DodaoTheme.of(context).bodyText3.override(
         fontFamily: 'Inter',
         color: textColor,
@@ -514,7 +519,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
             if (!widget.selected) {
               collectionServices.updateTreasuryNft(
-                  searchServices.selectionPageFilterResults[tagName]!
+                  searchServices.addToNewTaskFilterResults[tagName]!
               );
             } else {
               collectionServices.clearSelectedInManager();
@@ -522,7 +527,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           }
         } else if(widget.page == 'filter') {
           searchServices.tagSelection(
-              typeSelection: 'selection',
+              typeSelection: 'filter',
               tagName: tagName,
               tagKey: tagKey,
               unselectAll: false
@@ -588,7 +593,8 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                     Container(
                       width: 9,
                     ),
-                    if (widget.wrapperRole == WrapperRole.selectNew  || widget.wrapperRole == WrapperRole.removeNew)
+                    if ((widget.wrapperRole == WrapperRole.selectNew  || widget.wrapperRole == WrapperRole.removeNew)
+                    && widget.page != 'filter')
                     Flexible(
                       flex: 10,
                       child: GestureDetector(
@@ -603,7 +609,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                           //   frameHeight: 300,
                           // );
                           searchServices.specialTagSelection(tagName: '', tagKey: '', unselectAll: true);
-                          collectionServices.updateTreasuryNft(searchServices.selectionPageFilterResults[tagKey]!);
+                          collectionServices.updateTreasuryNft(searchServices.addToNewTaskFilterResults[tagKey]!);
                         } : null,
                         child: Opacity(
                           opacity: animationOpacity.value,
@@ -620,7 +626,23 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         ),
                       ),
                     ),
-
+                    if (widget.page == 'filter')
+                      Flexible(
+                        flex: 10,
+                        child: Opacity(
+                          opacity: animationOpacity.value,
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 0, right:5),
+                            width: 25,
+                            child: Icon(
+                                shadows: const <Shadow>[Shadow(color: Colors.black26, blurRadius: 0.01, offset: Offset(0, 1))],
+                                Icons.check_circle_outline_rounded,
+                                size: iconSize + 3,
+                                color: nftMintColor
+                            ),
+                          ),
+                        ),
+                      ),
 
                     if (icon == 'nft' && numOfNFTs < 1)
                       Flexible(
@@ -709,7 +731,7 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                         padding: centerTextPadding,
                         child: Text(
 
-                          tagName == 'ETH' ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
+                          tagName == tokenName ? "${widget.item.value.bunch.values.first.balance}  ${tagName}" : tagName,
                           style: DodaoTheme.of(context).bodyText3.override(
                             fontFamily: 'Inter',
                             color: animationTextColor.value,
@@ -777,6 +799,9 @@ class WrappedChipSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WalletModel walletModel = context.read<WalletModel>();
+
+    final tokenName = walletModel.getNetworkChainCurrency(walletModel.state.chainId ?? WalletService.defaultNetwork);
     // Colors (black BIG is default):
     late Color textColor = DodaoTheme.of(context).chipTextColor;
     late Color borderColor = DodaoTheme.of(context).chipBorderColor;
@@ -805,7 +830,7 @@ class WrappedChipSmall extends StatelessWidget {
     late EdgeInsets leftSpanPadding = const EdgeInsets.only(left: 2.0);
 
     var textSize = calcTextSize(
-      item.name == 'ETH' ? "${item.balance}  ${item.name}" : item.name,
+      item.name == tokenName ? "${item.balance}  ${item.name}" : item.name,
       DodaoTheme.of(context).bodyText3.override(
       fontFamily: 'Inter',
       color: textColor,
@@ -855,7 +880,7 @@ class WrappedChipSmall extends StatelessWidget {
               width: tagWidth,
               alignment: Alignment.center,
               child:  Text(
-                item.name == 'ETH' ? "${item.balance}  ${item.name}" : item.name,
+                item.name == tokenName ? "${item.balance}  ${item.name}" : item.name,
                 style: DodaoTheme.of(context).bodyText3.override(
                   fontFamily: 'Inter',
                   color: textColor,
@@ -978,13 +1003,14 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
 
     late double tagWidthInit = textSize.width + 18;
 
+    tagWidthInit += 36;
     if (widget.nft && widget.balance > 1) {
       showNftNumber = true;
-      tagWidthInit += 36;
+      // tagWidthInit -= 36;
     } else if (!widget.nft) {
-      tagWidthInit += 36;
+      // tagWidthInit += 36;
     } else if (specialNft) {
-      tagWidthInit += 36;
+      // tagWidthInit += 36;
     }
 
     return Container(
@@ -1012,7 +1038,7 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
               child: SizedBox(
                 height: containerMainHeight,
                 width: 18,
-                child: interface.chipIcon(tagName, nftColor, 20, tasksServices.chainId),
+                child: interface.chipIcon(tagName, nftColor, 20, WalletService.chainId),
               ),
             ),
           if (specialNft)
@@ -1021,7 +1047,17 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
               child: SizedBox(
                 height: containerMainHeight,
                 width: 18,
-                child: interface.chipIcon(tagName.toLowerCase(), nftColor, 20,tasksServices.chainId),
+                child: interface.chipIcon(tagName.toLowerCase(), nftColor, 20, WalletService.chainId),
+              ),
+            ),
+          if (widget.nft && !specialNft && !showNftNumber)
+            Flexible(
+              flex: 5,
+              child: Icon(
+                  // shadows: const <Shadow>[Shadow(color: Colors.black26, blurRadius: 0.01, offset: Offset(0, 1))],
+                  Icons.star,
+                  size: 18,
+                  color:nftColor
               ),
             ),
           if (showNftNumber)

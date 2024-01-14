@@ -52,7 +52,33 @@
   },
   {
     "inputs": [],
+    "name": "getRawTaskContracts",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getTaskContracts",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTaskContractsBlacklist",
     "outputs": [
       {
         "internalType": "address[]",
@@ -239,7 +265,12 @@
               },
               {
                 "internalType": "uint256",
-                "name": "rating",
+                "name": "performerRating",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "customerRating",
                 "type": "uint256"
               },
               {

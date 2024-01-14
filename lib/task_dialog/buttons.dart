@@ -50,9 +50,9 @@
 //           // ************************ NEW (EXCHANGE) ************************** //
 //           if (fromPage == 'tasks')
 //             TaskDialogButton(
-//               inactive: (task.contractOwner != tasksServices.publicAddress || tasksServices.hardhatDebug == true) &&
+//               inactive: (task.contractOwner != listenWalletAddress || tasksServices.hardhatDebug == true) &&
 //                       tasksServices.allowedChainId &&
-//                       tasksServices.publicAddress != null
+//                       listenWalletAddress != null
 //                   ? false
 //                   : true,
 //               buttonName: 'Participate',
@@ -72,7 +72,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: task.nanoId,
-//                           taskName: 'taskParticipate',
+//                           actionName: 'taskParticipate',
 //                         ));
 //               },
 //             ),
@@ -98,7 +98,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: task.nanoId,
-//                           taskName: 'taskStateChange',
+//                           actionName: 'taskStateChange',
 //                         ));
 //               },
 //             ),
@@ -122,7 +122,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: task.nanoId,
-//                           taskName: 'taskStateChange',
+//                           actionName: 'taskStateChange',
 //                         ));
 //               },
 //             ),
@@ -154,7 +154,7 @@
 //                 //     context: context,
 //                 //     builder: (context) => WalletActionDialog(
 //                 //       nanoId: task.nanoId,
-//                 //       taskName: 'taskStateChange',
+//                 //       actionName: 'taskStateChange',
 //                 //     ));
 //               },
 //             ),
@@ -177,7 +177,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: task.nanoId,
-//                           taskName: 'withdrawToChain',
+//                           actionName: 'withdrawToChain',
 //                         ));
 //               },
 //               task: task,
@@ -209,7 +209,7 @@
 //           //                       context: context,
 //           //                       builder: (context) => WalletActionDialog(
 //           //                         nanoId: task.nanoId,
-//           //                         taskName: 'addTokens',
+//           //                         actionName: 'addTokens',
 //           //                       ));
 //           //                 },
 //           //                 style: TextButton.styleFrom(
@@ -248,7 +248,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: task.nanoId,
-//                           taskName: 'taskStateChange',
+//                           actionName: 'taskStateChange',
 //                         ));
 //               },
 //             ),
@@ -272,7 +272,7 @@
 //                             context: context,
 //                             builder: (context) => WalletActionDialog(
 //                                   nanoId: task.nanoId,
-//                                   taskName: 'rateTask',
+//                                   actionName: 'rateTask',
 //                                 ));
 //                       }
 //                     : null;
@@ -298,7 +298,7 @@
 //                     context: context,
 //                     builder: (context) => WalletActionDialog(
 //                           nanoId: task.nanoId,
-//                           taskName: 'taskAuditParticipate',
+//                           actionName: 'taskAuditParticipate',
 //                         ));
 //               },
 //             ),
@@ -331,7 +331,7 @@
 //           //           context: context,
 //           //           builder: (context) => WalletActionDialog(
 //           //             nanoId: task.nanoId,
-//           //             taskName: 'taskAuditDecision',
+//           //             actionName: 'taskAuditDecision',
 //           //           ));
 //           //     },
 //           //   ),

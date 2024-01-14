@@ -14,7 +14,8 @@ class Task {
   final List<dynamic> tokenAmounts;
   final String taskState;
   final String auditState;
-  final int rating;
+  final int performerRating;
+  final int customerRating;
   final EthereumAddress contractOwner;
   final EthereumAddress performer;
   final EthereumAddress auditInitiator;
@@ -43,7 +44,8 @@ class Task {
     required this.tokenAmounts,
     required this.taskState,
     required this.auditState,
-    required this.rating,
+    required this.performerRating,
+    required this.customerRating,
     required this.contractOwner,
     required this.performer,
     required this.auditInitiator,
@@ -71,7 +73,17 @@ class TokenItem {
   late bool selected;
   late String feature;
   late bool collection;
-  TokenItem({required this.name, this.icon, this.type = 'myNft', this.nft = false, this.inactive = false, this.balance = 0, this.id, this.selected = false, this.feature = 'Simple', required this.collection});
+  TokenItem(
+      {required this.name,
+      this.icon,
+      this.type = 'myNft',
+      this.nft = false,
+      this.inactive = false,
+      this.balance = 0,
+      this.id,
+      this.selected = false,
+      this.feature = 'Simple',
+      required this.collection});
 }
 
 class NftCollection {

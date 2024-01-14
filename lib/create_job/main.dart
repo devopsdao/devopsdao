@@ -10,20 +10,18 @@ import 'package:webthree/credentials.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
-import '../widgets/my_tools.dart';
-import '../widgets/payment.dart';
+import '../widgets/utils/my_tools.dart';
+import '../widgets/value_input/widget/value_input.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../widgets/wallet_action_dialog.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_markdown/flutter_markdown.dart';
-// import 'package:markdown_editable_textinput/format_markdown.dart';
-// import 'package:markdown_editable_textinput/markdown_text_input.dart';
-import 'package:simple_markdown_editor_plus/simple_markdown_editor_plus.dart';
 
 import '../blockchain/task_services.dart';
 import '../task_dialog/widget/dialog_button_widget.dart';
 import '../widgets/tags/wrapped_chip.dart';
+import 'expanded_selection.dart';
+import 'header.dart';
 
 // Name of Widget > skeleton > Header > Pages
 
@@ -43,7 +41,7 @@ class _CreateJobState extends State<CreateJob> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       searchServices.removeAllTagsOnPages(page: 'create');
-      // searchServices.refreshLists('selection');
+      searchServices.refreshLists('selection');
       // searchServices.tagsSearchFilter('', simpleTagsMap);
     });
   }
@@ -59,7 +57,6 @@ class _CreateJobState extends State<CreateJob> {
 
     final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
     final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
-    late String backgroundPicture = "assets/images/niceshape.png";
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final double myMaxWidth = constraints.maxWidth;
@@ -135,7 +132,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
       ]);
       isTokenApproved = response[tasksServices.contractAddress]!;
       tasksServices.myNotifyListeners();
-      print('isTokenApproved $response');
+      // print('isTokenApproved $response');
     });
   }
 
@@ -400,7 +397,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   constraints: BoxConstraints(
                     maxWidth: maxStaticInternalDialogWidth,
                   ),
-                  child: Payment(
+                  child: ValueInput(
                     purpose: 'create',
                     innerPaddingWidth: innerPaddingWidth,
                   ),
@@ -626,10 +623,10 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                                   child: Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Row(
+                                    child: const Row(
                                       // mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
                                       // mainAxisSize: MainAxisSize.max,
-                                      children: const [
+                                      children: [
                                         Padding(
                                           padding: EdgeInsets.only(right: 12.0),
                                           child: Icon(Icons.new_releases, size: 35, color: Colors.lightGreen),
@@ -731,7 +728,8 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 if (interface.tokensEntered != 0) {
                   // add taskTokenSymbol if there any tokens(expl: ETH) added to contract
                   tokenIds.insert(0, [BigInt.from(0)]);
-                  tokenAmounts.insert(0, [BigInt.from(interface.tokensEntered * pow(10, 18))]);
+                  var rounded = roundBefore((interface.tokensEntered * pow(10, 18).toInt()).floor());
+                  tokenAmounts.insert(0, [BigInt.from(rounded)]);
                   tokenContracts.insert(0, EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'));
                   // tokenIds = [tokenId];
                   // tokenAmounts = [amounts];
@@ -748,13 +746,12 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 tasksServices.createTaskContract(titleFieldController!.text, descriptionController!.text, uri, interface.tokensEntered, nanoId, tags,
                     tokenIds, tokenAmounts, tokenContracts);
                 // Navigator.pop(context);
-                interface.createJobPageContext = context;
                 showDialog(
                     barrierDismissible: false,
                     context: context,
                     builder: (context) => WalletActionDialog(
                           nanoId: nanoId,
-                          taskName: 'createTaskContract',
+                          actionName: 'createTaskContract',
                         ));
               });
 
@@ -774,7 +771,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             widthSize: buttonWidthLong,
             // keyboardActive: keyboardSize == 0 ? false : true;
             callback: () async {
-              // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+              // tasksServices.approveSpend(tasksServices.contractAddress, listenWalletAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
               final List<EthereumAddress> tokenContracts = [];
               tokenContracts.add(tasksServices.contractAddress);
               tasksServices.myNotifyListeners();
@@ -783,7 +780,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   context: context,
                   builder: (context) => const WalletActionDialog(
                         nanoId: 'setApprovalForAll',
-                        taskName: 'setApprovalForAll',
+                        actionName: 'setApprovalForAll',
                       ));
               await tasksServices.setApprovalForAll(tokenContracts, [
                 [0]
@@ -795,7 +792,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                 isTokenApproved = response[tasksServices.contractAddress]!;
               });
               tasksServices.myNotifyListeners();
-              print('isTokenApproved $response');
+              // print('isTokenApproved $response');
               // List<EthereumAddress> addrList = [tasksServices.contractAddress];
               // var response = await tasksServices.isTokenApproved(addrList);
               // nftApproved = response[tasksServices.contractAddress]!;
@@ -809,7 +806,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
             buttonColorRequired: Colors.lightBlue.shade300,
             widthSize: buttonWidthLong,
             callback: () async {
-              // tasksServices.approveSpend(tasksServices.contractAddress, tasksServices.publicAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
+              // tasksServices.approveSpend(tasksServices.contractAddress, listenWalletAddress!, BigInt.from(1), nanoId, true, 'approveSpend');
               tokenApproved = true;
               tasksServices.myNotifyListeners();
               showDialog(
@@ -817,7 +814,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                   context: context,
                   builder: (context) => WalletActionDialog(
                         nanoId: nanoId,
-                        taskName: 'createTaskContract',
+                        actionName: 'createTaskContract',
                       ));
 
               // List<EthereumAddress> addrList = [tasksServices.contractAddress];
@@ -851,9 +848,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
           //   return approveButtonERC20;
           // }
 
-          else if (
-            !activeSubmitButton
-          ) {
+          else if (!activeSubmitButton) {
             return submitButtonInactive;
           } else if ((nftApproved && tokenApproved) || (!nftDetected || interface.tokenSelected == '')) {
             interface.tokenSelected == '';
@@ -888,157 +883,5 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
         }),
       ),
     );
-  }
-}
-
-class CreateJobHeader extends StatefulWidget {
-  const CreateJobHeader({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  _CreateJobHeaderState createState() => _CreateJobHeaderState();
-}
-
-class _CreateJobHeaderState extends State<CreateJobHeader> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
-    return Container(
-      padding: const EdgeInsets.only(bottom: 18),
-      width: interface.maxStaticDialogWidth,
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 30,
-          ),
-          const Spacer(),
-          Expanded(
-              flex: 10,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: RichText(
-                      // softWrap: false,
-                      // overflow: TextOverflow.ellipsis,
-                      // maxLines: 1,
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          // const WidgetSpan(
-                          //     child: Padding(
-                          //       padding:
-                          //       EdgeInsets.only(right: 5.0),
-                          //       child: Icon(
-                          //         Icons.copy,
-                          //         size: 20,
-                          //         color: Colors.black26,
-                          //       ),
-                          //     )),
-                          TextSpan(
-                            text: 'Add new Task',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              )),
-          const Spacer(),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              // RouteInformation routeInfo = RouteInformation(
-              //     location: '/${widget.fromPage}');
-              // Beamer.of(context)
-              //     .updateRouteInformation(routeInfo);
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              padding: const EdgeInsets.all(0.0),
-              height: 30,
-              width: 30,
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.circular(6),
-              // ),
-              child: Row(
-                children: const <Widget>[
-                  Expanded(
-                    child: Icon(
-                      Icons.close,
-                      size: 30,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ExpandedSection extends StatefulWidget {
-  final VoidCallback callback;
-
-  final Widget child;
-  final bool expand;
-  const ExpandedSection({super.key, this.expand = false, required this.child, required this.callback});
-
-  @override
-  _ExpandedSectionState createState() => _ExpandedSectionState();
-}
-
-class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProviderStateMixin {
-  late AnimationController expandController;
-  late Animation<double> animation;
-
-  @override
-  void initState() {
-    super.initState();
-    prepareAnimations();
-    _runExpandCheck();
-  }
-
-  void prepareAnimations() {
-    expandController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-    animation = CurvedAnimation(
-      parent: expandController,
-      curve: Curves.fastOutSlowIn,
-    );
-  }
-
-  void _runExpandCheck() {
-    if (widget.expand) {
-      expandController.forward();
-    } else {
-      expandController.reverse();
-    }
-  }
-
-  @override
-  void didUpdateWidget(ExpandedSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _runExpandCheck();
-  }
-
-  @override
-  void dispose() {
-    expandController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    widget.callback();
-    return SizeTransition(axisAlignment: 1.0, sizeFactor: animation, child: widget.child);
   }
 }

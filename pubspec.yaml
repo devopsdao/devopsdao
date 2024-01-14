@@ -1,5 +1,5 @@
 name: dodao
-description: dodao.dev
+description: docs.dodao.dev
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -89,7 +89,7 @@ dependencies:
 #  wallet_connect: ^1.0.4
   walletconnect_flutter_v2: ^2.1.9
   web_socket_channel: ^2.4.0
-  webthree: ^2.5.7+2
+  webthree: ^2.7.3
   web3modal_flutter: ^3.0.0-beta04
   week_of_year: ^2.0.0
 #  vector_graphics: ^1.0.1

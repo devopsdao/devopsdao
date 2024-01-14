@@ -204,7 +204,12 @@
           },
           {
             "internalType": "uint256",
-            "name": "rating",
+            "name": "performerRating",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "customerRating",
             "type": "uint256"
           },
           {

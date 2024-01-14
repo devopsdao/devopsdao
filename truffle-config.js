@@ -18,7 +18,7 @@
  *
  */
 
- const HDWalletProvider = require('./node_modules/@truffle/hdwallet-provider');
+ const HDWCModelView = require('./node_modules/@truffle/hdwallet-provider');
  //
  // const fs = require('fs');
  // const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -60,7 +60,7 @@
      // Useful for deploying to a public network.
      // NB: It's important to wrap the provider as a function.
      ropsten: {
-       provider: () => new HDWalletProvider(`diamond mass aerobic upgrade canoe immune code summer predict match lunar owner`, `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`),
+       provider: () => new HDWCModelView(`diamond mass aerobic upgrade canoe immune code summer predict match lunar owner`, `https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`),
        network_id: 3,       // Ropsten's id
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
        confirmations: 2,    // # of confs to wait between deployments. (default: 0)
@@ -69,7 +69,7 @@
      },
  
      goerli: {
-       provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`),
+       provider: () => new HDWCModelView(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161`),
        network_id: 5,       // Ropsten's id
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
        confirmations: 2,    // # of confs to wait between deployments. (default: 0)
@@ -78,7 +78,7 @@
      },
  
      polygon: {
-       provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://matic-mumbai.chainstacklabs.com`),
+       provider: () => new HDWCModelView(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://matic-mumbai.chainstacklabs.com`),
        network_id: 80001,       // Ropsten's id
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
        confirmations: 0,    // # of confs to wait between deployments. (default: 0)
@@ -87,8 +87,8 @@
      },
  
      moonbase: {
-       // provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81`),
-       provider: () => new HDWalletProvider(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f`),
+       // provider: () => new HDWCModelView(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `https://moonbeam-alpha.api.onfinality.io/rpc?apikey=a574e9f5-b1db-4984-8362-89b749437b81`),
+       provider: () => new HDWCModelView(`possible claw silk quiz decade ozone decide monster tired material crazy maple`, `wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f`),
        network_id: 1287,       // Moonbase's id
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
        confirmations: 0,    // # of confs to wait between deployments. (default: 0)
@@ -99,7 +99,7 @@
      },
      // Useful for private networks
      // private: {
-     // provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
+     // provider: () => new HDWCModelView(mnemonic, `https://network.io`),
      // network_id: 2111,   // This network is yours, in the cloud.
      // production: true    // Treats this network as if it was a public net. (default: false)
      // }

@@ -4,25 +4,42 @@ import 'package:dodao/task_dialog/states.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
-
+import 'package:dodao/wallet/services/wc_service.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 
 import '../config/theme.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
 import 'header.dart';
+import 'model_view/task_model_view.dart';
 import 'shimmer.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
-class TaskDialogFuture extends StatefulWidget {
+class TaskDialogFuture extends StatelessWidget {
+  const TaskDialogFuture({super.key, required this.fromPage, required this.taskAddress});
   final String fromPage;
-  final EthereumAddress? taskAddress;
+  final EthereumAddress taskAddress;
+  @override
+  Widget build(BuildContext context) {
+      return  ChangeNotifierProvider(
+        create: (_) => TaskModelView(),
+        child: _TaskDialogFuture(fromPage: fromPage, taskAddress: taskAddress,),
+      );
+  }
+}
+
+
+class _TaskDialogFuture extends StatefulWidget {
+  final String fromPage;
+  final EthereumAddress taskAddress;
   // final bool shimmerEnabled;
-  const TaskDialogFuture({
+  const _TaskDialogFuture({
     Key? key,
     required this.fromPage,
-    this.taskAddress,
+    required this.taskAddress,
     // required this.shimmerEnabled,
   }) : super(key: key);
 
@@ -30,15 +47,9 @@ class TaskDialogFuture extends StatefulWidget {
   _TaskDialogFutureState createState() => _TaskDialogFutureState();
 }
 
-class _TaskDialogFutureState extends State<TaskDialogFuture> {
-  // String backgroundPicture = "assets/images/niceshape.png";
+class _TaskDialogFutureState extends State<_TaskDialogFuture> {
 
   late Map<String, dynamic> dialogState;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +111,8 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
   Widget build(BuildContext context) {
     var interface = context.read<InterfaceServices>();
     var tasksServices = context.read<TasksServices>();
+    final listenAllowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     final task = widget.task;
 
@@ -117,9 +130,9 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
       interface.dialogCurrentState = dialogStates['empty'];
     } else if (fromPage == 'last-activities') {
       interface.dialogCurrentState = dialogStates['last-activities'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress == null && !tasksServices.allowedChainId) {
+    } else if (fromPage == 'tasks' && listenWalletAddress == null && !listenAllowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-not-logged'];
-    } else if (fromPage == 'tasks' && tasksServices.publicAddress != null && tasksServices.allowedChainId) {
+    } else if (fromPage == 'tasks' && listenWalletAddress != null && listenAllowedChainId) {
       interface.dialogCurrentState = dialogStates['tasks-new-logged'];
     } else if (fromPage == 'customer' && task.taskState == 'new') {
       interface.dialogCurrentState = dialogStates['customer-new'];
@@ -156,7 +169,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
     } else if ((task.taskState == 'audit' && task.auditState == 'requested') && (fromPage == 'auditor' || tasksServices.hardhatDebug == true)) {
       if (task.auditors.isNotEmpty) {
         for (var i = 0; i < task.auditors.length; i++) {
-          if (task.auditors[i] == tasksServices.publicAddress) {
+          if (task.auditors[i] == listenWalletAddress) {
             interface.dialogCurrentState = dialogStates['auditor-applied'];
             break;
           } else {

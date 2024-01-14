@@ -130,7 +130,7 @@ class _TagMintDialogState extends State<TagMintDialog> {
                         //     context: context,
                         //     builder: (context) => WalletActionDialog(
                         //       nanoId: task.nanoId,
-                        //       taskName: 'taskStateChange',
+                        //       actionName: 'taskStateChange',
                         //     ));
                       },
                       child: Container(

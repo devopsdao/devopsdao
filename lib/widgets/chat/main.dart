@@ -13,6 +13,8 @@ import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
 import '../../config/theme.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import '../utils/my_tools.dart';
 import '../wallet_action_dialog.dart';
 
 // void main() {
@@ -55,9 +57,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+    // var tasksServices = context.read<TasksServices>();
 
-    if (tasksServices.publicAddress != null) {
+    if (listenWalletAddress != null) {
       logged = true;
     }
 
@@ -78,7 +81,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         showUserAvatars: false,
         showUserNames: true,
 
-        user: types.User(id: tasksServices.publicAddress.toString()),
+        user: types.User(id: listenWalletAddress.toString()),
         inputOptions: const InputOptions(
             // sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
             ),
@@ -258,7 +261,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         context: context,
         builder: (context) => WalletActionDialog(
               nanoId: widget.task.nanoId,
-              taskName: 'sendChatMessage_$messageNanoID',
+              actionName: 'sendChatMessage_$messageNanoID',
             ));
 
     final textMessage = types.TextMessage(
@@ -272,10 +275,12 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   void _loadMessages() async {
     List taskMessages = [];
+    String ownerNickName = shortAddressAsNickname(widget.task.contractOwner.toString());
+
 
     Map<String, dynamic> message = {};
     Map<String, dynamic> author = {};
-    author['firstName'] = widget.task.contractOwner.toString();
+    author['firstName'] = ownerNickName;
     // author['firstName'] = 'vaso';
     author['lastName'] = '';
     author['id'] = '1';
@@ -298,9 +303,10 @@ class _ChatWidgetState extends State<ChatWidget> {
     taskMessages.add(message);
 
     for (var msg in widget.task.messages) {
+      String authorNickName = shortAddressAsNickname(msg[3].toString());
       Map<String, dynamic> message = {};
       Map<String, dynamic> author = {};
-      author['firstName'] = msg[3].toString();
+      author['firstName'] =authorNickName;
       // author['firstName'] = 'vaso';
       author['lastName'] = '';
       author['id'] = msg[3].toString();
@@ -363,7 +369,6 @@ class _NotLoggedInputState extends State<NotLoggedInput> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
 
     setState(() {});
 

@@ -40,22 +40,7 @@ class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-
-    // animationController = AnimationController(
-    //   duration: const Duration(milliseconds: 220),
-    //   value: 0,
-    //   lowerBound: 0,
-    //   upperBound: 1,
-    //   vsync: this,
-    // );
-    // animationController.forward();
     initDone = true;
-  }
-
-  @override
-  void dispose() {
-    // Don't forget to dispose all of your controllers!
-    super.dispose();
   }
 
   @override

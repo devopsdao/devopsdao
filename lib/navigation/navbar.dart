@@ -5,6 +5,7 @@ import '../config/theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../index.dart';
 
+import '../wallet/model_view/wallet_model.dart';
 import '../widgets/tags/search_services.dart';
 import 'beamer_delegate.dart';
 
@@ -20,6 +21,7 @@ class NavBarPage extends StatefulWidget {
 /// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
   String _currentPage = '/home';
+  bool isTriggered = false;
 
   @override
   void initState() {
@@ -29,19 +31,23 @@ class _NavBarPageState extends State<NavBarPage> {
 
   @override
   Widget build(BuildContext context) {
-    // var tasksServices = context.watch<TasksServices>();
     var searchServices = context.read<SearchServices>();
-    var tasksServices = context.read<TasksServices>();
+    final listenRoleNfts = context.select((TasksServices vm) => vm.roleNfts);
 
+    // // prevent error when switching between auditor/governor accounts:
+    // if ((listenRoleNfts['auditor'] == 1 || listenRoleNfts['governor'] == 1) && !isTriggered) {
+    //   _currentPage = '/home';
+    //   isTriggered = true;
+    // }
     final tabs = {
       '/home': const HomePageWidget(),
       '/tasks': const HomePageWidget(),
       // '/tasks/1': const TasksPageWidget(),
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
-      if (tasksServices.roleNfts['auditor'] > 0)
+      if (listenRoleNfts['auditor'] > 0)
       '/auditor': const HomePageWidget(),
-      if (tasksServices.roleNfts['governor'] > 0)
+      if (listenRoleNfts['governor'] > 0)
       '/accounts': const HomePageWidget(),
       // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
@@ -92,7 +98,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           label: 'Performer',
         ),
-        if (tasksServices.roleNfts['auditor'] > 0)
+        if (listenRoleNfts['auditor'] > 0)
           const NavigationDestination(
             icon: FaIcon(
               FontAwesomeIcons.penRuler,
@@ -100,7 +106,7 @@ class _NavBarPageState extends State<NavBarPage> {
             ),
             label: 'Auditor',
           ),
-        if (tasksServices.roleNfts['governor'] > 0)
+        if (listenRoleNfts['governor'] > 0)
           const NavigationDestination(
             icon: FaIcon(
               FontAwesomeIcons.peopleGroup,

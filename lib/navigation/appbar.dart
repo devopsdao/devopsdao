@@ -1,10 +1,12 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webthree/credentials.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
-import '../wallet/main.dart';
+import '../wallet/widgets/main/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags_on_page_open_container.dart';
@@ -27,8 +29,23 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-    var searchServices = context.read<SearchServices>();
+    TasksServices tasksServices = context.read<TasksServices>();
+    SearchServices searchServices = context.read<SearchServices>();
+    late Map<EthereumAddress, Task> participate;
+    late Map<EthereumAddress, Task> progress;
+    late Map<EthereumAddress, Task> complete;
+    late Map<String, NftCollection> tagsList;
+    if(page == 'performer') {
+      participate = tasksServices.tasksPerformerParticipate;
+      progress = tasksServices.tasksPerformerProgress;
+      complete = tasksServices.tasksPerformerComplete;
+      tagsList =  searchServices.performerTagsList;
+    } else if (page == 'customer') {
+      participate = tasksServices.tasksCustomerSelection;
+      progress = tasksServices.tasksCustomerProgress;
+      complete = tasksServices.tasksCustomerComplete;
+      tagsList =  searchServices.customerTagsList;
+    }
 
     return AppBarWithSearchSwitch(
       backgroundColor: Colors.transparent,
@@ -49,11 +66,16 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
                 page: page,
                 tabIndex: tabIndex,
               ),
-              IconButton(
-                onPressed: () {
+              InkResponse(
+                radius: DodaoTheme.of(context).inkRadius,
+                containedInkWell: true  ,
+                child: const Padding(
+                  padding: EdgeInsets.all(14.0),
+                  child: Icon(Icons.search),
+                ),
+                onTap: () {
                   AppBarWithSearchSwitch.of(context)?.startSearch();
                 },
-                icon: const Icon(Icons.search),
               ),
               if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
                 const LoadButtonIndicator(),
@@ -86,14 +108,14 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
 
       onChanged: (searchKeyword) {
         if (tabIndex == 0) {
-          tasksServices.runFilter(taskList: tasksServices.tasksPerformerParticipate,
-              tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: participate,
+              tagsMap: tagsList, enteredKeyword: searchKeyword);
         } else if (tabIndex == 1) {
-          tasksServices.runFilter(taskList: tasksServices.tasksPerformerProgress,
-              tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: progress,
+              tagsMap: tagsList, enteredKeyword: searchKeyword);
         } else if (tabIndex == 2) {
-          tasksServices.runFilter(taskList: tasksServices.tasksPerformerComplete,
-              tagsMap: searchServices.performerTagsList, enteredKeyword: searchKeyword);
+          tasksServices.runFilter(taskList: complete,
+              tagsMap: tagsList, enteredKeyword: searchKeyword);
         }
       },
       customTextEditingController: searchServices.searchKeywordController,
@@ -161,11 +183,11 @@ class HomeAppBar extends StatelessWidget  implements PreferredSizeWidget  {
         //               builder: (context) => const WalletPageTop(),
         //             );
         //           },
-        //           child: tasksServices.walletConnected && tasksServices.publicAddress != null
+        //           child: tasksServices.walletConnected && listenWalletAddress != null
         //               ? Text(
-        //             '${tasksServices.publicAddress.toString().substring(0, 4)}'
+        //             '${listenWalletAddress.toString().substring(0, 4)}'
         //                 '...'
-        //                 '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
+        //                 '${listenWalletAddress.toString().substring(listenWalletAddress.toString().length - 4)}',
         //             // textAlign: TextAlign.center,
         //             style: const TextStyle(fontSize: 14, color: Colors.white),
         //           )

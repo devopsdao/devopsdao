@@ -380,7 +380,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
 //       child: RefreshIndicator(
 //         onRefresh: () async {
 //           tasksServices.isLoadingBackground = true;
-//           tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
+//           tasksServices.fetchTasksPerformer(listenWalletAddress!);
 //         },
 //         child: ListView.builder(
 //           padding: EdgeInsets.zero,

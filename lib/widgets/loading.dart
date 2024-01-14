@@ -8,11 +8,12 @@ import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
-import '../config/flutter_flow_icon_button.dart';
 
 import '../config/theme.dart';
 
 import 'package:webthree/webthree.dart';
+
+import '../wallet/model_view/wallet_model.dart';
 
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
@@ -90,32 +91,55 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     return Row(
       children: [
-        FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          // borderWidth: 1,
-          buttonSize: 40,
-          icon: tasksServices.isLoadingBackground
-              ? LoadingAnimationWidget.threeRotatingDots(
-                  color: DodaoTheme.of(context).primaryText,
-                  size: 24,
-                )
-              : Icon(
-                  Icons.refresh_outlined,
-                  color: DodaoTheme.of(context).primaryText,
-                  // size: 24,
-                ),
-          onPressed: () async {
-            // interface.runPaw();
-            if (tasksServices.publicAddress != null) {
+        InkResponse(
+          radius: DodaoTheme.of(context).inkRadius,
+          containedInkWell: true  ,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: tasksServices.isLoadingBackground
+                ? LoadingAnimationWidget.threeRotatingDots(
+              color: DodaoTheme.of(context).primaryText,
+              size: 24,
+            )
+                : Icon(
+              Icons.refresh_outlined,
+              color: DodaoTheme.of(context).primaryText,
+              // size: 24,
+            ),
+          ),
+          onTap: () {
+            if (listenWalletAddress != null) {
               tasksServices.isLoadingBackground = true;
-              tasksServices.refreshTasksForAccount(tasksServices.publicAddress!);
+              tasksServices.refreshTasksForAccount(listenWalletAddress!);
             }
           },
         ),
+        // FlutterFlowIconButton(
+        //   borderColor: Colors.transparent,
+        //   borderRadius: 30,
+        //   // borderWidth: 1,
+        //   buttonSize: 40,
+        //   icon: tasksServices.isLoadingBackground
+        //       ? LoadingAnimationWidget.threeRotatingDots(
+        //           color: DodaoTheme.of(context).primaryText,
+        //           size: 24,
+        //         )
+        //       : Icon(
+        //           Icons.refresh_outlined,
+        //           color: DodaoTheme.of(context).primaryText,
+        //           // size: 24,
+        //         ),
+        //   onPressed: () async {
+        //     // interface.runPaw();
+        //     if (listenWalletAddress != null) {
+        //       tasksServices.isLoadingBackground = true;
+        //       tasksServices.refreshTasksForAccount(listenWalletAddress!);
+        //     }
+        //   },
+        // ),
       ],
     );
   }
