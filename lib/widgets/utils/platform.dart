@@ -26,6 +26,9 @@ class PlatformAndBrowser {
     if (browserInfo.platform.isIOS) {
       browserPlatform = 'ios';
     }
+    if (browserInfo.platform.isLinux) {
+      browserPlatform = 'linux';
+    }
     if (platform == 'web' && window.ethereum != null && window.ethereum?.isMetaMask == true) {
       metamaskAvailable = true;
     }
