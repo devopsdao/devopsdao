@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../config/flutter_flow_util.dart';
 import '../../../config/theme.dart';
-import '../../model_view/wc_model.dart';
 
 class WalletActionButton extends StatelessWidget {
   // final String buttonFunction;
@@ -69,8 +67,8 @@ class GoToWalletButton extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           // launchURL(wcModelView.state.walletConnectUri);
-          launchURL('metamask://');
-          // launchURL('wc:');
+          // launchURL('metamask://');
+          launchURL('wc:');
         },
 
 
