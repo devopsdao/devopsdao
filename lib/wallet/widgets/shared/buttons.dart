@@ -60,7 +60,7 @@ class GoToWalletButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WCModelView wcModelView = context.read<WCModelView>();
+    // WCModelView wcModelView = context.read<WCModelView>();
 
     return Material(
       elevation: DodaoTheme.of(context).elevation,
@@ -70,13 +70,14 @@ class GoToWalletButton extends StatelessWidget {
         onTap: () async {
           // launchURL(wcModelView.state.walletConnectUri);
           launchURL('metamask://');
+          // launchURL('wc:');
         },
 
 
         child: Container(
           padding: const EdgeInsets.all(0.0),
-          height: 38.0,
-          width: 160,
+          height: 80.0,
+          width: 80,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: DodaoTheme.of(context).borderRadius,
