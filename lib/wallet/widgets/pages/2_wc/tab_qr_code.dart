@@ -25,11 +25,9 @@ import '../../shared/network_selection.dart';
 class WcQrCodeTab extends StatelessWidget {
 
   final double screenHeightSizeNoKeyboard;
-  // final Function callConnectWallet;
   WcQrCodeTab({
     Key? key,
     required this.screenHeightSizeNoKeyboard,
-    // required this.callConnectWallet,
   }) : super(key: key);
 
   final _platform = PlatformAndBrowser();
@@ -37,26 +35,28 @@ class WcQrCodeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TasksServices tasksServices = context.read<TasksServices>();
     WCModelView wcModelView = context.watch<WCModelView>();
     WalletModel walletModel = context.read<WalletModel>();
 
     final Widget shimmer = Column(
       children: [
         Shimmer.fromColors(
-            baseColor: DodaoTheme.of(context).shimmerBaseColor,
-            highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
-            child: RichText(
-                text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-                  TextSpan(text: 'Scan QR or select network'),
-                ])),),
+          baseColor: DodaoTheme.of(context).shimmerBaseColor,
+          highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+          child: RichText(
+            text: TextSpan(
+                style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+              TextSpan(text: 'Scan QR or select network'),
+            ])
+          ),
+        ),
         Shimmer.fromColors(
-            baseColor: DodaoTheme.of(context).shimmerBaseColor,
-            highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
-            child: NetworkSelection(
-              qrSize: _qrSize, walletName: 'wc',
-            )),
+          baseColor: DodaoTheme.of(context).shimmerBaseColor,
+          highlightColor: DodaoTheme.of(context).shimmerHighlightColor,
+          child: NetworkSelection(
+            qrSize: _qrSize, walletName: 'wc',
+          )
+        ),
         const SizedBox(
           height: 8,
         ),
@@ -95,11 +95,14 @@ class WcQrCodeTab extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    // 'Performing connection with \n${wcModelView.chainNameOnWCWallet}',
-                    'Performing connection to\n${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \n\nCheck wallet for further information\n',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 46.0),
+                    child: Text(
+                      // 'Performing connection with \n${wcModelView.chainNameOnWCWallet}',
+                      'Performing connection to\n${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \nCheck wallet for further information\n',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   LoadingAnimationWidget.prograssiveDots(
                     size: 18,
@@ -108,7 +111,7 @@ class WcQrCodeTab extends StatelessWidget {
 
                   if (_platform.platform == 'mobile')
                   const Padding(
-                    padding: EdgeInsets.only(top: 12.0),
+                    padding: EdgeInsets.only(top: 32.0),
                     child: GoToWalletButton(),
                   ),
                 ],
@@ -123,14 +126,17 @@ class WcQrCodeTab extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Network on your wallet is not supported. \n Check wallet screen for further information\n',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 46.0),
+                    child: Text(
+                      'Network on your wallet is not supported. \n Check wallet screen for further information\n',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   if (_platform.platform == 'mobile')
                     const Padding(
-                      padding: EdgeInsets.only(top: 12.0),
+                      padding: EdgeInsets.only(top: 32.0),
                       child: GoToWalletButton(),
                     ),
                 ],
