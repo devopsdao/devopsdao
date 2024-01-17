@@ -1778,8 +1778,7 @@ class TasksServices extends ChangeNotifier {
     return txn;
   }
 
-  Future<Map<String, Account>> getAccountsData(
-      {required List<EthereumAddress> requestedAccountsList, String defaultListType = ''}) async {
+  Future<Map<String, Account>> getAccountsData({required List<EthereumAddress> requestedAccountsList, String defaultListType = ''}) async {
     final List<EthereumAddress> accountsList;
     final List accountsDataList;
     if (defaultListType == 'regular_list') {
@@ -2231,7 +2230,10 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> addTaskToBlackList(EthereumAddress taskAddress, String nanoId, ) async {
+  Future<void> addTaskToBlackList(
+    EthereumAddress taskAddress,
+    String nanoId,
+  ) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'addTaskToBlackList': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //
