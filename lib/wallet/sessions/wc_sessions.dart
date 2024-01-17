@@ -58,11 +58,12 @@ class WCSessions {
       //   // wcModelView.setLastErrorOnChainId(0); // reset error
       //   return;
       // }
-      if (wcModelView.wcCurrentState == WCScreenStatus.error) {
-        log.warning('wc_service.dart->onSessionEvent: '
-            'wallet on error state. stopped.');
-        return;
-      }
+      // if (wcModelView.wcCurrentState == WCScreenStatus.error) {
+      //   log.warning('wc_service.dart->onSessionEvent: '
+      //       'wallet on error state. stopped.');
+      //
+      //   return;
+      // }
 
       if (onSessionEvent?.name == 'chainChanged') {
         await finalConnectAndCollectData(onSessionEvent?.data, tasksServices, wcModelView, walletModel);

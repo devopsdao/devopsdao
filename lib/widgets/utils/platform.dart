@@ -6,7 +6,7 @@ import 'package:webthree/browser.dart';
 class PlatformAndBrowser {
   String platform = 'mobile';
   final BrowserDetector browserInfo = BrowserDetector();
-  String? browserPlatform;
+  String browserPlatform = 'not_a_browser';
   bool metamaskAvailable = false;
 
   PlatformAndBrowser() {

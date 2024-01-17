@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../config/flutter_flow_util.dart';
 import '../../../config/theme.dart';
-import '../../model_view/wc_model.dart';
 
 class WalletActionButton extends StatelessWidget {
   // final String buttonFunction;
@@ -60,7 +58,7 @@ class GoToWalletButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WCModelView wcModelView = context.read<WCModelView>();
+    // WCModelView wcModelView = context.read<WCModelView>();
 
     return Material(
       elevation: DodaoTheme.of(context).elevation,
@@ -69,14 +67,15 @@ class GoToWalletButton extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           // launchURL(wcModelView.state.walletConnectUri);
-          launchURL('metamask://');
+          // launchURL('metamask://');
+          launchURL('wc:');
         },
 
 
         child: Container(
           padding: const EdgeInsets.all(0.0),
-          height: 38.0,
-          width: 160,
+          height: 80.0,
+          width: 80,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: DodaoTheme.of(context).borderRadius,

@@ -61,15 +61,31 @@ class WCService {
     }
     late String walletConnectUri;
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
+    print(connectResponse?.uri);
+
     if (encodedUrl.isNotEmpty) {
       walletConnectUri = 'metamask://wc?uri=$encodedUrl';
     }
+
+    // Web Android:
     log.fine("browserPlatform: $_platform.browserPlatform");
-    if (_platform.platform == 'mobile' || _platform.browserPlatform == 'android' || _platform.browserPlatform == 'ios') {
+    if (_platform.platform == 'mobile') {
       await launchUrlString(
-        walletConnectUri,
+        connectResponse!.uri.toString(),
         mode: LaunchMode.externalApplication,
       );
+    } else if (_platform.platform == 'web') {
+      if (_platform.browserPlatform == 'android') {
+        await launchUrlString(
+          connectResponse!.uri.toString(),
+          mode: LaunchMode.externalApplication,
+        );
+      } else if (_platform.browserPlatform == 'ios') {
+        await launchUrlString(
+          connectResponse!.uri.toString(),
+          mode: LaunchMode.externalApplication,
+        );
+      } else {}
     }
     return walletConnectUri;
   }
