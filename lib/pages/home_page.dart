@@ -14,7 +14,7 @@ import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../navigation/navmenu.dart';
 import '../wallet/model_view/wallet_model.dart';
-import '../wallet/model_view/metamask_model.dart';
+import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
 import '../statistics/model_view/statistics_model.dart';

@@ -5,7 +5,7 @@ import 'package:walletconnect_flutter_v2/apis/web3app/web3app.dart';
 
 import '../../../blockchain/task_services.dart';
 import '../../../config/theme.dart';
-import '../../model_view/metamask_model.dart';
+import '../../model_view/mm_model.dart';
 import '../../model_view/wallet_model.dart';
 import '../../model_view/wc_model.dart';
 

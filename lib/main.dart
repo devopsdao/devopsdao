@@ -1,7 +1,7 @@
 import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
-import 'package:dodao/wallet/model_view/metamask_model.dart';
+import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
 import 'package:dodao/statistics/model_view/statistics_model.dart';

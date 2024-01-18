@@ -13,7 +13,7 @@ import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../blockchain/task_services.dart';
 import '../../statistics/services/statistics_service.dart';
 import '../../widgets/utils/platform.dart';
-import '../services/metamask_service.dart';
+import '../services/mm_service.dart';
 import 'wallet_model.dart';
 
 enum MMScreenStatus {
@@ -151,7 +151,7 @@ class MetamaskModel extends ChangeNotifier {
       await onFinalConnectAndCollectData(chainId, tasksServices);
       _mmSessions.initMMCreateSessions(MMService.eth!, metamaskModel, tasksServices, walletModel);
     } else {
-      log.warning('metamask_model.dart->invalid chainId $chainId');
+      log.warning('mm_model.dart->invalid chainId $chainId');
       int defaultChainId = WalletService.defaultNetwork;
       await setMmScreenState(state: MMScreenStatus.error, error:
           'Wrong network on the wallet, \'will be redirected to \''

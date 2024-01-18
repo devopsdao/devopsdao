@@ -8,7 +8,7 @@ import '../../../config/theme.dart';
 import '../../../widgets/utils/platform.dart';
 import '../../model_view/wallet_model.dart';
 import '../../services/wallet_service.dart';
-import '../../model_view/metamask_model.dart';
+import '../../model_view/mm_model.dart';
 import '../../model_view/wc_model.dart';
 import '../../services/wc_service.dart';
 import '../shared/choose_wallet_button.dart';
