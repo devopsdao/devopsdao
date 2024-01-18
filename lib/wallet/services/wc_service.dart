@@ -68,7 +68,7 @@ class WCService {
     }
 
     // Web Android:
-    log.fine("browserPlatform: $_platform.browserPlatform");
+    log.fine("browserPlatform: ${_platform.browserPlatform}");
     if (_platform.platform == 'mobile') {
       await launchUrlString(
         walletConnectUri,
@@ -78,12 +78,12 @@ class WCService {
       if (_platform.browserPlatform == 'android') {
         await launchUrlString(
           walletConnectUri,
-          mode: LaunchMode.externalApplication,
+          mode: LaunchMode.externalNonBrowserApplication,
         );
       } else if (_platform.browserPlatform == 'ios') {
         await launchUrlString(
           connectResponse!.uri.toString(),
-          mode: LaunchMode.externalApplication,
+          mode: LaunchMode.externalNonBrowserApplication,
         );
       } else {}
     }
