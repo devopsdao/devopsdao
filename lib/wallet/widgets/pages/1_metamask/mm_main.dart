@@ -4,7 +4,7 @@ import 'package:dodao/wallet/widgets/pages/1_metamask/select_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model_view/metamask_model.dart';
+import '../../../model_view/mm_model.dart';
 import '../../../model_view/wallet_model.dart';
 
 class MetamaskMainScreen extends StatelessWidget {

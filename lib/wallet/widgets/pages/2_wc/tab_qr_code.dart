@@ -86,27 +86,45 @@ class WcQrCodeTab extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
+                  Container(
                     padding: const EdgeInsets.only(top: 36.0),
-                    child: Text(
-                      // 'Performing connection with \n${wcModelView.chainNameOnWCWallet}',
-                      'Performing connection to\n'
-                          '${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \n'
-                          'Open your wallet to approve \nthe connection request.\n Sometimes it requires going\n back to the wallet\n a couple times. \n',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    child: RichText(
                       textAlign: TextAlign.center,
-                    ),
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Performing connection to\n'),
+                          TextSpan(text:
+    '${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \n\n',
+    style: const TextStyle(fontWeight: FontWeight.bold)),
+    const TextSpan(text: 'Open your wallet to approve the connection request. '
+    'Sometimes it requires going back to the wallet a couple times.',),
+                        ],
+                      ),
+                    )
+                    //
+                    // Text(
+                    //   // 'Performing connection with \n${wcModelView.chainNameOnWCWallet}',
+                    //   'Performing connection to\n'
+                    //       '${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \n'
+                    //       'Open your wallet to approve the connection request. Sometimes it requires going back to the wallet a couple times.',
+                    //   style: Theme.of(context).textTheme.bodyMedium,
+                    //   textAlign: TextAlign.center,
+                    // ),
                   ),
-                  LoadingAnimationWidget.prograssiveDots(
-                    size: 18,
-                    color: DodaoTheme.of(context).primaryText,
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: LoadingAnimationWidget.prograssiveDots(
+                      size: 18,
+                      color: DodaoTheme.of(context).primaryText,
+                    ),
                   ),
 
                   if (_platform.platform == 'mobile'
                       || _platform.browserPlatform == 'android'
                       || _platform.browserPlatform == 'ios')
                   Padding(
-                    padding: const EdgeInsets.only(top: 22.0),
+                    padding: const EdgeInsets.all( 15.0),
                     child: GoToWalletButton(),
                   ),
                 ],
@@ -138,17 +156,20 @@ class WcQrCodeTab extends StatelessWidget {
                     ),
                 ],
               ),
-            // if (wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedAddNetwork)
-            //   Text(
-            //     'Check wallet screen to add new network\n',
-            //     style: Theme.of(context).textTheme.bodyMedium,
-            //     textAlign: TextAlign.center,
-            //   ),
             if (wcModelView.wcCurrentState == WCScreenStatus.error)
               Text(
                 wcModelView.state.errorMessage,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
+              ),
+            if (wcModelView.wcCurrentState == WCScreenStatus.disconnected)
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Text(
+                  'Disconnected',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
               ),
             if (wcModelView.wcCurrentState == WCScreenStatus.wcNotConnected)
               Text(

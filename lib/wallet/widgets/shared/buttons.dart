@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../../config/flutter_flow_util.dart';
 import '../../../config/theme.dart';
 import '../../../widgets/utils/platform.dart';
@@ -70,8 +71,12 @@ class GoToWalletButton extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           // launchURL('metamask://');
+          // launchURL(wcModelView.state.walletConnectUri);
           if(_platform.platform == 'mobile') {
-            launchURL(wcModelView.state.walletConnectUri);
+            await launchUrlString(
+              'https://metamask.app.link/dapp',
+              mode: LaunchMode.externalNonBrowserApplication,
+            );
           } else {
             launchURL('wc:');
           }

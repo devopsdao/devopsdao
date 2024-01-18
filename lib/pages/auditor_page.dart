@@ -9,7 +9,7 @@ import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../wallet/model_view/wallet_model.dart';
-import '../wallet/model_view/metamask_model.dart';
+import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';

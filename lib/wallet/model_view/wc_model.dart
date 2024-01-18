@@ -161,7 +161,7 @@ class WCModelView extends ChangeNotifier {
   }
 
   onWalletDisconnect() async {
-    await setWcScreenState(state: WCScreenStatus.loadingQr);
+    // await setWcScreenState(state: WCScreenStatus.loadingQr);
     await _wcService.disconnectAndUnsubscribe();
     setWcScreenState(state: WCScreenStatus.disconnected);
   }
@@ -177,6 +177,7 @@ class WCModelView extends ChangeNotifier {
   }
 
   Future<void> onSwitchNetwork(int changeTo) async {
+    await setWcScreenState(state: WCScreenStatus.loadingWc);
     int changeFrom = _state.chainIdOnWCWallet!;
     bool result = await _wcService.initSwitchNetwork(changeFrom, changeTo);
     if (!result) {

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:webthree/browser.dart';
 
 import '../../blockchain/task_services.dart';
-import '../model_view/metamask_model.dart';
+import '../model_view/mm_model.dart';
 import '../model_view/wallet_model.dart';
 
 class MMSessions {

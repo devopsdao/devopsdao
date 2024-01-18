@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../config/theme.dart';
 import '../../../../widgets/icon_image.dart';
-import '../../../model_view/metamask_model.dart';
+import '../../../model_view/mm_model.dart';
 import '../../../model_view/wallet_model.dart';
 import '../../shared/network_selection.dart';
 
