@@ -61,7 +61,7 @@ class WCService {
     }
     late String walletConnectUri;
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
-    print(connectResponse?.uri);
+    print(connectResponse?.uri.toString());
 
     if (encodedUrl.isNotEmpty) {
       walletConnectUri = 'metamask://wc?uri=$encodedUrl';
@@ -70,13 +70,13 @@ class WCService {
     // Web Android:
     if(_platform.platform == 'mobile') {
       await launchUrlString(
-        connectResponse!.uri.toString(),
-        mode: LaunchMode.externalApplication,
+        walletConnectUri,
+        mode: LaunchMode.externalNonBrowserApplication,
       );
     } else if (_platform.platform == 'web') {
       if (_platform.browserPlatform == 'android') {
         await launchUrlString(
-          connectResponse!.uri.toString(),
+          walletConnectUri,
           mode: LaunchMode.externalApplication,
         );
       } else if (_platform.browserPlatform == 'ios') {

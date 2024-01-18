@@ -87,10 +87,12 @@ class WcQrCodeTab extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 46.0),
+                    padding: const EdgeInsets.only(top: 36.0),
                     child: Text(
                       // 'Performing connection with \n${wcModelView.chainNameOnWCWallet}',
-                      'Performing connection to\n${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \nCheck wallet for further information\n',
+                      'Performing connection to\n'
+                          '${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \n'
+                          'Open your wallet to approve \nthe connection request.\n Sometimes it requires going\n back to the wallet\n a couple times. \n',
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -103,8 +105,8 @@ class WcQrCodeTab extends StatelessWidget {
                   if (_platform.platform == 'mobile'
                       || _platform.browserPlatform == 'android'
                       || _platform.browserPlatform == 'ios')
-                  const Padding(
-                    padding: EdgeInsets.only(top: 32.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 22.0),
                     child: GoToWalletButton(),
                   ),
                 ],
@@ -130,8 +132,8 @@ class WcQrCodeTab extends StatelessWidget {
                   if (_platform.platform == 'mobile'
                       || _platform.browserPlatform == 'android'
                       || _platform.browserPlatform == 'ios')
-                    const Padding(
-                      padding: EdgeInsets.only(top: 32.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 32.0),
                       child: GoToWalletButton(),
                     ),
                 ],

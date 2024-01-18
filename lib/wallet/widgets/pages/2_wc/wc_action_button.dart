@@ -23,8 +23,9 @@ class _WCActionButtonState extends State<WCActionButton> {
     return WalletActionButton(
       buttonName: wcModelView.state.walletButtonText,
       callback: () async {
-        if ( // if button Refresh Qr, Connect or disconnect:
-        wcModelView.wcCurrentState == WCScreenStatus.wcNotConnected ||
+        if ( // Refresh Qr, Connect:
+        wcModelView.wcCurrentState == WCScreenStatus.disconnected ||
+            wcModelView.wcCurrentState == WCScreenStatus.wcNotConnected ||
             wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedWithQrReady ||
             wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkMatch ||
             wcModelView.wcCurrentState == WCScreenStatus.loadingQr ||
@@ -32,8 +33,14 @@ class _WCActionButtonState extends State<WCActionButton> {
             wcModelView.wcCurrentState == WCScreenStatus.error) {
           walletModel.onWalletReset();
           await wcModelView.onCreateWalletConnection(context);
+        } else if ( //Disconnect
+            wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkMatch ||
+            wcModelView.wcCurrentState == WCScreenStatus.loadingQr ||
+            wcModelView.wcCurrentState == WCScreenStatus.loadingWc ||
+            wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedAddNetwork) {
+
         } else if ( //if chain does not match
-        wcModelView.wcCurrentState == WCScreenStatus.none ||
+
             wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkNotMatch ||
             wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkUnknown) {
           await wcModelView.setWcScreenState(state: WCScreenStatus.loadingWc);

@@ -22,7 +22,7 @@ enum WCScreenStatus {
   wcConnectedNetworkNotMatch, // Show "not match" message; connect button (switch network in next build);
   wcConnectedNetworkUnknown, // Show Unknown network message; connect button (switch network in next build);
   error, // error message; resetting views; show connect button;
-  none,
+  disconnected,
 }
 
 class WCModelViewState {
@@ -133,8 +133,8 @@ class WCModelView extends ChangeNotifier {
       case WCScreenStatus.wcNotConnectedWithQrReady:
         _state.walletButtonText = 'Refresh QR';
         break;
-      case WCScreenStatus.none:
-        _state.walletButtonText = 'Switch network';
+      case WCScreenStatus.disconnected:
+        _state.walletButtonText = 'Connect';
         break;
       case WCScreenStatus.wcNotConnectedAddNetwork:
         _state.walletButtonText = 'Disconnect';
@@ -158,6 +158,12 @@ class WCModelView extends ChangeNotifier {
       log.severe('walletconnectv2->connectWallet error: walletConnectUri is empty');
       return false;
     }
+  }
+
+  onWalletDisconnect() async {
+    await setWcScreenState(state: WCScreenStatus.loadingQr);
+    await _wcService.disconnectAndUnsubscribe();
+    setWcScreenState(state: WCScreenStatus.disconnected);
   }
 
   // Future<void> setLastErrorOnChainId(int value) async {
