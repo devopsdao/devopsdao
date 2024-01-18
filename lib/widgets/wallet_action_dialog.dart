@@ -316,10 +316,8 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20.0),
                         onTap: () {
-                          // Navigator.pop(context);
                           launchURL(wcModelView.state.walletConnectUri);
                           setState(() {});
-                          // Navigator.pop(context);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(0.0),

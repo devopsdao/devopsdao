@@ -74,6 +74,7 @@ class WCSessions {
           && onSessionEvent?.data != WalletService.chainId
           && walletModel.state.walletConnected
       ) {
+        print(onSessionEvent!.data.first.toString());
         final EthereumAddress newAccount = EthereumAddress.fromHex(NamespaceUtils.getAccount(
           onSessionEvent!.data.first.toString(),
         ));

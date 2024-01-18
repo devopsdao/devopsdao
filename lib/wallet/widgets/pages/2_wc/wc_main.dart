@@ -27,7 +27,7 @@ class WalletConnectMainScreen extends StatelessWidget {
       children: [
         WcQrCodeTab(screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard),
         const Spacer(),
-        const ConnectDisconnectState(),
+        // const ConnectDisconnectState(),
         const WCActionButton(),
         const SizedBox(height: 22),
       ],
