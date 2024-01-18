@@ -21,16 +21,16 @@ class WCService {
   Future<bool> initWCInstance() async {
     try {
       web3App = await Web3App.createInstance(
-            projectId: '98a940d6677c21307eaa65e2290a7882',
-            metadata: const PairingMetadata(
-              name: 'dodao.dev',
-              description: 'Decentralzied marketplace for coders and art-creators',
-              url: 'https://walletconnect.com/',
-              icons: [
-                'https://walletconnect.com/walletconnect-logo.png',
-              ],
-            ),
-          );
+        projectId: '98a940d6677c21307eaa65e2290a7882',
+        metadata: const PairingMetadata(
+          name: 'dodao.dev',
+          description: 'Decentralzied marketplace for coders and art-creators',
+          url: 'https://walletconnect.com/',
+          icons: [
+            'https://walletconnect.com/walletconnect-logo.png',
+          ],
+        ),
+      );
       return true;
     } catch (e) {
       log.severe(e);
@@ -40,7 +40,7 @@ class WCService {
 
   Future<String> initCreateWalletConnection(int chainId) async {
     ChainInfo networkParams = ChainPresets.chains.entries.firstWhere((element) {
-      return element.key==chainId;
+      return element.key == chainId;
     }).value;
 
     try {
@@ -68,7 +68,8 @@ class WCService {
     }
 
     // Web Android:
-    if(_platform.platform == 'mobile') {
+    log.fine("browserPlatform: $_platform.browserPlatform");
+    if (_platform.platform == 'mobile') {
       await launchUrlString(
         walletConnectUri,
         mode: LaunchMode.externalNonBrowserApplication,
@@ -84,9 +85,7 @@ class WCService {
           connectResponse!.uri.toString(),
           mode: LaunchMode.externalApplication,
         );
-      } else {
-
-      }
+      } else {}
     }
     return walletConnectUri;
   }
@@ -100,7 +99,7 @@ class WCService {
       return false;
     }
     log.fine('wallet_service->switchNetwork from: $changeFrom to: $changeTo');
-    final params = <String, dynamic> {
+    final params = <String, dynamic>{
       'chainId': '0x${changeTo.toRadixString(16)}',
     };
     try {
@@ -118,7 +117,6 @@ class WCService {
         if (error['data'] != null && error['data']['originalError'] != null && error['data']['originalError']['code'] != null) {
           if (error['data']['originalError']['code'] == 4902) {
             try {
-
               await addNetwork(changeFrom, changeTo);
               return true;
             } on JsonRpcError catch (e) {
@@ -137,7 +135,7 @@ class WCService {
           }
           if (error['data']['originalError']['code'] == 4001) {
             try {
-              print ('4001 custom error');
+              print('4001 custom error');
             } on JsonRpcError catch (e) {
               if (e.message != null) {
                 final error = jsonDecode(e.message!);
@@ -170,7 +168,8 @@ class WCService {
     final params = {
       'chainId': networkParams.chainIdHex,
       'chainName': networkParams.chainName,
-      'nativeCurrency': { //
+      'nativeCurrency': {
+        //
         'name': networkParams.nativeCurrency?.name,
         'symbol': networkParams.nativeCurrency?.symbol,
         'decimals': networkParams.nativeCurrency?.decimals,
