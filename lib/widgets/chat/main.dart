@@ -14,7 +14,7 @@ import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
 import '../../config/theme.dart';
 import '../../wallet/model_view/wallet_model.dart';
-import '../utils/my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import '../wallet_action_dialog.dart';
 
 // void main() {

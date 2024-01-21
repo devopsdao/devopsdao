@@ -19,7 +19,7 @@ import '../../nft_manager/nft_item.dart';
 import '../../nft_manager/widgets/manager_open_container.dart';
 import '../../nft_manager/collection_services.dart';
 import '../../wallet/model_view/wallet_model.dart';
-import '../utils/my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import '../tags_on_page_open_container.dart';
 import 'main.dart';
 

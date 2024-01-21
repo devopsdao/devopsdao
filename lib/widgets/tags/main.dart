@@ -9,7 +9,7 @@ import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../pages/performer_page.dart';
 import '../../nft_manager/collection_services.dart';
-import '../utils/my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import 'bottom_item_info.dart';
 import 'wrapped_chip.dart';
 import 'package:flutter/services.dart';
