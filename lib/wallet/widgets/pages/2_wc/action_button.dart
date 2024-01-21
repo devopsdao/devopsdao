@@ -33,7 +33,7 @@ class _WCActionButtonState extends State<WCActionButton> {
             wcModelView.wcCurrentState == WCScreenStatus.error) {
           walletModel.onWalletReset();
           await wcModelView.onCreateWalletConnection(context);
-          if (_platformAndBrowser.platform == 'mobile') {
+          if (_platformAndBrowser.browserPlatform == 'ios') {
             launchUrlString(
               wcModelView.state.walletConnectUri,
               mode: LaunchMode.externalNonBrowserApplication,

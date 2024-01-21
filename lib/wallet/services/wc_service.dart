@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../config/utils/platform.dart';
+import '../widgets/pages/2_wc/debug/wc_debug.dart';
 
 class WCService {
   // utils:
@@ -63,7 +64,14 @@ class WCService {
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
 
     if (encodedUrl.isNotEmpty) {
-      walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+      if (selectedDebugLink == 'metamask:') {
+        walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+      } else if (selectedDebugLink == 'wc:') {
+        walletConnectUri = connectResponse!.uri.toString();
+      } else if (selectedDebugLink == 'universal') {
+        walletConnectUri = 'https://metamask.app.link/wc?uri=$encodedUrl';
+      }
+
       // if (_platform.browserPlatform == 'ios') {
       //   walletConnectUri = 'https://metamask.app.link/wc?uri=$encodedUrl';
       // } else {

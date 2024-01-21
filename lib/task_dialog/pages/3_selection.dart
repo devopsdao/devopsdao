@@ -247,7 +247,8 @@ class _SelectionPageState extends State<SelectionPage> {
             late String message;
             if (interface.dialogCurrentState['name'] == 'customer-new') {
               status = 'agreed';
-              message = '';
+              message = 'Selected participant'
+                  '${shortAddressAsNickname(interface.selectedUser.walletAddress.toString())}';
             } else if (interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
                 interface.dialogCurrentState['name'] == 'customer-audit-requested') {
               status = 'audit';
