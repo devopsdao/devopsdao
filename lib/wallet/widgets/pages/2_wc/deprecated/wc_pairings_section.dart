@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
-import '../../../../config/flutter_flow_util.dart';
-import '../../shared/pairing_item.dart';
+import '../../../../../config/utils/util.dart';
+import '../../../shared/pairing_item.dart';
 
 class PairingsPage extends StatefulWidget {
   const PairingsPage({
@@ -64,51 +64,6 @@ class PairingsPageState extends State<PairingsPage> {
             Text('expiry: ${expiry}'),
           ],
         ),
-        // onTap: () async {
-        //   showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return AlertDialog(
-        //         title: const Text(
-        //           deletePairing,
-        //           style: TextStyle(
-        //             color: Colors.black,
-        //             fontSize: 26,
-        //             fontWeight: FontWeight.w600,
-        //           ),
-        //         ),
-        //         content: Text(
-        //           pairing.topic,
-        //         ),
-        //         actions: [
-        //           TextButton(
-        //             child: const Text(
-        //               'Cancel',
-        //             ),
-        //             onPressed: () {
-        //               Navigator.of(context).pop();
-        //             },
-        //           ),
-        //           TextButton(
-        //             child: const Text(
-        //               'Delete',
-        //             ),
-        //             onPressed: () async {
-        //               try {
-        //                 widget.web3App.core.pairing.disconnect(
-        //                   topic: pairing.topic,
-        //                 );
-        //                 Navigator.of(context).pop();
-        //               } catch (e) {
-        //                 debugPrint(e.toString());
-        //               }
-        //             },
-        //           ),
-        //         ],
-        //       );
-        //     },
-        //   );
-        // },
       );
     }).toList();
 

@@ -13,7 +13,7 @@ import '../main.dart';
 import '../nft_manager/main.dart';
 import '../wallet/model_view/wallet_model.dart';
 import '../wallet/services/wallet_service.dart';
-import '../widgets/utils/platform.dart';
+import '../config/utils/platform.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key}) : super(key: key);

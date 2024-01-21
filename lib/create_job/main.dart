@@ -10,7 +10,7 @@ import 'package:webthree/credentials.dart';
 
 import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
-import '../widgets/utils/my_tools.dart';
+import '../config/utils/my_tools.dart';
 import '../widgets/value_input/widget/value_input.dart';
 import '../widgets/tags/tag_open_container.dart';
 import '../widgets/wallet_action_dialog.dart';

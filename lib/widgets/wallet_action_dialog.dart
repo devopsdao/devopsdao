@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:dodao/config/flutter_flow_util.dart';
+import 'package:dodao/config/utils/util.dart';
 import 'package:dodao/config/theme.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';

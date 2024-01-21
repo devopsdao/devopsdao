@@ -14,10 +14,9 @@ import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags_on_page_open_container.dart';
-import '../widgets/utils/platform.dart';
+import '../config/utils/platform.dart';
 import '/blockchain/task_services.dart';
 import '/widgets/loading.dart';
-import '/config/flutter_flow_animations.dart';
 import '/config/theme.dart';
 import 'package:flutter/material.dart';
 

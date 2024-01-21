@@ -5,7 +5,7 @@ import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
-import '../../widgets/utils/my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import '../../widgets/value_input/widget/value_input.dart';
 import '../../widgets/wallet_action_dialog.dart';
 import '../widget/dialog_button_widget.dart';
@@ -77,59 +77,58 @@ class _TopUpPageState extends State<TopUpPage> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                ValueInput(
-                    purpose: 'topup', innerPaddingWidth: innerPaddingWidth),
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: DodaoTheme.of(context).elevation,
-                    borderRadius: DodaoTheme.of(context).borderRadius,
-                    child: Container(
-                      // constraints: const BoxConstraints(maxHeight: 500),
-                      padding: const EdgeInsets.all(8.0),
-                      width: innerPaddingWidth,
-                      decoration: materialMainBoxDecoration,
-                      child: TextFormField(
-                        controller: messageControllerForTopup,
-                        // onChanged: (_) => EasyDebounce.debounce(
-                        //   'messageForStateController',
-                        //   Duration(milliseconds: 2000),
-                        //   () => setState(() {}),
-                        // ),
-                        autofocus: false,
-                        obscureText: false,
-                        onTapOutside: (test) {
-                          // FocusScope.of(context).unfocus();
-                          interface.taskTopupMessage =
-                              messageControllerForTopup!.text;
-                        },
-
-                        decoration: InputDecoration(
-                          labelText: 'Your message here..',
-                          labelStyle: Theme.of(context).textTheme.bodyMedium,
-                          hintText: '[Enter your message here..]',
-                          hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        style: DodaoTheme.of(context).bodyText1.override(
-                          fontFamily: 'Inter',
-                          color: Colors.black87,
-                          lineHeight: null,
-                        ),
-                        minLines: 1,
-                        maxLines: 5,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 65,
-                )
+                ValueInput(purpose: 'topup', innerPaddingWidth: innerPaddingWidth),
+                // Container(
+                //   padding: const EdgeInsets.only(top: 14.0),
+                //   child: Material(
+                //     elevation: DodaoTheme.of(context).elevation,
+                //     borderRadius: DodaoTheme.of(context).borderRadius,
+                //     child: Container(
+                //       // constraints: const BoxConstraints(maxHeight: 500),
+                //       padding: const EdgeInsets.all(8.0),
+                //       width: innerPaddingWidth,
+                //       decoration: materialMainBoxDecoration,
+                //       child: TextFormField(
+                //         controller: messageControllerForTopup,
+                //         // onChanged: (_) => EasyDebounce.debounce(
+                //         //   'messageForStateController',
+                //         //   Duration(milliseconds: 2000),
+                //         //   () => setState(() {}),
+                //         // ),
+                //         autofocus: false,
+                //         obscureText: false,
+                //         onTapOutside: (test) {
+                //           // FocusScope.of(context).unfocus();
+                //           interface.taskTopupMessage =
+                //               messageControllerForTopup!.text;
+                //         },
+                //
+                //         decoration: InputDecoration(
+                //           labelText: 'Your message here..',
+                //           labelStyle: Theme.of(context).textTheme.bodyMedium,
+                //           hintText: '[Enter your message here..]',
+                //           hintStyle:  Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                //           focusedBorder: const UnderlineInputBorder(
+                //             borderSide: BorderSide.none,
+                //           ),
+                //           enabledBorder: const UnderlineInputBorder(
+                //             borderSide: BorderSide.none,
+                //           ),
+                //         ),
+                //         style: DodaoTheme.of(context).bodyText1.override(
+                //           fontFamily: 'Inter',
+                //           color: Colors.black87,
+                //           lineHeight: null,
+                //         ),
+                //         minLines: 1,
+                //         maxLines: 5,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(
+                //   height: 65,
+                // )
               ],
             ),
           ),

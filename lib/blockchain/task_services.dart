@@ -17,7 +17,7 @@ import 'package:webthree/webthree.dart';
 
 import 'package:week_of_year/week_of_year.dart';
 
-import 'package:dodao/config/flutter_flow_util.dart';
+import 'package:dodao/config/utils/util.dart';
 import 'package:throttling/throttling.dart';
 
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../wallet/services/wallet_service.dart';
-import '../widgets/utils/get_addresses.dart';
+import 'chain_presets/get_addresses.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
 import 'abi/AccountFacet.g.dart';

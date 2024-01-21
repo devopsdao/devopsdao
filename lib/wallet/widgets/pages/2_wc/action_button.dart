@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_flutter_v2/apis/web3app/web3app.dart';
 
+import '../../../../config/utils/platform.dart';
 import '../../../model_view/wallet_model.dart';
 import '../../../model_view/wc_model.dart';
 import '../../shared/buttons.dart';
@@ -16,6 +18,7 @@ class WCActionButton extends StatefulWidget {
 }
 
 class _WCActionButtonState extends State<WCActionButton> {
+  final _platformAndBrowser = PlatformAndBrowser();
   @override
   Widget build(BuildContext context) {
     WCModelView wcModelView = context.watch<WCModelView>();
@@ -30,6 +33,12 @@ class _WCActionButtonState extends State<WCActionButton> {
             wcModelView.wcCurrentState == WCScreenStatus.error) {
           walletModel.onWalletReset();
           await wcModelView.onCreateWalletConnection(context);
+          if (_platformAndBrowser.platform == 'mobile') {
+            launchUrlString(
+              wcModelView.state.walletConnectUri,
+              mode: LaunchMode.externalNonBrowserApplication,
+            );
+          }
         } else if ( //Disconnect
             wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkMatch ||
             wcModelView.wcCurrentState == WCScreenStatus.loadingQr ||

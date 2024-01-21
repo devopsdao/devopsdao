@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../config/theme.dart';
 import '../../model_view/wallet_model.dart';
 import '../../model_view/wc_model.dart';
-import '2_wc/wc_main.dart';
+import '2_wc/main.dart';
 
 class WalletConnect extends StatefulWidget {
   final double screenHeightSizeNoKeyboard;

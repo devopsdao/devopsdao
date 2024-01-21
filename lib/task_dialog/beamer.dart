@@ -26,7 +26,7 @@ import '../blockchain/task_services.dart';
 import '../widgets/chat/main.dart';
 
 import '../config/theme.dart';
-import '../config/flutter_flow_util.dart';
+import '../config/utils/util.dart';
 
 import 'main.dart';
 import 'shimmer.dart';

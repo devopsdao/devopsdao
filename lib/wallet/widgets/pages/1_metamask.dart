@@ -10,7 +10,7 @@ import '../../model_view/mm_model.dart';
 import '../../model_view/wallet_model.dart';
 import '../shared/choose_wallet_button.dart';
 import '../shared/buttons.dart';
-import '1_metamask/mm_main.dart';
+import '1_metamask/main.dart';
 
 class MetamaskPage extends StatefulWidget {
   final double innerPaddingWidth;

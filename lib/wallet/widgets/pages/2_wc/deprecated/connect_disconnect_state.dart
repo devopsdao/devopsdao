@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model_view/wallet_model.dart';
+import '../../../../model_view/wallet_model.dart';
 
 class ConnectDisconnectState extends StatelessWidget {
   const ConnectDisconnectState({

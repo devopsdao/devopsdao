@@ -15,7 +15,7 @@ import '../../blockchain/classes.dart';
 import '../../blockchain/notify_listener.dart';
 import '../../blockchain/task_services.dart';
 import '../../widgets/badge-small-colored.dart';
-import '../../widgets/utils/my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import '../../widgets/wallet_action_dialog.dart';
 import '../contractor_info.dart';
 import '../widget/participants_list.dart';

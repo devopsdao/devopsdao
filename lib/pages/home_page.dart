@@ -21,7 +21,6 @@ import '../statistics/model_view/statistics_model.dart';
 import '../statistics/widget/home_statistics.dart';
 import '../widgets/icon_image.dart';
 import '../widgets/loading.dart';
-import '../config/flutter_flow_animations.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 

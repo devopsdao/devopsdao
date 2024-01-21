@@ -12,7 +12,7 @@ import "package:universal_html/html.dart" hide Platform;
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../blockchain/task_services.dart';
 import '../../statistics/services/statistics_service.dart';
-import '../../widgets/utils/platform.dart';
+import '../../config/utils/platform.dart';
 import '../services/mm_service.dart';
 import 'wallet_model.dart';
 

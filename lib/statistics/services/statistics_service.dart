@@ -12,7 +12,7 @@ import '../../../blockchain/abi/IERC20.g.dart';
 import '../../../blockchain/abi/IERC721.g.dart';
 import '../../../blockchain/abi/TokenDataFacet.g.dart';
 import '../../../blockchain/classes.dart';
-import '../../widgets/utils/get_addresses.dart';
+import '../../blockchain/chain_presets/get_addresses.dart';
 
 // get -> read ->
 // set -> write ->

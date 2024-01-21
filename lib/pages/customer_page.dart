@@ -13,7 +13,6 @@ import '../widgets/badgetab.dart';
 import '../widgets/loading.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
-import '../config/flutter_flow_animations.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
 
@@ -33,21 +32,6 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
 with TickerProviderStateMixin
 {
   List<String> localTagsList = [];
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final colors = [const Color(0xFFF62BAD), const Color(0xFFF75D21)  , const Color(

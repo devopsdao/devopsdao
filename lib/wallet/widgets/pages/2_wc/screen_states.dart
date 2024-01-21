@@ -1,4 +1,4 @@
-import 'package:dodao/wallet/widgets/pages/2_wc/wc_qr_code_image.dart';
+import 'package:dodao/wallet/widgets/pages/2_wc/qr_image.dart';
 import 'package:dodao/wallet/widgets/shared/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -8,15 +8,15 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../config/theme.dart';
 import '../../../../widgets/icon_image.dart';
-import '../../../../widgets/utils/platform.dart';
+import '../../../../config/utils/platform.dart';
 import '../../../model_view/wallet_model.dart';
 import '../../../model_view/wc_model.dart';
 import '../../shared/network_selection.dart';
 
-class WcQrCodeTab extends StatelessWidget {
+class WCStates extends StatelessWidget {
 
   final double screenHeightSizeNoKeyboard;
-  WcQrCodeTab({
+  WCStates({
     Key? key,
     required this.screenHeightSizeNoKeyboard,
   }) : super(key: key);
@@ -69,7 +69,7 @@ class WcQrCodeTab extends StatelessWidget {
       sizeCurve: Curves.easeInOutQuart,
 
       /////// *********** Has URL ************ /////////
-      firstChild: WcQrCodeTabImage(
+      firstChild: QrCodeImage(
         screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard,
         qrSize: _qrSize,
       ),
@@ -102,15 +102,6 @@ class WcQrCodeTab extends StatelessWidget {
                         ],
                       ),
                     )
-                    //
-                    // Text(
-                    //   // 'Performing connection with \n${wcModelView.chainNameOnWCWallet}',
-                    //   'Performing connection to\n'
-                    //       '${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)} \n'
-                    //       'Open your wallet to approve the connection request. Sometimes it requires going back to the wallet a couple times.',
-                    //   style: Theme.of(context).textTheme.bodyMedium,
-                    //   textAlign: TextAlign.center,
-                    // ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),

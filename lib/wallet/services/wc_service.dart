@@ -6,7 +6,7 @@ import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:logging/logging.dart';
 
 import '../../blockchain/chain_presets/chains_presets.dart';
-import '../../widgets/utils/platform.dart';
+import '../../config/utils/platform.dart';
 
 class WCService {
   // utils:
@@ -63,12 +63,13 @@ class WCService {
     final String encodedUrl = Uri.encodeComponent('${connectResponse?.uri}');
 
     if (encodedUrl.isNotEmpty) {
-      if (_platform.browserPlatform == 'ios') {
-        walletConnectUri = 'https://metamask.app.link/wc?uri=$encodedUrl';
-      } else {
-        // walletConnectUri = 'metamask://wc?uri=$encodedUrl';
-        walletConnectUri = 'https://metamask.app.link/wc?uri=$encodedUrl';
-      }
+      walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+      // if (_platform.browserPlatform == 'ios') {
+      //   walletConnectUri = 'https://metamask.app.link/wc?uri=$encodedUrl';
+      // } else {
+      //   // walletConnectUri = 'metamask://wc?uri=$encodedUrl';
+      //   walletConnectUri = 'https://metamask.app.link/wc?uri=$encodedUrl';
+      // }
     }
 
     log.fine("browserPlatform: ${_platform.browserPlatform}");
@@ -84,10 +85,10 @@ class WCService {
           mode: LaunchMode.externalNonBrowserApplication,
         );
       } else if (_platform.browserPlatform == 'ios') {
-        await launchUrlString(
-          walletConnectUri,
-          mode: LaunchMode.externalNonBrowserApplication,
-        );
+        // await launchUrlString(
+        //   walletConnectUri,
+        //   mode: LaunchMode.externalNonBrowserApplication,
+        // );
       }
     } else {
       // await launchUrlString(

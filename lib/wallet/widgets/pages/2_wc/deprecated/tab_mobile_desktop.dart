@@ -1,10 +1,10 @@
 import 'package:dodao/wallet/model_view/wc_model.dart';
-import 'package:dodao/wallet/widgets/pages/2_wc/wc_action_button.dart';
+import 'package:dodao/wallet/widgets/pages/2_wc/action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model_view/wallet_model.dart';
+import '../../../../model_view/wallet_model.dart';
 
 class WCMobileDesktopTab extends StatelessWidget {
   const WCMobileDesktopTab({

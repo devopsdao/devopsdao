@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../../../config/flutter_flow_util.dart';
+import '../../../config/utils/util.dart';
 import '../../../config/theme.dart';
-import '../../../widgets/utils/platform.dart';
+import '../../../config/utils/platform.dart';
 import '../../model_view/wc_model.dart';
 
 class WalletActionButton extends StatelessWidget {

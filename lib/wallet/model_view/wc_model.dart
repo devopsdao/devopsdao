@@ -7,7 +7,7 @@ import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:logging/logging.dart';
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../statistics/services/statistics_service.dart';
-import '../../widgets/utils/platform.dart';
+import '../../config/utils/platform.dart';
 import '../services/wc_service.dart';
 import '../sessions/wc_sessions.dart';
 
@@ -151,7 +151,11 @@ class WCModelView extends ChangeNotifier {
     await _wcSessions.initCreateSessions(context, web3App);
     _state.walletConnectUri = await _wcService.initCreateWalletConnection(_state.selectedChainIdOnApp);
     if (state.walletConnectUri.isNotEmpty) {
-      setWcScreenState(state: WCScreenStatus.wcNotConnectedWithQrReady);
+      if (_platformAndBrowser.platform == 'mobile') {
+        setWcScreenState(state: WCScreenStatus.disconnected);
+      } else {
+        setWcScreenState(state: WCScreenStatus.wcNotConnectedWithQrReady);
+      }
       return true;
     } else {
       setWcScreenState(state: WCScreenStatus.error, error: 'Opps... something went wrong, try again \nreason: WC connection error');

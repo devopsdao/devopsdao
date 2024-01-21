@@ -12,7 +12,7 @@ import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import '../../wallet/services/wallet_service.dart';
-import '../../widgets/utils/my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import '../../widgets/select_menu.dart';
 import '../../widgets/tags/tags_old.dart';
 import '../../widgets/tags/wrapped_chip.dart';
