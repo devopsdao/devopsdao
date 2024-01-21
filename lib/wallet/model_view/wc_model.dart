@@ -144,14 +144,19 @@ class WCModelView extends ChangeNotifier {
   }
 
   onCreateWalletConnection(context) async {
-    await setWcScreenState(state: WCScreenStatus.loadingQr);
+    if (_platformAndBrowser.browserPlatform == 'ios') {
+      setWcScreenState(state: WCScreenStatus.disconnected);
+    } else {
+      await setWcScreenState(state: WCScreenStatus.loadingQr);
+    }
+
     await _wcService.disconnectAndUnsubscribe();
 
     final Web3App? web3App = await _wcService.readWeb3App();
     await _wcSessions.initCreateSessions(context, web3App);
     _state.walletConnectUri = await _wcService.initCreateWalletConnection(_state.selectedChainIdOnApp);
     if (state.walletConnectUri.isNotEmpty) {
-      if (_platformAndBrowser.platform == 'mobile') {
+      if (_platformAndBrowser.browserPlatform == 'ios') {
         setWcScreenState(state: WCScreenStatus.disconnected);
       } else {
         setWcScreenState(state: WCScreenStatus.wcNotConnectedWithQrReady);
