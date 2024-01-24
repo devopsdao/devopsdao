@@ -49,56 +49,50 @@ class NativeCurrency {
   });
 }
 
-
-
 class ChainPresets {
   ChainInfo readChainInfo(int chainId) {
     ChainInfo networkParams = ChainPresets.chains.entries.firstWhere((element) {
-      return element.key==chainId;
+      return element.key == chainId;
     }).value;
     return networkParams;
   }
 
   static Map<int, ChainInfo> chains = {
     855456: ChainInfo(
-      chainName: 'Dodao Tanssi Appchain',
-      namespace: 'eip155:855456',
-      chainId: '855456',
-      chainIdHex: '0xd0da0',
-      chainIconLocally: chainImagesPath['855456'],
-      iconUrl: 'https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy',
-
-        requiredNamespaces: {
-      },
-      optionalNamespaces: {
-        'eip155': const RequiredNamespace(
-          methods: [
-            'eth_sign',
-            'eth_signTransaction',
-            'eth_sendTransaction',
-            'wallet_switchEthereumChain',
-            'wallet_addEthereumChain',
-            'eth_chainId'
-          ],
-          chains: ['eip155:855456'],
-          events: [
-            'chainChanged',
-            'accountsChanged',
-          ],
+        chainName: 'Dodao Tanssi Appchain',
+        namespace: 'eip155:855456',
+        chainId: '855456',
+        chainIdHex: '0xd0da0',
+        chainIconLocally: chainImagesPath['855456'],
+        iconUrl: 'https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy',
+        requiredNamespaces: {},
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+              'wallet_switchEthereumChain',
+              'wallet_addEthereumChain',
+              'eth_chainId'
+            ],
+            chains: ['eip155:855456'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        rpcUrl: 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
         ),
-      },
-      rpcUrl: 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
-      blockExplorer: BlockExplorer(
-        name: 'Explorer',
-        url: 'https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
-      ),
-      nativeCurrency: NativeCurrency(
-        name: 'Dodao',
-        symbol: 'DODAO',
-        decimals: 18,
-      )
-    ),
-
+        nativeCurrency: NativeCurrency(
+          name: 'Dodao',
+          symbol: 'DODAO',
+          decimals: 18,
+        )),
     1287: ChainInfo(
         chainName: 'Moonbase Alpha',
         namespace: 'eip155:1287',
@@ -106,7 +100,6 @@ class ChainPresets {
         chainIdHex: '0x507',
         chainIconLocally: chainImagesPath['1287'],
         iconUrl: '',
-
         requiredNamespaces: {
           'eip155': const RequiredNamespace(
             methods: [
@@ -123,11 +116,7 @@ class ChainPresets {
         },
         optionalNamespaces: {
           'eip155': const RequiredNamespace(
-            methods: [
-              'wallet_switchEthereumChain',
-              'wallet_addEthereumChain',
-              'eth_chainId'
-            ],
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
             chains: ['eip155:1287'],
             events: [],
           ),
@@ -141,9 +130,7 @@ class ChainPresets {
           name: 'Dev',
           symbol: 'DEV',
           decimals: 18,
-        )
-    ),
-
+        )),
     4002: ChainInfo(
         chainName: 'Fantom testnet',
         namespace: 'eip155:4002',
@@ -167,11 +154,7 @@ class ChainPresets {
         },
         optionalNamespaces: {
           'eip155': const RequiredNamespace(
-            methods: [
-              'wallet_switchEthereumChain',
-              'wallet_addEthereumChain',
-              'eth_chainId'
-            ],
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
             chains: ['eip155:4002'],
             events: [],
           ),
@@ -185,9 +168,45 @@ class ChainPresets {
           name: 'Fantom',
           symbol: 'FTM',
           decimals: 18,
-        )
-    ),
-
+        )),
+    64165: ChainInfo(
+        chainName: 'Fantom sonic',
+        namespace: 'eip155:4002',
+        chainId: '64165',
+        chainIdHex: '0xFAA5',
+        chainIconLocally: chainImagesPath['64165'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:64165'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:64165'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://rpc.sonic.fantom.network/',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://public-sonic.fantom.network',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Fantom',
+          symbol: 'FTM',
+          decimals: 18,
+        )),
     5: ChainInfo(
         chainName: 'Goerli',
         namespace: 'eip155:5',
@@ -195,7 +214,6 @@ class ChainPresets {
         chainIdHex: '0x5',
         chainIconLocally: chainImagesPath['5'],
         iconUrl: '',
-
         requiredNamespaces: {
           'eip155': const RequiredNamespace(
             methods: [
@@ -212,11 +230,7 @@ class ChainPresets {
         },
         optionalNamespaces: {
           'eip155': const RequiredNamespace(
-            methods: [
-              'wallet_switchEthereumChain',
-              'wallet_addEthereumChain',
-              'eth_chainId'
-            ],
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
             chains: ['eip155:5'],
             events: [],
           ),
@@ -229,10 +243,8 @@ class ChainPresets {
         nativeCurrency: NativeCurrency(
           name: 'Eth',
           symbol: 'ETH',
-            decimals: 18,
-        )
-    ),
-
+          decimals: 18,
+        )),
     280: ChainInfo(
         chainName: 'zkSync Era testnet',
         namespace: 'eip155:280',
@@ -240,7 +252,6 @@ class ChainPresets {
         chainIdHex: '0x118',
         chainIconLocally: chainImagesPath['280'],
         iconUrl: '',
-
         requiredNamespaces: {
           'eip155': const RequiredNamespace(
             methods: [
@@ -257,11 +268,7 @@ class ChainPresets {
         },
         optionalNamespaces: {
           'eip155': const RequiredNamespace(
-            methods: [
-              'wallet_switchEthereumChain',
-              'wallet_addEthereumChain',
-              'eth_chainId'
-            ],
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
             chains: ['eip155:280'],
             events: [],
           ),
@@ -275,9 +282,7 @@ class ChainPresets {
           name: 'ETH',
           symbol: 'ETH',
           decimals: 18,
-        )
-    ),
-
+        )),
     80001: ChainInfo(
         chainName: 'Polygon Mumbai',
         namespace: 'eip155:80001',
@@ -285,7 +290,6 @@ class ChainPresets {
         chainIdHex: '0x13881',
         chainIconLocally: chainImagesPath['80001'],
         iconUrl: '',
-
         requiredNamespaces: {
           'eip155': const RequiredNamespace(
             methods: [
@@ -302,11 +306,7 @@ class ChainPresets {
         },
         optionalNamespaces: {
           'eip155': const RequiredNamespace(
-            methods: [
-              'wallet_switchEthereumChain',
-              'wallet_addEthereumChain',
-              'eth_chainId'
-            ],
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
             chains: ['eip155:80001'],
             events: [],
           ),
@@ -320,8 +320,7 @@ class ChainPresets {
           name: 'Matic',
           symbol: 'MATIC',
           decimals: 18,
-        )
-    ),
+        )),
   };
 
   static Map<String, String> chainImagesPath = {
@@ -331,6 +330,8 @@ class ChainPresets {
     '1287': 'assets/images/net_icon_moonbeam.png',
     // Fantom testnet
     '4002': 'assets/images/net_icon_fantom.png',
+    //Fantom sonic
+    '64165': 'assets/images/net_icon_fantom_sonic.png',
     // Goerli
     '5': 'assets/images/net_icon_eth.png',
     // zkSync

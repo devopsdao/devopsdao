@@ -211,6 +211,19 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "contractDiamondCutFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "components": [

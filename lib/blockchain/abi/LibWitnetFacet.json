@@ -1,7 +1,7 @@
 [
   {
     "inputs": [],
-    "name": "contractDiamondInit",
+    "name": "contractLibWitnetFacet",
     "outputs": [
       {
         "internalType": "bool",
@@ -10,13 +10,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "init",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

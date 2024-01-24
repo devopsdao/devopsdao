@@ -17,5 +17,18 @@
     ],
     "name": "Logs",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "contractLibWithdraw",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]
