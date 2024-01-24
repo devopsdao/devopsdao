@@ -27,10 +27,10 @@ class _WCActionButtonState extends State<WCActionButton> {
       buttonName: wcModelView.state.walletButtonText,
       callback: () async {
         if ( // Refresh Qr, Connect:
-        wcModelView.wcCurrentState == WCScreenStatus.disconnected ||
-            wcModelView.wcCurrentState == WCScreenStatus.wcNotConnected ||
-            wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedWithQrReady ||
-            wcModelView.wcCurrentState == WCScreenStatus.error) {
+            wcModelView.wcCurrentState == WCScreenStatus.disconnected ||
+                wcModelView.wcCurrentState == WCScreenStatus.wcNotConnected ||
+                wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedWithQrReady ||
+                wcModelView.wcCurrentState == WCScreenStatus.error) {
           walletModel.onWalletReset();
           await wcModelView.onCreateWalletConnection(context);
           if (_platformAndBrowser.browserPlatform == 'ios') {
@@ -41,14 +41,14 @@ class _WCActionButtonState extends State<WCActionButton> {
           }
         } else if ( //Disconnect
             wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkMatch ||
-            wcModelView.wcCurrentState == WCScreenStatus.loadingQr ||
-            wcModelView.wcCurrentState == WCScreenStatus.loadingWc ||
-            wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedAddNetwork) {
+                wcModelView.wcCurrentState == WCScreenStatus.loadingQr ||
+                wcModelView.wcCurrentState == WCScreenStatus.loadingWc ||
+                wcModelView.wcCurrentState == WCScreenStatus.wcNotConnectedAddNetwork) {
           await walletModel.onWalletReset();
           await wcModelView.onWalletDisconnect();
         } else if ( //if chain does not match
             wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkNotMatch ||
-            wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkUnknown) {
+                wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkUnknown) {
           await wcModelView.onSwitchNetwork(wcModelView.state.selectedChainIdOnApp);
         }
       },

@@ -1,4 +1,3 @@
-
 import 'package:dodao/wallet/widgets/pages/2_wc/debug/wc_debug.dart';
 import 'package:dodao/wallet/widgets/pages/2_wc/screen_states.dart';
 import 'package:dodao/wallet/widgets/pages/2_wc/action_button.dart';
@@ -23,18 +22,13 @@ class WalletConnectMainScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         WCStates(screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard),
-        const WCDebug(),
+        // const WCDebug(),
         const Spacer(),
         // const ConnectDisconnectState(),
         const WCActionButton(),
         const SizedBox(height: 22),
       ],
     );
-
-
-
-
-
 
     // return DefaultTabController(
     //   length: 3,
@@ -99,4 +93,3 @@ class WalletConnectMainScreen extends StatelessWidget {
     // );
   }
 }
-
