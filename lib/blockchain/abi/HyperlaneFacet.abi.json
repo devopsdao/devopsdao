@@ -247,6 +247,19 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "contractHyperlaneFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",

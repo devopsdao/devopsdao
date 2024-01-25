@@ -348,6 +348,10 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'FTM';
       _rpcUrl = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       _wsUrl = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 64165) {
+      chainTicker = 'FTM';
+      _rpcUrl = 'https://rpc.sonic.fantom.network';
+      _wsUrl = 'wss://rpc.sonic.fantom.network';
     } else if (chainId == 80001) {
       chainTicker = 'MATIC';
       _rpcUrl = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';

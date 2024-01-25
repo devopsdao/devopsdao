@@ -41,18 +41,12 @@ class StatisticsService {
     }
 
     Map<String, EthereumAddress> whitelistedContracts = await getWhitelistedContracts(contractAddress, chainId);
-    Map<String, Map<String, BigInt>> balances = await getTokenBalances(
-        whitelistedContracts,
-        [WalletService.walletAddress!],
-        chainId,
-        tasksServices
-    );
+    Map<String, Map<String, BigInt>> balances = await getTokenBalances(whitelistedContracts, [WalletService.walletAddress!], chainId, tasksServices);
     _tags = await convertToTokenList(balances);
     _controller.add(_tags);
   }
 
-  Future<Map<String, EthereumAddress>> getWhitelistedContracts  (EthereumAddress contractAddress, int chainId) async {
-
+  Future<Map<String, EthereumAddress>> getWhitelistedContracts(EthereumAddress contractAddress, int chainId) async {
     final Map<int, Map<String, EthereumAddress>> tokenContracts = {
       // hardhat:
       31337: {
@@ -68,6 +62,12 @@ class StatisticsService {
         tokenContractKeyName: contractAddress
       },
       4002: {
+        'FTM': zeroAddress,
+        // 'USDC': zeroAddress,
+        // 'USDT': zeroAddress,
+        tokenContractKeyName: contractAddress
+      },
+      64165: {
         'FTM': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
@@ -91,7 +91,6 @@ class StatisticsService {
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       }
-      
     };
     if (tokenContracts[chainId] != null) {
       return tokenContracts[chainId]!;
