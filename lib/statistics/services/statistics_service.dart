@@ -19,7 +19,6 @@ import '../../blockchain/chain_presets/get_addresses.dart';
 // on -> init ->
 // ... -> check (logic with bool return(not bool stored data))
 
-
 class StatisticsService {
   //Utils:
   final _getAddresses = GetAddresses();
@@ -40,8 +39,6 @@ class StatisticsService {
   //   });
   // }
 
-
-
   Future<void> initRequestBalances(int chainId, tasksServices) async {
     EthereumAddress contractAddress = await _getAddresses.requestContractAddress(chainId);
     if (WalletService.walletAddress == null) {
@@ -49,18 +46,12 @@ class StatisticsService {
     }
 
     Map<String, EthereumAddress> whitelistedContracts = await getWhitelistedContracts(contractAddress, chainId);
-    Map<String, Map<String, BigInt>> balances = await getTokenBalances(
-        whitelistedContracts,
-        [WalletService.walletAddress!],
-        chainId,
-        tasksServices
-    );
+    Map<String, Map<String, BigInt>> balances = await getTokenBalances(whitelistedContracts, [WalletService.walletAddress!], chainId, tasksServices);
     _tags = await convertToTokenList(balances);
     _controller.add(_tags);
   }
 
-  Future<Map<String, EthereumAddress>> getWhitelistedContracts  (EthereumAddress contractAddress, int chainId) async {
-
+  Future<Map<String, EthereumAddress>> getWhitelistedContracts(EthereumAddress contractAddress, int chainId) async {
     final Map<int, Map<String, EthereumAddress>> tokenContracts = {
       // hardhat:
       31337: {
@@ -76,6 +67,12 @@ class StatisticsService {
         tokenContractKeyName: contractAddress
       },
       4002: {
+        'FTM': zeroAddress,
+        // 'USDC': zeroAddress,
+        // 'USDT': zeroAddress,
+        tokenContractKeyName: contractAddress
+      },
+      64165: {
         'FTM': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
@@ -99,7 +96,6 @@ class StatisticsService {
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       }
-      
     };
     if (tokenContracts[chainId] != null) {
       return tokenContracts[chainId]!;
@@ -112,33 +108,26 @@ class StatisticsService {
     List<TokenItem> convertedTags = [];
     late bool nft = false;
 
-      for (var element in balance.entries) {
-        if (element.key == tokenContractKeyName ) {
-          nft = true;
-        }
-        element.value.forEach((k,v) {
-          final double myBalance;
-          if (nft) {
-            myBalance = v.toDouble();
-          } else {
-            final ethBalancePrecise = v.toDouble() / pow(10, 18);
-            myBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
-          }
-          convertedTags.add(
-              TokenItem(collection: true, name: k.toString(), balance: myBalance, nft: nft)
-          );
-        });
+    for (var element in balance.entries) {
+      if (element.key == tokenContractKeyName) {
+        nft = true;
       }
+      element.value.forEach((k, v) {
+        final double myBalance;
+        if (nft) {
+          myBalance = v.toDouble();
+        } else {
+          final ethBalancePrecise = v.toDouble() / pow(10, 18);
+          myBalance = (((ethBalancePrecise * 10000).floor()) / 10000).toDouble();
+        }
+        convertedTags.add(TokenItem(collection: true, name: k.toString(), balance: myBalance, nft: nft));
+      });
+    }
     return convertedTags;
   }
 
-
   Future<Map<String, Map<String, BigInt>>> getTokenBalances(
-        Map<String, EthereumAddress> tokenContracts, 
-        List<EthereumAddress> addresses, 
-        int chainId,
-        tasksServices
-      ) async {
+      Map<String, EthereumAddress> tokenContracts, List<EthereumAddress> addresses, int chainId, tasksServices) async {
     Map<String, Map<String, BigInt>> balances = {};
     for (final key in tokenContracts.keys) {
       if (tokenContracts[key] == zeroAddress) {
@@ -153,15 +142,15 @@ class StatisticsService {
         //   balances[i][idx] = weiBalance;
         // }
       } else {
-        var ierc165 = IERC165(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId );
+        var ierc165 = IERC165(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId);
         //check if ERC-1155
         var erc1155InterfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
         var erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
         var erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
         bool resultIerc = await ierc165.supportsInterface(Uint8List.fromList(erc1155InterfaceID));
         if (resultIerc == true) {
-          var ierc1155 = IERC1155(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId );
-          var tokenDataFacet = TokenDataFacet(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId );
+          var ierc1155 = IERC1155(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId);
+          var tokenDataFacet = TokenDataFacet(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId);
           for (int i = 0; i < addresses.length; i++) {
             final List<BigInt> tokenIds = await tokenDataFacet.getTokenIds(addresses[i]);
             final List<String> tokenNames = await tokenDataFacet.getTokenNames(addresses[i]);
@@ -185,12 +174,12 @@ class StatisticsService {
             }
           }
         } else if (await ierc165.supportsInterface(Uint8List.fromList(erc20InterfaceID)) == true) {
-          var ierc20 = IERC20(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: WalletService.chainId );
+          var ierc20 = IERC20(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: WalletService.chainId);
           for (int idx = 0; idx < addresses.length; idx++) {
             // balances[i][idx] = await ierc20.balanceOf(addresses[i]);
           }
         } else if (await ierc165.supportsInterface(Uint8List.fromList(erc721InterfaceID)) == true) {
-          var ierc721 = IERC721(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: WalletService.chainId );
+          var ierc721 = IERC721(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: WalletService.chainId);
           for (int idx = 0; idx < addresses.length; idx++) {
             // balances[i][idx] = await ierc721.balanceOf(addresses[i]);
           }
@@ -201,5 +190,3 @@ class StatisticsService {
     return balances;
   }
 }
-
-
