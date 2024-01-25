@@ -8,6 +8,7 @@ import 'package:webthree/credentials.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
+import '../wallet/model_view/wallet_model.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/wallet_action_dialog.dart';
 import 'collection_services.dart';
@@ -29,7 +30,7 @@ class NftMint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    var searchServices = Provider.of<SearchServices>(context, listen: false);
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var collectionServices = context.watch<CollectionServices>();
     final String collectionName = item.name;
 
@@ -103,8 +104,8 @@ class NftMint extends StatelessWidget {
                                       //       }
                                       //     : null,
                                       onPressed: () async {
-                                        if (tasksServices.publicAddress != null) {
-                                          final List<EthereumAddress> address = [tasksServices.publicAddress!];
+                                        if (listenWalletAddress != null) {
+                                          final List<EthereumAddress> address = [listenWalletAddress!];
                                           final List<BigInt> quantities = [BigInt.from(1)];
 
                                           showDialog(
@@ -112,7 +113,7 @@ class NftMint extends StatelessWidget {
                                               context: context,
                                               builder: (context) => const WalletActionDialog(
                                                 nanoId: 'mintNonFungible',
-                                                taskName: 'mintNonFungible',
+                                                actionName: 'mintNonFungible',
                                               ));
 
                                           await tasksServices.mintNonFungibleByName(collectionName, address, quantities);

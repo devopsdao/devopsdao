@@ -7,14 +7,13 @@ import 'package:shimmer/shimmer.dart';
 
 import '../blockchain/classes.dart';
 
-import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
-import '../config/flutter_flow_util.dart';
+import '../config/utils/util.dart';
 import '../config/theme.dart';
-import '../config/flutter_flow_util.dart';
-import '../widgets/tags/tags_old.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
 import '../widgets/tags/wrapped_chip.dart';
-import 'delete_item_alert.dart';
+import '../widgets/delete_item_alert.dart';
 
 class TaskItem extends StatefulWidget {
   // final int taskCount;
@@ -40,6 +39,7 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
+    WalletModel walletModel = context.read<WalletModel>();
 
     task = widget.object;
 
@@ -114,7 +114,7 @@ class _TaskItemState extends State<TaskItem> {
     final content = Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        if (tasksServices.roleNfts['governor'] > 0)
+        if (tasksServices.roleNfts['governor'] > 0 && task.taskState == 'new')
           SizedBox(
             width: 50,
             height: 80,
@@ -211,7 +211,8 @@ class _TaskItemState extends State<TaskItem> {
                       for (var e in task.tokenNames[i]) {
                         // if (task.tokenBalances[i]) {}
                         if (task.tokenNames[i].first == 'ETH') {
-                          tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: e.toString()));
+                          final name = walletModel.getNetworkChainCurrency(walletModel.state.chainId ?? WalletService.defaultNetwork);
+                          tags.add(TokenItem(collection: true, nft: false, balance: task.tokenBalances[i], name: name));
                         } else {
                           if (task.tokenBalances[i] == 0) {
                             tags.add(TokenItem(collection: true, nft: true, inactive: true, name: e.toString()));
@@ -251,44 +252,6 @@ class _TaskItemState extends State<TaskItem> {
                         maxLines: 1,
                       ),
                     ),
-                    // Spacer(),
-                    // if (task.tokenBalances[0] != 0)
-                    //   Expanded(
-                    //     flex: 3,
-                    //     child: Text(
-                    //       '${task.tokenBalances[0]} ${tasksServices.chainTicker}',
-                    //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                    //       softWrap: false,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       maxLines: 1,
-                    //       textAlign: TextAlign.end,
-                    //     ),
-                    //   ),
-                    // if (task.tokenValues[0] != 0)
-                    //   Expanded(
-                    //     flex: 3,
-                    //     child: Text(
-                    //       '${task.tokenValues[0]} USDC',
-                    //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                    //       softWrap: false,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       maxLines: 1,
-                    //       textAlign: TextAlign.end,
-                    //     ),
-                    //   ),
-                    // if (task.tokenBalances[0] == 0 && task.tokenBalances[0] == 0)
-                    //   Expanded(
-                    //     flex: 3,
-                    //     child: Text(
-                    //       // 'Has no money',
-                    //       '',
-                    //       style: DodaoTheme.of(context).bodyText2.override(fontFamily: 'Inter', color: DodaoTheme.of(context).secondaryText),
-                    //       softWrap: false,
-                    //       overflow: TextOverflow.ellipsis,
-                    //       maxLines: 1,
-                    //       textAlign: TextAlign.end,
-                    //     ),
-                    //   ),
                   ],
                 ),
               ],
@@ -334,11 +297,6 @@ class _TaskItemState extends State<TaskItem> {
               // child: Icon(Icons.settings),
             ),
           ),
-        // if (task.loadingIndicator == true)
-        //   const Padding(
-        //     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-        //     child: CircularProgressIndicator(),
-        //   ),
       ],
     );
 

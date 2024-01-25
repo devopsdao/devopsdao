@@ -8,6 +8,7 @@ import '../blockchain/classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../task_dialog/beamer.dart';
+import '../wallet/model_view/wallet_model.dart';
 import '../widgets/badgetab.dart';
 import '../widgets/tags/search_services.dart';
 import '../config/theme.dart';
@@ -55,9 +56,10 @@ class _CreateOrMintState extends State<CreateOrMint> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
     var searchServices = context.watch<SearchServices>();
     var collectionServices = context.watch<CollectionServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     collectionExist = collectionServices.mintNftTagSelected.collection;
     collectionExist = widget.item.collection;
@@ -328,7 +330,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                                 context: context,
                                 builder: (context) => const WalletActionDialog(
                                   nanoId: 'createNFT',
-                                  taskName: 'createNFT',
+                                  actionName: 'createNFT',
                                   page: 'create_collection',
                                 )
                               );
@@ -376,8 +378,8 @@ class _CreateOrMintState extends State<CreateOrMint> {
                             //       }
                             //     : null,
                             onPressed: (collectionExist ) ? () {
-                              if (tasksServices.publicAddress != null) {
-                                final List<EthereumAddress> address = [tasksServices.publicAddress!];
+                              if (listenWalletAddress != null) {
+                                final List<EthereumAddress> address = [listenWalletAddress!];
                                 final List<BigInt> quantities = [BigInt.from(1)];
 
                                 showDialog(
@@ -385,7 +387,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
                                     context: context,
                                     builder: (context) => const WalletActionDialog(
                                       nanoId: 'mintNonFungible',
-                                      taskName: 'mintNonFungible',
+                                      actionName: 'mintNonFungible',
                                     )
                                 );
 

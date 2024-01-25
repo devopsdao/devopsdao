@@ -5,13 +5,13 @@ import 'package:dodao/task_dialog/pages/3_selection.dart';
 import 'package:dodao/task_dialog/task_transition_effect.dart';
 import 'package:dodao/task_dialog/widget/participants_list.dart';
 import 'package:dodao/task_dialog/widget/request_audit_alert.dart';
-import 'package:dodao/widgets/payment.dart';
+import 'package:dodao/widgets/value_input/widget/value_input.dart';
 import 'package:dodao/widgets/select_menu.dart';
 import 'package:dodao/task_dialog/buttons.dart';
 import 'package:dodao/task_dialog/states.dart';
 import 'package:dodao/widgets/wallet_action_dialog.dart';
 import 'package:dodao/task_dialog/widget/dialog_button_widget.dart';
-import 'package:dodao/task_dialog/widget/rate_widget.dart';
+import 'package:dodao/task_dialog/pages/1_main/rate_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,7 +26,7 @@ import '../blockchain/task_services.dart';
 import '../widgets/chat/main.dart';
 
 import '../config/theme.dart';
-import '../config/flutter_flow_util.dart';
+import '../config/utils/util.dart';
 
 import 'main.dart';
 import 'shimmer.dart';
@@ -66,7 +66,7 @@ class _TaskDialogBeamerState extends State<TaskDialogBeamer> {
         height: double.infinity,
         // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
-        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress),
+        child: TaskDialogFuture(fromPage: widget.fromPage, taskAddress: widget.taskAddress!),
       )
     );
   }

@@ -1,35 +1,20 @@
-import 'package:animations/animations.dart';
-import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dodao/main.dart';
 import 'package:provider/provider.dart';
-import 'package:rive/rive.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-import '../blockchain/empty_classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../navigation/appbar.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
-import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
-import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
-import '../widgets/search_filter_route.dart';
-import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
-import '../widgets/tags/tag_open_container.dart';
-import '../widgets/tags/tags_old.dart';
-import '../task_item/task_item.dart';
-import '../config/flutter_flow_animations.dart';
-import '../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../widgets/tags/wrapped_chip.dart';
-
-import 'package:beamer/beamer.dart';
 
 import 'package:webthree/credentials.dart';
 
@@ -47,21 +32,6 @@ class _CustomerPageWidgetState extends State<CustomerPageWidget>
 with TickerProviderStateMixin
 {
   List<String> localTagsList = [];
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final colors = [const Color(0xFFF62BAD), const Color(0xFFF75D21)  , const Color(

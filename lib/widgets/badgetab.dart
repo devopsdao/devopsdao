@@ -57,8 +57,8 @@ class _BadgeTabState extends State<BadgeTab> {
                   // curve: Curves.easeInCubic,
                 ),
                 badgeContent: Container(
-                  width: 8,
-                  height: 10,
+                  width: widget.taskCount <= 9 ? 8 : 12,
+                  height: 12,
                   alignment: Alignment.center,
                   child: Text(widget.taskCount.toString(),
                     style: const TextStyle(

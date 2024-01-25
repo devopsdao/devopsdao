@@ -11,6 +11,7 @@ import '../../blockchain/accounts.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/notify_listener.dart';
 import '../../blockchain/task_services.dart';
+import '../../wallet/model_view/wallet_model.dart';
 import '../../widgets/badge-small-colored.dart';
 
 class ParticipantList extends StatefulWidget {
@@ -27,7 +28,6 @@ class ParticipantList extends StatefulWidget {
 
 class _ParticipantListState extends State<ParticipantList> {
   late List participants = [];
-  late String status;
   late double selectedIndex = 1990;
   late Future<Map<String, Account>> futureParticipationList;
 
@@ -46,8 +46,20 @@ class _ParticipantListState extends State<ParticipantList> {
   }
 
   Future<void> getParticipationList() async {
+    var interface = context.read<InterfaceServices>();
     final provider = Provider.of<TasksServices>(context, listen: false);
-    final participationList = provider.getAccountsData(widget.task.participants.cast<EthereumAddress>());
+
+    if (interface.dialogCurrentState['name'] == 'customer-new') {
+      if (widget.task.participants.isNotEmpty) {
+        participants = widget.task.participants;
+      } else {
+        participants = [];
+      }
+    } else if (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
+        interface.dialogCurrentState['name'] == 'performer-audit-requested') {
+      participants = widget.task.auditors;
+    }
+    final participationList = provider.getAccountsData(requestedAccountsList: participants.cast<EthereumAddress>());
     setState((){
       futureParticipationList = participationList;
     });
@@ -56,23 +68,18 @@ class _ParticipantListState extends State<ParticipantList> {
   @override
   Widget build(BuildContext context) {
     var myNotifyListener = context.watch<MyNotifyListener>();
-    var tasksServices = context.read<TasksServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var interface = context.read<InterfaceServices>();
-    // void getParticipantData() async {
-    //   Map<String, Account> list = await tasksServices.getAccountsData(widget.task.participants as List<EthereumAddress>);
-    //   participants = list.values.toList();
-    //   // participants = list.values.toList();
+    // if (interface.dialogCurrentState['name'] == 'customer-new') {
+    //   if (widget.task.participants != null) {
+    //     // getParticipantData();
+    //   } else {
+    //     participants = [];
+    //   }
+    // } else if (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
+    //     interface.dialogCurrentState['name'] == 'performer-audit-requested') {
+    //   participants = widget.task.auditors;
     // }
-    if (interface.dialogCurrentState['name'] == 'customer-new') {
-      if (widget.task.participants != null) {
-        // getParticipantData();
-      } else {
-        participants = [];
-      }
-    } else if (interface.dialogCurrentState['name'] == 'customer-audit-requested' ||
-        interface.dialogCurrentState['name'] == 'performer-audit-requested') {
-      participants = widget.task.auditors;
-    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(4),
@@ -82,7 +89,7 @@ class _ParticipantListState extends State<ParticipantList> {
       child: FutureBuilder(
         future: futureParticipationList,
         builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot)  {
-          if (snapshot. connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               snapshot.error.toString();
               return Text(snapshot.error.toString());
@@ -107,7 +114,7 @@ class _ParticipantListState extends State<ParticipantList> {
                                     TextSpan(
                                       text:
                                       '${list?[index2].walletAddress.toString().substring(0, 5)}...'
-                                      '${list?[index2].walletAddress.toString().substring(tasksServices.publicAddress.toString().length - 5)}',
+                                      '${list?[index2].walletAddress.toString().substring(listenWalletAddress.toString().length - 5)}',
                                     ),
                                   ]
                                   )

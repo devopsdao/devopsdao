@@ -2,14 +2,14 @@ import 'package:provider/provider.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
 
-import '../../account_dialog/widget/dialog_button_widget.dart';
+import '../../account_dialog/widget/widget/dialog_button_widget.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
 import '../../config/theme.dart';
 import '../../pages/performer_page.dart';
 import '../../nft_manager/collection_services.dart';
-import '../my_tools.dart';
+import '../../config/utils/my_tools.dart';
 import 'bottom_item_info.dart';
 import 'wrapped_chip.dart';
 import 'package:flutter/services.dart';

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
+import 'model_view/task_model_view.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
 
@@ -28,6 +29,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
     var emptyClasses = context.read<EmptyClasses>();
+    var taskModelView = context.read<TaskModelView>();
     final Task task = widget.task;
 
     return Container(
@@ -139,7 +141,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
             onTap: () {
               interface.dialogPageNum = interface.dialogCurrentState['pages']['main']; // reset page to *main*
               interface.selectedUser = emptyClasses.emptyAccount; // reset
-              interface.rating = 0.0; // reset rating score
+              taskModelView.onUpdateRatingValue(0.0); // reset rating score
               Navigator.pop(context);
               interface.emptyTaskMessage();
               RouteInformation routeInfo = RouteInformation(location: '/${widget.fromPage}');

@@ -6,7 +6,7 @@ import 'package:webthree/credentials.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
-import '../wallet/main.dart';
+import '../wallet/widgets/main/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags_on_page_open_container.dart';
@@ -183,11 +183,11 @@ class HomeAppBar extends StatelessWidget  implements PreferredSizeWidget  {
         //               builder: (context) => const WalletPageTop(),
         //             );
         //           },
-        //           child: tasksServices.walletConnected && tasksServices.publicAddress != null
+        //           child: tasksServices.walletConnected && listenWalletAddress != null
         //               ? Text(
-        //             '${tasksServices.publicAddress.toString().substring(0, 4)}'
+        //             '${listenWalletAddress.toString().substring(0, 4)}'
         //                 '...'
-        //                 '${tasksServices.publicAddress.toString().substring(tasksServices.publicAddress.toString().length - 4)}',
+        //                 '${listenWalletAddress.toString().substring(listenWalletAddress.toString().length - 4)}',
         //             // textAlign: TextAlign.center,
         //             style: const TextStyle(fontSize: 14, color: Colors.white),
         //           )

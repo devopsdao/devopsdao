@@ -11,6 +11,9 @@ import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../main.dart';
 import '../nft_manager/main.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
+import '../config/utils/platform.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -48,6 +51,7 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     var modelTheme = context.read<ModelTheme>();
+
     return Drawer(
       child: Container(
         color: DodaoTheme.of(context).taskBackgroundColor,
@@ -193,16 +197,17 @@ class _NavDrawerState extends State<NavDrawer> {
 }
 
 class SideBar extends StatelessWidget {
-  const SideBar({
+  SideBar({
     Key? key,
     required SidebarXController controller,
   })  : _controller = controller,
         super(key: key);
+  final _platform = PlatformAndBrowser();
 
   final SidebarXController _controller;
-
   @override
   Widget build(BuildContext context) {
+    final listenWalletConnected = context.select((WalletModel vm) => vm.state.walletConnected);
     var tasksServices = context.watch<TasksServices>();
     var modelTheme = context.read<ModelTheme>();
     return SidebarX(
@@ -343,8 +348,8 @@ class SideBar extends StatelessWidget {
                       onTap: () => launchUrl(Uri.parse('https://docs.dodao.dev/')))),
             if (extended)
               Text(
-                  tasksServices.browserPlatform ??
-                      'v${tasksServices.version}-${tasksServices.buildNumber};\nPlatform: ${tasksServices.platform};\nBrowser: ${tasksServices.browserPlatform}',
+                  _platform.browserPlatform ??
+                      'v${tasksServices.version}-${tasksServices.buildNumber};\nPlatform: ${tasksServices.platform};\nBrowser: ${_platform.browserPlatform}',
                   style: TextStyle(
                     height: 2,
                     fontWeight: FontWeight.bold,
@@ -383,7 +388,7 @@ class SideBar extends StatelessWidget {
             context.beamToNamed('/performer');
           },
         ),
-        if (tasksServices.roleNfts['auditor'] > 0)
+        if (tasksServices.roleNfts['auditor'] > 0 && listenWalletConnected)
           SidebarXItem(
             icon: Icons.engineering_rounded,
             label: 'Auditor',
@@ -391,7 +396,7 @@ class SideBar extends StatelessWidget {
               context.beamToNamed('/auditor');
             },
           ),
-        if (tasksServices.roleNfts['governor'] > 0)
+        if (tasksServices.roleNfts['governor'] > 0 && listenWalletConnected)
           SidebarXItem(
             icon: Icons.engineering_rounded,
             label: 'Accounts',

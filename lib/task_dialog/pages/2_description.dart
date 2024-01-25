@@ -7,7 +7,7 @@ import 'package:webthree/credentials.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
-import '../../config/flutter_flow_util.dart';
+import '../../config/utils/util.dart';
 import '../../config/theme.dart';
 import '../widget/dialog_button_widget.dart';
 import '../widget/request_audit_alert.dart';
@@ -263,7 +263,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
               //     fromPage == 'customer' ||
               //     tasksServices.hardhatDebug == true) &&
               //     (task.taskState == "progress" || task.taskState == "review")
-              //     // && task.contractOwner != tasksServices.publicAddress
+              //     // && task.contractOwner != listenWalletAddress
               // )
 
               if (interface.dialogCurrentState['name'] == 'customer-progress' ||
@@ -276,7 +276,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   child: Row(
                     children: [
                       TaskDialogButton(
-                        inactive: false,
+                        inactive: task.auditors.isNotEmpty ? true : false,
                         buttonName: 'Request audit',
                         buttonColorRequired: Colors.orangeAccent.shade700,
                         callback: () {

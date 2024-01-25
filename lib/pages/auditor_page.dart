@@ -8,14 +8,14 @@ import '../blockchain/task_services.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/model_view/mm_model.dart';
+import '../wallet/services/wallet_service.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
 import '../widgets/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
-import '../widgets/tags/tag_open_container.dart';
-import '../task_item/task_item.dart';
-import '../config/flutter_flow_animations.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
@@ -32,28 +32,8 @@ class AuditorPageWidget extends StatefulWidget {
 }
 
 class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProviderStateMixin {
-  // String _searchKeyword = '';
   int tabIndex = 0;
 
-  // _changeField() {
-  //   setState(() =>_searchKeyword = _searchKeywordController.text);
-  // }
-
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      duration: 1000,
-      delay: 1000,
-      hideBeforeAnimating: false,
-      fadeIn: false, // changed to false(orig from FLOW true)
-      initialState: AnimationState(
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        opacity: 1,
-      ),
-    ),
-  };
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -79,24 +59,16 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       var searchServices = context.read<SearchServices>();
       searchServices.selectTagListOnTasksPages(page: 'auditor', initial: true);
     });
-    // _searchKeywordController.text = '';
-    // _searchKeywordController.addListener(() {_changeField();});
-    startPageLoadAnimations(
-      animationsMap.values.where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
-      this,
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
+    // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
+    final walletService = WalletService();
 
     Map tabs = {
       "requested": 0,
@@ -138,7 +110,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       resetFilters();
     }
 
-    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {}
+    if (listenWalletAddress != null && WalletService.allowedChainId) {}
 
     return Scaffold(
       key: scaffoldKey,
@@ -209,7 +181,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        // padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
         alignment: Alignment.center,
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -263,88 +234,6 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                       ),
                     ],
                   ),
-                  // Row(
-                  //   children: [
-                  //     Container(
-                  //       width: constraints.minWidth - 70,
-                  //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                  //       // decoration: const BoxDecoration(
-                  //       //   // color: Colors.white70,
-                  //       //   // borderRadius: BorderRadius.circular(8),
-                  //       // ),
-                  //       child: TextField(
-                  //         controller: _searchKeywordController,
-                  //         onChanged: (searchKeyword) {
-                  //           // print(tabIndex);
-                  //           if (tabIndex == 0) {
-                  //             tasksServices.runFilter(
-                  //               taskList: tasksServices.tasksAuditPending,
-                  //               enteredKeyword: searchKeyword,
-                  //               tagsMap: searchServices.auditorTagsList
-                  //             );
-                  //           } else if (tabIndex == 1) {
-                  //             tasksServices.runFilter(
-                  //               taskList: tasksServices.tasksAuditApplied,
-                  //               enteredKeyword: searchKeyword,
-                  //               tagsMap: searchServices.auditorTagsList
-                  //             );
-                  //           } else if (tabIndex == 2) {
-                  //             tasksServices.runFilter(
-                  //               taskList: tasksServices.tasksAuditWorkingOn,
-                  //               enteredKeyword: searchKeyword,
-                  //               tagsMap: searchServices.auditorTagsList
-                  //             );
-                  //           } else if (tabIndex == 3) {
-                  //             tasksServices.runFilter(
-                  //               taskList: tasksServices.tasksAuditComplete,
-                  //               enteredKeyword: searchKeyword,
-                  //               tagsMap: searchServices.auditorTagsList
-                  //             );
-                  //           }
-                  //         },
-                  //         decoration: const InputDecoration(
-                  //           hintText: '[Find task by Title...]',
-                  //           hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                  //           labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                  //           labelText: 'Search',
-                  //           suffixIcon: Icon(
-                  //             Icons.search,
-                  //             color: Colors.white,
-                  //           ),
-                  //           enabledBorder: UnderlineInputBorder(
-                  //             borderSide: BorderSide(
-                  //               color: Colors.white,
-                  //               width: 1,
-                  //             ),
-                  //             borderRadius: BorderRadius.only(
-                  //               topLeft: Radius.circular(4.0),
-                  //               topRight: Radius.circular(4.0),
-                  //             ),
-                  //           ),
-                  //           focusedBorder: UnderlineInputBorder(
-                  //             borderSide: BorderSide(
-                  //               color: Colors.white,
-                  //               width: 1,
-                  //             ),
-                  //             borderRadius: BorderRadius.only(
-                  //               topLeft: Radius.circular(4.0),
-                  //               topRight: Radius.circular(4.0),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         style: DodaoTheme.of(context).bodyText1.override(
-                  //               fontFamily: 'Inter',
-                  //               color: Colors.white,
-                  //               lineHeight: 2,
-                  //             ),
-                  //       ),
-                  //     ),
-                  //     TagOpenContainerButton(
-                  //       page: 'auditor',
-                  //       tabIndex: tabIndex,
-                  //     ),
-                  //   ],
-                  // ),
                   Consumer<SearchServices>(builder: (context, model, child) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
@@ -383,7 +272,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
             }),
           ),
         ),
-      ).animated([animationsMap['containerOnPageLoadAnimation']!]),
+      ),
     );
   }
 }
@@ -407,7 +296,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     List objList = tasksServices.filterResults.values.toList();
 
@@ -416,7 +305,7 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
       child: RefreshIndicator(
         onRefresh: () async {
           tasksServices.isLoadingBackground = true;
-          tasksServices.fetchTasksPerformer(tasksServices.publicAddress!);
+          tasksServices.fetchTasksPerformer(listenWalletAddress!);
         },
         child: ListView.builder(
           padding: EdgeInsets.zero,
@@ -424,48 +313,12 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
           itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                child: TaskTransition(
-                  fromPage: 'auditor',
-                  task: tasksServices.filterResults.values.toList()[index],
-                )
-
-                // InkWell(
-                //   onTap: () {
-                //     setState(() {
-                //       // Toggle light when tapped.
-                //     });
-                //     // final taskAddress = tasksServices.filterResults.values
-                //     //     .toList()[index]
-                //     //     .taskAddress;
-                //     // context.beamToNamed('/auditor/$taskAddress');
-                //     // showDialog(
-                //     //     context: context,
-                //     //     builder: (context) {
-                //     //       return StatefulBuilder(builder: (context, setState) {
-                //     //         return TaskInformationDialog(
-                //     //             fromPage: 'auditor', object: objList[index]);
-                //     //       });
-                //     //     });
-                //     // => TaskInformationDialog(fromPage: 'auditor', object: objList[index]),);
-                //
-                //     showDialog(
-                //         context: context,
-                //         builder: (context) {
-                //           interface.mainDialogContext = context;
-                //           return TaskInformationDialog(
-                //             fromPage: 'auditor',
-                //             taskAddress: objList[index].taskAddress,
-                //             shimmerEnabled: false,
-                //           );
-                //         });
-                //     final String taskAddress = tasksServices.filterResults.values.toList()[index].taskAddress;
-                //     RouteInformation routeInfo = RouteInformation(location: '/auditor/$taskAddress');
-                //     Beamer.of(context).updateRouteInformation(routeInfo);
-                //   },
-                //   child: TaskItem(fromPage: 'auditor', object: objList[index]),
-                // ),
-                );
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+              child: TaskTransition(
+                fromPage: 'auditor',
+                task: tasksServices.filterResults.values.toList()[index],
+              )
+            );
           },
         ),
       ),

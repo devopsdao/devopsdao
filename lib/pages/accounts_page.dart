@@ -1,21 +1,17 @@
 import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-import '../account_dialog/account_transition_effect.dart';
-import '../blockchain/accounts.dart';
-import '../blockchain/classes.dart';
-import '../blockchain/interface.dart';
 import '../navigation/appbar.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
-import '../widgets/tags/search_services.dart';
-import '../widgets/tags/wrapped_chip.dart';
-import '../widgets/tags/tag_open_container.dart';
+import '../wallet/model_view/wallet_model.dart';
+import '../wallet/services/wallet_service.dart';
 import '/blockchain/task_services.dart';
-import '/config/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
+
+import 'account_page/main.dart';
 
 class AccountsPage extends StatefulWidget {
   final EthereumAddress? taskAddress;
@@ -31,7 +27,6 @@ class _AccountsPageState extends State<AccountsPage> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late List<EthereumAddress> accountsAddressList;
-  late Map<String, Account> accountsList = {};
 
   @override
   void initState() {
@@ -41,23 +36,8 @@ class _AccountsPageState extends State<AccountsPage> {
         showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'accounts'));
       });
     }
-    getAccountsList();
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   var tasksServices = context.read<TasksServices>();
-    //   accountsAddressList = await tasksServices.getAccountsList();
-    //   accountsList = await tasksServices.getAccountsData(accountsAddressList);
-    // });
   }
 
-  Future<void> getAccountsList() async {
-    final tasksServices = Provider.of<TasksServices>(context, listen: false);
-    accountsList = await tasksServices.getAccountsData(await tasksServices.getAccountsList());
-
-    setState((){
-      accountsList = accountsList;
-
-    });
-  }
 
   @override
   void dispose() {
@@ -70,32 +50,16 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+    // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
+    // final walletService = WalletService();
     bool isFloatButtonVisible = false;
     if (_searchKeywordController.text.isEmpty) {
       tasksServices.resetFilter(taskList: tasksServices.tasksNew, tagsMap: {});
     }
-    if (tasksServices.publicAddress != null && tasksServices.allowedChainId) {
+    if (listenWalletAddress != null && WalletService.allowedChainId) {
       isFloatButtonVisible = true;
     }
-
-    void deleteItem(String id) async {
-      setState(() {
-        deleteItems.add(id);
-      });
-      Future.delayed(const Duration(milliseconds: 350)).whenComplete(() {
-        setState(() {
-          deleteItems.removeWhere((i) => i == id);
-        });
-      });
-    }
-
-    // if (widget.index != null) {
-    //   showDialog(
-    //       context: context,
-    //       builder: (context) => TaskDialogBeamer(index: widget.index!));
-    // }
-    // print('dfs ' + accountsList.values.toList().length.toString());
     return Scaffold(
       key: scaffoldKey,
       drawer: SideBar(controller: SidebarXController(selectedIndex: tasksServices.roleNfts['governor'] > 0 ? 4 : 5, extended: true)),
@@ -115,25 +79,7 @@ class _AccountsPageState extends State<AccountsPage> {
             filterQuality: FilterQuality.medium,
           ),
         ),
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await tasksServices.getAccountsData(await tasksServices.getAccountsList());
-          },
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.vertical,
-            itemCount: accountsList.values.toList().length,
-            itemBuilder: (context, index) {
-              return Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                  child: ClickOnAccountFromIndexedList(
-                    fromPage: 'accounts',
-                    account: accountsList.values.toList()[index],
-                  )
-              );
-            },
-          ),
-        ),
+        child: const AccountsTabs(),
       ),
     );
   }

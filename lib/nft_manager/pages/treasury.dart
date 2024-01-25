@@ -43,15 +43,16 @@ class _TreasuryWidget extends State<TreasuryWidget> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var searchServices = Provider.of<SearchServices>(context, listen: false);
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
-      searchServices.tagSelection(typeSelection: 'treasury', tagName: '', unselectAll: true, tagKey: '');
 
       // final Map<String, dynamic> emptyCollectionMap = simpleTagsMap.map((key, value) => MapEntry(key, 0));
       // tasksServices.collectMyTokens();
-      await tasksServices.collectMyTokens();
       Future.delayed(
-        const Duration(milliseconds: 100), () {
-          searchServices.refreshLists('treasury');
-          searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
+        const Duration(milliseconds: 400), () async {
+        // searchServices.tagSelection(typeSelection: 'treasury', tagName: '', unselectAll: true, tagKey: '');
+
+        await tasksServices.collectMyTokens();
+        searchServices.refreshLists('treasury');
+        searchServices.tagSelection(typeSelection: 'mint', tagName: '', unselectAll: true, tagKey: '');
         }
       );
     });
