@@ -1,5 +1,7 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
@@ -45,6 +47,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
   @override
   void initState() {
     super.initState();
+    preload();
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (widget.taskAddress != null) {
@@ -64,7 +67,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
       searchServices.selectTagListOnTasksPages(page: 'performer', initial: true);
     });
 
-    _controller = TabController(length: 3, vsync: this)
+    _controller = TabController(length: 3, vsync: this, animationDuration: const Duration(milliseconds: 500))
       ..addListener(() {
         setState(() {
           indicatorColor = colors[_controller.index];
@@ -72,11 +75,24 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
       });
     indicatorColor = colors[0];
   }
-
-  @override
-  void dispose() {
-    super.dispose();
+  //
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
+  RiveFile? _file;
+  Future<void> preload() async {
+    rootBundle.load('assets/rive_animations/paw.riv').then(
+          (data) async {
+        // Load the RiveFile from the binary data.
+        setState(() {
+          _file = RiveFile.import(data);
+        });
+      },
+    );
   }
+
+
 
   int tabIndex = 0;
 
@@ -117,8 +133,6 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
     if (searchServices.searchKeywordController.text.isEmpty) {
       resetFilters();
     }
-
-
 
     return Stack(
       children: [
@@ -339,10 +353,10 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
                               child: TabBarView(
                                 physics: const NeverScrollableScrollPhysics(),
                                 controller: _controller,
-                                children: const [
-                                  PawRefreshAndTasksList(pageName: 'performer',),
-                                  PawRefreshAndTasksList(pageName: 'performer',),
-                                  PawRefreshAndTasksList(pageName: 'performer',),
+                                children: [
+                                  PawRefreshAndTasksList(pageName: 'performer', paw: _file,),
+                                  PawRefreshAndTasksList(pageName: 'performer', paw: _file,),
+                                  PawRefreshAndTasksList(pageName: 'performer', paw: _file,),
                                 ],
                               ),
                             ),

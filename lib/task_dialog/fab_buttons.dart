@@ -9,6 +9,7 @@ import 'package:throttling/throttling.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
+import '../config/utils/my_tools.dart';
 import '../wallet/model_view/wallet_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
@@ -34,9 +35,16 @@ class SetsOfFabButtons extends StatelessWidget {
     var taskModelView = context.watch<TaskModelView>();
     final listenAllowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+    bool keyboardOnScreen = false;
 
-    final double buttonWidth = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 120; // Keyboard is here?
-    final double buttonWidthLong = MediaQuery.of(context).viewInsets.bottom == 0 ? 600 : 160; // Keyboard is here?
+    if (MediaQuery.of(context).viewInsets.bottom == 0) {
+      keyboardOnScreen = true;
+    } else {
+      keyboardOnScreen = false;
+    }
+
+    final double buttonWidth = keyboardOnScreen ? 600 : 36; // Keyboard is here?
+    final double buttonWidthLong = keyboardOnScreen ? 600 : 36; // Keyboard is here?
 
     return Builder(builder: (context) {
       // ##################### ACTION BUTTONS PART ######################## //
@@ -51,7 +59,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Participate',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
+          widthSize: buttonWidth + calcTextSize('Participate', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
@@ -76,7 +84,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Start the task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong,
+          widthSize: buttonWidthLong + calcTextSize('Start the task', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
@@ -101,7 +109,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Submit for Review',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong,
+          widthSize: buttonWidthLong  + calcTextSize('Submit for Review', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
@@ -129,7 +137,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Check merge',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong,
+          widthSize: buttonWidthLong + calcTextSize('Check merge', const TextStyle(fontSize: 18)).width,
           callback: () {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
@@ -156,7 +164,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Complete Task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong,
+          widthSize: buttonWidthLong + calcTextSize('Complete Task', const TextStyle(fontSize: 18)).width,
           callback: () async {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
@@ -184,7 +192,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Withdraw & Rate Task',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
+          widthSize: buttonWidthLong + calcTextSize('Withdraw & Rate Task', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(taskModelView.state.rating));
@@ -231,7 +239,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Sign Review & Rate',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong,
+          widthSize: buttonWidthLong + calcTextSize('Sign Review & Rate', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
@@ -257,7 +265,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Withdraw',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
+          widthSize: buttonWidth + calcTextSize('Withdraw', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(0));
@@ -280,7 +288,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: 'Take audit',
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
+          widthSize: buttonWidth + calcTextSize('Take audit', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
@@ -301,7 +309,7 @@ class SetsOfFabButtons extends StatelessWidget {
           expand: true,
           buttonName: interface.dialogCurrentState['mainButtonName'],
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidth,
+          widthSize: buttonWidth + calcTextSize(interface.dialogCurrentState['mainButtonName'], const TextStyle(fontSize: 18)).width,
           callback: () {
             showDialog(context: context, builder: (context) => AuditorDecision(task: task));
           },

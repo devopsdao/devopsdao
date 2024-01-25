@@ -11,7 +11,6 @@ class AccountsChatPage extends StatelessWidget {
   final double innerPaddingWidth;
   final Account account;
 
-
   const AccountsChatPage(
       {Key? key,
         required this.innerPaddingWidth,
@@ -25,7 +24,8 @@ class AccountsChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    var emptyClasses = context.watch<EmptyClasses>();
+    final emptyClasses = EmptyClasses();
+
 
     return Center(
         child: Container(
@@ -44,10 +44,11 @@ class AccountsChatPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(interface.borderRadius),
                     ),
-                    child: ChatWidget(
-                        // account: account,
-                        task: emptyClasses.emptyTask,
-                        tasksServices: tasksServices)),
+                    // child: ChatWidget(
+                    //     // account: account,
+                    //     task: emptyClasses.emptyTask,
+                    //     tasksServices: tasksServices)
+                ),
               )),
         ));
   }

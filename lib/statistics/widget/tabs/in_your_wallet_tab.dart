@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../blockchain/classes.dart';
 import '../../../widgets/tags/wrapped_chip.dart';
-import '../../model_view/statistics_model.dart';
+import '../../model_view/statistics_model_view.dart';
 import '../stat_shimmer.dart';
 
 class InYourWalletTab extends StatelessWidget {

@@ -32,14 +32,6 @@ class StatisticsService {
   EthereumAddress zeroAddress = GetAddresses.zeroAddress;
   static final StreamController<List<TokenItem>> _controller = StreamController<List<TokenItem>>.broadcast();
   Stream<List<TokenItem>> get statisticsTokenItems => _controller.stream.asBroadcastStream();
-  // StatisticsService() {
-  //   print('StatisticsService  test');
-  //   number.listen((s) {
-  //     print('listen');
-  //     print(s);
-  //   });
-  // }
-
 
 
   Future<void> initRequestBalances(int chainId, tasksServices) async {

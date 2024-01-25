@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
+import '../task_dialog/services/task_update_service.dart';
 import '../wallet/services/wallet_service.dart';
 import 'chain_presets/get_addresses.dart';
 import 'abi/TaskCreateFacet.g.dart';
@@ -800,6 +801,11 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
+  final _taskUpdateService = TaskUpdateService();
+  Debouncing mainDebounce = Debouncing(duration: const Duration(seconds: 1));
+  // DateTime monitorTimestamp = DateTime.now();
+  // EthereumAddress lastContractAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
+
   // EthereumAddress lastJobContract;
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
@@ -812,6 +818,20 @@ class TasksServices extends ChangeNotifier {
         await refreshTask(tasks[event.contractAdr]!);
         log.fine('refreshed task: ${tasks[event.contractAdr]!.title}');
         await myBalance();
+
+        mainDebounce.debounce(() {
+          log.fine('debounced initCheckingOpenedTask fired');
+          _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
+        });
+
+        // var duration = DateTime.now().difference(monitorTimestamp);
+        // if (duration.inSeconds > 2 && lastContractAdr != event.contractAdr) {
+        //   _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
+        //   monitorTimestamp = DateTime.now();
+        //   lastContractAdr = event.contractAdr;
+        // } else {
+        //   lastContractAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
+        // }
         notifyListeners();
       } on GetTaskException {
         log.severe('could not get task ${event.contractAdr} from blockchain');

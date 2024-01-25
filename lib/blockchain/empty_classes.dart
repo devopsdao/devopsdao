@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
 import 'accounts.dart';
 
-class EmptyClasses extends ChangeNotifier {
+class EmptyClasses {
   final loadingTask = Task(
       nanoId: '111',
       createTime: DateTime.now(),

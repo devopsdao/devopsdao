@@ -1,6 +1,8 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dodao/main.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/interface.dart';
@@ -43,7 +45,7 @@ with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-
+    preload();
 
 
     if (widget.taskAddress != null) {
@@ -73,6 +75,18 @@ with TickerProviderStateMixin
       });
 
     indicatorColor = colors[0];
+  }
+
+  RiveFile? _file;
+  Future<void> preload() async {
+    rootBundle.load('assets/rive_animations/paw.riv').then(
+          (data) async {
+        // Load the RiveFile from the binary data.
+        setState(() {
+          _file = RiveFile.import(data);
+        });
+      },
+    );
   }
 
   @override
@@ -401,10 +415,10 @@ with TickerProviderStateMixin
                                       child: TabBarView(
                                         physics: const NeverScrollableScrollPhysics(),
                                         controller: _controller,
-                                        children: const [
-                                          PawRefreshAndTasksList(pageName: 'customer',), //new
-                                          PawRefreshAndTasksList(pageName: 'customer',), //agreed
-                                          PawRefreshAndTasksList(pageName: 'customer',), //completed & canceled
+                                        children: [
+                                          PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //new
+                                          PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //agreed
+                                          PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //completed & canceled
                                         ],
                                       ),
                                     ),

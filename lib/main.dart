@@ -1,10 +1,11 @@
 import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
+import 'package:dodao/config/preload_assets.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
 import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
-import 'package:dodao/statistics/model_view/statistics_model.dart';
+import 'package:dodao/statistics/model_view/statistics_model_view.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +33,7 @@ void main() async {
   // createAuthenticator();
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
+  // await PreloadAssets.preload();
   // beamerDelegate.beamToNamed('/tasks/1');
 
   // runApp(MyApp());
@@ -42,7 +44,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => TasksServices()),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
-        ChangeNotifierProvider(create: (context) => EmptyClasses()),
+        // ChangeNotifierProvider(create: (context) => EmptyClasses()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
         ChangeNotifierProvider(create: (context) => MetamaskModel()),

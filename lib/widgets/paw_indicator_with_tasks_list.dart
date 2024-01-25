@@ -1,6 +1,7 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
@@ -14,7 +15,8 @@ import '../wallet/model_view/wallet_model.dart';
 
 class PawRefreshAndTasksList extends StatefulWidget {
   final String pageName;
-  const PawRefreshAndTasksList({Key? key, required this.pageName}) : super(key: key);
+  final RiveFile? paw;
+  const PawRefreshAndTasksList({Key? key, required this.pageName, required this.paw}) : super(key: key);
 
   @override
   PawRefreshAndTasksListState createState() => PawRefreshAndTasksListState();
@@ -29,6 +31,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   @override
   void initState() {
     super.initState();
+    // preload();
     // Future.delayed(const Duration(milliseconds: 300)).then((_) {
     //   indicator.currentState!.refresh( );
     // });
@@ -39,8 +42,11 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
 
   void _onRiveInit(Artboard artboard) {
     final controller = StateMachineController.fromArtboard(artboard, 'State Machine 1');
+    controller!.isActive = false;
     artboard.addController(controller!);
     _bump = controller.findInput<bool>('Trigger 1') as SMITrigger;
+    // _bump?.controller.isActive = false;
+
   }
 
   Future<void> _hitBump() async {
@@ -51,7 +57,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   Widget build(BuildContext context) {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var tasksServices = context.watch<TasksServices>();
-    var emptyClasses = context.read<EmptyClasses>();
+    final emptyClasses = EmptyClasses();
     List objList = tasksServices.filterResults.values.toList();
     late double offsetToArmed = 200;
     return Padding(
@@ -76,6 +82,18 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
               }
             }
             _hitBump();
+          },
+          onStateChanged: (state) {
+            // print(state);
+            if (state == const IndicatorStateChange(IndicatorState.idle, IndicatorState.dragging)) {
+              _bump?.controller.isActive = true;
+            }
+            if (state == const IndicatorStateChange(IndicatorState.dragging, IndicatorState.canceling)) {
+              _bump?.controller.isActive = false;
+            }
+            if (state == const IndicatorStateChange(IndicatorState.finalizing, IndicatorState.idle)) {
+              _bump?.controller.isActive = false;
+            }
           },
           builder: (BuildContext context, Widget child, IndicatorController controller) {
             return AnimatedBuilder(
@@ -111,13 +129,21 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                         width: double.infinity,
                         height: offsetToArmed * controller.value,
                         child: SizedBox(
-                          child: RiveAnimation.asset(
-                            'assets/rive_animations/paw.riv',
+                          child: (widget.paw == null)
+                              ? const SizedBox.shrink()
+                              : RiveAnimation.direct(widget.paw!,
                             fit: BoxFit.fitHeight,
-                            stateMachines: const ['State Machine 1'],
+                            // stateMachines: const ['State Machine 1'],
                             // controllers: [_controller],
-                            onInit: _onRiveInit,
-                          ),
+                            onInit: _onRiveInit,),
+
+                          // RiveAnimation.asset(
+                          //   'assets/rive_animations/paw.riv',
+                          //   fit: BoxFit.fitHeight,
+                          //   stateMachines: const ['State Machine 1'],
+                          //   // controllers: [_controller],
+                          //   onInit: _onRiveInit,
+                          // ),
                         ),
                       ),
                       Transform.translate(

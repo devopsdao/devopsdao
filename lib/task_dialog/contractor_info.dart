@@ -35,7 +35,7 @@ class ContractorInfoState extends State<ContractorInfo> {
   Widget build(BuildContext context) {
     var myNotifyListener = context.watch<MyNotifyListener>();
     var interface = context.read<InterfaceServices>();
-    var emptyClasses = context.read<EmptyClasses>();
+    final emptyClasses = EmptyClasses();
 
 
     return Column(

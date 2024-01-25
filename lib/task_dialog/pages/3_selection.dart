@@ -55,8 +55,7 @@ class _SelectionPageState extends State<SelectionPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    var asdf = context.watch<MyNotifyListener>();
-    var emptyClasses = context.read<EmptyClasses>();
+    final emptyClasses = EmptyClasses();
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
     final double participantPaddingSize = 2.0;
