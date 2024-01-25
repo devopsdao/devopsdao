@@ -50,7 +50,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
       backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.only(top: 5.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 3, bottom: 14),
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: maxStaticInternalDialogWidth,
@@ -65,13 +65,13 @@ class _DescriptionPageState extends State<DescriptionPage> {
                     child: Column(
                       children: [
                         ConstrainedBox(
-                          constraints: BoxConstraints(maxHeight: widget.screenHeightSizeNoKeyboard - 220, minHeight: 40),
+                          constraints: BoxConstraints(maxHeight: widget.screenHeightSizeNoKeyboard - 234, minHeight: 40),
                           child: SingleChildScrollView(
                             child: Container(
                                 padding: const EdgeInsets.all(8.0),
                                 // height: MediaQuery.of(context).size.width * .08,
                                 // width: MediaQuery.of(context).size.width * .57
-                                width: innerPaddingWidth,
+                                // width: innerPaddingWidth,
                                 // decoration: materialMainBoxDecoration,
                                 child: Container(
                                     padding: const EdgeInsets.all(6),
@@ -108,7 +108,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                           padding: const EdgeInsets.all(12.0),
                           // height: MediaQuery.of(context).size.width * .08,
                           // width: MediaQuery.of(context).size.width * .57
-                          width: innerPaddingWidth,
+                          // width: innerPaddingWidth,
                           decoration: materialMainBoxDecoration,
                           child: ListBody(children: <Widget>[
                             GestureDetector(
@@ -272,7 +272,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   tasksServices.hardhatDebug == true)
                 Container(
                   padding: const EdgeInsets.fromLTRB(0.0, 14.0, 0.0, 16.0),
-                  width: innerPaddingWidth + 8,
+                  // width: innerPaddingWidth + 8,
                   child: Row(
                     children: [
                       TaskDialogButton(

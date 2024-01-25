@@ -215,8 +215,12 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
 
     return LayoutBuilder(builder: (context, constraints) {
       // ****** Count Screen size with keyboard and without ***** ///
+      // final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+      // final double screenHeightSizeNoKeyboard = constraints.maxHeight;
+      // final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+
       final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-      final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
+      final double screenHeightSizeNoKeyboard = constraints.maxHeight;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
       return Container(
@@ -235,7 +239,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
             fromPage: fromPage,
           ),
           SizedBox(
-            height: screenHeightSize - statusBarHeight,
+            height: screenHeightSizeNoKeyboard - 58 -statusBarHeight,
             width: interface.maxStaticDialogWidth,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 350),
