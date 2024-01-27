@@ -73,7 +73,79 @@
         "type": "address"
       }
     ],
+    "name": "addAgreedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addAuditAgreedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addAuditCompletedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
     "name": "addAuditParticipantTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCompetedTask",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -208,6 +280,26 @@
           {
             "internalType": "address[]",
             "name": "auditParticipantTasks",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "agreedTasks",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "auditAgreedTasks",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "completedTasks",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "auditCompletedTasks",
             "type": "address[]"
           },
           {
