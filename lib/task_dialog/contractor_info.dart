@@ -37,7 +37,6 @@ class ContractorInfoState extends State<ContractorInfo> {
     var interface = context.read<InterfaceServices>();
     final emptyClasses = EmptyClasses();
 
-
     return Column(
       children: [
         Row(
@@ -45,7 +44,7 @@ class ContractorInfoState extends State<ContractorInfo> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
-              width: 20,
+              width: 40,
             ),
             RichText(
                 maxLines: 10,
@@ -61,7 +60,7 @@ class ContractorInfoState extends State<ContractorInfo> {
                   myNotifyListener.myNotifyListeners();
                 });
               },
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               child: Container(
                 padding: const EdgeInsets.all(0.0),
                 height: 18,
@@ -84,19 +83,19 @@ class ContractorInfoState extends State<ContractorInfo> {
           children: [
             Container(
               // padding: const EdgeInsets.only(right: 14),
-              width: 100,
-              height: 100,
+              width: 80,
+              height: 80,
               decoration: BoxDecoration(
                 image: const DecorationImage(
                   image: AssetImage("assets/images/logo.png"),
-                  fit: BoxFit.scaleDown,
+                  // fit: BoxFit.scaleDown,
                   alignment: Alignment.bottomRight,
                 ),
                 borderRadius: DodaoTheme.of(context).borderRadius,
               ),
             ),
             Container(
-              width: 14,
+              width: 3,
             ),
             Flexible(
               child: Row(
