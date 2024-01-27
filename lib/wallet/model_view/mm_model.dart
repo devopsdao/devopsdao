@@ -140,7 +140,9 @@ class MetamaskModel extends ChangeNotifier {
     int chainId = resultData['chainId'];
     EthereumAddress publicAddress = resultData['public_address'];
 
-    if (await _mmServices.checkAllowedChainId(chainId, tasksServices)) {
+    if (await _mmServices.checkAllowedChainId(chainId, tasksServices)
+        && chainId == _state.selectedChainIdOnMMApp
+    ) {
       await walletModel.onWalletUpdate(
         connectionState: true,
         walletType: WalletSelected.metamask,

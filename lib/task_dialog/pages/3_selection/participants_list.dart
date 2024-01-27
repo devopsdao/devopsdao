@@ -142,7 +142,7 @@ class _ParticipantListState extends State<ParticipantList> {
                               ),
                               // Padding(
                               //   padding: const EdgeInsets.all(2.0),
-                              //   child: BadgeSmallColored(count: list[index2].customerTasks.length, color: Colors.lightBlue,),
+                              //   child: BadgeSmallColored(count: list[index2]..length, color: Colors.greenAccent.shade700,),
                               // ),
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
