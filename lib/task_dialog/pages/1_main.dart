@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_limiter/rate_limiter.dart';
+import 'package:throttling/throttling.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webthree/credentials.dart';
 
@@ -543,7 +545,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           obscureText: false,
                           onTapOutside: (test) {
                             FocusScope.of(context).unfocus();
-                            interface.taskMessage = messageForStateController!.text;
+                            // interface.taskMessage = messageForStateController!.text;
                           },
                           onTap: () {
                             Future.delayed(const Duration(milliseconds: 700), () {
@@ -554,7 +556,21 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               );
                             });
                           },
-
+                          keyboardType: TextInputType.multiline,
+                          onChanged: (text) {
+                            interface.taskMessage = messageForStateController!.text;
+                            Debouncing(duration: const Duration(milliseconds: 200)).debounce(() {
+                              scrollController.animateTo(
+                                scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 700),
+                                curve: Curves.fastOutSlowIn,
+                              );
+                              // tasksServices.myNotifyListeners();
+                            });
+                            // debounceNotifyListener.debounce(() {
+                            //   tasksServices.myNotifyListeners();
+                            // });
+                          },
                           decoration: InputDecoration(
                             // suffixIcon: interface.dialogCurrentState['pages']['chat'] != null ? IconButton(
                             //   onPressed: () {
@@ -581,8 +597,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                             ),
                           ),
                           style: Theme.of(context).textTheme.bodyMedium,
-                          minLines: 1,
-                          maxLines: 4,
+                          minLines: 2,
+                          maxLines: 5,
                         ),
                       ),
                     ),

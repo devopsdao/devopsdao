@@ -18,7 +18,7 @@ import '../../widgets/badge-small-colored.dart';
 import '../../config/utils/my_tools.dart';
 import '../../widgets/wallet_action_dialog.dart';
 import '../contractor_info.dart';
-import '../widget/participants_list.dart';
+import '3_selection/participants_list.dart';
 
 class SelectionPage extends StatefulWidget {
   final double screenHeightSize;
@@ -55,6 +55,7 @@ class _SelectionPageState extends State<SelectionPage> {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
+    var myNotifyListener = context.watch<MyNotifyListener>();
     final emptyClasses = EmptyClasses();
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
@@ -122,13 +123,13 @@ class _SelectionPageState extends State<SelectionPage> {
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
       body: Center(
         child: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.only(top: 5.0),
-          width: innerPaddingWidth,
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 3, bottom: 14),
+          // width: innerPaddingWidth,
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: interface.maxStaticInternalDialogWidth,
@@ -192,7 +193,7 @@ class _SelectionPageState extends State<SelectionPage> {
                         // color: Colors.amber,
                         duration: const Duration(milliseconds: 150),
                         height: accountSelected ? participantInfoHeight : 0,
-                        width: accountSelected ? widget.innerPaddingWidth : 0,
+                        // width: accountSelected ? widget.innerPaddingWidth : 0,
                         child: Container(
                           alignment: Alignment.center,
                           child: ExpandInformation(
@@ -231,7 +232,7 @@ class _SelectionPageState extends State<SelectionPage> {
       floatingActionButtonAnimator: NoScalingAnimation(),
       floatingActionButton: Padding(
         // padding: keyboardSize == 0 ? const EdgeInsets.only(left: 40.0, right: 28.0) : const EdgeInsets.only(right: 14.0),
-        padding: const EdgeInsets.only(right: 13, left: 46),
+        padding: const EdgeInsets.only(right: 4, left: 37),
         child: TaskDialogFAB(
           inactive: interface.selectedUser.walletAddress == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') ? true : false,
           expand: true,

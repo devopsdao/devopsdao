@@ -437,7 +437,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
               splitScreen = true;
             }
             return Padding(
-              padding: const EdgeInsets.only(right: 13, left: 46),
+              padding: const EdgeInsets.only(right: 4, left: 37),
               // AnimatedCOntainer needs to show button 'Apply' over Tag Info:
               child: AnimatedContainer(
                 padding: EdgeInsets.only(bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0) ? 300.0 : 0),

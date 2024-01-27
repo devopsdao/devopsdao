@@ -71,7 +71,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 // height: MediaQuery.of(context).size.width * .08,
                                 // width: MediaQuery.of(context).size.width * .57
-                                // width: innerPaddingWidth,
+                                width: double.infinity,
                                 // decoration: materialMainBoxDecoration,
                                 child: Container(
                                     padding: const EdgeInsets.all(6),

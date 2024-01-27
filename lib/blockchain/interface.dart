@@ -110,7 +110,7 @@ class InterfaceServices extends ChangeNotifier {
       customerRating: []);
   // participants_list.dart & 3_selection.dart & auditor
   final double tileHeight = 36;
-  final double participantInfoHeight = 165;
+  final double participantInfoHeight = 145;
 
   // Input text on accounts_page.dart
   late String taskMessage = '';
