@@ -107,10 +107,10 @@ class InterfaceServices extends ChangeNotifier {
       participantTasks: [],
       auditParticipantTasks: [],
       performerRating: [],
-      customerRating: []);
+      customerRating: [], agreedTasks: [], auditAgreed: [], completedTasks: []);
   // participants_list.dart & 3_selection.dart & auditor
   final double tileHeight = 36;
-  final double participantInfoHeight = 145;
+  final double participantInfoHeight = 165;
 
   // Input text on accounts_page.dart
   late String taskMessage = '';

@@ -37,6 +37,26 @@ class ContractorInfoState extends State<ContractorInfo> {
     var interface = context.read<InterfaceServices>();
     final emptyClasses = EmptyClasses();
 
+    double customerRating = 0.0;
+    BigInt tmpCustomerRating = BigInt.from(0);
+
+    for (int i = 0; i < interface.selectedUser.customerRating.length; i++) {
+      tmpCustomerRating += interface.selectedUser.customerRating[i];
+    }
+    if (tmpCustomerRating != BigInt.from(0)) {
+      customerRating = tmpCustomerRating.toDouble() / interface.selectedUser.customerRating.length;
+    }
+
+    double performerRating = 0.0;
+    BigInt tmpPerformerRating = BigInt.from(0);
+    for (int i = 0; i < interface.selectedUser.performerRating.length; i++) {
+      tmpPerformerRating += interface.selectedUser.performerRating[i];
+    }
+    if (tmpPerformerRating != BigInt.from(0)) {
+      performerRating = tmpPerformerRating.toDouble() / interface.selectedUser.performerRating.length;
+    }
+
+
     return Column(
       children: [
         Row(
@@ -124,10 +144,13 @@ class ContractorInfoState extends State<ContractorInfo> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(participantPaddingSize),
-                            child: BadgeSmallColored(count: interface.selectedUser.participantTasks.length, color: Colors.amber,),
+                            child: BadgeSmallColored(
+                              count: interface.selectedUser.agreedTasks.length -
+                                  interface.selectedUser.completedTasks.length,
+                              color: Colors.amber,),
                           ),
                           Text(
-                            'Participated',
+                            'Now working',
                             style: DodaoTheme.of(context).bodyText3,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -139,56 +162,90 @@ class ContractorInfoState extends State<ContractorInfo> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(participantPaddingSize),
-                            child: BadgeSmallColored(count: interface.selectedUser.auditParticipantTasks.length, color: Colors.redAccent,),
+                            child: BadgeSmallColored(count: interface.selectedUser.completedTasks.length, color: Colors.greenAccent.shade700,),
                           ),
                           Text(
-                            'Audit requested',
+                            'Completed',
                             style: DodaoTheme.of(context).bodyText3,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
+
                         ],
                       ),
                     ],
                   ),
                   const Spacer(),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(participantPaddingSize),
-                            child: BadgeSmallColored(count: interface.selectedUser.customerRating.length, color: Colors.deepPurpleAccent,),
-                          ),
-                          Text(
-                            'Customer rating',
-                            style: DodaoTheme.of(context).bodyText3,
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(participantPaddingSize),
+                              child: BadgeSmallColored(count: interface.selectedUser.participantTasks.length, color: Colors.yellow,),
+                            ),
+                            Text(
+                              'Participated',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(participantPaddingSize),
+                              child: BadgeSmallColored(count: interface.selectedUser.auditParticipantTasks.length, color: Colors.redAccent,),
+                            ),
+                            Text(
+                              'Audit requested',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
 
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(participantPaddingSize),
-                            child: BadgeSmallColored(count:interface.selectedUser.performerRating.length, color: Colors.deepPurple,),
-                          ),
-                          Text(
-                            'Performer rating',
-                            style: DodaoTheme.of(context).bodyText3,
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(participantPaddingSize),
+                              child: BadgeSmallRatingColored(count: customerRating, color: Colors.deepPurpleAccent,),
+                            ),
+                            Text(
+                              'Customer rating',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
 
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(participantPaddingSize),
+                              child: BadgeSmallRatingColored(count: performerRating, color: Colors.deepPurple,),
+                            ),
+                            Text(
+                              'Performer rating',
+                              style: DodaoTheme.of(context).bodyText3,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                 ],
@@ -196,13 +253,22 @@ class ContractorInfoState extends State<ContractorInfo> {
             )
           ],
         ),
-        RichText(
-            maxLines: 10,
-            softWrap: true,
-            text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-              TextSpan(text: '${interface.selectedUser.walletAddress}', style: Theme.of(context).textTheme.bodySmall),
-            ])
-        )
+        SizedBox(height: 3,),
+        Text(
+          '${interface.selectedUser.walletAddress}',
+          style: DodaoTheme.of(context).bodyText3,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+        // RichText(
+        //     maxLines: 1,
+        //     softWrap: true,
+        //
+        //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+        //       TextSpan(text: '${interface.selectedUser.walletAddress}', style: Theme.of(context).textTheme.bodySmall),
+        //     ])
+        // )
       ],
     );
   }

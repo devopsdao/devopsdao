@@ -138,12 +138,16 @@ class _ParticipantListState extends State<ParticipantList> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
+                                child: BadgeSmallColored(count: list[index2].agreedTasks.length - list[index2].completedTasks.length, color: Colors.yellow.shade700,),
                               ),
                               // Padding(
                               //   padding: const EdgeInsets.all(2.0),
-                              //   child: BadgeSmallColored(count: list[index2]..length, color: Colors.greenAccent.shade700,),
+                              //   child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
                               // ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].completedTasks.length , color: Colors.greenAccent.shade700,),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
                                 child: BadgeSmallColored(count: list[index2].auditParticipantTasks.length, color: Colors.redAccent.shade400,),

@@ -1826,8 +1826,14 @@ class TasksServices extends ChangeNotifier {
           customerTasks: accountData[3].cast<EthereumAddress>(),
           participantTasks: accountData[4].cast<EthereumAddress>(),
           auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
-          customerRating: accountData[6].cast<int>(),
-          performerRating: accountData[7].cast<int>());
+          customerRating: accountData[6].cast<BigInt>(),
+          performerRating: accountData[7].cast<BigInt>(),
+
+          agreedTasks: accountData[3].cast<EthereumAddress>(),
+          auditAgreed: accountData[3].cast<EthereumAddress>(),
+          completedTasks: accountData[3].cast<EthereumAddress>(),
+      );
+
     }
     notifyListeners();
     return myAccountsData;
