@@ -185,30 +185,32 @@ class PendingTab extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                direction: Axis.horizontal,
-                children: tags.map((e) {
+              child: SingleChildScrollView(
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  direction: Axis.horizontal,
+                  children: tags.map((e) {
 
 
-                  return HomeWrappedChip(
-                    key: ValueKey(e),
-                    item: MapEntry(
-                        e.name,
-                        NftCollection(
-                          selected: e.selected,
-                          name: e.name,
-                          bunch: {
-                            BigInt.from(e.balance):
-                            TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
-                          },
-                        )),
-                    nft: e.nft,
-                    balance: e.balance,
-                    completed: e.selected,
-                    type: e.type!,
-                  );
-                }).toList(),
+                    return HomeWrappedChip(
+                      key: ValueKey(e),
+                      item: MapEntry(
+                          e.name,
+                          NftCollection(
+                            selected: e.selected,
+                            name: e.name,
+                            bunch: {
+                              BigInt.from(e.balance):
+                              TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                            },
+                          )),
+                      nft: e.nft,
+                      balance: e.balance,
+                      completed: e.selected,
+                      type: e.type!,
+                    );
+                  }).toList(),
+                ),
               ),
             );
           }

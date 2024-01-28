@@ -22,28 +22,30 @@ class InYourWalletTab extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: listenTags.isNotEmpty ? Padding(
           padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
-          child: Wrap(
-            alignment: WrapAlignment.start,
-            direction: Axis.horizontal,
-            children: listenTags.map((e) {
-              return HomeWrappedChip(
-                key: ValueKey(e),
-                item: MapEntry(
-                    e.name,
-                    NftCollection(
-                      selected: false,
-                      name: e.name,
-                      bunch: {
-                        BigInt.from(e.balance):
-                        TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true, type: 'myNft')
-                      },
-                    )),
-                nft: e.nft,
-                balance: e.balance,
-                completed: e.selected,
-                type: e.type!,
-              );
-            }).toList(),
+          child: SingleChildScrollView(
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              direction: Axis.horizontal,
+              children: listenTags.map((e) {
+                return HomeWrappedChip(
+                  key: ValueKey(e),
+                  item: MapEntry(
+                      e.name,
+                      NftCollection(
+                        selected: false,
+                        name: e.name,
+                        bunch: {
+                          BigInt.from(e.balance):
+                          TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true, type: 'myNft')
+                        },
+                      )),
+                  nft: e.nft,
+                  balance: e.balance,
+                  completed: e.selected,
+                  type: e.type!,
+                );
+              }).toList(),
+            ),
           ),
         )
             : const StatisticsChipShimmer()
