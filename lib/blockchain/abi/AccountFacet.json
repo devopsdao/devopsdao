@@ -145,7 +145,7 @@
         "type": "address"
       }
     ],
-    "name": "addCompetedTask",
+    "name": "addCompletedTask",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
