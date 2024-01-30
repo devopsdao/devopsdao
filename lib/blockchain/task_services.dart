@@ -406,20 +406,22 @@ class TasksServices extends ChangeNotifier {
 
     // await walletConnectClient?.initSession();
 
-    web3client = Web3Client(
-      _rpcUrl,
-      http.Client(),
-      socketConnector: () {
-        if (_wsUrl.length > 0) {
+    if (_wsUrl.length > 0) {
+      web3client = Web3Client(
+        _rpcUrl,
+        http.Client(),
+        socketConnector: () {
           if (platform == 'web') {
             final uri = Uri.parse(_wsUrl);
             return WebSocketChannel.connect(uri).cast<String>();
           } else {
             return IOWebSocketChannel.connect(_wsUrl).cast<String>();
           }
-        }
-      },
-    );
+        },
+      );
+    } else {
+      web3client = Web3Client(_rpcUrl, http.Client(), socketConnector: null);
+    }
     // templorary fix:
     if (hardhatLive == false) {
       web3clientAxelar = Web3Client(
