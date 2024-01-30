@@ -260,8 +260,18 @@ class SetsOfFabButtons extends StatelessWidget {
         );
       }
       else if (task.taskState == 'canceled' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
+        bool inactiveResult = true;
+        if (task.tokenBalances.isEmpty) {
+          inactiveResult = false;
+        } else {
+          for (var tokenBalances in task.tokenBalances) {
+            if (tokenBalances > 0) {
+              inactiveResult = false;
+            }
+          }
+        }
         return TaskDialogFAB(
-          inactive: taskModelView.onShowRateStars(task),
+          inactive: inactiveResult,
           expand: true,
           buttonName: 'Withdraw',
           buttonColorRequired: Colors.lightBlue.shade300,
