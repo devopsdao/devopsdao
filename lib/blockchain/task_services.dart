@@ -351,7 +351,7 @@ class TasksServices extends ChangeNotifier {
     } else if (chainId == 64165) {
       chainTicker = 'FTM';
       _rpcUrl = 'https://rpc.sonic.fantom.network';
-      _wsUrl = 'wss://rpc.sonic.fantom.network';
+      _wsUrl = '';
     } else if (chainId == 80001) {
       chainTicker = 'MATIC';
       _rpcUrl = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -410,11 +410,13 @@ class TasksServices extends ChangeNotifier {
       _rpcUrl,
       http.Client(),
       socketConnector: () {
-        if (platform == 'web') {
-          final uri = Uri.parse(_wsUrl);
-          return WebSocketChannel.connect(uri).cast<String>();
-        } else {
-          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        if (_wsUrl.length > 0) {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrl);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+          }
         }
       },
     );
@@ -1820,20 +1822,18 @@ class TasksServices extends ChangeNotifier {
     late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
       myAccountsData[accountData[0].toString()] = Account(
-          walletAddress: accountData[0],
-          nickName: accountData[1].toString(),
-          about: accountData[2].toString(),
-          customerTasks: accountData[3].cast<EthereumAddress>(),
-          participantTasks: accountData[4].cast<EthereumAddress>(),
-          auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
-          customerRating: accountData[6].cast<BigInt>(),
-          performerRating: accountData[7].cast<BigInt>(),
-
-          agreedTasks: accountData[3].cast<EthereumAddress>(),
-          auditAgreed: accountData[3].cast<EthereumAddress>(),
-          completedTasks: accountData[3].cast<EthereumAddress>(),
+        walletAddress: accountData[0],
+        nickName: accountData[1].toString(),
+        about: accountData[2].toString(),
+        customerTasks: accountData[3].cast<EthereumAddress>(),
+        participantTasks: accountData[4].cast<EthereumAddress>(),
+        auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
+        customerRating: accountData[6].cast<BigInt>(),
+        performerRating: accountData[7].cast<BigInt>(),
+        agreedTasks: accountData[3].cast<EthereumAddress>(),
+        auditAgreed: accountData[3].cast<EthereumAddress>(),
+        completedTasks: accountData[3].cast<EthereumAddress>(),
       );
-
     }
     notifyListeners();
     return myAccountsData;
