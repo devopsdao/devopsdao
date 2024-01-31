@@ -64,7 +64,7 @@ class SetsOfFabButtons extends StatelessWidget {
             task.loadingIndicator = true;
             /// need to be finished
             String message = '[performer application] ${interface.taskMessage}';
-            tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+            tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: message);
             Navigator.pop(context);
             interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/tasks');
