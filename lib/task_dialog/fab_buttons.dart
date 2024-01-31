@@ -63,7 +63,7 @@ class SetsOfFabButtons extends StatelessWidget {
           callback: () {
             task.loadingIndicator = true;
             /// need to be finished
-            String message = '[] ${interface.taskMessage}';
+            String message = '[performer application] ${interface.taskMessage}';
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -90,7 +90,6 @@ class SetsOfFabButtons extends StatelessWidget {
           callback: () {
             task.loadingIndicator = true;
 
-            /// not finished
             String message = '[in progress] ${interface.taskMessage}';
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
                 message: message);
@@ -309,7 +308,7 @@ class SetsOfFabButtons extends StatelessWidget {
           callback: () {
             task.loadingIndicator = true;
             /// need to be finished:
-            String message = '[] ${interface.taskMessage}';
+            String message = '[auditor application] ${interface.taskMessage}';
             tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId, message: message);
             Navigator.pop(context);
             interface.emptyTaskMessage();
