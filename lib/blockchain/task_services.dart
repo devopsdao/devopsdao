@@ -988,6 +988,17 @@ class TasksServices extends ChangeNotifier {
         filterResults = Map.from(filterResultsSearch);
       }
     }
+    //sort by createTime desc
+    final sortedFilterResultsList = filterResults.values.toList().map((task) => (task)).toList()
+      ..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    Map<EthereumAddress, Task> sortedFilterResults = {};
+    for (Task task in sortedFilterResultsList) {
+      sortedFilterResults[task.taskAddress] = task;
+    }
+
+    filterResults = sortedFilterResults;
+
     notifyListeners();
   }
 
@@ -1015,6 +1026,16 @@ class TasksServices extends ChangeNotifier {
     } else {
       filterResults = Map.from(taskList);
     }
+    //sort by createTime desc
+    final sortedFilterResultsList = filterResults.values.toList().map((task) => (task)).toList()
+      ..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    Map<EthereumAddress, Task> sortedFilterResults = {};
+    for (Task task in sortedFilterResultsList) {
+      sortedFilterResults[task.taskAddress] = task;
+    }
+
+    filterResults = sortedFilterResults;
   }
 
   // late bool loopRunning = false;
