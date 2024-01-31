@@ -351,7 +351,7 @@ class TasksServices extends ChangeNotifier {
     } else if (chainId == 64165) {
       chainTicker = 'FTM';
       _rpcUrl = 'https://rpc.sonic.fantom.network';
-      _wsUrl = '';
+      _wsUrl = 'wss://rpc.sonic.fantom.network';
     } else if (chainId == 80001) {
       chainTicker = 'MATIC';
       _rpcUrl = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -406,22 +406,36 @@ class TasksServices extends ChangeNotifier {
 
     // await walletConnectClient?.initSession();
 
-    if (_wsUrl.length > 0) {
-      web3client = Web3Client(
-        _rpcUrl,
-        http.Client(),
-        socketConnector: () {
-          if (platform == 'web') {
-            final uri = Uri.parse(_wsUrl);
-            return WebSocketChannel.connect(uri).cast<String>();
-          } else {
-            return IOWebSocketChannel.connect(_wsUrl).cast<String>();
-          }
-        },
-      );
-    } else {
-      web3client = Web3Client(_rpcUrl, http.Client(), socketConnector: null);
-    }
+    web3client = Web3Client(
+      _rpcUrl,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(_wsUrl);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+        }
+      },
+    );
+
+    // if (_wsUrl.length > 0) {
+    //   web3client = Web3Client(
+    //     _rpcUrl,
+    //     http.Client(),
+    //     socketConnector: () {
+    //       if (platform == 'web') {
+    //         final uri = Uri.parse(_wsUrl);
+    //         return WebSocketChannel.connect(uri).cast<String>();
+    //       } else {
+    //         return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+    //       }
+    //     },
+    //   );
+    // } else {
+    //   web3client = Web3Client(_rpcUrl, http.Client(), socketConnector: null);
+    // }
+
     // templorary fix:
     if (hardhatLive == false) {
       web3clientAxelar = Web3Client(
@@ -1593,7 +1607,20 @@ class TasksServices extends ChangeNotifier {
 
     //combine all batches of tasks to one map
     tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
-    return tasks;
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    //sort by createTime desc
+    final sortedTasksList = tasks.values.toList().map((task) => (task)).toList()..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    Map<EthereumAddress, Task> sortedTasks = {};
+    for (Task task in sortedTasksList) {
+      sortedTasks[task.taskAddress] = task;
+    }
+
+    return sortedTasks;
   }
 
   Future<void> refreshTasksForAccount(EthereumAddress address) async {
