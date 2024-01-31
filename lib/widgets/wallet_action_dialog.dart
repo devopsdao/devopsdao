@@ -10,6 +10,7 @@ import 'package:rive/rive.dart' as rive;
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
+import '../config/utils/platform.dart';
 import '../navigation/beamer_delegate.dart';
 import '../nft_manager/collection_services.dart';
 import '../wallet/model_view/wc_model.dart';
@@ -43,7 +44,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     }
     super.initState();
   }
-
+  final PlatformAndBrowser platformAndBrowser = PlatformAndBrowser();
   @override
   Widget build(BuildContext context) {
     TasksServices tasksServices = context.watch<TasksServices>();
@@ -311,7 +312,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                   const SizedBox(
                     width: 16,
                   ),
-                  if (transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading')
+                  if ((transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading') && !platformAndBrowser.metamaskAvailable)
                     Expanded(
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20.0),

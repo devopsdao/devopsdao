@@ -62,6 +62,8 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidth + calcTextSize('Participate', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
+            /// need to be finished
+            String message = '[] ${interface.taskMessage}';
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
             Navigator.pop(context);
             interface.emptyTaskMessage();
@@ -87,8 +89,11 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidthLong + calcTextSize('Start the task', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
+
+            /// not finished
+            String message = '[in progress] ${interface.taskMessage}';
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
-                message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                message: message);
             Navigator.pop(context);
             interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/performer');
@@ -112,8 +117,9 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidthLong  + calcTextSize('Submit for Review', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
+            String message = '[sent to review] ${interface.taskMessage}';
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
-                message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                message: message);
             Navigator.pop(context);
             interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/performer');
@@ -242,20 +248,21 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidthLong + calcTextSize('Sign Review & Rate', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
+            String message = '[review signed] ${interface.taskMessage}';
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
-                message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                message: message);
             // context.beamToNamed('/customer');
             Navigator.pop(context);
             interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/customer');
             Beamer.of(context).updateRouteInformation(routeInfo);
             showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => WalletActionDialog(
-                      nanoId: task.nanoId,
-                      actionName: 'taskStateChange',
-                    ));
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => WalletActionDialog(
+                nanoId: task.nanoId,
+                actionName: 'taskStateChange',
+              ));
           },
         );
       }
@@ -301,7 +308,9 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidth + calcTextSize('Take audit', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
-            tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId, message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+            /// need to be finished:
+            String message = '[] ${interface.taskMessage}';
+            tasksServices.taskAuditParticipate(task.taskAddress, task.nanoId, message: message);
             Navigator.pop(context);
             interface.emptyTaskMessage();
             showDialog(

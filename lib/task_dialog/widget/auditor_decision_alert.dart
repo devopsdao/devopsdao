@@ -151,8 +151,9 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                         setState(() {
                           task.loadingIndicator = true;
                         });
+                        String message = '[audit decision] ${interface.taskMessage}';
                         tasksServices.taskAuditDecision(task.taskAddress, 'customer', task.nanoId,
-                            message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                            message: message);
 
                         interface.emptyTaskMessage();
                         showDialog(
@@ -201,8 +202,9 @@ class _AuditorDecisionState extends State<AuditorDecision> {
                         setState(() {
                           task.loadingIndicator = true;
                         });
+                        String message = '[audit decision] ${interface.taskMessage}';
                         tasksServices.taskAuditDecision(task.taskAddress, 'performer', task.nanoId,
-                            message: interface.taskMessage.isEmpty ? null : interface.taskMessage);
+                            message: message);
                         interface.emptyTaskMessage();
                         showDialog(
                             barrierDismissible: false,

@@ -104,24 +104,25 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                     shimmeredTasks = [emptyClasses.tasksForShimmer.values.toList().first];
                   } else if (objList.length == 2) {
                     shimmeredTasks = [emptyClasses.tasksForShimmer.values.toList().first, emptyClasses.tasksForShimmer.values.toList().last];
-                  } else if (objList.length == 3) {
+                  } else if (objList.length >= 3) {
                     shimmeredTasks = emptyClasses.tasksForShimmer.values.toList();
-                  } else if (objList.length == 4) {
-                    shimmeredTasks = [
-                      emptyClasses.tasksForShimmer.values.toList().first,
-                      emptyClasses.tasksForShimmer.values.toList().last,
-                      emptyClasses.tasksForShimmer.values.toList()[1],
-                      emptyClasses.tasksForShimmer.values.toList().last
-                    ];
-                  } else if (objList.length >= 5) {
-                    shimmeredTasks = [
-                      emptyClasses.tasksForShimmer.values.toList().first,
-                      emptyClasses.tasksForShimmer.values.toList()[1],
-                      emptyClasses.tasksForShimmer.values.toList()[2],
-                      emptyClasses.tasksForShimmer.values.toList().last,
-                      emptyClasses.tasksForShimmer.values.toList()[1],
-                    ];
                   }
+                  // else if (objList.length == 4) {
+                  //   shimmeredTasks = [
+                  //     emptyClasses.tasksForShimmer.values.toList().first,
+                  //     emptyClasses.tasksForShimmer.values.toList().last,
+                  //     emptyClasses.tasksForShimmer.values.toList()[1],
+                  //     emptyClasses.tasksForShimmer.values.toList().last
+                  //   ];
+                  // } else if (objList.length >= 5) {
+                  //   shimmeredTasks = [
+                  //     emptyClasses.tasksForShimmer.values.toList().first,
+                  //     emptyClasses.tasksForShimmer.values.toList()[1],
+                  //     emptyClasses.tasksForShimmer.values.toList()[2],
+                  //     emptyClasses.tasksForShimmer.values.toList().last,
+                  //     emptyClasses.tasksForShimmer.values.toList()[1],
+                  //   ];
+                  // }
                   // print(controller.isDragging);
                   return Stack(
                     children: [

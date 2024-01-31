@@ -247,15 +247,16 @@ class _SelectionPageState extends State<SelectionPage> {
             late String message;
             if (interface.dialogCurrentState['name'] == 'customer-new') {
               status = 'agreed';
-              message = 'Selected participant'
-                  '${shortAddressAsNickname(interface.selectedUser.walletAddress.toString())}';
+              message = '[performer selected '
+                  '${shortAddressAsNickname(interface.selectedUser.walletAddress.toString())}]';
             } else if (interface.dialogCurrentState['name'] == 'performer-audit-requested' ||
                 interface.dialogCurrentState['name'] == 'customer-audit-requested') {
               status = 'audit';
-              message = 'Selected auditor '
-                  '${shortAddressAsNickname(interface.selectedUser.walletAddress.toString())}';
+              message = '[auditor selected '
+                  '${shortAddressAsNickname(interface.selectedUser.walletAddress.toString())}]';
             }
-            tasksServices.taskStateChange(task.taskAddress, EthereumAddress.fromHex(interface.selectedUser.walletAddress.toString()), status, task.nanoId, message: message);
+            tasksServices.taskStateChange(
+                task.taskAddress, EthereumAddress.fromHex(interface.selectedUser.walletAddress.toString()), status, task.nanoId, message: message);
             interface.selectedUser = emptyClasses.emptyAccount; // reset
             Navigator.pop(context);
             interface.emptyTaskMessage();

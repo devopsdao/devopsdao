@@ -188,8 +188,9 @@ class _RequestAuditDialogState extends State<RequestAuditDialog> {
                         setState(() {
                           task.loadingIndicator = true;
                         });
+                        String message = '[audit requested] ${messageController!.text.isEmpty ? '' : messageController!.text}';
                         tasksServices.taskStateChange(task.taskAddress, task.performer, 'audit', task.nanoId,
-                          message: messageController!.text.isEmpty ? null : messageController!.text);
+                          message: message);
                         showDialog(
                           barrierDismissible: false,
                           context: context,

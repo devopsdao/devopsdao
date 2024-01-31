@@ -120,7 +120,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   borderRadius: DodaoTheme.of(context).borderRadius,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: maxStaticInternalDialogWidth,
+                      // maxWidth: maxStaticInternalDialogWidth,
                     ),
                     child: GestureDetector(
                       onTap: () {
