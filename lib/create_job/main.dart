@@ -211,63 +211,55 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
                       constraints: BoxConstraints(
                         maxWidth: maxStaticInternalDialogWidth,
                       ),
-                      child: LayoutBuilder(builder: (ctx, constraints) {
-                        // actualFieldWidth = constraints.maxWidth;
-                        // if (myMaxWidth <= maxStaticDialogWidth) {
-                        //   // buttonPaddingLeft = (myMaxWidth - actualFieldWidth) / 2 + 76;
-                        //   // buttonPaddingRight = (myMaxWidth - actualFieldWidth) / 2 - 10;
-                        // }
+                      child: Container(
+                        padding: DodaoTheme.of(context).inputEdge,
+                        width: innerPaddingWidth,
+                        decoration: materialMainBoxDecoration,
+                        child: TextFormField(
+                          onTap: () {
+                            // scrollController.animateTo(
+                            //   scrollController.position.minScrollExtent,
+                            //   duration: const Duration(milliseconds: 500),
+                            //   curve: Curves.fastOutSlowIn,
+                            // );
+                            Future.delayed(const Duration(milliseconds: 400), () {
+                              scrollController.animateTo(
+                                scrollController.position.minScrollExtent,
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.fastOutSlowIn,
+                              );
+                            });
+                          },
+                          controller: titleFieldController,
+                          // onChanged: (_) => EasyDebounce.debounce(
+                          //   'titleFieldController',
+                          //   Duration(milliseconds: 2000),
+                          //   () => setState(() {}),
+                          // ),
+                          autofocus: true,
+                          obscureText: false,
 
-                        return Container(
-                          padding: DodaoTheme.of(context).inputEdge,
-                          width: innerPaddingWidth,
-                          decoration: materialMainBoxDecoration,
-                          child: TextFormField(
-                            onTap: () {
-                              // scrollController.animateTo(
-                              //   scrollController.position.minScrollExtent,
-                              //   duration: const Duration(milliseconds: 500),
-                              //   curve: Curves.fastOutSlowIn,
-                              // );
-                              Future.delayed(const Duration(milliseconds: 400), () {
-                                scrollController.animateTo(
-                                  scrollController.position.minScrollExtent,
-                                  duration: const Duration(seconds: 1),
-                                  curve: Curves.fastOutSlowIn,
-                                );
-                              });
-                            },
-                            controller: titleFieldController,
-                            // onChanged: (_) => EasyDebounce.debounce(
-                            //   'titleFieldController',
-                            //   Duration(milliseconds: 2000),
-                            //   () => setState(() {}),
-                            // ),
-                            autofocus: true,
-                            obscureText: false,
-
-                            decoration: InputDecoration(
-                              labelText: 'Title:',
-                              labelStyle: Theme.of(context).textTheme.bodyMedium,
-                              hintText: '[Enter the Title..]',
-                              hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                          decoration: InputDecoration(
+                            labelText: 'Title:',
+                            labelStyle: Theme.of(context).textTheme.bodyMedium,
+                            hintText: '[Enter the Title..]',
+                            hintStyle: Theme.of(context).textTheme.bodyMedium?.apply(heightFactor: 1.4),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide.none,
                             ),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            maxLines: 1,
-                            onChanged: (text) {
-                              debounceNotifyListener.debounce(() {
-                                tasksServices.myNotifyListeners();
-                              });
-                            },
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
                           ),
-                        );
-                      }),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          maxLines: 1,
+                          onChanged: (text) {
+                            debounceNotifyListener.debounce(() {
+                              tasksServices.myNotifyListeners();
+                            });
+                          },
+                        ),
+                      ),
                     )),
                 Container(
                   padding: const EdgeInsets.only(top: 14.0),

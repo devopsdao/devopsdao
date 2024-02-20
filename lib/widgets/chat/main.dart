@@ -8,11 +8,13 @@ import 'package:nanoid/async.dart';
 // import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:webthree/credentials.dart';
 
 import '../../blockchain/accounts.dart';
 import '../../blockchain/empty_classes.dart';
 import '../../blockchain/classes.dart';
 import '../../config/theme.dart';
+import '../../task_dialog/model_view/task_update_model_view.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import '../../config/utils/my_tools.dart';
 import '../wallet_action_dialog.dart';
@@ -31,13 +33,11 @@ import '../wallet_action_dialog.dart';
 // }
 
 class ChatWidget extends StatefulWidget {
-  final Task task;
-  // final Account account;
+  final EthereumAddress taskAddress;
   final TasksServices tasksServices;
   const ChatWidget(
       {super.key,
-      required this.task,
-      // required this.account,
+      required this.taskAddress,
       required this.tasksServices});
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
@@ -45,7 +45,6 @@ class ChatWidget extends StatefulWidget {
 
 class _ChatWidgetState extends State<ChatWidget> {
   List<types.Message> _messages = [];
-  // final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
 
   @override
   void initState() {
@@ -58,7 +57,14 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   Widget build(BuildContext context) {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    // var tasksServices = context.read<TasksServices>();
+    // TaskUpdateModelView taskUpdateModelView = context.watch<TaskUpdateModelView>();
+
+    int dateInt = widget.tasksServices.tasks[widget.taskAddress]!.messages.last[2].toInt();
+    DateTime taskLastMessageTimestamp = DateTime.fromMillisecondsSinceEpoch(dateInt * 1000);
+    Duration duration = DateTime.now().difference(taskLastMessageTimestamp);
+    if (duration.inSeconds < 15) {
+      _loadMessages();
+    }
 
     if (listenWalletAddress != null) {
       logged = true;
@@ -252,32 +258,38 @@ class _ChatWidgetState extends State<ChatWidget> {
   // }
 
   void _handleSendPressed(types.PartialText message) async {
-    // var tasksServices = context.watch<TasksServices>();
     final messageNanoID = await customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 5);
-    widget.tasksServices.sendChatMessage(widget.task.taskAddress, widget.task.nanoId, message.text, messageNanoID);
+    Task? task = widget.tasksServices.tasks[widget.taskAddress];
+    widget.tasksServices.sendChatMessage(task!.taskAddress, task.nanoId, message.text, messageNanoID);
 
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) => WalletActionDialog(
-              nanoId: widget.task.nanoId,
+              nanoId: task.nanoId,
               actionName: 'sendChatMessage_$messageNanoID',
             ));
 
     final textMessage = types.TextMessage(
-      author: types.User(id: widget.task.messages[0][3].toString()),
+      author: types.User(
+        firstName: shortAddressAsNickname(widget.tasksServices.publicAddress),
+          lastName: '',
+          id: widget.tasksServices.publicAddress.toString()
+      ),
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
     );
+    // print(task.messages[0][3].toString());
     _addMessage(textMessage);
   }
 
   void _loadMessages() async {
+    Task? task = widget.tasksServices.tasks[widget.taskAddress];
     List taskMessages = [];
-    String ownerNickName = shortAddressAsNickname(widget.task.contractOwner.toString());
+    String ownerNickName = shortAddressAsNickname(task!.contractOwner.toString());
 
-
+    // Firs message:
     Map<String, dynamic> message = {};
     Map<String, dynamic> author = {};
     author['firstName'] = ownerNickName;
@@ -286,10 +298,10 @@ class _ChatWidgetState extends State<ChatWidget> {
     author['id'] = '1';
     // author['id'] = const Uuid().v4();
     message['author'] = author;
-    message['createdAt'] = widget.task.createTime.millisecondsSinceEpoch;
+    message['createdAt'] = task.createTime.millisecondsSinceEpoch;
     message['id'] = "0";
     message['status'] = 'delivered';
-    message['text'] = widget.task.title;
+    message['text'] = '[Task name] ${task.title}';
     message['type'] = 'text';
     // final String firstName = msg[3].toString();
     // taskMessages.add(message);
@@ -302,7 +314,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     // _addMessage(textMessage);
     taskMessages.add(message);
 
-    for (var msg in widget.task.messages) {
+    for (var msg in task.messages) {
       String authorNickName = shortAddressAsNickname(msg[3].toString());
       Map<String, dynamic> message = {};
       Map<String, dynamic> author = {};

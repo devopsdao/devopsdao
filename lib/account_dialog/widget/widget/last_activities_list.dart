@@ -66,7 +66,7 @@ class LastActivitiesListState extends State<LastActivitiesList> {
 
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.only(top: 4),
       controller: selectionScrollController,
       child: FutureBuilder(
         future: taskList,
@@ -121,6 +121,8 @@ class LastActivitiesListState extends State<LastActivitiesList> {
                           height: interface.tileHeight,
                           child: ListTile(
                             title: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 if (role == 'not set')
                                   const BadgeWideColored(color: Colors.green, name: 'Performer', width: 42,),
@@ -130,26 +132,43 @@ class LastActivitiesListState extends State<LastActivitiesList> {
                                   const BadgeWideColored(color: Colors.redAccent, name: 'Auditor', width: 38,),
                                 if (role == 'participant')
                                   const BadgeWideColored(color: Colors.amber, name: 'Participant', width: 46,),
-                                const Spacer(),
-                                RichText(
-                                    text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
-                                      TextSpan(
-                                          text: '${list?[index2].title.toString()}'
-                                      ),
-                                    ]
-                                    )
+                                // const Spacer(),
+                                const SizedBox(width: 6,),
+                                Text(
+                                  '${list?[index2].title.toString()}',
+                                  style: DodaoTheme.of(context).bodyText3,
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
-                                const Spacer(),
-                                RichText(
-                                    text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
-                                      TextSpan(
-                                          text: list![index2].description.isNotEmpty ?
-                                          list[index2].description :
-                                          'No description'
-                                      ),
-                                    ]
-                                    )
-                                ),
+                                // RichText(
+                                //     text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                                //       TextSpan(
+                                //           text: '${list?[index2].title.toString()}'
+                                //       ),
+                                //     ]
+                                //   )
+                                // ),
+                                // const Spacer(),
+                                // Text(
+                                //   list![index2].description.isNotEmpty ?
+                                //   list[index2].description :
+                                //   'No description',
+                                //   style: DodaoTheme.of(context).bodyText3,
+                                //   softWrap: false,
+                                //   overflow: TextOverflow.ellipsis,
+                                //   maxLines: 1,
+                                // ),
+                                // RichText(
+                                //     text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                                //       TextSpan(
+                                //           text: list![index2].description.isNotEmpty ?
+                                //           list[index2].description :
+                                //           'No description'
+                                //       ),
+                                //     ]
+                                //     )
+                                // ),
                               ],
                             ),
                             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
@@ -163,7 +182,6 @@ class LastActivitiesListState extends State<LastActivitiesList> {
                         );
                       },
                     );
-
                   });
             } else {
               return const Text('Nothing to load..');

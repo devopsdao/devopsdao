@@ -31,13 +31,6 @@ class StatisticsService {
   EthereumAddress zeroAddress = GetAddresses.zeroAddress;
   static final StreamController<List<TokenItem>> _controller = StreamController<List<TokenItem>>.broadcast();
   Stream<List<TokenItem>> get statisticsTokenItems => _controller.stream.asBroadcastStream();
-  // StatisticsService() {
-  //   print('StatisticsService  test');
-  //   number.listen((s) {
-  //     print('listen');
-  //     print(s);
-  //   });
-  // }
 
   Future<void> initRequestBalances(int chainId, tasksServices) async {
     EthereumAddress contractAddress = await _getAddresses.requestContractAddress(chainId);
@@ -95,6 +88,12 @@ class StatisticsService {
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
+      },
+      168587773: {
+        'ETH': zeroAddress,
+        // 'USDC': zeroAddress,
+        // 'USDT': zeroAddress,
+        tokenContractKeyName: contractAddress
       }
     };
     if (tokenContracts[chainId] != null) {
@@ -144,7 +143,7 @@ class StatisticsService {
       } else {
         var ierc165 = IERC165(address: tokenContracts[key]!, client: tasksServices.web3client, chainId: chainId);
         //check if ERC-1155
-        var erc1155InterfaceID = Uint8List.fromList(hex.decode('4e2312e0'));
+        var erc1155InterfaceID = Uint8List.fromList(hex.decode('d9b67a26'));
         var erc20InterfaceID = Uint8List.fromList(hex.decode('36372b07'));
         var erc721InterfaceID = Uint8List.fromList(hex.decode('80ac58cd'));
         bool resultIerc = await ierc165.supportsInterface(Uint8List.fromList(erc1155InterfaceID));

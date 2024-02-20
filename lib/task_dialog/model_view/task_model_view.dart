@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 
 import '../../blockchain/classes.dart';
@@ -18,7 +20,7 @@ class TaskModelView extends ChangeNotifier {
 
   /// State update:
   var _state = TaskModelViewState(
-    rating: 0.0
+    rating: 0.0,
   );
 
   TaskModelViewState get state => _state;
@@ -34,11 +36,17 @@ class TaskModelView extends ChangeNotifier {
 
   onShowRateStars(Task task) {
     bool result = false;
-    for (var tokenBalances in task.tokenBalances) {
-      if (tokenBalances > 0) {
-        result = true;
+
+    if (task.tokenBalances.isEmpty) {
+      result = true;
+    } else {
+      for (var tokenBalances in task.tokenBalances) {
+        if (tokenBalances > 0) {
+          result = true;
+        }
       }
     }
+
     notifyListeners();
     return result;
   }

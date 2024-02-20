@@ -7,12 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:beamer/beamer.dart';
 import 'package:webthree/credentials.dart';
 
-import '../../blockchain/accounts.dart';
-import '../../blockchain/interface.dart';
-import '../../blockchain/notify_listener.dart';
-import '../../blockchain/task_services.dart';
-import '../../wallet/model_view/wallet_model.dart';
-import '../../widgets/badge-small-colored.dart';
+import '../../../blockchain/accounts.dart';
+import '../../../blockchain/interface.dart';
+import '../../../blockchain/notify_listener.dart';
+import '../../../blockchain/task_services.dart';
+import '../../../wallet/model_view/wallet_model.dart';
+import '../../../widgets/badge-small-colored.dart';
 
 class ParticipantList extends StatefulWidget {
   final Task task;
@@ -47,7 +47,7 @@ class _ParticipantListState extends State<ParticipantList> {
 
   Future<void> getParticipationList() async {
     var interface = context.read<InterfaceServices>();
-    final provider = Provider.of<TasksServices>(context, listen: false);
+    final tasksServices = Provider.of<TasksServices>(context, listen: false);
 
     if (interface.dialogCurrentState['name'] == 'customer-new') {
       if (widget.task.participants.isNotEmpty) {
@@ -59,7 +59,7 @@ class _ParticipantListState extends State<ParticipantList> {
         interface.dialogCurrentState['name'] == 'performer-audit-requested') {
       participants = widget.task.auditors;
     }
-    final participationList = provider.getAccountsData(requestedAccountsList: participants.cast<EthereumAddress>());
+    final participationList = tasksServices.getAccountsData(requestedAccountsList: participants.cast<EthereumAddress>());
     setState((){
       futureParticipationList = participationList;
     });
@@ -95,6 +95,7 @@ class _ParticipantListState extends State<ParticipantList> {
               return Text(snapshot.error.toString());
             } else if (snapshot.hasData) {
               final list = snapshot.data?.values.toList();
+
               return ListView.builder(
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
@@ -119,17 +120,17 @@ class _ParticipantListState extends State<ParticipantList> {
                                   ]
                                   )
                               ),
-                              const Spacer(),
-                              RichText(
-                                  text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
-                                    TextSpan(
-                                      text: list![index2].nickName.isNotEmpty ?
-                                      list[index2].nickName :
-                                          'Nameless'
-                                    ),
-                                  ]
-                                  )
-                              ),
+                              // const Spacer(),
+                              // RichText(
+                              //     text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                              //       TextSpan(
+                              //         text: list![index2].nickName.isNotEmpty ?
+                              //         list[index2].nickName :
+                              //             'Nameless'
+                              //       ),
+                              //     ]
+                              //     )
+                              // ),
                               const Spacer(),
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
@@ -137,7 +138,15 @@ class _ParticipantListState extends State<ParticipantList> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
+                                child: BadgeSmallColored(count: list[index2].agreedTasks.length - list[index2].completedTasks.length, color: Colors.yellow.shade700,),
+                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.all(2.0),
+                              //   child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: BadgeSmallColored(count: list[index2].completedTasks.length , color: Colors.greenAccent.shade700,),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(2.0),

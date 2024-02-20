@@ -17,7 +17,7 @@ import '../wallet/model_view/wallet_model.dart';
 import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
-import '../statistics/model_view/statistics_model.dart';
+import '../statistics/model_view/statistics_model_view.dart';
 import '../statistics/widget/home_statistics.dart';
 import '../widgets/icon_image.dart';
 import '../widgets/loading.dart';

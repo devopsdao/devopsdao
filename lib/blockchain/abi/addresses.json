@@ -13,16 +13,19 @@
       "Diamond": "0x9B4a285881bE210C35999B3bCFF7F9A4f03ACec2"
     },
     "31337": {
-      "Diamond": "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f"
+      "Diamond": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25"
     },
     "64165": {
-      "Diamond": "0xA24eBbFCe303D866c2278147E5BdFE53a3CFc4D6"
+      "Diamond": "0x354f0f0b309ADBC3D28F81e6462AA3A2D83a82ce"
     },
     "80001": {
       "Diamond": "0x98280ca7Fb208dCbc0A9681ff0D929DcDc13640a"
     },
     "855456": {
       "Diamond": "0x782FE094f443EE94a4dE6d7dd617B672102E8C18"
+    },
+    "168587773": {
+      "Diamond": "0x033266E1795788495078b7b220b3d162f1e7cC93"
     }
   }
 }

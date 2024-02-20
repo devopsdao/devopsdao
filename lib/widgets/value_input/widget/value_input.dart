@@ -7,7 +7,7 @@ import 'package:throttling/throttling.dart';
 import '../../../blockchain/interface.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../config/theme.dart';
-import '../../../statistics/model_view/statistics_model.dart';
+import '../../../statistics/model_view/statistics_model_view.dart';
 
 
 

@@ -4,16 +4,15 @@ import 'package:dodao/task_dialog/states.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webthree/credentials.dart';
-import 'package:dodao/wallet/services/wc_service.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 
 import '../config/theme.dart';
 import '../wallet/model_view/wallet_model.dart';
-import '../wallet/services/wallet_service.dart';
 import 'header.dart';
 import 'model_view/task_model_view.dart';
+import 'model_view/task_update_model_view.dart';
 import 'shimmer.dart';
 
 // Name of Widget & TaskDialogBeamer > TaskDialogFuture > Skeleton > Header > Pages > (topup, main, deskription, selection, widgets.chat)
@@ -24,8 +23,11 @@ class TaskDialogFuture extends StatelessWidget {
   final EthereumAddress taskAddress;
   @override
   Widget build(BuildContext context) {
-      return  ChangeNotifierProvider(
-        create: (_) => TaskModelView(),
+      return  MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => TaskModelView()),
+          ChangeNotifierProvider(create: (context) => TaskUpdateModelView()),
+        ],
         child: _TaskDialogFuture(fromPage: fromPage, taskAddress: taskAddress,),
       );
   }
@@ -35,50 +37,73 @@ class TaskDialogFuture extends StatelessWidget {
 class _TaskDialogFuture extends StatefulWidget {
   final String fromPage;
   final EthereumAddress taskAddress;
-  // final bool shimmerEnabled;
   const _TaskDialogFuture({
     Key? key,
     required this.fromPage,
     required this.taskAddress,
-    // required this.shimmerEnabled,
   }) : super(key: key);
 
   @override
   _TaskDialogFutureState createState() => _TaskDialogFutureState();
 }
 
+
+
 class _TaskDialogFutureState extends State<_TaskDialogFuture> {
 
   late Map<String, dynamic> dialogState;
 
+
+  @override
+  void initState() {
+    super.initState();
+    TaskUpdateModelView taskUpdateModelView = context.read<TaskUpdateModelView>();
+    taskUpdateModelView.subscribeToTaskUpdate();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    //   var tasksServices = context.read<TasksServices>();
+    // });
+  }
+
+
+  //// unsubscribe statistics broadcast:
+  late TaskUpdateModelView _disposeSub;
+  @override
+  void didChangeDependencies() {
+    _disposeSub = context.read<TaskUpdateModelView>();
+    super.didChangeDependencies();
+  }
+  @override
+  Future<void> dispose() async {
+    _disposeSub.unsubscribeTaskUpdate();
+    super.dispose();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    var emptyClasses = context.read<EmptyClasses>();
+    TaskUpdateModelView taskUpdateModelView = context.watch<TaskUpdateModelView>();
+    final emptyClasses = EmptyClasses();
 
     return FutureBuilder<Task>(
+      future: tasksServices.loadOneTask(widget.taskAddress), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
 
-        future: tasksServices.loadOneTask(widget.taskAddress), // a previously-obtained Future<String> or null
-        builder: (BuildContext context, AsyncSnapshot<Task> snapshot) {
-
-          if (snapshot.connectionState == ConnectionState.done) {
-            // print('snapshot start:');
-            // print(snapshot);
-            // print('snapshot end');
-
-            if (snapshot.hasError) {
-              emptyClasses.loadingTask.description = snapshot.error.toString();
-              return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
-            } else if (snapshot.hasData) {
-              return TaskDialogSkeleton(fromPage: widget.fromPage, task: snapshot.data!, isLoading: false);
-            } else {
-              return const Text('Empty data');
-            }
-
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            emptyClasses.loadingTask.description = snapshot.error.toString();
+            return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
+          } else if (snapshot.hasData) {
+            taskUpdateModelView.onOpenedTask(snapshot.data!.taskAddress);
+            return TaskDialogSkeleton(fromPage: widget.fromPage, task: snapshot.data!, isLoading: false);
+          } else {
+            return const Text('Empty data');
           }
-
-          return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
-        });
+        }
+        return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
+      }
+    );
   }
 }
 
@@ -190,8 +215,12 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
 
     return LayoutBuilder(builder: (context, constraints) {
       // ****** Count Screen size with keyboard and without ***** ///
+      // final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+      // final double screenHeightSizeNoKeyboard = constraints.maxHeight;
+      // final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
+
       final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
-      final double screenHeightSizeNoKeyboard = constraints.maxHeight - 70;
+      final double screenHeightSizeNoKeyboard = constraints.maxHeight;
       final double screenHeightSize = screenHeightSizeNoKeyboard - keyboardSize;
       final statusBarHeight = MediaQuery.of(context).viewPadding.top;
       return Container(
@@ -210,7 +239,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
             fromPage: fromPage,
           ),
           SizedBox(
-            height: screenHeightSize - statusBarHeight,
+            height: screenHeightSizeNoKeyboard - 58 -statusBarHeight,
             width: interface.maxStaticDialogWidth,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 350),
@@ -218,7 +247,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
               switchOutCurve: Curves.easeOutQuint,
               child: !widget.isLoading
                   ? TaskDialogPages(
-                key: const Key("normal"),
+                // key: const Key("normal"),
                 task: task,
                 fromPage: widget.fromPage,
                 screenHeightSize: screenHeightSize,

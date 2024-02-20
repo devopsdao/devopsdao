@@ -207,12 +207,12 @@ class ChainPresets {
           symbol: 'FTM',
           decimals: 18,
         )),
-    5: ChainInfo(
+    11155111: ChainInfo(
         chainName: 'Goerli',
-        namespace: 'eip155:5',
-        chainId: '5',
-        chainIdHex: '0x5',
-        chainIconLocally: chainImagesPath['5'],
+        namespace: 'eip155:11155111',
+        chainId: '11155111',
+        chainIdHex: '0xaa36a7',
+        chainIconLocally: chainImagesPath['11155111'],
         iconUrl: '',
         requiredNamespaces: {
           'eip155': const RequiredNamespace(
@@ -221,7 +221,7 @@ class ChainPresets {
               'eth_signTransaction',
               'eth_sendTransaction',
             ],
-            chains: ['eip155:5'],
+            chains: ['eip155:11155111'],
             events: [
               'chainChanged',
               'accountsChanged',
@@ -231,14 +231,14 @@ class ChainPresets {
         optionalNamespaces: {
           'eip155': const RequiredNamespace(
             methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
-            chains: ['eip155:5'],
+            chains: ['eip155:11155111'],
             events: [],
           ),
         },
-        rpcUrl: 'https://rpc.goerli.eth.gateway.fm',
+        rpcUrl: 'https://rpc.sepolia.dev',
         blockExplorer: BlockExplorer(
           name: 'Explorer',
-          url: 'https://goerli.etherscan.io/',
+          url: 'https://sepolia.etherscan.io/',
         ),
         nativeCurrency: NativeCurrency(
           name: 'Eth',
@@ -321,22 +321,64 @@ class ChainPresets {
           symbol: 'MATIC',
           decimals: 18,
         )),
+    168587773: ChainInfo(
+        chainName: 'Blast Sepolia',
+        namespace: 'eip155:168587773',
+        chainId: '168587773',
+        chainIdHex: '0xA0C71FD',
+        chainIconLocally: chainImagesPath['168587773'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:168587773'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:168587773'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://sepolia.blast.io',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://testnet.blastscan.io/',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Eth',
+          symbol: 'ETH',
+          decimals: 18,
+        )),
   };
 
   static Map<String, String> chainImagesPath = {
-    // Dodao
+    // Dodao Tanssi
     '855456': 'assets/images/logo.png',
     // Moonbase,
     '1287': 'assets/images/net_icon_moonbeam.png',
     // Fantom testnet
     '4002': 'assets/images/net_icon_fantom.png',
-    //Fantom sonic
+    // Fantom sonic
     '64165': 'assets/images/net_icon_fantom_sonic.png',
     // Goerli
     '5': 'assets/images/net_icon_eth.png',
     // zkSync
     '280': 'assets/images/zksync.png',
     // Polygon Mumbai
-    '80001': 'assets/images/net_icon_mumbai_polygon.png'
+    '80001': 'assets/images/net_icon_mumbai_polygon.png',
+    // Sepolia
+    '11155111': 'assets/images/net_icon_sepolia.png',
+    // Blast Sepolia
+    '168587773': 'assets/images/net_icon_blast.png'
   };
 }

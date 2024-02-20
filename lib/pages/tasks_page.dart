@@ -1,5 +1,7 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../blockchain/classes.dart';
@@ -58,6 +60,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
   @override
   void initState() {
     super.initState();
+    preload();
     if (widget.taskAddress != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(context: context, builder: (context) => TaskDialogBeamer(taskAddress: widget.taskAddress!, fromPage: 'tasks'));
@@ -69,6 +72,18 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
       var searchServices = context.read<SearchServices>();
       searchServices.selectTagListOnTasksPages(page: 'tasks', initial: true);
     });
+  }
+
+  RiveFile? _file;
+  Future<void> preload() async {
+    rootBundle.load('assets/rive_animations/paw.riv').then(
+          (data) async {
+        // Load the RiveFile from the binary data.
+        setState(() {
+         _file = RiveFile.import(data);
+        });
+      },
+    );
   }
 
   @override
@@ -270,10 +285,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
                       listenIsLoading
                           ? const LoadIndicator()
-                          : const Expanded(
+                          : Expanded(
                               child: TabBarView(
                                 children: [
-                                  PawRefreshAndTasksList(pageName: 'tasks',),
+                                  PawRefreshAndTasksList(pageName: 'tasks', paw: _file,),
                                   // Padding(
                                   //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
                                   //   child: RefreshIndicator(

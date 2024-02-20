@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
+import '../task_dialog/services/task_update_service.dart';
 import '../wallet/services/wallet_service.dart';
 import 'chain_presets/get_addresses.dart';
 import 'abi/TaskCreateFacet.g.dart';
@@ -235,6 +236,9 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlGoerli;
   late String _wsUrlGoerli;
 
+  late String _rpcUrlSepolia;
+  late String _wsUrlSepolia;
+
   late String _rpcUrlFantom;
   late String _wsUrlFantom;
 
@@ -243,6 +247,9 @@ class TasksServices extends ChangeNotifier {
 
   late String _rpcUrlTanssi;
   late String _wsUrlTanssi;
+
+  late String _rpcUrlBlast;
+  late String _wsUrlBlast;
 
   // late int chainId = 0;
   // final String defaultNetwork = 'Dodao Tanssi Appchain';
@@ -365,6 +372,14 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'DODAO';
       _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
       _wsUrl = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    } else if (chainId == 168587773) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://sepolia.blast.io';
+      _wsUrl = 'wss://sepolia.blast.io';
+    } else if (chainId == 11155111) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://rpc.sepolia.dev';
+      _wsUrl = 'wss://sepolia.blast.io';
     }
 
     // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -382,6 +397,9 @@ class TasksServices extends ChangeNotifier {
     _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
     _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
 
+    _rpcUrlSepolia = 'https://rpc.sepolia.dev';
+    _wsUrlSepolia = 'wss://rpc.sepolia.dev';
+
     _rpcUrlFantom = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
 
@@ -390,6 +408,9 @@ class TasksServices extends ChangeNotifier {
 
     _rpcUrlTanssi = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
     _wsUrlTanssi = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+
+    _rpcUrlBlast = 'https://sepolia.blast.io';
+    _wsUrlBlast = 'wss://sepolia.blast.io';
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
@@ -417,6 +438,24 @@ class TasksServices extends ChangeNotifier {
         }
       },
     );
+
+    // if (_wsUrl.length > 0) {
+    //   web3client = Web3Client(
+    //     _rpcUrl,
+    //     http.Client(),
+    //     socketConnector: () {
+    //       if (platform == 'web') {
+    //         final uri = Uri.parse(_wsUrl);
+    //         return WebSocketChannel.connect(uri).cast<String>();
+    //       } else {
+    //         return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+    //       }
+    //     },
+    //   );
+    // } else {
+    //   web3client = Web3Client(_rpcUrl, http.Client(), socketConnector: null);
+    // }
+
     // templorary fix:
     if (hardhatLive == false) {
       web3clientAxelar = Web3Client(
@@ -804,6 +843,11 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
+  final _taskUpdateService = TaskUpdateService();
+  Debouncing mainDebounce = Debouncing(duration: const Duration(seconds: 1));
+  // DateTime monitorTimestamp = DateTime.now();
+  // EthereumAddress lastContractAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
+
   // EthereumAddress lastJobContract;
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
@@ -816,6 +860,20 @@ class TasksServices extends ChangeNotifier {
         await refreshTask(tasks[event.contractAdr]!);
         log.fine('refreshed task: ${tasks[event.contractAdr]!.title}');
         await myBalance();
+
+        mainDebounce.debounce(() {
+          log.fine('debounced initCheckingOpenedTask fired');
+          _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
+        });
+
+        // var duration = DateTime.now().difference(monitorTimestamp);
+        // if (duration.inSeconds > 2 && lastContractAdr != event.contractAdr) {
+        //   _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
+        //   monitorTimestamp = DateTime.now();
+        //   lastContractAdr = event.contractAdr;
+        // } else {
+        //   lastContractAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
+        // }
         notifyListeners();
       } on GetTaskException {
         log.severe('could not get task ${event.contractAdr} from blockchain');
@@ -950,6 +1008,17 @@ class TasksServices extends ChangeNotifier {
         filterResults = Map.from(filterResultsSearch);
       }
     }
+    //sort by createTime desc
+    final sortedFilterResultsList = filterResults.values.toList().map((task) => (task)).toList()
+      ..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    Map<EthereumAddress, Task> sortedFilterResults = {};
+    for (Task task in sortedFilterResultsList) {
+      sortedFilterResults[task.taskAddress] = task;
+    }
+
+    filterResults = sortedFilterResults;
+
     notifyListeners();
   }
 
@@ -977,6 +1046,16 @@ class TasksServices extends ChangeNotifier {
     } else {
       filterResults = Map.from(taskList);
     }
+    //sort by createTime desc
+    final sortedFilterResultsList = filterResults.values.toList().map((task) => (task)).toList()
+      ..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    Map<EthereumAddress, Task> sortedFilterResults = {};
+    for (Task task in sortedFilterResultsList) {
+      sortedFilterResults[task.taskAddress] = task;
+    }
+
+    filterResults = sortedFilterResults;
   }
 
   // late bool loopRunning = false;
@@ -1569,7 +1648,20 @@ class TasksServices extends ChangeNotifier {
 
     //combine all batches of tasks to one map
     tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
-    return tasks;
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    //sort by createTime desc
+    final sortedTasksList = tasks.values.toList().map((task) => (task)).toList()..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    Map<EthereumAddress, Task> sortedTasks = {};
+    for (Task task in sortedTasksList) {
+      sortedTasks[task.taskAddress] = task;
+    }
+
+    return sortedTasks;
   }
 
   Future<void> refreshTasksForAccount(EthereumAddress address) async {
@@ -1800,14 +1892,18 @@ class TasksServices extends ChangeNotifier {
     late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
       myAccountsData[accountData[0].toString()] = Account(
-          walletAddress: accountData[0],
-          nickName: accountData[1].toString(),
-          about: accountData[2].toString(),
-          customerTasks: accountData[3].cast<EthereumAddress>(),
-          participantTasks: accountData[4].cast<EthereumAddress>(),
-          auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
-          customerRating: accountData[6].cast<int>(),
-          performerRating: accountData[7].cast<int>());
+        walletAddress: accountData[0],
+        nickName: accountData[1].toString(),
+        about: accountData[2].toString(),
+        customerTasks: accountData[3].cast<EthereumAddress>(),
+        participantTasks: accountData[4].cast<EthereumAddress>(),
+        auditParticipantTasks: accountData[5].cast<EthereumAddress>(),
+        customerRating: accountData[6].cast<BigInt>(),
+        performerRating: accountData[7].cast<BigInt>(),
+        agreedTasks: accountData[3].cast<EthereumAddress>(),
+        auditAgreed: accountData[3].cast<EthereumAddress>(),
+        completedTasks: accountData[3].cast<EthereumAddress>(),
+      );
     }
     notifyListeners();
     return myAccountsData;

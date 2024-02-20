@@ -9,11 +9,9 @@ import '../../model_view/task_model_view.dart';
 
 class RateTask extends StatefulWidget {
   final Task task;
-  final double innerPaddingWidth;
   const RateTask({
     Key? key,
     required this.task,
-    required this.innerPaddingWidth,
   }) : super(key: key);
 
   @override
@@ -120,7 +118,6 @@ class _RateTaskState extends State<RateTask> {
         borderRadius: DodaoTheme.of(context).borderRadius,
         child: Container(
             padding: const EdgeInsets.only(top: 5.0),
-            width: widget.innerPaddingWidth,
             decoration: materialMainBoxDecoration,
             child: Padding(
               padding: DodaoTheme.of(context).inputEdge,

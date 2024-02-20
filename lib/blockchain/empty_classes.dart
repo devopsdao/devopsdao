@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
 import 'accounts.dart';
 
-class EmptyClasses extends ChangeNotifier {
+class EmptyClasses {
   final loadingTask = Task(
       nanoId: '111',
       createTime: DateTime.now(),
@@ -73,8 +73,8 @@ class EmptyClasses extends ChangeNotifier {
       customerTasks: [],
       participantTasks: [],
       auditParticipantTasks: [],
-      performerRating: [0],
-      customerRating: [0]);
+      performerRating: [BigInt.from(0)],
+      customerRating: [BigInt.from(0)], agreedTasks: [], auditAgreed: [], completedTasks: []);
 
   final emptyAccount = Account(
       nickName: 'Empty',
@@ -83,8 +83,8 @@ class EmptyClasses extends ChangeNotifier {
       customerTasks: [],
       participantTasks: [],
       auditParticipantTasks: [],
-      performerRating: [0],
-      customerRating: [0]);
+      performerRating: [BigInt.from(0)],
+      customerRating: [BigInt.from(0)], agreedTasks: [], auditAgreed: [], completedTasks: []);
 
   Map<EthereumAddress, Task> tasksForShimmer = {
     EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'): Task(

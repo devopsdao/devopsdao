@@ -27,7 +27,7 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
-    var emptyClasses = context.watch<EmptyClasses>();
+    final emptyClasses = EmptyClasses();
     //
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
     //   interface.updateBoxKeyboardHeight();
@@ -52,7 +52,7 @@ class ChatPage extends StatelessWidget {
                 border: DodaoTheme.of(context).borderGradient,
               ),
               child: ChatWidget(
-                task: task,
+                taskAddress: task.taskAddress,
                 tasksServices: tasksServices
               )
             ),

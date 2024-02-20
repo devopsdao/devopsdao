@@ -28,12 +28,11 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
-    var emptyClasses = context.read<EmptyClasses>();
+    final emptyClasses = EmptyClasses();
     var taskModelView = context.read<TaskModelView>();
     final Task task = widget.task;
 
     return Container(
-      // color: DodaoTheme.of(context).taskBackgroundColor,
       padding: const EdgeInsets.all(14),
       width: interface.maxStaticDialogWidth,
       child: Row(

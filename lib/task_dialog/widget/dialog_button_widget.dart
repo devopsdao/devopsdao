@@ -171,61 +171,9 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
   late Color textColor = Colors.white;
   late bool _buttonState = true;
 
-  // late AnimationController expandController;
-  // late Animation<double> animation;
-
-  @override
-  void initState() {
-    super.initState();
-    // prepareAnimations();
-    // _runExpandCheck();
-  }
-
-  // void prepareAnimations() {
-  //   expandController = AnimationController(
-  //       vsync: this,
-  //       duration: const Duration(milliseconds: 200)
-  //   );
-  //   animation = CurvedAnimation(
-  //     parent: expandController,
-  //     curve: Curves.fastOutSlowIn,
-  //   );
-  // }
-  //
-  // void _runExpandCheck() {
-  //   if(widget.expand) {
-  //     expandController.forward();
-  //   }
-  //   else {
-  //     expandController.reverse();
-  //   }
-  // }
-  //
-  // @override
-  // void didUpdateWidget(TaskDialogFAB oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   // expandController.forward();
-  //   _runExpandCheck();
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   expandController.dispose();
-  //   super.dispose();
-  // }
-
 
   @override
   Widget build(BuildContext context) {
-    // final Size widthTextSize = (TextPainter(
-    //     text: TextSpan(
-    //         text: widget.buttonName,
-    //         style: TextStyle(fontSize: 18, color: textColor)),
-    //     maxLines: 1,
-    //     textScaleFactor: MediaQuery.of(context).textScaleFactor,
-    //     textDirection: ui.TextDirection.ltr)
-    //   ..layout())
-    //     .size;
     buttonColor = widget.buttonColorRequired;
 
     if (widget.inactive == true) {
@@ -235,11 +183,6 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
     } else {
       _buttonState = true;
     }
-
-    // late double? padding = 10.0;
-    // if (widget.padding != null) {
-    //   padding = widget.padding;
-    // }
 
     late Widget child = FloatingActionButton.extended(
       onPressed: _buttonState ? widget.callback : null,
@@ -251,51 +194,12 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
         style: TextStyle(fontSize: 18, color: textColor),
       ),
     );
-    // onTap: _buttonState ? widget.callback : null,
-    // Text(
-    //   widget.buttonName,
-    //   textAlign: TextAlign.center,
-    //   style: TextStyle(fontSize: 18, color: textColor),
-    // ),
-    // return SizeTransition(
-    //     // axisAlignment: 1.0,
-    //     sizeFactor: animation,
-    //     axis: Axis.vertical,
-    //     child: SizedBox(
-    //         width: widget.widthSize,
-    //         child: Padding(
-    //           padding: const EdgeInsets.all(11.0),
-    //           child: child,
-    //         )
-    //     )
-    // );
-
-
-    // return AnimatedSize(
-    //   duration: const Duration(milliseconds: 1150),
-    //   curve: Curves.fastOutSlowIn,
-    //   child: child,
-    // );
 
     return AnimatedContainer(
-      // color: Colors.amber,
       duration:  const Duration(milliseconds: 500),
       width:  widget.widthSize,
       child: child,
     );
-
-    // return SizeTransition(
-    //     axisAlignment: 1.0,
-    //     sizeFactor: animation,
-    //     child: child
-    // );
-
-    // return SizedBox(
-    //   width: widget.widthSize,
-    //     // child: widget.inactive ? child  : childWithAnimation
-    //     // child: child
-    //     child: childWithAnimation
-    // );
   }
 }
 

@@ -1,3 +1,8 @@
+## [1.5.1] - 2024-02-20
+### Added
+- Blast Sepolia blockchain support
+- bug fixes
+
 ## [1.5.0] - 2023-12-01
 ### Added
 - Dodao Tanssi Appchain support

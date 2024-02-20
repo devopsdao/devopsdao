@@ -97,7 +97,7 @@ class ClickOnAccount extends StatelessWidget {
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
 
         return const Padding(
-          padding: EdgeInsets.all(12.0),
+          padding: EdgeInsets.all(8.0),
           child: ContractorInfo(
             // account: interface.selectedUser,
           ),

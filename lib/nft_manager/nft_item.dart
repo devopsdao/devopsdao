@@ -43,7 +43,7 @@ class NftItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 LayoutBuilder(builder: (context, constraints) {
-                  final double maxWidth = constraints.maxWidth - 170;
+                  final double maxWidth = constraints.maxWidth - 150;
                   return Row(
                     children: [
                       Container(
@@ -53,7 +53,7 @@ class NftItem extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image.asset(
                             'assets/images/logo.png',
-                            height: frameHeight - 162,
+                            height: frameHeight - 192,
                             filterQuality: FilterQuality.medium,
                             isAntiAlias: true,
                           ),
@@ -153,7 +153,7 @@ class NftItem extends StatelessWidget {
                                   child: RichText(
                                       textAlign: TextAlign.start,
                                       softWrap: false,
-                                      maxLines: 2,
+                                      maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
                                       fontFamily: 'Inter',

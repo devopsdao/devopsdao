@@ -70,8 +70,8 @@ class _AccountFutureState extends State<AccountFuture> {
               customerTasks: [],
               participantTasks: [],
               auditParticipantTasks: [],
-              customerRating: [0],
-              performerRating: [0]);
+              customerRating: [],
+              performerRating: [], agreedTasks: [], auditAgreed: [], completedTasks: []);
           return AccountDialogSkeleton(accountRole: widget.accountRole, object: account, isLoading: true);
         });
   }

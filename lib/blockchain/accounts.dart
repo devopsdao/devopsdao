@@ -7,8 +7,12 @@ class Account {
   final List<EthereumAddress> customerTasks;
   final List<EthereumAddress> participantTasks;
   final List<EthereumAddress> auditParticipantTasks;
-  final List<int> customerRating;
-  final List<int> performerRating;
+  final List<BigInt> customerRating;
+  final List<BigInt> performerRating;
+
+  final List<EthereumAddress> agreedTasks;
+  final List<EthereumAddress> auditAgreed;
+  final List<EthereumAddress> completedTasks;
 
   Account(
       {required this.nickName,
@@ -18,5 +22,10 @@ class Account {
       required this.participantTasks,
       required this.auditParticipantTasks,
       required this.customerRating,
-      required this.performerRating});
+      required this.performerRating,
+
+      required this.agreedTasks,
+      required this.auditAgreed,
+      required this.completedTasks
+      });
 }
