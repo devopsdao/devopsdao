@@ -236,6 +236,9 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlGoerli;
   late String _wsUrlGoerli;
 
+  late String _rpcUrlSepolia;
+  late String _wsUrlSepolia;
+
   late String _rpcUrlFantom;
   late String _wsUrlFantom;
 
@@ -244,6 +247,9 @@ class TasksServices extends ChangeNotifier {
 
   late String _rpcUrlTanssi;
   late String _wsUrlTanssi;
+
+  late String _rpcUrlBlast;
+  late String _wsUrlBlast;
 
   // late int chainId = 0;
   // final String defaultNetwork = 'Dodao Tanssi Appchain';
@@ -366,6 +372,14 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'DODAO';
       _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
       _wsUrl = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    } else if (chainId == 168587773) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://sepolia.blast.io';
+      _wsUrl = 'wss://sepolia.blast.io';
+    } else if (chainId == 11155111) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://rpc.sepolia.dev';
+      _wsUrl = 'wss://sepolia.blast.io';
     }
 
     // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -383,6 +397,9 @@ class TasksServices extends ChangeNotifier {
     _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
     _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
 
+    _rpcUrlSepolia = 'https://rpc.sepolia.dev';
+    _wsUrlSepolia = 'wss://rpc.sepolia.dev';
+
     _rpcUrlFantom = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
 
@@ -391,6 +408,9 @@ class TasksServices extends ChangeNotifier {
 
     _rpcUrlTanssi = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
     _wsUrlTanssi = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+
+    _rpcUrlBlast = 'https://sepolia.blast.io';
+    _wsUrlBlast = 'wss://sepolia.blast.io';
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 

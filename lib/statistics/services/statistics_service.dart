@@ -88,6 +88,12 @@ class StatisticsService {
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
+      },
+      168587773: {
+        'ETH': zeroAddress,
+        // 'USDC': zeroAddress,
+        // 'USDT': zeroAddress,
+        tokenContractKeyName: contractAddress
       }
     };
     if (tokenContracts[chainId] != null) {
