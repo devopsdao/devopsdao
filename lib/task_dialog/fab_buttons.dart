@@ -62,7 +62,6 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidth + calcTextSize('Participate', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
-            /// need to be finished
             String message = '[performer application] ${interface.taskMessage}';
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: message);
             Navigator.pop(context);

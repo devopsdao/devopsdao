@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:dodao/blockchain/task_services.dart';
 import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:logging/logging.dart';
 import '../../blockchain/chain_presets/chains_presets.dart';
@@ -59,7 +57,7 @@ class WCModelView extends ChangeNotifier {
   late ConnectResponse? connectResponse;
   late WCScreenStatus wcCurrentState = WCScreenStatus.loadingQr;
 
-  /// Init:
+    /// Init:
   WCModelView() {
     if (_platformAndBrowser.platform == 'mobile'
         || _platformAndBrowser.browserPlatform == 'android'
