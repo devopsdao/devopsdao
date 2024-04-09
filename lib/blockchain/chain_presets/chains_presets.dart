@@ -171,7 +171,7 @@ class ChainPresets {
         )),
     64165: ChainInfo(
         chainName: 'Fantom sonic',
-        namespace: 'eip155:4002',
+        namespace: 'eip155:64165',
         chainId: '64165',
         chainIdHex: '0xFAA5',
         chainIconLocally: chainImagesPath['64165'],
