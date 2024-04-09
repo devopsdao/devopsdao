@@ -46,55 +46,76 @@ class StatisticsService {
 
   Future<Map<String, EthereumAddress>> getWhitelistedContracts(EthereumAddress contractAddress, int chainId) async {
     final Map<int, Map<String, EthereumAddress>> tokenContracts = {
-      // hardhat:
+      // hardhat
       31337: {
         'ETH': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //Moonbase-alpha
       1287: {
         'DEV': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //Fantom testnet
       4002: {
         'FTM': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //Fantom sonic testnet
       64165: {
         'FTM': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //Polygon Mumbai
       80001: {
         'MATIC': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //zkSync testnet
       280: {
         'ETH': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //Dodao Tanssi
       855456: {
         'DODAO': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
       },
+      //Blast Sepolia
       168587773: {
         'ETH': zeroAddress,
         // 'USDC': zeroAddress,
         // 'USDT': zeroAddress,
         tokenContractKeyName: contractAddress
-      }
+      },
+      //Scroll Sepolia
+      534351: {
+        'ETH': zeroAddress,
+        // 'USDC': zeroAddress,
+        // 'USDT': zeroAddress,
+        tokenContractKeyName: contractAddress
+      },
+      //Sepolia
+      11155111: {
+        'ETH': zeroAddress,
+        // 'USDC': zeroAddress,
+        // 'USDT': zeroAddress,
+        tokenContractKeyName: contractAddress
+      },
     };
     if (tokenContracts[chainId] != null) {
       return tokenContracts[chainId]!;

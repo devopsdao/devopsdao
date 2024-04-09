@@ -208,7 +208,7 @@ class ChainPresets {
           decimals: 18,
         )),
     11155111: ChainInfo(
-        chainName: 'Goerli',
+        chainName: 'Sepolia',
         namespace: 'eip155:11155111',
         chainId: '11155111',
         chainIdHex: '0xaa36a7',
@@ -235,7 +235,7 @@ class ChainPresets {
             events: [],
           ),
         },
-        rpcUrl: 'https://rpc.sepolia.dev',
+        rpcUrl: 'https://rpc2.sepolia.org/',
         blockExplorer: BlockExplorer(
           name: 'Explorer',
           url: 'https://sepolia.etherscan.io/',
@@ -359,6 +359,196 @@ class ChainPresets {
           symbol: 'ETH',
           decimals: 18,
         )),
+    534351: ChainInfo(
+        chainName: 'Scroll Sepolia',
+        namespace: 'eip155:534351',
+        chainId: '534351',
+        chainIdHex: '0x8274f',
+        chainIconLocally: chainImagesPath['534351'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:534351'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:534351'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://sepolia.scrollscan.com/',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Eth',
+          symbol: 'ETH',
+          decimals: 18,
+        )),
+    3441005: ChainInfo(
+        chainName: 'Manta testnet',
+        namespace: 'eip155:3441005',
+        chainId: '3441005',
+        chainIdHex: '0x34816D',
+        chainIconLocally: chainImagesPath['3441005'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:3441005'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:3441005'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://pacific-rpc.testnet.manta.network/http',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://pacific-explorer.testnet.manta.network',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Eth',
+          symbol: 'ETH',
+          decimals: 18,
+        )),
+    1442: ChainInfo(
+        chainName: 'zkEVM Polygon',
+        namespace: 'eip155:1442',
+        chainId: '1442',
+        chainIdHex: '0x5A2',
+        chainIconLocally: chainImagesPath['1442'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:1442'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:1442'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://explorer.public.zkevm-test.net',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Eth',
+          symbol: 'ETH',
+          decimals: 18,
+        )),
+    3110: ChainInfo(
+        chainName: 'satoshiVM',
+        namespace: 'eip155:3110',
+        chainId: '3110',
+        chainIdHex: '0xC26',
+        chainIconLocally: chainImagesPath['3110'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:3110'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:3110'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://test-rpc-node-http.svmscan.io',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://testnet.svmscan.io/',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Eth',
+          symbol: 'ETH',
+          decimals: 18,
+        )),
+    1029: ChainInfo(
+        chainName: 'BTTC',
+        namespace: 'eip155:1029',
+        chainId: '1029',
+        chainIdHex: '0x405',
+        chainIconLocally: chainImagesPath['1029'],
+        iconUrl: '',
+        requiredNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: [
+              'eth_sign',
+              'eth_signTransaction',
+              'eth_sendTransaction',
+            ],
+            chains: ['eip155:1029'],
+            events: [
+              'chainChanged',
+              'accountsChanged',
+            ],
+          ),
+        },
+        optionalNamespaces: {
+          'eip155': const RequiredNamespace(
+            methods: ['wallet_switchEthereumChain', 'wallet_addEthereumChain', 'eth_chainId'],
+            chains: ['eip155:1029'],
+            events: [],
+          ),
+        },
+        rpcUrl: 'https://pre-rpc.bt.io',
+        blockExplorer: BlockExplorer(
+          name: 'Explorer',
+          url: 'https://testscan.bt.io/',
+        ),
+        nativeCurrency: NativeCurrency(
+          name: 'Eth',
+          symbol: 'ETH',
+          decimals: 18,
+        )),
   };
 
   static Map<String, String> chainImagesPath = {
@@ -379,6 +569,14 @@ class ChainPresets {
     // Sepolia
     '11155111': 'assets/images/net_icon_sepolia.png',
     // Blast Sepolia
-    '168587773': 'assets/images/net_icon_blast.png'
+    '': 'assets/images/net_icon_blast.png',
+    // Scroll Sepolia
+    '534351': 'assets/images/net_icon_scroll.png',
+    // Manta Testnet
+    '3441005': 'assets/images/net_icon_manta.png',
+    // zkEVM Polygon
+    '1442': 'assets/images/net_icon_zkevm.png',
+    // Scroll Sepolia
+    '3110': 'assets/images/net_icon_satoshivm.png',
   };
 }

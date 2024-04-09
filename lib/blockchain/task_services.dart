@@ -251,6 +251,21 @@ class TasksServices extends ChangeNotifier {
   late String _rpcUrlBlast;
   late String _wsUrlBlast;
 
+  late String _rpcUrlScroll;
+  late String _wsUrlScroll;
+
+  late String _rpcUrlZkevm;
+  late String _wsUrlZkevm;
+
+  late String _rpcUrlManta;
+  late String _wsUrlManta;
+
+  late String _rpcUrlSatoshivm;
+  late String _wsUrlSatoshivm;
+
+  late String _rpcUrlBTTC;
+  late String _wsUrlBTTC;
+
   // late int chainId = 0;
   // final String defaultNetwork = 'Dodao Tanssi Appchain';
   // Map<String, int> allowedChainIds = {
@@ -364,6 +379,10 @@ class TasksServices extends ChangeNotifier {
       _wsUrl = 'wss://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       // _rpcUrl = 'https://rpc-mumbai.matic.today';
       // _wsUrl = 'wss://rpc-mumbai.matic.today';
+    } else if (chainId == 1442) {
+      chainTicker = 'MATIC';
+      _rpcUrl = 'https://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://ws.public.zkevm-test.net';
     } else if (chainId == 280) {
       chainTicker = 'ETH';
       _rpcUrl = 'https://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -376,10 +395,26 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'ETH';
       _rpcUrl = 'https://sepolia.blast.io';
       _wsUrl = 'wss://sepolia.blast.io';
+    } else if (chainId == 534351) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 3441005) {
+      chainTicker = 'MANTA';
+      _rpcUrl = 'https://pacific-rpc.testnet.manta.network/http';
+      _wsUrl = 'wss://pacific-rpc.testnet.manta.network/ws';
     } else if (chainId == 11155111) {
       chainTicker = 'ETH';
-      _rpcUrl = 'https://rpc.sepolia.dev';
-      _wsUrl = 'wss://sepolia.blast.io';
+      _rpcUrl = 'https://rpc2.sepolia.org/';
+      _wsUrl = 'wss://rpc2.sepolia.dev';
+    } else if (chainId == 3110) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://test-rpc-node-http.svmscan.io';
+      _wsUrl = 'wss://test-rpc-node-http.svmscan.io';
+    } else if (chainId == 1029) {
+      chainTicker = 'BTT';
+      _rpcUrl = 'https://pre-rpc.bt.io';
+      _wsUrl = 'wss://pre-rpc.bt.io';
     }
 
     // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -397,8 +432,8 @@ class TasksServices extends ChangeNotifier {
     _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
     _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
 
-    _rpcUrlSepolia = 'https://rpc.sepolia.dev';
-    _wsUrlSepolia = 'wss://rpc.sepolia.dev';
+    _rpcUrlSepolia = 'https://rpc2.sepolia.org/';
+    _wsUrlSepolia = 'wss://rpc2.sepolia.dev';
 
     _rpcUrlFantom = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
     _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
@@ -411,6 +446,22 @@ class TasksServices extends ChangeNotifier {
 
     _rpcUrlBlast = 'https://sepolia.blast.io';
     _wsUrlBlast = 'wss://sepolia.blast.io';
+
+    _rpcUrlScroll = 'https://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlScroll = 'wss://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlZkevm = 'https://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlZkevm = 'wss://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlManta = 'https://pacific-rpc.testnet.manta.network/http';
+    _wsUrlManta = 'wss://pacific-rpc.testnet.manta.network/ws';
+
+    _rpcUrlSatoshivm = 'https://test-rpc-node-http.svmscan.io';
+    _wsUrlSatoshivm = 'wss://test-rpc-node-http.svmscan.io';
+
+    _rpcUrlBTTC = 'https://pre-rpc.bt.io';
+    _wsUrlBTTC = 'wss://pre-rpc.bt.io';
+
     // _rpcUrl = 'https://rpc.api.moonbase.moonbeam.network';
     // _wsUrl = 'wss://wss.api.moonbase.moonbeam.network';
 
