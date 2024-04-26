@@ -38,12 +38,12 @@ class ContractorInfoState extends State<ContractorInfo> {
     final emptyClasses = EmptyClasses();
 
     double customerRating = 0.0;
-    BigInt tmpCustomerRating = BigInt.from(0);
-
+    // BigInt tmpCustomerRating = BigInt.from(0);
+    double tmpCustomerRating = 0;
     for (int i = 0; i < interface.selectedUser.customerRating.length; i++) {
-      tmpCustomerRating += interface.selectedUser.customerRating[i];
+      tmpCustomerRating += interface.selectedUser.customerRating.length;
     }
-    if (tmpCustomerRating != BigInt.from(0)) {
+    if (tmpCustomerRating != 0) {
       customerRating = tmpCustomerRating.toDouble() / interface.selectedUser.customerRating.length;
     }
 
