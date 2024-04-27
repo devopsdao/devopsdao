@@ -15,7 +15,6 @@ import 'package:g_json/g_json.dart';
 // on -> init ->
 // ... -> check (logic with bool return(not bool stored data))
 
-
 class MMService {
   final _chainPresets = ChainPresets();
 
@@ -43,7 +42,7 @@ class MMService {
         tasksServices.publicAddress = publicAddressMM;
         try {
           chainIdHex = await eth?.rawRequest('eth_chainId');
-          return {'public_address' : publicAddressMM, 'chainId' : int.parse(chainIdHex)};
+          return {'public_address': publicAddressMM, 'chainId': int.parse(chainIdHex)};
         } catch (e) {
           String errorJson = stringify(e);
           final error = JSON.parse(errorJson);
@@ -58,13 +57,9 @@ class MMService {
     }
   }
 
-
   Future<String> initSwitchNetworkMM(changeTo) async {
     try {
-      await eth!.rawRequest(
-          'wallet_switchEthereumChain',
-          params: [JSrawRequestSwitchChainParams(chainId: '0x${changeTo.toRadixString(16)}')]
-      );
+      await eth!.rawRequest('wallet_switchEthereumChain', params: [JSrawRequestSwitchChainParams(chainId: '0x${changeTo.toRadixString(16)}')]);
       return 'network_switched';
     } on EthereumException catch (e) {
       if (e.code == 4902) {
@@ -114,7 +109,6 @@ class MMService {
     // }
   }
 
-
   Future<bool> initAddNetworkMM(changeTo) async {
     final eth = window.ethereum;
     if (eth == null) {
@@ -127,7 +121,6 @@ class MMService {
       addBlockExplorer = false;
     }
     try {
-
       ChainInfo networkParams = _chainPresets.readChainInfo(changeTo);
 
       // final params = {
@@ -208,5 +201,3 @@ class MMService {
     }
   }
 }
-
-

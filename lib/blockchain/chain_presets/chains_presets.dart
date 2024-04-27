@@ -83,16 +83,51 @@ class ChainPresets {
             ],
           ),
         },
-        rpcUrl: 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
+        rpcUrl: 'https://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network',
         blockExplorer: BlockExplorer(
           name: 'Explorer',
-          url: 'https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
+          url: 'https://evmexplorer.tanssi-chains.network/?rpcUrl=https://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network',
         ),
         nativeCurrency: NativeCurrency(
           name: 'Dodao',
           symbol: 'DODAO',
           decimals: 18,
         )),
+    // 855456: ChainInfo(
+    //     chainName: 'Dodao Tanssi Appchain',
+    //     namespace: 'eip155:855456',
+    //     chainId: '855456',
+    //     chainIdHex: '0xd0da0',
+    //     chainIconLocally: chainImagesPath['855456'],
+    //     iconUrl: 'https://ipfs.io/ipfs/bafybeihbpxhz4urjr27gf6hjdmvmyqs36f3yn4k3iuz3w3pb5dd7grdnjy',
+    //     requiredNamespaces: {},
+    //     optionalNamespaces: {
+    //       'eip155': const RequiredNamespace(
+    //         methods: [
+    //           'eth_sign',
+    //           'eth_signTransaction',
+    //           'eth_sendTransaction',
+    //           'wallet_switchEthereumChain',
+    //           'wallet_addEthereumChain',
+    //           'eth_chainId'
+    //         ],
+    //         chains: ['eip155:855456'],
+    //         events: [
+    //           'chainChanged',
+    //           'accountsChanged',
+    //         ],
+    //       ),
+    //     },
+    //     rpcUrl: 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
+    //     blockExplorer: BlockExplorer(
+    //       name: 'Explorer',
+    //       url: 'https://tanssi-evmexplorer.netlify.app/?rpcUrl=https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network',
+    //     ),
+    //     nativeCurrency: NativeCurrency(
+    //       name: 'Dodao',
+    //       symbol: 'DODAO',
+    //       decimals: 18,
+    //     )),
     1287: ChainInfo(
         chainName: 'Moonbase Alpha',
         namespace: 'eip155:1287',

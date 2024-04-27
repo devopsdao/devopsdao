@@ -387,10 +387,16 @@ class TasksServices extends ChangeNotifier {
       chainTicker = 'ETH';
       _rpcUrl = 'https://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
       _wsUrl = 'wss://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
-    } else if (chainId == 855456) {
+    }
+    // else if (chainId == 855456) {
+    //   chainTicker = 'DODAO';
+    //   _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    //   _wsUrl = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    // }
+    else if (chainId == 855456) {
       chainTicker = 'DODAO';
-      _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
-      _wsUrl = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+      _rpcUrl = 'https://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
+      _wsUrl = 'wss://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
     } else if (chainId == 168587773) {
       chainTicker = 'ETH';
       _rpcUrl = 'https://sepolia.blast.io';
@@ -441,8 +447,11 @@ class TasksServices extends ChangeNotifier {
     _rpcUrlZksync = 'https://zksync2-testnet.zksync.dev';
     _wsUrlZksync = 'wss://zksync2-testnet.zksync.dev';
 
-    _rpcUrlTanssi = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
-    _wsUrlTanssi = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    // _rpcUrlTanssi = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    // _wsUrlTanssi = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+
+    _rpcUrlTanssi = 'https://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
+    _wsUrlTanssi = 'wss://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
 
     _rpcUrlBlast = 'https://sepolia.blast.io';
     _wsUrlBlast = 'wss://sepolia.blast.io';
