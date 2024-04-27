@@ -664,61 +664,10 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
                             widget.page == 'filter' || widget.page == 'create')
                         && (numOfNFTs > 1 ) || (nft && widget.page == 'create'))
                       Flexible(
-                        flex: 15,
-                        child: SizedBox(
-                          height: containerMainHeight,
-                          width: 18,
-                          child: Badges.Badge(
-                            badgeStyle: Badges.BadgeStyle(
-                              badgeColor: nftColor,
-                              elevation: 1,
-                              shape: Badges.BadgeShape.circle,
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            badgeAnimation: const Badges.BadgeAnimation.fade(
-                              disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
-                              // curve: Curves.easeInCubic,
-                            ),
-                            // position: BadgePosition.topEnd(top: 10, end: 10),
-                            badgeContent: Container(
-                              // width: 8,
-                              // height: 8,
-                              alignment: Alignment.center,
-                              child: Text(numOfNFTs.toString(), style: TextStyle(fontWeight: FontWeight.w700, color: animationColor.value, fontSize: 12)),
-                            ),
-                            // badgeColor: Colors.white,
-                            // animationDuration: const Duration(milliseconds: 600),
-                            // animationType: Badges.BadgeAnimationType.fade,
-                            // child: Icon(Icons.settings),
-                          ),
-
-
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     color: nftColor,
-                          //     border: Border.all(
-                          //       color: nftColor,
-                          //     ),
-                          //     borderRadius: const BorderRadius.all(Radius.circular(12)),
-                          //
-                          //   ),
-                          //   width: 15,
-                          //   height: 15,
-                          //   // color: nftColor,
-                          //   child: Align(
-                          //     alignment: Alignment.center,
-                          //     child: Text(
-                          //       numOfNFTs.toString(),
-                          //       style: DodaoTheme.of(context).bodyText3.override(
-                          //         fontFamily: 'Inter',
-                          //         color: animationColor.value,
-                          //         fontWeight: FontWeight.w700,
-                          //         fontSize: fontSize - 4,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                        ),
+                        flex: 24,
+                        child: Container(
+                          width: 30,
+                            child: NumberBadge(numOfNFTs: numOfNFTs, containerMainHeight: containerMainHeight, nftColor: nftColor, color: animationColor.value!)),
                       ),
                     if (
                           widget.wrapperRole != WrapperRole.getMore &&
@@ -782,6 +731,84 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
           );
         }
       ),
+    );
+  }
+}
+
+class NumberBadge extends StatelessWidget {
+  const NumberBadge({
+    super.key,
+    required this.numOfNFTs,
+    required this.containerMainHeight,
+    required this.nftColor,
+    required this.color,
+  });
+
+  final int numOfNFTs;
+  final double containerMainHeight;
+  final Color nftColor;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        String nftsNum = numOfNFTs.toString();
+        double badgeWidth = 23;
+    
+        if (numOfNFTs > 99) {
+          nftsNum = '9..';
+        }
+    
+        // if (numOfNFTs > 9) {
+        //   badgeWidth = 24;
+        // }
+        return SizedBox(
+          height: containerMainHeight - 8 ,
+          width: badgeWidth,
+          child: Badges.Badge(
+            badgeStyle: Badges.BadgeStyle(
+              badgeColor: nftColor,
+              elevation: 1,
+              shape: Badges.BadgeShape.circle,
+              borderRadius: BorderRadius.circular(14),
+              padding: const EdgeInsets.all(3.0),
+            ),
+            badgeAnimation: const Badges.BadgeAnimation.fade(
+              disappearanceFadeAnimationDuration: Duration(milliseconds: 300),
+              // curve: Curves.easeInCubic,
+            ),
+            badgeContent: Center(child: Text(nftsNum, style: TextStyle(fontWeight: FontWeight.w600, color: color, fontSize: 10))),
+          ),
+    
+    
+          // Container(
+          //   decoration: BoxDecoration(
+          //     color: nftColor,
+          //     border: Border.all(
+          //       color: nftColor,
+          //     ),
+          //     borderRadius: const BorderRadius.all(Radius.circular(12)),
+          //
+          //   ),
+          //   width: 15,
+          //   height: 15,
+          //   // color: nftColor,
+          //   child: Align(
+          //     alignment: Alignment.center,
+          //     child: Text(
+          //       numOfNFTs.toString(),
+          //       style: DodaoTheme.of(context).bodyText3.override(
+          //         fontFamily: 'Inter',
+          //         color: animationColor.value,
+          //         fontWeight: FontWeight.w700,
+          //         fontSize: fontSize - 4,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+        );
+      }
     );
   }
 }
@@ -1065,26 +1092,37 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
             flex: 5,
             child: Padding(
               padding: const EdgeInsets.only(left: 2.0, right: 2.0),
-              child: SizedBox(
-                height: containerMainHeight,
-                width: 18,
-                child: Badges.Badge(
-                  badgeStyle: Badges.BadgeStyle(
-                    badgeColor: nftColor,
-                    elevation: 1,
-                    shape: Badges.BadgeShape.circle,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  badgeAnimation: const Badges.BadgeAnimation.fade(
-                    toAnimate: false,
-                    // disappearanceFadeAnimationDuration: Duration(milliseconds: 1),
-                  ),
-                  badgeContent: Container(
-                    alignment: Alignment.center,
-                    child: Text(widget.balance.toString(), style: TextStyle(fontWeight: FontWeight.w700, color: bodyColor, fontSize: 12)),
-                  ),
-                ),
-              ),
+              child: NumberBadge(numOfNFTs: widget.balance.toInt(), containerMainHeight: containerMainHeight, nftColor: nftColor, color: bodyColor),
+
+              // Builder(
+              //   builder: (context) {
+              //     String nftsNum = widget.balance.toInt().toString();
+              //     double badgeWidth = 23;
+              //
+              //     if (widget.balance > 99) {
+              //       nftsNum = '9..';
+              //     }
+              //     return SizedBox(
+              //       height: containerMainHeight - 8,
+              //       width: badgeWidth,
+              //       child: Badges.Badge(
+              //         badgeStyle: Badges.BadgeStyle(
+              //           padding: const EdgeInsets.all(3.0),
+              //           badgeColor: nftColor,
+              //           elevation: 1,
+              //           shape: Badges.BadgeShape.circle,
+              //           borderRadius: BorderRadius.circular(14),
+              //         ),
+              //         badgeAnimation: const Badges.BadgeAnimation.fade(
+              //           toAnimate: false,
+              //           // disappearanceFadeAnimationDuration: Duration(milliseconds: 1),
+              //         ),
+              //         badgeContent: Center(
+              //             child: Text(nftsNum, style: TextStyle(fontWeight: FontWeight.w600, color: bodyColor, fontSize: 10))),
+              //       ),
+              //     );
+              //   }
+              // ),
             ),
           ),
           Container(

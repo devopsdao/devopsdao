@@ -28,7 +28,7 @@ dependencies:
   app_bar_with_search_switch: ^1.3.8
   auto_animated: ^3.1.0
   auto_size_text: 3.0.0
-  badges: ^3.1.1
+  badges: ^3.1.2
   beamer:
     path: ../beamer/package
   blurrycontainer: ^1.0.2
