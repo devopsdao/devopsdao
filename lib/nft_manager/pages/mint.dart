@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
@@ -72,12 +73,13 @@ class _MintWidget extends State<MintWidget> {
   Widget build(BuildContext context) {
     var searchServices = context.watch<SearchServices>();
     var collectionServices = context.watch<CollectionServices>();
-    // var tasksServices = context.read<TasksServices>();
 
     return LayoutBuilder(
         builder: (context, constraints) {
           final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
           late double maxHeight = constraints.maxHeight - statusBarHeight - 76;
+          late bool splitScreen = false;
+          print(splitScreen);
 
           return Column(
             children: [
@@ -162,68 +164,53 @@ class _MintWidget extends State<MintWidget> {
                       alignment: Alignment.topLeft,
                       child: Consumer<SearchServices>(
                           builder: (context, model, child) {
-                            return Wrap(
-                                alignment: WrapAlignment.start,
-                                direction: Axis.horizontal,
-                                children: model.mintPageFilterResults.entries.map((e) {
+                            return SingleChildScrollView(
+                              child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  direction: Axis.horizontal,
+                                  children: model.mintPageFilterResults.entries.map((e) {
 
-                                  if(!tagsCompare.containsKey(e.value.name)){
-                                    if (e.value.selected) {
-                                      tagsCompare[e.value.name] = TagsCompare(state: 'remain',);
-                                    } else {
-                                      tagsCompare[e.value.name] = TagsCompare(state: 'none',);
+                                    if(!tagsCompare.containsKey(e.value.name)){
+                                      if (e.value.selected) {
+                                        tagsCompare[e.value.name] = TagsCompare(state: 'remain',);
+                                      } else {
+                                        tagsCompare[e.value.name] = TagsCompare(state: 'none',);
+                                      }
+                                    } else if (tagsCompare.containsKey(e.value.name)) {
+                                      if (e.value.selected) {
+                                        if (tagsCompare[e.value.name]!.state == 'start') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'remain',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'none') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'end') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
+                                        }
+                                      } else {
+                                        if (tagsCompare[e.value.name]!.state == 'end') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'none',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'start') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'remain') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
+                                        }
+                                      }
                                     }
-                                  } else if (tagsCompare.containsKey(e.value.name)) {
-                                    if (e.value.selected) {
-                                      if (tagsCompare[e.value.name]!.state == 'start') {
-                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'remain',));
-                                      }
-                                      if (tagsCompare[e.value.name]!.state == 'none') {
-                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
-                                      }
-                                      if (tagsCompare[e.value.name]!.state == 'end') {
-                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
-                                      }
-                                    } else {
-                                      if (tagsCompare[e.value.name]!.state == 'end') {
-                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'none',));
-                                      }
-                                      if (tagsCompare[e.value.name]!.state == 'start') {
-                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
-                                      }
-                                      if (tagsCompare[e.value.name]!.state == 'remain') {
-                                        tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
-                                      }
-                                    }
-
-
-                                    // if (e.value.selected && tagsCompare[e.value.tag]!.state == 'none') {
-                                    //   // Start animation on clicked Widget
-                                    //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'start',));
-                                    // } else if (tagsCompare[e.value.tag]!.state == 'none' && !e.value.selected) {
-                                    //   // End(exit) animation
-                                    //   tagsCompare.update(e.value.tag, (val) => val = TagsCompare(state: 'end',));
-                                    // }
-
-
-                                    // for (var entry in entriesCopy.entries) {
-                                    //   print(DateTime.now().difference(entry.value.timestamp).inSeconds);
-                                    //   if (DateTime.now().difference(entry.value.timestamp).inSeconds > 1) {
-                                    //     tagsCompare.remove(e.value.tag);
-                                    //   }
-                                    // }
-                                  }
-                                  // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
-                                  return WrappedChip(
-                                    key: ValueKey(e),
-                                    item: e,
-                                    page: 'mint',
-                                    startScale: false,
-                                    animationCicle: tagsCompare[e.value.name]!.state,
-                                    selected: e.value.selected,
-                                    wrapperRole: WrapperRole.mint,
-                                  );
-                                }).toList()
+                                    // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
+                                    return WrappedChip(
+                                      key: ValueKey(e),
+                                      item: e,
+                                      page: 'mint',
+                                      startScale: false,
+                                      animationCicle: tagsCompare[e.value.name]!.state,
+                                      selected: e.value.selected,
+                                      wrapperRole: WrapperRole.mint,
+                                    );
+                                  }).toList()
+                              ),
                             );
                           }
                       ),
@@ -231,8 +218,6 @@ class _MintWidget extends State<MintWidget> {
                     Consumer<CollectionServices>(
                         builder: (context, model, child) {
                         late double secondPartHeight = 0.0;
-                        late bool splitScreen = false;
-
                         if (model.mintNftTagSelected.name != 'empty') {
                           splitScreen = true;
                         }

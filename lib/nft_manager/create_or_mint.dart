@@ -165,11 +165,17 @@ class _CreateOrMintState extends State<CreateOrMint> {
               child: Row(
                 children: [
                   const Spacer(),
-                  Padding(
+                  Container(
+                    constraints: const BoxConstraints(
+                      maxWidth: 250,
+                    ),
                     padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                     child: Text(
                       collectionName,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                   const Spacer(),

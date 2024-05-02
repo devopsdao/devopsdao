@@ -947,8 +947,10 @@ class TasksServices extends ChangeNotifier {
     if (hash.length == 66) {
       TransactionReceipt? transactionReceipt = await web3GetTransactionReceipt(hash);
       while (transactionReceipt == null) {
-        Future.delayed(const Duration(milliseconds: 3000));
         transactionReceipt = await web3GetTransactionReceipt(hash);
+        if(transactionReceipt == null) {
+          await Future.delayed(const Duration(milliseconds: 1000));
+        }
       }
       if (messageNanoId != '') {
         // sendChatMessage_$messageNanoID

@@ -42,8 +42,11 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     } else {
       riveAssetPath = 'assets/rive_animations/clew2.riv';
     }
+
+
     super.initState();
   }
+
   final PlatformAndBrowser platformAndBrowser = PlatformAndBrowser();
   @override
   Widget build(BuildContext context) {
@@ -233,6 +236,12 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       }
     }
     var width = MediaQuery.of(context).size.width;
+
+    Widget alertContainer =   Container(
+      height: 100,
+      color: Colors.white,
+      // child: ,
+    );
 
     return Dialog(
       // title: Text('Connect your wallet'),

@@ -45,16 +45,20 @@ class SearchServices extends ChangeNotifier {
     if (listToRefresh == 'mint') {
       mintPageFilterResults.clear();
       mintPageFilterResults = Map.from(collectionMap);
+      mintPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (listToRefresh == 'treasury') {
       treasuryPageFilterResults.clear();
       treasuryPageFilterResults = Map.from(nftBalanceMap);
     } else if (listToRefresh == 'filter') {
       taskFilterResults.clear();
       taskFilterResults = Map.from(collectionMap);
+      taskFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (listToRefresh == 'selection') {
       Map<String, NftCollection> tempNfts = {};
       if (collectionMap.entries.isNotEmpty) {
         for (var e in collectionMap.entries) {
+          if(e.value.name == '') {return;}
+
           tempNfts['collection ${e.key}'] = NftCollection(
             name: e.key,
             bunch: { BigInt.from(0) : (
@@ -272,15 +276,19 @@ class SearchServices extends ChangeNotifier {
     if (page == 'mint') {
       mintPageFilterResults.clear();
       mintPageFilterResults = resultMap;
+      mintPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (page == 'selection') {
       addToNewTaskFilterResults.clear();
       addToNewTaskFilterResults = resultMap;
+      addToNewTaskFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (page == 'treasury') {
       treasuryPageFilterResults.clear();
       treasuryPageFilterResults = resultMap;
+      treasuryPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (page == 'filter') {
       taskFilterResults.clear();
       taskFilterResults = resultMap;
+      taskFilterResults.removeWhere((String key, dynamic value) => key == '');
     }
     notifyListeners();
   }

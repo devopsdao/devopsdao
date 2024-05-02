@@ -334,79 +334,81 @@ class _MainTagsPageState extends State<MainTagsPage> {
                   } else {
                     localFilterResults = searchServices.taskFilterResults;
                   }
-                  return Wrap(
-                      alignment: WrapAlignment.start,
-                      direction: Axis.horizontal,
-                      children: localFilterResults.entries.map((e) {
-                        final String name = e.key;
-                        if (!tagsCompare.containsKey(name)) {
-                          if (e.value.selected) {
-                            tagsCompare[name] = TagsCompare(
-                              state: 'remain',
-                            );
-                          } else {
-                            tagsCompare[name] = TagsCompare(
-                              state: 'none',
-                            );
+                  return SingleChildScrollView(
+                    child: Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.horizontal,
+                        children: localFilterResults.entries.map((e) {
+                          final String name = e.key;
+                          if (!tagsCompare.containsKey(name)) {
+                            if (e.value.selected) {
+                              tagsCompare[name] = TagsCompare(
+                                state: 'remain',
+                              );
+                            } else {
+                              tagsCompare[name] = TagsCompare(
+                                state: 'none',
+                              );
+                            }
+                          } else if (tagsCompare.containsKey(name)) {
+                            if (e.value.selected) {
+                              if (tagsCompare[name]!.state == 'start') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'remain',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'none') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'start',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'end') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'start',
+                                        ));
+                              }
+                            } else {
+                              if (tagsCompare[name]!.state == 'end') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'none',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'start') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'end',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'remain') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'end',
+                                        ));
+                              }
+                            }
                           }
-                        } else if (tagsCompare.containsKey(name)) {
-                          if (e.value.selected) {
-                            if (tagsCompare[name]!.state == 'start') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'remain',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'none') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'start',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'end') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'start',
-                                      ));
-                            }
-                          } else {
-                            if (tagsCompare[name]!.state == 'end') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'none',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'start') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'end',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'remain') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'end',
-                                      ));
-                            }
-                          }
-                        }
-                        return WrappedChip(
-                          key: ValueKey(e),
-                          item: e,
-                          // selection or filter:
-                          page: actualPage,
-                          startScale: false,
-                          animationCicle: tagsCompare[name]!.state,
-                          selected: e.value.selected,
-                          wrapperRole: WrapperRole.selectNew,
-                        );
-                      }).toList());
+                          return WrappedChip(
+                            key: ValueKey(e),
+                            item: e,
+                            // selection or filter:
+                            page: actualPage,
+                            startScale: false,
+                            animationCicle: tagsCompare[name]!.state,
+                            selected: e.value.selected,
+                            wrapperRole: WrapperRole.selectNew,
+                          );
+                        }).toList()),
+                  );
                 }),
               ),
               const BottomItemInfo()
