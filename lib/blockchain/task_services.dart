@@ -922,7 +922,7 @@ class TasksServices extends ChangeNotifier {
         await myBalance();
 
         mainDebounce.debounce(() {
-          log.fine('debounced initCheckingOpenedTask fired');
+          // log.fine('debounced initCheckingOpenedTask fired');
           _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
         });
 

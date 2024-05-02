@@ -293,9 +293,9 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
     late double opacityBegin = 0.0;
     late double opacityEnd = 1.0;
 
-    final double tagWidthInit = textSize.width + 10;
-    late double sizeRegular = tagWidthInit;
-    late double sizeExpanded = tagWidthInit;
+    final double tagMainWidth = textSize.width + 10;
+    late double sizeRegular = tagMainWidth;
+    late double sizeExpanded = tagMainWidth;
     late double sizeBegin = 0;
     late double sizeEnd = 0;
 
@@ -355,10 +355,10 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
       sizeEnd += sizeExpanded;
 
     } else if (widget.animationCicle == 'end') {
-      // tagWidthInit += 12;
+      // tagMainWidth += 12;
       // expandExtra = -12;
       // if (icon == 'extra_icon') {
-      //   tagWidthInit += 22;
+      //   tagMainWidth += 22;
       //   expandExtra = -34;
       // }
       // scaleMoreSpaceForButtonController.reverse();
@@ -376,8 +376,8 @@ class _WrappedChipState extends State<WrappedChip> with TickerProviderStateMixin
 
 
     } else if (widget.animationCicle == 'remain') {
-      // if (icon == 'extra_icon') { tagWidthInit += 22; }
-      // tagWidthInit += 12;
+      // if (icon == 'extra_icon') { tagMainWidth += 22; }
+      // tagMainWidth += 12;
       sizeBegin += sizeRegular;
       sizeEnd += sizeRegular;
 
@@ -1017,21 +1017,24 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
         )
     );
 
-    late double tagWidthInit = textSize.width + 18;
+    late double tagMainWidth = textSize.width + 18;
 
-    tagWidthInit += 36;
+    tagMainWidth += 36;
     if (widget.nft && widget.balance > 1) {
       showNftNumber = true;
-      // tagWidthInit -= 36;
+      // tagMainWidth -= 36;
     } else if (!widget.nft) {
-      // tagWidthInit += 36;
+      // tagMainWidth += 36;
     }
     if (specialNft) {
-      tagWidthInit = tagWidthInit + 20;
+      tagMainWidth = tagMainWidth + 20;
+    }
+    if (tagMainWidth >= 250) {
+      tagMainWidth = 250;
     }
 
     return Container(
-      width: tagWidthInit,
+      width: tagMainWidth,
 
       margin: containerMargin,
       decoration: BoxDecoration(
@@ -1123,7 +1126,10 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
           Container(
             alignment: Alignment.center,
             height: containerMainHeight,
-            child: Padding(
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 220,
+              ),
               padding: centerTextPadding,
               child: Text(
 
@@ -1134,6 +1140,9 @@ class _HomeWrappedChipState extends State<HomeWrappedChip> with TickerProviderSt
                   fontWeight: FontWeight.w400,
                   fontSize: fontSize,
                 ),
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ),

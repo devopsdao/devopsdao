@@ -49,6 +49,7 @@ class SearchServices extends ChangeNotifier {
     } else if (listToRefresh == 'treasury') {
       treasuryPageFilterResults.clear();
       treasuryPageFilterResults = Map.from(nftBalanceMap);
+      treasuryPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (listToRefresh == 'filter') {
       taskFilterResults.clear();
       taskFilterResults = Map.from(collectionMap);
@@ -57,24 +58,26 @@ class SearchServices extends ChangeNotifier {
       Map<String, NftCollection> tempNfts = {};
       if (collectionMap.entries.isNotEmpty) {
         for (var e in collectionMap.entries) {
-          if(e.value.name == '') {return;}
-
-          tempNfts['collection ${e.key}'] = NftCollection(
-            name: e.key,
-            bunch: { BigInt.from(0) : (
-              TokenItem(
+          if (e.value.name != '') {
+            tempNfts['collection ${e.key}'] = NftCollection(
                 name: e.key,
-                collection: false,
-                nft: false,
+                bunch: { BigInt.from(0) : (
+                    TokenItem(
+                        name: e.key,
+                        collection: false,
+                        nft: false,
+                        selected: false
+                    )
+                )},
                 selected: false
-              )
-            )},
-            selected: false
-          );
+            );
+          }
+
         }
       }
       addToNewTaskFilterResults = {...tempNfts, ...nftBalanceMap};
       selectionPageInitialCombined = {...tempNfts, ...nftBalanceMap}; // initial combined copied map for tagsSearchFilter()
+
     }
     notifyListeners();
   }
