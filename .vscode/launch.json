@@ -21,7 +21,9 @@
             "program": "lib/main.dart",
             "args": [
                 "-d",
-                "chrome"
+                "chrome",
+                "--web-browser-flag",
+                "--disable-web-security"
             ]
         },
         {
