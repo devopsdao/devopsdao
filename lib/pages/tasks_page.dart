@@ -181,7 +181,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       ),
                     ),
                   ),
-                  if (platformAndBrowser.platform == 'web' || platformAndBrowser.platform == 'linux') const LoadButtonIndicator(),
+                  if (platformAndBrowser.platform == 'web' || platformAndBrowser.platform == 'linux') LoadButtonIndicator(refresh: 'new',),
                 ],
               );
             },

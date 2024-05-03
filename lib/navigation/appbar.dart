@@ -78,7 +78,7 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
                 },
               ),
               if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
-                const LoadButtonIndicator(),
+                LoadButtonIndicator(refresh: page,),
             ]
         );
       },
