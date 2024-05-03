@@ -5,10 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/classes.dart';
+import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../widgets/tags/search_services.dart';
 
-class NftItem extends StatelessWidget {
+class NftItem extends StatefulWidget {
   final TokenItem item;
   final double frameHeight;
   final String page;
@@ -20,16 +21,32 @@ class NftItem extends StatelessWidget {
     required this.page
   }) : super(key: key);
 
+  @override
+  State<NftItem> createState() => _NftItemState();
+}
+
+class _NftItemState extends State<NftItem> {
   final EdgeInsets padding = const EdgeInsets.all(10.0);
 
+  late List<dynamic> totalSupply = [BigInt.from(0)];
 
+  getTotalSupply() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+      var getTS = await tasksServices.totalSupplyOfBatchName([widget.item.name]);
+      setState(() {
+        totalSupply = getTS;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bool selected = item.selected;
+    final bool selected = widget.item.selected;
+    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    getTotalSupply();
     return InkWell(
       child: Card(
-
           elevation: 4,
           color: Colors.grey[700],
           shape: RoundedRectangleBorder(
@@ -53,13 +70,12 @@ class NftItem extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image.asset(
                             'assets/images/logo.png',
-                            height: frameHeight - 192,
+                            height: widget.frameHeight - 192,
                             filterQuality: FilterQuality.medium,
                             isAntiAlias: true,
                           ),
                         ),
                       ),
-
                       Container(
                           width: maxWidth,
                           alignment: Alignment.topLeft,
@@ -78,7 +94,7 @@ class NftItem extends StatelessWidget {
                                     color: Colors.white,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                      children: [TextSpan(text: 'NFT: ${item.name}'),])),
+                                      children: [TextSpan(text: 'NFT: ${widget.item.name}'),])),
                               RichText(
                                   text: TextSpan(style: DodaoTheme.of(context).bodyText1.override(
                                       fontFamily: 'Inter',
@@ -86,22 +102,27 @@ class NftItem extends StatelessWidget {
                                       fontWeight: FontWeight.w400
                                   ),
                                   children: <TextSpan>[
-                                    TextSpan(text: 'Features: ${item.feature}\n'),
-                                    TextSpan(text: 'Rarity: ${item.nft}\n'),
-                                    TextSpan(text: 'Total supply: ${item.nft}\n'),
-                                    TextSpan(text: 'Issued by: ${item.nft}\n'),
+                                    TextSpan(text: 'Features: ${widget.item.feature}\n'),
+                                    TextSpan(text: 'Rarity: ${widget.item.nft}\n'),
+                                    TextSpan(text: 'Issued by: ${widget.item.nft}\n'),
                                     const TextSpan(text: 'You own: 1'),
                                   ])),
+                              Text('Total supply: ${totalSupply.first}',
+                                style: DodaoTheme.of(context).bodyText1.override(
+                                    fontFamily: 'Inter',
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400
+                                ),),
                               GestureDetector(
                                 onTap: () async {
-                                  Clipboard.setData(ClipboardData(text: '${item.id}')).then((_) {
+                                  Clipboard.setData(ClipboardData(text: '${widget.item.id}')).then((_) {
                                     Flushbar(
                                         icon: Icon(
                                           Icons.copy,
                                           size: 20,
                                           color: DodaoTheme.of(context).flushTextColor,
                                         ),
-                                        message: '${item.id} copied to your clipboard!',
+                                        message: '${widget.item.id} copied to your clipboard!',
                                         duration: const Duration(seconds: 2),
                                         backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                         shouldIconPulse: false)
@@ -128,20 +149,20 @@ class NftItem extends StatelessWidget {
                                                   size: 16,
                                                   color: Colors.white,
                                                 )),
-                                            TextSpan(text: '${item.id}'),
+                                            TextSpan(text: '${widget.item.id}'),
                                           ])),
                                 ),
                               ),
                               GestureDetector(
                                 onTap: () async {
-                                  Clipboard.setData(ClipboardData(text: '${item.name}')).then((_) {
+                                  Clipboard.setData(ClipboardData(text: '${widget.item.name}')).then((_) {
                                     Flushbar(
                                         icon: Icon(
                                           Icons.copy,
                                           size: 20,
                                           color: DodaoTheme.of(context).flushTextColor,
                                         ),
-                                        message: '${item.name} copied to your clipboard!',
+                                        message: '${widget.item.name} copied to your clipboard!',
                                         duration: const Duration(seconds: 2),
                                         backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
                                         shouldIconPulse: false)
@@ -149,7 +170,6 @@ class NftItem extends StatelessWidget {
                                   });
                                 },
                                 child: Container(
-
                                   child: RichText(
                                       textAlign: TextAlign.start,
                                       softWrap: false,
@@ -168,7 +188,7 @@ class NftItem extends StatelessWidget {
                                             size: 16,
                                             color: Colors.white,
                                           )),
-                                        TextSpan(text: '${item.name}'),
+                                        TextSpan(text: '${widget.item.name}'),
                                       ])),
                                 ),
                               ),
@@ -179,8 +199,8 @@ class NftItem extends StatelessWidget {
                     ],
                   );
                 }),
-                if (page == 'selection')
-                NftCheckBox(item: item),
+                if (widget.page == 'selection')
+                NftCheckBox(item: widget.item),
               ],
             ),
           )
@@ -239,3 +259,4 @@ class _NftCheckBox extends State<NftCheckBox> {
     );
   }
 }
+
