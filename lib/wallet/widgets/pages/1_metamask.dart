@@ -61,6 +61,7 @@ class _MetamaskPageState extends State<MetamaskPage> {
         MetamaskMainScreen(innerPaddingWidth: widget.innerPaddingWidth),
 
       const SizedBox(height: 50),
+        // if(listenWalletConnected)
         WalletActionButton(
           buttonName: buttonText,
           // buttonFunction: 'metamask',
