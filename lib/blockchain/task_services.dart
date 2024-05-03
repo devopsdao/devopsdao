@@ -1728,8 +1728,8 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> refreshTasksForAccount(EthereumAddress address) async {
     await fetchTasksByState('new');
-    await fetchTasksCustomer(address);
-    await fetchTasksPerformer(address);
+    // await fetchTasksCustomer(address);
+    // await fetchTasksPerformer(address);
   }
 
   Future<void> getTaskListFullThenFetchIt() async {
