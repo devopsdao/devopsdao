@@ -133,7 +133,8 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 onPressed: AppBarWithSearchSwitch.of(context)?.startSearch,
                 icon: const Icon(Icons.search),
               ),
-              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux') const LoadButtonIndicator(),
+              if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
+                LoadButtonIndicator(refresh: 'auditor',),
             ],
           );
         },

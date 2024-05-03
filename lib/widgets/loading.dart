@@ -74,7 +74,8 @@ class _LoadIndicator extends State<LoadIndicator> {
 }
 
 class LoadButtonIndicator extends StatefulWidget {
-  const LoadButtonIndicator({Key? key}) : super(key: key);
+  LoadButtonIndicator({Key? key,required this.refresh,}) : super(key: key);
+  String refresh;
 
   @override
   _LoadButtonIndicator createState() => _LoadButtonIndicator();
@@ -113,7 +114,7 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
           onTap: () {
             if (listenWalletAddress != null) {
               tasksServices.isLoadingBackground = true;
-              tasksServices.refreshTasksForAccount(listenWalletAddress);
+              tasksServices.refreshTasksForAccount(listenWalletAddress, widget.refresh);
             }
           },
         ),

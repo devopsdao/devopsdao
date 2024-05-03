@@ -1726,10 +1726,14 @@ class TasksServices extends ChangeNotifier {
     return sortedTasks;
   }
 
-  Future<void> refreshTasksForAccount(EthereumAddress address) async {
-    await fetchTasksByState('new');
-    // await fetchTasksCustomer(address);
-    // await fetchTasksPerformer(address);
+  Future<void> refreshTasksForAccount(EthereumAddress address, String refresh) async {
+    if  (refresh == 'new') {
+      await fetchTasksByState('new');
+    } else {
+      await fetchTasksByState('new');
+      await fetchTasksCustomer(address);
+      await fetchTasksPerformer(address);
+    }
   }
 
   Future<void> getTaskListFullThenFetchIt() async {
