@@ -171,9 +171,8 @@ class MMService {
       // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
       // await tasksServices.fetchTasksBatch(taskList);
       await tasksServices.connectRPC(newChainId);
-      await tasksServices.startup();
       await tasksServices.collectMyTokens();
-      await tasksServices.myBalance();
+      // await tasksServices.myBalance();
       // await tasksServices.getAccountBalances(newChainId);
       return true;
     } catch (e) {

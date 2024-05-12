@@ -21,7 +21,6 @@ import 'config/internationalization.dart';
 
 import 'package:dodao/blockchain/task_services.dart';
 
-import 'navigation/authenticator.dart';
 import 'navigation/beamer_delegate.dart';
 import 'package:beamer/beamer.dart';
 
@@ -30,14 +29,8 @@ void main() async {
 
   await DodaoTheme.initialize();
 
-  // createAuthenticator();
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
-  // await PreloadAssets.preload();
-  // beamerDelegate.beamToNamed('/tasks/1');
-
-  // runApp(MyApp());
-  // var taskServices = TasksServices();
 
   runApp(
     MultiProvider(
@@ -80,26 +73,14 @@ void main() async {
       ],
       child: MyApp(),
     ),
-    // ChangeNotifierProvider(
-    //   create: (context) => TasksServices(),
-    //   child: MyApp(),
-    // ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   State<MyApp> createState() => _MyAppState();
 
   static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
-
-  // Widget build(BuildContext context) {
-  //   return MaterialApp.router(
-  //     routerDelegate: beamerDelegate,
-  //     routeInformationParser: BeamerParser(),
-  //   );
-  // }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -118,36 +99,33 @@ class _MyAppState extends State<MyApp> {
         DodaoTheme.saveThemeMode(mode);
       });
 
-  // final beamerRouter = MaterialApp.router(
-  //     routerDelegate: beamerDelegate, routeInformationParser: BeamerParser());
-
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp.router(
-    //   routerDelegate: beamerDelegate,
-    //   routeInformationParser: BeamerParser(),
-    // );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     return ChangeNotifierProvider(
       create: (_) => ModelTheme(),
       child: Consumer<ModelTheme>(
       builder: (context, ModelTheme themeNotifier, child) {
-        return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen.navigate(
-            name: 'assets/rive_animations/cat-blinking.riv',
-            until: () => Future.delayed(const Duration(seconds: 1)),
-            startAnimation: 'Opening one eye',
-            width: 210,
-            height: 210,
+        // return MaterialApp(
+        //   debugShowCheckedModeBanner: false,
+        //   home: SplashScreen.navigate(
+        //     name: 'assets/rive_animations/cat-blinking.riv',
+        //     until: () => Future.delayed(const Duration(seconds: 1)),
+        //     startAnimation: 'Opening one eye',
+        //     width: 210,
+        //     height: 210,
+        //
+        //     next: (context) =>
 
-            next: (context) => MaterialApp.router(
+               return MaterialApp.router(
+
 
               routerDelegate: beamerDelegate,
-              routeInformationParser: BeamerParser(),
+              routeInformationParser: parser,
               backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
               debugShowCheckedModeBanner: false,
               title: 'dodao.dev',
@@ -156,7 +134,7 @@ class _MyAppState extends State<MyApp> {
               localizationsDelegates: const [
                 FFLocalizationsDelegate(),
                 GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate ,
                 GlobalCupertinoLocalizations.delegate,
               ],
               locale: _locale,
@@ -278,12 +256,8 @@ class _MyAppState extends State<MyApp> {
               ),
               // Theme mode settings:
               themeMode: themeNotifier.isDark  ? ThemeMode.dark : ThemeMode.light,
-            ),
-        )
-
-
-
-        );
+            );
+        // ));
       }
     ));
   }
