@@ -21,17 +21,16 @@ class MMService {
   EthereumAddress? publicAddressMM;
   static Ethereum? eth;
 
-
   Future<Map<String, dynamic>?> initCreateWalletConnection(TasksServices tasksServices, bool onStartup) async {
     tasksServices.credentials = {};
     eth = window.ethereum;
     final List<CredentialsWithKnownAddress> accounts;
     late String chainIdHex;
-    print('wallet is connected: ${eth!.isConnected()}');
+    print('wallet is connected: ${await isAccountsConnected()}');
     if (eth == null) {
       log.info('metamask_services.dart->initCreateWalletConnection MetaMask is not available');
       return null;
-    } else if (onStartup && !eth!.isConnected()) {
+    } else if (onStartup && await isAccountsConnected()) {
       log.info('onStartup && !eth!.isConnected(): false');
       return null;
     }
@@ -60,6 +59,20 @@ class MMService {
       log.severe(e);
       return null;
     }
+  }
+
+  Future<bool> isAccountsConnected() async {
+    try {
+      List accounts = await eth!.rawRequest('eth_accounts');
+      if (accounts.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   Future<String> initSwitchNetworkMM(changeTo) async {
