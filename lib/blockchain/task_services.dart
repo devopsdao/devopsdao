@@ -349,7 +349,6 @@ class TasksServices extends ChangeNotifier {
     // await nftInitialCollection();
     await collectMyTokens();
 
-
     // await getABI();
     // await getDeployedContract();
 
@@ -359,7 +358,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> connectRPC(int chainId) async {
-    if (chainId == 31337) {
+    if (chainId == 31337 || hardhatDebug == true || hardhatLive == true) {
       chainTicker = 'ETH';
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
@@ -723,6 +722,7 @@ class TasksServices extends ChangeNotifier {
       print('event fired');
     });
   }
+
   late bool contractsInitialized = false;
 
   late Map fees;
@@ -766,7 +766,6 @@ class TasksServices extends ChangeNotifier {
     await monitorEvents();
     notifyListeners();
     isLoadingBackground = false;
-
   }
 
   Future<void> connectContracts() async {
@@ -789,7 +788,6 @@ class TasksServices extends ChangeNotifier {
     }
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: web3client, chainId: chainId);
     contractsInitialized = true;
-
   }
 
   Future<void> myBalance() async {
@@ -954,7 +952,7 @@ class TasksServices extends ChangeNotifier {
       TransactionReceipt? transactionReceipt = await web3GetTransactionReceipt(hash);
       while (transactionReceipt == null) {
         transactionReceipt = await web3GetTransactionReceipt(hash);
-        if(transactionReceipt == null) {
+        if (transactionReceipt == null) {
           await Future.delayed(const Duration(milliseconds: 1000));
         }
       }
@@ -1283,22 +1281,22 @@ class TasksServices extends ChangeNotifier {
 
   /// todo function for dashboard:
   Future<Map<String, Map<String, int>>> getTasksStats(Map<EthereumAddress, Task> tasks) async {
-    late List createTimeList = [];
-    late List taskTypeList = [];
-    late List tagsList = [];
-    late List tagsNFTList = [];
-    late List taskStateList = [];
-    late List auditStateList = [];
-    late List performerRatingList = [];
-    late List customerRatingList = [];
-    late List contractOwnerList = [];
-    late List performerList = [];
-    late List participantsList = [];
-    late List fundersList = [];
-    late List auditorList = [];
-    late List auditorsList = [];
-    late List tokenNamesList = [];
-    late List tokenValuesList = [];
+    List createTimeList = [];
+    List taskTypeList = [];
+    List tagsList = [];
+    List tagsNFTList = [];
+    List taskStateList = [];
+    List auditStateList = [];
+    List performerRatingList = [];
+    List customerRatingList = [];
+    List contractOwnerList = [];
+    List performerList = [];
+    List participantsList = [];
+    List fundersList = [];
+    List auditorList = [];
+    List auditorsList = [];
+    List tokenNamesList = [];
+    List tokenValuesList = [];
     // Map<String, List<Task>> taskStatsLists = {};
 
     for (final task in tasks.values) {
@@ -1352,10 +1350,10 @@ class TasksServices extends ChangeNotifier {
   countOccurences(list) {
     Map<String, int> map = {};
     for (var i in list) {
-      if (!map.containsKey(i)) {
+      if (!map.containsKey(i.toString())) {
         map[i.toString()] = 1;
       } else {
-        map[i] = map[i]! + 1;
+        map[i.toString()] = map[i.toString()]! + 1;
       }
     }
     return map;
@@ -1381,9 +1379,9 @@ class TasksServices extends ChangeNotifier {
       return tasks[taskAddress]!;
     } else {
       await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
-        print('wait');
-        return !contractsInitialized;
-      }));
+            print('wait');
+            return !contractsInitialized;
+          }));
       // await Future.delayed(const Duration(milliseconds: 1000));
       final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
       tasks[taskAddress] = tasksTemp[taskAddress]!;
@@ -1733,7 +1731,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> refreshTasksForAccount(EthereumAddress address, String refresh) async {
-    if  (refresh == 'new') {
+    if (refresh == 'new') {
       await fetchTasksByState('new');
     } else {
       await fetchTasksByState('new');
@@ -1787,17 +1785,17 @@ class TasksServices extends ChangeNotifier {
     Map<String, Map<EthereumAddress, Task>> tasksWeekMap = await getTasksWeekMap(tasks);
     Map<String, Map<EthereumAddress, Task>> tasksMonthMap = await getTasksMonthMap(tasks);
 
-    late Map<String, Map<String, Map<String, int>>> dailyStats = {};
+    Map<String, Map<String, Map<String, int>>> dailyStats = {};
     for (String taskDate in tasksDateMap.keys) {
       dailyStats[taskDate] = await getTasksStats(tasksDateMap[taskDate]!);
     }
 
-    late Map<String, Map<String, Map<String, int>>> weeklyStats = {};
+    Map<String, Map<String, Map<String, int>>> weeklyStats = {};
     for (String taskDateWeek in tasksWeekMap.keys) {
       weeklyStats[taskDateWeek] = await getTasksStats(tasksWeekMap[taskDateWeek]!);
     }
 
-    late Map<String, Map<String, Map<String, int>>> monthlyStats = {};
+    Map<String, Map<String, Map<String, int>>> monthlyStats = {};
     for (String taskDateMonth in tasksMonthMap.keys) {
       monthlyStats[taskDateMonth] = await getTasksStats(tasksMonthMap[taskDateMonth]!);
     }
