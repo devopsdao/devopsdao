@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dodao/nft_manager/pages/mint.dart';
+import 'package:dodao/nft_manager/pages/mint.dart__';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';

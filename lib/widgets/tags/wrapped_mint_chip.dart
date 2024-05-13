@@ -62,7 +62,38 @@ class _WrappedMintChipState extends State<WrappedMintChip> {
           bodyColor = DodaoTheme.of(context).chipSelectedColor;
         });
         // searchServices.tagSelection( unselectAll: false, tagName: tagName, typeSelection: 'mint', tagKey: tagKey);
-        collectionServices.updateMintNft(widget.item.value.bunch.values.first);
+        // collectionServices.updateMintNft(widget.item.value.bunch.values.first);
+
+        showBottomSheet(
+          // backgroundColor: Colors.transparent,
+          constraints: BoxConstraints(minWidth: double.infinity),
+          // barrierColor: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              height: 300,
+              width: double.infinity,
+              color: Colors.white,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text(
+                      'This is a BottomSheet',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();                   },
+                      child: Text('Close BottomSheet'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
       },
       onTapOutside: (tap) {
         setState(() {

@@ -92,6 +92,7 @@ dependencies:
   webthree: ^2.7.3
   web3modal_flutter: ^3.0.0-beta04
   week_of_year: ^2.0.0
+  chips_choice: ^3.0.1
 #  vector_graphics: ^1.0.1
 dependency_overrides:
   font_awesome_flutter: ^10.1.0

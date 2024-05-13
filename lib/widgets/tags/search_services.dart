@@ -9,6 +9,14 @@ class SearchServices extends ChangeNotifier {
   //
   late ValueNotifier<bool> searchBarStart = ValueNotifier(true);
 
+  Future<List<String>> getMintList() async {
+    List<String>list = [];
+    for (var v in mintPageFilterResults.values) {
+      list.add(v.name);
+    }
+    return list;
+  }
+
   Map<String, NftCollection> mintPageFilterResults = {};
   Map<String, NftCollection> treasuryPageFilterResults = {};
   Map<String, NftCollection> taskFilterResults = {};

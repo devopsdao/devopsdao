@@ -1,4 +1,4 @@
-import 'package:dodao/nft_manager/pages/mint.dart';
+import 'package:dodao/nft_manager/pages/mint.dart__';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
