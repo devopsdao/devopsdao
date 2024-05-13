@@ -21,39 +21,44 @@ class MMService {
   EthereumAddress? publicAddressMM;
   static Ethereum? eth;
 
-  Future<Map<String, dynamic>?> initCreateWalletConnection(TasksServices tasksServices) async {
+
+  Future<Map<String, dynamic>?> initCreateWalletConnection(TasksServices tasksServices, bool onStartup) async {
     tasksServices.credentials = {};
     eth = window.ethereum;
     final List<CredentialsWithKnownAddress> accounts;
     late String chainIdHex;
+    print('wallet is connected: ${eth!.isConnected()}');
     if (eth == null) {
       log.info('metamask_services.dart->initCreateWalletConnection MetaMask is not available');
       return null;
-    } else {
-      var ethRPC = eth?.asRpcService();
+    } else if (onStartup && !eth!.isConnected()) {
+      log.info('onStartup && !eth!.isConnected(): false');
+      return null;
+    }
 
-      final client = Web3Client.custom(ethRPC!);
+    var ethRPC = eth?.asRpcService();
+
+    final client = Web3Client.custom(ethRPC!);
+    try {
+      accounts = await eth!.requestAccounts();
+      CredentialsWithKnownAddress credentials = accounts[0];
+
+      publicAddressMM = credentials.address;
+      tasksServices.credentials = credentials;
+      tasksServices.publicAddress = publicAddressMM;
       try {
-        accounts = await eth!.requestAccounts();
-        CredentialsWithKnownAddress credentials = accounts[0];
-
-        publicAddressMM = credentials.address;
-        tasksServices.credentials = credentials;
-        tasksServices.publicAddress = publicAddressMM;
-        try {
-          chainIdHex = await eth?.rawRequest('eth_chainId');
-          return {'public_address': publicAddressMM, 'chainId': int.parse(chainIdHex)};
-        } catch (e) {
-          String errorJson = stringify(e);
-          final error = JSON.parse(errorJson);
-          if (error['code'] == 4902) {}
-          log.severe(e);
-          return null;
-        }
+        chainIdHex = await eth?.rawRequest('eth_chainId');
+        return {'public_address': publicAddressMM, 'chainId': int.parse(chainIdHex)};
       } catch (e) {
+        String errorJson = stringify(e);
+        final error = JSON.parse(errorJson);
+        if (error['code'] == 4902) {}
         log.severe(e);
         return null;
       }
+    } catch (e) {
+      log.severe(e);
+      return null;
     }
   }
 

@@ -117,7 +117,7 @@ class MetamaskModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onCreateMetamaskConnection(tasksServices, walletModel, context) async {
+  Future<void> onCreateMetamaskConnection(tasksServices, walletModel, context, bool onStartup) async {
     if (_platform.platform != 'web' || window.ethereum == null) {
       log.warning("eth not initialized");
       return;
@@ -129,7 +129,7 @@ class MetamaskModel extends ChangeNotifier {
     await setMmScreenState(state: MMScreenStatus.loadingMetamask);
     await onResetMM(tasksServices, walletModel);
     _mmSessions.initUnsubscribe();
-    Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices);
+    Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices, onStartup);
 
     if (resultData == null) {
       await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
@@ -184,7 +184,7 @@ class MetamaskModel extends ChangeNotifier {
         }
       }
 
-      Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices);
+      Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices, false);
       // _mmSessions.initUnsubscribe();
 
       if (resultData == null) {

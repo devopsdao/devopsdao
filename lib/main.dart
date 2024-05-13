@@ -91,7 +91,17 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+    // Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      MetamaskModel metamaskProvider = context.read<MetamaskModel>();
+      WalletModel walletModel = context.read<WalletModel>();
+      var tasksServices = context.read<TasksServices>();
+      await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
+        print('wait on startup wallet connect');
+        return !tasksServices.contractsInitialized;
+      }));
+      metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context, true);
+    });
   }
 
   void setLocale(Locale value) => setState(() => _locale = value);

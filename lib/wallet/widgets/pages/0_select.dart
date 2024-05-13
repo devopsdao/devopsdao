@@ -68,7 +68,7 @@ class _WalletSelectConnectionState extends State<WalletSelectConnection> {
               // walletModel.onWalletReset();
               print(int.parse('0xd0da0'.substring(2), radix: 16));
 
-              await metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context);
+              await metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context, false);
             },
             buttonColor: Colors.green.shade400,
             assetPath: 'assets/images/metamask-icon2.svg',

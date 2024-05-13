@@ -67,7 +67,7 @@ class _MetamaskPageState extends State<MetamaskPage> {
           // buttonFunction: 'metamask',
           callback: () async {
             if (!listenWalletConnected) {
-              await metamaskModel.onCreateMetamaskConnection(tasksServices, walletModel, context);
+              await metamaskModel.onCreateMetamaskConnection(tasksServices, walletModel, context, false);
             } else if (listenWalletConnected && !listenAllowedChainId) {
               // await metamaskModel.onSwitchNetworkMM(context);
             } else if (listenWalletConnected && listenAllowedChainId) {
