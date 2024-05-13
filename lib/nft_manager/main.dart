@@ -1,10 +1,10 @@
-import 'package:dodao/nft_manager/pages/mint.dart__';
+import 'package:dodao/nft_manager/pages/mint.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../task_dialog/beamer.dart';
-import '../widgets/badgetab.dart';
+import '../widgets/badgetab.dart'; 
 import '../widgets/tags/search_services.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';

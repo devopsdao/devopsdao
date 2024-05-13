@@ -26,11 +26,12 @@ class MMService {
     eth = window.ethereum;
     final List<CredentialsWithKnownAddress> accounts;
     late String chainIdHex;
-    print('wallet is connected: ${await isAccountsConnected()}');
+    bool accountConnected = await isAccountsConnected();
+    print('wallet is connected: $accountConnected');
     if (eth == null) {
       log.info('metamask_services.dart->initCreateWalletConnection MetaMask is not available');
       return null;
-    } else if (onStartup && await isAccountsConnected()) {
+    } else if (onStartup && !accountConnected) {
       log.info('onStartup && !eth!.isConnected(): false');
       return null;
     }
