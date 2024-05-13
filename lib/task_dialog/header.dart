@@ -120,7 +120,8 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                   ],
                 ),
                 onTap: () async {
-                  Clipboard.setData(ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress}')).then((_) {
+                  // Clipboard.setData(ClipboardData(text: 'https://dodao.dev/#/${widget.fromPage}/${task.taskAddress}')).then((_) {
+                  Clipboard.setData(ClipboardData(text: 'https://dodao.dev/#/tasks/${task.taskAddress}')).then((_) {
                     Flushbar(
                             icon: Icon(
                               Icons.copy,
