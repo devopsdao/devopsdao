@@ -144,7 +144,7 @@ class GetTaskException implements Exception {
 class TasksServices extends ChangeNotifier {
   final _walletService = WalletService();
   final _getAddresses = GetAddresses();
-  bool hardhatDebug = false;
+  bool hardhatDebug = true;
   bool hardhatLive = false;
   int liveAccount = 0; // choose hardhat account(wallet) to use;
   Map<EthereumAddress, Task> tasks = {};
@@ -357,7 +357,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> connectRPC(int chainId) async {
-    if (chainId == 31337) {
+    if (chainId == 31337 || hardhatDebug == true || hardhatLive == true) {
       chainTicker = 'ETH';
       _rpcUrl = 'http://localhost:8545';
       _wsUrl = 'ws://localhost:8545';
@@ -948,7 +948,7 @@ class TasksServices extends ChangeNotifier {
       TransactionReceipt? transactionReceipt = await web3GetTransactionReceipt(hash);
       while (transactionReceipt == null) {
         transactionReceipt = await web3GetTransactionReceipt(hash);
-        if(transactionReceipt == null) {
+        if (transactionReceipt == null) {
           await Future.delayed(const Duration(milliseconds: 1000));
         }
       }
@@ -1727,7 +1727,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> refreshTasksForAccount(EthereumAddress address, String refresh) async {
-    if  (refresh == 'new') {
+    if (refresh == 'new') {
       await fetchTasksByState('new');
     } else {
       await fetchTasksByState('new');

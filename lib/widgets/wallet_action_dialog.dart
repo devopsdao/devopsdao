@@ -43,7 +43,9 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
   void startWarningTimer() {
     const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(oneSec, (Timer timer) {
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
         if (_start == 0) {
           setState(() {
             showWarning = true;
@@ -207,7 +209,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
         Future.delayed(const Duration(milliseconds: 400)).whenComplete(() {
           // if (mounted) {Navigator.pop(context);}
-
         });
       }
     } else if (widget.actionName == 'saveLastWitnetResult') {
@@ -290,10 +291,12 @@ class _WalletActionDialog extends State<WalletActionDialog> {
           ),
           Expanded(
             child: Text(
-                'If the transaction takes longer than usual, check its status in Metamask. '
-                'If it stuck in pending mode, set a higher(aggressive) Gas fee.\n'
-                'If transaction got JSON-rpc error: submit a new transaction with'
-                ' increased Gas.',
+              'If the transaction takes longer than usual, Check its status in Metamask. '
+              'If it stuck in pending mode, Set a higher(aggressive) Gas fee.\n'
+              'If transaction got a JSON-rpc error, Submit a new transaction with'
+              ' increased Gas.'
+              'If it still does not go through, Clear activity and nonce data in'
+              'Metamask settings -> Advanced',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -338,15 +341,11 @@ class _WalletActionDialog extends State<WalletActionDialog> {
               const SizedBox(
                 height: 15,
               ),
-
               ExpandedSection(
                 expand: showWarning,
-                callback: () {  },
+                callback: () {},
                 child: warningContainer,
-
               ),
-
-
               Row(
                 children: [
                   Expanded(
@@ -387,8 +386,8 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                   ),
                   if ((transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading') && !platformAndBrowser.metamaskAvailable)
                     const SizedBox(
-                    width: 16,
-                  ),
+                      width: 16,
+                    ),
                   if ((transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading') && !platformAndBrowser.metamaskAvailable)
                     Expanded(
                       child: InkWell(
