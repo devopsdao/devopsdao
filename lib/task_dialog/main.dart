@@ -47,10 +47,7 @@ class _TaskDialogFuture extends StatefulWidget {
   _TaskDialogFutureState createState() => _TaskDialogFutureState();
 }
 
-
-
 class _TaskDialogFutureState extends State<_TaskDialogFuture> {
-
   late Map<String, dynamic> dialogState;
 
 
@@ -93,7 +90,7 @@ class _TaskDialogFutureState extends State<_TaskDialogFuture> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
             emptyClasses.loadingTask.description = snapshot.error.toString();
-            return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: true);
+            return TaskDialogSkeleton(fromPage: widget.fromPage, task: emptyClasses.loadingTask, isLoading: false);
           } else if (snapshot.hasData) {
             taskUpdateModelView.onOpenedTask(snapshot.data!.taskAddress);
             return TaskDialogSkeleton(fromPage: widget.fromPage, task: snapshot.data!, isLoading: false);

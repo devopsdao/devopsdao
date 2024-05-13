@@ -232,8 +232,9 @@ class MetamaskModel extends ChangeNotifier {
     _state.selectedChainIdOnMMApp = chainId;
     bool result = await _mmServices.initConnectAndCollectData(chainId, tasksServices);
     if (result) {
-      onRequestBalances(chainId, tasksServices);
       await setMmScreenState(state: MMScreenStatus.mmConnectedNetworkMatch);
+      onRequestBalances(chainId, tasksServices);
+      await tasksServices.startup();
     } else {
       await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
           'something went wrong, try again \nBlockchain connection error');

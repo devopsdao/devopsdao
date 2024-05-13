@@ -61,7 +61,7 @@ class _CreateOrMintState extends State<CreateOrMint> {
     var collectionServices = context.watch<CollectionServices>();
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
-    collectionExist = collectionServices.mintNftTagSelected.collection;
+    // collectionExist = collectionServices.mintNftTagSelected.collection;
     collectionExist = widget.item.collection;
 
     if (collectionExist) {

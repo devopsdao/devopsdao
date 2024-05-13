@@ -348,6 +348,8 @@ class TasksServices extends ChangeNotifier {
     await startup();
     // await nftInitialCollection();
     await collectMyTokens();
+
+
     // await getABI();
     // await getDeployedContract();
 
@@ -721,6 +723,7 @@ class TasksServices extends ChangeNotifier {
       print('event fired');
     });
   }
+  late bool contractsInitialized = false;
 
   late Map fees;
   Future<void> startup() async {
@@ -751,7 +754,7 @@ class TasksServices extends ChangeNotifier {
       publicAddress = EthereumAddress.fromHex(hardhatAccounts[liveAccount]["address"]);
     }
 
-    thr = Debouncing(duration: const Duration(seconds: 10));
+    // thr = Debouncing(duration: const Duration(seconds: 10));
     await connectContracts();
     List<EthereumAddress> taskList = await getTaskListFull();
     await fetchTasksBatch(taskList); // to fix enable fetchTasks
@@ -763,6 +766,7 @@ class TasksServices extends ChangeNotifier {
     await monitorEvents();
     notifyListeners();
     isLoadingBackground = false;
+
   }
 
   Future<void> connectContracts() async {
@@ -784,6 +788,8 @@ class TasksServices extends ChangeNotifier {
       witnetFacet = WitnetFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     }
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: web3client, chainId: chainId);
+    contractsInitialized = true;
+
   }
 
   Future<void> myBalance() async {
@@ -1374,14 +1380,14 @@ class TasksServices extends ChangeNotifier {
     if (tasks.containsKey(taskAddress)) {
       return tasks[taskAddress]!;
     } else {
-      // print('containsKey != start:');
+      await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
+        print('wait');
+        return !contractsInitialized;
+      }));
+      // await Future.delayed(const Duration(milliseconds: 1000));
       final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
-
       tasks[taskAddress] = tasksTemp[taskAddress]!;
       refreshTask(tasks[taskAddress]!);
-
-      // print(tasks[taskAddress]!);
-      // print('loadOneTask end');
 
       return tasks[taskAddress]!;
     }

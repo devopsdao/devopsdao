@@ -10,11 +10,13 @@ import 'package:webthree/credentials.dart';
 import '../../blockchain/interface.dart';
 import '../../blockchain/classes.dart';
 import '../../blockchain/task_services.dart';
+import '../../config/utils/my_tools.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../config/theme.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/tags/wrapped_chip.dart';
 
+import '../../widgets/tags/wrapped_mint_chip.dart';
 import '../collection_services.dart';
 import '../create_or_mint.dart';
 
@@ -199,11 +201,20 @@ class _MintWidget extends State<MintWidget> {
                                         }
                                       }
                                     }
+                                    // var textWidth = calcTextSize(
+                                    //     e.value.name,
+                                    //     DodaoTheme.of(context).bodyText3.override(
+                                    //       fontFamily: 'Inter',
+                                    //       fontWeight: FontWeight.w400,
+                                    //       fontSize: 14,
+                                    //     )
+                                    // );
                                     // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
                                     return WrappedChip(
                                       key: ValueKey(e),
                                       item: e,
                                       page: 'mint',
+                                      // textWidth: textWidth.width,
                                       startScale: false,
                                       animationCicle: tagsCompare[e.value.name]!.state,
                                       selected: e.value.selected,

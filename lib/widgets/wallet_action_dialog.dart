@@ -47,11 +47,13 @@ class _WalletActionDialog extends State<WalletActionDialog> {
       oneSec,
       (Timer timer) {
         if (_start == 0) {
-          setState(() {
-            showWarning = true;
-            timer.cancel();
-            _timer = null;
-          });
+          if (_timer != null) {
+            setState(() {
+              showWarning = true;
+              timer.cancel();
+              _timer = null;
+            });
+          }
         } else {
           _start--;
         }
@@ -73,6 +75,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
   void dispose() {
     if (_timer != null) {
       _timer!.cancel();
+      _timer = null;
     }
     super.dispose();
   }

@@ -42,8 +42,8 @@ class _NftItemState extends State<NftItem> {
 
   @override
   Widget build(BuildContext context) {
-    final bool selected = widget.item.selected;
-    TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
+    // final bool selected = widget.item.selected;
+    // TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
     getTotalSupply();
     return InkWell(
       child: Card(
