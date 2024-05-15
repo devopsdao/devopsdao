@@ -280,7 +280,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
     Widget warningContainer = Container(
       padding: const EdgeInsets.only(bottom: 25),
-      height: 130,
+      height: 150,
       width: width < 360 ? width - 40 : 310,
       child: Row(
         children: [

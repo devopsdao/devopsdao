@@ -103,7 +103,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 5.0),
                                 child: Icon(
-                                  Icons.copy,
+                                  Icons.share,
                                   size: 20,
                                   color: DodaoTheme.of(context).secondaryText,
                                 ),
@@ -124,7 +124,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                   Clipboard.setData(ClipboardData(text: 'https://dodao.dev/#/tasks/${task.taskAddress}')).then((_) {
                     Flushbar(
                             icon: Icon(
-                              Icons.copy,
+                              Icons.share,
                               size: 20,
                               color: DodaoTheme.of(context).flushTextColor,
                             ),

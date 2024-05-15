@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:chips_choice/chips_choice.dart';
 import 'package:dodao/widgets/tags/tags_old.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:image_picker/image_picker.dart';
@@ -71,7 +70,6 @@ class _MintWidget extends State<MintWidget> {
     _searchKeywordController.dispose();
     super.dispose();
   }
-  int tag =740;
 
   @override
   Widget build(BuildContext context) {
@@ -168,60 +166,62 @@ class _MintWidget extends State<MintWidget> {
                       alignment: Alignment.topLeft,
                       child: Consumer<SearchServices>(
                           builder: (context, model, child) {
-                            List<String> list = [];
-                            for (var v in model.mintPageFilterResults.values) {
-                              list.add(v.name);
-                            }
-                            var interface = context.read<InterfaceServices>();
                             return SingleChildScrollView(
-                              child: ChipsChoice<int>.single(
-                                wrapped: true,
-                                value: tag,
-                                onChanged: (val) {
-                                  setState(() => tag = val);
+                              child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  direction: Axis.horizontal,
+                                  children: model.mintPageFilterResults.entries.map((e) {
 
-                                  showBottomSheet(
-                                    // backgroundColor: Colors.transparent,
-                                    constraints: BoxConstraints(maxWidth: interface.maxStaticGlobalWidth - 100,),
-                                    // barrierColor: Colors.transparent,
-                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        padding: const EdgeInsets.all(10),
-                                        height: 300,
-                                        width: double.infinity,
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              const Text(
-                                                'This is a BottomSheet',
-                                                style: TextStyle(fontSize: 20),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();                   },
-                                                child: Text('Close BottomSheet'),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                choiceItems: C2Choice.listFrom<int, String>(
-                                  source: list,
-                                  value: (i, v) => i,
-                                  label: (i, v) => v,
-                                ),
-                                choiceStyle: C2ChipStyle.filled(
-                                  selectedStyle: const C2ChipStyle(
-                                    backgroundColor: Colors.green,
-                                  ),
-                                ),
-                              )
+                                    if(!tagsCompare.containsKey(e.value.name)){
+                                      if (e.value.selected) {
+                                        tagsCompare[e.value.name] = TagsCompare(state: 'remain',);
+                                      } else {
+                                        tagsCompare[e.value.name] = TagsCompare(state: 'none',);
+                                      }
+                                    } else if (tagsCompare.containsKey(e.value.name)) {
+                                      if (e.value.selected) {
+                                        if (tagsCompare[e.value.name]!.state == 'start') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'remain',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'none') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'end') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'start',));
+                                        }
+                                      } else {
+                                        if (tagsCompare[e.value.name]!.state == 'end') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'none',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'start') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
+                                        }
+                                        if (tagsCompare[e.value.name]!.state == 'remain') {
+                                          tagsCompare.update(e.value.name, (val) => val = TagsCompare(state: 'end',));
+                                        }
+                                      }
+                                    }
+                                    // var textWidth = calcTextSize(
+                                    //     e.value.name,
+                                    //     DodaoTheme.of(context).bodyText3.override(
+                                    //       fontFamily: 'Inter',
+                                    //       fontWeight: FontWeight.w400,
+                                    //       fontSize: 14,
+                                    //     )
+                                    // );
+                                    // print('state: ${tagsCompare[e.value.tag]!.state} actual: ${e.value.selected} ${e.value.tag}');
+                                    return WrappedChip(
+                                      key: ValueKey(e),
+                                      item: e,
+                                      page: 'mint',
+                                      // textWidth: textWidth.width,
+                                      startScale: false,
+                                      animationCicle: tagsCompare[e.value.name]!.state,
+                                      selected: e.value.selected,
+                                      wrapperRole: WrapperRole.mint,
+                                    );
+                                  }).toList()
+                              ),
                             );
                           }
                       ),

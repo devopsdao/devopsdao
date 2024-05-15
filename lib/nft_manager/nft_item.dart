@@ -44,7 +44,9 @@ class _NftItemState extends State<NftItem> {
   Widget build(BuildContext context) {
     // final bool selected = widget.item.selected;
     // TasksServices tasksServices = Provider.of<TasksServices>(context, listen: false);
-    getTotalSupply();
+    if (widget.item.name != 'empty') {
+      getTotalSupply();
+    }
     return InkWell(
       child: Card(
           elevation: 4,
