@@ -758,12 +758,12 @@ class TasksServices extends ChangeNotifier {
     await connectContracts();
     // List<EthereumAddress> taskList = await getTaskListFull();
     // await fetchTasksBatch(taskList); // to fix enable fetchTasks
-    await fetchTasksByState("new");
+    // await fetchTasksByState("new");
     // await Future.delayed(const Duration(milliseconds: 200));
     await Future.delayed(const Duration(milliseconds: 200));
     await myBalance();
-    await Future.delayed(const Duration(milliseconds: 200));
-    await monitorEvents();
+    // await Future.delayed(const Duration(milliseconds: 200));
+    // await monitorEvents();
     notifyListeners();
     isLoadingBackground = false;
   }
@@ -1850,7 +1850,7 @@ class TasksServices extends ChangeNotifier {
     isLoadingBackground = true;
 
     List<EthereumAddress> taskList = await getTaskContractsByState(state);
-    await monitorTasks(taskList);
+    // await monitorTasks(taskList);
 
     filterResults.clear();
 

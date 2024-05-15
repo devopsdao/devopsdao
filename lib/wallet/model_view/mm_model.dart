@@ -219,11 +219,11 @@ class MetamaskModel extends ChangeNotifier {
   Future<void> onResetMM(TasksServices tasksServices, WalletModel walletModel) async {
     walletModel.onWalletReset();
     tasksServices.reset('onResetMM');
-    if (walletModel.state.walletAddress != null) {
-      await tasksServices.refreshTasksForAccount(walletModel.state.walletAddress!, "refresh");
-    } else {
-      await tasksServices.fetchTasksByState("new");
-    }
+    // if (walletModel.state.walletAddress != null) {
+    //   await tasksServices.refreshTasksForAccount(walletModel.state.walletAddress!, "refresh");
+    // } else {
+    //   await tasksServices.fetchTasksByState("new");
+    // }
     // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
     // await tasksServices.fetchTasksBatch(taskList);
   }
@@ -247,7 +247,8 @@ class MetamaskModel extends ChangeNotifier {
     if (result) {
       await setMmScreenState(state: MMScreenStatus.mmConnectedNetworkMatch);
       onRequestBalances(chainId, tasksServices);
-      await tasksServices.startup();
+      await Future.delayed(const Duration(milliseconds: 200));
+      await tasksServices.monitorEvents();
     } else {
       await setMmScreenState(
           state: MMScreenStatus.error,

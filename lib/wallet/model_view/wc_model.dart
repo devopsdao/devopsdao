@@ -42,7 +42,6 @@ class WCModelViewState {
   });
 }
 
-
 class WCModelView extends ChangeNotifier {
   final _walletService = WalletService();
   final _wcService = WCService();
@@ -51,23 +50,19 @@ class WCModelView extends ChangeNotifier {
   // utils:
   final _platformAndBrowser = PlatformAndBrowser();
 
-
   final log = Logger('WCModelView');
 
   late ConnectResponse? connectResponse;
   late WCScreenStatus wcCurrentState = WCScreenStatus.loadingQr;
 
-    /// Init:
+  /// Init:
   WCModelView() {
-    if (_platformAndBrowser.platform == 'mobile'
-        || _platformAndBrowser.browserPlatform == 'android'
-        || _platformAndBrowser.browserPlatform == 'ios') {
+    if (_platformAndBrowser.platform == 'mobile' ||
+        _platformAndBrowser.browserPlatform == 'android' ||
+        _platformAndBrowser.browserPlatform == 'ios') {
       _state.mobile = true;
-
-    } else if (_platformAndBrowser.platform == 'linux'
-        || _platformAndBrowser.platform == 'web'
-        && _platformAndBrowser.browserPlatform != 'android'
-        && _platformAndBrowser.browserPlatform != 'ios') {
+    } else if (_platformAndBrowser.platform == 'linux' ||
+        _platformAndBrowser.platform == 'web' && _platformAndBrowser.browserPlatform != 'android' && _platformAndBrowser.browserPlatform != 'ios') {
       _state.mobile = false;
     }
     init();
@@ -179,6 +174,7 @@ class WCModelView extends ChangeNotifier {
   Future<void> setChainOnWCWallet(int value) async {
     _state.chainIdOnWCWallet = value;
   }
+
   Future<void> setSelectedChainIdOnApp(int value) async {
     _state.selectedChainIdOnApp = value;
   }
@@ -192,6 +188,7 @@ class WCModelView extends ChangeNotifier {
       log.severe('walletconnectv2->connectWallet error: onSwitchNetwork');
     }
   }
+
   Future<void> onNetworkChangeInMenu(String value) async {
     setWcScreenState(state: WCScreenStatus.loadingWc);
     int changeTo = _walletService.readChainIdByName(value);
@@ -209,6 +206,7 @@ class WCModelView extends ChangeNotifier {
     }
     _wcService.registerEventHandlers(chains);
   }
+
   Future<Web3App?> getWeb3App() async {
     return _wcService.readWeb3App();
   }
