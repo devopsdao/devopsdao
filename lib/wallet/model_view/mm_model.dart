@@ -36,7 +36,6 @@ class MMModelViewState {
   String errorMessage = '';
   late MMScreenStatus mmScreenStatus = MMScreenStatus.mmNotConnected;
 
-
   MMModelViewState({
     required this.initComplete,
     required this.selectedChainIdOnMMApp,
@@ -132,17 +131,17 @@ class MetamaskModel extends ChangeNotifier {
     Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices, onStartup);
 
     if (resultData == null) {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'something went wrong, try again \nBlockchain connection error');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'something went wrong, try again \nBlockchain connection error');
       return;
     }
 
     int chainId = resultData['chainId'];
     EthereumAddress publicAddress = resultData['public_address'];
 
-    if (await _mmServices.checkAllowedChainId(chainId, tasksServices)
-        && chainId == _state.selectedChainIdOnMMApp
-    ) {
+    if (await _mmServices.checkAllowedChainId(chainId, tasksServices) && chainId == _state.selectedChainIdOnMMApp) {
       await walletModel.onWalletUpdate(
         connectionState: true,
         walletType: WalletSelected.metamask,
@@ -155,9 +154,10 @@ class MetamaskModel extends ChangeNotifier {
     } else {
       log.warning('mm_model.dart->invalid chainId $chainId');
       int defaultChainId = WalletService.defaultNetwork;
-      await setMmScreenState(state: MMScreenStatus.error, error:
-          'Wrong network on the wallet, \'will be redirected to \''
-            '${_walletService.readChainNameById(defaultChainId)}');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Wrong network on the wallet, \'will be redirected to \''
+              '${_walletService.readChainNameById(defaultChainId)}');
       await walletModel.onWalletUpdate(
         connectionState: true,
         walletType: WalletSelected.metamask,
@@ -178,8 +178,10 @@ class MetamaskModel extends ChangeNotifier {
       if (result == 'add_network') {
         bool result = await _mmServices.initAddNetworkMM(chainId);
         if (!result) {
-          await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-              'Cannot add network \nBlockchain connection error');
+          await setMmScreenState(
+              state: MMScreenStatus.error,
+              error: 'Opps... '
+                  'Cannot add network \nBlockchain connection error');
           return;
         }
       }
@@ -188,8 +190,10 @@ class MetamaskModel extends ChangeNotifier {
       // _mmSessions.initUnsubscribe();
 
       if (resultData == null) {
-        await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-            'something went wrong, try again \nBlockchain connection error');
+        await setMmScreenState(
+            state: MMScreenStatus.error,
+            error: 'Opps... '
+                'something went wrong, try again \nBlockchain connection error');
         return;
       }
       await walletModel.onWalletUpdate(
@@ -201,20 +205,27 @@ class MetamaskModel extends ChangeNotifier {
       await onFinalConnectAndCollectData(resultData['chainId'], tasksServices);
       // _mmSessions.initMMCreateSessions(MMService.eth!, walletModel, tasksServices);
     }
-    
+
     if (result == 'user_rejected') {
       await setMmScreenState(state: MMScreenStatus.rejected);
     } else if (result == 'error') {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'something went wrong, try again');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'something went wrong, try again');
     }
   }
 
   Future<void> onResetMM(TasksServices tasksServices, WalletModel walletModel) async {
     walletModel.onWalletReset();
     tasksServices.reset('onResetMM');
-    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-    await tasksServices.fetchTasksBatch(taskList);
+    if (walletModel.state.walletAddress != null) {
+      await tasksServices.refreshTasksForAccount(walletModel.state.walletAddress!, "refresh");
+    } else {
+      await tasksServices.fetchTasksByState("new");
+    }
+    // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+    // await tasksServices.fetchTasksBatch(taskList);
   }
 
   Future<void> onDisconnectButtonPressed(tasksServices, walletModel) async {
@@ -225,8 +236,10 @@ class MetamaskModel extends ChangeNotifier {
 
   Future<void> onFinalConnectAndCollectData(int chainId, tasksServices) async {
     if (!ChainPresets.chains.keys.contains(chainId)) {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'Unfortunately does not support\nthis network');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'Unfortunately does not support\nthis network');
       return;
     }
     _state.selectedChainIdOnMMApp = chainId;
@@ -236,13 +249,13 @@ class MetamaskModel extends ChangeNotifier {
       onRequestBalances(chainId, tasksServices);
       await tasksServices.startup();
     } else {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'something went wrong, try again \nBlockchain connection error');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'something went wrong, try again \nBlockchain connection error');
     }
   }
 
-  Future<void> onRequestBalances(int chainId, tasksServices) async =>
-      _statisticsService.initRequestBalances(chainId, tasksServices);
-  Future<void> setSelectedChainIdOnApp(int value) async =>
-      _state.selectedChainIdOnMMApp = value;
+  Future<void> onRequestBalances(int chainId, tasksServices) async => _statisticsService.initRequestBalances(chainId, tasksServices);
+  Future<void> setSelectedChainIdOnApp(int value) async => _state.selectedChainIdOnMMApp = value;
 }
