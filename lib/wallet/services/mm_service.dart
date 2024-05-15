@@ -33,7 +33,7 @@ class MMService {
       return null;
     } else if (onStartup && !accountConnected) {
       log.info('onStartup && !eth!.isConnected(): false');
-      await tasksServices.fetchTasksByState("new");
+      await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       return null;
     }
 
@@ -196,7 +196,7 @@ class MMService {
       if (publicAddressMM != null) {
         await tasksServices.refreshTasksForAccount(publicAddressMM, "refresh");
       } else {
-        await tasksServices.fetchTasksByState("new");
+        await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       }
       // await tasksServices.myBalance();
       // await tasksServices.getAccountBalances(newChainId);
