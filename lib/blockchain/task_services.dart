@@ -756,10 +756,10 @@ class TasksServices extends ChangeNotifier {
 
     // thr = Debouncing(duration: const Duration(seconds: 10));
     await connectContracts();
-    List<EthereumAddress> taskList = await getTaskListFull();
-    await fetchTasksBatch(taskList); // to fix enable fetchTasks
-    await Future.delayed(const Duration(milliseconds: 200));
-    await monitorTasks(taskList);
+    // List<EthereumAddress> taskList = await getTaskListFull();
+    // await fetchTasksBatch(taskList); // to fix enable fetchTasks
+    await fetchTasksByState("new");
+    // await Future.delayed(const Duration(milliseconds: 200));
     await Future.delayed(const Duration(milliseconds: 200));
     await myBalance();
     await Future.delayed(const Duration(milliseconds: 200));
@@ -1812,9 +1812,45 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<EthereumAddress>> getTaskContractsByState(String state) async {
+    int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    print('Total task count: $taskCount');
+
+    const int batchSize = 100;
+    const int maxSimultaneousRequests = 10;
+
+    List<EthereumAddress> taskContractAddresses = [];
+    int offset = 0;
+
+    while (offset < taskCount) {
+      int limit = min(batchSize, taskCount - offset);
+      print('Fetching tasks from offset $offset with limit $limit');
+
+      List<Future<List<EthereumAddress>>> futures = [];
+
+      for (int i = 0; i < maxSimultaneousRequests && offset < taskCount; i++) {
+        futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(limit)));
+        offset += limit;
+        limit = min(batchSize, taskCount - offset);
+      }
+
+      List<List<EthereumAddress>> results = await Future.wait(futures);
+      int retrievedCount = results.fold<int>(0, (sum, result) => sum + result.length);
+      print('Retrieved $retrievedCount task contract addresses');
+
+      taskContractAddresses.addAll(results.expand((result) => result));
+      print('Total task contract addresses so far: ${taskContractAddresses.length}');
+    }
+
+    print('Finished retrieving task contract addresses. Total count: ${taskContractAddresses.length}');
+    return taskContractAddresses;
+  }
+
   Future<void> fetchTasksByState(String state) async {
     isLoadingBackground = true;
-    List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsByState(state);
+
+    List<EthereumAddress> taskList = await getTaskContractsByState(state);
+    await monitorTasks(taskList);
 
     filterResults.clear();
 
