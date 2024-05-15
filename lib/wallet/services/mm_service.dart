@@ -33,6 +33,7 @@ class MMService {
       return null;
     } else if (onStartup && !accountConnected) {
       log.info('onStartup && !eth!.isConnected(): false');
+      await tasksServices.fetchTasksByState("new");
       return null;
     }
 

@@ -1738,6 +1738,7 @@ class TasksServices extends ChangeNotifier {
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
     }
+    notifyListeners();
   }
 
   Future<void> getTaskListFullThenFetchIt() async {
