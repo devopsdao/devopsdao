@@ -163,6 +163,8 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerProgress = {};
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
+  Map<EthereumAddress, bool> monitoredTasks = {};
+
   // Map<String, Account> accountsData = {};
 
   Map<String, int> statsCreateTimeListCounts = {};
@@ -1629,8 +1631,10 @@ class TasksServices extends ChangeNotifier {
 
     for (var i = 0; i < taskList.length; i++) {
       try {
-        monitors.add(monitorTaskEvents(taskList[i]));
-        batchItemCount++;
+        if (monitoredTasks[taskList[i]] == null || monitoredTasks[taskList[i]] == false) {
+          monitors.add(monitorTaskEvents(taskList[i]));
+          batchItemCount++;
+        }
         // print('batchItemCount: ${batchItemCount}');
         if (batchItemCount == batchSize) {
           monitorBatches.add([...monitors]);
@@ -1738,7 +1742,7 @@ class TasksServices extends ChangeNotifier {
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
     }
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> getTaskListFullThenFetchIt() async {
@@ -1851,7 +1855,7 @@ class TasksServices extends ChangeNotifier {
     isLoadingBackground = true;
 
     List<EthereumAddress> taskList = await getTaskContractsByState(state);
-    // await monitorTasks(taskList);
+    await monitorTasks(taskList);
 
     filterResults.clear();
 
