@@ -44,7 +44,6 @@ class WalletConnectButton extends StatelessWidget {
                   context: context,
                   builder: (context) => const WalletDialog(),
                 );
-                print('wallet connect closed');
                 statisticsModel.onRequestBalances(WalletService.chainId, tasksServices);
               },
               child: walletConnected && listenWalletAddress != null

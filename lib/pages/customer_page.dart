@@ -135,6 +135,10 @@ with TickerProviderStateMixin
 
     return Stack(
       children: [
+        Positioned(
+            top:55.0,
+            width: MediaQuery.of(context).size.width,
+            child: const LoadIndicator()),
         if (!desktopWidth)
         Image.asset(
           "assets/images/background_cat_pink.png",
@@ -271,83 +275,7 @@ with TickerProviderStateMixin
                                 ],
                               ),
                             ),
-                            // Row(
-                            //   children: [
-                            //     Container(
-                            //       width: constraints.minWidth - 70,
-                            //       padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-                            //
-                            //       // child: TextField(
-                            //       //   controller: _searchKeywordController,
-                            //       //   onChanged: (searchKeyword) {
-                            //       //     if (tabIndex == 0) {
-                            //       //       tasksServices.runFilter(
-                            //       //           taskList: tasksServices.tasksCustomerSelection,
-                            //       //           enteredKeyword: searchKeyword,
-                            //       //           tagsMap: searchServices.customerTagsList );
-                            //       //     } else if (tabIndex == 1) {
-                            //       //       tasksServices.runFilter(
-                            //       //           taskList: tasksServices.tasksCustomerProgress,
-                            //       //           enteredKeyword: searchKeyword,
-                            //       //           tagsMap: searchServices.customerTagsList );
-                            //       //     } else if (tabIndex == 2) {
-                            //       //       tasksServices.runFilter(
-                            //       //           taskList: tasksServices.tasksCustomerComplete,
-                            //       //           enteredKeyword: searchKeyword,
-                            //       //           tagsMap: searchServices.customerTagsList );
-                            //       //     }
-                            //       //   },
-                            //       //   decoration: const InputDecoration(
-                            //       //     hintText: '[Find task by Title...]',
-                            //       //     hintStyle: TextStyle(fontSize: 15.0, color: Colors.white),
-                            //       //     labelStyle: TextStyle(fontSize: 17.0, color: Colors.white),
-                            //       //     labelText: 'Search',
-                            //       //     suffixIcon: Icon(
-                            //       //       Icons.search,
-                            //       //       color: Colors.white,
-                            //       //     ),
-                            //       //     enabledBorder: UnderlineInputBorder(
-                            //       //       borderSide: BorderSide(
-                            //       //         color: Colors.white,
-                            //       //         width: 1,
-                            //       //       ),
-                            //       //       borderRadius: BorderRadius.only(
-                            //       //         topLeft: Radius.circular(4.0),
-                            //       //         topRight: Radius.circular(4.0),
-                            //       //       ),
-                            //       //     ),
-                            //       //     focusedBorder: UnderlineInputBorder(
-                            //       //       borderSide: BorderSide(
-                            //       //         color: Colors.white,
-                            //       //         width: 1,
-                            //       //       ),
-                            //       //       borderRadius: BorderRadius.only(
-                            //       //         topLeft: Radius.circular(4.0),
-                            //       //         topRight: Radius.circular(4.0),
-                            //       //       ),
-                            //       //     ),
-                            //       //   ),
-                            //       //   style: DodaoTheme.of(context).bodyText1.override(
-                            //       //         fontFamily: 'Inter',
-                            //       //         color: Colors.white,
-                            //       //         lineHeight: 2,
-                            //       //       ),
-                            //       // ),
-                            //     ),
-                            //
-                            //   ],
-                            // ),
                             Consumer<SearchServices>(builder: (context, model, child) {
-                              // localTagsList = model.customerTagsList.entries.map((e) => e.value.name).toList();
-                              // if (model.ready) {
-                              //   tasksServices.runFilter(
-                              //     tasksServices.tasksNew,
-                              //     enteredKeyword: _searchKeywordController.text,
-                              //     tagsList: localTagsList
-                              //   );
-                              //   model.ready = false;
-                              // }
-
                               return Padding(
                                 padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 16),
                                 child: Container(
@@ -368,62 +296,60 @@ with TickerProviderStateMixin
                                 ),
                               );
                             }),
-                            tasksServices.isLoading
-                                ? const LoadIndicator()
-                                : Expanded(
-                                    child: NotificationListener(
-                                      onNotification: (scrollNotification) {
-                                        // changeTab(tabIndex);
-                                        // late int index = 0;
-                                        if (scrollNotification is ScrollUpdateNotification) {
-                                          late double tabWidth = MediaQuery.of(context).size.width;
-                                          late double metrics = scrollNotification.metrics.pixels;
-                                          // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
-                                          // setState(() {
-                                          //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
-                                          //     print('first');
-                                          //     debounceChangeTab0.throttle(() {
-                                          //       changeTab(0, metrics);
-                                          //     });
-                                          //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
-                                          //           (metrics < tabWidth + (tabWidth / 5)) &&
-                                          //           prevMetrics < metrics) ||
-                                          //       (metrics > tabWidth &&
-                                          //           metrics < tabWidth * 2 - (tabWidth / 5) &&
-                                          //           tabIndex == 2 &&
-                                          //           prevMetrics > metrics)) {
-                                          //     print('second');
-                                          //     debounceChangeTab1.throttle(() {
-                                          //       changeTab(1, metrics);
-                                          //     });
-                                          //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
-                                          //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
-                                          //     print('third');
-                                          //     debounceChangeTab2.throttle(() {
-                                          //       changeTab(2, metrics);
-                                          //     });
-                                          //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
-                                          //     print('forth');
-                                          //     debounceChangeTab3.throttle(() {
-                                          //       changeTab(3, metrics);
-                                          //     });
-                                          //   }
-                                          // });
-                                          // print(tabIndex);
-                                        }
-                                        return false;
-                                      },
-                                      child: TabBarView(
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        controller: _controller,
-                                        children: [
-                                          PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //new
-                                          PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //agreed
-                                          PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //completed & canceled
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                            Expanded(
+                              child: NotificationListener(
+                                onNotification: (scrollNotification) {
+                                  // changeTab(tabIndex);
+                                  // late int index = 0;
+                                  if (scrollNotification is ScrollUpdateNotification) {
+                                    late double tabWidth = MediaQuery.of(context).size.width;
+                                    late double metrics = scrollNotification.metrics.pixels;
+                                    // print('metrics: ${metrics}   tabWidth: $tabWidth tabIndex $tabIndex');
+                                    // setState(() {
+                                    //   if (metrics < tabWidth - (tabWidth / 5) && tabIndex >= 1 && prevMetrics > metrics) {
+                                    //     print('first');
+                                    //     debounceChangeTab0.throttle(() {
+                                    //       changeTab(0, metrics);
+                                    //     });
+                                    //   } else if (((metrics > tabWidth / 5 && tabIndex == 0) &&
+                                    //           (metrics < tabWidth + (tabWidth / 5)) &&
+                                    //           prevMetrics < metrics) ||
+                                    //       (metrics > tabWidth &&
+                                    //           metrics < tabWidth * 2 - (tabWidth / 5) &&
+                                    //           tabIndex == 2 &&
+                                    //           prevMetrics > metrics)) {
+                                    //     print('second');
+                                    //     debounceChangeTab1.throttle(() {
+                                    //       changeTab(1, metrics);
+                                    //     });
+                                    //   } else if ((metrics > tabWidth + (tabWidth / 5)) ||
+                                    //       (metrics < tabWidth * 3 - (tabWidth / 5) && tabIndex == 3 && prevMetrics < metrics)) {
+                                    //     print('third');
+                                    //     debounceChangeTab2.throttle(() {
+                                    //       changeTab(2, metrics);
+                                    //     });
+                                    //   } else if ((metrics > tabWidth * 2 + (tabWidth / 5) && tabIndex == 2)) {
+                                    //     print('forth');
+                                    //     debounceChangeTab3.throttle(() {
+                                    //       changeTab(3, metrics);
+                                    //     });
+                                    //   }
+                                    // });
+                                    // print(tabIndex);
+                                  }
+                                  return false;
+                                },
+                                child: TabBarView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  controller: _controller,
+                                  children: [
+                                    PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //new
+                                    PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //agreed
+                                    PawRefreshAndTasksList(pageName: 'customer', paw: _file,), //completed & canceled
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         );
                       });

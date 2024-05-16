@@ -243,7 +243,7 @@ class MetamaskModel extends ChangeNotifier {
       return;
     }
     _state.selectedChainIdOnMMApp = chainId;
-    bool result = await _mmServices.initConnectAndCollectData(chainId, tasksServices);
+    bool result = await _mmServices.initFinalConnect(chainId, tasksServices);
     if (result) {
       await setMmScreenState(state: MMScreenStatus.mmConnectedNetworkMatch);
       await onRequestBalances(chainId, tasksServices);
@@ -255,6 +255,8 @@ class MetamaskModel extends ChangeNotifier {
           error: 'Opps... '
               'something went wrong, try again \nBlockchain connection error');
     }
+
+    await _mmServices.initFinalCollectData(chainId, tasksServices);
   }
 
   Future<void> onRequestBalances(int chainId, tasksServices) async => _statisticsService.initRequestBalances(chainId, tasksServices);

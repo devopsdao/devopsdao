@@ -11,6 +11,10 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'package:webthree/browser.dart';
+import 'package:webthree/webthree.dart';
+import "package:universal_html/html.dart" hide Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rive_splash_screen/rive_splash_screen.dart';
@@ -21,6 +25,7 @@ import 'config/internationalization.dart';
 
 import 'package:dodao/blockchain/task_services.dart';
 
+import 'config/utils/platform.dart';
 import 'navigation/beamer_delegate.dart';
 import 'package:beamer/beamer.dart';
 
@@ -96,11 +101,19 @@ class _MyAppState extends State<MyApp> {
       MetamaskModel metamaskProvider = context.read<MetamaskModel>();
       WalletModel walletModel = context.read<WalletModel>();
       var tasksServices = context.read<TasksServices>();
+      final platform = PlatformAndBrowser();
       await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
-        print('wait on startup wallet connect');
+        print('wait: contracts initializing');
         return !tasksServices.contractsInitialized;
       }));
-      metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context, true);
+      if (platform.platform != 'web' || window.ethereum == null) {
+        await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
+        // await Future.delayed(const Duration(milliseconds: 200));
+        // await tasksServices.monitorEvents();
+      } else {
+
+        metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context, true);
+      }
     });
   }
 

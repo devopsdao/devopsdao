@@ -188,36 +188,39 @@ class MMService {
     }
   }
 
-  Future<bool> initConnectAndCollectData(int newChainId, tasksServices) async {
+  Future<bool> initFinalConnect(int newChainId, tasksServices) async {
     try {
-      // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-      // await tasksServices.fetchTasksBatch(taskList);
-      // await tasksServices.connectRPC(newChainId);
-      // await tasksServices.startup();
-      // await tasksServices.myBalance();
-      // await tasksServices.collectMyTokens();
       try {
         await tasksServices.connectRPC(newChainId);
       } catch (e) {
-        log.severe('mm_service->initConnectAndCollectData->connectRPC error: $e');
-        return false;
-      }
-      try {
-        await tasksServices.collectMyTokens();
-      } catch (e) {
-        log.severe('mm_service->initConnectAndCollectData->collectMyTokens error: $e');
-        return false;
-      }
-      try {
-        await tasksServices.myBalance();
-      } catch (e) {
-        log.severe('mm_service->initConnectAndCollectData->myBalance() error: $e');
+        log.severe('mm_service->initFinalConnect->connectRPC error: $e');
         return false;
       }
       try {
         await tasksServices.startup();
       } catch (e) {
-        log.severe('mm_service->initConnectAndCollectData->startup() error: $e');
+        log.severe('mm_service->initFinalConnect->startup() error: $e');
+        return false;
+      }
+      return true;
+    } catch (e) {
+      log.severe('metamask_service->initFinalConnect error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> initFinalCollectData(int newChainId, tasksServices) async {
+    try {
+      try {
+        await tasksServices.collectMyTokens();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->collectMyTokens error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.myBalance();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->myBalance() error: $e');
         return false;
       }
       if (publicAddressMM != null) {
@@ -225,13 +228,11 @@ class MMService {
       } else {
         await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       }
-
-
       await Future.delayed(const Duration(milliseconds: 200));
       await tasksServices.monitorEvents();
       return true;
     } catch (e) {
-      log.severe('metamask_service->initConnectAndCollectData error: $e');
+      log.severe('metamask_service->initFinalCollectData error: $e');
       return false;
     }
   }

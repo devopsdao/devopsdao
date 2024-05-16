@@ -13,6 +13,7 @@ import '../config/utils/my_tools.dart';
 import '../wallet/model_view/wallet_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
+import '../wallet/widgets/main/main.dart';
 import '../widgets/wallet_action_dialog.dart';
 import 'model_view/task_model_view.dart';
 
@@ -50,7 +51,7 @@ class SetsOfFabButtons extends StatelessWidget {
       // ##################### ACTION BUTTONS PART ######################## //
       // ************************ NEW (EXCHANGE) ************************** //
       if (fromPage == 'tasks') {
-        return TaskDialogFAB(
+        return listenWalletAddress != null ? TaskDialogFAB(
           inactive: (task.contractOwner != listenWalletAddress || tasksServices.hardhatDebug == true) &&
               listenAllowedChainId &&
                   listenWalletAddress != null
@@ -76,6 +77,15 @@ class SetsOfFabButtons extends StatelessWidget {
                       nanoId: task.nanoId,
                       actionName: 'taskParticipate',
                     ));
+          },
+        ) : TaskDialogConnectWallet(
+          buttonName: 'Connect wallet',
+          widthSize: buttonWidth + calcTextSize('Connect wallet', const TextStyle(fontSize: 18)).width,
+          callback: () {
+            showDialog(
+              context: context,
+              builder: (context) => const WalletDialog(),
+            );
           },
         );
       } else if (task.taskState == "agreed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
