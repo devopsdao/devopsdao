@@ -136,7 +136,7 @@ with TickerProviderStateMixin
     return Stack(
       children: [
         Positioned(
-            top:55.0,
+            top:95.0,
             width: MediaQuery.of(context).size.width,
             child: const LoadIndicator()),
         if (!desktopWidth)
