@@ -131,6 +131,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
     return Stack(
       children: [
+        Positioned(
+            top:55.0,
+            width: MediaQuery.of(context).size.width,
+            child: const LoadIndicator()),
         if (!desktopWidth)
           Image.asset(
             "assets/images/background_cat_orange.png",
@@ -283,38 +287,36 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       //   ],
                       // ),
 
-                      listenIsLoading
-                          ? const LoadIndicator()
-                          : Expanded(
-                              child: TabBarView(
-                                children: [
-                                  PawRefreshAndTasksList(pageName: 'tasks', paw: _file,),
-                                  // Padding(
-                                  //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                  //   child: RefreshIndicator(
-                                  //     onRefresh: () async {
-                                  //       tasksServices.isLoadingBackground = true;
-                                  //       // tasksServices.refreshTasksForAccount(listenWalletAddress!);
-                                  //     },
-                                  //     child: ListView.builder(
-                                  //       padding: EdgeInsets.zero,
-                                  //       scrollDirection: Axis.vertical,
-                                  //       itemCount: tasksServices.filterResults.values.toList().length,
-                                  //       itemBuilder: (context, index) {
-                                  //         return Container(
-                                  //             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                                  //
-                                  //             child: TaskTransition(
-                                  //               fromPage: 'tasks',
-                                  //               task: tasksServices.filterResults.values.toList()[index],
-                                  //             ));
-                                  //       },
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            PawRefreshAndTasksList(pageName: 'tasks', paw: _file,),
+                            // Padding(
+                            //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                            //   child: RefreshIndicator(
+                            //     onRefresh: () async {
+                            //       tasksServices.isLoadingBackground = true;
+                            //       // tasksServices.refreshTasksForAccount(listenWalletAddress!);
+                            //     },
+                            //     child: ListView.builder(
+                            //       padding: EdgeInsets.zero,
+                            //       scrollDirection: Axis.vertical,
+                            //       itemCount: tasksServices.filterResults.values.toList().length,
+                            //       itemBuilder: (context, index) {
+                            //         return Container(
+                            //             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                            //
+                            //             child: TaskTransition(
+                            //               fromPage: 'tasks',
+                            //               task: tasksServices.filterResults.values.toList()[index],
+                            //             ));
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
                     ],
                   );
                 }),

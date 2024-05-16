@@ -55,7 +55,10 @@ class _MetamaskPageState extends State<MetamaskPage> {
       buttonText = 'Connect';
     }
 
-    return interface.walletButtonPressed == 'metamask' ? Column(
+    return
+      // interface.walletButtonPressed == 'metamask' ?
+
+    Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
         MetamaskMainScreen(innerPaddingWidth: widget.innerPaddingWidth),
@@ -76,7 +79,9 @@ class _MetamaskPageState extends State<MetamaskPage> {
           },
         ),
       const SizedBox(height: 30),
-    ]) : const Center();
+    ]);
+
+        // : const Center();
   }
 }
 

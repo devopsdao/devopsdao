@@ -246,9 +246,9 @@ class MetamaskModel extends ChangeNotifier {
     bool result = await _mmServices.initConnectAndCollectData(chainId, tasksServices);
     if (result) {
       await setMmScreenState(state: MMScreenStatus.mmConnectedNetworkMatch);
-      onRequestBalances(chainId, tasksServices);
-      await Future.delayed(const Duration(milliseconds: 200));
-      await tasksServices.monitorEvents();
+      await onRequestBalances(chainId, tasksServices);
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // await tasksServices.monitorEvents();
     } else {
       await setMmScreenState(
           state: MMScreenStatus.error,

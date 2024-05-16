@@ -348,13 +348,14 @@ class TasksServices extends ChangeNotifier {
 
     await connectRPC(WalletService.chainId);
     await startup();
+    await myBalance();
     // await nftInitialCollection();
-    await collectMyTokens();
+    // await collectMyTokens();
 
     // await getABI();
     // await getDeployedContract();
 
-    if (platform == 'web') {}
+    // if (platform == 'web') {}
 
     // testTaskCreation();
   }
@@ -574,8 +575,10 @@ class TasksServices extends ChangeNotifier {
 
   late ContractAbi _abiCode;
 
-  late num totalTaskLen = 0;
+  int totalTaskLen = 0;
   int tasksLoaded = 0;
+  int monitorTasksLoaded = 0;
+  int monitorTotalTaskLen = 0;
   late EthereumAddress _contractAddress;
   late EthereumAddress _contractAddressAxelar;
   late EthereumAddress _contractAddressHyperlane;
@@ -763,10 +766,10 @@ class TasksServices extends ChangeNotifier {
     // await fetchTasksByState("new");
     // await Future.delayed(const Duration(milliseconds: 200));
     await Future.delayed(const Duration(milliseconds: 200));
-    await myBalance();
+    // await myBalance();
     // await Future.delayed(const Duration(milliseconds: 200));
     // await monitorEvents();
-    notifyListeners();
+    // notifyListeners();
     isLoadingBackground = false;
   }
 
@@ -821,6 +824,7 @@ class TasksServices extends ChangeNotifier {
         return mapEnt;
       });
     }
+    notifyListeners();
   }
 
   late Map<String, NftCollection> resultInitialCollectionMap = {};
@@ -1381,9 +1385,8 @@ class TasksServices extends ChangeNotifier {
       return tasks[taskAddress]!;
     } else {
       await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
-            print('wait');
-            return !contractsInitialized;
-          }));
+        return !contractsInitialized;
+      }));
       // await Future.delayed(const Duration(milliseconds: 1000));
       final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
       tasks[taskAddress] = tasksTemp[taskAddress]!;
@@ -1627,7 +1630,8 @@ class TasksServices extends ChangeNotifier {
     int batchSize = 10;
     int totalBatches = (taskList.length / batchSize).ceil();
     int batchItemCount = 0;
-    tasksLoaded = 0;
+    monitorTasksLoaded = 0;
+    monitorTotalTaskLen = totalBatches;
 
     for (var i = 0; i < taskList.length; i++) {
       try {
@@ -1657,8 +1661,11 @@ class TasksServices extends ChangeNotifier {
         await Future.wait<void>(monitorBatches[batchId]);
         log.fine('monitoring ${batchId + 1} batch| total: $totalBatches batches');
         await Future.delayed(const Duration(milliseconds: 200));
+        monitorTasksLoaded = batchId;
+        notifyListeners();
       }
     } on GetTaskException {}
+    monitorTotalTaskLen = 0;
   }
 
   Future<Map<EthereumAddress, Task>> getTasksBatch(List<EthereumAddress> taskList) async {
@@ -1673,6 +1680,7 @@ class TasksServices extends ChangeNotifier {
     // int totalBatches = (totalTaskListReversed.length / batchSize).ceil();
     int batchItemCount = 0;
     tasksLoaded = 0;
+    totalTaskLen = taskList.length;
 
     final batches = taskList.slices(requestBatchSize).toList();
     final batchesResults = [];
@@ -1713,7 +1721,7 @@ class TasksServices extends ChangeNotifier {
         notifyListeners();
       }
     } on GetTaskException {
-      log.severe('EXEPTI9ON');
+      log.severe('EXEPTION');
     }
 
     //combine all batches of tasks to one map
@@ -1730,7 +1738,7 @@ class TasksServices extends ChangeNotifier {
     for (Task task in sortedTasksList) {
       sortedTasks[task.taskAddress] = task;
     }
-
+    totalTaskLen = 0;
     return sortedTasks;
   }
 
@@ -1738,9 +1746,9 @@ class TasksServices extends ChangeNotifier {
     if (refresh == 'new') {
       await fetchTasksByState('new');
     } else {
-      await fetchTasksByState('new');
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
+      await fetchTasksByState('new');
     }
     // notifyListeners();
   }
@@ -1882,7 +1890,7 @@ class TasksServices extends ChangeNotifier {
       await refreshTask(task);
     }
 
-    // isLoading = false;
+    isLoading = false;
     isLoadingBackground = false;
     // await myBalance();
     // notifyListeners();

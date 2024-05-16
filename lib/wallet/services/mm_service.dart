@@ -34,6 +34,8 @@ class MMService {
     } else if (onStartup && !accountConnected) {
       log.info('onStartup && !eth!.isConnected(): false');
       await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
+      await Future.delayed(const Duration(milliseconds: 200));
+      await tasksServices.monitorEvents();
       return null;
     }
 
@@ -190,16 +192,43 @@ class MMService {
     try {
       // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
       // await tasksServices.fetchTasksBatch(taskList);
-      await tasksServices.connectRPC(newChainId);
-      await tasksServices.startup();
-      await tasksServices.collectMyTokens();
+      // await tasksServices.connectRPC(newChainId);
+      // await tasksServices.startup();
+      // await tasksServices.myBalance();
+      // await tasksServices.collectMyTokens();
+      try {
+        await tasksServices.connectRPC(newChainId);
+      } catch (e) {
+        log.severe('mm_service->initConnectAndCollectData->connectRPC error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.collectMyTokens();
+      } catch (e) {
+        log.severe('mm_service->initConnectAndCollectData->collectMyTokens error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.myBalance();
+      } catch (e) {
+        log.severe('mm_service->initConnectAndCollectData->myBalance() error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.startup();
+      } catch (e) {
+        log.severe('mm_service->initConnectAndCollectData->startup() error: $e');
+        return false;
+      }
       if (publicAddressMM != null) {
         await tasksServices.refreshTasksForAccount(publicAddressMM, "refresh");
       } else {
         await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       }
-      // await tasksServices.myBalance();
-      // await tasksServices.getAccountBalances(newChainId);
+
+
+      await Future.delayed(const Duration(milliseconds: 200));
+      await tasksServices.monitorEvents();
       return true;
     } catch (e) {
       log.severe('metamask_service->initConnectAndCollectData error: $e');

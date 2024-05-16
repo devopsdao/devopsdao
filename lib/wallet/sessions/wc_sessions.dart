@@ -225,6 +225,12 @@ class WCSessions {
       return false;
     }
     try {
+      await tasksServices.myBalance();
+    } catch (e) {
+      log.severe('wc_sessions->initConnectAndCollectData->myBalance() error: $e');
+      return false;
+    }
+    try {
       await tasksServices.collectMyTokens();
       return true;
     } catch (e) {
