@@ -588,25 +588,6 @@ class TasksServices extends ChangeNotifier {
   EthereumAddress get contractAddress => _contractAddress;
 
   EthereumAddress zeroAddress = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
-  // Future<void> getABI() async {
-  //   // String abiFile =
-  //   //     await rootBundle.loadString('lib/blockchain/abi/TasksFacet.json');
-
-  //   // var jsonABI = jsonDecode(abiFile);
-  //   // _abiCode = ContractAbi.fromJson(jsonEncode(jsonABI), 'TasksFacet');
-
-  //   String addressesFile = await rootBundle.loadString('lib/blockchain/abi/addresses.json');
-  //   var addresses = jsonDecode(addressesFile);
-  //   _contractAddress = EthereumAddress.fromHex(addresses["Diamond"]);
-
-  //   String addressesFileAxelar = await rootBundle.loadString('lib/blockchain/abi/axelar-addresses.json');
-  //   var addressesAxelar = jsonDecode(addressesFileAxelar);
-  //   _contractAddressAxelar = EthereumAddress.fromHex(addressesAxelar["Diamond"]);
-
-  //   String addressesFileHyperlane = await rootBundle.loadString('lib/blockchain/abi/hyperlane-addresses.json');
-  //   var addressesHyperlane = jsonDecode(addressesFileHyperlane);
-  //   _contractAddressHyperlane = EthereumAddress.fromHex(addressesHyperlane["Diamond"]);
-  // }
 
   Future<void> reset(String reason) async {
     publicAddress = null;
@@ -1385,8 +1366,8 @@ class TasksServices extends ChangeNotifier {
       return tasks[taskAddress]!;
     } else {
       await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
-        return !contractsInitialized;
-      }));
+            return !contractsInitialized;
+          }));
       // await Future.delayed(const Duration(milliseconds: 1000));
       final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
       tasks[taskAddress] = tasksTemp[taskAddress]!;
@@ -1669,75 +1650,68 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<Map<EthereumAddress, Task>> getTasksBatch(List<EthereumAddress> taskList) async {
-    List<List<Future<void>>> downloadBatches = [];
-    List<List<Future<void>>> monitorBatches = [];
+    const requestBatchSize = 10;
+    const downloadBatchSize = 5;
 
-    List<Future<void>> downloaders = [];
-    List<Future<void>> monitors = [];
-
-    int requestBatchSize = 10;
-    int downloadBatchSize = 5;
-    // int totalBatches = (totalTaskListReversed.length / batchSize).ceil();
-    int batchItemCount = 0;
     tasksLoaded = 0;
     totalTaskLen = taskList.length;
 
     final batches = taskList.slices(requestBatchSize).toList();
-    final batchesResults = [];
+    final batchesResults = <Map<EthereumAddress, Task>>[];
 
-    for (var i = 0; i < batches.length; i++) {
-      try {
-        downloaders.add(getTasksData(batches[i].toList().cast<EthereumAddress>()).then((result) => batchesResults.add(result)));
-        // monitors.add(getTasksData(batches[i].toList().cast<EthereumAddress>()).then((result) => batchesResults.add(result)));
-        batchItemCount++;
-        // print('batchItemCount: ${batchItemCount}');
-        if (batchItemCount == downloadBatchSize) {
-          downloadBatches.add([...downloaders]);
-          // monitorBatches.add([...monitors]);
-          downloaders.clear();
-          monitors.clear();
-          batchItemCount = 0;
-        }
-      } on GetTaskException {
-        log.severe('could not get task ${taskList[i]} from blockchain');
+    final downloadBatches = <List<Future<Map<EthereumAddress, Task>>>>[];
+
+    for (final batch in batches) {
+      final downloaders = <Future<Map<EthereumAddress, Task>>>[];
+
+      for (final taskAddress in batch) {
+        downloaders.add(getTasksData([taskAddress]).then((result) => result));
       }
-    }
-    if (batchItemCount > 0) {
-      downloadBatches.add([...downloaders]);
-      // monitorBatches.add([...monitors]);
-      downloaders.clear();
-      // monitors.clear();
-      batchItemCount = 0;
+
+      downloadBatches.add(downloaders);
     }
 
     try {
       log.info(
-          'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests');
+        'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests',
+      );
+
       for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
-        await Future.wait<void>(downloadBatches[batchId]);
+        final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloadBatches[batchId]);
+        batchesResults.addAll(batchResults);
         log.fine('downloaded ${batchId + 1} batch | total: ${downloadBatches.length} batches');
         await Future.delayed(const Duration(milliseconds: 200));
-        tasksLoaded += downloadBatchSize * requestBatchSize;
+        tasksLoaded += batchResults.length;
         notifyListeners();
       }
-    } on GetTaskException {
-      log.severe('EXEPTION');
+    } on GetTaskException catch (e) {
+      log.severe('EXCEPTION: $e');
     }
 
-    //combine all batches of tasks to one map
     tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
 
-    for (Task task in tasks.values) {
-      await refreshTask(task);
-    }
+    // final uniqueTaskList = <EthereumAddress>[];
+    // final duplicateTaskList = <EthereumAddress>[];
 
-    //sort by createTime desc
-    final sortedTasksList = tasks.values.toList().map((task) => (task)).toList()..sort((a, b) => b.createTime.compareTo(a.createTime));
+    // for (final address in taskList) {
+    //   if (uniqueTaskList.contains(address)) {
+    //     duplicateTaskList.add(address);
+    //   } else {
+    //     uniqueTaskList.add(address);
+    //   }
+    // }
 
-    Map<EthereumAddress, Task> sortedTasks = {};
-    for (Task task in sortedTasksList) {
-      sortedTasks[task.taskAddress] = task;
-    }
+    // if (duplicateTaskList.isNotEmpty) {
+    //   log.warning('Found ${duplicateTaskList.length} duplicate tasks in taskList:');
+    //   final duplicateTaskListAddresses = duplicateTaskList.map((address) => address.hex).toList()..sort();
+    //   log.warning('Duplicate Task List Addresses:\n${duplicateTaskListAddresses.join('\n')}');
+    // }
+
+    await Future.forEach<Task>(tasks.values, refreshTask);
+
+    final sortedTasksList = tasks.values.toList()..sort((a, b) => b.createTime.compareTo(a.createTime));
+    final sortedTasks = {for (final task in sortedTasksList) task.taskAddress: task};
+
     totalTaskLen = 0;
     return sortedTasks;
   }
@@ -1840,6 +1814,46 @@ class TasksServices extends ChangeNotifier {
       print('Fetching tasks from offset $offset with limit $limit');
 
       List<Future<List<EthereumAddress>>> futures = [];
+      int remainingTasks = taskCount - offset;
+
+      for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
+        int currentLimit = min(limit, remainingTasks);
+        futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(currentLimit)));
+        remainingTasks -= currentLimit;
+        offset += currentLimit;
+      }
+
+      List<List<EthereumAddress>> results = await Future.wait(futures);
+      int retrievedCount = results.fold<int>(0, (sum, result) => sum + result.length);
+      print('Retrieved $retrievedCount task contract addresses');
+
+      taskContractAddresses.addAll(results.expand((result) => result));
+      print('Total task contract addresses so far: ${taskContractAddresses.length}');
+    }
+
+    print('Finished retrieving task contract addresses. Total count: ${taskContractAddresses.length}');
+
+    // Remove duplicates from the taskContractAddresses list
+    taskContractAddresses = taskContractAddresses.toSet().toList();
+
+    return taskContractAddresses;
+  }
+
+  Future<List<EthereumAddress>> getTaskContractsByState2(String state) async {
+    int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    print('Total task count: $taskCount');
+
+    const int batchSize = 100;
+    const int maxSimultaneousRequests = 10;
+
+    List<EthereumAddress> taskContractAddresses = [];
+    int offset = 0;
+
+    while (offset < taskCount) {
+      int limit = min(batchSize, taskCount - offset);
+      print('Fetching tasks from offset $offset with limit $limit');
+
+      List<Future<List<EthereumAddress>>> futures = [];
 
       for (int i = 0; i < maxSimultaneousRequests && offset < taskCount; i++) {
         futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(limit)));
@@ -1899,6 +1913,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
     isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
+    await monitorTasks(taskList);
 
     filterResults.clear();
 
@@ -1933,6 +1948,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
     isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
+    await monitorTasks(taskList);
 
     filterResults.clear();
 
