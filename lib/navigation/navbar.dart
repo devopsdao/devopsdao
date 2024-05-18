@@ -45,10 +45,9 @@ class _NavBarPageState extends State<NavBarPage> {
       // '/tasks/1': const TasksPageWidget(),
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
-      if (listenRoleNfts['auditor'] > 0)
-      '/auditor': const HomePageWidget(),
-      if (listenRoleNfts['governor'] > 0)
-      '/accounts': const HomePageWidget(),
+      '/stats': const HomePageWidget(),
+      if (listenRoleNfts['auditor'] > 0) '/auditor': const HomePageWidget(),
+      if (listenRoleNfts['governor'] > 0) '/accounts': const HomePageWidget(),
       // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
@@ -97,6 +96,14 @@ class _NavBarPageState extends State<NavBarPage> {
             size: 24,
           ),
           label: 'Performer',
+        ),
+        const NavigationDestination(
+          // selectedIcon: Icon(Icons.bookmark),
+          icon: Icon(
+            Icons.engineering_rounded,
+            size: 24,
+          ),
+          label: 'Stats',
         ),
         if (listenRoleNfts['auditor'] > 0)
           const NavigationDestination(

@@ -53,15 +53,16 @@ class _LoadIndicator extends State<LoadIndicator> {
     return LinearProgressIndicator(
       value: loadingTasks ? progress : progress2,
       backgroundColor: Colors.transparent,
-      valueColor: AlwaysStoppedAnimation<Color>(
-          loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent
-      ),
+      valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent),
     );
   }
 }
 
 class LoadButtonIndicator extends StatefulWidget {
-  LoadButtonIndicator({Key? key,required this.refresh,}) : super(key: key);
+  LoadButtonIndicator({
+    Key? key,
+    required this.refresh,
+  }) : super(key: key);
   String refresh;
 
   @override
@@ -69,8 +70,6 @@ class LoadButtonIndicator extends StatefulWidget {
 }
 
 class _LoadButtonIndicator extends State<LoadButtonIndicator> {
-
-
   @override
   void initState() {
     super.initState();
@@ -89,13 +88,13 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
             padding: const EdgeInsets.all(12.0),
             child:
 
-            // tasksServices.isLoadingBackground ?
-            // LoadingAnimationWidget.threeRotatingDots(
-            //   color: DodaoTheme.of(context).primaryText,
-            //   size: 24,
-            // ) :
+                // tasksServices.isLoadingBackground ?
+                // LoadingAnimationWidget.threeRotatingDots(
+                //   color: DodaoTheme.of(context).primaryText,
+                //   size: 24,
+                // ) :
 
-            Icon(
+                Icon(
               Icons.refresh_outlined,
               color: DodaoTheme.of(context).primaryText,
               // size: 24,
@@ -105,6 +104,8 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
             if (listenWalletAddress != null) {
               tasksServices.isLoadingBackground = true;
               tasksServices.refreshTasksForAccount(listenWalletAddress, widget.refresh);
+            } else {
+              tasksServices.fetchTasksByState("new");
             }
           },
         ),

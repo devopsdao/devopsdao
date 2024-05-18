@@ -2,6 +2,7 @@
 
 import 'package:beamer/beamer.dart';
 import 'package:dodao/pages/auditor_page.dart';
+import 'package:dodao/pages/stats_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:webthree/webthree.dart';
 import '../wallet/widgets/main/main.dart';
@@ -14,17 +15,15 @@ import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'navmenu.dart';
 
-
 late final BeamerDelegate beamerDelegate;
 final parser = BeamerParser();
 
 void createBeamerDelegate() {
-
   beamerDelegate = BeamerDelegate(
     // initialPath: '/home',
     transitionDelegate: const NoAnimationTransitionDelegate(),
     locationBuilder: RoutesLocationBuilder(
-        routes: {
+      routes: {
         '/home': (context, state, data) => const Scaffold(
             body: HomePageWidget(),
             bottomNavigationBar: NavBarPage(
@@ -60,10 +59,16 @@ void createBeamerDelegate() {
                 initialPage: '/accounts',
               ),
             ),
+        '/stats': (context, state, data) => const Scaffold(
+              body: StatisticsPage(),
+              bottomNavigationBar: NavBarPage(
+                initialPage: '/stats',
+              ),
+            ),
         '/wallet': (context, state, data) => showDialog(
-            context: context,
-            builder: (context) => const WalletDialog(),
-          ),
+              context: context,
+              builder: (context) => const WalletDialog(),
+            ),
         '/tasks/:taskAddress': (context, state, data) {
           EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
