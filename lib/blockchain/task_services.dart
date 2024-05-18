@@ -1220,6 +1220,7 @@ class TasksServices extends ChangeNotifier {
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
       tasks[taskAddresses[i]] = taskObject;
+      await refreshTask(taskObject);
       i++;
     }
 

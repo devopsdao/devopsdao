@@ -1,173 +1,131 @@
-class CustomerStatisticsCards extends StatelessWidget {
-  final Map<String, Map<String, Map<String, int>>> dailyStats;
-  final Map<String, Map<String, Map<String, int>>> weeklyStats;
-  final Map<String, Map<String, Map<String, int>>> monthlyStats;
+class TotalOverviewCards extends StatefulWidget {
+  final Map<String, Map<String, int>> totalStats;
 
-  const CustomerStatisticsCards({
+  const TotalOverviewCards({
     Key? key,
-    required this.dailyStats,
-    required this.weeklyStats,
-    required this.monthlyStats,
+    required this.totalStats,
   }) : super(key: key);
+
+  @override
+  _TotalOverviewCardsState createState() => _TotalOverviewCardsState();
+}
+
+class _TotalOverviewCardsState extends State<TotalOverviewCards> {
+  final Map<String, List<Widget>> _expandedOtherCards = {};
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widget.totalStats.entries.map((entry) {
+        final groupTitle = entry.key;
+        final groupValues = entry.value;
+        final sortedGroupValues = groupValues.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+
+        final threshold = sortedGroupValues.length * 0.25;
+        final topGroupEntries = sortedGroupValues.take(threshold.ceil()).toList();
+        final otherGroupEntries = sortedGroupValues.skip(threshold.ceil()).toList();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildStatisticsCard(
-              title: 'Tasks Posted',
-              value: getTotalValue(dailyStats, 'statsTaskStateListCounts', 'new'),
-              color: Colors.purple,
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+              child: Text(
+                groupTitle,
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            _buildStatisticsCard(
-              title: 'Tasks In Review',
-              value: getTotalValue(dailyStats, 'statsTaskStateListCounts', 'review'),
-              color: Colors.orange,
-            ),
-            _buildStatisticsCard(
-              title: 'Tasks Completed',
-              value: getTotalValue(dailyStats, 'statsTaskStateListCounts', 'completed'),
-              color: Colors.green,
+            const SizedBox(height: 8.0),
+            StatisticsCharts(stats: groupValues),
+            const SizedBox(height: 8.0),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: [
+                ...topGroupEntries.map((innerEntry) {
+                  return _buildStatisticsCard(
+                    title: innerEntry.key,
+                    value: innerEntry.value.toString(),
+                    color: Colors.blue,
+                  );
+                }),
+                if (otherGroupEntries.isNotEmpty)
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    title: _buildStatisticsCard(
+                      title: 'Other',
+                      value: otherGroupEntries
+                          .fold(
+                            0,
+                            (sum, entry) => sum + entry.value,
+                          )
+                          .toString(),
+                      color: Colors.grey,
+                    ),
+                    initiallyExpanded: _expandedOtherCards.containsKey(groupTitle),
+                    onExpansionChanged: (isExpanded) {
+                      setState(() {
+                        if (isExpanded) {
+                          _expandedOtherCards[groupTitle] = otherGroupEntries.map((innerEntry) {
+                            return _buildStatisticsCard(
+                              title: innerEntry.key,
+                              value: innerEntry.value.toString(),
+                              color: Colors.blue,
+                            );
+                          }).toList();
+                        } else {
+                          _expandedOtherCards.remove(groupTitle);
+                        }
+                      });
+                    },
+                    children: _expandedOtherCards[groupTitle] ?? [],
+                  ),
+              ],
             ),
           ],
-        ),
-        const SizedBox(height: 16.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildStatisticsCard(
-              title: 'Avg. Customer Rating',
-              value: getAvgValue(dailyStats, 'statsCustomerRatingListCounts'),
-              color: Colors.pink,
-            ),
-            _buildStatisticsCard(
-              title: 'Unique Contract Owners',
-              value: getUniqueCount(dailyStats, 'statsContractOwnerListCounts'),
-              color: Colors.teal,
-            ),
-            _buildStatisticsCard(
-              title: 'Unique Funders',
-              value: getUniqueCount(dailyStats, 'statsFundersListCounts'),
-              color: Colors.brown,
-            ),
-          ],
-        ),
-      ],
+        );
+      }).toList(),
     );
-  }
-
-  String getTotalValue(
-    Map<String, Map<String, Map<String, int>>> stats,
-    String key,
-    String value,
-  ) {
-    List<MapEntry<String, int>> sortedEntries = [];
-
-    for (var entry in stats.entries) {
-      if (entry.value[key]?.containsKey(value) ?? false) {
-        if (entry.value[key]![value] is int) {
-          sortedEntries.add(MapEntry(entry.key, entry.value[key]![value]!));
-        }
-      }
-    }
-
-    sortedEntries.sort((a, b) => b.value.compareTo(a.value));
-
-    int total = 0;
-    for (var entry in sortedEntries) {
-      total += entry.value;
-    }
-
-    return total.toString();
-  }
-
-  String getAvgValue(
-    Map<String, Map<String, Map<String, int>>> stats,
-    String key,
-  ) {
-    List<MapEntry<int, int>> sortedEntries = [];
-
-    for (var entry in stats.entries) {
-      for (var ratingEntry in entry.value[key]!.entries) {
-        if (ratingEntry.key is int) {
-          sortedEntries.add(MapEntry(ratingEntry.key, ratingEntry.value));
-        }
-      }
-    }
-
-    sortedEntries.sort((a, b) => b.value.compareTo(a.value));
-
-    int total = 0;
-    int count = 0;
-    for (var entry in sortedEntries) {
-      total += (entry.key * entry.value);
-      count += entry.value;
-    }
-
-    return count > 0 ? (total / count).toStringAsFixed(2) : '0.00';
-  }
-
-  String getUniqueCount(
-    Map<String, Map<String, Map<String, int>>> stats,
-    String key,
-  ) {
-    Set<dynamic> uniqueValues = {};
-    for (var entry in stats.entries) {
-      for (var valueEntry in entry.value[key]!.entries) {
-        if (valueEntry is int) uniqueValues.add(valueEntry.key);
-      }
-    }
-
-    List<MapEntry<dynamic, int>> sortedEntries = uniqueValues.entries.map((entry) {
-      int count = 0;
-      for (var stat in stats.values) {
-        if (stat[key]?.containsKey(entry.key) ?? false) {
-          count += stat[key]![entry.key]!;
-        }
-      }
-      return MapEntry(entry.key, count);
-    }).toList();
-
-    sortedEntries.sort((a, b) => b.value.compareTo(a.value));
-
-    return sortedEntries.isNotEmpty ? sortedEntries.first.value.toString() : '0';
   }
 
   Widget _buildStatisticsCard({
     required String title,
     required String value,
     required Color color,
-    TextStyle? valueStyle,
-    TextStyle? titleStyle,
   }) {
     return Card(
       color: color.withOpacity(0.5),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: titleStyle ??
-                  const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              value,
-              style: valueStyle ??
-                  const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
+        padding: const EdgeInsets.all(4.0),
+        child: SizedBox(
+          width: 80,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2.0),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
