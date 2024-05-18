@@ -280,7 +280,7 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
     Widget warningContainer = Container(
       padding: const EdgeInsets.only(bottom: 25),
-      height: 150,
+      height: 160,
       width: width < 360 ? width - 40 : 310,
       child: Row(
         children: [
@@ -297,8 +297,8 @@ class _WalletActionDialog extends State<WalletActionDialog> {
               'If the transaction takes longer than usual, Check its status in Metamask. '
               'If it stuck in pending mode, Set a higher(aggressive) Gas fee.\n'
               'If transaction got a JSON-rpc error, Submit a new transaction with'
-              ' increased Gas.'
-              'If it still does not go through, Clear activity and nonce data in'
+              ' increased Gas. '
+              'If it still does not go through, Clear activity and nonce data in '
               'Metamask settings -> Advanced',
               style: Theme.of(context).textTheme.bodySmall,
             ),
