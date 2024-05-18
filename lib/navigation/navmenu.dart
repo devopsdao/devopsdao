@@ -388,6 +388,13 @@ class SideBar extends StatelessWidget {
             context.beamToNamed('/performer');
           },
         ),
+        SidebarXItem(
+          icon: Icons.engineering_rounded,
+          label: 'Stats',
+          onTap: () {
+            context.beamToNamed('/stats');
+          },
+        ),
         if (tasksServices.roleNfts['auditor'] > 0 && listenWalletConnected)
           SidebarXItem(
             icon: Icons.engineering_rounded,

@@ -97,14 +97,14 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           label: 'Performer',
         ),
-        const NavigationDestination(
-          // selectedIcon: Icon(Icons.bookmark),
-          icon: Icon(
-            Icons.engineering_rounded,
-            size: 24,
-          ),
-          label: 'Stats',
-        ),
+        // const NavigationDestination(
+        //   // selectedIcon: Icon(Icons.bookmark),
+        //   icon: Icon(
+        //     Icons.engineering_rounded,
+        //     size: 24,
+        //   ),
+        //   label: 'Stats',
+        // ),
         if (listenRoleNfts['auditor'] > 0)
           const NavigationDestination(
             icon: FaIcon(
