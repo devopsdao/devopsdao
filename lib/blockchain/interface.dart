@@ -107,7 +107,15 @@ class InterfaceServices extends ChangeNotifier {
       participantTasks: [],
       auditParticipantTasks: [],
       performerRating: [],
-      customerRating: [], agreedTasks: [], auditAgreed: [], completedTasks: []);
+      customerRating: [],
+      performerAgreedTasks: [],
+      customerAgreedTasks: [],
+      auditAgreed: [],
+      auditCompleted: [],
+      performerAuditedTasks: [],
+      customerAuditedTasks: [],
+      performerCompletedTasks: [],
+      customerCompletedTasks: []);
   // participants_list.dart & 3_selection.dart & auditor
   final double tileHeight = 36;
   final double participantInfoHeight = 165;
