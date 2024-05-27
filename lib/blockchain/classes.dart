@@ -104,6 +104,116 @@ class Token {
   Token({required this.name, required this.approved});
 }
 
+class AccountStats {
+  final List<EthereumAddress> accountAddresses;
+  final List<String> nicknames;
+  final List<String> aboutTexts;
+  final List<BigInt> ownerTaskCounts;
+  final List<BigInt> participantTaskCounts;
+  final List<BigInt> auditParticipantTaskCounts;
+  final List<BigInt> agreedTaskCounts;
+  final List<BigInt> auditAgreedTaskCounts;
+  final List<BigInt> completedTaskCounts;
+  final List<BigInt> auditCompletedTaskCounts;
+  final List<BigInt> avgCustomerRatings;
+  final List<BigInt> avgPerformerRatings;
+  final BigInt overallAvgCustomerRating;
+  final BigInt overallAvgPerformerRating;
+
+  AccountStats({
+    required this.accountAddresses,
+    required this.nicknames,
+    required this.aboutTexts,
+    required this.ownerTaskCounts,
+    required this.participantTaskCounts,
+    required this.auditParticipantTaskCounts,
+    required this.agreedTaskCounts,
+    required this.auditAgreedTaskCounts,
+    required this.completedTaskCounts,
+    required this.auditCompletedTaskCounts,
+    required this.avgCustomerRatings,
+    required this.avgPerformerRatings,
+    required this.overallAvgCustomerRating,
+    required this.overallAvgPerformerRating,
+  });
+}
+
+class AccountData {
+  final EthereumAddress accountAddress;
+  final String nickname;
+  final String aboutText;
+  final int ownerTaskCount;
+  final int participantTaskCount;
+  final int completedTaskCount;
+  final int avgCustomerRating;
+  final int avgPerformerRating;
+
+  AccountData({
+    required this.accountAddress,
+    required this.nickname,
+    required this.aboutText,
+    required this.ownerTaskCount,
+    required this.participantTaskCount,
+    required this.completedTaskCount,
+    required this.avgCustomerRating,
+    required this.avgPerformerRating,
+  });
+}
+
+class TaskStats {
+  final BigInt countNew;
+  final BigInt countAgreed;
+  final BigInt countProgress;
+  final BigInt countReview;
+  final BigInt countCompleted;
+  final BigInt countCanceled;
+  final BigInt countPrivate;
+  final BigInt countPublic;
+  final BigInt countHackaton;
+  final BigInt avgTaskDuration;
+  final BigInt avgPerformerRating;
+  final BigInt avgCustomerRating;
+  final List<String> topTags;
+  final List<BigInt> topTagCounts;
+  final List<String> topTokenNames;
+  final List<BigInt> topTokenBalances;
+  final List<BigInt> topETHBalances;
+  final List<BigInt> topETHAmounts;
+  final List<BigInt> newTimestamps;
+  final List<BigInt> agreedTimestamps;
+  final List<BigInt> progressTimestamps;
+  final List<BigInt> reviewTimestamps;
+  final List<BigInt> completedTimestamps;
+  final List<BigInt> canceledTimestamps;
+
+  TaskStats({
+    required this.countNew,
+    required this.countAgreed,
+    required this.countProgress,
+    required this.countReview,
+    required this.countCompleted,
+    required this.countCanceled,
+    required this.countPrivate,
+    required this.countPublic,
+    required this.countHackaton,
+    required this.avgTaskDuration,
+    required this.avgPerformerRating,
+    required this.avgCustomerRating,
+    required this.topTags,
+    required this.topTagCounts,
+    required this.topTokenNames,
+    required this.topTokenBalances,
+    required this.topETHBalances,
+    required this.topETHAmounts,
+    required this.newTimestamps,
+    required this.agreedTimestamps,
+    required this.progressTimestamps,
+    required this.reviewTimestamps,
+    required this.completedTimestamps,
+    required this.canceledTimestamps,
+  });
+}
+
 // class TaskData extends MapBase<String, TaskData> {
 //   final String nanoId;
 //   final String taskType;

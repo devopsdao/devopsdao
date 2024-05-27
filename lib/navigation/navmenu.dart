@@ -388,13 +388,14 @@ class SideBar extends StatelessWidget {
             context.beamToNamed('/performer');
           },
         ),
-        SidebarXItem(
-          icon: Icons.engineering_rounded,
-          label: 'Stats',
-          onTap: () {
-            context.beamToNamed('/stats');
-          },
-        ),
+        if (tasksServices.roleNfts['governor'] > 0 && listenWalletConnected)
+          SidebarXItem(
+            icon: Icons.engineering_rounded,
+            label: 'Stats',
+            onTap: () {
+              context.beamToNamed('/stats');
+            },
+          ),
         if (tasksServices.roleNfts['auditor'] > 0 && listenWalletConnected)
           SidebarXItem(
             icon: Icons.engineering_rounded,
@@ -403,14 +404,13 @@ class SideBar extends StatelessWidget {
               context.beamToNamed('/auditor');
             },
           ),
-        if (tasksServices.roleNfts['governor'] > 0 && listenWalletConnected)
-          SidebarXItem(
-            icon: Icons.engineering_rounded,
-            label: 'Accounts',
-            onTap: () {
-              context.beamToNamed('/accounts');
-            },
-          ),
+        SidebarXItem(
+          icon: Icons.engineering_rounded,
+          label: 'Accounts',
+          onTap: () {
+            context.beamToNamed('/accounts');
+          },
+        ),
         SidebarXItem(
           icon: Icons.token_outlined,
           label: 'NFT Manager',

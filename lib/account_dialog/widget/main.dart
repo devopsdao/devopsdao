@@ -46,13 +46,9 @@ class _AccountFutureState extends State<AccountFuture> {
     var tasksServices = context.read<TasksServices>();
 
     return FutureBuilder<Map<String, Account>>(
-        future: tasksServices.getAccountsData(
-          requestedAccountsList: [widget.account.walletAddress]
-        ),
+        future: tasksServices.getAccountsData(requestedAccountsList: [widget.account.walletAddress]),
         // future: tasksServices.loadOneTask(taskAddress), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot) {
-
-
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               snapshot.error.toString();
@@ -71,7 +67,15 @@ class _AccountFutureState extends State<AccountFuture> {
               participantTasks: [],
               auditParticipantTasks: [],
               customerRating: [],
-              performerRating: [], agreedTasks: [], auditAgreed: [], completedTasks: []);
+              performerRating: [],
+              performerAgreedTasks: [],
+              customerAgreedTasks: [],
+              auditAgreed: [],
+              auditCompleted: [],
+              performerAuditedTasks: [],
+              customerAuditedTasks: [],
+              performerCompletedTasks: [],
+              customerCompletedTasks: []);
           return AccountDialogSkeleton(accountRole: widget.accountRole, object: account, isLoading: true);
         });
   }
@@ -127,25 +131,24 @@ class _AccountDialogSkeletonState extends State<AccountDialogSkeleton> {
             accountRole: widget.accountRole,
           ),
           SizedBox(
-            height: screenHeightSize - statusBarHeight,
-            width: interface.maxStaticDialogWidth,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              switchInCurve: Curves.easeInQuint,
-              switchOutCurve: Curves.easeOutQuint,
-              child: widget.isLoading == false
-                  ? AccountDialogPages(
-                key: const Key("normal"),
-                account: account,
-                accountRole: widget.accountRole,
-                screenHeightSize: screenHeightSize,
-                screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
-              )
-                  : ShimmeredPages(
-                object: account,
-              ),
-            )
-          ),
+              height: screenHeightSize - statusBarHeight,
+              width: interface.maxStaticDialogWidth,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                switchInCurve: Curves.easeInQuint,
+                switchOutCurve: Curves.easeOutQuint,
+                child: widget.isLoading == false
+                    ? AccountDialogPages(
+                        key: const Key("normal"),
+                        account: account,
+                        accountRole: widget.accountRole,
+                        screenHeightSize: screenHeightSize,
+                        screenHeightSizeNoKeyboard: screenHeightSizeNoKeyboard - statusBarHeight,
+                      )
+                    : ShimmeredPages(
+                        object: account,
+                      ),
+              )),
         ]),
       );
     });
@@ -198,11 +201,9 @@ class ShimmeredPages extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                             child: Container(
                                 padding: const EdgeInsets.all(4),
-                                child: const Text('▇▇▇▇▇ ▇▇▇▇▇▇▇: \n▇▇▇▇ ▇▇▇▇▇▇▇ \n▇▇▇▇ ▇▇▇▇ \n▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇')
-                            ),
+                                child: const Text('▇▇▇▇▇ ▇▇▇▇▇▇▇: \n▇▇▇▇ ▇▇▇▇▇▇▇ \n▇▇▇▇ ▇▇▇▇ \n▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇')),
                           ),
-                        )
-                    ),
+                        )),
                   ),
                 ),
                 // ************ Show prices and topup part ******** //
@@ -227,10 +228,7 @@ class ShimmeredPages extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                    padding: const EdgeInsets.all(4),
-                                    child: const Text('▇▇▇▇▇▇▇▇:')
-                                ),
+                                Container(padding: const EdgeInsets.all(4), child: const Text('▇▇▇▇▇▇▇▇:')),
                                 SizedBox(
                                   height: 80,
                                   child: Column(
@@ -239,7 +237,10 @@ class ShimmeredPages extends StatelessWidget {
                                         padding: const EdgeInsets.all(2.0),
                                         child: Row(
                                           children: [
-                                            const BadgeSmallColored(count: 0, color: Colors.lightBlue,),
+                                            const BadgeSmallColored(
+                                              count: 0,
+                                              color: Colors.lightBlue,
+                                            ),
                                             Text(
                                               ' - ▇▇▇▇▇▇',
                                               style: DodaoTheme.of(context).bodyText3,
@@ -247,7 +248,6 @@ class ShimmeredPages extends StatelessWidget {
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
-
                                           ],
                                         ),
                                       ),
@@ -255,7 +255,10 @@ class ShimmeredPages extends StatelessWidget {
                                         padding: const EdgeInsets.all(2.0),
                                         child: Row(
                                           children: [
-                                            const BadgeSmallColored(count:0, color: Colors.amber,),
+                                            const BadgeSmallColored(
+                                              count: 0,
+                                              color: Colors.amber,
+                                            ),
                                             Text(
                                               ' - ▇▇▇▇▇▇▇▇▇',
                                               style: DodaoTheme.of(context).bodyText3,
@@ -263,7 +266,6 @@ class ShimmeredPages extends StatelessWidget {
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                             ),
-
                                           ],
                                         ),
                                       ),
@@ -271,7 +273,10 @@ class ShimmeredPages extends StatelessWidget {
                                         padding: const EdgeInsets.all(2.0),
                                         child: Row(
                                           children: [
-                                            const BadgeSmallColored(count: 0, color: Colors.redAccent,),
+                                            const BadgeSmallColored(
+                                              count: 0,
+                                              color: Colors.redAccent,
+                                            ),
                                             Text(
                                               ' - ▇▇▇▇ ▇▇▇▇▇▇▇▇▇',
                                               style: DodaoTheme.of(context).bodyText3,
@@ -288,8 +293,7 @@ class ShimmeredPages extends StatelessWidget {
                               ],
                             ),
                           ),
-                        )
-                    ),
+                        )),
                   ),
                 ),
                 Padding(
@@ -313,10 +317,7 @@ class ShimmeredPages extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                    padding: const EdgeInsets.all(4),
-                                    child: const Text('▇▇▇▇▇▇▇▇:')
-                                ),
+                                Container(padding: const EdgeInsets.all(4), child: const Text('▇▇▇▇▇▇▇▇:')),
                                 SizedBox(
                                   height: 60,
                                   child: Column(
@@ -325,7 +326,10 @@ class ShimmeredPages extends StatelessWidget {
                                         padding: const EdgeInsets.all(2.0),
                                         child: Row(
                                           children: [
-                                            BadgeSmallColored(count: 0, color: Colors.lightBlue,),
+                                            BadgeSmallColored(
+                                              count: 0,
+                                              color: Colors.lightBlue,
+                                            ),
                                             Text(
                                               ' - ▇▇▇▇▇▇▇ ▇▇▇▇▇',
                                               style: DodaoTheme.of(context).bodyText3,
@@ -337,7 +341,10 @@ class ShimmeredPages extends StatelessWidget {
                                         padding: const EdgeInsets.all(2.0),
                                         child: Row(
                                           children: [
-                                            BadgeSmallColored(count:0, color: Colors.amber,),
+                                            BadgeSmallColored(
+                                              count: 0,
+                                              color: Colors.amber,
+                                            ),
                                             Text(
                                               ' - ▇▇▇▇▇▇ ▇▇▇▇▇▇',
                                               style: DodaoTheme.of(context).bodyText3,
@@ -351,8 +358,7 @@ class ShimmeredPages extends StatelessWidget {
                               ],
                             ),
                           ),
-                        )
-                    ),
+                        )),
                   ),
                 ),
               ],

@@ -65,6 +65,12 @@ void createBeamerDelegate() {
                 initialPage: '/stats',
               ),
             ),
+        // '/leaderboard': (context, state, data) => Scaffold(
+        //       body: AccountLeaderboard(),
+        //       bottomNavigationBar: NavBarPage(
+        //         initialPage: '/leaderboard',
+        //       ),
+        //     ),
         '/wallet': (context, state, data) => showDialog(
               context: context,
               builder: (context) => const WalletDialog(),

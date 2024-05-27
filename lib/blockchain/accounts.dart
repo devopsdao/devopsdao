@@ -10,9 +10,14 @@ class Account {
   final List<BigInt> customerRating;
   final List<BigInt> performerRating;
 
-  final List<EthereumAddress> agreedTasks;
+  final List<EthereumAddress> performerAgreedTasks;
+  final List<EthereumAddress> customerAgreedTasks;
+  final List<EthereumAddress> performerAuditedTasks;
+  final List<EthereumAddress> customerAuditedTasks;
   final List<EthereumAddress> auditAgreed;
-  final List<EthereumAddress> completedTasks;
+  final List<EthereumAddress> auditCompleted;
+  final List<EthereumAddress> performerCompletedTasks;
+  final List<EthereumAddress> customerCompletedTasks;
 
   Account(
       {required this.nickName,
@@ -23,9 +28,12 @@ class Account {
       required this.auditParticipantTasks,
       required this.customerRating,
       required this.performerRating,
-
-      required this.agreedTasks,
+      required this.performerAgreedTasks,
+      required this.customerAgreedTasks,
+      required this.performerAuditedTasks,
+      required this.customerAuditedTasks,
       required this.auditAgreed,
-      required this.completedTasks
-      });
+      required this.auditCompleted,
+      required this.performerCompletedTasks,
+      required this.customerCompletedTasks});
 }

@@ -3,7 +3,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_sender",
+        "name": "_performer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_customer",
         "type": "address"
       },
       {
@@ -75,7 +80,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_sender",
+        "name": "_performer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_customer",
         "type": "address"
       },
       {
@@ -85,6 +95,60 @@
       }
     ],
     "name": "addCompletedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCustomerAgreedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCustomerAuditedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCustomerCompletedTask",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -126,6 +190,60 @@
       }
     ],
     "name": "addParticipantTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addPerformerAgreedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addPerformerAuditedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addPerformerCompletedTask",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
