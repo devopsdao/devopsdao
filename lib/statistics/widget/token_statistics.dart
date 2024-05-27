@@ -1,22 +1,22 @@
 
-import 'package:dodao/statistics/widget/tabs/in_your_wallet_tab.dart';
-import 'package:dodao/statistics/widget/tabs/pending_tab.dart';
+import 'package:dodao/statistics/widget/token_statistics/in_your_wallet_tab.dart';
+import 'package:dodao/statistics/widget/token_statistics/pending_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../wallet/model_view/wallet_model.dart';
 import '../../../wallet/services/wallet_service.dart';
-import '../model_view/statistics_model_view.dart';
+import '../model_view/pending_model_view.dart';
 
 
-class HomeStatistics extends StatefulWidget {
-  const HomeStatistics({Key? key}) : super(key: key);
+class TokensStats extends StatefulWidget {
+  const TokensStats({Key? key}) : super(key: key);
 
   @override
-  State<HomeStatistics> createState() => HomeStatisticsState();
+  State<TokensStats> createState() => TokensStatsState();
 }
 
-class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProviderStateMixin{
+class TokensStatsState extends State<TokensStats>  with SingleTickerProviderStateMixin{
 
   final colors = [const Color(0xFFF62BAD), const Color(0xFFF75D21)];
   late Color indicatorColor = colors[0];
@@ -26,11 +26,11 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    StatisticsModel statisticsModel = context.read<StatisticsModel>();
-    statisticsModel.subscribeToStatistics();
+    TokenPendingModel tokenPendingModel = context.read<TokenPendingModel>();
+    tokenPendingModel.subscribeToStatistics();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var tasksServices = context.read<TasksServices>();
-      statisticsModel.onRequestBalances(WalletService.chainId,tasksServices );
+      tokenPendingModel.onRequestBalances(WalletService.chainId,tasksServices );
     });
     tabBarController = TabController(length: 2, vsync: this)
       ..addListener(() {
@@ -42,10 +42,10 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   }
 
   //// unsubscribe statistics broadcast:
-  late StatisticsModel _disposeSub;
+  late TokenPendingModel _disposeSub;
   @override
   void didChangeDependencies() {
-    _disposeSub = context.read<StatisticsModel>();
+    _disposeSub = context.read<TokenPendingModel>();
     super.didChangeDependencies();
   }
   @override
@@ -58,7 +58,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.read<TasksServices>();
-    StatisticsModel statisticsModel = context.watch<StatisticsModel>();
+    TokenPendingModel tokenPendingModel = context.watch<TokenPendingModel>();
     WalletModel walletModel = context.watch<WalletModel>();
     // final listenWalletConnected = context.select((WalletModel vm) => vm.state.walletConnected);
     // final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
@@ -68,7 +68,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
     // }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Column(
         children: [
           if(walletModel.state.walletConnected && walletModel.state.walletAddress != null)
@@ -95,7 +95,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
               onTap: (index) {
                 // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
                 if (index == 0) {
-                  statisticsModel.onRequestBalances(WalletService.chainId,tasksServices );
+                  tokenPendingModel.onRequestBalances(WalletService.chainId,tasksServices );
                 }
               },
               tabs: [
@@ -122,7 +122,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
           ),
           if(walletModel.state.walletConnected && walletModel.state.walletAddress != null)
           SizedBox(
-            height: 150,
+            height: 160,
             child: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               controller: tabBarController,
@@ -135,7 +135,7 @@ class HomeStatisticsState extends State<HomeStatistics>  with SingleTickerProvid
             
             if(!walletModel.state.walletConnected)
               const SizedBox(
-                height: 200,
+                height: 160,
                 child: Center(
                   child: Text('Please connect your wallet')
                 ),

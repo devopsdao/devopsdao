@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:logging/logging.dart';
 import '../../blockchain/chain_presets/chains_presets.dart';
-import '../../statistics/services/statistics_service.dart';
 import '../../config/utils/platform.dart';
+import '../../statistics/services/pending_service.dart';
 import '../services/wc_service.dart';
 import '../sessions/wc_sessions.dart';
 
@@ -46,7 +46,7 @@ class WCModelView extends ChangeNotifier {
   final _walletService = WalletService();
   final _wcService = WCService();
   final _wcSessions = WCSessions();
-  final _statisticsService = StatisticsService();
+  final _tokenPendingService = TokenPendingService();
   // utils:
   final _platformAndBrowser = PlatformAndBrowser();
 
@@ -196,7 +196,7 @@ class WCModelView extends ChangeNotifier {
   }
 
   Future<void> onFinalConnection(chainId, tasksServices) async {
-    _statisticsService.initRequestBalances(chainId, tasksServices);
+    _tokenPendingService.initRequestBalances(chainId, tasksServices);
   }
 
   Future<void> registerEventHandlers() async {

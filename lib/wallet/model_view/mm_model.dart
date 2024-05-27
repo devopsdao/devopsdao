@@ -11,8 +11,8 @@ import "package:universal_html/html.dart" hide Platform;
 
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../blockchain/task_services.dart';
-import '../../statistics/services/statistics_service.dart';
 import '../../config/utils/platform.dart';
+import '../../statistics/services/pending_service.dart';
 import '../services/mm_service.dart';
 import 'wallet_model.dart';
 
@@ -52,9 +52,9 @@ class MetamaskModel extends ChangeNotifier {
   final _walletService = WalletService();
   final _mmSessions = MMSessions();
   final _mmServices = MMService();
-  final _statisticsService = StatisticsService();
+  final _tokenPendingService = TokenPendingService();
 
-  // final _statisticsModel = StatisticsModel();
+  // final _TokenPendingModel = TokenPendingModel();
 
   MetamaskModel() {
     _state.selectedChainIdOnMMApp = WalletService.defaultNetwork;
@@ -259,6 +259,6 @@ class MetamaskModel extends ChangeNotifier {
     await _mmServices.initFinalCollectData(chainId, tasksServices);
   }
 
-  Future<void> onRequestBalances(int chainId, tasksServices) async => _statisticsService.initRequestBalances(chainId, tasksServices);
+  Future<void> onRequestBalances(int chainId, tasksServices) async => _tokenPendingService.initRequestBalances(chainId, tasksServices);
   Future<void> setSelectedChainIdOnApp(int value) async => _state.selectedChainIdOnMMApp = value;
 }

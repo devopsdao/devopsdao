@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../blockchain/task_services.dart';
-import '../../statistics/model_view/statistics_model_view.dart';
+import '../../statistics/model_view/pending_model_view.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import '../../wallet/services/wallet_service.dart';
 import '../../wallet/widgets/main/main.dart';
@@ -20,7 +20,7 @@ class WalletConnectButton extends StatelessWidget {
     var tasksServices = context.read<TasksServices>();
     final walletConnected = context.select((WalletModel vm) => vm.state.walletConnected);
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    StatisticsModel statisticsModel = context.read<StatisticsModel>();
+    TokenPendingModel tokenPendingModel = context.read<TokenPendingModel>();
 
     return Center(
       child: Padding(
@@ -44,7 +44,7 @@ class WalletConnectButton extends StatelessWidget {
                   context: context,
                   builder: (context) => const WalletDialog(),
                 );
-                statisticsModel.onRequestBalances(WalletService.chainId, tasksServices);
+                tokenPendingModel.onRequestBalances(WalletService.chainId, tasksServices);
               },
               child: walletConnected && listenWalletAddress != null
                   ? Row(

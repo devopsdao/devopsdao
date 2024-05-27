@@ -55,7 +55,7 @@ dependencies:
   g_json: ^4.1.0
   google_fonts: ^4.0.0
   gradient_borders: ^1.0.0
-  horizontal_blocked_scroll_physics: ^4.0.1
+#  horizontal_blocked_scroll_physics: ^4.0.1
   html: ^0.15.0
 #  http: ^0.13.4
   http: ^1.1.0

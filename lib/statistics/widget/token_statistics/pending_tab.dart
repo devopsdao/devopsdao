@@ -26,7 +26,7 @@ class PendingTab extends StatelessWidget {
     late List<TokenItem> tags = [];
 
     return Container(
-      padding: const EdgeInsets.only(top: 4.0, right: 8.0, left: 8.0, bottom: 4.0),
+      padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0, bottom: 16.0),
       height: 100,
       alignment: Alignment.topLeft,
       child:
@@ -183,34 +183,31 @@ class PendingTab extends StatelessWidget {
               );
             });
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
-              child: SingleChildScrollView(
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  direction: Axis.horizontal,
-                  children: tags.map((e) {
+            return SingleChildScrollView(
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                direction: Axis.horizontal,
+                children: tags.map((e) {
 
 
-                    return HomeWrappedChip(
-                      key: ValueKey(e),
-                      item: MapEntry(
-                          e.name,
-                          NftCollection(
-                            selected: e.selected,
-                            name: e.name,
-                            bunch: {
-                              BigInt.from(e.balance):
-                              TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
-                            },
-                          )),
-                      nft: e.nft,
-                      balance: e.balance,
-                      completed: e.selected,
-                      type: e.type!,
-                    );
-                  }).toList(),
-                ),
+                  return HomeWrappedChip(
+                    key: ValueKey(e),
+                    item: MapEntry(
+                        e.name,
+                        NftCollection(
+                          selected: e.selected,
+                          name: e.name,
+                          bunch: {
+                            BigInt.from(e.balance):
+                            TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                          },
+                        )),
+                    nft: e.nft,
+                    balance: e.balance,
+                    completed: e.selected,
+                    type: e.type!,
+                  );
+                }).toList(),
               ),
             );
           }
