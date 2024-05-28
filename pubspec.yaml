@@ -96,6 +96,7 @@ dependencies:
   fl_chart: ^0.68.0
   material_design_icons_flutter: ^7.0.7296
   data_table_2: ^2.5.12
+  syncfusion_flutter_charts: ^25.2.5
 #  vector_graphics: ^1.0.1
 dependency_overrides:
   font_awesome_flutter: ^10.1.0

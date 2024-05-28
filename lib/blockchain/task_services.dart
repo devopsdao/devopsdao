@@ -1821,7 +1821,7 @@ class TasksServices extends ChangeNotifier {
     isLoadingBackground = false;
     await Future.delayed(const Duration(milliseconds: 201));
     await myBalance();
-    notifyListeners();
+    // notifyListeners(); //already notifyed in my balance
   }
 
   Future<List<EthereumAddress>> getTaskContractsByState(String state) async {
@@ -1937,7 +1937,7 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     isLoadingBackground = false;
     await myBalance();
-    notifyListeners();
+    // notifyListeners(); // notified in mybalance
   }
 
   Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
@@ -1968,7 +1968,7 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     isLoadingBackground = false;
     await myBalance();
-    notifyListeners();
+    // notifyListeners(); // notified in mybalance()
   }
 
   Future<String> addAccountToBlacklist(EthereumAddress accountAddress) async {
@@ -2156,7 +2156,7 @@ class TasksServices extends ChangeNotifier {
 
       await Future.delayed(const Duration(milliseconds: 201));
     }
-
+    log.info('Complete fetching account stats');
     return AccountStats(
       accountAddresses: accountAddresses,
       nicknames: nicknames,
@@ -2175,8 +2175,91 @@ class TasksServices extends ChangeNotifier {
     );
   }
 
-  Future<TaskStats> getTaskStats() async {
+  AccountStats? _accountStats;
+  AccountStats? get accountStats => _accountStats;
+  Future<void> runAccountStats() async {
+    int accountCount = (await accountFacet.getRawAccountsCount()).toInt();
+
+    log.info('Total account count: $accountCount');
+
     const int batchSize = 100;
+    const int maxSimultaneousRequests = 10;
+
+    List<EthereumAddress> accountAddresses = [];
+    List<String> nicknames = [];
+    List<String> aboutTexts = [];
+    List<BigInt> ownerTaskCounts = [];
+    List<BigInt> participantTaskCounts = [];
+    List<BigInt> auditParticipantTaskCounts = [];
+    List<BigInt> agreedTaskCounts = [];
+    List<BigInt> auditAgreedTaskCounts = [];
+    List<BigInt> completedTaskCounts = [];
+    List<BigInt> auditCompletedTaskCounts = [];
+    List<BigInt> avgCustomerRatings = [];
+    List<BigInt> avgPerformerRatings = [];
+    BigInt overallAvgCustomerRating = BigInt.zero;
+    BigInt overallAvgPerformerRating = BigInt.zero;
+
+    int offset = 0;
+
+    while (offset < accountCount) {
+      int limit = min(batchSize, accountCount - offset);
+
+      log.info('Fetching account stats from offset $offset with limit $limit');
+
+      List<Future<dynamic>> futures = [];
+      int remainingAccounts = accountCount - offset;
+
+      for (int i = 0; i < maxSimultaneousRequests && remainingAccounts > 0; i++) {
+        int currentLimit = min(limit, remainingAccounts);
+        futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
+        remainingAccounts -= currentLimit;
+        offset += currentLimit;
+      }
+
+      List<dynamic> results = await Future.wait(futures);
+
+      for (dynamic result in results) {
+        accountAddresses.addAll(result[0].cast<EthereumAddress>());
+        nicknames.addAll(result[1].cast<String>());
+        aboutTexts.addAll(result[2].cast<String>());
+        ownerTaskCounts.addAll(result[3].cast<BigInt>());
+        participantTaskCounts.addAll(result[4].cast<BigInt>());
+        auditParticipantTaskCounts.addAll(result[5].cast<BigInt>());
+        agreedTaskCounts.addAll(result[6].cast<BigInt>());
+        auditAgreedTaskCounts.addAll(result[7].cast<BigInt>());
+        completedTaskCounts.addAll(result[8].cast<BigInt>());
+        auditCompletedTaskCounts.addAll(result[9].cast<BigInt>());
+        avgCustomerRatings.addAll(result[10].cast<BigInt>());
+        avgPerformerRatings.addAll(result[11].cast<BigInt>());
+        overallAvgCustomerRating = result[12];
+        overallAvgPerformerRating = result[13];
+      }
+
+      await Future.delayed(const Duration(milliseconds: 201));
+    }
+    log.info('Complete fetching account stats');
+    _accountStats = AccountStats(
+      accountAddresses: accountAddresses,
+      nicknames: nicknames,
+      aboutTexts: aboutTexts,
+      ownerTaskCounts: ownerTaskCounts,
+      participantTaskCounts: participantTaskCounts,
+      auditParticipantTaskCounts: auditParticipantTaskCounts,
+      agreedTaskCounts: agreedTaskCounts,
+      auditAgreedTaskCounts: auditAgreedTaskCounts,
+      completedTaskCounts: completedTaskCounts,
+      auditCompletedTaskCounts: auditCompletedTaskCounts,
+      avgCustomerRatings: avgCustomerRatings,
+      avgPerformerRatings: avgPerformerRatings,
+      overallAvgCustomerRating: overallAvgCustomerRating,
+      overallAvgPerformerRating: overallAvgPerformerRating,
+    );
+    notifyListeners();
+  }
+
+  Future<TaskStats> getTaskStats() async {
+    const int batchSize = 50;
     const int maxSimultaneousRequests = 10;
 
     int offset = 0;

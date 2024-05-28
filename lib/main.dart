@@ -107,9 +107,15 @@ class _MyAppState extends State<MyApp> {
         return !tasksServices.contractsInitialized;
       }));
       if (platform.platform != 'web' || window.ethereum == null) {
+        try {
+          await tasksServices.runAccountStats();
+        } catch (e) {
+          log.severe('MyApp->initState->runAccountStats error: $e');
+        }
         await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
         // await Future.delayed(const Duration(milliseconds: 200));
         // await tasksServices.monitorEvents();
+
       } else {
 
         metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context, true);

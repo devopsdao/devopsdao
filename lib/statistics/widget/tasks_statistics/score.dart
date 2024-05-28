@@ -15,31 +15,45 @@ class ScoreStats extends StatelessWidget {
     var tasksServices = context.read<TasksServices>();
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Your score:',
-                  style: Theme.of(context).textTheme.bodyMedium),
-              if (listenWalletAddress == null)
-                Text(
-                  'Not Connected',
-                  style: Theme.of(context).textTheme.titleSmall,
-                )
-              else if (tasksServices.scoredTaskCount == 0)
-                Text(
-                  'No completed evaluated tasks',
-                  style: Theme.of(context).textTheme.titleSmall,
-                )
-              else
-                SelectableText(
-                  '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
-                  style: Theme.of(context).textTheme.titleSmall,
-                )
-            ],
-          ),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Your score',
+                style: Theme.of(context).textTheme.bodyMedium),
+            SizedBox(
+              height: 110,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (listenWalletAddress == null)
+                    Text(
+                      'Not Connected',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    )
+
+                  else if (tasksServices.scoredTaskCount == 0)
+                    Text(
+                      'No completed evaluated tasks',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    )
+                  else
+                    Column(
+                      children: [
+                        SelectableText(
+                          '${tasksServices.myScore} Starts of ${tasksServices.scoredTaskCount}',
+                          style: Theme.of(context).textTheme.bodyMedium?.apply(fontWeightDelta: 10),
+                        ),
+                        SelectableText(
+                          'Tasks!',
+                          style: Theme.of(context).textTheme.bodyMedium?.apply(fontWeightDelta: 10),
+                        ),
+                      ],
+                    )
+                ],
+              ),
+            ),
+          ],
         );
       },
     );

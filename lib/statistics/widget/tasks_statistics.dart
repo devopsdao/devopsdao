@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:dodao/statistics/widget/tasks_statistics/my.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/score.dart';
+import 'package:dodao/statistics/widget/tasks_statistics/total.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,34 +25,17 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
 
   List<Widget> children = [
     Container(
-      width: 200,
+      width: 180,
       child: const ScoreStats(extended: false,),
     ),
     Container(
-      width: 160,
-      color: Colors.redAccent,
-      child: const Center(
-        child: Text(
-          'item: 1',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      width: 200,
+      child: const TotalStats(extended: false,),
     ),
     Container(
-      width: 240,
-      color: Colors.greenAccent,
-      child: const Center(
-        child: Text(
-          'item: 1',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      width: 250,
+      height: 150,
+      child: const MyStats(extended: false,),
     ),
     Container(
       width: 300,
@@ -117,7 +102,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
               PointerDeviceKind.mouse,
             }),
             child: SizedBox(
-              height: 120,
+              height: 150,
               child: HorizontalListView.builder(
                 alignment: CrossAxisAlignment.start,
                 crossAxisSpacing: 12,

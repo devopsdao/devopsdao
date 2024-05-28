@@ -32,10 +32,15 @@ class MMService {
       log.info('metamask_services.dart->initCreateWalletConnection MetaMask is not available');
       return null;
     } else if (onStartup && !accountConnected) {
-      log.info('onStartup && !eth!.isConnected(): false');
+      log.info('onStartup');
+      try {
+        await tasksServices.runAccountStats();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->runAccountStats error: $e');
+      }
       await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       await Future.delayed(const Duration(milliseconds: 200));
-      await tasksServices.monitorEvents();
+      // await tasksServices.monitorEvents();
       return null;
     }
 
@@ -211,6 +216,12 @@ class MMService {
 
   Future<bool> initFinalCollectData(int newChainId, tasksServices) async {
     try {
+      try {
+        await tasksServices.runAccountStats();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->runAccountStats error: $e');
+        return false;
+      }
       try {
         await tasksServices.collectMyTokens();
       } catch (e) {
