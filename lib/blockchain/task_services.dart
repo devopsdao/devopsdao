@@ -2322,7 +2322,7 @@ class TasksServices extends ChangeNotifier {
         avgTaskDuration += result[9];
         avgPerformerRating += result[10];
         avgCustomerRating += result[11];
-        topTags.addAll(result[12]);
+        topTags.addAll(result[12]); 
         topTagCounts.addAll(result[13]);
         topTokenNames.addAll(result[14]);
         topTokenBalances.addAll(result[15]);
