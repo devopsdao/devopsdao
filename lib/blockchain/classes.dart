@@ -179,39 +179,41 @@ class TaskStats {
   final List<BigInt> topTokenBalances;
   final List<BigInt> topETHBalances;
   final List<BigInt> topETHAmounts;
-  final List<BigInt> newTimestamps;
-  final List<BigInt> agreedTimestamps;
-  final List<BigInt> progressTimestamps;
-  final List<BigInt> reviewTimestamps;
-  final List<BigInt> completedTimestamps;
-  final List<BigInt> canceledTimestamps;
+  final List<BigInt> createTimestamps;
+  // final List<BigInt> newTimestamps;
+  // final List<BigInt> agreedTimestamps;
+  // final List<BigInt> progressTimestamps;
+  // final List<BigInt> reviewTimestamps;
+  // final List<BigInt> completedTimestamps;
+  // final List<BigInt> canceledTimestamps;
 
-  TaskStats({
-    required this.countNew,
-    required this.countAgreed,
-    required this.countProgress,
-    required this.countReview,
-    required this.countCompleted,
-    required this.countCanceled,
-    required this.countPrivate,
-    required this.countPublic,
-    required this.countHackaton,
-    required this.avgTaskDuration,
-    required this.avgPerformerRating,
-    required this.avgCustomerRating,
-    required this.topTags,
-    required this.topTagCounts,
-    required this.topTokenNames,
-    required this.topTokenBalances,
-    required this.topETHBalances,
-    required this.topETHAmounts,
-    required this.newTimestamps,
-    required this.agreedTimestamps,
-    required this.progressTimestamps,
-    required this.reviewTimestamps,
-    required this.completedTimestamps,
-    required this.canceledTimestamps,
-  });
+  TaskStats(
+      {required this.countNew,
+      required this.countAgreed,
+      required this.countProgress,
+      required this.countReview,
+      required this.countCompleted,
+      required this.countCanceled,
+      required this.countPrivate,
+      required this.countPublic,
+      required this.countHackaton,
+      required this.avgTaskDuration,
+      required this.avgPerformerRating,
+      required this.avgCustomerRating,
+      required this.topTags,
+      required this.topTagCounts,
+      required this.topTokenNames,
+      required this.topTokenBalances,
+      required this.topETHBalances,
+      required this.topETHAmounts,
+      required this.createTimestamps
+      // required this.newTimestamps,
+      // required this.agreedTimestamps,
+      // required this.progressTimestamps,
+      // required this.reviewTimestamps,
+      // required this.completedTimestamps,
+      // required this.canceledTimestamps,
+      });
 }
 
 // class TaskData extends MapBase<String, TaskData> {

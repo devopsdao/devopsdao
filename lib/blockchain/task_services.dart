@@ -2285,12 +2285,13 @@ class TasksServices extends ChangeNotifier {
     List<BigInt> topTokenBalances = [];
     List<BigInt> topETHBalances = [];
     List<BigInt> topETHAmounts = [];
-    List<BigInt> newTimestamps = [];
-    List<BigInt> agreedTimestamps = [];
-    List<BigInt> progressTimestamps = [];
-    List<BigInt> reviewTimestamps = [];
-    List<BigInt> completedTimestamps = [];
-    List<BigInt> canceledTimestamps = [];
+    List<BigInt> createTimestamps = [];
+    // List<BigInt> newTimestamps = [];
+    // List<BigInt> agreedTimestamps = [];
+    // List<BigInt> progressTimestamps = [];
+    // List<BigInt> reviewTimestamps = [];
+    // List<BigInt> completedTimestamps = [];
+    // List<BigInt> canceledTimestamps = [];
 
     while (offset < taskCount) {
       int limit = min(batchSize, taskCount - offset);
@@ -2328,43 +2329,45 @@ class TasksServices extends ChangeNotifier {
         topTokenBalances.addAll(result[15].cast<BigInt>());
         topETHBalances.addAll(result[16].cast<BigInt>());
         topETHAmounts.addAll(result[17].cast<BigInt>());
-        newTimestamps.addAll(result[18].cast<BigInt>());
-        agreedTimestamps.addAll(result[19].cast<BigInt>());
-        progressTimestamps.addAll(result[20].cast<BigInt>());
-        reviewTimestamps.addAll(result[21].cast<BigInt>());
-        completedTimestamps.addAll(result[22].cast<BigInt>());
-        canceledTimestamps.addAll(result[23].cast<BigInt>());
+        createTimestamps.addAll(result[18].cast<BigInt>());
+        // newTimestamps.addAll(result[18].cast<BigInt>());
+        // agreedTimestamps.addAll(result[19].cast<BigInt>());
+        // progressTimestamps.addAll(result[20].cast<BigInt>());
+        // reviewTimestamps.addAll(result[21].cast<BigInt>());
+        // completedTimestamps.addAll(result[22].cast<BigInt>());
+        // canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
 
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
     return TaskStats(
-      countNew: countNew,
-      countAgreed: countAgreed,
-      countProgress: countProgress,
-      countReview: countReview,
-      countCompleted: countCompleted,
-      countCanceled: countCanceled,
-      countPrivate: countPrivate,
-      countPublic: countPublic,
-      countHackaton: countHackaton,
-      avgTaskDuration: avgTaskDuration,
-      avgPerformerRating: avgPerformerRating,
-      avgCustomerRating: avgCustomerRating,
-      topTags: topTags,
-      topTagCounts: topTagCounts,
-      topTokenNames: topTokenNames,
-      topTokenBalances: topTokenBalances,
-      topETHBalances: topETHBalances,
-      topETHAmounts: topETHAmounts,
-      newTimestamps: newTimestamps,
-      agreedTimestamps: agreedTimestamps,
-      progressTimestamps: progressTimestamps,
-      reviewTimestamps: reviewTimestamps,
-      completedTimestamps: completedTimestamps,
-      canceledTimestamps: canceledTimestamps,
-    );
+        countNew: countNew,
+        countAgreed: countAgreed,
+        countProgress: countProgress,
+        countReview: countReview,
+        countCompleted: countCompleted,
+        countCanceled: countCanceled,
+        countPrivate: countPrivate,
+        countPublic: countPublic,
+        countHackaton: countHackaton,
+        avgTaskDuration: avgTaskDuration,
+        avgPerformerRating: avgPerformerRating,
+        avgCustomerRating: avgCustomerRating,
+        topTags: topTags,
+        topTagCounts: topTagCounts,
+        topTokenNames: topTokenNames,
+        topTokenBalances: topTokenBalances,
+        topETHBalances: topETHBalances,
+        topETHAmounts: topETHAmounts,
+        createTimestamps: createTimestamps
+        // newTimestamps: newTimestamps,
+        // agreedTimestamps: agreedTimestamps,
+        // progressTimestamps: progressTimestamps,
+        // reviewTimestamps: reviewTimestamps,
+        // completedTimestamps: completedTimestamps,
+        // canceledTimestamps: canceledTimestamps,
+        );
   }
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
   //   Map<EthereumAddress, Task> tasks = {};
