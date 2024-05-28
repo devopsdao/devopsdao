@@ -2,6 +2,7 @@
 
 import 'package:beamer/beamer.dart';
 import 'package:dodao/pages/auditor_page.dart';
+import 'package:dodao/pages/statistics_page.dart';
 import 'package:dodao/pages/stats_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:webthree/webthree.dart';
@@ -65,6 +66,12 @@ void createBeamerDelegate() {
                 initialPage: '/stats',
               ),
             ),
+        '/statistics': (context, state, data) => const Scaffold(
+          body: StatisticsPageFinal(),
+          bottomNavigationBar: NavBarPage(
+            initialPage: '/statistics',
+          ),
+        ),
         // '/leaderboard': (context, state, data) => Scaffold(
         //       body: AccountLeaderboard(),
         //       bottomNavigationBar: NavBarPage(

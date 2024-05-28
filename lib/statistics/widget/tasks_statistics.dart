@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:dodao/statistics/widget/tasks_statistics/goto.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/my.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/score.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/total.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/theme.dart';
+import '../../wallet/model_view/wallet_model.dart';
 import '../horizontal_list/horizontal_list_view.dart';
 import '../model_view/statistics_model_view.dart';
 
@@ -51,17 +53,9 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
       ),
     ),
     Container(
-      width: 300,
-      color: Colors.green,
-      child: const Center(
-        child: Text(
-          'item: 1',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      width: 220,
+      height: 150,
+      child: const GotoStatistics(extended: false,),
     ),
   ];
 
@@ -84,6 +78,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
   HorizontalListViewController();
   @override
   Widget build(BuildContext context) {
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
     List<double> itemWidths = children.map((child) {
       if (child is Container) {

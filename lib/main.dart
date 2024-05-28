@@ -108,7 +108,12 @@ class _MyAppState extends State<MyApp> {
       }));
       if (platform.platform != 'web' || window.ethereum == null) {
         try {
-          await tasksServices.runAccountStats();
+          await tasksServices.initAccountStats();
+        } catch (e) {
+          log.severe('MyApp->initState->runAccountStats error: $e');
+        }
+        try {
+          await tasksServices.initTaskStats();
         } catch (e) {
           log.severe('MyApp->initState->runAccountStats error: $e');
         }
