@@ -2259,7 +2259,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<TaskStats> getTaskStats() async {
-    const int batchSize = 10;
+    const int batchSize = 50;
     const int maxSimultaneousRequests = 10;
 
     int offset = 0;
