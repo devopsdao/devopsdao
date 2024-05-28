@@ -2322,18 +2322,18 @@ class TasksServices extends ChangeNotifier {
         avgTaskDuration += result[9];
         avgPerformerRating += result[10];
         avgCustomerRating += result[11];
-        topTags.addAll(result[12]);
-        topTagCounts.addAll(result[13]);
-        topTokenNames.addAll(result[14]);
-        topTokenBalances.addAll(result[15]);
-        topETHBalances.addAll(result[16]);
-        topETHAmounts.addAll(result[17]);
-        newTimestamps.addAll(result[18]);
-        agreedTimestamps.addAll(result[19]);
-        progressTimestamps.addAll(result[20]);
-        reviewTimestamps.addAll(result[21]);
-        completedTimestamps.addAll(result[22]);
-        canceledTimestamps.addAll(result[23]);
+        topTags.addAll(result[12].cast<String>());
+        topTagCounts.addAll(result[13].cast<BigInt>());
+        topTokenNames.addAll(result[14].cast<String>());
+        topTokenBalances.addAll(result[15].cast<BigInt>());
+        topETHBalances.addAll(result[16].cast<BigInt>());
+        topETHAmounts.addAll(result[17].cast<BigInt>());
+        newTimestamps.addAll(result[18].cast<BigInt>());
+        agreedTimestamps.addAll(result[19].cast<BigInt>());
+        progressTimestamps.addAll(result[20].cast<BigInt>());
+        reviewTimestamps.addAll(result[21].cast<BigInt>());
+        completedTimestamps.addAll(result[22].cast<BigInt>());
+        canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
 
       await Future.delayed(const Duration(milliseconds: 201));
