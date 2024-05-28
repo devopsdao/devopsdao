@@ -110,12 +110,12 @@ class _MyAppState extends State<MyApp> {
         try {
           await tasksServices.initAccountStats();
         } catch (e) {
-          log.severe('MyApp->initState->runAccountStats error: $e');
+          log.severe('MyApp->initState->initAccountStats error: $e');
         }
         try {
           await tasksServices.initTaskStats();
         } catch (e) {
-          log.severe('MyApp->initState->runAccountStats error: $e');
+          log.severe('MyApp->initState->initTaskStats error: $e');
         }
         await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
         // await Future.delayed(const Duration(milliseconds: 200));

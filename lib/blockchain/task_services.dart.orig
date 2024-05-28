@@ -2177,7 +2177,7 @@ class TasksServices extends ChangeNotifier {
 
   AccountStats? _accountStats;
   AccountStats? get accountStats => _accountStats;
-  Future<void> runAccountStats() async {
+  Future<void> initAccountStats() async {
     int accountCount = (await accountFacet.getRawAccountsCount()).toInt();
 
     log.info('Total account count: $accountCount');
@@ -2257,8 +2257,9 @@ class TasksServices extends ChangeNotifier {
     );
     notifyListeners();
   }
-
-  Future<TaskStats> getTaskStats() async {
+  TaskStats? _taskStats;
+  TaskStats? get taskStats => _taskStats;
+  Future<void> initTaskStats() async {
     const int batchSize = 50;
     const int maxSimultaneousRequests = 10;
 
@@ -2285,12 +2286,13 @@ class TasksServices extends ChangeNotifier {
     List<BigInt> topTokenBalances = [];
     List<BigInt> topETHBalances = [];
     List<BigInt> topETHAmounts = [];
-    List<BigInt> newTimestamps = [];
-    List<BigInt> agreedTimestamps = [];
-    List<BigInt> progressTimestamps = [];
-    List<BigInt> reviewTimestamps = [];
-    List<BigInt> completedTimestamps = [];
-    List<BigInt> canceledTimestamps = [];
+    List<BigInt> createTimestamps = [];
+    // List<BigInt> newTimestamps = [];
+    // List<BigInt> agreedTimestamps = [];
+    // List<BigInt> progressTimestamps = [];
+    // List<BigInt> reviewTimestamps = [];
+    // List<BigInt> completedTimestamps = [];
+    // List<BigInt> canceledTimestamps = [];
 
     while (offset < taskCount) {
       int limit = min(batchSize, taskCount - offset);
@@ -2322,39 +2324,26 @@ class TasksServices extends ChangeNotifier {
         avgTaskDuration += result[9];
         avgPerformerRating += result[10];
         avgCustomerRating += result[11];
-<<<<<<< HEAD
-        topTags.addAll(result[12]); 
-        topTagCounts.addAll(result[13]);
-        topTokenNames.addAll(result[14]);
-        topTokenBalances.addAll(result[15]);
-        topETHBalances.addAll(result[16]);
-        topETHAmounts.addAll(result[17]);
-        newTimestamps.addAll(result[18]);
-        agreedTimestamps.addAll(result[19]);
-        progressTimestamps.addAll(result[20]);
-        reviewTimestamps.addAll(result[21]);
-        completedTimestamps.addAll(result[22]);
-        canceledTimestamps.addAll(result[23]);
-=======
         topTags.addAll(result[12].cast<String>());
         topTagCounts.addAll(result[13].cast<BigInt>());
         topTokenNames.addAll(result[14].cast<String>());
         topTokenBalances.addAll(result[15].cast<BigInt>());
         topETHBalances.addAll(result[16].cast<BigInt>());
         topETHAmounts.addAll(result[17].cast<BigInt>());
-        newTimestamps.addAll(result[18].cast<BigInt>());
-        agreedTimestamps.addAll(result[19].cast<BigInt>());
-        progressTimestamps.addAll(result[20].cast<BigInt>());
-        reviewTimestamps.addAll(result[21].cast<BigInt>());
-        completedTimestamps.addAll(result[22].cast<BigInt>());
-        canceledTimestamps.addAll(result[23].cast<BigInt>());
->>>>>>> 8f59d40cb1086d1448cf62ccf3dae454a2cd47eb
+        createTimestamps.addAll(result[18].cast<BigInt>());
+        // newTimestamps.addAll(result[18].cast<BigInt>());
+        // agreedTimestamps.addAll(result[19].cast<BigInt>());
+        // progressTimestamps.addAll(result[20].cast<BigInt>());
+        // reviewTimestamps.addAll(result[21].cast<BigInt>());
+        // completedTimestamps.addAll(result[22].cast<BigInt>());
+        // canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
 
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
-    return TaskStats(
+<<<<<<< HEAD
+    _taskStats = TaskStats(
       countNew: countNew,
       countAgreed: countAgreed,
       countProgress: countProgress,
@@ -2380,6 +2369,36 @@ class TasksServices extends ChangeNotifier {
       completedTimestamps: completedTimestamps,
       canceledTimestamps: canceledTimestamps,
     );
+    notifyListeners();
+=======
+    return TaskStats(
+        countNew: countNew,
+        countAgreed: countAgreed,
+        countProgress: countProgress,
+        countReview: countReview,
+        countCompleted: countCompleted,
+        countCanceled: countCanceled,
+        countPrivate: countPrivate,
+        countPublic: countPublic,
+        countHackaton: countHackaton,
+        avgTaskDuration: avgTaskDuration,
+        avgPerformerRating: avgPerformerRating,
+        avgCustomerRating: avgCustomerRating,
+        topTags: topTags,
+        topTagCounts: topTagCounts,
+        topTokenNames: topTokenNames,
+        topTokenBalances: topTokenBalances,
+        topETHBalances: topETHBalances,
+        topETHAmounts: topETHAmounts,
+        createTimestamps: createTimestamps
+        // newTimestamps: newTimestamps,
+        // agreedTimestamps: agreedTimestamps,
+        // progressTimestamps: progressTimestamps,
+        // reviewTimestamps: reviewTimestamps,
+        // completedTimestamps: completedTimestamps,
+        // canceledTimestamps: canceledTimestamps,
+        );
+>>>>>>> c6b82688f2fc7e051d24b330db5f245938223c25
   }
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
   //   Map<EthereumAddress, Task> tasks = {};

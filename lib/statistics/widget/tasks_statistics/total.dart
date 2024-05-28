@@ -78,7 +78,7 @@ class _TotalStatsState extends State<TotalStats> {
           );
         } else {
           final chartData = [
-            ChartData('Created Tasks','100%', _sumBigIntList(tasksStats.newTimestamps), myColors![0]),
+            ChartData('Created Tasks','100%', _sumBigIntList(tasksStats.topETHAmounts), myColors![0]),
             // // ChartData('Involvement', '100%', _sumBigIntList(account.participantTaskCounts),myColors![1] ),
             // ChartData('Agreed', '100%', _sumBigIntList(tasksStats.agreedTaskCounts), myColors![1]),
             // ChartData('Audit Completed',  '100%', _sumBigIntList(tasksStats.auditCompletedTaskCounts), myColors![2]),

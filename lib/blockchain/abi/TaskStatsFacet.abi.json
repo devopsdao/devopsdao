@@ -1,5 +1,18 @@
 [
   {
+    "inputs": [],
+    "name": "contractTaskStatsFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -108,32 +121,7 @@
           },
           {
             "internalType": "uint256[]",
-            "name": "newTimestamps",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "agreedTimestamps",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "progressTimestamps",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "reviewTimestamps",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "completedTimestamps",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "canceledTimestamps",
+            "name": "createTimestamps",
             "type": "uint256[]"
           }
         ],
