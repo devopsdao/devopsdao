@@ -2130,7 +2130,7 @@ class TasksServices extends ChangeNotifier {
 
       for (int i = 0; i < maxSimultaneousRequests && remainingAccounts > 0; i++) {
         int currentLimit = min(limit, remainingAccounts);
-        futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
+        // futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
         remainingAccounts -= currentLimit;
         offset += currentLimit;
       }
@@ -2212,7 +2212,7 @@ class TasksServices extends ChangeNotifier {
 
       for (int i = 0; i < maxSimultaneousRequests && remainingAccounts > 0; i++) {
         int currentLimit = min(limit, remainingAccounts);
-        futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
+        // futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
         remainingAccounts -= currentLimit;
         offset += currentLimit;
       }
@@ -2259,7 +2259,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<TaskStats> getTaskStats() async {
-    const int batchSize = 50;
+    const int batchSize = 10;
     const int maxSimultaneousRequests = 10;
 
     int offset = 0;
