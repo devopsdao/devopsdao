@@ -31,7 +31,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
       child: const ScoreStats(extended: false,),
     ),
     Container(
-      width: 200,
+      width: 240,
       child: const TotalStats(extended: false,),
     ),
     Container(
