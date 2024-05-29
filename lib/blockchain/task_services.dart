@@ -2096,12 +2096,8 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<AccountStats> getAccountStats() async {
-    int accountCount = (await accountFacet.getRawAccountsCount()).toInt();
-
-    log.info('Total account count: $accountCount');
-
-    const int batchSize = 100;
-    const int maxSimultaneousRequests = 10;
+    final accountsList = await accountFacet.getRawAccountsList();
+    final accountsData = await getAccountsData(requestedAccountsList: accountsList, defaultListType: 'raw_list');
 
     List<EthereumAddress> accountAddresses = [];
     List<String> nicknames = [];
@@ -2118,45 +2114,30 @@ class TasksServices extends ChangeNotifier {
     BigInt overallAvgCustomerRating = BigInt.zero;
     BigInt overallAvgPerformerRating = BigInt.zero;
 
-    int offset = 0;
-
-    while (offset < accountCount) {
-      int limit = min(batchSize, accountCount - offset);
-
-      log.info('Fetching account stats from offset $offset with limit $limit');
-
-      List<Future<dynamic>> futures = [];
-      int remainingAccounts = accountCount - offset;
-
-      for (int i = 0; i < maxSimultaneousRequests && remainingAccounts > 0; i++) {
-        int currentLimit = min(limit, remainingAccounts);
-        // futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
-        remainingAccounts -= currentLimit;
-        offset += currentLimit;
-      }
-
-      List<dynamic> results = await Future.wait(futures);
-
-      for (dynamic result in results) {
-        accountAddresses.addAll(result[0].cast<EthereumAddress>());
-        nicknames.addAll(result[1].cast<String>());
-        aboutTexts.addAll(result[2].cast<String>());
-        ownerTaskCounts.addAll(result[3].cast<BigInt>());
-        participantTaskCounts.addAll(result[4].cast<BigInt>());
-        auditParticipantTaskCounts.addAll(result[5].cast<BigInt>());
-        agreedTaskCounts.addAll(result[6].cast<BigInt>());
-        auditAgreedTaskCounts.addAll(result[7].cast<BigInt>());
-        completedTaskCounts.addAll(result[8].cast<BigInt>());
-        auditCompletedTaskCounts.addAll(result[9].cast<BigInt>());
-        avgCustomerRatings.addAll(result[10].cast<BigInt>());
-        avgPerformerRatings.addAll(result[11].cast<BigInt>());
-        overallAvgCustomerRating = result[12];
-        overallAvgPerformerRating = result[13];
-      }
-
-      await Future.delayed(const Duration(milliseconds: 201));
+    for (final account in accountsData.values) {
+      accountAddresses.add(account.walletAddress);
+      nicknames.add(account.nickName);
+      aboutTexts.add(account.about);
+      ownerTaskCounts.add(BigInt.from(account.customerTasks.length));
+      participantTaskCounts.add(BigInt.from(account.participantTasks.length));
+      auditParticipantTaskCounts.add(BigInt.from(account.auditParticipantTasks.length));
+      agreedTaskCounts.add(BigInt.from(account.performerAgreedTasks.length));
+      auditAgreedTaskCounts.add(BigInt.from(account.auditAgreed.length));
+      completedTaskCounts.add(BigInt.from(account.performerCompletedTasks.length));
+      auditCompletedTaskCounts.add(BigInt.from(account.auditCompleted.length));
+      avgCustomerRatings.add(account.customerRating.isNotEmpty
+          ? account.customerRating.reduce((a, b) => a + b) ~/ BigInt.from(account.customerRating.length)
+          : BigInt.zero);
+      avgPerformerRatings.add(account.performerRating.isNotEmpty
+          ? account.performerRating.reduce((a, b) => a + b) ~/ BigInt.from(account.performerRating.length)
+          : BigInt.zero);
     }
-    log.info('Complete fetching account stats');
+
+    overallAvgCustomerRating =
+        avgCustomerRatings.isNotEmpty ? avgCustomerRatings.reduce((a, b) => a + b) ~/ BigInt.from(avgCustomerRatings.length) : BigInt.zero;
+    overallAvgPerformerRating =
+        avgPerformerRatings.isNotEmpty ? avgPerformerRatings.reduce((a, b) => a + b) ~/ BigInt.from(avgPerformerRatings.length) : BigInt.zero;
+
     return AccountStats(
       accountAddresses: accountAddresses,
       nicknames: nicknames,
@@ -2178,83 +2159,7 @@ class TasksServices extends ChangeNotifier {
   AccountStats? _accountStats;
   AccountStats? get accountStats => _accountStats;
   Future<void> runAccountStats() async {
-    int accountCount = (await accountFacet.getRawAccountsCount()).toInt();
-
-    log.info('Total account count: $accountCount');
-
-    const int batchSize = 100;
-    const int maxSimultaneousRequests = 10;
-
-    List<EthereumAddress> accountAddresses = [];
-    List<String> nicknames = [];
-    List<String> aboutTexts = [];
-    List<BigInt> ownerTaskCounts = [];
-    List<BigInt> participantTaskCounts = [];
-    List<BigInt> auditParticipantTaskCounts = [];
-    List<BigInt> agreedTaskCounts = [];
-    List<BigInt> auditAgreedTaskCounts = [];
-    List<BigInt> completedTaskCounts = [];
-    List<BigInt> auditCompletedTaskCounts = [];
-    List<BigInt> avgCustomerRatings = [];
-    List<BigInt> avgPerformerRatings = [];
-    BigInt overallAvgCustomerRating = BigInt.zero;
-    BigInt overallAvgPerformerRating = BigInt.zero;
-
-    int offset = 0;
-
-    while (offset < accountCount) {
-      int limit = min(batchSize, accountCount - offset);
-
-      log.info('Fetching account stats from offset $offset with limit $limit');
-
-      List<Future<dynamic>> futures = [];
-      int remainingAccounts = accountCount - offset;
-
-      for (int i = 0; i < maxSimultaneousRequests && remainingAccounts > 0; i++) {
-        int currentLimit = min(limit, remainingAccounts);
-        // futures.add(taskStatsFacet.getAccountStats(BigInt.from(offset), BigInt.from(currentLimit)));
-        remainingAccounts -= currentLimit;
-        offset += currentLimit;
-      }
-
-      List<dynamic> results = await Future.wait(futures);
-
-      for (dynamic result in results) {
-        accountAddresses.addAll(result[0].cast<EthereumAddress>());
-        nicknames.addAll(result[1].cast<String>());
-        aboutTexts.addAll(result[2].cast<String>());
-        ownerTaskCounts.addAll(result[3].cast<BigInt>());
-        participantTaskCounts.addAll(result[4].cast<BigInt>());
-        auditParticipantTaskCounts.addAll(result[5].cast<BigInt>());
-        agreedTaskCounts.addAll(result[6].cast<BigInt>());
-        auditAgreedTaskCounts.addAll(result[7].cast<BigInt>());
-        completedTaskCounts.addAll(result[8].cast<BigInt>());
-        auditCompletedTaskCounts.addAll(result[9].cast<BigInt>());
-        avgCustomerRatings.addAll(result[10].cast<BigInt>());
-        avgPerformerRatings.addAll(result[11].cast<BigInt>());
-        overallAvgCustomerRating = result[12];
-        overallAvgPerformerRating = result[13];
-      }
-
-      await Future.delayed(const Duration(milliseconds: 201));
-    }
-    log.info('Complete fetching account stats');
-    _accountStats = AccountStats(
-      accountAddresses: accountAddresses,
-      nicknames: nicknames,
-      aboutTexts: aboutTexts,
-      ownerTaskCounts: ownerTaskCounts,
-      participantTaskCounts: participantTaskCounts,
-      auditParticipantTaskCounts: auditParticipantTaskCounts,
-      agreedTaskCounts: agreedTaskCounts,
-      auditAgreedTaskCounts: auditAgreedTaskCounts,
-      completedTaskCounts: completedTaskCounts,
-      auditCompletedTaskCounts: auditCompletedTaskCounts,
-      avgCustomerRatings: avgCustomerRatings,
-      avgPerformerRatings: avgPerformerRatings,
-      overallAvgCustomerRating: overallAvgCustomerRating,
-      overallAvgPerformerRating: overallAvgPerformerRating,
-    );
+    _accountStats = await getAccountStats();
     notifyListeners();
   }
 
