@@ -2274,7 +2274,7 @@ class TasksServices extends ChangeNotifier {
         // completedTimestamps: completedTimestamps,
         // canceledTimestamps: canceledTimestamps,
         );
-    notifyListeners();
+     notifyListeners();
   }
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
   //   Map<EthereumAddress, Task> tasks = {};

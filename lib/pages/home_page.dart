@@ -206,7 +206,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     ),
                                   ),
                                   const SizedBox(height: 16,),
-                                  const TasksStatistics(),
+                                  // const TasksStatistics(),
                                   // const SizedBox(height: 1,),
                                   Container(
                                       padding: const EdgeInsets.only(top: 10.0, bottom: 6),

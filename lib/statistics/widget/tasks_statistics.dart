@@ -26,19 +26,19 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
   late StatisticsModel _model;
 
   List<Widget> children = [
-    Container(
-      width: 180,
-      child: const ScoreStats(extended: false,),
-    ),
+    // Container(
+    //   width: 180,
+    //   child: const ScoreStats(extended: false,),
+    // ),
     Container(
       width: 240,
       child: const TotalStats(extended: false,),
     ),
-    Container(
-      width: 250,
-      height: 150,
-      child: const MyStats(extended: false,),
-    ),
+    // Container(
+    //   width: 250,
+    //   height: 150,
+    //   child: const MyStats(extended: false,),
+    // ),
     Container(
       width: 300,
       color: Colors.deepPurple,
