@@ -2158,12 +2158,14 @@ class TasksServices extends ChangeNotifier {
 
   AccountStats? _accountStats;
   AccountStats? get accountStats => _accountStats;
-  Future<void> runAccountStats() async {
+  Future<void> initAccountStats() async {
     _accountStats = await getAccountStats();
     notifyListeners();
   }
 
-  Future<TaskStats> getTaskStats() async {
+  TaskStats? _taskStats;
+  TaskStats? get taskStats => _taskStats;
+  Future<void> initTaskStats() async {
     const int batchSize = 50;
     const int maxSimultaneousRequests = 10;
 
@@ -2234,7 +2236,6 @@ class TasksServices extends ChangeNotifier {
         topTokenBalances.addAll(result[15].cast<BigInt>());
         topETHBalances.addAll(result[16].cast<BigInt>());
         topETHAmounts.addAll(result[17].cast<BigInt>());
-        createTimestamps.addAll(result[18].cast<BigInt>());
         // newTimestamps.addAll(result[18].cast<BigInt>());
         // agreedTimestamps.addAll(result[19].cast<BigInt>());
         // progressTimestamps.addAll(result[20].cast<BigInt>());
@@ -2246,7 +2247,7 @@ class TasksServices extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
-    return TaskStats(
+    _taskStats = TaskStats(
         countNew: countNew,
         countAgreed: countAgreed,
         countProgress: countProgress,
@@ -2273,6 +2274,7 @@ class TasksServices extends ChangeNotifier {
         // completedTimestamps: completedTimestamps,
         // canceledTimestamps: canceledTimestamps,
         );
+    notifyListeners();
   }
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
   //   Map<EthereumAddress, Task> tasks = {};

@@ -34,9 +34,14 @@ class MMService {
     } else if (onStartup && !accountConnected) {
       log.info('onStartup');
       try {
-        await tasksServices.runAccountStats();
+        await tasksServices.initAccountStats();
       } catch (e) {
-        log.severe('mm_service->initFinalCollectData->runAccountStats error: $e');
+        log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
+      }
+      try {
+        await tasksServices.initTaskStats();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->initTaskStats error: $e');
       }
       await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       await Future.delayed(const Duration(milliseconds: 200));
@@ -217,9 +222,15 @@ class MMService {
   Future<bool> initFinalCollectData(int newChainId, tasksServices) async {
     try {
       try {
-        await tasksServices.runAccountStats();
+        await tasksServices.initAccountStats();
       } catch (e) {
-        log.severe('mm_service->initFinalCollectData->runAccountStats error: $e');
+        log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.initTaskStats();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->initTaskStats error: $e');
         return false;
       }
       try {
