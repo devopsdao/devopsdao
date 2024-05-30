@@ -8,7 +8,7 @@ import '../../blockchain/task_services.dart';
 import '../../task_dialog/beamer.dart';
 import '../../task_dialog/task_transition_effect.dart';
 import '../../widgets/badgetab.dart';
-import '../../widgets/loading.dart';
+import '../../widgets/loading/loading.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/tag_open_container.dart';
 import '../../config/theme.dart';

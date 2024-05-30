@@ -18,7 +18,7 @@ import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags_on_page_open_container.dart';
 import '../config/utils/platform.dart';
 import '/blockchain/task_services.dart';
-import '/widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '/config/theme.dart';
 import 'package:flutter/material.dart';
 

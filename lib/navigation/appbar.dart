@@ -7,7 +7,7 @@ import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../wallet/widgets/main/main.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags_on_page_open_container.dart';
 

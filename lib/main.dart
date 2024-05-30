@@ -3,9 +3,11 @@ import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/config/preload_assets.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
 import 'package:dodao/statistics/model_view/pending_model_view.dart';
+import 'package:dodao/statistics/model_view/task_stats_model.dart';
 import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
+import 'package:dodao/widgets/loading/loading_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,7 +38,6 @@ void main() async {
 
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
-
   runApp(
     MultiProvider(
       providers: [
@@ -48,6 +49,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MetamaskModel()),
         ChangeNotifierProvider(create: (context) => WCModelView()),
         ChangeNotifierProvider(create: (context) => WalletModel()),
+        ChangeNotifierProvider(create: (context) => LoadingUpdatedData()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
         ChangeNotifierProvider(create: (_) => TokenPendingModel()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(

@@ -13,7 +13,7 @@ import '../navigation/appbar.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/badgetab.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';

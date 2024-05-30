@@ -13,7 +13,7 @@ import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../config/theme.dart';

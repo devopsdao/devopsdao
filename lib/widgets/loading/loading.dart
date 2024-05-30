@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/interface.dart';
-import '../blockchain/task_services.dart';
+import '../../blockchain/interface.dart';
+import '../../blockchain/task_services.dart';
 
-import '../config/theme.dart';
+import '../../config/theme.dart';
 
 import 'package:webthree/webthree.dart';
 
-import '../wallet/model_view/wallet_model.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import 'loading_model.dart';
+
+
 
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
@@ -37,23 +40,28 @@ class _LoadIndicator extends State<LoadIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
-    loadingTasks = tasksServices.totalTaskLen >= 1;
-    loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
-    if (loadingTasks) {
-      progress = getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
-    } else {
-      progress = 0.0;
-    }
-    if (loadingMonitor) {
-      progress2 = getLoadingProgress(tasksServices.monitorTasksLoaded, tasksServices.monitorTotalTaskLen);
-    } else {
-      progress2 = 0.0;
-    }
-    return LinearProgressIndicator(
-      value: loadingTasks ? progress : progress2,
-      backgroundColor: Colors.transparent,
-      valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent),
+    // var tasksServices = context.read<TasksServices>();
+
+    // if (loadingMonitor) {
+    //   progress2 = getLoadingProgress(tasksServices.monitorTasksLoaded, tasksServices.monitorTotalTaskLen);
+    // } else {
+    //   progress2 = 0.0;
+    // }
+    return Consumer<LoadingUpdatedData>(
+        builder: (context, loadingUpdatedData, child) {
+          loadingTasks = loadingUpdatedData.totalTaskLen >= 1;
+          // loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
+          if (loadingTasks) {
+            progress = getLoadingProgress(loadingUpdatedData.tasksLoaded, loadingUpdatedData.totalTaskLen);
+          } else {
+            progress = 0.0;
+          }
+        return LinearProgressIndicator(
+          value: loadingTasks ? progress : progress2,
+          backgroundColor: Colors.transparent,
+          valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent),
+        );
+      }
     );
   }
 }

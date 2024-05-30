@@ -21,7 +21,7 @@ import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
 import '../widgets/icon_image.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 

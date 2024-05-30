@@ -14,7 +14,7 @@ import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';

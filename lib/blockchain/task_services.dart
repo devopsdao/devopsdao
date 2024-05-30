@@ -26,6 +26,7 @@ import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
 import '../task_dialog/services/task_update_service.dart';
 import '../wallet/services/wallet_service.dart';
+import '../widgets/loading/loading_model.dart';
 import 'chain_presets/get_addresses.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
@@ -1642,7 +1643,7 @@ class TasksServices extends ChangeNotifier {
   //     }
   //   } on GetTaskException {}
   // }
-
+  final LoadingUpdatedData loadingUpdatedData = LoadingUpdatedData();
   Future<void> monitorTasks(List<EthereumAddress> taskList) async {
     // isLoadingBackground = true;
 
@@ -1684,7 +1685,8 @@ class TasksServices extends ChangeNotifier {
         log.fine('monitoring ${batchId + 1} batch| total: $totalBatches batches');
         await Future.delayed(const Duration(milliseconds: 201));
         monitorTasksLoaded = batchId;
-        notifyListeners();
+        // notifyListeners();
+        // loadingUpdatedData.updateData();
       }
     } on GetTaskException {}
     monitorTotalTaskLen = 0;
@@ -1723,7 +1725,8 @@ class TasksServices extends ChangeNotifier {
         log.fine('downloaded ${batchId + 1} batch | total: ${downloadBatches.length} batches');
         await Future.delayed(const Duration(milliseconds: 201));
         tasksLoaded += batchResults.length;
-        notifyListeners();
+        // notifyListeners();
+        loadingUpdatedData.updateData(tasksLoaded, totalTaskLen);
       }
     } on GetTaskException catch (e) {
       log.severe('EXCEPTION: $e');
@@ -1745,7 +1748,7 @@ class TasksServices extends ChangeNotifier {
     // if (duplicateTaskList.isNotEmpty) {
     //   log.warning('Found ${duplicateTaskList.length} duplicate tasks in taskList:');
     //   final duplicateTaskListAddresses = duplicateTaskList.map((address) => address.hex).toList()..sort();
-    //   log.warning('Duplicate Task List Addresses:\n${duplicateTaskListAddresses.join('\n')}');
+    //   log.warning('Duplicate Task List Addresses:\n${duplicateTa skListAddresses.join('\n')}');
     // }
 
     await Future.forEach<Task>(tasks.values, refreshTask);
@@ -1754,6 +1757,7 @@ class TasksServices extends ChangeNotifier {
     final sortedTasks = {for (final task in sortedTasksList) task.taskAddress: task};
 
     totalTaskLen = 0;
+    loadingUpdatedData.resetLength();
     return sortedTasks;
   }
 
@@ -2276,10 +2280,6 @@ class TasksServices extends ChangeNotifier {
         // canceledTimestamps: canceledTimestamps,
         );
      notifyListeners();
-  }
-
-  void startFetchingTaskStats() {
-    initTaskStats();
   }
 
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
