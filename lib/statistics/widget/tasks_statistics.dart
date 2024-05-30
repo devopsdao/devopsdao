@@ -4,7 +4,8 @@ import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/goto.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/my.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/score.dart';
-import 'package:dodao/statistics/widget/tasks_statistics/total.dart';
+import 'package:dodao/statistics/widget/tasks_statistics/total_created.dart';
+import 'package:dodao/statistics/widget/tasks_statistics/total_process.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,13 +32,12 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
       child: const ScoreStats(extended: false,),
     ),
     Container(
-      width: 200,
-      child: const TotalStats(extended: false,),
+      width: 300,
+      child: const TotalProcessStats(extended: false,),
     ),
     Container(
       width: 250,
-      height: 150,
-      child: const MyStats(extended: false,),
+      child: const TotalCreatedStats(extended: false,),
     ),
     Container(
       width: 300,
@@ -54,7 +54,6 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
     ),
     Container(
       width: 220,
-      height: 150,
       child: const GotoStatistics(extended: false,),
     ),
   ];
@@ -97,7 +96,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
               PointerDeviceKind.mouse,
             }),
             child: SizedBox(
-              height: 150,
+              height: 170,
               child: HorizontalListView.builder(
                 alignment: CrossAxisAlignment.start,
                 crossAxisSpacing: 12,
@@ -110,7 +109,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
                     color: DodaoTheme.of(context).transparentCloud,
                     padding: const EdgeInsets.all(0.5),
                     child: Container(
-                        padding: const EdgeInsetsDirectional.fromSTEB(14, 8, 14, 8),
+                        padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
                         decoration: BoxDecoration(
                           borderRadius: DodaoTheme.of(context).borderRadius,
                           border: DodaoTheme.of(context).borderGradient,
