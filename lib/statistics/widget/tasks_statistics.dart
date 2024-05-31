@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:dodao/statistics/model_view/task_stats_model.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/goto.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/my.dart';
 import 'package:dodao/statistics/widget/tasks_statistics/score.dart';
@@ -13,8 +14,6 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import '../horizontal_list/horizontal_list_view.dart';
-import '../model_view/statistics_model_view.dart';
-
 
 class TasksStatistics extends StatefulWidget {
   const TasksStatistics({super.key});
@@ -24,60 +23,52 @@ class TasksStatistics extends StatefulWidget {
 }
 
 class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderStateMixin {
-  late StatisticsModel _model;
+  final HorizontalListViewController _controller = HorizontalListViewController();
+  final TaskStatsModel taskStatsModel = TaskStatsModel();
 
-  List<Widget> children = [
-    Container(
-      width: 180,
-      child: const ScoreStats(extended: false,),
-    ),
-    Container(
-      width: 300,
-      child: const TotalProcessStats(extended: false,),
-    ),
-    Container(
-      width: 250,
-      child: const TotalCreatedStats(extended: false,),
-    ),
-    Container(
-      width: 300,
-      color: Colors.deepPurple,
-      child: const Center(
-        child: Text(
-          'item: 1',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateChildren();
+  }
+
+  List<Widget> children = [];
+
+  void _updateChildren() {
+    final listenWalletAddress = context.read<WalletModel>().state.walletAddress;
+
+    children = [
+      if (listenWalletAddress != null)
+        Container(
+          width: 180,
+          child: const ScoreStats(extended: false),
+        ),
+      Container(
+        width: 280,
+        child: const TotalProcessStats(extended: false),
+      ),
+      Container(
+        width: 250,
+        child: const TotalCreatedStats(extended: false),
+      ),
+      Container(
+        width: 300,
+        color: Colors.deepPurple,
+        child: const Center(
+          child: Text(
+            'item: 1',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
-    ),
-    Container(
-      width: 220,
-      child: const GotoStatistics(extended: false,),
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _model = StatisticsModel(this);
-  }
-
-  @override
-  void dispose() {
-    _model.dispose();
-    super.dispose();
-  }
-
-
-
-
-  final HorizontalListViewController _controller =
-  HorizontalListViewController();
-  @override
-  Widget build(BuildContext context) {
-    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
+      Container(
+        width: 220,
+        child: const GotoStatistics(extended: false),
+      ),
+    ];
 
     List<double> itemWidths = children.map((child) {
       if (child is Container) {
@@ -86,43 +77,56 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
       return 0.0;
     }).toList();
 
+    _controller.itemWidths = itemWidths;
+    taskStatsModel.updateItemWidths(itemWidths);
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use context.watch to listen for changes in the WalletModel's state
+    final listenWalletAddress = context.watch<WalletModel>().state.walletAddress;
+
+    // Update children whenever listenWalletAddress changes
+    _updateChildren();
+
     return ChangeNotifierProvider.value(
-      value: _model,
-      child: Consumer<StatisticsModel>(
-        builder: (context, model, child) {
-          return ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse,
-            }),
-            child: SizedBox(
-              height: 170,
-              child: HorizontalListView.builder(
-                alignment: CrossAxisAlignment.start,
-                crossAxisSpacing: 12,
-                controller: _controller,
-                itemWidths: itemWidths,
-                itemCount: itemWidths.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return  BlurryContainer(
-                    blur: 3,
-                    color: DodaoTheme.of(context).transparentCloud,
-                    padding: const EdgeInsets.all(0.5),
-                    child: Container(
-                        padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
-                        decoration: BoxDecoration(
-                          borderRadius: DodaoTheme.of(context).borderRadius,
-                          border: DodaoTheme.of(context).borderGradient,
-                        ),
-                        child: children[index]
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
+      value: taskStatsModel,
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+          },
+        ),
+        child: SizedBox(
+          height: 170,
+          child: HorizontalListView.builder(
+            alignment: CrossAxisAlignment.start,
+            crossAxisSpacing: 12,
+            controller: _controller,
+            itemWidths: _controller.itemWidths,
+            itemCount: _controller.itemWidths.length,
+            itemBuilder: (BuildContext context, int index) {
+              return BlurryContainer(
+                blur: 3,
+                color: DodaoTheme.of(context).transparentCloud,
+                padding: const EdgeInsets.all(0.5),
+                child: Container(
+                  padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
+                  decoration: BoxDecoration(
+                    borderRadius: DodaoTheme.of(context).borderRadius,
+                    border: DodaoTheme.of(context).borderGradient,
+                  ),
+                  child: children[index],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 }
+

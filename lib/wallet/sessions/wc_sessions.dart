@@ -225,9 +225,9 @@ class WCSessions {
       return false;
     }
     try {
-      await tasksServices.runAccountStats();
+      await tasksServices.initAccountStats();
     } catch (e) {
-      log.severe('wc_sessions->initConnectAndCollectData->runAccountStats error: $e');
+      log.severe('wc_sessions->initConnectAndCollectData->initAccountStats error: $e');
       return false;
     }
     try {

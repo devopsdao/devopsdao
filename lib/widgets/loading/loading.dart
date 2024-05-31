@@ -16,8 +16,6 @@ import 'package:webthree/webthree.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import 'loading_model.dart';
 
-
-
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
 
@@ -31,47 +29,37 @@ class _LoadIndicator extends State<LoadIndicator> {
   double progress = 0.0;
   double progress2 = 0.0;
 
-  double getLoadingProgress(int loaded, int total) {
-    if (total == 0) {
-      return 0.0;
-    }
-    return loaded / total;
-  }
-
   @override
   Widget build(BuildContext context) {
-    // var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
+    var loadingModel = context.watch<LoadingModel>();
 
     // if (loadingMonitor) {
     //   progress2 = getLoadingProgress(tasksServices.monitorTasksLoaded, tasksServices.monitorTotalTaskLen);
     // } else {
     //   progress2 = 0.0;
     // }
-    return Consumer<LoadingUpdatedData>(
-        builder: (context, loadingUpdatedData, child) {
-          loadingTasks = loadingUpdatedData.totalTaskLen >= 1;
-          // loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
-          if (loadingTasks) {
-            progress = getLoadingProgress(loadingUpdatedData.tasksLoaded, loadingUpdatedData.totalTaskLen);
-          } else {
-            progress = 0.0;
-          }
-        return LinearProgressIndicator(
-          value: loadingTasks ? progress : progress2,
-          backgroundColor: Colors.transparent,
-          valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent),
-        );
-      }
+    loadingTasks = tasksServices.totalTaskLen >= 1;
+    // loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
+    if (loadingTasks) {
+      progress = loadingModel.getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
+    } else {
+      progress = 0.0;
+    }
+    return LinearProgressIndicator(
+      value: loadingTasks ? progress : progress2,
+      backgroundColor: Colors.transparent,
+      valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent),
     );
   }
 }
 
 class LoadButtonIndicator extends StatefulWidget {
-  LoadButtonIndicator({
+  const LoadButtonIndicator({
     Key? key,
     required this.refresh,
   }) : super(key: key);
-  String refresh;
+  final String refresh;
 
   @override
   _LoadButtonIndicator createState() => _LoadButtonIndicator();

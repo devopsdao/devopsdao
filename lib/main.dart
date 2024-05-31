@@ -43,13 +43,12 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => TasksServices()),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
-        // ChangeNotifierProvider(create: (context) => EmptyClasses()),
+        ChangeNotifierProvider(create: (context) => LoadingModel()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
         ChangeNotifierProvider(create: (context) => MetamaskModel()),
         ChangeNotifierProvider(create: (context) => WCModelView()),
         ChangeNotifierProvider(create: (context) => WalletModel()),
-        ChangeNotifierProvider(create: (context) => LoadingUpdatedData()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
         ChangeNotifierProvider(create: (_) => TokenPendingModel()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
@@ -99,6 +98,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+
+    final tasksServices = Provider.of<TasksServices>(context, listen: false);
+    final taskStatsModel = Provider.of<LoadingModel>(context, listen: false);
+    tasksServices.setDelegate(taskStatsModel);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       MetamaskModel metamaskProvider = context.read<MetamaskModel>();
       WalletModel walletModel = context.read<WalletModel>();

@@ -7,22 +7,25 @@ import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../wallet/model_view/wallet_model.dart';
 
-class TotalProcessStats extends StatefulWidget {
+class PrivateStats extends StatefulWidget {
   final bool extended;
 
-  const TotalProcessStats({Key? key, required this.extended}) : super(key: key);
+  const PrivateStats({Key? key, required this.extended}) : super(key: key);
 
   @override
-  State<TotalProcessStats> createState() => _TotalProcessStatsState();
+  State<PrivateStats> createState() => _PrivateStatsState();
 }
 
-class _TotalProcessStatsState extends State<TotalProcessStats> {
+class _PrivateStatsState extends State<PrivateStats> {
   List<ChartItem>? _chartItems;
 
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var tasksServices = context.read<TasksServices>();
+      tasksServices.
+    });
     _chartItems = [
       ChartItem(
         label: 'New',

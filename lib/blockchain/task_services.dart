@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
+import '../statistics/model_view/task_stats_model.dart';
 import '../task_dialog/services/task_update_service.dart';
 import '../wallet/services/wallet_service.dart';
 import '../widgets/loading/loading_model.dart';
@@ -1643,7 +1644,6 @@ class TasksServices extends ChangeNotifier {
   //     }
   //   } on GetTaskException {}
   // }
-  final LoadingUpdatedData loadingUpdatedData = LoadingUpdatedData();
   Future<void> monitorTasks(List<EthereumAddress> taskList) async {
     // isLoadingBackground = true;
 
@@ -1692,6 +1692,11 @@ class TasksServices extends ChangeNotifier {
     monitorTotalTaskLen = 0;
   }
 
+  LoadingDelegate? _loadingDelegate;
+  void setDelegate(LoadingDelegate delegate) {
+    _loadingDelegate = delegate;
+  }
+
   Future<Map<EthereumAddress, Task>> getTasksBatch(List<EthereumAddress> taskList) async {
     const requestBatchSize = 10;
     const downloadBatchSize = 5;
@@ -1726,7 +1731,7 @@ class TasksServices extends ChangeNotifier {
         await Future.delayed(const Duration(milliseconds: 201));
         tasksLoaded += batchResults.length;
         // notifyListeners();
-        loadingUpdatedData.updateData(tasksLoaded, totalTaskLen);
+        _loadingDelegate?.onLoadingUpdated();
       }
     } on GetTaskException catch (e) {
       log.severe('EXCEPTION: $e');
@@ -1757,7 +1762,6 @@ class TasksServices extends ChangeNotifier {
     final sortedTasks = {for (final task in sortedTasksList) task.taskAddress: task};
 
     totalTaskLen = 0;
-    loadingUpdatedData.resetLength();
     return sortedTasks;
   }
 
@@ -1861,7 +1865,7 @@ class TasksServices extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
-    log.info(taskContractAddresses);
+    // log.info(taskContractAddresses);
 
     log.info('Finished retrieving task contract addresses. Total count: ${taskContractAddresses.length}');
 
@@ -2169,6 +2173,7 @@ class TasksServices extends ChangeNotifier {
 
   TaskStats? _taskStats;
   TaskStats? get taskStats => _taskStats;
+
   Future<void> initTaskStats() async {
     const int batchSize = 50;
     const int maxSimultaneousRequests = 10;

@@ -1,8 +1,8 @@
-// import 'dart:async';
-// import 'package:flutter/cupertino.dart';
-//
-// import '../../../blockchain/classes.dart';
-// import '../../blockchain/task_services.dart';
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
+
+import '../../../blockchain/classes.dart';
+import '../../blockchain/task_services.dart';
 //
 // abstract class TaskStatsDelegate {
 //   void onTaskStatsUpdated();
@@ -31,13 +31,25 @@
 //   }
 //
 //   @override
+//   void onTaskStatsUpdated() {
+//     _onTaskStatsUpdated();
+//   }
+//
+//   @override
 //   void dispose() {
 //     tasksServices.removeListener(_onTaskStatsUpdated);
 //     super.dispose();
 //   }
-//
-//   @override
-//   void onTaskStatsUpdated() {
-//     _onTaskStatsUpdated();
-//   }
 // }
+
+
+class TaskStatsModel extends ChangeNotifier {
+  List<double> _itemWidths = [];
+
+  List<double> get itemWidths => _itemWidths;
+
+  void updateItemWidths(List<double> newWidths) {
+    _itemWidths = newWidths;
+    notifyListeners();
+  }
+}

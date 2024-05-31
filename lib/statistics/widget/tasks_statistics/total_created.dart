@@ -28,57 +28,58 @@ class _TotalCreatedStatsState extends State<TotalCreatedStats> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TasksServices>(
-      builder: (context, tasksServices, child) {
-        final taskStats = tasksServices.taskStats;
-        if (taskStats == null) {
-          return Container(
-            height: 170,
-            child: const Column(
+    return Container(
+      height: 170,
+      child: Consumer<TasksServices>(
+        builder: (context, tasksServices, child) {
+          final taskStats = tasksServices.taskStats;
+          if (taskStats == null) {
+            return const Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('Fetching blockchain data', style: TextStyle(fontSize: 12)),
                 Center(child: CircularProgressIndicator()),
               ],
-            ),
-          );
-        } else {
-          final chartData = _generateChartData(taskStats.createTimestamps);
-          return SfCartesianChart(
-            title: ChartTitle(text: 'Tasks Created for last 31 days', textStyle: TextStyle(fontSize: 10)),
-            primaryXAxis: DateTimeAxis(
-              dateFormat: DateFormat.yMd(),
-              interval: 7,
-              intervalType: DateTimeIntervalType.days,
-              majorGridLines: const MajorGridLines(width: 0),
-                labelStyle:TextStyle(fontSize: 8)
-                // edgeLabelPlacement: EdgeLabelPlacement.none
-            ),
-            primaryYAxis: NumericAxis(
-              title: AxisTitle(text: 'Number of Tasks', textStyle: TextStyle(fontSize: 10)),
-              majorGridLines: const MajorGridLines(width: 0),
-                labelStyle:TextStyle(fontSize: 8)
-            ),
-            series: [
-              ColumnSeries<ChartData, DateTime>(
-                name: 'Tasks created',
-                gradient: LinearGradient(colors: [Colors.blue, Colors.lightBlue]),
-                borderColor: Colors.blue,
-                // borderRadius:BorderRadius.circular(15.0) ,
-                dataSource: chartData,
-                xValueMapper: (ChartData data, _) => data.date,
-                yValueMapper: (ChartData data, _) => data.count,
+            );
+          } else {
+            final chartData = _generateChartData(taskStats.createTimestamps);
+            return SfCartesianChart(
+              title: const ChartTitle(text: 'Tasks Created for last 31 days', textStyle: TextStyle(fontSize: 10)),
+              margin: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+              primaryXAxis: DateTimeAxis(
+                dateFormat: DateFormat.yMd(),
+                interval: 9,
+                intervalType: DateTimeIntervalType.days,
+                majorGridLines: const MajorGridLines(width: 0),
+                  labelStyle:TextStyle(fontSize: 8)
+                  // edgeLabelPlacement: EdgeLabelPlacement.none
               ),
-            ],
-            tooltipBehavior: TooltipBehavior(
-              duration: 2000,
-              canShowMarker: false,
-              enable: true,
-              tooltipPosition: TooltipPosition.pointer
-            ),
-          );
-        }
-      },
+              primaryYAxis: const NumericAxis(
+                title: AxisTitle(text: 'Number of Tasks', textStyle: TextStyle(fontSize: 10)),
+                majorGridLines: MajorGridLines(width: 0),
+                  labelStyle:TextStyle(fontSize: 8)
+              ),
+              series: [
+                ColumnSeries<ChartData, DateTime>(
+                  name: 'Tasks created',
+                  gradient: LinearGradient(colors: [Colors.blue, Colors.lightBlue]),
+                  borderColor: Colors.blue,
+                  // borderRadius:BorderRadius.circular(15.0) ,
+                  dataSource: chartData,
+                  xValueMapper: (ChartData data, _) => data.date,
+                  yValueMapper: (ChartData data, _) => data.count,
+                ),
+              ],
+              tooltipBehavior: TooltipBehavior(
+                duration: 2000,
+                canShowMarker: false,
+                enable: true,
+                tooltipPosition: TooltipPosition.pointer
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 

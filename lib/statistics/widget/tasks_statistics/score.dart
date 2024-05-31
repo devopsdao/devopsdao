@@ -26,6 +26,7 @@ class ScoreStats extends StatelessWidget {
               height: 130,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
 
                   if (listenWalletAddress == null)
@@ -38,6 +39,7 @@ class ScoreStats extends StatelessWidget {
                     Text(
                       'No completed evaluated tasks',
                       style: Theme.of(context).textTheme.bodySmall,
+                        textAlign: TextAlign.center
                     )
                   else
                     Column(
