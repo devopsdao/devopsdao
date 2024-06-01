@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 
 import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../wallet/model_view/wallet_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:intl/intl.dart';
 
 class TotalCreatedStats extends StatefulWidget {
   final bool extended;
@@ -28,8 +24,11 @@ class _TotalCreatedStatsState extends State<TotalCreatedStats> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 170,
+    final fontSize = widget.extended ? 13.0 : 10.0;
+    final axisLabelFontSize = widget.extended ? 11.0 : 8.0;
+
+    return SizedBox(
+      height: widget.extended ? 200 : 170,
       child: Consumer<TasksServices>(
         builder: (context, tasksServices, child) {
           final taskStats = tasksServices.taskStats;
@@ -44,27 +43,31 @@ class _TotalCreatedStatsState extends State<TotalCreatedStats> {
           } else {
             final chartData = _generateChartData(taskStats.createTimestamps);
             return SfCartesianChart(
-              title: const ChartTitle(text: 'Tasks Created for last 31 days', textStyle: TextStyle(fontSize: 10)),
+              title: ChartTitle(
+                text: 'Tasks Created for last 31 days',
+                textStyle: TextStyle(fontSize: fontSize),
+              ),
               margin: const EdgeInsets.fromLTRB(2, 0, 2, 0),
               primaryXAxis: DateTimeAxis(
                 dateFormat: DateFormat.yMd(),
                 interval: 9,
                 intervalType: DateTimeIntervalType.days,
                 majorGridLines: const MajorGridLines(width: 0),
-                  labelStyle:TextStyle(fontSize: 8)
-                  // edgeLabelPlacement: EdgeLabelPlacement.none
+                labelStyle: TextStyle(fontSize: axisLabelFontSize),
               ),
-              primaryYAxis: const NumericAxis(
-                title: AxisTitle(text: 'Number of Tasks', textStyle: TextStyle(fontSize: 10)),
-                majorGridLines: MajorGridLines(width: 0),
-                  labelStyle:TextStyle(fontSize: 8)
+              primaryYAxis: NumericAxis(
+                title: AxisTitle(
+                  text: 'Number of Tasks',
+                  textStyle: TextStyle(fontSize: fontSize),
+                ),
+                majorGridLines: const MajorGridLines(width: 0),
+                labelStyle: TextStyle(fontSize: axisLabelFontSize),
               ),
               series: [
                 ColumnSeries<ChartData, DateTime>(
                   name: 'Tasks created',
                   gradient: LinearGradient(colors: [Colors.blue, Colors.lightBlue]),
                   borderColor: Colors.blue,
-                  // borderRadius:BorderRadius.circular(15.0) ,
                   dataSource: chartData,
                   xValueMapper: (ChartData data, _) => data.date,
                   yValueMapper: (ChartData data, _) => data.count,
@@ -74,7 +77,7 @@ class _TotalCreatedStatsState extends State<TotalCreatedStats> {
                 duration: 2000,
                 canShowMarker: false,
                 enable: true,
-                tooltipPosition: TooltipPosition.pointer
+                tooltipPosition: TooltipPosition.pointer,
               ),
             );
           }
@@ -109,4 +112,3 @@ class ChartData {
 
   ChartData(this.date, this.count);
 }
-

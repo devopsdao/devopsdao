@@ -2,11 +2,12 @@ import 'dart:ui';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:dodao/statistics/model_view/task_stats_model.dart';
-import 'package:dodao/statistics/widget/tasks_statistics/goto.dart';
-import 'package:dodao/statistics/widget/tasks_statistics/my.dart';
-import 'package:dodao/statistics/widget/tasks_statistics/score.dart';
-import 'package:dodao/statistics/widget/tasks_statistics/total_created.dart';
-import 'package:dodao/statistics/widget/tasks_statistics/total_process.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/goto.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/my.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/personal_stats.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/score.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/total_created.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/total_process.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,19 +52,11 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
         width: 250,
         child: const TotalCreatedStats(extended: false),
       ),
-      Container(
-        width: 300,
-        color: Colors.deepPurple,
-        child: const Center(
-          child: Text(
-            'item: 1',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+      if (listenWalletAddress != null)
+        Container(
+          width: 300,
+          child: const PersonalStats(extended: false),
         ),
-      ),
       Container(
         width: 220,
         child: const GotoStatistics(extended: false),
