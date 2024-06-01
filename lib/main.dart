@@ -3,7 +3,7 @@ import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/config/preload_assets.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
 import 'package:dodao/statistics/model_view/pending_model_view.dart';
-import 'package:dodao/statistics/model_view/task_stats_model.dart';
+import 'package:dodao/statistics/model_view/horizontal_list_view_model.dart';
 import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
@@ -49,6 +49,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MetamaskModel()),
         ChangeNotifierProvider(create: (context) => WCModelView()),
         ChangeNotifierProvider(create: (context) => WalletModel()),
+        ChangeNotifierProvider(create: (context) => HorizontalListViewModel()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
         ChangeNotifierProvider(create: (_) => TokenPendingModel()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(

@@ -24,9 +24,34 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
     super.initState();
 
     _chartItems = [
+        ChartItem(
+          label: 'All tasks',
+          color: Colors.lightBlue.shade400,
+          icon: FontAwesomeIcons.handshake,
+          valueGetter: (TaskStats stats) {
+            int sum = stats.countPrivate.toInt()
+              + stats.countPublic.toInt()
+              + stats.countHackaton.toInt();
+            return sum;
+          },
+        ),
+      // if(widget.extended)
+      //   ChartItem(
+      //     label: 'Public tasks',
+      //     color: Colors.lightBlue.shade300,
+      //     icon: FontAwesomeIcons.handshake,
+      //     valueGetter: (TaskStats stats) => stats.countPublic.toInt(),
+      //   ),
+      // if(widget.extended)
+      //   ChartItem(
+      //     label: 'Hackaton tasks',
+      //     color: Colors.lightBlue.shade500,
+      //     icon: FontAwesomeIcons.handshake,
+      //     valueGetter: (TaskStats stats) => stats.countHackaton.toInt(),
+      //   ),
       ChartItem(
         label: 'New',
-        color: Colors.lightBlue.shade200,
+        color: Colors.purple,
         icon: FontAwesomeIcons.user,
         valueGetter: (TaskStats stats) => stats.countNew.toInt(),
       ),
@@ -54,19 +79,13 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
         icon: FontAwesomeIcons.handshake,
         valueGetter: (TaskStats stats) => stats.countCompleted.toInt(),
       ),
+      if(widget.extended)
       ChartItem(
         label: 'Canceled',
         color: Colors.red,
         icon: FontAwesomeIcons.handshake,
         valueGetter: (TaskStats stats) => stats.countCanceled.toInt(),
       ),
-      // if(widget.extended)
-      //   ChartItem(
-      //     label: 'Audit',
-      //     color: Colors.orange,
-      //     icon: FontAwesomeIcons.handshake,
-      //     valueGetter: (TaskStats stats) => stats..toInt(),
-      //   ),
     ];
   }
 
@@ -107,9 +126,11 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
             return LayoutBuilder(
               builder: (context, constraints) {
                 return SfCircularChart(
+                  selectionGesture: widget.extended ? ActivationMode.doubleTap : ActivationMode.none,
                   title: ChartTitle(text: 'Overall', textStyle: TextStyle(fontSize: textSize)),
                   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   legend: Legend(
+
                     itemPadding: 0,
                     isVisible: true,
                     legendItemBuilder: (String name, dynamic series, dynamic point, int index) {
@@ -121,6 +142,8 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                             height: itemSize,
                             width: itemSize,
                             child: SfCircularChart(
+
+                              selectionGesture: widget.extended ? ActivationMode.doubleTap : ActivationMode.none,
                               margin: const EdgeInsets.fromLTRB(1, 1, 1, 1),
                               annotations: <CircularChartAnnotation>[
                                 annotations[index],
@@ -137,6 +160,10 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                                   pointColorMapper: (ChartData data, _) => data.color,
                                   innerRadius: '80%',
                                   pointRadiusMapper: (ChartData data, _) => data.text,
+                                  selectionBehavior: SelectionBehavior(
+                                    enable: false,
+                                    toggleSelection: false,
+                                  ),
                                 ),
                               ],
                             ),
@@ -161,7 +188,7 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                       name: 'Tasks',
                       dataLabelSettings: DataLabelSettings(
                         isVisible: true,
-                        textStyle: Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: widget.extended ? 0.85 : 0.6),
+                        textStyle: Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: widget.extended ? 0.8 : 0.6),
                       ),
                       maximumValue: chartData.first.y.toDouble() + 400,
                       innerRadius: '44%',
@@ -173,6 +200,10 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                       pointColorMapper: (ChartData data, _) => data.color,
                       trackColor: Colors.transparent,
                       trackBorderWidth: 0,
+                      selectionBehavior: SelectionBehavior(
+                        enable: false,
+                        toggleSelection: false,
+                      ),
                     ),
                   ],
                 );

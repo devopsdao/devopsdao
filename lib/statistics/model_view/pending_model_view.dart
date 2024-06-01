@@ -60,21 +60,4 @@ class TokenPendingModel extends ChangeNotifier {
   Future<void> onRequestBalances(int chainId, tasksServices) async {
     _TokenPendingService.initRequestBalances(chainId, tasksServices);
   }
-
-  // void _updateState() {
-  //   bool initialized = _state.initialized;
-  //   _state = TokenPendingModelState(
-  //     initialized: initialized,
-  //     tags: [],
-  //     initialEmptyBalance:
-  //   );
-  //   notifyListeners();
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   print('disposed');
-  //   tagSubscription?.cancel();
-  //   super.dispose();
-  // }
 }

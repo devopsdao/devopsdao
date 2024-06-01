@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../wallet/model_view/wallet_model.dart';
-import '../model_view/task_stats_model.dart';
+import '../model_view/horizontal_list_view_model.dart';
 class HorizontalListView extends StatefulWidget {
   HorizontalListView({
     required this.itemWidths,
@@ -42,7 +42,7 @@ class _HorizontalListViewState extends State<HorizontalListView> {
 
   @override
   Widget build(BuildContext context) {
-    final taskStatsModel = Provider.of<TaskStatsModel>(context);
+    final taskStatsModel = Provider.of<HorizontalListViewModel>(context);
 
     return LayoutBuilder(
       key: _key,
@@ -138,7 +138,7 @@ class SnapScrollPhysics extends ScrollPhysics {
   });
 
   final double crossAxisSpacing;
-  final TaskStatsModel taskStatsModel;
+  final HorizontalListViewModel taskStatsModel;
 
   @override
   SnapScrollPhysics applyTo(ScrollPhysics? ancestor) {

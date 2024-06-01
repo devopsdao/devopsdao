@@ -24,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
-import '../statistics/model_view/task_stats_model.dart';
+import '../statistics/model_view/horizontal_list_view_model.dart';
 import '../task_dialog/services/task_update_service.dart';
 import '../wallet/services/wallet_service.dart';
 import '../widgets/loading/loading_model.dart';

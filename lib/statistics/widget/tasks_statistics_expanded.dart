@@ -14,13 +14,11 @@ import '../../navigation/navmenu.dart';
 import '../../task_dialog/beamer.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import '../../wallet/services/wallet_service.dart';
+import '../model_view/statistics_model_view.dart';
 import '/blockchain/task_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:webthree/credentials.dart';
-
-import '../../pages/account_page/main.dart';
-
 class StatisticsExpanded extends StatefulWidget {
   final EthereumAddress? taskAddress;
   const StatisticsExpanded({Key? key, this.taskAddress}) : super(key: key);
@@ -30,32 +28,15 @@ class StatisticsExpanded extends StatefulWidget {
 }
 
 class _StatisticsExpandedState extends State<StatisticsExpanded> {
-  final _searchKeywordController = TextEditingController();
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late IndexedChildrenManager _indexedChildrenManager;
 
   @override
-  void initState() {
-    super.initState();
-    // if (widget.taskAddress != null) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   });
-    // }
-  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-  List<Widget> children = [];
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    var interface = context.read<InterfaceServices>();
-
-    children = [
+    final listenWalletAddress = context.watch<WalletModel>().state.walletAddress;
+    List<Widget> children = [
       if (listenWalletAddress != null)
         Container(
           child: const ScoreStats(extended: true),
@@ -72,57 +53,75 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
         ),
     ];
 
+    List<int> initialIndexOrder = List<int>.generate(children.length, (i) => i);
+
+    _indexedChildrenManager = IndexedChildrenManager(children, initialIndexOrder);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       key: scaffoldKey,
       appBar: const StatisticsExpandedHeader(),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.medium,
-          ),
-        ),
-        child: Align(
-            alignment: Alignment.center,
-            child: Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-              width: interface.maxStaticDialogWidth,
-              child: LayoutBuilder(builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: Container(
-                    height: height - 60,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.vertical,
-                      itemCount: children.length,
-                      itemBuilder: (context, index) {
-                         return Padding(
-                           padding: const EdgeInsets.only(bottom: 14.0),
-                           child: BlurryContainer(
-                            blur: 3,
-                            color: DodaoTheme.of(context).transparentCloud,
-                            padding: const EdgeInsets.all(0.5),
-                            child: Container(
-                              padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
-                              decoration: BoxDecoration(
-                                borderRadius: DodaoTheme.of(context).borderRadius,
-                                border: DodaoTheme.of(context).borderGradient,
+      body: ChangeNotifierProvider.value(
+        value: _indexedChildrenManager,
+        child: Consumer<IndexedChildrenManager>(
+          builder: (context, manager, child) {
+            List<Widget> orderedChildren = manager.getOrderedChildren();
+
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/background.png"),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.medium,
+                ),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Container(
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                  width: context.read<InterfaceServices>().maxStaticDialogWidth,
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      child: Container(
+                        height: height - 60,
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          scrollDirection: Axis.vertical,
+                          itemCount: orderedChildren.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 14.0),
+                              child: BlurryContainer(
+                                blur: 3,
+                                color: DodaoTheme.of(context).transparentCloud,
+                                padding: const EdgeInsets.all(0.5),
+                                child: Container(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
+                                  decoration: BoxDecoration(
+                                    borderRadius: DodaoTheme.of(context).borderRadius,
+                                    border: DodaoTheme.of(context).borderGradient,
+                                  ),
+                                  child: orderedChildren[index],
+                                ),
                               ),
-                              child: children[index],
-                            ),
-                                                   ),
-                         );
-                      },
-                    ),
-                  ),
-                );
-              }))),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
