@@ -27,13 +27,19 @@ class TasksStatistics extends StatefulWidget {
 class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderStateMixin {
   final HorizontalListViewController _controller = HorizontalListViewController();
   final HorizontalListViewModel horizontalListViewModel = HorizontalListViewModel();
-  late IndexedChildrenManager _indexedChildrenManager;
+  late IndexedChildrenManager _indexedChildrenManager = IndexedChildrenManager();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _updateChildren();
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _initChildren();
+  // }
 
   List<Widget> _buildChildren(EthereumAddress? listenWalletAddress) {
     return [
@@ -61,14 +67,14 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
       ),
     ];
   }
+  late List<Widget> children;
 
   void _updateChildren() {
     final listenWalletAddress = context.read<WalletModel>().state.walletAddress;
-    List<Widget> children = _buildChildren(listenWalletAddress);
+    children = _buildChildren(listenWalletAddress);
 
     List<int> initialIndexOrder = List<int>.generate(children.length, (i) => i);
 
-    _indexedChildrenManager = IndexedChildrenManager(children, initialIndexOrder);
 
     List<double> itemWidths = children.map((child) {
       if (child is Container) {
@@ -83,11 +89,13 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
     setState(() {});
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final listenWalletAddress = context.watch<WalletModel>().state.walletAddress;
 
-    _updateChildren();
+    // _updateChildren();
 
     return ChangeNotifierProvider.value(
       value: horizontalListViewModel,
@@ -95,7 +103,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
         value: _indexedChildrenManager,
         child: Consumer<IndexedChildrenManager>(
           builder: (context, manager, child) {
-            List<Widget> orderedChildren = manager.getOrderedChildren();
+            List<Widget> orderedChildren = manager.getOrderedChildren(children);
 
             return ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(

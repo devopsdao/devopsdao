@@ -30,16 +30,17 @@ class StatisticsExpanded extends StatefulWidget {
   _StatisticsExpandedState createState() => _StatisticsExpandedState();
 }
 
+
 class _StatisticsExpandedState extends State<StatisticsExpanded> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late IndexedChildrenManager _indexedChildrenManager;
-
+  final IndexedChildrenManager _indexedChildrenManager = IndexedChildrenManager();
+  late List<Widget> children;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     final listenWalletAddress = context.watch<WalletModel>().state.walletAddress;
-    List<Widget> children = [
+    children = [
       if (listenWalletAddress != null)
         Container(
           child: const ScoreStats(extended: true),
@@ -57,17 +58,11 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
     ];
 
     List<int> initialIndexOrder = List<int>.generate(children.length, (i) => i);
-
-    _indexedChildrenManager = IndexedChildrenManager(children, initialIndexOrder);
   }
 
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final item = _indexedChildrenManager.children.removeAt(oldIndex);
-      _indexedChildrenManager.children.insert(newIndex, item);
+      _indexedChildrenManager.reorder(oldIndex, newIndex);
     });
   }
 
@@ -82,7 +77,7 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
         value: _indexedChildrenManager,
         child: Consumer<IndexedChildrenManager>(
           builder: (context, manager, child) {
-            List<Widget> orderedChildren = manager.getOrderedChildren();
+            List<Widget> orderedChildren = manager.getOrderedChildren(children);
 
             return Container(
               width: double.infinity,

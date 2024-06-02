@@ -1,12 +1,26 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../config/preferences.dart';
 
 class IndexedChildrenManager extends ChangeNotifier {
-  final List<Widget> children;
-  List<int> indexOrder;
+  late List<int> indexOrder;
+  late List<int> smallListOrderIndex;
+  final Completer<void> _initializationCompleter = Completer<void>();
 
-  IndexedChildrenManager(this.children, this.indexOrder);
+  IndexedChildrenManager() {
+    _initializeIndexes();
+  }
 
-  List<Widget> getOrderedChildren() {
+  Future<void> _initializeIndexes() async {
+    final prefs = StatisticsOrderPreferences();
+    smallListOrderIndex = await prefs.getSmallList();
+    indexOrder = smallListOrderIndex; // or some other initial value
+    _initializationCompleter.complete();
+    notifyListeners();
+  }
+
+  Future<List<Widget>> getOrderedChildren(List<Widget> children) async {
+    await _initializationCompleter.future;
     return indexOrder.map((index) => children[index]).toList();
   }
 
@@ -24,5 +38,3 @@ class IndexedChildrenManager extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-

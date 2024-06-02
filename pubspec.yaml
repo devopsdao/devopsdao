@@ -78,7 +78,7 @@ dependencies:
   rive_splash_screen: ^0.1.1
   scan: ^1.6.0
   fl_toast: ^3.2.0
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.3
   shimmer: ^3.0.0
   sidebarx: ^0.16.2
   simple_markdown_editor_plus: ^0.2.6
