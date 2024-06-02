@@ -14,4 +14,15 @@ class IndexedChildrenManager extends ChangeNotifier {
     indexOrder = newOrder;
     notifyListeners();
   }
+
+  void reorder(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = indexOrder.removeAt(oldIndex);
+    indexOrder.insert(newIndex, item);
+    notifyListeners();
+  }
 }
+
+

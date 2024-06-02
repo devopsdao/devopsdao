@@ -16,71 +16,73 @@ class ScoreStats extends StatelessWidget {
     var tasksServices = context.read<TasksServices>();
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Your score',
-                style: Theme.of(context).textTheme.bodySmall),
-            SizedBox(
-              height: 130,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Your score',
+                  style: Theme.of(context).textTheme.bodySmall),
+              SizedBox(
+                height: 130,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
 
-                  if (listenWalletAddress == null)
-                    Text(
-                      'Not Connected',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    )
+                    if (listenWalletAddress == null)
+                      Text(
+                        'Not Connected',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
 
-                  else if (tasksServices.scoredTaskCount == 0)
-                    Text(
-                      'No completed evaluated tasks',
-                      style: Theme.of(context).textTheme.bodySmall,
-                        textAlign: TextAlign.center
-                    )
-                  else
-                    Column(
-                      children: [
-                        RatingStars(
-                          value: tasksServices.myScore,
+                    else if (tasksServices.scoredTaskCount == 0)
+                      Text(
+                        'No completed evaluated tasks',
+                        style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.center
+                      )
+                    else
+                      Column(
+                        children: [
+                          RatingStars(
+                            value: tasksServices.myScore,
 
-                          starCount: 5,
-                          starSize: 20,
-                          valueLabelColor: const Color(0xff9b9b9b),
-                          valueLabelTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 12.0),
-                          valueLabelRadius: 10,
-                          starOffColor: Colors.grey,
-                          maxValue: 5,
-                          starSpacing: 2,
-                          maxValueVisibility: true,
-                          valueLabelVisibility: false,
-                          animationDuration: Duration(milliseconds: 1000),
-                          valueLabelPadding:
-                          const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
-                          valueLabelMargin: const EdgeInsets.only(right: 8),
-                          starColor: Colors.deepPurpleAccent,
-                        ),
-                        SelectableText(
-                          '${tasksServices.myScore} of ${tasksServices.scoredTaskCount}',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SelectableText(
-                          'Tasks',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                ],
+                            starCount: 5,
+                            starSize: 20,
+                            valueLabelColor: const Color(0xff9b9b9b),
+                            valueLabelTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 12.0),
+                            valueLabelRadius: 10,
+                            starOffColor: Colors.grey,
+                            maxValue: 5,
+                            starSpacing: 2,
+                            maxValueVisibility: true,
+                            valueLabelVisibility: false,
+                            animationDuration: Duration(milliseconds: 1000),
+                            valueLabelPadding:
+                            const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+                            valueLabelMargin: const EdgeInsets.only(right: 8),
+                            starColor: Colors.deepPurpleAccent,
+                          ),
+                          SelectableText(
+                            '${tasksServices.myScore} of ${tasksServices.scoredTaskCount}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          SelectableText(
+                            'Tasks',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

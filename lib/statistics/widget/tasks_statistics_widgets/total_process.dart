@@ -130,13 +130,13 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                   title: ChartTitle(text: 'Overall', textStyle: TextStyle(fontSize: textSize)),
                   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   legend: Legend(
-
+                    position: LegendPosition.right,
                     itemPadding: 0,
                     isVisible: true,
                     legendItemBuilder: (String name, dynamic series, dynamic point, int index) {
                       return SizedBox(
                         height: itemSize,
-                        width:  widget.extended ? 200 : 130,
+                        width:  widget.extended ? 155 : 130,
                         child: Row(children: <Widget>[
                           SizedBox(
                             height: itemSize,
@@ -169,12 +169,12 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                             ),
                           ),
                           SizedBox(
-                            width: widget.extended ? 150 : 100,
+                            width: widget.extended ? 120 : 100,
                             child: Text(
                               point.x,
                               style: TextStyle(
                                 color: chartData[index].color,
-                                fontSize: textSize,
+                                fontSize: textSize - 1,
                               ),
                             ),
                           ),

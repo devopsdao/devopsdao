@@ -1,11 +1,16 @@
+import 'dart:ui';
+
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/goto.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/personal_stats.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/score.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/total_created.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/total_process.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
+import 'package:flutter/material.dart';
+import 'package:webthree/credentials.dart';
 
 import '../../blockchain/interface.dart';
 import '../../config/theme.dart';
@@ -16,9 +21,7 @@ import '../../wallet/model_view/wallet_model.dart';
 import '../../wallet/services/wallet_service.dart';
 import '../model_view/statistics_model_view.dart';
 import '/blockchain/task_services.dart';
-import 'package:flutter/material.dart';
 
-import 'package:webthree/credentials.dart';
 class StatisticsExpanded extends StatefulWidget {
   final EthereumAddress? taskAddress;
   const StatisticsExpanded({Key? key, this.taskAddress}) : super(key: key);
@@ -58,6 +61,16 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
     _indexedChildrenManager = IndexedChildrenManager(children, initialIndexOrder);
   }
 
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final item = _indexedChildrenManager.children.removeAt(oldIndex);
+      _indexedChildrenManager.children.insert(newIndex, item);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -91,28 +104,53 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
                     return SingleChildScrollView(
                       child: Container(
                         height: height - 60,
-                        child: ListView.builder(
+                        child: ReorderableListView(
                           padding: EdgeInsets.zero,
                           scrollDirection: Axis.vertical,
-                          itemCount: orderedChildren.length,
-                          itemBuilder: (context, index) {
+                          onReorder: _onReorder,
+                          buildDefaultDragHandles: false, // Prevents default drag handle
+                            proxyDecorator: (child, index, animation) => child,
+                          children: List.generate(orderedChildren.length, (index) {
                             return Padding(
+                              key: ValueKey(index),
                               padding: const EdgeInsets.only(bottom: 14.0),
-                              child: BlurryContainer(
-                                blur: 3,
-                                color: DodaoTheme.of(context).transparentCloud,
-                                padding: const EdgeInsets.all(0.5),
-                                child: Container(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
-                                  decoration: BoxDecoration(
-                                    borderRadius: DodaoTheme.of(context).borderRadius,
-                                    border: DodaoTheme.of(context).borderGradient,
+                              child: GestureDetector(
+                                onLongPress: () {},
+                                child: BlurryContainer(
+                                  blur: 3,
+                                  color: DodaoTheme.of(context).transparentCloud,
+                                  padding: const EdgeInsets.all(0.5),
+                                  child: Container(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(6, 6, 6, 6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: DodaoTheme.of(context).borderRadius,
+                                      border: DodaoTheme.of(context).borderGradient,
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        orderedChildren[index],
+                                        Positioned(
+                                          top:0.0,
+                                          right: 0.0,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ReorderableDragStartListener(
+                                              index: index,
+                                              child: Container(
+                                                color: Colors.transparent,
+                                                  width: 30,
+                                                  height: 30,
+                                                  child: Icon(FontAwesomeIcons.gripVertical, size: 16,)),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  child: orderedChildren[index],
                                 ),
                               ),
                             );
-                          },
+                          }),
                         ),
                       ),
                     );
@@ -128,16 +166,13 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
 }
 
 
-
-class StatisticsExpandedHeader extends StatelessWidget implements PreferredSizeWidget  {
-
+class StatisticsExpandedHeader extends StatelessWidget implements PreferredSizeWidget {
   const StatisticsExpandedHeader({
     super.key,
   });
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
-
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +196,7 @@ class StatisticsExpandedHeader extends StatelessWidget implements PreferredSizeW
       actions: [
         InkResponse(
           radius: DodaoTheme.of(context).inkRadius,
-          containedInkWell: true  ,
+          containedInkWell: true,
           child: const Padding(
             padding: EdgeInsets.all(12.0),
             child: Icon(Icons.close),
