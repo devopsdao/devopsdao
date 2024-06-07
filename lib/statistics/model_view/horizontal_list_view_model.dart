@@ -13,4 +13,7 @@ class HorizontalListViewModel extends ChangeNotifier {
     _itemWidths = newWidths;
     notifyListeners();
   }
+  void update() {
+    notifyListeners();
+  }
 }

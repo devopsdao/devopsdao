@@ -8,7 +8,6 @@ class StatisticsOrderPreferences {
   // Default values
   final List<int> defaultSmallList = [0, 1];  // Example default list
   final List<int> defaultLargeList = [0, 1, 2, 3];  // Example default list
-
   // Save a small list of integers to SharedPreferences
   Future<void> setSmallList(List<int> value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -20,6 +19,7 @@ class StatisticsOrderPreferences {
   Future<List<int>> getSmallList() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? encodedData = prefs.getString(smallListKey);
+    // await prefs.clear();
 
     if (encodedData != null) {
       final List<dynamic> decodedData = jsonDecode(encodedData);
@@ -29,6 +29,11 @@ class StatisticsOrderPreferences {
       await setSmallList(defaultSmallList);
       return defaultSmallList;
     }
+  }
+
+  Future<void> setDefaultStatisticsPrefs() async {
+    await setSmallList(defaultSmallList);
+    await setLargeList(defaultLargeList);
   }
 
   // Save a large list of integers to SharedPreferences

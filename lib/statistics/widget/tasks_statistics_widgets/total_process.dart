@@ -100,7 +100,7 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
             return const Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('Fetching blockchain data', style: TextStyle(fontSize: 12)),
+                Text('Fetching blockchain data for Overall Stats', style: TextStyle(fontSize: 12)),
                 Center(child: CircularProgressIndicator()),
               ],
             );
@@ -150,6 +150,7 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                               ],
                               series: <RadialBarSeries<ChartData, String>>[
                                 RadialBarSeries<ChartData, String>(
+                                  animationDuration: widget.extended ? 0 : 2400,
                                   dataSource: <ChartData>[chartData[index]],
                                   maximumValue: chartData.first.y.toDouble(),
                                   trackColor: Colors.transparent,
@@ -184,6 +185,7 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                   ),
                   series: <CircularSeries>[
                     RadialBarSeries<ChartData, String>(
+                      animationDuration: widget.extended ? 0 : 2400,
                       radius: '100%',
                       name: 'Tasks',
                       dataLabelSettings: DataLabelSettings(
@@ -191,7 +193,7 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                         textStyle: Theme.of(context).textTheme.bodySmall?.apply(fontSizeFactor: widget.extended ? 0.8 : 0.6),
                       ),
                       maximumValue: chartData.first.y.toDouble() + 400,
-                      innerRadius: '44%',
+                      innerRadius: '36%',
                       dataSource: chartData,
                       cornerStyle: CornerStyle.bothFlat,
                       xValueMapper: (ChartData data, _) => data.x,

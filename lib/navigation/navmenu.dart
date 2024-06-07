@@ -429,7 +429,7 @@ class SideBar extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const StatisticsExpanded()),
+              MaterialPageRoute(builder: (context) => StatisticsExpandedMain()),
             );
           },
         ),

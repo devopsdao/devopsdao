@@ -22,7 +22,7 @@ class GotoStatistics extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const StatisticsExpanded()),
+                      MaterialPageRoute(builder: (context) => StatisticsExpandedMain()),
                     );
                   },
                   style: TextButton.styleFrom(

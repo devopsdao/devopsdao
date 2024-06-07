@@ -65,6 +65,7 @@ class _TotalCreatedStatsState extends State<TotalCreatedStats> {
               ),
               series: [
                 ColumnSeries<ChartData, DateTime>(
+                  animationDuration: widget.extended ? 0 : 2400,
                   name: 'Tasks created',
                   gradient: LinearGradient(colors: [Colors.blue, Colors.lightBlue]),
                   borderColor: Colors.blue,
