@@ -56,6 +56,9 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
         future: orderedWidgetsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.data != null) {
+              snapshot.data!.clear();
+            }
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

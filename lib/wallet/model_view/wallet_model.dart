@@ -124,8 +124,8 @@ class WalletModel extends ChangeNotifier {
   }
 
   String getNetworkChainCurrency(int id) {
-    if (id == 0) {
-      return 'unknown';
+    if (id == 0 || ChainPresets.chains[id] == null ) {
+      return ChainPresets.chains[855456]!.nativeCurrency!.symbol;
     } else {
       return ChainPresets.chains[id]!.nativeCurrency!.symbol;
     }

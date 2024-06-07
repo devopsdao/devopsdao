@@ -24,8 +24,10 @@ class NetworkIconImage extends StatelessWidget {
         filterQuality: FilterQuality.medium,
       );
     } else {
+      print('chainPresets.readChainInfo(855456) ');
+      ChainInfo networkParams = chainPresets.readChainInfo(855456);
       return Image.asset(
-        ChainPresets.chains[5]!.chainIconLocally!,
+        networkParams.chainIconLocally!,
         height: height,
         filterQuality: FilterQuality.medium,
       );
