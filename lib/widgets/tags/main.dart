@@ -91,7 +91,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
   @override
   Widget build(BuildContext context) {
-    InterfaceServices interfaceServices = context.read<InterfaceServices>();
+    // InterfaceServices interfaceServices = context.read<InterfaceServices>();
     SearchServices searchServices = context.read<SearchServices>();
     TasksServices tasksServices = context.read<TasksServices>();
     CollectionServices collectionServices = context.read<CollectionServices>();
@@ -105,7 +105,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
       actualPage = 'filter';
     }
 
-    final double maxStaticDialogWidth = interfaceServices.maxStaticDialogWidth;
+    final double maxStaticDialogWidth = InterfaceSettings.maxStaticDialogWidth;
     const double myPadding = 8.0;
     // const List<Widget> filter = <Widget>[Text('Tags'), Text('Both'), Text('Nft\'s')];
 

@@ -13,7 +13,7 @@ import '../navigation/appbar.dart';
 import '../navigation/navmenu.dart';
 import '../task_dialog/beamer.dart';
 import '../widgets/badgetab.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/search_services.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +100,7 @@ with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
 
@@ -208,7 +208,7 @@ with TickerProviderStateMixin
               //
               // ),
               child: SizedBox(
-                width: interface.maxStaticGlobalWidth,
+                width: InterfaceSettings.maxStaticGlobalWidth,
                 child: DefaultTabController(
                     length: 3,
                     initialIndex: tabIndex,

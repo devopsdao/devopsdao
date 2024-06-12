@@ -1,5 +1,6 @@
 import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:beamer/beamer.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_expanded.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_animate/icons_animate.dart';
@@ -419,6 +420,16 @@ class SideBar extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const TagManagerPage()),
+            );
+          },
+        ),
+        SidebarXItem(
+          icon: Icons.engineering_rounded,
+          label: 'Statistics',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => StatisticsExpandedMain()),
             );
           },
         ),

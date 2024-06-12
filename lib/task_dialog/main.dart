@@ -237,7 +237,7 @@ class _TaskDialogSkeletonState extends State<TaskDialogSkeleton> {
           ),
           SizedBox(
             height: screenHeightSizeNoKeyboard - 58 -statusBarHeight,
-            width: interface.maxStaticDialogWidth,
+            width: InterfaceSettings.maxStaticDialogWidth,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 350),
               switchInCurve: Curves.easeInQuint,

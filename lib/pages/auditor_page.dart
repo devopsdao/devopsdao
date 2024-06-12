@@ -13,7 +13,7 @@ import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
 import '../config/theme.dart';
@@ -65,7 +65,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
   Widget build(BuildContext context) {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
     final walletService = WalletService();
@@ -191,7 +191,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
           ),
         ),
         child: SizedBox(
-          width: interface.maxStaticGlobalWidth,
+          width: InterfaceSettings.maxStaticGlobalWidth,
           child: DefaultTabController(
             length: 4,
             initialIndex: tabIndex,

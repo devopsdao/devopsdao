@@ -108,7 +108,7 @@ class WCSessions {
           tasksServices.reset('getTaskListFullThenFetchIt hardhat error');
           return;
         }
-        await tasksServices.myBalance();
+        // await tasksServices.myBalance();
         await wcModelView.setWcScreenState(
           state: WCScreenStatus.wcConnectedNetworkMatch,
         );
@@ -129,31 +129,23 @@ class WCSessions {
         onSessionConnect.session.namespaces.values.first.accounts.last,
       ).split(":").last);
       await wcModelView.setChainOnWCWallet(chainIdOnWallet);
-
-      // if (chainIdOnWallet == wcModelView.state.lastErrorOnNetworkChainId) {
-      //   log.severe('wc_sessions.dart->onSessionConnect: lastErrorOnNetworkChainId, '
-      //       'id(chainIdOnWallet): $chainIdOnWallet , onSessionConnect stopped');
-      //   wcModelView.setWcScreenState(
-      //       state: WCScreenStatus.error,
-      //       error: 'Opps... something went wrong. \nCannot connect to '
-      //           '${ChainPresets.chains[chainIdOnWallet]?.chainName ?? 'unknown network'}, '
-      //           'please change it and try again');
-      //   tasksServices.reset('lastErrorOnNetworkChainId');
-      //   // wcModelView.setLastErrorOnChainId(0); // reset error
-      //   // return;
-      // }
-
       await wcModelView.registerEventHandlers();
 
       tasksServices.publicAddress = publicAddress;
       int selectedChainId = wcModelView.state.selectedChainIdOnApp;
 
-      if (ChainPresets.chains.keys.contains(chainIdOnWallet) ||
+      if (ChainPresets.chains.keys.contains(selectedChainId) ||
           chainIdOnWallet == tasksServices.chainIdAxelar ||
           chainIdOnWallet == tasksServices.chainIdHyperlane ||
           chainIdOnWallet == tasksServices.chainIdLayerzero ||
           chainIdOnWallet == tasksServices.chainIdWormhole) {
         if (selectedChainId == chainIdOnWallet) {
+          await walletModel.onWalletUpdate(
+              connectionState: true,
+              walletType: WalletSelected.walletConnect,
+              walletAddress: publicAddress,
+              allowedChain: true,
+              chainId: chainIdOnWallet);
           await finalConnectAndCollectData(chainIdOnWallet, tasksServices, wcModelView, walletModel);
           Timer(const Duration(milliseconds: 1600), () {
             Navigator.of(context, rootNavigator: true).pop();
@@ -169,12 +161,7 @@ class WCSessions {
             tasksServices.reset('getTaskListFullThenFetchIt error');
           }
         }
-        await walletModel.onWalletUpdate(
-            connectionState: true,
-            walletType: WalletSelected.walletConnect,
-            walletAddress: publicAddress,
-            allowedChain: true,
-            chainId: chainIdOnWallet);
+
       } else {
         log.warning('wc_sessions.dart -> selectedChainId unknown chainId: $chainIdOnWallet.');
         await wcModelView.setWcScreenState(state: WCScreenStatus.wcConnectedNetworkUnknown);
@@ -195,6 +182,12 @@ class WCSessions {
     bool result = await initConnectAndCollectData(chainToChange, tasksServices);
     if (result) {
       await wcModelView.setWcScreenState(state: WCScreenStatus.wcConnectedNetworkMatch);
+      await initFinalCollectData(chainToChange, tasksServices);
+      if (walletModel.state.walletAddress != null) {
+        await tasksServices.refreshTasksForAccount(walletModel.state.walletAddress, "refresh");
+      } else {
+        await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
+      }
     } else {
       await wcModelView.setWcScreenState(
           state: WCScreenStatus.error,
@@ -212,35 +205,16 @@ class WCSessions {
     //   log.severe('wc_sessions->initConnectAndCollectData->fetchTasksBatch error: $e');
     //   return false;
     // }
-    try {
+    try { // pre load final
       await tasksServices.connectRPC(newChainId);
     } catch (e) {
       log.severe('wc_sessions->initConnectAndCollectData->connectRPC error: $e');
       return false;
     }
-    try {
+    try { // pre load final
       await tasksServices.startup();
     } catch (e) {
       log.severe('wc_sessions->initConnectAndCollectData->startup() error: $e');
-      return false;
-    }
-    try {
-      await tasksServices.runAccountStats();
-    } catch (e) {
-      log.severe('wc_sessions->initConnectAndCollectData->runAccountStats error: $e');
-      return false;
-    }
-    try {
-      await tasksServices.myBalance();
-    } catch (e) {
-      log.severe('wc_sessions->initConnectAndCollectData->myBalance() error: $e');
-      return false;
-    }
-    try {
-      await tasksServices.collectMyTokens();
-      return true;
-    } catch (e) {
-      log.severe('wc_sessions->initConnectAndCollectData->collectMyTokens error: $e');
       return false;
     }
     // try {
@@ -251,5 +225,32 @@ class WCSessions {
     //   log.severe('wc_sessions->initConnectAndCollectData->myBalance error: $e');
     //   return false;
     // }
+    return true;
+  }
+
+  Future<void> initFinalCollectData(int newChainId, tasksServices) async {
+    // try {
+    //   await tasksServices.initAccountStats();
+    // } catch (e) {
+    //   log.severe('wc_sessions->initConnectAndCollectData->initAccountStats error: $e');
+    // }
+    try {
+      await tasksServices.initTaskStats();
+    } catch (e) {
+      log.severe('wc_sessions->initFinalCollectData->initTaskStats error: $e');
+    }
+    try { // on final
+      await tasksServices.myBalance();
+    } catch (e) {
+      log.severe('wc_sessions->initFinalCollectData->myBalance() error: $e');
+    }
+    try { // on final
+      await tasksServices.collectMyTokens();
+    } catch (e) {
+      log.severe('wc_sessions->initFinalCollectData->collectMyTokens error: $e');
+    }
+
   }
 }
+
+

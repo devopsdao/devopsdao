@@ -1,92 +1,85 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import '../../config/preferences.dart';
 
-import '../../../blockchain/classes.dart';
-import '../services/statistics_service.dart';
+class StatsManagerStates {
 
-// model - service:
-// get -> read
-// set -> write
-// on -> init
-// ... -> check (logic with bool return(not bool stored data))
+}
 
-class PartialSwipeAnimation {
-  late AnimationController _controller;
-  late Animation<Offset> _animation;
+class StatisticsWidgetsManager extends ChangeNotifier {
+  late List<int> smallListOrderIndex;
+  late List<int> largeListOrderIndex;
+  final Completer<void> _initializationCompleter = Completer<void>();
 
-  PartialSwipeAnimation(TickerProvider vsync) {
-    _controller = AnimationController(
-      vsync: vsync,
-      duration: Duration(milliseconds: 300),
-    );
-    _animation = Tween<Offset>(
-      begin: Offset(1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+  StatisticsWidgetsManager() {
+    _initializeIndexes();
   }
 
-  Animation<Offset> get animation => _animation;
-
-  void handleDragUpdate(double delta, double maxWidth) {
-    _controller.value -= (-delta) / maxWidth;
-    _controller.value = _controller.value.clamp(-1.0, 1.0);
-
+  Future<void> _initializeIndexes() async {
+    final prefs = StatisticsOrderPreferences();
+    smallListOrderIndex = await prefs.getSmallList();
+    largeListOrderIndex = await prefs.getLargeList();
+    _initializationCompleter.complete();
+    // notifyListeners(); // Notify listeners after initialization
   }
 
-  void handleDragEnd() {
-    if (_controller.value >= 0.5) {
-      _controller.animateTo(1.0);
+  Future<List<Widget>> getStatsWidgets(List<Widget> children) async {
+    return children;
+  }
+
+  // void update() {
+  //   print('update  $smallListOrderIndex');
+  // }
+
+  List<int> getOrderList(bool walletConnected) {
+    // print('getOrderList ${smallListOrderIndex.length}');
+    return walletConnected ? largeListOrderIndex : smallListOrderIndex;
+  }
+
+  Future<List<Widget>> getOrderedChildren(List<Widget> children, bool walletConnected) async {
+    await _initializationCompleter.future;
+    if ((!walletConnected && children.length != smallListOrderIndex.length) ||
+        (walletConnected && children.length != largeListOrderIndex.length)) {
+      print('smallListOrderIndex or largeListOrderIndex not equal, clear prefs!');
+      final prefs = StatisticsOrderPreferences();
+      prefs.setDefaultStatisticsPrefs();
+      await _initializeIndexes(); // Reinitialize the indices
+    }
+    return walletConnected
+        ? largeListOrderIndex.map((index) => children[index]).toList()
+        : smallListOrderIndex.map((index) => children[index]).toList();
+  }
+
+  void reorder(int oldIndex, int newIndex, bool walletConnected) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    if (walletConnected) {
+      final item = largeListOrderIndex.removeAt(oldIndex);
+      largeListOrderIndex.insert(newIndex, item);
     } else {
-      _controller.animateTo(0.0);
+      final item = smallListOrderIndex.removeAt(oldIndex);
+      smallListOrderIndex.insert(newIndex, item);
+    }
+    notifyListeners();
+    saveOrderPreferences(walletConnected);
+  }
+
+  Future<void> saveOrderPreferences(walletConnected) async {
+    final prefs = StatisticsOrderPreferences();
+    if (walletConnected) {
+      await prefs.setLargeList(largeListOrderIndex);
+    } else {
+      await prefs.setSmallList(smallListOrderIndex);
     }
   }
-
-
-  void dispose() {
-    _controller.dispose();
-  }
 }
 
 
-class StatisticsModelState {
-  List<TokenItem> tags = [];
-  Map<String, Map<String, BigInt>> initialEmptyBalance = {};
-  double valueOnWallet = 0.0; // for value_input max
 
-  StatisticsModelState({
-    required this.tags,
-    required this.initialEmptyBalance,
-    required this.valueOnWallet,
-  });
-}
 
-class StatisticsModel extends ChangeNotifier {
-  final _statisticsService = StatisticsService();
-  late PartialSwipeAnimation _animation;
 
-  StatisticsModel(TickerProvider vsync) {
-    _animation = PartialSwipeAnimation(vsync);
-  }
 
-  Animation<Offset> get animation => _animation.animation;
 
-  void handleDragUpdate(DragUpdateDetails details, RenderBox renderBox) {
-    double delta = details.primaryDelta ?? 0;
-    // print(renderBox.constraints.maxWidth);
-    _animation.handleDragUpdate(delta, renderBox.constraints.maxWidth);
-    notifyListeners();
-  }
 
-  void handleDragEnd() {
-    _animation.handleDragEnd();
-  }
 
-  @override
-  void dispose() {
-    _animation.dispose();
-    super.dispose();
-  }
-}

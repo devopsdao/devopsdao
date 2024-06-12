@@ -14,7 +14,7 @@ import '../task_dialog/beamer.dart';
 import '../task_dialog/task_transition_effect.dart';
 import '../widgets/badgetab.dart';
 import '../task_dialog/main.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/paw_indicator_with_tasks_list.dart';
 import '../widgets/tags/main.dart';
 import '../widgets/tags/search_services.dart';
@@ -99,7 +99,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
 
@@ -191,7 +191,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
             //   ),
             // ),
             child: SizedBox(
-              width: interface.maxStaticGlobalWidth,
+              width: InterfaceSettings.maxStaticGlobalWidth,
               child: DefaultTabController(
                 length: 3,
                 initialIndex: tabIndex,

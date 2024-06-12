@@ -56,7 +56,7 @@ class _AccountMainPageState extends State<AccountMainPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
 
     final BoxDecoration materialMainBoxDecoration = BoxDecoration(

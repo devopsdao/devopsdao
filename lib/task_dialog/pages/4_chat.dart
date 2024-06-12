@@ -26,7 +26,7 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    // var interface = context.watch<InterfaceServices>();
     final emptyClasses = EmptyClasses();
     //
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -41,7 +41,7 @@ class ChatPage extends StatelessWidget {
           borderRadius: DodaoTheme.of(context).borderRadius,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: interface.maxStaticInternalDialogWidth,
+              maxWidth: InterfaceSettings.maxStaticInternalDialogWidth,
               // maxHeight: screenHeightSize,
             ),
             child: Container(

@@ -53,10 +53,10 @@ class _CreateJobState extends State<CreateJob> {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
+    // var interface = context.watch<InterfaceServices>();
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
-    final double maxStaticDialogWidth = interface.maxStaticDialogWidth;
+    // final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticDialogWidth = InterfaceSettings.maxStaticDialogWidth;
 
     return LayoutBuilder(builder: (ctx, constraints) {
       final double myMaxWidth = constraints.maxWidth;
@@ -165,7 +165,7 @@ class _CreateJobSkeletonState extends State<CreateJobSkeleton> with TickerProvid
     var tasksServices = context.watch<TasksServices>();
     var searchServices = context.watch<SearchServices>();
     var interface = context.watch<InterfaceServices>();
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
 
     const Color textColor = Colors.black54;
     final double myMaxWidth = widget.myMaxWidth;

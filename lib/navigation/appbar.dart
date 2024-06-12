@@ -7,7 +7,7 @@ import '../blockchain/classes.dart';
 import '../blockchain/task_services.dart';
 import '../config/theme.dart';
 import '../wallet/widgets/main/main.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../widgets/tags/search_services.dart';
 import '../widgets/tags_on_page_open_container.dart';
 
@@ -137,78 +137,78 @@ class OurAppBar extends StatelessWidget  implements PreferredSizeWidget  {
     );
   }
 }
-
-
-class HomeAppBar extends StatelessWidget  implements PreferredSizeWidget  {
-  const HomeAppBar({Key? key}) : super(key: key);
-
-  @override
-  Size get preferredSize => const Size.fromHeight(56);
-
-  @override
-  Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-
-    return AppBar(
-      backgroundColor: Colors.black,
-      elevation: 0,
-      // automaticallyImplyLeading: false,
-      title: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text('Dodao', style: Theme.of(context).textTheme.titleLarge),
-        ],
-      ),
-      actions: [
-        // Center(
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
-        //     child: Container(
-        //       // width: 150,
-        //       height: 30,
-        //       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        //
-        //       decoration: BoxDecoration(
-        //         borderRadius: BorderRadius.circular(16),
-        //         gradient: const LinearGradient(
-        //           colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
-        //           stops: [0.1, 0.5, 1],
-        //         ),
-        //       ),
-        //       child: InkWell(
-        //           highlightColor: Colors.white,
-        //           onTap: () async {
-        //             showDialog(
-        //               context: context,
-        //               builder: (context) => const WalletPageTop(),
-        //             );
-        //           },
-        //           child: tasksServices.walletConnected && listenWalletAddress != null
-        //               ? Text(
-        //             '${listenWalletAddress.toString().substring(0, 4)}'
-        //                 '...'
-        //                 '${listenWalletAddress.toString().substring(listenWalletAddress.toString().length - 4)}',
-        //             // textAlign: TextAlign.center,
-        //             style: const TextStyle(fontSize: 14, color: Colors.white),
-        //           )
-        //               : const Text(
-        //             'Connect wallet',
-        //             textAlign: TextAlign.center,
-        //             style: TextStyle(fontSize: 14, color: Colors.white),
-        //           )),
-        //     ),
-        //   ),
-        // ),
-        if (!tasksServices.isDeviceConnected)
-          Padding(
-            padding: const EdgeInsets.only(left: 0.0, right: 14),
-            child: Icon(
-              Icons.cloud_off,
-              color: DodaoTheme.of(context).primaryText,
-              size: 26,
-            ),
-          ),
-      ],
-    );
-  }
-}
+//
+//
+// class HomeAppBar extends StatelessWidget  implements PreferredSizeWidget  {
+//   const HomeAppBar({Key? key}) : super(key: key);
+//
+//   @override
+//   Size get preferredSize => const Size.fromHeight(56);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var tasksServices = context.read<TasksServices>();
+//
+//     return AppBar(
+//       backgroundColor: Colors.black,
+//       elevation: 0,
+//       // automaticallyImplyLeading: false,
+//       title: Row(
+//         mainAxisSize: MainAxisSize.max,
+//         children: [
+//           Text('Dodao', style: Theme.of(context).textTheme.titleLarge),
+//         ],
+//       ),
+//       actions: [
+//         // Center(
+//         //   child: Padding(
+//         //     padding: const EdgeInsets.only(left: 6.0, right: 14, top: 8, bottom: 8),
+//         //     child: Container(
+//         //       // width: 150,
+//         //       height: 30,
+//         //       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+//         //
+//         //       decoration: BoxDecoration(
+//         //         borderRadius: BorderRadius.circular(16),
+//         //         gradient: const LinearGradient(
+//         //           colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+//         //           stops: [0.1, 0.5, 1],
+//         //         ),
+//         //       ),
+//         //       child: InkWell(
+//         //           highlightColor: Colors.white,
+//         //           onTap: () async {
+//         //             showDialog(
+//         //               context: context,
+//         //               builder: (context) => const WalletPageTop(),
+//         //             );
+//         //           },
+//         //           child: tasksServices.walletConnected && listenWalletAddress != null
+//         //               ? Text(
+//         //             '${listenWalletAddress.toString().substring(0, 4)}'
+//         //                 '...'
+//         //                 '${listenWalletAddress.toString().substring(listenWalletAddress.toString().length - 4)}',
+//         //             // textAlign: TextAlign.center,
+//         //             style: const TextStyle(fontSize: 14, color: Colors.white),
+//         //           )
+//         //               : const Text(
+//         //             'Connect wallet',
+//         //             textAlign: TextAlign.center,
+//         //             style: TextStyle(fontSize: 14, color: Colors.white),
+//         //           )),
+//         //     ),
+//         //   ),
+//         // ),
+//         if (!tasksServices.isDeviceConnected)
+//           Padding(
+//             padding: const EdgeInsets.only(left: 0.0, right: 14),
+//             child: Icon(
+//               Icons.cloud_off,
+//               color: DodaoTheme.of(context).primaryText,
+//               size: 26,
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }

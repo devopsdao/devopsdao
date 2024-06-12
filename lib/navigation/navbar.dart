@@ -49,6 +49,7 @@ class _NavBarPageState extends State<NavBarPage> {
       // '/leaderboard': const HomePageWidget(),
       if (listenRoleNfts['auditor'] > 0) '/auditor': const HomePageWidget(),
       '/accounts': const HomePageWidget(),
+      // '/statistics': const HomePageWidget(),
       // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),
     };
@@ -98,15 +99,15 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           label: 'Performer',
         ),
-        if (listenRoleNfts['governor'] > 0)
-          const NavigationDestination(
-            // selectedIcon: Icon(Icons.bookmark),
-            icon: Icon(
-              Icons.engineering_rounded,
-              size: 24,
-            ),
-            label: 'Stats',
-          ),
+        // if (listenRoleNfts['governor'] > 0)
+        //   const NavigationDestination(
+        //     // selectedIcon: Icon(Icons.bookmark),
+        //     icon: Icon(
+        //       Icons.engineering_rounded,
+        //       size: 24,
+        //     ),
+        //     label: 'Stats',
+        //   ),
         // const NavigationDestination(
         //   // selectedIcon: Icon(Icons.bookmark),
         //   icon: Icon(
@@ -115,6 +116,7 @@ class _NavBarPageState extends State<NavBarPage> {
         //   ),
         //   label: 'Leaderboard',
         // ),
+
         if (listenRoleNfts['auditor'] > 0)
           const NavigationDestination(
             icon: FaIcon(
@@ -131,6 +133,13 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           label: 'Accounts',
         ),
+        // const NavigationDestination(
+        //   icon: Icon(
+        //     Icons.engineering_rounded,
+        //     size: 24,
+        //   ),
+        //   label: 'Statistics',
+        // ),
       ],
       // destinations: <BottomNavigationBarItem>[
       //   const BottomNavigationBarItem(

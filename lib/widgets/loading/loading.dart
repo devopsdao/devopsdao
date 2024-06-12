@@ -6,14 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../blockchain/interface.dart';
-import '../blockchain/task_services.dart';
+import '../../blockchain/interface.dart';
+import '../../blockchain/task_services.dart';
 
-import '../config/theme.dart';
+import '../../config/theme.dart';
 
 import 'package:webthree/webthree.dart';
 
-import '../wallet/model_view/wallet_model.dart';
+import '../../wallet/model_view/wallet_model.dart';
+import 'loading_model.dart';
 
 class LoadIndicator extends StatefulWidget {
   const LoadIndicator({Key? key}) : super(key: key);
@@ -28,27 +29,22 @@ class _LoadIndicator extends State<LoadIndicator> {
   double progress = 0.0;
   double progress2 = 0.0;
 
-  double getLoadingProgress(int loaded, int total) {
-    if (total == 0) {
-      return 0.0;
-    }
-    return loaded / total;
-  }
-
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.watch<TasksServices>();
+    var tasksServices = context.read<TasksServices>();
+    var loadingModel = context.watch<LoadingModel>();
+
+    // if (loadingMonitor) {
+    //   progress2 = getLoadingProgress(tasksServices.monitorTasksLoaded, tasksServices.monitorTotalTaskLen);
+    // } else {
+    //   progress2 = 0.0;
+    // }
     loadingTasks = tasksServices.totalTaskLen >= 1;
-    loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
+    // loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
     if (loadingTasks) {
-      progress = getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
+      progress = loadingModel.getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
     } else {
       progress = 0.0;
-    }
-    if (loadingMonitor) {
-      progress2 = getLoadingProgress(tasksServices.monitorTasksLoaded, tasksServices.monitorTotalTaskLen);
-    } else {
-      progress2 = 0.0;
     }
     return LinearProgressIndicator(
       value: loadingTasks ? progress : progress2,
@@ -59,11 +55,11 @@ class _LoadIndicator extends State<LoadIndicator> {
 }
 
 class LoadButtonIndicator extends StatefulWidget {
-  LoadButtonIndicator({
+  const LoadButtonIndicator({
     Key? key,
     required this.refresh,
   }) : super(key: key);
-  String refresh;
+  final String refresh;
 
   @override
   _LoadButtonIndicator createState() => _LoadButtonIndicator();

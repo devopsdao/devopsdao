@@ -132,7 +132,7 @@ class _SelectionPageState extends State<SelectionPage> {
           // width: innerPaddingWidth,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: interface.maxStaticInternalDialogWidth,
+              maxWidth: InterfaceSettings.maxStaticInternalDialogWidth,
               maxHeight: widget.screenHeightSize,
               // minHeight: widget.screenHeightSize
             ),

@@ -78,7 +78,7 @@ dependencies:
   rive_splash_screen: ^0.1.1
   scan: ^1.6.0
   fl_toast: ^3.2.0
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.3
   shimmer: ^3.0.0
   sidebarx: ^0.16.2
   simple_markdown_editor_plus: ^0.2.6
@@ -97,6 +97,9 @@ dependencies:
   material_design_icons_flutter: ^7.0.7296
   data_table_2: ^2.5.12
   syncfusion_flutter_charts: ^25.2.5
+  flutter_rating_stars: ^1.1.0
+  flutter_draggable_list: ^1.0.2
+  isolate_manager: ^4.1.5+1
 #  vector_graphics: ^1.0.1
 dependency_overrides:
   font_awesome_flutter: ^10.1.0

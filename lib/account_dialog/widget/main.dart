@@ -108,7 +108,7 @@ class _AccountDialogSkeletonState extends State<AccountDialogSkeleton> {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     // var tasksServices = context.read<TasksServices>();
 
     final account = widget.object;
@@ -132,7 +132,7 @@ class _AccountDialogSkeletonState extends State<AccountDialogSkeleton> {
           ),
           SizedBox(
               height: screenHeightSize - statusBarHeight,
-              width: interface.maxStaticDialogWidth,
+              width: InterfaceSettings.maxStaticDialogWidth,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
                 switchInCurve: Curves.easeInQuint,
@@ -165,9 +165,9 @@ class ShimmeredPages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
+    // var interface = context.watch<InterfaceServices>();
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
 
     return LayoutBuilder(builder: (ctx, dialogConstraints) {
       double innerPaddingWidth = dialogConstraints.maxWidth - 50;

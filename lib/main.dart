@@ -3,9 +3,14 @@ import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/config/preload_assets.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
 import 'package:dodao/statistics/model_view/pending_model_view.dart';
+import 'package:dodao/statistics/model_view/horizontal_list_view_model.dart';
+import 'package:dodao/statistics/model_view/statistics_model_view.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/model/cashed_personal_stats_model.dart';
 import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
+import 'package:dodao/wallet/services/wallet_service.dart';
+import 'package:dodao/widgets/loading/loading_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,21 +39,30 @@ void main() async {
 
   await DodaoTheme.initialize();
 
+  // final rpcUrl = 'http://localhost:8545';
+  // final wsUrl = 'ws://localhost:8545';
+  // final web3ClientInitializer = Web3ClientInitializer(rpcUrl, wsUrl);
+  // final walletService = WalletService();
+  // final contractConnector = ContractConnector(web3ClientInitializer);
+
+
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => TasksServices()),
+        ChangeNotifierProvider(create: (context) => TasksServices(),),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
-        // ChangeNotifierProvider(create: (context) => EmptyClasses()),
+        ChangeNotifierProvider(create: (context) => StatisticsWidgetsManager()),
+        ChangeNotifierProvider(create: (context) => LoadingModel()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
         ChangeNotifierProvider(create: (context) => MetamaskModel()),
         ChangeNotifierProvider(create: (context) => WCModelView()),
         ChangeNotifierProvider(create: (context) => WalletModel()),
+        ChangeNotifierProvider(create: (context) => HorizontalListViewModel()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
+        ChangeNotifierProvider(create: (_) => CachedPersonalStatisticsDataModel()),
         ChangeNotifierProvider(create: (_) => TokenPendingModel()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
@@ -97,6 +111,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+
+    final tasksServices = Provider.of<TasksServices>(context, listen: false);
+    final taskStatsModel = Provider.of<LoadingModel>(context, listen: false);
+    tasksServices.setDelegate(taskStatsModel);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       MetamaskModel metamaskProvider = context.read<MetamaskModel>();
       WalletModel walletModel = context.read<WalletModel>();
@@ -107,11 +126,11 @@ class _MyAppState extends State<MyApp> {
         return !tasksServices.contractsInitialized;
       }));
       if (platform.platform != 'web' || window.ethereum == null) {
-        try {
-          await tasksServices.initAccountStats();
-        } catch (e) {
-          log.severe('MyApp->initState->initAccountStats error: $e');
-        }
+        // try {
+        //   await tasksServices.initAccountStats();
+        // } catch (e) {
+        //   log.severe('MyApp->initState->initAccountStats error: $e');
+        // }
         try {
           await tasksServices.initTaskStats();
         } catch (e) {

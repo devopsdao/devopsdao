@@ -15,6 +15,7 @@ import 'package:g_json/g_json.dart';
 // on -> init ->
 // ... -> check (logic with bool return(not bool stored data))
 
+
 class MMService {
   final _chainPresets = ChainPresets();
 
@@ -33,11 +34,11 @@ class MMService {
       return null;
     } else if (onStartup && !accountConnected) {
       log.info('onStartup');
-      try {
-        await tasksServices.initAccountStats();
-      } catch (e) {
-        log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
-      }
+      // try {
+      //   await tasksServices.initAccountStats();
+      // } catch (e) {
+      //   log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
+      // }
       try {
         await tasksServices.initTaskStats();
       } catch (e) {
@@ -221,12 +222,12 @@ class MMService {
 
   Future<bool> initFinalCollectData(int newChainId, tasksServices) async {
     try {
-      try {
-        await tasksServices.initAccountStats();
-      } catch (e) {
-        log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
-        return false;
-      }
+      // try {
+      //   await tasksServices.initAccountStats();
+      // } catch (e) {
+      //   log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
+      //   return false;
+      // }
       try {
         await tasksServices.initTaskStats();
       } catch (e) {

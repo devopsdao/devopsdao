@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 
+import '../tasks_statistics_expanded.dart';
+
 
 class GotoStatistics extends StatelessWidget {
   final bool extended;
@@ -18,7 +20,10 @@ class GotoStatistics extends StatelessWidget {
             children: [
               TextButton(child: Text('Go to Statistics page'),
                   onPressed: () {
-                    context.beamToNamed('/customer');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => StatisticsExpandedMain()),
+                    );
                   },
                   style: TextButton.styleFrom(
                       textStyle: Theme.of(context).textTheme.bodyMedium)
