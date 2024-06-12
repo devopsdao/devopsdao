@@ -4,10 +4,6 @@ import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:dodao/statistics/model_view/horizontal_list_view_model.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/goto.dart';
 import 'package:dodao/statistics/widget/tasks_statistics_widgets/main_widget_list.dart';
-import 'package:dodao/statistics/widget/tasks_statistics_widgets/score.dart';
-import 'package:dodao/statistics/widget/tasks_statistics_widgets/total_created.dart';
-import 'package:dodao/statistics/widget/tasks_statistics_widgets/total_process.dart';
-import 'package:dodao/statistics/widget/tasks_statistics_widgets/personal_stats.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,19 +25,24 @@ class TasksStatistics extends StatefulWidget {
 class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderStateMixin {
   final HorizontalListViewController _controller = HorizontalListViewController();
   final HorizontalListViewModel horizontalListViewModel = HorizontalListViewModel();
-  final StatisticsWidgetsManager _statisticsWidgetsManager = StatisticsWidgetsManager();
+  // final StatisticsWidgetsManager _statisticsWidgetsManager = StatisticsWidgetsManager();
   late List<Widget> children;
   late Future<List<Widget>> orderedWidgetsFuture;
+  double widgetHeight = 164;
   @override
   void initState() {
     super.initState();
-    _initializeChildren();
+    // _initializeChildren();
   }
 
-  void _initializeChildren() {
-    final listenWalletAddress = context.read<WalletModel>().state.walletAddress;
-    children = initializeWidgets(false, walletConnected: listenWalletAddress != null);
-    orderedWidgetsFuture = _statisticsWidgetsManager.getStatsWidgets(children);
+  // void _initializeChildren() {
+  //   final listenWalletAddress = context.read<WalletModel>().state.walletAddress;
+  //   children = initializeWidgets(false, walletConnected: listenWalletAddress != null);
+  //   orderedWidgetsFuture = _statisticsWidgetsManager.getStatsWidgets(children);
+  // }
+
+  bool _containsGotoStatisticsContainer(List<Widget> widgets) {
+    return widgets.any((widget) => widget is Container && widget.child is GotoStatistics);
   }
 
   @override
@@ -53,28 +54,30 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
     return ChangeNotifierProvider.value(
       value: horizontalListViewModel,
       child: FutureBuilder<List<Widget>>(
-        future: orderedWidgetsFuture,
+        future: statisticsWidgetsManager.getStatsWidgets(initializeWidgets(false, walletConnected: listenWalletConnected)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            if (snapshot.data != null) {
-              snapshot.data!.clear();
-            }
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: SizedBox(
+                height: widgetHeight,
+                child: const CircularProgressIndicator()));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No data available'));
           } else {
-            late List<int> order = statisticsWidgetsManager.getOrderList(listenWalletConnected);
-
-            snapshot.data!.add(
-              Container(
-                width: 220,
-                child: const GotoStatistics(extended: false),
-              ),
-            );
+            late List<int> order = List.from(statisticsWidgetsManager.getOrderList(listenWalletConnected));
+            late List<Widget> items = snapshot.data!;
+            if (!_containsGotoStatisticsContainer(items)) {
+              items.add(
+                Container(
+                  width: 220,
+                  child: const GotoStatistics(extended: false),
+                ),
+              );
+            }
             order.add(order.length); // for extra widget "goto stat page"
-            final orderedWidgets = order.map((index) => snapshot.data![index]).toList();
+
+            final orderedWidgets = order.map((index) => items[index]).toList();
             List<double> itemWidths = orderedWidgets.map((child) {
               if (child is Container) {
                 return child.constraints?.minWidth ?? 0.0;
@@ -82,7 +85,9 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
               return 0.0;
             }).toList();
             // itemWidths.add(220); // for extra widget "goto stat page"
-            order.removeLast(); // don't forget to remove an extra order value
+            // if (!_containsGotoStatisticsContainer(items)) {
+            // }
+              order.removeLast(); // don't forget to remove an extra order value
 
             _controller.itemWidths = itemWidths;
             WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -97,7 +102,7 @@ class _TasksStatisticsState extends State<TasksStatistics> with TickerProviderSt
                 },
               ),
               child: SizedBox(
-                height: 164,
+                height: widgetHeight,
                 child: HorizontalListView.builder(
                   alignment: CrossAxisAlignment.start,
                   crossAxisSpacing: 12,

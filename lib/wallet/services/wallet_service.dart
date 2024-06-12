@@ -11,6 +11,8 @@ import '../model_view/wallet_model.dart';
 // ... -> check (logic with bool return(not bool stored data))
 
 class WalletService {
+  static bool hardhatDebug = false;
+  static bool hardhatLive = false;
   static bool walletConnected = false;
   static bool allowedChainId = false;
   static WalletSelected walletSelected = WalletSelected.none;

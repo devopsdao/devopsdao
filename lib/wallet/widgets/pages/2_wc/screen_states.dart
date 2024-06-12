@@ -172,10 +172,29 @@ class WCStates extends StatelessWidget {
               Column(
                 children: [
                 Text(
-                  'Current network: \n${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)}',
+                  'Connected \n${walletModel.getNetworkChainName(wcModelView.state.selectedChainIdOnApp)}',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
+                  if (walletModel.state.walletConnected && wcModelView.wcCurrentState == WCScreenStatus.wcConnectedNetworkMatch)
+                    Container(
+                      padding: const EdgeInsets.only(top: 2, left: 6, right: 6),
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          // Text(
+                          //   'Wallet address:',
+                          //   style: Theme.of(context).textTheme.bodySmall,
+                          //   textAlign: TextAlign.center,
+                          // ),
+                          Text(
+                            walletModel.state.walletAddress.toString(),
+                            style: Theme.of(context).textTheme.labelSmall,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
                 Container(
                   padding: const EdgeInsets.all(15.0),
                   height: 140,
@@ -184,6 +203,7 @@ class WCStates extends StatelessWidget {
                   )),
                 ],
               ),
+
             if (walletModel.state.walletConnected
                 && wcModelView.wcCurrentState != WCScreenStatus.loadingWc
                 && wcModelView.wcCurrentState != WCScreenStatus.wcNotConnectedAddNetwork
@@ -191,6 +211,7 @@ class WCStates extends StatelessWidget {
               NetworkSelection(
                 qrSize: _qrSize, walletName: 'wc',
               ),
+
           ],
         ),
       ),

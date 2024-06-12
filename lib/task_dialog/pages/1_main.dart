@@ -84,7 +84,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
     WalletModel walletModel = context.read<WalletModel>();
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    // final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
     // final double innerPaddingWidth = widget.innerPaddingWidth;
     final Task task = widget.task;
     final String fromPage = widget.fromPage;

@@ -249,14 +249,13 @@ class MetamaskModel extends ChangeNotifier {
       await onRequestBalances(chainId, tasksServices);
       // await Future.delayed(const Duration(milliseconds: 200));
       // await tasksServices.monitorEvents();
+      await _mmServices.initFinalCollectData(chainId, tasksServices);
     } else {
       await setMmScreenState(
           state: MMScreenStatus.error,
           error: 'Opps... '
               'something went wrong, try again \nBlockchain connection error');
     }
-
-    await _mmServices.initFinalCollectData(chainId, tasksServices);
   }
 
   Future<void> onRequestBalances(int chainId, tasksServices) async => _tokenPendingService.initRequestBalances(chainId, tasksServices);

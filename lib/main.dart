@@ -9,6 +9,7 @@ import 'package:dodao/statistics/widget/tasks_statistics_widgets/model/cashed_pe
 import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
+import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:dodao/widgets/loading/loading_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
@@ -38,12 +39,19 @@ void main() async {
 
   await DodaoTheme.initialize();
 
+  // final rpcUrl = 'http://localhost:8545';
+  // final wsUrl = 'ws://localhost:8545';
+  // final web3ClientInitializer = Web3ClientInitializer(rpcUrl, wsUrl);
+  // final walletService = WalletService();
+  // final contractConnector = ContractConnector(web3ClientInitializer);
+
+
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => TasksServices()),
+        ChangeNotifierProvider(create: (context) => TasksServices(),),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
         ChangeNotifierProvider(create: (context) => StatisticsWidgetsManager()),
         ChangeNotifierProvider(create: (context) => LoadingModel()),

@@ -70,7 +70,7 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
 
   @override
   Widget build(BuildContext context) {
-    final listenWalletConnected = context.read<WalletModel>().state.walletConnected;
+    // final listenWalletConnected = context.read<WalletModel>().state.walletConnected;
     final height = MediaQuery.of(context).size.height;
 
     return FutureBuilder<List<Widget>>(
@@ -104,7 +104,7 @@ class _StatisticsExpandedState extends State<StatisticsExpanded> {
                     alignment: Alignment.center,
                     child: Container(
                       padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                      width: context.read<InterfaceServices>().maxStaticDialogWidth,
+                      width: InterfaceSettings.maxStaticDialogWidth,
                       child: LayoutBuilder(builder: (context, constraints) {
                         return SingleChildScrollView(
                           child: Container(
@@ -220,7 +220,7 @@ class StatisticsExpandedHeader extends StatelessWidget implements PreferredSizeW
             child: Icon(Icons.close),
           ),
           onTap: () {
-            context.read<StatisticsWidgetsManager>().update();
+            // context.read<StatisticsWidgetsManager>().update();
             Navigator.of(context).pop(null);
           },
         ),

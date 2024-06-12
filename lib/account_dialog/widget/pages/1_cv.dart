@@ -32,9 +32,9 @@ class _AccountCvPageState extends State<AccountCvPage> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Account account = widget.account;
 
@@ -51,7 +51,7 @@ class _AccountCvPageState extends State<AccountCvPage> {
             children: [
               Material(
                   elevation: 10,
-                  borderRadius: BorderRadius.circular(interface.borderRadius),
+                  borderRadius: BorderRadius.circular(InterfaceSettings.borderRadius),
                   child: GestureDetector(
                       onTap: () {
                         // interface.accountsDialogPagesController.animateToPage(
@@ -70,7 +70,7 @@ class _AccountCvPageState extends State<AccountCvPage> {
                                   // width: MediaQuery.of(context).size.width * .57
                                   width: innerPaddingWidth,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(interface.borderRadius),
+                                    borderRadius: BorderRadius.circular(InterfaceSettings.borderRadius),
                                   ),
                                   child: Container(
                                       padding: const EdgeInsets.all(6),
@@ -93,7 +93,7 @@ class _AccountCvPageState extends State<AccountCvPage> {
                   padding: const EdgeInsets.only(top: 14.0),
                   child: Material(
                       elevation: 10,
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
+                      borderRadius: BorderRadius.circular(InterfaceSettings.borderRadius),
                       child: GestureDetector(
                           child: Container(
                               padding: const EdgeInsets.all(8.0),
@@ -101,7 +101,7 @@ class _AccountCvPageState extends State<AccountCvPage> {
                               // width: MediaQuery.of(context).size.width * .57
                               width: innerPaddingWidth,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(interface.borderRadius),
+                                borderRadius: BorderRadius.circular(InterfaceSettings.borderRadius),
                               ),
                               child: ListBody(children: <Widget>[
                                 GestureDetector(

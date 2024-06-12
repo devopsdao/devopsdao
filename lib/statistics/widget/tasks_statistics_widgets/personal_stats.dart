@@ -30,8 +30,8 @@ class _PersonalStatsState extends State<PersonalStats> {
       format: 'point.x : point.y',
       header: '',
     );
-    super.initState();
     _loadData();
+    super.initState();
   }
 
   Future<void> _loadData() async {
@@ -56,16 +56,14 @@ class _PersonalStatsState extends State<PersonalStats> {
           errorMessage = null;
         });
       } catch (error) {
-        setState(() {
-          isLoading = false;
-          errorMessage = 'Error: $error';
-        });
+        isLoading = false;
+        errorMessage = 'Error: $error';
       }
     } else {
-      setState(() {
+      // setState(() {
         isLoading = false;
         errorMessage = null;
-      });
+      // });
     }
   }
 

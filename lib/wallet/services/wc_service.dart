@@ -107,74 +107,81 @@ class WCService {
 
   Future<bool> initSwitchNetwork(int changeFrom, int changeTo) async {
     late SessionData sessionData;
+
     try {
       sessionData = await connectResponse!.session.future;
     } catch (e) {
       log.severe(e);
       return false;
     }
+
     log.fine('wallet_service->switchNetwork from: $changeFrom to: $changeTo');
     final params = <String, dynamic>{
       'chainId': '0x${changeTo.toRadixString(16)}',
     };
+
     try {
       await web3App!.request(
-          topic: sessionData.topic,
-          chainId: 'eip155:$changeFrom',
-          request: SessionRequestParams(
-            method: 'wallet_switchEthereumChain',
-            params: [params],
-          ));
+        topic: sessionData.topic,
+        chainId: 'eip155:$changeFrom',
+        request: SessionRequestParams(
+          method: 'wallet_switchEthereumChain',
+          params: [params],
+        ),
+      );
       return true;
     } on JsonRpcError catch (e) {
-      if (e.message != null) {
-        final error = jsonDecode(e.message!);
-        if (error['data'] != null && error['data']['originalError'] != null && error['data']['originalError']['code'] != null) {
-          if (error['data']['originalError']['code'] == 4902) {
-            try {
-              await addNetwork(changeFrom, changeTo);
-              return true;
-            } on JsonRpcError catch (e) {
-              if (e.message != null) {
-                final error = jsonDecode(e.message!);
-                if (error['code'] != 4001) {
-                  log.severe(error);
-                }
-              }
-              log.severe(e);
-              return false;
-            } catch (e) {
-              log.severe(e);
-              return false;
-            }
-          }
-          if (error['data']['originalError']['code'] == 4001) {
-            try {
-              print('4001 custom error');
-            } on JsonRpcError catch (e) {
-              if (e.message != null) {
-                final error = jsonDecode(e.message!);
-                if (error['code'] != 4001) {
-                  log.severe(error);
-                }
-              }
-              log.severe(e);
-              return false;
-            } catch (e) {
-              log.severe(e);
-              return false;
-            }
-          }
-        }
-      }
+      return await _handleJsonRpcError(e, changeFrom, changeTo);
     } catch (e) {
       log.severe(e);
       return false;
     }
-    return true;
   }
 
-  Future<void> addNetwork(int currentChainId, int changeTo) async {
+  Future<bool> _handleJsonRpcError(JsonRpcError e, int changeFrom, int changeTo) async {
+    if (e.message != null) {
+      final error = jsonDecode(e.message!);
+
+      if (error['data'] != null && error['data']['originalError'] != null) {
+        final int errorCode = error['data']['originalError']['code'];
+
+        if (errorCode == 4902) {
+          return await _attemptAddNetwork(changeFrom, changeTo);
+        } else if (errorCode == 4001) {
+          log.severe('User rejected the request');
+          return false;
+        }
+      }
+    }
+    log.severe(e);
+    return false;
+  }
+
+  Future<bool> _attemptAddNetwork(int changeFrom, int changeTo) async {
+    try {
+      await _addNetwork(changeFrom, changeTo);
+      return true;
+    } on JsonRpcError catch (e) {
+      _logJsonRpcError(e);
+      return false;
+    } catch (e) {
+      log.severe(e);
+      return false;
+    }
+  }
+
+  void _logJsonRpcError(JsonRpcError e) {
+    if (e.message != null) {
+      final error = jsonDecode(e.message!);
+      if (error['code'] != 4001) {
+        log.severe(error);
+      }
+    }
+    log.severe(e);
+  }
+
+
+  Future<void> _addNetwork(int currentChainId, int changeTo) async {
     final SessionData sessionData = await connectResponse!.session.future;
     log.fine('wallet_service->addNetwork, currentChainId: $currentChainId sessionData.topic: ${sessionData.topic}');
 

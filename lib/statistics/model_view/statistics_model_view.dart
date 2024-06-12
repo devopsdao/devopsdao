@@ -20,18 +20,19 @@ class StatisticsWidgetsManager extends ChangeNotifier {
     smallListOrderIndex = await prefs.getSmallList();
     largeListOrderIndex = await prefs.getLargeList();
     _initializationCompleter.complete();
-    notifyListeners(); // Notify listeners after initialization
+    // notifyListeners(); // Notify listeners after initialization
   }
 
   Future<List<Widget>> getStatsWidgets(List<Widget> children) async {
     return children;
   }
 
-  void update() {
-    print('update  $smallListOrderIndex');
-  }
+  // void update() {
+  //   print('update  $smallListOrderIndex');
+  // }
 
   List<int> getOrderList(bool walletConnected) {
+    // print('getOrderList ${smallListOrderIndex.length}');
     return walletConnected ? largeListOrderIndex : smallListOrderIndex;
   }
 

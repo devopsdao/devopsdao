@@ -83,7 +83,7 @@ class _MintWidget extends State<MintWidget> {
     void openBottomSheet(val) {
       Future.delayed(const Duration(milliseconds: 100), () async {
         bottomSheetController = showBottomSheet(
-          constraints: BoxConstraints(maxWidth: interface.maxStaticGlobalWidth,),
+          constraints: BoxConstraints(maxWidth: InterfaceSettings.maxStaticGlobalWidth,),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
           context: context,
           builder: (BuildContext context) {

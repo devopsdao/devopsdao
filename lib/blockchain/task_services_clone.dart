@@ -145,6 +145,9 @@ class GetTaskException implements Exception {
 }
 
 class TasksServices extends ChangeNotifier {
+  final Web3ClientInitializer web3ClientInitializer;
+  final ContractConnector contractConnector;
+  // final WalletService walletService;
   final _walletService = WalletService();
   final _getAddresses = GetAddresses();
   bool hardhatDebug = false;
@@ -307,7 +310,7 @@ class TasksServices extends ChangeNotifier {
 
   late IERC20 ierc20;
 
-  TasksServices() {
+  TasksServices(this.web3ClientInitializer, this.contractConnector) {
     Logger.root.level = Level.ALL; // defaults to Level.INFO
     Logger.root.onRecord.listen((record) {
       print('${record.level.name}: ${record.time}: ${record.message}');
@@ -720,48 +723,59 @@ class TasksServices extends ChangeNotifier {
 
   late bool contractsInitialized = false;
 
-  late Map fees;
+  // late Map fees;
+
   Future<void> startup() async {
-    // clear collection and nft's maps on startup:
-    resultInitialCollectionMap = {};
-    resultNftsMap = {};
-
-    isLoadingBackground = true;
-    WidgetsFlutterBinding.ensureInitialized();
-
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    version = packageInfo.version;
-    buildNumber = packageInfo.buildNumber;
-
     _contractAddress = await _getAddresses.requestContractAddress(WalletService.chainId);
-
-    if (hardhatLive == false) {
-      _contractAddressAxelar = await _getAddresses.requestAxelarAddress();
-      _contractAddressHyperlane = await _getAddresses.requestHyperlaneAddress();
-      _contractAddressLayerzero = await _getAddresses.requestLayerzeroAddress();
-      _contractAddressWormhole = await _getAddresses.requestWormholeAddress();
-    }
-
-    if (hardhatDebug == true || hardhatLive == true) {
-      String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
-      hardhatAccounts = jsonDecode(hardhatAccountsFile);
-      credentials = EthPrivateKey.fromHex(hardhatAccounts[liveAccount]["key"]);
-      publicAddress = EthereumAddress.fromHex(hardhatAccounts[liveAccount]["address"]);
-    }
-
-    // thr = Debouncing(duration: const Duration(seconds: 10));
-    await connectContracts();
-    // List<EthereumAddress> taskList = await getTaskListFull();
-    // await fetchTasksBatch(taskList); // to fix enable fetchTasks
-    // await fetchTasksByState("new");
-    // await Future.delayed(const Duration(milliseconds: 200));
-    await Future.delayed(const Duration(milliseconds: 200));
-    // await myBalance();
-    // await Future.delayed(const Duration(milliseconds: 200));
-    // await monitorEvents();
-    // notifyListeners();
-    isLoadingBackground = false;
+    await contractConnector.connectContracts(
+      _contractAddress,
+      EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b'),
+    );
+    notifyListeners();
   }
+
+
+  // Future<void> startup() async {
+  //   // clear collection and nft's maps on startup:
+  //   resultInitialCollectionMap = {};
+  //   resultNftsMap = {};
+  //
+  //   isLoadingBackground = true;
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   version = packageInfo.version;
+  //   buildNumber = packageInfo.buildNumber;
+  //
+  //   _contractAddress = await _getAddresses.requestContractAddress(WalletService.chainId);
+  //
+  //   if (hardhatLive == false) {
+  //     _contractAddressAxelar = await _getAddresses.requestAxelarAddress();
+  //     _contractAddressHyperlane = await _getAddresses.requestHyperlaneAddress();
+  //     _contractAddressLayerzero = await _getAddresses.requestLayerzeroAddress();
+  //     _contractAddressWormhole = await _getAddresses.requestWormholeAddress();
+  //   }
+  //
+  //   if (hardhatDebug == true || hardhatLive == true) {
+  //     String hardhatAccountsFile = await rootBundle.loadString('lib/blockchain/accounts/hardhat.json');
+  //     hardhatAccounts = jsonDecode(hardhatAccountsFile);
+  //     credentials = EthPrivateKey.fromHex(hardhatAccounts[liveAccount]["key"]);
+  //     publicAddress = EthereumAddress.fromHex(hardhatAccounts[liveAccount]["address"]);
+  //   }
+  //
+  //   // thr = Debouncing(duration: const Duration(seconds: 10));
+  //   await connectContracts();
+  //   // List<EthereumAddress> taskList = await getTaskListFull();
+  //   // await fetchTasksBatch(taskList); // to fix enable fetchTasks
+  //   // await fetchTasksByState("new");
+  //   // await Future.delayed(const Duration(milliseconds: 200));
+  //   await Future.delayed(const Duration(milliseconds: 200));
+  //   // await myBalance();
+  //   // await Future.delayed(const Duration(milliseconds: 200));
+  //   // await monitorEvents();
+  //   // notifyListeners();
+  //   isLoadingBackground = false;
+  // }
 
   Future<void> connectContracts() async {
     EthereumAddress tokenContractAddress = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
@@ -2179,117 +2193,126 @@ class TasksServices extends ChangeNotifier {
   TaskStats? get taskStats => _taskStats;
 
   Future<void> initTaskStats() async {
-    const int batchSize = 50;
-    const int maxSimultaneousRequests = 10;
-
-    int offset = 0;
-    int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
-
-    log.info('Total task count: $taskCount');
-
-    BigInt countNew = BigInt.zero;
-    BigInt countAgreed = BigInt.zero;
-    BigInt countProgress = BigInt.zero;
-    BigInt countReview = BigInt.zero;
-    BigInt countCompleted = BigInt.zero;
-    BigInt countCanceled = BigInt.zero;
-    BigInt countPrivate = BigInt.zero;
-    BigInt countPublic = BigInt.zero;
-    BigInt countHackaton = BigInt.zero;
-    BigInt avgTaskDuration = BigInt.zero;
-    BigInt avgPerformerRating = BigInt.zero;
-    BigInt avgCustomerRating = BigInt.zero;
-    List<String> topTags = [];
-    List<BigInt> topTagCounts = [];
-    List<String> topTokenNames = [];
-    List<BigInt> topTokenBalances = [];
-    List<BigInt> topETHBalances = [];
-    List<BigInt> topETHAmounts = [];
-    List<BigInt> createTimestamps = [];
-    // List<BigInt> newTimestamps = [];
-    // List<BigInt> agreedTimestamps = [];
-    // List<BigInt> progressTimestamps = [];
-    // List<BigInt> reviewTimestamps = [];
-    // List<BigInt> completedTimestamps = [];
-    // List<BigInt> canceledTimestamps = [];
-
-    while (offset < taskCount) {
-      int limit = min(batchSize, taskCount - offset);
-
-      log.info('Fetching task stats from offset $offset with limit $limit');
-
-      List<Future<dynamic>> futures = [];
-      int remainingTasks = taskCount - offset;
-
-      for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
-        int currentLimit = min(limit, remainingTasks);
-        futures.add(taskStatsFacet.getTaskStatsWithTimestamps(BigInt.from(offset), BigInt.from(currentLimit)));
-        remainingTasks -= currentLimit;
-        offset += currentLimit;
-      }
-
-      List<dynamic> results = await Future.wait(futures);
-
-      for (dynamic result in results) {
-        countNew += result[0];
-        countAgreed += result[1];
-        countProgress += result[2];
-        countReview += result[3];
-        countCompleted += result[4];
-        countCanceled += result[5];
-        countPrivate += result[6];
-        countPublic += result[7];
-        countHackaton += result[8];
-        avgTaskDuration += result[9];
-        avgPerformerRating += result[10];
-        avgCustomerRating += result[11];
-        topTags.addAll(result[12].cast<String>());
-        topTagCounts.addAll(result[13].cast<BigInt>());
-        topTokenNames.addAll(result[14].cast<String>());
-        topTokenBalances.addAll(result[15].cast<BigInt>());
-        topETHBalances.addAll(result[16].cast<BigInt>());
-        topETHAmounts.addAll(result[17].cast<BigInt>());
-        createTimestamps.addAll(result[18].cast<BigInt>());
-        // newTimestamps.addAll(result[18].cast<BigInt>());
-        // agreedTimestamps.addAll(result[19].cast<BigInt>());
-        // progressTimestamps.addAll(result[20].cast<BigInt>());
-        // reviewTimestamps.addAll(result[21].cast<BigInt>());
-        // completedTimestamps.addAll(result[22].cast<BigInt>());
-        // canceledTimestamps.addAll(result[23].cast<BigInt>());
-      }
-
-      await Future.delayed(const Duration(milliseconds: 201));
-    }
-
-    _taskStats = TaskStats(
-        countNew: countNew,
-        countAgreed: countAgreed,
-        countProgress: countProgress,
-        countReview: countReview,
-        countCompleted: countCompleted,
-        countCanceled: countCanceled,
-        countPrivate: countPrivate,
-        countPublic: countPublic,
-        countHackaton: countHackaton,
-        avgTaskDuration: avgTaskDuration,
-        avgPerformerRating: avgPerformerRating,
-        avgCustomerRating: avgCustomerRating,
-        topTags: topTags,
-        topTagCounts: topTagCounts,
-        topTokenNames: topTokenNames,
-        topTokenBalances: topTokenBalances,
-        topETHBalances: topETHBalances,
-        topETHAmounts: topETHAmounts,
-        createTimestamps: createTimestamps
-      // newTimestamps: newTimestamps,
-      // agreedTimestamps: agreedTimestamps,
-      // progressTimestamps: progressTimestamps,
-      // reviewTimestamps: reviewTimestamps,
-      // completedTimestamps: completedTimestamps,
-      // canceledTimestamps: canceledTimestamps,
+    TaskStatsInitializer taskStatsInitializer = TaskStatsInitializer(
+      contractConnector.taskDataFacet,
+      contractConnector.taskStatsFacet,
     );
+    _taskStats = await taskStatsInitializer.initTaskStats();
     notifyListeners();
   }
+
+  //   Future<void> initTaskStats() async {
+  //   const int batchSize = 50;
+  //   const int maxSimultaneousRequests = 10;
+  //
+  //   int offset = 0;
+  //   int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+  //
+  //   log.info('Total task count: $taskCount');
+  //
+  //   BigInt countNew = BigInt.zero;
+  //   BigInt countAgreed = BigInt.zero;
+  //   BigInt countProgress = BigInt.zero;
+  //   BigInt countReview = BigInt.zero;
+  //   BigInt countCompleted = BigInt.zero;
+  //   BigInt countCanceled = BigInt.zero;
+  //   BigInt countPrivate = BigInt.zero;
+  //   BigInt countPublic = BigInt.zero;
+  //   BigInt countHackaton = BigInt.zero;
+  //   BigInt avgTaskDuration = BigInt.zero;
+  //   BigInt avgPerformerRating = BigInt.zero;
+  //   BigInt avgCustomerRating = BigInt.zero;
+  //   List<String> topTags = [];
+  //   List<BigInt> topTagCounts = [];
+  //   List<String> topTokenNames = [];
+  //   List<BigInt> topTokenBalances = [];
+  //   List<BigInt> topETHBalances = [];
+  //   List<BigInt> topETHAmounts = [];
+  //   List<BigInt> createTimestamps = [];
+  //   // List<BigInt> newTimestamps = [];
+  //   // List<BigInt> agreedTimestamps = [];
+  //   // List<BigInt> progressTimestamps = [];
+  //   // List<BigInt> reviewTimestamps = [];
+  //   // List<BigInt> completedTimestamps = [];
+  //   // List<BigInt> canceledTimestamps = [];
+  //
+  //   while (offset < taskCount) {
+  //     int limit = min(batchSize, taskCount - offset);
+  //
+  //     log.info('Fetching task stats from offset $offset with limit $limit');
+  //
+  //     List<Future<dynamic>> futures = [];
+  //     int remainingTasks = taskCount - offset;
+  //
+  //     for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
+  //       int currentLimit = min(limit, remainingTasks);
+  //       futures.add(taskStatsFacet.getTaskStatsWithTimestamps(BigInt.from(offset), BigInt.from(currentLimit)));
+  //       remainingTasks -= currentLimit;
+  //       offset += currentLimit;
+  //     }
+  //
+  //     List<dynamic> results = await Future.wait(futures);
+  //
+  //     for (dynamic result in results) {
+  //       countNew += result[0];
+  //       countAgreed += result[1];
+  //       countProgress += result[2];
+  //       countReview += result[3];
+  //       countCompleted += result[4];
+  //       countCanceled += result[5];
+  //       countPrivate += result[6];
+  //       countPublic += result[7];
+  //       countHackaton += result[8];
+  //       avgTaskDuration += result[9];
+  //       avgPerformerRating += result[10];
+  //       avgCustomerRating += result[11];
+  //       topTags.addAll(result[12].cast<String>());
+  //       topTagCounts.addAll(result[13].cast<BigInt>());
+  //       topTokenNames.addAll(result[14].cast<String>());
+  //       topTokenBalances.addAll(result[15].cast<BigInt>());
+  //       topETHBalances.addAll(result[16].cast<BigInt>());
+  //       topETHAmounts.addAll(result[17].cast<BigInt>());
+  //       createTimestamps.addAll(result[18].cast<BigInt>());
+  //       // newTimestamps.addAll(result[18].cast<BigInt>());
+  //       // agreedTimestamps.addAll(result[19].cast<BigInt>());
+  //       // progressTimestamps.addAll(result[20].cast<BigInt>());
+  //       // reviewTimestamps.addAll(result[21].cast<BigInt>());
+  //       // completedTimestamps.addAll(result[22].cast<BigInt>());
+  //       // canceledTimestamps.addAll(result[23].cast<BigInt>());
+  //     }
+  //
+  //     await Future.delayed(const Duration(milliseconds: 201));
+  //   }
+  //
+  //   _taskStats = TaskStats(
+  //       countNew: countNew,
+  //       countAgreed: countAgreed,
+  //       countProgress: countProgress,
+  //       countReview: countReview,
+  //       countCompleted: countCompleted,
+  //       countCanceled: countCanceled,
+  //       countPrivate: countPrivate,
+  //       countPublic: countPublic,
+  //       countHackaton: countHackaton,
+  //       avgTaskDuration: avgTaskDuration,
+  //       avgPerformerRating: avgPerformerRating,
+  //       avgCustomerRating: avgCustomerRating,
+  //       topTags: topTags,
+  //       topTagCounts: topTagCounts,
+  //       topTokenNames: topTokenNames,
+  //       topTokenBalances: topTokenBalances,
+  //       topETHBalances: topETHBalances,
+  //       topETHAmounts: topETHAmounts,
+  //       createTimestamps: createTimestamps
+  //       // newTimestamps: newTimestamps,
+  //       // agreedTimestamps: agreedTimestamps,
+  //       // progressTimestamps: progressTimestamps,
+  //       // reviewTimestamps: reviewTimestamps,
+  //       // completedTimestamps: completedTimestamps,
+  //       // canceledTimestamps: canceledTimestamps,
+  //       );
+  //    notifyListeners();
+  // }
 
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
   //   Map<EthereumAddress, Task> tasks = {};
@@ -3671,3 +3694,419 @@ class TasksServices extends ChangeNotifier {
     // var taskInfo = await taskContract.getTaskInfo();
   }
 }
+
+
+
+class Web3ClientInitializer {
+  final _walletService = WalletService();
+  int chainId = WalletService.chainId;
+
+  late final Web3Client web3client;
+  late final Web3Client web3clientAxelar;
+  late final Web3Client web3clientHyperlane;
+  late final Web3Client web3clientLayerzero;
+  late final Web3Client web3clientWormhole;
+  late final String platform;
+
+  late String chainTicker = 'ETH';
+  late String _rpcUrl;
+  late String _wsUrl;
+
+  late String _rpcUrlMoonbeam;
+  late String _wsUrlMoonbeam;
+
+  late String _rpcUrlMatic;
+  late String _wsUrlMatic;
+
+  late String _rpcUrlGoerli;
+  late String _wsUrlGoerli;
+
+  late String _rpcUrlSepolia;
+  late String _wsUrlSepolia;
+
+  late String _rpcUrlFantom;
+  late String _wsUrlFantom;
+
+  late String _rpcUrlZksync;
+  late String _wsUrlZksync;
+
+  late String _rpcUrlTanssi;
+  late String _wsUrlTanssi;
+
+  late String _rpcUrlBlast;
+  late String _wsUrlBlast;
+
+  late String _rpcUrlScroll;
+  late String _wsUrlScroll;
+
+  late String _rpcUrlZkevm;
+  late String _wsUrlZkevm;
+
+  late String _rpcUrlManta;
+  late String _wsUrlManta;
+
+  late String _rpcUrlSatoshivm;
+  late String _wsUrlSatoshivm;
+
+  late String _rpcUrlBTTC;
+  late String _wsUrlBTTC;
+
+
+  Web3ClientInitializer() {
+
+    if (chainId == 31337 || WalletService.hardhatDebug == true || WalletService.hardhatLive == true) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'http://localhost:8545';
+      _wsUrl = 'ws://localhost:8545';
+    } else if (chainId == 1287) {
+      chainTicker = 'DEV';
+      _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 4002) {
+      chainTicker = 'FTM';
+      _rpcUrl = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 64165) {
+      chainTicker = 'FTM';
+      _rpcUrl = 'https://rpc.sonic.fantom.network';
+      _wsUrl = 'wss://rpc.sonic.fantom.network';
+    } else if (chainId == 80001) {
+      chainTicker = 'MATIC';
+      _rpcUrl = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      // _rpcUrl = 'https://rpc-mumbai.matic.today';
+      // _wsUrl = 'wss://rpc-mumbai.matic.today';
+    } else if (chainId == 1442) {
+      chainTicker = 'MATIC';
+      _rpcUrl = 'https://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://ws.public.zkevm-test.net';
+    } else if (chainId == 280) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://zksync-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    }
+    // else if (chainId == 855456) {
+    //   chainTicker = 'DODAO';
+    //   _rpcUrl = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    //   _wsUrl = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    // }
+    else if (chainId == 855456) {
+      chainTicker = 'DODAO';
+      _rpcUrl = 'https://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
+      _wsUrl = 'wss://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
+    } else if (chainId == 168587773) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://sepolia.blast.io';
+      _wsUrl = 'wss://sepolia.blast.io';
+    } else if (chainId == 534351) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+      _wsUrl = 'wss://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    } else if (chainId == 3441005) {
+      chainTicker = 'MANTA';
+      _rpcUrl = 'https://pacific-rpc.testnet.manta.network/http';
+      _wsUrl = 'wss://pacific-rpc.testnet.manta.network/ws';
+    } else if (chainId == 11155111) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://rpc2.sepolia.org/';
+      _wsUrl = 'wss://rpc2.sepolia.dev';
+    } else if (chainId == 3110) {
+      chainTicker = 'ETH';
+      _rpcUrl = 'https://test-rpc-node-http.svmscan.io';
+      _wsUrl = 'wss://test-rpc-node-http.svmscan.io';
+    } else if (chainId == 1029) {
+      chainTicker = 'BTT';
+      _rpcUrl = 'https://pre-rpc.bt.io';
+      _wsUrl = 'wss://pre-rpc.bt.io';
+    }
+
+    // _rpcUrl = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    // _wsUrl = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    // _rpcUrl = 'https://matic-mumbai.chainstacklabs.com';
+    // _wsUrl = 'wss://ws-matic-mumbai.chainstacklabs.com';
+
+    _rpcUrlMoonbeam = 'https://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlMoonbeam = 'wss://moonbase-alpha.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlMatic = 'https://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlMatic = 'wss://polygon-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlGoerli = 'https://rpc.ankr.com/eth_goerli';
+    _wsUrlGoerli = 'wss://rpc.ankr.com/eth_goerli';
+
+    _rpcUrlSepolia = 'https://rpc2.sepolia.org/';
+    _wsUrlSepolia = 'wss://rpc2.sepolia.dev';
+
+    _rpcUrlFantom = 'https://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlFantom = 'wss://fantom-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlZksync = 'https://zksync2-testnet.zksync.dev';
+    _wsUrlZksync = 'wss://zksync2-testnet.zksync.dev';
+
+    // _rpcUrlTanssi = 'https://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+    // _wsUrlTanssi = 'wss://fraa-dancebox-3041-rpc.a.dancebox.tanssi.network';
+
+    _rpcUrlTanssi = 'https://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
+    _wsUrlTanssi = 'wss://fraa-flashbox-2804-rpc.a.stagenet.tanssi.network';
+
+    _rpcUrlBlast = 'https://sepolia.blast.io';
+    _wsUrlBlast = 'wss://sepolia.blast.io';
+
+    _rpcUrlScroll = 'https://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlScroll = 'wss://scroll-sepolia.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlZkevm = 'https://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+    _wsUrlZkevm = 'wss://polygon-zkevm-testnet.blastapi.io/5adb17c5-f79f-4542-b37c-b9cf98d6b28f';
+
+    _rpcUrlManta = 'https://pacific-rpc.testnet.manta.network/http';
+    _wsUrlManta = 'wss://pacific-rpc.testnet.manta.network/ws';
+
+    _rpcUrlSatoshivm = 'https://test-rpc-node-http.svmscan.io';
+    _wsUrlSatoshivm = 'wss://test-rpc-node-http.svmscan.io';
+
+    _rpcUrlBTTC = 'https://pre-rpc.bt.io';
+    _wsUrlBTTC = 'wss://pre-rpc.bt.io';
+
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        platform = 'mobile';
+      } else if (Platform.isLinux) {
+        platform = 'linux';
+      }
+    } catch (e) {
+      platform = 'web';
+    }
+
+    web3client = Web3Client(
+      rpcUrl,
+      http.Client(),
+      socketConnector: () {
+        if (platform == 'web') {
+          final uri = Uri.parse(wsUrl);
+          return WebSocketChannel.connect(uri).cast<String>();
+        } else {
+          return IOWebSocketChannel.connect(wsUrl).cast<String>();
+        }
+      },
+    );
+
+
+    // if (_wsUrl.length > 0) {
+    //   web3client = Web3Client(
+    //     _rpcUrl,
+    //     http.Client(),
+    //     socketConnector: () {
+    //       if (platform == 'web') {
+    //         final uri = Uri.parse(_wsUrl);
+    //         return WebSocketChannel.connect(uri).cast<String>();
+    //       } else {
+    //         return IOWebSocketChannel.connect(_wsUrl).cast<String>();
+    //       }
+    //     },
+    //   );
+    // } else {
+    //   web3client = Web3Client(_rpcUrl, http.Client(), socketConnector: null);
+    // }
+
+    // templorary fix:
+    if (WalletService.hardhatLive == false) {
+      web3clientAxelar = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      web3clientHyperlane = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      web3clientLayerzero = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+      web3clientWormhole = Web3Client(
+        _rpcUrlMatic,
+        http.Client(),
+        socketConnector: () {
+          if (platform == 'web') {
+            final uri = Uri.parse(_wsUrlMatic);
+            return WebSocketChannel.connect(uri).cast<String>();
+          } else {
+            return IOWebSocketChannel.connect(_wsUrlMatic).cast<String>();
+          }
+        },
+      );
+    }
+  }
+}
+
+
+class ContractConnector {
+  final Web3ClientInitializer web3ClientInitializer;
+  late final IERC20 ierc20;
+  late final TaskCreateFacet taskCreateFacet;
+  late final TaskDataFacet taskDataFacet;
+  late final TaskStatsFacet taskStatsFacet;
+  late final AccountFacet accountFacet;
+  late final TokenFacet tokenFacet;
+  late final TokenDataFacet tokenDataFacet;
+  late final AxelarFacet axelarFacet;
+  late final HyperlaneFacet hyperlaneFacet;
+  late final LayerzeroFacet layerzeroFacet;
+  late final WormholeFacet wormholeFacet;
+  late final WitnetFacet witnetFacet;
+
+  ContractConnector(this.web3ClientInitializer);
+
+  Future<void> connectContracts(EthereumAddress contractAddress, EthereumAddress tokenContractAddress) async {
+    final client = web3ClientInitializer.web3client;
+    final chainId = WalletService.chainId;
+
+    ierc20 = IERC20(address: tokenContractAddress, client: client, chainId: chainId);
+    taskCreateFacet = TaskCreateFacet(address: contractAddress, client: client, chainId: chainId);
+    taskDataFacet = TaskDataFacet(address: contractAddress, client: client, chainId: chainId);
+    taskStatsFacet = TaskStatsFacet(address: contractAddress, client: client, chainId: chainId);
+    accountFacet = AccountFacet(address: contractAddress, client: client, chainId: chainId);
+    tokenFacet = TokenFacet(address: contractAddress, client: client, chainId: chainId);
+    tokenDataFacet = TokenDataFacet(address: contractAddress, client: client, chainId: chainId);
+    axelarFacet = AxelarFacet(address: contractAddress, client: client, chainId: chainId);
+    hyperlaneFacet = HyperlaneFacet(address: contractAddress, client: client, chainId: chainId);
+    layerzeroFacet = LayerzeroFacet(address: contractAddress, client: client, chainId: chainId);
+    wormholeFacet = WormholeFacet(address: contractAddress, client: client, chainId: chainId);
+    witnetFacet = WitnetFacet(address: contractAddress, client: client, chainId: chainId);
+  }
+}
+
+
+class TaskStatsInitializer {
+  final TaskDataFacet taskDataFacet;
+  final TaskStatsFacet taskStatsFacet;
+
+  TaskStatsInitializer(this.taskDataFacet, this.taskStatsFacet);
+
+  Future<TaskStats> initTaskStats() async {
+    const int batchSize = 50;
+    const int maxSimultaneousRequests = 10;
+
+    int offset = 0;
+    int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    BigInt countNew = BigInt.zero;
+    BigInt countAgreed = BigInt.zero;
+    BigInt countProgress = BigInt.zero;
+    BigInt countReview = BigInt.zero;
+    BigInt countCompleted = BigInt.zero;
+    BigInt countCanceled = BigInt.zero;
+    BigInt countPrivate = BigInt.zero;
+    BigInt countPublic = BigInt.zero;
+    BigInt countHackaton = BigInt.zero;
+    BigInt avgTaskDuration = BigInt.zero;
+    BigInt avgPerformerRating = BigInt.zero;
+    BigInt avgCustomerRating = BigInt.zero;
+    List<String> topTags = [];
+    List<BigInt> topTagCounts = [];
+    List<String> topTokenNames = [];
+    List<BigInt> topTokenBalances = [];
+    List<BigInt> topETHBalances = [];
+    List<BigInt> topETHAmounts = [];
+    List<BigInt> createTimestamps = [];
+    // List<BigInt> newTimestamps = [];
+    // List<BigInt> agreedTimestamps = [];
+    // List<BigInt> progressTimestamps = [];
+    // List<BigInt> reviewTimestamps = [];
+    // List<BigInt> completedTimestamps = [];
+    // List<BigInt> canceledTimestamps = [];
+
+    while (offset < taskCount) {
+      int limit = min(batchSize, taskCount - offset);
+      List<Future<dynamic>> futures = [];
+      int remainingTasks = taskCount - offset;
+      for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
+        int currentLimit = min(limit, remainingTasks);
+        futures.add(taskStatsFacet.getTaskStatsWithTimestamps(BigInt.from(offset), BigInt.from(currentLimit)));
+        remainingTasks -= currentLimit;
+        offset += currentLimit;
+      }
+      List<dynamic> results = await Future.wait(futures);
+      for (dynamic result in results) {
+        countNew += result[0];
+        countAgreed += result[1];
+        countProgress += result[2];
+        countReview += result[3];
+        countCompleted += result[4];
+        countCanceled += result[5];
+        countPrivate += result[6];
+        countPublic += result[7];
+        countHackaton += result[8];
+        avgTaskDuration += result[9];
+        avgPerformerRating += result[10];
+        avgCustomerRating += result[11];
+        topTags.addAll(result[12].cast<String>());
+        topTagCounts.addAll(result[13].cast<BigInt>());
+        topTokenNames.addAll(result[14].cast<String>());
+        topTokenBalances.addAll(result[15].cast<BigInt>());
+        topETHBalances.addAll(result[16].cast<BigInt>());
+        topETHAmounts.addAll(result[17].cast<BigInt>());
+        createTimestamps.addAll(result[18].cast<BigInt>());
+        // newTimestamps.addAll(result[18].cast<BigInt>());
+        // agreedTimestamps.addAll(result[19].cast<BigInt>());
+        // progressTimestamps.addAll(result[20].cast<BigInt>());
+        // reviewTimestamps.addAll(result[21].cast<BigInt>());
+        // completedTimestamps.addAll(result[22].cast<BigInt>());
+        // canceledTimestamps.addAll(result[23].cast<BigInt>());
+      }
+      await Future.delayed(const Duration(milliseconds: 201));
+    }
+
+    return TaskStats(
+        countNew: countNew,
+        countAgreed: countAgreed,
+        countProgress: countProgress,
+        countReview: countReview,
+        countCompleted: countCompleted,
+        countCanceled: countCanceled,
+        countPrivate: countPrivate,
+        countPublic: countPublic,
+        countHackaton: countHackaton,
+        avgTaskDuration: avgTaskDuration,
+        avgPerformerRating: avgPerformerRating,
+        avgCustomerRating: avgCustomerRating,
+        topTags: topTags,
+        topTagCounts: topTagCounts,
+        topTokenNames: topTokenNames,
+        topTokenBalances: topTokenBalances,
+        topETHBalances: topETHBalances,
+        topETHAmounts: topETHAmounts,
+        createTimestamps: createTimestamps
+      // newTimestamps: newTimestamps,
+      // agreedTimestamps: agreedTimestamps,
+      // progressTimestamps: progressTimestamps,
+      // reviewTimestamps: reviewTimestamps,
+      // completedTimestamps: completedTimestamps,
+      // canceledTimestamps: canceledTimestamps,
+    );
+  }
+}
+

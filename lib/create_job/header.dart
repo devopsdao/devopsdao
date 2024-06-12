@@ -20,10 +20,10 @@ class _CreateJobHeaderState extends State<CreateJobHeader> {
 
   @override
   Widget build(BuildContext context) {
-    var interface = context.watch<InterfaceServices>();
+    // var interface = context.watch<InterfaceServices>();
     return Container(
       padding: const EdgeInsets.only(bottom: 18),
-      width: interface.maxStaticDialogWidth,
+      width: InterfaceSettings.maxStaticDialogWidth,
       child: Row(
         children: [
           const SizedBox(

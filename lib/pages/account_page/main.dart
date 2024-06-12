@@ -107,11 +107,11 @@ class _AccountsTabsState extends State<AccountsTabs> {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     final listenRoleNfts = context.select((TasksServices vm) => vm.roleNfts);
 
     return SizedBox(
-      width: interface.maxStaticGlobalWidth,
+      width: InterfaceSettings.maxStaticGlobalWidth,
       child: DefaultTabController(
         length: 2,
         initialIndex: tabIndex,

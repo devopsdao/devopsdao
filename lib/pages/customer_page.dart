@@ -100,7 +100,7 @@ with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
 
@@ -208,7 +208,7 @@ with TickerProviderStateMixin
               //
               // ),
               child: SizedBox(
-                width: interface.maxStaticGlobalWidth,
+                width: InterfaceSettings.maxStaticGlobalWidth,
                 child: DefaultTabController(
                     length: 3,
                     initialIndex: tabIndex,

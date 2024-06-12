@@ -66,7 +66,7 @@ class _ValueInputState extends State<ValueInput> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    late double borderRadius = interface.borderRadius;
+    late double borderRadius = InterfaceSettings.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
       dropdownValue = tasksServices.chainTicker;

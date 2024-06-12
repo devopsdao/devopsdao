@@ -32,7 +32,7 @@ class _DialogHeaderState extends State<DialogHeader> {
 
     return Container(
       padding: const EdgeInsets.all(20),
-      width: interface.maxStaticDialogWidth,
+      width: InterfaceSettings.maxStaticDialogWidth,
       child: Row(
         children: [
           SizedBox(

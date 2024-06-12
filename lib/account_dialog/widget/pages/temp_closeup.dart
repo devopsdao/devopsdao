@@ -58,7 +58,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Account account = widget.account;
     final String fromPage = widget.fromPage;

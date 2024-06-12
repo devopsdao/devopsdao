@@ -99,7 +99,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     final listenIsLoading = context.select((TasksServices vm) => vm.isLoading);
     var tasksServices = context.read<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
     // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
@@ -227,7 +227,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             height: double.infinity,
             alignment: Alignment.center,
             child: SizedBox(
-              width: interface.maxStaticGlobalWidth,
+              width: InterfaceSettings.maxStaticGlobalWidth,
               child: DefaultTabController(
                 length: 1,
                 initialIndex: 0,

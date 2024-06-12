@@ -23,7 +23,7 @@ class AccountsChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.watch<InterfaceServices>();
+    // var interface = context.watch<InterfaceServices>();
     final emptyClasses = EmptyClasses();
 
 
@@ -32,7 +32,7 @@ class AccountsChatPage extends StatelessWidget {
           // padding: const EdgeInsets.all(12),
           child: Material(
               elevation: 10,
-              borderRadius: BorderRadius.circular(interface.borderRadius),
+              borderRadius: BorderRadius.circular(InterfaceSettings.borderRadius),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   // maxWidth: interface.maxStaticInternalDialogWidth,
@@ -42,7 +42,7 @@ class AccountsChatPage extends StatelessWidget {
                     // height: widget.topConstraints.maxHeight,
                     // width: innerPaddingWidth,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(interface.borderRadius),
+                      borderRadius: BorderRadius.circular(InterfaceSettings.borderRadius),
                     ),
                     // child: ChatWidget(
                     //     // account: account,

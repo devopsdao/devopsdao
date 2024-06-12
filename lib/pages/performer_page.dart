@@ -99,7 +99,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
 
@@ -191,7 +191,7 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
             //   ),
             // ),
             child: SizedBox(
-              width: interface.maxStaticGlobalWidth,
+              width: InterfaceSettings.maxStaticGlobalWidth,
               child: DefaultTabController(
                 length: 3,
                 initialIndex: tabIndex,

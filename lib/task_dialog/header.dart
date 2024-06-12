@@ -38,7 +38,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      width: interface.maxStaticDialogWidth,
+      width: InterfaceSettings.maxStaticDialogWidth,
       child: Row(
         children: [
           SizedBox(
