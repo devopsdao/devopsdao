@@ -1,10 +1,12 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:easy_infinite_pagination/easy_infinite_pagination.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
+import '../blockchain/classes.dart';
 import '../blockchain/empty_classes.dart';
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
@@ -31,11 +33,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   @override
   void initState() {
     super.initState();
-    // preload();
-    // Future.delayed(const Duration(milliseconds: 300)).then((_) {
-    //   indicator.currentState!.refresh( );
-    // });
-    // _controller = SimpleAnimation('idle');
+    // _fetchData();
   }
 
   SMITrigger? _bump;
@@ -52,14 +50,54 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   Future<void> _hitBump() async {
     _bump?.fire();
   }
+  List<Task> objList = [];
+  List<Task> _newList = [];
+  bool _isLoading = false;
+  int _currentIndex = 0;
+  final int batchSize = 40;
+
+  void _fetchData() async {
+    var tasksServices = context.read<TasksServices>();
+    List<Task> objList = tasksServices.filterResults.values.toList();
+    if (_currentIndex >= objList.length) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    setState(() {
+      int end = (_currentIndex + batchSize < objList.length) ? _currentIndex + batchSize : objList.length;
+      _newList.addAll(objList.sublist(_currentIndex, end));
+      _currentIndex = end;
+      _isLoading = false;
+    });
+  }
+
+  List<Task> _fetchData2(objList)  {
+    // _currentIndex = 0;
+
+
+    int end= (_currentIndex + batchSize < objList.length) ? _currentIndex + batchSize : objList.length;
+    List<Task> _new = [];
+    _new.addAll(objList.sublist(_currentIndex, end));
+    // _currentIndex = end;
+    // _isLoading = false;
+    return _new;
+  }
 
   @override
   Widget build(BuildContext context) {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    var tasksServices = context.watch<TasksServices>();
+    final filterResults = context.select((TasksServices vm) => vm.filterResults);
+    var tasksServices = context.read<TasksServices>();
     final emptyClasses = EmptyClasses();
-    List objList = tasksServices.filterResults.values.toList();
     late double offsetToArmed = 200;
+    List<Task> objList = filterResults.values.toList();
+    // _newList = _fetchData2(filterResults.values.toList());
+    // _fetchData();
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
         child: CustomRefreshIndicator(
@@ -168,9 +206,26 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                     ],
                   );
                 },
-                child: child);
+                child: child
+            );
           },
-          child: ListView.builder(
+          // child: InfiniteListView(
+          //   delegate: PaginationDelegate(
+          //     itemCount: _newList.length,
+          //     itemBuilder: (_, index) => Padding(
+          //         padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+          //         child: TaskTransition(
+          //           fromPage: widget.pageName,
+          //           task: _newList[index],
+          //         )
+          //     ),
+          //     isLoading: _isLoading,
+          //     onFetchData: _fetchData,
+          //   ),
+          // ),
+
+
+          child:  ListView.builder(
             padding: EdgeInsets.zero,
             scrollDirection: Axis.vertical,
             itemCount: objList.length,
@@ -184,6 +239,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
               );
             },
           ),
+
         ));
   }
 }

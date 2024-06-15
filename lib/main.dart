@@ -14,6 +14,7 @@ import 'package:dodao/widgets/loading/loading_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:isolate_manager/isolate_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:webthree/browser.dart';
@@ -34,17 +35,28 @@ import 'config/utils/platform.dart';
 import 'navigation/beamer_delegate.dart';
 import 'package:beamer/beamer.dart';
 
+late IsolateManager isolate ;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await DodaoTheme.initialize();
 
-  // final rpcUrl = 'http://localhost:8545';
-  // final wsUrl = 'ws://localhost:8545';
-  // final web3ClientInitializer = Web3ClientInitializer(rpcUrl, wsUrl);
+  // // final rpcUrl = 'http://localhost:8545';
+  // // final wsUrl = 'ws://localhost:8545';
+  // final  web3ClientInitializer =  Web3ClientInitializer();
   // final walletService = WalletService();
   // final contractConnector = ContractConnector(web3ClientInitializer);
-
+  // TaskStatsInitializer taskStatsInitializer = TaskStatsInitializer(
+  //   contractConnector.taskDataFacet,
+  //   contractConnector.taskStatsFacet,
+  // );
+  //
+  // isolate = IsolateManager.create(
+  //     initTaskStats,
+  //     workerName: 'initTaskStats', // Add this line
+  //     concurrent: 2
+  // );
 
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
@@ -132,6 +144,10 @@ class _MyAppState extends State<MyApp> {
         //   log.severe('MyApp->initState->initAccountStats error: $e');
         // }
         try {
+          // isolate.sendMessage(tasksServices.connectContracts);
+          // if (WalletService.statsLoadingDoneOnNetId != WalletService.chainId) {
+          //   await tasksServices.initTaskStats();
+          // }
           await tasksServices.initTaskStats();
         } catch (e) {
           log.severe('MyApp->initState->initTaskStats error: $e');

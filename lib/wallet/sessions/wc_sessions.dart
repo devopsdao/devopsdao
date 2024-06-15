@@ -148,17 +148,26 @@ class WCSessions {
               chainId: chainIdOnWallet);
           await finalConnectAndCollectData(chainIdOnWallet, tasksServices, wcModelView, walletModel);
           Timer(const Duration(milliseconds: 1600), () {
-            Navigator.of(context, rootNavigator: true).pop();
+            // Navigator.of(context, rootNavigator: true).pop();
             // beamerDelegate.beamToNamed('/home');
           });
         } else {
           await wcModelView.onSwitchNetwork(selectedChainId);
+          // try {
+          //   if (WalletService.tasksLoadingAndMonitorDoneOnNetId != WalletService.chainId) {
+          //     await tasksServices.getTaskListFullThenFetchIt();
+          //   }
+          // } catch (e) {
+          //   log.severe('wc_sessions.dart->error: $e');
+          //   wcModelView.setWcScreenState(state: WCScreenStatus.error, error: 'Opps... something went wrong, try again \nBlockchain connection error');
+          //   tasksServices.reset('getTaskListFullThenFetchIt error');
+          // }
           try {
-            await tasksServices.getTaskListFullThenFetchIt();
+            await tasksServices.refreshTasksForAccount(publicAddress, "refresh");
           } catch (e) {
-            log.severe('wc_sessions.dart->error: $e');
+            log.severe('wc_sessions.dart->refreshTasksForAccount->error: $e');
             wcModelView.setWcScreenState(state: WCScreenStatus.error, error: 'Opps... something went wrong, try again \nBlockchain connection error');
-            tasksServices.reset('getTaskListFullThenFetchIt error');
+            tasksServices.reset('refreshTasksForAccount error');
           }
         }
 
@@ -235,6 +244,7 @@ class WCSessions {
     //   log.severe('wc_sessions->initConnectAndCollectData->initAccountStats error: $e');
     // }
     try {
+
       await tasksServices.initTaskStats();
     } catch (e) {
       log.severe('wc_sessions->initFinalCollectData->initTaskStats error: $e');

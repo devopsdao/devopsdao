@@ -103,7 +103,6 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
     // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
-    final walletService = WalletService();
     late bool desktopWidth = false;
     if (MediaQuery.of(context).size.width > 700) {
       desktopWidth = true;

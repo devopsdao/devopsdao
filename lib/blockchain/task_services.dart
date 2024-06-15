@@ -151,6 +151,7 @@ class TasksServices extends ChangeNotifier {
   bool hardhatLive = false;
   int liveAccount = 0; // choose hardhat account(wallet) to use;
   Map<EthereumAddress, Task> tasks = {};
+  int monitorTasksCount = 0;
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
   Map<EthereumAddress, Task> tasksAuditPending = {};
@@ -1085,7 +1086,7 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftCollection> tagsMap}) async {
+  Future<void>  resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftCollection> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
 
     filterResults.clear();
@@ -1101,7 +1102,21 @@ class TasksServices extends ChangeNotifier {
       for (var tag in tagsList) {
         if (tag != '#') {
           filteredWithTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
-          filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tokenNames.last.contains(tag));
+          // filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) {
+          //   return !value.tokenNames.last.contains(tag);
+          // });
+          filteredWithNfts = Map.from(filterResultsTags)
+            ..removeWhere((key, value) {
+              bool result = false;
+              for (var nftNameList in value.tokenNames) {
+                for (var nftName in nftNameList) {
+                  if (nftName == tag) {
+                    result = true;
+                  }
+                }
+              }
+              return !result;
+            });
         }
       }
       filterResults = {...filteredWithTags, ...filteredWithNfts};
@@ -1179,7 +1194,12 @@ class TasksServices extends ChangeNotifier {
 
   Future<Map<EthereumAddress, Task>> getTasksData(List<EthereumAddress> taskAddresses) async {
     Map<EthereumAddress, Task> tasks = {};
-    final rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
+    List rawTasksList = [];
+    try {
+      rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
+    } catch (e) {
+      log.severe(e);
+    }
     late int i = 0;
     for (final task in rawTasksList) {
       List<double> tokenValues = [];
@@ -1226,6 +1246,7 @@ class TasksServices extends ChangeNotifier {
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
       tasks[taskAddresses[i]] = taskObject;
       await refreshTask(taskObject);
+      // log.fine(taskObject.title);
       i++;
     }
 
@@ -1655,8 +1676,9 @@ class TasksServices extends ChangeNotifier {
     int batchItemCount = 0;
     monitorTasksLoaded = 0;
     monitorTotalTaskLen = totalBatches;
-
+    int index = 0;
     for (var i = 0; i < taskList.length; i++) {
+      index = i;
       try {
         if (monitoredTasks[taskList[i]] == null || monitoredTasks[taskList[i]] == false) {
           monitors.add(monitorTaskEvents(taskList[i]));
@@ -1664,7 +1686,20 @@ class TasksServices extends ChangeNotifier {
         }
         // print('batchItemCount: ${batchItemCount}');
         if (batchItemCount == batchSize) {
-          monitorBatches.add([...monitors]);
+          // monitorBatches.add([...monitors]);
+
+          try {
+            log.info('will monitor tasks in ${totalBatches} batches');
+            // for (var batchId = 0; batchId < totalBatches; batchId++) {
+              await Future.wait<void>(monitors);
+              log.fine('monitoring ${index + 1} tasks| total: $totalBatches batches');
+              await Future.delayed(const Duration(milliseconds: 201));
+              // monitorTasksLoaded = index;
+              // notifyListeners();
+              // loadingUpdatedData.updateData();
+            // }
+          } on GetTaskException {}
+
           monitors.clear();
           batchItemCount = 0;
         }
@@ -1673,22 +1708,17 @@ class TasksServices extends ChangeNotifier {
       }
     }
     if (batchItemCount > 0) {
-      monitorBatches.add([...monitors]);
+      log.info('will monitor tasks in ${totalBatches} batches');
+      await Future.wait<void>(monitors);
+      log.fine('monitoring ${index + 1} batch| total: $totalBatches batches');
+      await Future.delayed(const Duration(milliseconds: 201));
+      // monitorBatches.add([...monitors]);
       monitors.clear();
       batchItemCount = 0;
     }
+    monitorTasksCount = monitorTasksCount + index;
 
-    try {
-      log.info('will monitor tasks in ${totalBatches} batches');
-      for (var batchId = 0; batchId < totalBatches; batchId++) {
-        await Future.wait<void>(monitorBatches[batchId]);
-        log.fine('monitoring ${batchId + 1} batch| total: $totalBatches batches');
-        await Future.delayed(const Duration(milliseconds: 201));
-        monitorTasksLoaded = batchId;
-        // notifyListeners();
-        // loadingUpdatedData.updateData();
-      }
-    } on GetTaskException {}
+
     monitorTotalTaskLen = 0;
   }
 
@@ -1707,35 +1737,42 @@ class TasksServices extends ChangeNotifier {
     final batches = taskList.slices(requestBatchSize).toList();
     final batchesResults = <Map<EthereumAddress, Task>>[];
 
-    final downloadBatches = <List<Future<Map<EthereumAddress, Task>>>>[];
+    var downloadBatches = <List<Future<Map<EthereumAddress, Task>>>>[];
 
+
+    log.info(
+      'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests',
+    );
     for (final batch in batches) {
+      int index = batches.indexOf(batch);
       final downloaders = <Future<Map<EthereumAddress, Task>>>[];
 
       for (final taskAddress in batch) {
-        downloaders.add(getTasksData([taskAddress]).then((result) => result));
+        try {
+          downloaders.add(getTasksData([taskAddress]).then((result) => result));
+        } catch (e) {
+          log.severe(e);
+        }
+      }
+      try {
+        // for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
+          final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloaders);
+          batchesResults.addAll(batchResults);
+          log.fine('downloaded ${index + 1} batch | total: ${downloadBatches.length} batches');
+          // await Future.delayed(const Duration(milliseconds: 201));
+          tasksLoaded += batchResults.length;
+          // notifyListeners();
+          _loadingDelegate?.onLoadingUpdated();
+
+        // }
+      } on GetTaskException catch (e) {
+        log.severe('EXCEPTION: $e');
       }
 
-      downloadBatches.add(downloaders);
+      // downloadBatches.add(downloaders);
     }
+    // downloadBatches = downloadBatches.slice(0, 1);
 
-    try {
-      log.info(
-        'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests',
-      );
-
-      for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
-        final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloadBatches[batchId]);
-        batchesResults.addAll(batchResults);
-        log.fine('downloaded ${batchId + 1} batch | total: ${downloadBatches.length} batches');
-        await Future.delayed(const Duration(milliseconds: 201));
-        tasksLoaded += batchResults.length;
-        // notifyListeners();
-        _loadingDelegate?.onLoadingUpdated();
-      }
-    } on GetTaskException catch (e) {
-      log.severe('EXCEPTION: $e');
-    }
 
     tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
 
@@ -1760,6 +1797,7 @@ class TasksServices extends ChangeNotifier {
 
     final sortedTasksList = tasks.values.toList()..sort((a, b) => b.createTime.compareTo(a.createTime));
     final sortedTasks = {for (final task in sortedTasksList) task.taskAddress: task};
+    // _walletService.writeTasksLoadingAndMonitorDoneOnNetId(WalletService.chainId);
 
     totalTaskLen = 0;
     return sortedTasks;
@@ -1777,7 +1815,6 @@ class TasksServices extends ChangeNotifier {
       await fetchTasksPerformer(address);
       await fetchTasksByState('new');
     }
-    // notifyListeners();
   }
 
   Future<void> getTaskListFullThenFetchIt() async {
@@ -1837,11 +1874,16 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List<EthereumAddress>> getTaskContractsByState(String state) async {
-    int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    late int taskCount;
+    try {
+      taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    } catch (e) {
+      log.severe(e);
+    }
     log.info('Total task count: $taskCount');
 
-    const int batchSize = 100;
-    const int maxSimultaneousRequests = 10;
+    const int batchSize = 50;
+    const int maxSimultaneousRequests = 8;
 
     List<EthereumAddress> taskContractAddresses = [];
     int offset = 0;
@@ -1866,7 +1908,7 @@ class TasksServices extends ChangeNotifier {
 
       taskContractAddresses.addAll(results.expand((result) => result));
       log.info('Total task contract addresses so far: ${taskContractAddresses.length}');
-      await Future.delayed(const Duration(milliseconds: 201));
+      // await Future.delayed(const Duration(milliseconds: 201));
     }
 
     // log.info(taskContractAddresses);
@@ -1881,8 +1923,13 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> fetchTasksByState(String state) async {
     isLoadingBackground = true;
-
-    List<EthereumAddress> taskList = await getTaskContractsByState(state);
+    late List<EthereumAddress> taskList;
+    late List<EthereumAddress> taskListMonitor;
+    try {
+      taskList = await getTaskContractsByState(state);
+    } catch (e) {
+      log.severe(e);
+    }
 
     filterResults.clear();
 
@@ -1913,7 +1960,22 @@ class TasksServices extends ChangeNotifier {
 
     await aggregateStats();
 
-    await monitorTasks(taskList);
+
+
+    if (state == "new") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.slice(0,limit);
+    } else if (state == "agreed" || state == "progress" || state == "review") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.slice(0,limit);
+    } else if (state == 'audit') {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.slice(0,limit);
+    } else if (state == "completed" || state == "canceled") {
+      taskListMonitor = [];
+    }
+
+    await monitorTasks(taskListMonitor);
 
     isLoading = false;
     isLoadingBackground = false;
@@ -1973,7 +2035,7 @@ class TasksServices extends ChangeNotifier {
       await refreshTask(task);
     }
 
-    await aggregateStats();
+    // await aggregateStats();
 
     await monitorTasks(taskList);
 
@@ -2178,7 +2240,24 @@ class TasksServices extends ChangeNotifier {
   TaskStats? _taskStats;
   TaskStats? get taskStats => _taskStats;
 
+  // bool stopTaskStatsInit = false;
+  // static bool stopTaskDownloadInit = false;
+  // static bool stopTaskMonitorInit = false;
+  // Future<void> stopTaskStatsInitialization() async {
+  //   stopTaskStatsInit = true;
+  // }
+  // Future<void> stopDownloadAndMonitoringInitialization() async {
+  //   stopTaskDownloadInit = true;
+  //   stopTaskMonitorInit = true;
+  // }
+
+  bool _isInitTaskStatsRunning = false;
   Future<void> initTaskStats() async {
+    if (_isInitTaskStatsRunning) {
+      return;
+    }
+    _isInitTaskStatsRunning = true;
+
     const int batchSize = 50;
     const int maxSimultaneousRequests = 10;
 
@@ -2214,6 +2293,7 @@ class TasksServices extends ChangeNotifier {
     // List<BigInt> canceledTimestamps = [];
 
     while (offset < taskCount) {
+
       int limit = min(batchSize, taskCount - offset);
 
       log.info('Fetching task stats from offset $offset with limit $limit');
@@ -2258,6 +2338,8 @@ class TasksServices extends ChangeNotifier {
         // canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
 
+
+
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
@@ -2288,6 +2370,8 @@ class TasksServices extends ChangeNotifier {
       // completedTimestamps: completedTimestamps,
       // canceledTimestamps: canceledTimestamps,
     );
+    // _walletService.writeStatsLoadingDoneOnNetId(WalletService.chainId);
+    _isInitTaskStatsRunning = false;
     notifyListeners();
   }
 
@@ -3669,5 +3753,10 @@ class TasksServices extends ChangeNotifier {
 
     // TaskContract taskContract = TaskContract(address: taskContracts[0], client: web3client, chainId: chainId);
     // var taskInfo = await taskContract.getTaskInfo();
+  }
+
+  Future<List<Task>> fetchTasksForPagination(int pageKey, int pageSize) async {
+    await Future.delayed(const Duration(seconds: 2));
+    return filterResults.values.skip(pageKey).take(pageSize).toList();
   }
 }

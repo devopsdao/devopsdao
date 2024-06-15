@@ -20,6 +20,9 @@ class WalletService {
   // static const int defaultNetwork = 855456;
   static const int defaultNetwork = 855456;
   static int chainId = defaultNetwork;
+  // static int statsLoadingDoneOnNetId = 0;
+  // static int tasksLoadingAndMonitorDoneOnNetId = 0;
+
   // static int chainId = ChainPresets.chains.keys.firstWhere(
   //         (k) => ChainPresets.chains[k]?.chainName == defaultNetwork);
 
@@ -52,6 +55,14 @@ class WalletService {
   void writeWalletAddress(EthereumAddress? address) {
     walletAddress = address;
   }
+
+  // void writeStatsLoadingDoneOnNetId(int id) {
+  //   statsLoadingDoneOnNetId = id;
+  // }
+  //
+  // void writeTasksLoadingAndMonitorDoneOnNetId(int id) {
+  //   tasksLoadingAndMonitorDoneOnNetId = id;
+  // }
 
   void writeAllowedChainId(bool state) {
     allowedChainId = state;

@@ -19,7 +19,7 @@ import 'package:week_of_year/week_of_year.dart';
 
 import 'package:dodao/config/utils/util.dart';
 import 'package:throttling/throttling.dart';
-
+import 'package:isolate_manager/isolate_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
@@ -721,7 +721,7 @@ class TasksServices extends ChangeNotifier {
     });
   }
 
-  late bool contractsInitialized = false;
+  // late bool contractsInitialized = false;
 
   // late Map fees;
 
@@ -797,7 +797,7 @@ class TasksServices extends ChangeNotifier {
       witnetFacet = WitnetFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     }
     // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: web3client, chainId: chainId);
-    contractsInitialized = true;
+    // contractsInitialized = true;
   }
 
   Future<void> myBalance() async {
@@ -1423,7 +1423,7 @@ class TasksServices extends ChangeNotifier {
       return tasks[taskAddress]!;
     } else {
       await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
-        return !contractsInitialized;
+        return !ContractConnector.contractsInitialized;
       }));
       // await Future.delayed(const Duration(milliseconds: 1000));
       final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
@@ -2194,8 +2194,8 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> initTaskStats() async {
     TaskStatsInitializer taskStatsInitializer = TaskStatsInitializer(
-      contractConnector.taskDataFacet,
-      contractConnector.taskStatsFacet,
+      taskDataFacet,
+      taskStatsFacet,
     );
     _taskStats = await taskStatsInitializer.initTaskStats();
     notifyListeners();
@@ -3709,8 +3709,8 @@ class Web3ClientInitializer {
   late final String platform;
 
   late String chainTicker = 'ETH';
-  late String _rpcUrl;
-  late String _wsUrl;
+  late String _rpcUrl = 'http://localhost:8545';
+  late String _wsUrl = 'ws://localhost:8545';
 
   late String _rpcUrlMoonbeam;
   late String _wsUrlMoonbeam;
@@ -3879,14 +3879,14 @@ class Web3ClientInitializer {
     }
 
     web3client = Web3Client(
-      rpcUrl,
+      _rpcUrl,
       http.Client(),
       socketConnector: () {
         if (platform == 'web') {
-          final uri = Uri.parse(wsUrl);
+          final uri = Uri.parse(_wsUrl);
           return WebSocketChannel.connect(uri).cast<String>();
         } else {
-          return IOWebSocketChannel.connect(wsUrl).cast<String>();
+          return IOWebSocketChannel.connect(_wsUrl).cast<String>();
         }
       },
     );
@@ -3964,26 +3964,29 @@ class Web3ClientInitializer {
 }
 
 
+
 class ContractConnector {
   final Web3ClientInitializer web3ClientInitializer;
-  late final IERC20 ierc20;
-  late final TaskCreateFacet taskCreateFacet;
-  late final TaskDataFacet taskDataFacet;
-  late final TaskStatsFacet taskStatsFacet;
-  late final AccountFacet accountFacet;
-  late final TokenFacet tokenFacet;
-  late final TokenDataFacet tokenDataFacet;
-  late final AxelarFacet axelarFacet;
-  late final HyperlaneFacet hyperlaneFacet;
-  late final LayerzeroFacet layerzeroFacet;
-  late final WormholeFacet wormholeFacet;
-  late final WitnetFacet witnetFacet;
 
+  static bool contractsInitialized = false;
+  static late  IERC20 ierc20;
+  static late  TaskCreateFacet taskCreateFacet;
+  static late  TaskDataFacet taskDataFacet;
+  static late  TaskStatsFacet taskStatsFacet;
+  static late  AccountFacet accountFacet;
+  static late  TokenFacet tokenFacet;
+  static late  TokenDataFacet tokenDataFacet;
+  static late  AxelarFacet axelarFacet;
+  static late  HyperlaneFacet hyperlaneFacet;
+  static late  LayerzeroFacet layerzeroFacet;
+  static late  WormholeFacet wormholeFacet;
+  static late  WitnetFacet witnetFacet;
   ContractConnector(this.web3ClientInitializer);
 
   Future<void> connectContracts(EthereumAddress contractAddress, EthereumAddress tokenContractAddress) async {
     final client = web3ClientInitializer.web3client;
     final chainId = WalletService.chainId;
+    // EthereumAddress tokenContractAddressGoerli = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
 
     ierc20 = IERC20(address: tokenContractAddress, client: client, chainId: chainId);
     taskCreateFacet = TaskCreateFacet(address: contractAddress, client: client, chainId: chainId);
@@ -3992,14 +3995,18 @@ class ContractConnector {
     accountFacet = AccountFacet(address: contractAddress, client: client, chainId: chainId);
     tokenFacet = TokenFacet(address: contractAddress, client: client, chainId: chainId);
     tokenDataFacet = TokenDataFacet(address: contractAddress, client: client, chainId: chainId);
-    axelarFacet = AxelarFacet(address: contractAddress, client: client, chainId: chainId);
-    hyperlaneFacet = HyperlaneFacet(address: contractAddress, client: client, chainId: chainId);
-    layerzeroFacet = LayerzeroFacet(address: contractAddress, client: client, chainId: chainId);
-    wormholeFacet = WormholeFacet(address: contractAddress, client: client, chainId: chainId);
-    witnetFacet = WitnetFacet(address: contractAddress, client: client, chainId: chainId);
+    if (WalletService.hardhatLive == false) {
+      axelarFacet = AxelarFacet(address: contractAddress, client: client, chainId: chainId);
+      hyperlaneFacet = HyperlaneFacet(address: contractAddress, client: client, chainId: chainId);
+      layerzeroFacet = LayerzeroFacet(address: contractAddress, client: client, chainId: chainId);
+      wormholeFacet = WormholeFacet(address: contractAddress, client: client, chainId: chainId);
+      witnetFacet = WitnetFacet(address: contractAddress, client: client, chainId: chainId);
+    }
+    // ierc20Goerli = IERC20(address: tokenContractAddressGoerli, client: web3client, chainId: chainId);
+
+    contractsInitialized = true;
   }
 }
-
 
 class TaskStatsInitializer {
   final TaskDataFacet taskDataFacet;
@@ -4110,3 +4117,105 @@ class TaskStatsInitializer {
   }
 }
 
+
+Future<TaskStats> initTaskStats(batchSize) async {
+  // const int batchSize = 50;
+  const int maxSimultaneousRequests = 10;
+
+  int offset = 0;
+  int taskCount = (await ContractConnector.taskDataFacet.getTaskContractsCount()).toInt();
+  BigInt countNew = BigInt.zero;
+  BigInt countAgreed = BigInt.zero;
+  BigInt countProgress = BigInt.zero;
+  BigInt countReview = BigInt.zero;
+  BigInt countCompleted = BigInt.zero;
+  BigInt countCanceled = BigInt.zero;
+  BigInt countPrivate = BigInt.zero;
+  BigInt countPublic = BigInt.zero;
+  BigInt countHackaton = BigInt.zero;
+  BigInt avgTaskDuration = BigInt.zero;
+  BigInt avgPerformerRating = BigInt.zero;
+  BigInt avgCustomerRating = BigInt.zero;
+  List<String> topTags = [];
+  List<BigInt> topTagCounts = [];
+  List<String> topTokenNames = [];
+  List<BigInt> topTokenBalances = [];
+  List<BigInt> topETHBalances = [];
+  List<BigInt> topETHAmounts = [];
+  List<BigInt> createTimestamps = [];
+  // List<BigInt> newTimestamps = [];
+  // List<BigInt> agreedTimestamps = [];
+  // List<BigInt> progressTimestamps = [];
+  // List<BigInt> reviewTimestamps = [];
+  // List<BigInt> completedTimestamps = [];
+  // List<BigInt> canceledTimestamps = [];
+
+  while (offset < taskCount) {
+    int limit = min(batchSize, taskCount - offset);
+    List<Future<dynamic>> futures = [];
+    int remainingTasks = taskCount - offset;
+    for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
+      int currentLimit = min(limit, remainingTasks);
+      futures.add(ContractConnector.taskStatsFacet.getTaskStatsWithTimestamps(BigInt.from(offset), BigInt.from(currentLimit)));
+      remainingTasks -= currentLimit;
+      offset += currentLimit;
+    }
+    List<dynamic> results = await Future.wait(futures);
+    for (dynamic result in results) {
+      countNew += result[0];
+      countAgreed += result[1];
+      countProgress += result[2];
+      countReview += result[3];
+      countCompleted += result[4];
+      countCanceled += result[5];
+      countPrivate += result[6];
+      countPublic += result[7];
+      countHackaton += result[8];
+      avgTaskDuration += result[9];
+      avgPerformerRating += result[10];
+      avgCustomerRating += result[11];
+      topTags.addAll(result[12].cast<String>());
+      topTagCounts.addAll(result[13].cast<BigInt>());
+      topTokenNames.addAll(result[14].cast<String>());
+      topTokenBalances.addAll(result[15].cast<BigInt>());
+      topETHBalances.addAll(result[16].cast<BigInt>());
+      topETHAmounts.addAll(result[17].cast<BigInt>());
+      createTimestamps.addAll(result[18].cast<BigInt>());
+      // newTimestamps.addAll(result[18].cast<BigInt>());
+      // agreedTimestamps.addAll(result[19].cast<BigInt>());
+      // progressTimestamps.addAll(result[20].cast<BigInt>());
+      // reviewTimestamps.addAll(result[21].cast<BigInt>());
+      // completedTimestamps.addAll(result[22].cast<BigInt>());
+      // canceledTimestamps.addAll(result[23].cast<BigInt>());
+    }
+    await Future.delayed(const Duration(milliseconds: 201));
+  }
+
+  return TaskStats(
+      countNew: countNew,
+      countAgreed: countAgreed,
+      countProgress: countProgress,
+      countReview: countReview,
+      countCompleted: countCompleted,
+      countCanceled: countCanceled,
+      countPrivate: countPrivate,
+      countPublic: countPublic,
+      countHackaton: countHackaton,
+      avgTaskDuration: avgTaskDuration,
+      avgPerformerRating: avgPerformerRating,
+      avgCustomerRating: avgCustomerRating,
+      topTags: topTags,
+      topTagCounts: topTagCounts,
+      topTokenNames: topTokenNames,
+      topTokenBalances: topTokenBalances,
+      topETHBalances: topETHBalances,
+      topETHAmounts: topETHAmounts,
+      createTimestamps: createTimestamps
+    // newTimestamps: newTimestamps,
+    // agreedTimestamps: agreedTimestamps,
+    // progressTimestamps: progressTimestamps,
+    // reviewTimestamps: reviewTimestamps,
+    // completedTimestamps: completedTimestamps,
+    // canceledTimestamps: canceledTimestamps,
+  );
+}

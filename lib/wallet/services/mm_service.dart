@@ -228,12 +228,12 @@ class MMService {
       //   log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
       //   return false;
       // }
-      try {
-        await tasksServices.initTaskStats();
-      } catch (e) {
-        log.severe('mm_service->initFinalCollectData->initTaskStats error: $e');
-        return false;
-      }
+      // try {
+      //   await tasksServices.initTaskStats();
+      // } catch (e) {
+      //   log.severe('mm_service->initFinalCollectData->initTaskStats error: $e');
+      //   return false;
+      // }
       try {
         await tasksServices.collectMyTokens();
       } catch (e) {
@@ -251,8 +251,8 @@ class MMService {
       } else {
         await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
       }
-      await Future.delayed(const Duration(milliseconds: 200));
-      await tasksServices.monitorEvents();
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // await tasksServices.monitorEvents();
       return true;
     } catch (e) {
       log.severe('metamask_service->initFinalCollectData error: $e');

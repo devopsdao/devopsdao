@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../blockchain/task_services.dart';
+import '../../main.dart';
 import '../../statistics/model_view/pending_model_view.dart';
 import '../../wallet/model_view/wallet_model.dart';
 import '../../wallet/services/wallet_service.dart';
@@ -40,6 +41,7 @@ class WalletConnectButton extends StatelessWidget {
           child: InkWell(
               highlightColor: Colors.white,
               onTap: () async {
+                // isolate.sendMessage(50);
                 await showDialog(
                   context: context,
                   builder: (context) => const WalletDialog(),
