@@ -69,11 +69,6 @@
       },
       {
         "internalType": "address",
-        "name": "_customer",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "taskAddress",
         "type": "address"
       }
