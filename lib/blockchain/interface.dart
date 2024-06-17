@@ -7,7 +7,7 @@ class InterfaceSettings {
   // border radius:
   static double borderRadius = 8.0;
   // -------------------- Sizes for Dialog window ------------------------- //
-  static double maxStaticDialogWidth = 600;
+  static double maxStaticDialogWidth = 700;
   static double maxStaticInternalDialogWidth = 480;
   static double maxStaticGlobalWidth = 1000;
 }

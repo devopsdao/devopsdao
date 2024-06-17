@@ -1,4 +1,5 @@
 
+import 'package:collection/collection.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:easy_infinite_pagination/easy_infinite_pagination.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,10 +31,11 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   double ratingScore = 0;
   // late RiveAnimationController _controller;
   final GlobalKey<CustomRefreshIndicatorState> indicator = GlobalKey<CustomRefreshIndicatorState>();
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-    // _fetchData();
+    _fetchData();
   }
 
   SMITrigger? _bump;
@@ -50,54 +52,105 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   Future<void> _hitBump() async {
     _bump?.fire();
   }
-  List<Task> objList = [];
+  // List<Task> _filterResults = [];
+  // List<Task> _newList = [];
+  // bool _isLoading = false;
+  // int _currentIndex = 0;
+  // final int batchSize = 20;
+  // int end = 0;
+  //
+  // void _fetchData() async {
+  //   // var tasksServices = context.read<TasksServices>();
+  //   // List<Task> objList = tasksServices._filterResults.values.toList();
+  //   // if (_currentIndex >= objList.length) {
+  //   //   return;
+  //   // }
+  //   // setState(() {});
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   await Future.delayed(const Duration(milliseconds: 600));
+  //   setState(() {
+  //     // if (_currentIndex >= _filterResults.length) {
+  //     //   _currentIndex = 0;
+  //     //   end = 0;
+  //     // }
+  //     // _newList.clear();
+  //     //
+  //     // end = (_currentIndex + batchSize < _filterResults.length) ? _currentIndex + batchSize : _filterResults.length;
+  //     // _newList.addAll(_filterResults.sublist(_currentIndex, end));
+  //     // _currentIndex = end;
+  //     _isLoading = false;
+  //   });
+  // }
+
   List<Task> _newList = [];
+  int _controlListNumber = 0;
+  List<Task> _filterResults = [];
+
+  bool _hasReachedMax = false;
   bool _isLoading = false;
   int _currentIndex = 0;
-  final int batchSize = 40;
+  final int batchSize = 20;
+
 
   void _fetchData() async {
-    var tasksServices = context.read<TasksServices>();
-    List<Task> objList = tasksServices.filterResults.values.toList();
-    if (_currentIndex >= objList.length) {
-      return;
-    }
-
+    if (_isLoading) return;
     setState(() {
       _isLoading = true;
     });
     await Future.delayed(const Duration(milliseconds: 600));
-
     setState(() {
-      int end = (_currentIndex + batchSize < objList.length) ? _currentIndex + batchSize : objList.length;
-      _newList.addAll(objList.sublist(_currentIndex, end));
-      _currentIndex = end;
       _isLoading = false;
     });
   }
 
-  List<Task> _fetchData2(objList)  {
-    // _currentIndex = 0;
-
-
-    int end= (_currentIndex + batchSize < objList.length) ? _currentIndex + batchSize : objList.length;
-    List<Task> _new = [];
-    _new.addAll(objList.sublist(_currentIndex, end));
-    // _currentIndex = end;
-    // _isLoading = false;
-    return _new;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    final filterResults = context.select((TasksServices vm) => vm.filterResults);
-    var tasksServices = context.read<TasksServices>();
     final emptyClasses = EmptyClasses();
+    final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     late double offsetToArmed = 200;
-    List<Task> objList = filterResults.values.toList();
-    // _newList = _fetchData2(filterResults.values.toList());
-    // _fetchData();
+
+
+    // var tasksServices = context.watch<TasksServices>();
+    // final _filterResults = tasksServices._filterResults.values.toList();
+    // if (_currentIndex >= _filterResults.length) {
+    //   _currentIndex = 0;
+    //   end = 0;
+    //   _newList.clear();
+    // }
+    //
+    // end = (_currentIndex + batchSize < _filterResults.length) ? _currentIndex + batchSize : _filterResults.length;
+    // _newList.addAll(_filterResults.sublist(_currentIndex, end));
+    // _currentIndex = end;
+    // final filterResults = context.select((TasksServices vm) => vm.filterResults);
+    var tasksServices = context.watch<TasksServices>();
+    _filterResults = tasksServices.filterResults.values.toList();
+
+    if (_newList.isEmpty
+        || _filterResults.isNotEmpty
+        && _filterResults.first != _newList.first
+        || _controlListNumber != _filterResults.length) {
+      _newList.clear();
+      _currentIndex = 0;
+      _hasReachedMax = false;
+      _scrollController.jumpTo(0);
+    }
+
+    _controlListNumber = _filterResults.length;
+
+    if (!_hasReachedMax && _currentIndex < _filterResults.length) {
+      final end = (_currentIndex + batchSize < _filterResults.length) ? _currentIndex + batchSize : _filterResults.length;
+      _newList.addAll(_filterResults.sublist(_currentIndex, end));
+      _currentIndex = end;
+      if (_currentIndex >= _filterResults.length) {
+        _hasReachedMax = true;
+      }
+    }
+
+    print('_filterResults: ${_filterResults.length}');
+    print('_newList: ${_newList.length}');
+    print('_currentIndex: ${_currentIndex}');
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
         child: CustomRefreshIndicator(
@@ -138,21 +191,21 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                 animation: controller,
                 builder: (context, child) {
                   List shimmeredTasks = [];
-                  if (objList.length <= 1) {
+                  if (_filterResults.length <= 1) {
                     shimmeredTasks = [emptyClasses.tasksForShimmer.values.toList().first];
-                  } else if (objList.length == 2) {
+                  } else if (_filterResults.length == 2) {
                     shimmeredTasks = [emptyClasses.tasksForShimmer.values.toList().first, emptyClasses.tasksForShimmer.values.toList().last];
-                  } else if (objList.length >= 3) {
+                  } else if (_filterResults.length >= 3) {
                     shimmeredTasks = emptyClasses.tasksForShimmer.values.toList();
                   }
-                  // else if (objList.length == 4) {
+                  // else if (_filterResults.length == 4) {
                   //   shimmeredTasks = [
                   //     emptyClasses.tasksForShimmer.values.toList().first,
                   //     emptyClasses.tasksForShimmer.values.toList().last,
                   //     emptyClasses.tasksForShimmer.values.toList()[1],
                   //     emptyClasses.tasksForShimmer.values.toList().last
                   //   ];
-                  // } else if (objList.length >= 5) {
+                  // } else if (_filterResults.length >= 5) {
                   //   shimmeredTasks = [
                   //     emptyClasses.tasksForShimmer.values.toList().first,
                   //     emptyClasses.tasksForShimmer.values.toList()[1],
@@ -209,36 +262,39 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                 child: child
             );
           },
-          // child: InfiniteListView(
-          //   delegate: PaginationDelegate(
-          //     itemCount: _newList.length,
-          //     itemBuilder: (_, index) => Padding(
-          //         padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-          //         child: TaskTransition(
-          //           fromPage: widget.pageName,
-          //           task: _newList[index],
-          //         )
-          //     ),
-          //     isLoading: _isLoading,
-          //     onFetchData: _fetchData,
-          //   ),
-          // ),
-
-
-          child:  ListView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.vertical,
-            itemCount: objList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                child: TaskTransition(
-                  fromPage: widget.pageName,
-                  task: objList[index],
-                )
-              );
-            },
+          child: InfiniteListView(
+            controller: _scrollController,
+            delegate: PaginationDelegate(
+              itemCount: _newList.length,
+              itemBuilder: (_, index) => Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                  child: TaskTransition(
+                    fromPage: widget.pageName,
+                    task: _newList[index],
+                  )
+              ),
+              // hasReachedMax: true,
+              isLoading: _isLoading,
+              onFetchData: _fetchData,
+                hasReachedMax: _hasReachedMax,
+            ),
           ),
+
+
+          // child:  ListView.builder(
+          //   padding: EdgeInsets.zero,
+          //   scrollDirection: Axis.vertical,
+          //   itemCount: _filterResults.length,
+          //   itemBuilder: (context, index) {
+          //     return Padding(
+          //       padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+          //       child: TaskTransition(
+          //         fromPage: widget.pageName,
+          //         task: _filterResults[index],
+          //       )
+          //     );
+          //   },
+          // ),
 
         ));
   }
