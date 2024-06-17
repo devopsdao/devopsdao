@@ -98,7 +98,7 @@ class _LoadButtonIndicator extends State<LoadButtonIndicator> {
           ),
           onTap: () {
             if (listenWalletAddress != null) {
-              tasksServices.isLoadingBackground = true;
+              // tasksServices.isLoadingBackground = true;
               tasksServices.refreshTasksForAccount(listenWalletAddress, widget.refresh);
             } else {
               tasksServices.fetchTasksByState("new");

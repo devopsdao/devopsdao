@@ -6,6 +6,7 @@ import '../../blockchain/task_services.dart';
 
 abstract class LoadingDelegate {
   void onLoadingUpdated();
+  void onLoadingPublicStats(int loaded, int total);
 }
 
 class LoadingModel extends ChangeNotifier implements LoadingDelegate {
@@ -32,6 +33,26 @@ class LoadingModel extends ChangeNotifier implements LoadingDelegate {
     }
     return loaded / total;
   }
+
+  int loadedOverAllStats = 0;
+  int totalOverAllStats = 0;
+  void _onLoadingPublicStats(int loaded, int total) {
+    loadedOverAllStats = loaded;
+    totalOverAllStats = total;
+    notifyListeners();
+  }
+  @override
+  void onLoadingPublicStats(int loaded, int total) {
+    _onLoadingPublicStats(loaded,total);
+  }
+
+  double getPublicStatsLoadingProgress(int loaded, int total) {
+    if (total == 0) {
+      return 0.0;
+    }
+    return loaded / total;
+  }
+
 
   void _onLoadingUpdated() {
     notifyListeners();

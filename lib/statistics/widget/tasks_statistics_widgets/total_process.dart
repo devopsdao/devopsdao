@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
 import '../../../wallet/model_view/wallet_model.dart';
 
 class TotalProcessStats extends StatefulWidget {
@@ -91,17 +93,38 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return SizedBox(
       height: widget.extended ? 250.0 : 170.0,
       child: Consumer<TasksServices>(
         builder: (context, tasksServices, child) {
           final taskStats = tasksServices.taskStats;
           if (taskStats == null) {
-            return const Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            // if (loadingTasks) {
+            //   progress = loadingModel.getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
+            // } else {
+            //   progress = 0.0;
+            // }
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Fetching blockchain data for Overall Stats', style: TextStyle(fontSize: 12)),
-                Center(child: CircularProgressIndicator()),
+                const Text('Overall Stats', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                Container(
+                  height: 130,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Fetching data will start after other tasks.', style: TextStyle(fontSize: 12)),
+                      Center(child: LoadingAnimationWidget.prograssiveDots(
+                        size: 25,
+                        color: DodaoTheme.of(context).secondaryText,
+                      )),
+                    ],
+                  ),
+                )
+
               ],
             );
           } else {

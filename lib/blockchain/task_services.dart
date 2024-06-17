@@ -1810,7 +1810,11 @@ class TasksServices extends ChangeNotifier {
       await fetchTasksPerformer(address);
     } else if (refresh == 'customer') {
       await fetchTasksCustomer(address);
-    } else {
+    } else if (refresh == 'auditor') {
+      await fetchTasksByState('auditor');
+    }
+    else
+    {
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
       await fetchTasksByState('new');
@@ -1940,7 +1944,7 @@ class TasksServices extends ChangeNotifier {
     } else if (state == "agreed" || state == "progress" || state == "review") {
       tasksCustomerProgress.clear();
       tasksPerformerProgress.clear();
-    } else if (state == 'audit') {
+    } else if (state == 'auditor') {
       tasksAuditPending.clear();
       tasksAuditApplied.clear();
       tasksAuditWorkingOn.clear();
@@ -1962,28 +1966,32 @@ class TasksServices extends ChangeNotifier {
 
 
 
-    if (state == "new") {
-      int limit = min(500, (taskList.length - monitorTasksCount).abs());
-      taskListMonitor = taskList.slice(0,limit);
-    } else if (state == "agreed" || state == "progress" || state == "review") {
-      int limit = min(500, (taskList.length - monitorTasksCount).abs());
-      taskListMonitor = taskList.slice(0,limit);
-    } else if (state == 'audit') {
-      int limit = min(500, (taskList.length - monitorTasksCount).abs());
-      taskListMonitor = taskList.slice(0,limit);
-    } else if (state == "completed" || state == "canceled") {
-      taskListMonitor = [];
-    }
+    // if (state == "new") {
+    //   int limit = min(500, (taskList.length - monitorTasksCount).abs());
+    //   taskListMonitor = taskList.slice(0,limit);
+    // } else if (state == "agreed" || state == "progress" || state == "review") {
+    //   int limit = min(500, (taskList.length - monitorTasksCount).abs());
+    //   taskListMonitor = taskList.slice(0,limit);
+    // } else if (state == 'audit') {
+    //   int limit = min(500, (taskList.length - monitorTasksCount).abs());
+    //   taskListMonitor = taskList.slice(0,limit);
+    // } else if (state == "completed" || state == "canceled") {
+    //   taskListMonitor = [];
+    // }
 
-    await monitorTasks(taskListMonitor);
+    await monitorTasks(taskList);
 
     isLoading = false;
     isLoadingBackground = false;
     // await myBalance();
     // notifyListeners();
   }
-
+  bool _isFetchTasksCustomerRunning = false;
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
+    if (_isFetchTasksCustomerRunning) {
+      return;
+    }
+    _isFetchTasksCustomerRunning = true;
     isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
 
@@ -2011,10 +2019,15 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     isLoadingBackground = false;
     await myBalance();
-    // notifyListeners(); // notified in mybalance
+    _isFetchTasksCustomerRunning = false;
   }
 
+  bool _isFetchTasksPerformerRunning = false;
   Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
+    if (_isFetchTasksPerformerRunning) {
+      return;
+    }
+    _isFetchTasksPerformerRunning = true;
     isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
 
@@ -2042,7 +2055,7 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     isLoadingBackground = false;
     await myBalance();
-    // notifyListeners(); // notified in mybalance()
+    _isFetchTasksPerformerRunning = false;
   }
 
   Future<String> addAccountToBlacklist(EthereumAddress accountAddress) async {
@@ -2300,6 +2313,7 @@ class TasksServices extends ChangeNotifier {
 
       List<Future<dynamic>> futures = [];
       int remainingTasks = taskCount - offset;
+      _loadingDelegate?.onLoadingPublicStats(remainingTasks, taskCount);
 
       for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
         int currentLimit = min(limit, remainingTasks);

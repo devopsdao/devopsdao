@@ -141,6 +141,10 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
               if (listenWalletAddress != null) {
                 await tasksServices.fetchTasksByState('new');
               }
+            } else if (widget.pageName == 'auditor') {
+              if (listenWalletAddress != null) {
+                await tasksServices.fetchTasksByState('auditor');
+              }
             }
             _hitBump();
           },
