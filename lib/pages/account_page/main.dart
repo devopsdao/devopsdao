@@ -33,7 +33,7 @@ class _AccountsTabsState extends State<AccountsTabs> {
     accountsList = await tasksServices.getAccountsData(defaultListType: 'regular_list', requestedAccountsList: []);
     accountsBlackList = await tasksServices.getAccountsData(defaultListType: 'black_list', requestedAccountsList: []);
     filteredAccounts = _sortAccounts(accountsList.values.toList());
-    setState(() {});
+    // setState(() {});
   }
 
   @override
