@@ -1692,7 +1692,7 @@ class TasksServices extends ChangeNotifier {
             log.info('will monitor tasks in ${totalBatches} batches');
             // for (var batchId = 0; batchId < totalBatches; batchId++) {
               await Future.wait<void>(monitors);
-              log.fine('monitoring ${index + 1} tasks| total: $totalBatches batches');
+              log.fine('monitoring ${index + 1} tasks | total: $totalBatches batches');
               await Future.delayed(const Duration(milliseconds: 201));
               // monitorTasksLoaded = index;
               // notifyListeners();
@@ -1710,7 +1710,7 @@ class TasksServices extends ChangeNotifier {
     if (batchItemCount > 0) {
       log.info('will monitor tasks in ${totalBatches} batches');
       await Future.wait<void>(monitors);
-      log.fine('monitoring ${index + 1} batch| total: $totalBatches batches');
+      log.fine('monitoring ${index + 1} tasks | total: $totalBatches batches');
       await Future.delayed(const Duration(milliseconds: 201));
       // monitorBatches.add([...monitors]);
       monitors.clear();
@@ -1810,14 +1810,15 @@ class TasksServices extends ChangeNotifier {
       await fetchTasksPerformer(address);
     } else if (refresh == 'customer') {
       await fetchTasksCustomer(address);
-    } else if (refresh == 'auditor') {
-      await fetchTasksByState('auditor');
-    }
-    else
-    {
+    } else if (refresh == 'audit') {
+      await fetchTasksByState('audit');
+    } else {
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
-      await fetchTasksByState('new');
+      // await fetchTasksByState('new');
+      // for (Task task in tasksNew.values) {
+      //   await refreshTask(task);
+      // }
     }
   }
 
@@ -1944,7 +1945,7 @@ class TasksServices extends ChangeNotifier {
     } else if (state == "agreed" || state == "progress" || state == "review") {
       tasksCustomerProgress.clear();
       tasksPerformerProgress.clear();
-    } else if (state == 'auditor') {
+    } else if (state == 'audit') {
       tasksAuditPending.clear();
       tasksAuditApplied.clear();
       tasksAuditWorkingOn.clear();
@@ -1966,20 +1967,20 @@ class TasksServices extends ChangeNotifier {
 
 
 
-    // if (state == "new") {
-    //   int limit = min(500, (taskList.length - monitorTasksCount).abs());
-    //   taskListMonitor = taskList.slice(0,limit);
-    // } else if (state == "agreed" || state == "progress" || state == "review") {
-    //   int limit = min(500, (taskList.length - monitorTasksCount).abs());
-    //   taskListMonitor = taskList.slice(0,limit);
-    // } else if (state == 'audit') {
-    //   int limit = min(500, (taskList.length - monitorTasksCount).abs());
-    //   taskListMonitor = taskList.slice(0,limit);
-    // } else if (state == "completed" || state == "canceled") {
-    //   taskListMonitor = [];
-    // }
+    if (state == "new") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == "agreed" || state == "progress" || state == "review") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == 'audit') {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == "completed" || state == "canceled") {
+      taskListMonitor = [];
+    }
 
-    await monitorTasks(taskList);
+    await monitorTasks(taskListMonitor);
 
     isLoading = false;
     isLoadingBackground = false;
@@ -1996,11 +1997,6 @@ class TasksServices extends ChangeNotifier {
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
 
     filterResults.clear();
-
-    tasksAuditPending.clear();
-    tasksAuditApplied.clear();
-    tasksAuditWorkingOn.clear();
-    tasksAuditComplete.clear();
 
     tasksCustomerSelection.clear();
     tasksCustomerProgress.clear();
@@ -2032,11 +2028,6 @@ class TasksServices extends ChangeNotifier {
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
 
     filterResults.clear();
-
-    tasksAuditPending.clear();
-    tasksAuditApplied.clear();
-    tasksAuditWorkingOn.clear();
-    tasksAuditComplete.clear();
 
     tasksPerformerParticipate.clear();
     tasksPerformerProgress.clear();

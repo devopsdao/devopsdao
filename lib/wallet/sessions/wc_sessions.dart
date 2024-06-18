@@ -260,6 +260,14 @@ class WCSessions {
       log.severe('wc_sessions->initFinalCollectData->collectMyTokens error: $e');
     }
 
+    if (tasksServices.roleNfts['auditor'] > 0) {
+      try { // on final
+        await tasksServices.refreshTasksForAccount(WalletService.walletAddress, "audit");
+      } catch (e) {
+        log.severe('wc_sessions->initFinalCollectData->refreshTasksForAccount error: $e');
+      }
+    }
+
   }
 }
 

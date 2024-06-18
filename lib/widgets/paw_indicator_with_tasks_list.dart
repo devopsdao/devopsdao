@@ -118,9 +118,9 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
       }
     }
 
-    print('_filterResults: ${_filterResults.length}');
-    print('_newList: ${_newList.length}');
-    print('_currentIndex: ${_currentIndex}');
+    // print('_filterResults: ${_filterResults.length}');
+    // print('_newList: ${_newList.length}');
+    // print('_currentIndex: ${_currentIndex}');
     return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
         child: CustomRefreshIndicator(
@@ -143,7 +143,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
               }
             } else if (widget.pageName == 'auditor') {
               if (listenWalletAddress != null) {
-                await tasksServices.fetchTasksByState('auditor');
+                await tasksServices.fetchTasksByState('audit');
               }
             }
             _hitBump();
