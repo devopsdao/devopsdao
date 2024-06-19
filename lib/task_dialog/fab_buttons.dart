@@ -201,12 +201,13 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+        String buttonText = 'Withdraw & Rate Task';
         return TaskDialogFAB(
-          inactive: taskModelView.state.rating == 0.0 ? true : false,
+          inactive: task.customerRating != 0 || taskModelView.state.rating == 0  ? true : false,
           expand: true,
-          buttonName: 'Withdraw & Rate Task',
+          buttonName: buttonText,
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong + calcTextSize('Withdraw & Rate Task', const TextStyle(fontSize: 18)).width,
+          widthSize: buttonWidthLong + calcTextSize(buttonText, const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(taskModelView.state.rating));
@@ -249,7 +250,7 @@ class SetsOfFabButtons extends StatelessWidget {
       // *********************** CUSTOMER BUTTONS *********************** //
       else if (task.taskState == 'review' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: taskModelView.state.rating == 0.0 ? true : false,
+          inactive: task.performerRating != 0.0 || taskModelView.state.rating == 0 ?  true : false,
           expand: true,
           buttonName: 'Sign Review & Rate',
           buttonColorRequired: Colors.lightBlue.shade300,
@@ -258,7 +259,7 @@ class SetsOfFabButtons extends StatelessWidget {
             task.loadingIndicator = true;
             String message = '[review signed] ${interface.taskMessage}';
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
-                message: message);
+                message: message, score: BigInt.from(taskModelView.state.rating));
             // context.beamToNamed('/customer');
             Navigator.pop(context);
             interface.emptyTaskMessage();

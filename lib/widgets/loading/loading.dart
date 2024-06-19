@@ -24,32 +24,33 @@ class LoadIndicator extends StatefulWidget {
 }
 
 class _LoadIndicator extends State<LoadIndicator> {
-  bool loadingMonitor = false;
+  bool loadingPreparation = false;
   bool loadingTasks = false;
   double progress = 0.0;
   double progress2 = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
+    // var tasksServices = context.read<TasksServices>();
     var loadingModel = context.watch<LoadingModel>();
 
-    // if (loadingMonitor) {
-    //   progress2 = getLoadingProgress(tasksServices.monitorTasksLoaded, tasksServices.monitorTotalTaskLen);
-    // } else {
-    //   progress2 = 0.0;
-    // }
-    loadingTasks = tasksServices.totalTaskLen >= 1;
-    // loadingMonitor = tasksServices.monitorTotalTaskLen >= 1;
+    loadingPreparation = loadingModel.totalPreparedTasks >= 1;
+    if (loadingPreparation) {
+      progress2 = loadingModel.getLoadingProgress(loadingModel.preparedTasks, loadingModel.totalPreparedTasks);
+    } else {
+      progress2 = 0.0;
+    }
+    loadingTasks = loadingModel.totalTasks >= 1;
+
     if (loadingTasks) {
-      progress = loadingModel.getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
+      progress = loadingModel.getLoadingProgress(loadingModel.loadedTasks, loadingModel.totalTasks);
     } else {
       progress = 0.0;
     }
     return LinearProgressIndicator(
       value: loadingTasks ? progress : progress2,
       backgroundColor: Colors.transparent,
-      valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.orangeAccent),
+      valueColor: AlwaysStoppedAnimation<Color>(loadingTasks ? Colors.deepOrangeAccent : Colors.lightBlueAccent),
     );
   }
 }
