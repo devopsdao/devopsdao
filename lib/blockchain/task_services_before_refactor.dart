@@ -1731,7 +1731,7 @@
 //         await Future.delayed(const Duration(milliseconds: 201));
 //         tasksLoaded += batchResults.length;
 //         // notifyListeners();
-//         _loadingDelegate?.onLoadingUpdated();
+//         _loadingDelegate?.onTaskLoadingUpdated();
 //       }
 //     } on GetTaskException catch (e) {
 //       log.severe('EXCEPTION: $e');

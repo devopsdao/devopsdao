@@ -584,8 +584,6 @@ class TasksServices extends ChangeNotifier {
 
   late ContractAbi _abiCode;
 
-  int totalTaskLen = 0;
-  int tasksLoaded = 0;
   int monitorTasksLoaded = 0;
   int monitorTotalTaskLen = 0;
   late EthereumAddress _contractAddress;
@@ -1731,8 +1729,8 @@ class TasksServices extends ChangeNotifier {
     const requestBatchSize = 10;
     const downloadBatchSize = 5;
 
-    tasksLoaded = 0;
-    totalTaskLen = taskList.length;
+    int tasksLoaded = 0;
+    int totalTaskLen = taskList.length;
 
     final batches = taskList.slices(requestBatchSize).toList();
     final batchesResults = <Map<EthereumAddress, Task>>[];
@@ -1762,7 +1760,7 @@ class TasksServices extends ChangeNotifier {
           // await Future.delayed(const Duration(milliseconds: 201));
           tasksLoaded += batchResults.length;
           // notifyListeners();
-          _loadingDelegate?.onLoadingUpdated();
+          _loadingDelegate?.onTaskLoadingUpdated(tasksLoaded, totalTaskLen);
 
         // }
       } on GetTaskException catch (e) {
@@ -1800,6 +1798,7 @@ class TasksServices extends ChangeNotifier {
     // _walletService.writeTasksLoadingAndMonitorDoneOnNetId(WalletService.chainId);
 
     totalTaskLen = 0;
+    _loadingDelegate?.onTaskLoadingUpdated(tasksLoaded, totalTaskLen);
     return sortedTasks;
   }
 
@@ -1821,7 +1820,7 @@ class TasksServices extends ChangeNotifier {
     }
   }
 
-  Future<void> getTaskListFullThenFetchIt() async {
+  Future<void> getTaskListFullThenFetchIt() async { // work for hardhat
     List<EthereumAddress> taskList = await getTaskListFull();
     fetchTasksBatch(taskList);
   }
@@ -1878,6 +1877,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List<EthereumAddress>> getTaskContractsByState(String state) async {
+    int tasksLoaded = 0;
     late int taskCount;
     try {
       taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
@@ -1908,11 +1908,12 @@ class TasksServices extends ChangeNotifier {
 
       List<List<EthereumAddress>> results = await Future.wait(futures);
       int retrievedCount = results.fold<int>(0, (sum, result) => sum + result.length);
-      log.info('Retrieved $retrievedCount task contract addresses');
+      log.info('Retrieved $retrievedCount task contract addresses result.length ${results.length}, remainingTasks: $remainingTasks' );
 
       taskContractAddresses.addAll(results.expand((result) => result));
       log.info('Total task contract addresses so far: ${taskContractAddresses.length}');
       // await Future.delayed(const Duration(milliseconds: 201));
+      _loadingDelegate?.onTaskPreparationUpdated(offset, taskCount);
     }
 
     // log.info(taskContractAddresses);
@@ -1921,6 +1922,7 @@ class TasksServices extends ChangeNotifier {
 
     // Remove duplicates from the taskContractAddresses list
     taskContractAddresses = taskContractAddresses.toSet().toList();
+    _loadingDelegate?.onTaskPreparationUpdated(offset, 0);
 
     return taskContractAddresses;
   }
@@ -1983,8 +1985,6 @@ class TasksServices extends ChangeNotifier {
 
     isLoading = false;
     isLoadingBackground = false;
-    // await myBalance();
-    // notifyListeners();
   }
   bool _isFetchTasksCustomerRunning = false;
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {

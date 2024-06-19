@@ -8,6 +8,7 @@ import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../config/theme.dart';
 import '../../../wallet/model_view/wallet_model.dart';
+import '../../../widgets/loading/loading_model.dart';
 
 class TotalProcessStats extends StatefulWidget {
   final bool extended;
@@ -102,30 +103,35 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
         builder: (context, tasksServices, child) {
           final taskStats = tasksServices.taskStats;
           if (taskStats == null) {
-            // if (loadingTasks) {
-            //   progress = loadingModel.getLoadingProgress(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
-            // } else {
-            //   progress = 0.0;
-            // }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text('Overall Stats', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                Container(
-                  height: 130,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Fetching data will start after other tasks.', style: TextStyle(fontSize: 12)),
-                      Center(child: LoadingAnimationWidget.prograssiveDots(
-                        size: 25,
-                        color: DodaoTheme.of(context).secondaryText,
-                      )),
-                    ],
-                  ),
-                )
 
-              ],
+            return Consumer<LoadingModel>(
+                builder: (context, loadingModel, child) {
+                // if (loadingModel) {
+                //   progress = loadingModel.onLoadingPublicStats(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
+                // } else {
+                //   progress = 0.0;
+                // }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text('Overall Stats', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    Container(
+                      height: 130,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Fetching data will start after other tasks.', style: TextStyle(fontSize: 12)),
+                          Center(child: LoadingAnimationWidget.prograssiveDots(
+                            size: 25,
+                            color: DodaoTheme.of(context).secondaryText,
+                          )),
+                        ],
+                      ),
+                    )
+
+                  ],
+                );
+              }
             );
           } else {
             final chartData = _chartItems!.map((item) => ChartData(
