@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../blockchain/classes.dart';
@@ -250,6 +251,13 @@ class MMService {
         await tasksServices.refreshTasksForAccount(publicAddressMM, "refresh");
       } else {
         await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
+      }
+      if (tasksServices.roleNfts['auditor'] > 0) {
+        try { // on final
+          await tasksServices.refreshTasksForAccount(WalletService.walletAddress, "audit");
+        } catch (e) {
+          log.severe('wc_sessions->initFinalCollectData->refreshTasksForAccount error: $e');
+        }
       }
       // await Future.delayed(const Duration(milliseconds: 200));
       // await tasksServices.monitorEvents();

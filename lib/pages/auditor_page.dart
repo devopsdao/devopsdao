@@ -134,7 +134,7 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 icon: const Icon(Icons.search),
               ),
               if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
-                LoadButtonIndicator(refresh: 'auditor',),
+                LoadButtonIndicator(refresh: 'audit',),
             ],
           );
         },

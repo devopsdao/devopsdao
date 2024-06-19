@@ -4,7 +4,7 @@
 import 'package:webthree/webthree.dart' as _i1;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"ownerAddr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"AccountCreated","type":"event"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"nickname","type":"string"},{"internalType":"string","name":"about","type":"string"}],"name":"addAccountData","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"addAccountToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_performer","type":"address"},{"internalType":"address","name":"_customer","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_performer","type":"address"},{"internalType":"address","name":"_customer","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerAuditedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addCustomerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerAuditedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addPerformerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"contractAccountFacet","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccountsBlacklist","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accountAddresses","type":"address[]"}],"name":"getAccountsData","outputs":[{"components":[{"internalType":"address","name":"accountOwner","type":"address"},{"internalType":"string","name":"nickname","type":"string"},{"internalType":"string","name":"about","type":"string"},{"internalType":"address[]","name":"ownerTasks","type":"address[]"},{"internalType":"address[]","name":"participantTasks","type":"address[]"},{"internalType":"address[]","name":"auditParticipantTasks","type":"address[]"},{"internalType":"address[]","name":"agreedTasks","type":"address[]"},{"internalType":"address[]","name":"auditAgreedTasks","type":"address[]"},{"internalType":"address[]","name":"completedTasks","type":"address[]"},{"internalType":"address[]","name":"auditCompletedTasks","type":"address[]"},{"internalType":"uint256[]","name":"customerRatings","type":"uint256[]"},{"internalType":"uint256[]","name":"performerRatings","type":"uint256[]"},{"internalType":"address[]","name":"customerAgreedTasks","type":"address[]"},{"internalType":"address[]","name":"performerAuditedTasks","type":"address[]"},{"internalType":"address[]","name":"customerAuditedTasks","type":"address[]"},{"internalType":"address[]","name":"customerCompletedTasks","type":"address[]"}],"internalType":"struct Account[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccountsList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getRawAccountsCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getRawAccountsList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"removeAccountFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
+  '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"ownerAddr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"AccountCreated","type":"event"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"identity","type":"string"},{"internalType":"string","name":"about","type":"string"}],"name":"addAccountData","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"addAccountToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_performer","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_performer","type":"address"},{"internalType":"address","name":"_customer","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerAuditedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addCustomerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerAuditedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addPerformerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"contractAccountFacet","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccountsBlacklist","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accountAddresses","type":"address[]"}],"name":"getAccountsData","outputs":[{"components":[{"internalType":"address","name":"accountOwner","type":"address"},{"internalType":"string","name":"nickname","type":"string"},{"internalType":"string","name":"about","type":"string"},{"internalType":"address[]","name":"ownerTasks","type":"address[]"},{"internalType":"address[]","name":"participantTasks","type":"address[]"},{"internalType":"address[]","name":"auditParticipantTasks","type":"address[]"},{"internalType":"address[]","name":"agreedTasks","type":"address[]"},{"internalType":"address[]","name":"auditAgreedTasks","type":"address[]"},{"internalType":"address[]","name":"completedTasks","type":"address[]"},{"internalType":"address[]","name":"auditCompletedTasks","type":"address[]"},{"internalType":"uint256[]","name":"customerRatings","type":"uint256[]"},{"internalType":"uint256[]","name":"performerRatings","type":"uint256[]"},{"internalType":"address[]","name":"customerAgreedTasks","type":"address[]"},{"internalType":"address[]","name":"performerAuditedTasks","type":"address[]"},{"internalType":"address[]","name":"customerAuditedTasks","type":"address[]"},{"internalType":"address[]","name":"customerCompletedTasks","type":"address[]"}],"internalType":"struct Account[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccountsList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string[]","name":"identities","type":"string[]"}],"name":"getIdentitiesAddresses","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getRawAccountsCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getRawAccountsList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"removeAccountFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
   'AccountFacet',
 );
 
@@ -27,7 +27,7 @@ class AccountFacet extends _i1.GeneratedContract {
   /// set by the contract.
   Future<String> addAccountData(
     _i1.EthereumAddress _sender,
-    String nickname,
+    String identity,
     String about, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
@@ -36,7 +36,7 @@ class AccountFacet extends _i1.GeneratedContract {
     assert(checkSignature(function, '56fd9644'));
     final params = [
       _sender,
-      nickname,
+      identity,
       about,
     ];
     return write(
@@ -71,16 +71,14 @@ class AccountFacet extends _i1.GeneratedContract {
   /// set by the contract.
   Future<String> addAgreedTask(
     _i1.EthereumAddress _performer,
-    _i1.EthereumAddress _customer,
     _i1.EthereumAddress taskAddress, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[2];
-    assert(checkSignature(function, '7a4fc02d'));
+    assert(checkSignature(function, 'a543bc4b'));
     final params = [
       _performer,
-      _customer,
       taskAddress,
     ];
     return write(
@@ -476,11 +474,31 @@ class AccountFacet extends _i1.GeneratedContract {
   /// The optional [atBlock] parameter can be used to view historical data. When
   /// set, the function will be evaluated in the specified block. By default, the
   /// latest on-chain block will be used.
-  Future<BigInt> getRawAccountsCount({
+  Future<List<_i1.EthereumAddress>> getIdentitiesAddresses(
+    List<String> identities, {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
     final function = self.abi.functions[20];
+    assert(checkSignature(function, '815707e5'));
+    final params = [identities];
+    final response = await read(
+      sender,
+      function,
+      params,
+      atBlock,
+    );
+    return (response[0] as List<dynamic>).cast<_i1.EthereumAddress>();
+  }
+
+  /// The optional [atBlock] parameter can be used to view historical data. When
+  /// set, the function will be evaluated in the specified block. By default, the
+  /// latest on-chain block will be used.
+  Future<BigInt> getRawAccountsCount({
+    _i1.BlockNum? atBlock,
+    _i1.EthereumAddress? sender,
+  }) async {
+    final function = self.abi.functions[21];
     assert(checkSignature(function, 'a601d46a'));
     final params = [];
     final response = await read(
@@ -499,7 +517,7 @@ class AccountFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[21];
+    final function = self.abi.functions[22];
     assert(checkSignature(function, 'c6a8ade3'));
     final params = [];
     final response = await read(
@@ -519,7 +537,7 @@ class AccountFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[22];
+    final function = self.abi.functions[23];
     assert(checkSignature(function, '89a76332'));
     final params = [accountAddress];
     return write(

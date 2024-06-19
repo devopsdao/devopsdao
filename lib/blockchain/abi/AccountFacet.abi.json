@@ -33,7 +33,7 @@
       },
       {
         "internalType": "string",
-        "name": "nickname",
+        "name": "identity",
         "type": "string"
       },
       {
@@ -457,6 +457,25 @@
   {
     "inputs": [],
     "name": "getAccountsList",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string[]",
+        "name": "identities",
+        "type": "string[]"
+      }
+    ],
+    "name": "getIdentitiesAddresses",
     "outputs": [
       {
         "internalType": "address[]",
