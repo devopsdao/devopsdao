@@ -33,6 +33,7 @@ import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
 import 'abi/TaskStatsFacet.g.dart';
 import 'abi/AccountFacet.g.dart';
+import 'abi/AccountDataFacet.g.dart';
 import 'abi/TokenFacet.g.dart';
 import 'abi/TokenDataFacet.g.dart';
 import 'abi/TaskContract.g.dart';
@@ -695,6 +696,7 @@ class TasksServices extends ChangeNotifier {
   late TaskDataFacet taskDataFacet;
   late TaskStatsFacet taskStatsFacet;
   late AccountFacet accountFacet;
+  late AccountDataFacet accountDataFacet;
   late TokenFacet tokenFacet;
   late TokenDataFacet tokenDataFacet;
   late AxelarFacet axelarFacet;
@@ -773,6 +775,7 @@ class TasksServices extends ChangeNotifier {
     taskDataFacet = TaskDataFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     taskStatsFacet = TaskStatsFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     accountFacet = AccountFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
+    accountDataFacet = AccountDataFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     tokenDataFacet = TokenDataFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     //templorary fix:
@@ -846,7 +849,7 @@ class TasksServices extends ChangeNotifier {
       final Map<BigInt, String> combinedTokenMap = Map.fromIterables(tokenIds, tokenNames);
       final Map<String, List<BigInt>> result = combinedTokenMap.entries.fold(
         {},
-            (Map<String, List<BigInt>> acc, entry) {
+        (Map<String, List<BigInt>> acc, entry) {
           final key = entry.value;
           final value = entry.key;
           acc.putIfAbsent(key, () => []).add(value);
@@ -1086,7 +1089,7 @@ class TasksServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void>  resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftCollection> tagsMap}) async {
+  Future<void> resetFilter({required Map<EthereumAddress, Task> taskList, required Map<String, NftCollection> tagsMap}) async {
     final List<String> tagsList = tagsMap.entries.map((e) => e.value.name).toList();
 
     filterResults.clear();
@@ -1156,7 +1159,7 @@ class TasksServices extends ChangeNotifier {
 
       // print('Task loaded: ${task.title}');
       var taskObject = Task(
-        // nanoId: task[0],
+          // nanoId: task[0],
           nanoId: task[0].toString(),
           createTime: DateTime.fromMillisecondsSinceEpoch(task[1].toInt() * 1000),
           taskType: task[2],
@@ -1213,7 +1216,7 @@ class TasksServices extends ChangeNotifier {
 
       // print('Task loaded: ${task.title}');
       var taskObject = Task(
-        // nanoId: task[0],
+          // nanoId: task[0],
           nanoId: task[0][0].toString(),
           createTime: DateTime.fromMillisecondsSinceEpoch(task[0][1].toInt() * 1000),
           taskType: task[0][2],
@@ -1430,8 +1433,8 @@ class TasksServices extends ChangeNotifier {
       return tasks[taskAddress]!;
     } else {
       await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
-        return !contractsInitialized;
-      }));
+            return !contractsInitialized;
+          }));
       // await Future.delayed(const Duration(milliseconds: 1000));
       final Map<EthereumAddress, Task> tasksTemp = await getTasksData([taskAddress]);
       tasks[taskAddress] = tasksTemp[taskAddress]!;
@@ -1691,12 +1694,12 @@ class TasksServices extends ChangeNotifier {
           try {
             log.info('will monitor tasks in ${totalBatches} batches');
             // for (var batchId = 0; batchId < totalBatches; batchId++) {
-              await Future.wait<void>(monitors);
-              log.fine('monitoring ${index + 1} tasks | total: $totalBatches batches');
-              await Future.delayed(const Duration(milliseconds: 201));
-              // monitorTasksLoaded = index;
-              // notifyListeners();
-              // loadingUpdatedData.updateData();
+            await Future.wait<void>(monitors);
+            log.fine('monitoring ${index + 1} tasks | total: $totalBatches batches');
+            await Future.delayed(const Duration(milliseconds: 201));
+            // monitorTasksLoaded = index;
+            // notifyListeners();
+            // loadingUpdatedData.updateData();
             // }
           } on GetTaskException {}
 
@@ -1718,7 +1721,6 @@ class TasksServices extends ChangeNotifier {
     }
     monitorTasksCount = monitorTasksCount + index;
 
-
     monitorTotalTaskLen = 0;
   }
 
@@ -1739,7 +1741,6 @@ class TasksServices extends ChangeNotifier {
 
     var downloadBatches = <List<Future<Map<EthereumAddress, Task>>>>[];
 
-
     log.info(
       'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests',
     );
@@ -1756,13 +1757,13 @@ class TasksServices extends ChangeNotifier {
       }
       try {
         // for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
-          final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloaders);
-          batchesResults.addAll(batchResults);
-          log.fine('downloaded ${index + 1} batch | total: ${downloadBatches.length} batches');
-          // await Future.delayed(const Duration(milliseconds: 201));
-          tasksLoaded += batchResults.length;
-          // notifyListeners();
-          _loadingDelegate?.onLoadingUpdated();
+        final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloaders);
+        batchesResults.addAll(batchResults);
+        log.fine('downloaded ${index + 1} batch | total: ${downloadBatches.length} batches');
+        // await Future.delayed(const Duration(milliseconds: 201));
+        tasksLoaded += batchResults.length;
+        // notifyListeners();
+        _loadingDelegate?.onLoadingUpdated();
 
         // }
       } on GetTaskException catch (e) {
@@ -1772,7 +1773,6 @@ class TasksServices extends ChangeNotifier {
       // downloadBatches.add(downloaders);
     }
     // downloadBatches = downloadBatches.slice(0, 1);
-
 
     tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
 
@@ -1902,7 +1902,7 @@ class TasksServices extends ChangeNotifier {
 
       for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
         int currentLimit = min(limit, remainingTasks);
-        futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(currentLimit)));
+        futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(currentLimit), BigInt.from(0)));
         remainingTasks -= currentLimit;
         offset += currentLimit;
       }
@@ -1965,8 +1965,6 @@ class TasksServices extends ChangeNotifier {
 
     await aggregateStats();
 
-
-
     if (state == "new") {
       int limit = min(500, (taskList.length - monitorTasksCount).abs());
       taskListMonitor = taskList.take(limit).toList();
@@ -1987,6 +1985,7 @@ class TasksServices extends ChangeNotifier {
     // await myBalance();
     // notifyListeners();
   }
+
   bool _isFetchTasksCustomerRunning = false;
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
     if (_isFetchTasksCustomerRunning) {
@@ -2089,16 +2088,16 @@ class TasksServices extends ChangeNotifier {
     final List<EthereumAddress> accountsList;
     final List accountsDataList;
     if (defaultListType == 'regular_list') {
-      accountsList = await accountFacet.getAccountsList();
+      accountsList = await accountDataFacet.getAccountsList();
     } else if (defaultListType == 'black_list') {
-      accountsList = await accountFacet.getAccountsBlacklist();
+      accountsList = await accountDataFacet.getAccountsBlacklist();
     } else if (defaultListType == 'raw_list') {
-      accountsList = await accountFacet.getRawAccountsList();
+      accountsList = await accountDataFacet.getRawAccountsList();
     } else {
       accountsList = requestedAccountsList;
     }
 
-    accountsDataList = await accountFacet.getAccountsData(accountsList);
+    accountsDataList = await accountDataFacet.getAccountsData(accountsList);
 
     late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
@@ -2174,7 +2173,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<AccountStats> getAccountStats() async {
-    final accountsList = await accountFacet.getRawAccountsList();
+    final accountsList = await accountDataFacet.getRawAccountsList();
     final accountsData = await getAccountsData(requestedAccountsList: accountsList, defaultListType: 'raw_list');
 
     List<EthereumAddress> accountAddresses = [];
@@ -2212,9 +2211,9 @@ class TasksServices extends ChangeNotifier {
     }
 
     overallAvgCustomerRating =
-    avgCustomerRatings.isNotEmpty ? avgCustomerRatings.reduce((a, b) => a + b) ~/ BigInt.from(avgCustomerRatings.length) : BigInt.zero;
+        avgCustomerRatings.isNotEmpty ? avgCustomerRatings.reduce((a, b) => a + b) ~/ BigInt.from(avgCustomerRatings.length) : BigInt.zero;
     overallAvgPerformerRating =
-    avgPerformerRatings.isNotEmpty ? avgPerformerRatings.reduce((a, b) => a + b) ~/ BigInt.from(avgPerformerRatings.length) : BigInt.zero;
+        avgPerformerRatings.isNotEmpty ? avgPerformerRatings.reduce((a, b) => a + b) ~/ BigInt.from(avgPerformerRatings.length) : BigInt.zero;
 
     return AccountStats(
       accountAddresses: accountAddresses,
@@ -2297,7 +2296,6 @@ class TasksServices extends ChangeNotifier {
     // List<BigInt> canceledTimestamps = [];
 
     while (offset < taskCount) {
-
       int limit = min(batchSize, taskCount - offset);
 
       log.info('Fetching task stats from offset $offset with limit $limit');
@@ -2343,8 +2341,6 @@ class TasksServices extends ChangeNotifier {
         // canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
 
-
-
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
@@ -2368,13 +2364,13 @@ class TasksServices extends ChangeNotifier {
         topETHBalances: topETHBalances,
         topETHAmounts: topETHAmounts,
         createTimestamps: createTimestamps
-      // newTimestamps: newTimestamps,
-      // agreedTimestamps: agreedTimestamps,
-      // progressTimestamps: progressTimestamps,
-      // reviewTimestamps: reviewTimestamps,
-      // completedTimestamps: completedTimestamps,
-      // canceledTimestamps: canceledTimestamps,
-    );
+        // newTimestamps: newTimestamps,
+        // agreedTimestamps: agreedTimestamps,
+        // progressTimestamps: progressTimestamps,
+        // reviewTimestamps: reviewTimestamps,
+        // completedTimestamps: completedTimestamps,
+        // canceledTimestamps: canceledTimestamps,
+        );
     // _walletService.writeStatsLoadingDoneOnNetId(WalletService.chainId);
     _isInitTaskStatsRunning = false;
     notifyListeners();
@@ -2754,9 +2750,9 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> addTaskToBlackList(
-      EthereumAddress taskAddress,
-      String nanoId,
-      ) async {
+    EthereumAddress taskAddress,
+    String nanoId,
+  ) async {
     if (taskTokenSymbol != '') {
       transactionStatuses[nanoId] = {
         'addTaskToBlackList': {'status': 'pending', 'tokenApproved': 'initial', 'txn': 'initial'} //

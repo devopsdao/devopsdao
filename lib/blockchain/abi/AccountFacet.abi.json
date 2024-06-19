@@ -213,6 +213,29 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "customer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addCustomerEarnedTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_account",
         "type": "address"
       },
@@ -228,6 +251,29 @@
       }
     ],
     "name": "addCustomerRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "customer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addCustomerSpentTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -308,6 +354,29 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "performer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addPerformerEarnedTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_account",
         "type": "address"
       },
@@ -328,6 +397,29 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "performer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addPerformerSpentTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "contractAccountFacet",
     "outputs": [
@@ -335,178 +427,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAccountsBlacklist",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "accountAddresses",
-        "type": "address[]"
-      }
-    ],
-    "name": "getAccountsData",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "accountOwner",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "nickname",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "about",
-            "type": "string"
-          },
-          {
-            "internalType": "address[]",
-            "name": "ownerTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "participantTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "auditParticipantTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "agreedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "auditAgreedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "completedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "auditCompletedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "customerRatings",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "performerRatings",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "customerAgreedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "performerAuditedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "customerAuditedTasks",
-            "type": "address[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "customerCompletedTasks",
-            "type": "address[]"
-          }
-        ],
-        "internalType": "struct Account[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAccountsList",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string[]",
-        "name": "identities",
-        "type": "string[]"
-      }
-    ],
-    "name": "getIdentitiesAddresses",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRawAccountsCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getRawAccountsList",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
       }
     ],
     "stateMutability": "view",

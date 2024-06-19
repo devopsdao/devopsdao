@@ -137,6 +137,11 @@
         "internalType": "uint256",
         "name": "limit",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fromTimestamp",
+        "type": "uint256"
       }
     ],
     "name": "getTaskContractsByStateLimit",
