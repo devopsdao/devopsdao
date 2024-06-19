@@ -19,9 +19,9 @@ class StatisticsChipShimmer extends StatelessWidget {
           padding: const EdgeInsets.only(top: 16.0, left: 4, right: 4, bottom: 16),
           child: LayoutBuilder(builder: (context, constraints) {
             List<TokenItem> tags = [
-              TokenItem(collection: true, name: 'empty', id: BigInt.from(0)),
-              TokenItem(collection: true, name: 'empty123', id: BigInt.from(0)),
-              TokenItem(collection: true, name: 'empt', id: BigInt.from(0)),
+              TokenItem(collection: true, name: 'loading..', id: BigInt.from(0)),
+              TokenItem(collection: true, name: 'nft loading', id: BigInt.from(0)),
+              TokenItem(collection: true, name: 'loading', id: BigInt.from(0)),
             ];
             return Wrap(
                 alignment: WrapAlignment.start,

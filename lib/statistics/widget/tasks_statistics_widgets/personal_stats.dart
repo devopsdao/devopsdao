@@ -112,6 +112,7 @@ class _PersonalStatsState extends State<PersonalStats> {
           ),
           series: [
             ColumnSeries<ChartData, String>(
+              enableTooltip: widget.extended ? true : false,
               animationDuration: widget.extended ? 0 : 2400,
               width: 0.9,
               dataLabelSettings: DataLabelSettings(

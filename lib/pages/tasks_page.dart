@@ -98,7 +98,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     final PlatformAndBrowser platformAndBrowser = PlatformAndBrowser();
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     final listenIsLoading = context.select((TasksServices vm) => vm.isLoading);
-    var tasksServices = context.read<TasksServices>();
+    var tasksServices = context.watch<TasksServices>();
     // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();

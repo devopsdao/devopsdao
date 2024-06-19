@@ -90,7 +90,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     late double offsetToArmed = 200;
 
-    var tasksServices = context.watch<TasksServices>();
+    final tasksServices = context.watch<TasksServices>();
     _filterResults = tasksServices.filterResults.values.toList();
 
     if (_newList.isEmpty

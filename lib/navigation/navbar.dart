@@ -45,10 +45,11 @@ class _NavBarPageState extends State<NavBarPage> {
       // '/tasks/1': const TasksPageWidget(),
       '/customer': const HomePageWidget(),
       '/performer': const HomePageWidget(),
-      if (listenRoleNfts['governor'] > 0) '/stats': const HomePageWidget(),
+      // '/stats': const HomePageWidget(),
       // '/leaderboard': const HomePageWidget(),
       if (listenRoleNfts['auditor'] > 0) '/auditor': const HomePageWidget(),
-      '/accounts': const HomePageWidget(),
+      // if (listenRoleNfts['governor'] > 0)
+        '/accounts': const HomePageWidget(),
       // '/statistics': const HomePageWidget(),
       // 'walletPage': WalletPageTop(title: 'WalletConnect'),
       // 'orangePage': MyOrangePage(title: 'WalletConnect'),

@@ -214,6 +214,7 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
                   ),
                   series: <CircularSeries>[
                     RadialBarSeries<ChartData, String>(
+                      enableTooltip: widget.extended ? true : false,
                       animationDuration: widget.extended ? 0 : 2400,
                       radius: '100%',
                       name: 'Tasks',

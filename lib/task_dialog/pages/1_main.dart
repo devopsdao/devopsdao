@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_limiter/rate_limiter.dart';
@@ -214,7 +215,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     ),
                   ),
                 ),
-                if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
+                  if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
                     (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true)))
                   RateTask(task: task),
 
@@ -512,6 +513,106 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 },
                               ),
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                // ******** Show rating info ******* //
+                if (task.performerRating != 0 || task.customerRating != 0)
+                Container(
+                  padding: const EdgeInsets.only(top: 14.0),
+                  child: Material(
+                    elevation: DodaoTheme.of(context).elevation,
+                    borderRadius: DodaoTheme.of(context).borderRadius,
+                    child: Container(
+                      padding: const EdgeInsets.all(12.0),
+                      decoration: materialMainBoxDecoration,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only( left: 4.0),
+                            child: RichText(
+                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                  TextSpan(text: 'Task rating: '),
+                                ])),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 4.0),
+                                      child: Text('Customer rating', style: Theme.of(context).textTheme.bodySmall,),
+                                    ),
+                                    RatingStars(
+                                      value: task.customerRating.toDouble(),
+                                      starCount: 5,
+                                      starSize: 15,
+                                      // valueLabelColor: Colors.orangeAccent,
+                                      valueLabelTextStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w200,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 10.0),
+                                      valueLabelRadius: 12,
+                                      starOffColor: Colors.grey,
+                                      maxValue: 5,
+                                      starSpacing: 2,
+                                      maxValueVisibility: false,
+                                      valueLabelVisibility: true,
+                                      animationDuration: Duration(milliseconds: 2000),
+
+                                      valueLabelPadding:
+                                      const EdgeInsets.symmetric(vertical: 1, horizontal: 6),
+                                      valueLabelMargin: const EdgeInsets.only(right: 6),
+                                      starColor: Colors.orangeAccent,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 4.0),
+                                      child: Text('Performer rating', style: Theme.of(context).textTheme.bodySmall,),
+                                    ),
+                                    RatingStars(
+                                      value: task.performerRating.toDouble(),
+                                      starCount: 5,
+                                      starSize: 15,
+                                      // valueLabelColor: Colors.orangeAccent,
+                                      valueLabelTextStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w200,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 10.0),
+                                      valueLabelRadius: 12,
+                                      starOffColor: Colors.grey,
+                                      maxValue: 5,
+                                      starSpacing: 2,
+                                      maxValueVisibility: false,
+                                      valueLabelVisibility: true,
+                                      animationDuration: Duration(milliseconds: 2000),
+
+                                      valueLabelPadding:
+                                      const EdgeInsets.symmetric(vertical: 1, horizontal: 6),
+                                      valueLabelMargin: const EdgeInsets.only(right: 6),
+                                      starColor: Colors.orangeAccent,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

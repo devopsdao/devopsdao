@@ -1491,7 +1491,7 @@ class TasksServices extends ChangeNotifier {
     if (task.taskState != "" && task.taskState == "new") {
       if (hardhatDebug == true) {
         tasksNew[task.taskAddress] = task;
-        filterResults[task.taskAddress] = task;
+        // filterResults[task.taskAddress] = task;
       }
       if (task.contractOwner == publicAddress) {
         tasksCustomerSelection[task.taskAddress] = task;
@@ -1506,15 +1506,11 @@ class TasksServices extends ChangeNotifier {
           tasksPerformerParticipate[task.taskAddress] = task;
         } else {
           tasksNew[task.taskAddress] = task;
-          filterResults[task.taskAddress] = task;
-          // tasksNew.add(task);
-          // filterResults.add(task);
+          // filterResults[task.taskAddress] = task;
         }
       } else {
         tasksNew[task.taskAddress] = task;
-        filterResults[task.taskAddress] = task;
-        // tasksNew.add(task);
-        // filterResults.add(task);
+        // filterResults[task.taskAddress] = task;
       }
     }
 
@@ -1799,6 +1795,7 @@ class TasksServices extends ChangeNotifier {
 
     totalTaskLen = 0;
     _loadingDelegate?.onTaskLoadingUpdated(tasksLoaded, totalTaskLen);
+    notifyListeners();
     return sortedTasks;
   }
 
@@ -1924,11 +1921,16 @@ class TasksServices extends ChangeNotifier {
     // Remove duplicates from the taskContractAddresses list
     taskContractAddresses = taskContractAddresses.toSet().toList();
     _loadingDelegate?.onTaskPreparationUpdated(offset, 0);
-
+    notifyListeners();
     return taskContractAddresses;
   }
 
+  bool _isFetchTasksByStateRunning = false;
   Future<void> fetchTasksByState(String state) async {
+    if (_isFetchTasksByStateRunning) {
+      return;
+    }
+    _isFetchTasksByStateRunning = true;
     isLoadingBackground = true;
     late List<EthereumAddress> taskList;
     late List<EthereumAddress> taskListMonitor;
@@ -1986,7 +1988,10 @@ class TasksServices extends ChangeNotifier {
 
     isLoading = false;
     isLoadingBackground = false;
+    _isFetchTasksByStateRunning = false;
   }
+
+
   bool _isFetchTasksCustomerRunning = false;
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
     if (_isFetchTasksCustomerRunning) {
