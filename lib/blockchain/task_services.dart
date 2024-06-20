@@ -1679,6 +1679,7 @@ class TasksServices extends ChangeNotifier {
       try {
         if (monitoredTasks[taskList[i]] == null || monitoredTasks[taskList[i]] == false) {
           monitors.add(monitorTaskEvents(taskList[i]));
+          monitoredTasks[taskList[i]] = true;
           batchItemCount++;
         }
         // print('batchItemCount: ${batchItemCount}');
@@ -1701,7 +1702,7 @@ class TasksServices extends ChangeNotifier {
           batchItemCount = 0;
         }
       } on GetTaskException {
-        log.severe('could not get task ${taskList[i]} from blockchain');
+        log.severe('could not subscribe for task ${taskList[i]} events');
       }
     }
     if (batchItemCount > 0) {

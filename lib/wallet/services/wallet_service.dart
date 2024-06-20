@@ -18,7 +18,7 @@ class WalletService {
   static WalletSelected walletSelected = WalletSelected.none;
   static EthereumAddress? walletAddress;
   // static const int defaultNetwork = 855456;
-  static const int defaultNetwork = 855456;
+  static const int defaultNetwork = 64165;
   static int chainId = defaultNetwork;
   // static int statsLoadingDoneOnNetId = 0;
   // static int tasksLoadingAndMonitorDoneOnNetId = 0;
