@@ -710,14 +710,14 @@ class TasksServices extends ChangeNotifier {
   late Debouncing thr;
   late String searchKeyword = '';
 
-  Future<void> listenToEvents() async {
-    final JobContractCreated = _deployedContract.event('JobContractCreated');
-    final subscription = web3client.events(FilterOptions.events(contract: _deployedContract, event: JobContractCreated)).listen((event) {
-      final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
-      //
-      print('event fired');
-    });
-  }
+  // Future<void> listenToEvents() async {
+  //   final JobContractCreated = _deployedContract.event('JobContractCreated');
+  //   final subscription = web3client.events(FilterOptions.events(contract: _deployedContract, event: JobContractCreated)).listen((event) {
+  //     final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
+  //     //
+  //     print('event fired');
+  //   });
+  // }
 
   late bool contractsInitialized = false;
 
@@ -759,7 +759,7 @@ class TasksServices extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 200));
     // await myBalance();
     // await Future.delayed(const Duration(milliseconds: 200));
-    // await monitorEvents();
+    await monitorEvents();
     // notifyListeners();
     isLoadingBackground = false;
   }
@@ -877,7 +877,10 @@ class TasksServices extends ChangeNotifier {
         // await refreshTask(tasks[event.contractAdr]!);
         // print('refreshed task: ${tasks[event.contractAdr]!.title}');
         // await myBalance();
-        await monitorTaskEvents(event.contractAdr);
+        if (monitoredTasks[event.contractAdr] == null || monitoredTasks[event.contractAdr] == false) {
+          await monitorTaskEvents(event.contractAdr);
+        }
+        monitoredTasks[event.contractAdr] = true;
       } on GetTaskException {
         log.warning('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
