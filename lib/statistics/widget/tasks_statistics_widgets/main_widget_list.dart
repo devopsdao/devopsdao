@@ -8,7 +8,7 @@ List<Widget> initializeWidgets(bool extended, {required bool walletConnected}) {
   final double scoreStatsWidth = extended ? double.infinity : 180.0;
   final double totalProcessStatsWidth = extended ? double.infinity : 280.0;
   final double totalCreatedStatsWidth = extended ? double.infinity : 250.0;
-  final double personalStatsWidth = extended ? double.infinity : 280.0;
+  final double personalStatsWidth = extended ? double.infinity : 310.0;
 
   return [
     if (walletConnected)

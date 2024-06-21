@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../blockchain/accounts.dart';
 import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
 import '../../../wallet/model_view/wallet_model.dart';
 import 'model/cashed_personal_stats_model.dart';
 
@@ -79,7 +81,26 @@ class _PersonalStatsState extends State<PersonalStats> {
     if (isLoading) {
       return SizedBox(
         height: widget.extended ? 200 : 170,
-        child: Center(child: CircularProgressIndicator()),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text('Personal statistics', style: TextStyle(fontSize: 12, )),
+            Container(
+              height: widget.extended ? 170.0 : 130,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Fetching data', style: TextStyle(fontSize: 12)),
+                  Center(child: LoadingAnimationWidget.prograssiveDots(
+                    size: 25,
+                    color: DodaoTheme.of(context).secondaryText,
+                  )),
+                ],
+              ),
+            )
+
+          ],
+        ),
       );
     } else if (errorMessage != null) {
       return Center(child: Text(errorMessage!));

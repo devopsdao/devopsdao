@@ -141,7 +141,7 @@ class _TaskDialogButtonState extends State<TaskDialogButton> with SingleTickerPr
 }
 
 
-class TaskDialogFAB extends StatefulWidget {
+class TaskDialogFAB extends StatelessWidget {
   final String buttonName;
   final Color buttonColorRequired;
   final VoidCallback callback;
@@ -150,7 +150,7 @@ class TaskDialogFAB extends StatefulWidget {
   final double? padding;
   final bool expand;
   final double widthSize;
-  const TaskDialogFAB(
+  TaskDialogFAB(
       {Key? key,
         required this.buttonName,
         required this.buttonColorRequired,
@@ -162,21 +162,17 @@ class TaskDialogFAB extends StatefulWidget {
         this.expand = false})
       : super(key: key);
 
-  @override
-  _TaskDialogFABState createState() => _TaskDialogFABState();
-}
-
-class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProviderStateMixin{
   late Color buttonColor;
-  late Color textColor = Colors.white;
-  late bool _buttonState = true;
 
+  late Color textColor = Colors.white;
+
+  late bool _buttonState = true;
 
   @override
   Widget build(BuildContext context) {
-    buttonColor = widget.buttonColorRequired;
+    buttonColor = buttonColorRequired;
 
-    if (widget.inactive == true) {
+    if (inactive == true) {
       textColor = Colors.white;
       buttonColor = Colors.blueGrey.shade200;
       _buttonState = false;
@@ -185,11 +181,11 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
     }
 
     late Widget child = FloatingActionButton.extended(
-      onPressed: _buttonState ? widget.callback : null,
+      onPressed: _buttonState ? callback : null,
       backgroundColor: buttonColor,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(17.0))),
       label: Text(
-        widget.buttonName,
+        buttonName,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 18, color: textColor),
       ),
@@ -197,12 +193,11 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
 
     return AnimatedContainer(
       duration:  const Duration(milliseconds: 500),
-      width:  widget.widthSize,
+      width:  widthSize,
       child: child,
     );
   }
 }
-
 
 class TaskDialogConnectWallet extends StatefulWidget {
   final String buttonName;

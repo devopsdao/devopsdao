@@ -247,17 +247,19 @@ class MMService {
         log.severe('mm_service->initFinalCollectData->myBalance() error: $e');
         return false;
       }
-      if (publicAddressMM != null) {
-        await tasksServices.refreshTasksForAccount(publicAddressMM, "refresh");
-      } else {
-        await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
-      }
+      await tasksServices.refreshTasksForAccount(publicAddressMM, "refresh");
+      await tasksServices.refreshTasksForAccount(publicAddressMM, "new");
       if (tasksServices.roleNfts['auditor'] > 0) {
         try { // on final
           await tasksServices.refreshTasksForAccount(WalletService.walletAddress, "audit");
         } catch (e) {
           log.severe('wc_sessions->initFinalCollectData->refreshTasksForAccount error: $e');
         }
+      }
+      try {
+        await tasksServices.initTaskStats();
+      } catch (e) {
+        log.severe('MyApp->initState->initTaskStats error: $e');
       }
       // await Future.delayed(const Duration(milliseconds: 200));
       // await tasksServices.monitorEvents();
