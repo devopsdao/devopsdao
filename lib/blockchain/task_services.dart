@@ -772,7 +772,7 @@ class TasksServices extends ChangeNotifier {
 
   Future<void> connectContracts() async {
     EthereumAddress tokenContractAddress = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
-    EthereumAddress tokenContractAddressGoerli = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+    // EthereumAddress tokenContractAddressGoerli = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
 
     ierc20 = IERC20(address: tokenContractAddress, client: web3client, chainId: WalletService.chainId);
     taskCreateFacet = TaskCreateFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
