@@ -41,7 +41,7 @@ class _TaskDialogFuture extends StatefulWidget {
     Key? key,
     required this.fromPage,
     required this.taskAddress,
-  }) : super(key: key);
+  }) : super(key: key); 
 
   @override
   _TaskDialogFutureState createState() => _TaskDialogFutureState();

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../blockchain/classes.dart';
 import '../../../blockchain/task_services.dart';
+import '../../../config/theme.dart';
 import '../../../wallet/model_view/wallet_model.dart';
+import '../../../widgets/loading/loading_model.dart';
 
 class TotalCreatedStats extends StatefulWidget {
   final bool extended;
@@ -33,12 +36,34 @@ class _TotalCreatedStatsState extends State<TotalCreatedStats> {
         builder: (context, tasksServices, child) {
           final taskStats = tasksServices.taskStats;
           if (taskStats == null) {
-            return const Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Fetching blockchain data', style: TextStyle(fontSize: 12)),
-                Center(child: CircularProgressIndicator()),
-              ],
+            return Consumer<LoadingModel>(
+                builder: (context, loadingModel, child) {
+                  int handled = loadingModel.totalOverStats - loadingModel.loadedOverStats;
+                  int total = loadingModel.totalOverStats;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text('Tasks Created for last 31 days', style: TextStyle(fontSize: 12,)),
+                      Container(
+                        height: widget.extended ? 180.0 : 130,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (total == 0)
+                              const Text('Fetching data will start soon.', style: TextStyle(fontSize: 12)),
+                            if (total > 0)
+                              Text('Handled $handled Tasks of $total', style: const TextStyle(fontSize: 12)),
+                            Center(child: LoadingAnimationWidget.prograssiveDots(
+                              size: 25,
+                              color: DodaoTheme.of(context).secondaryText,
+                            )),
+                          ],
+                        ),
+                      )
+
+                    ],
+                  );
+                }
             );
           } else {
             final chartData = _generateChartData(taskStats.createTimestamps);

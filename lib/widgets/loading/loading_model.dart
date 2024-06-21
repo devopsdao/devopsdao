@@ -30,24 +30,17 @@ class LoadingModel extends ChangeNotifier implements LoadingDelegate {
 
 
 
-  int loadedOverAllStats = 0;
-  int totalOverAllStats = 0;
+  int loadedOverStats = 0;
+  int totalOverStats = 0;
   void _onLoadingPublicStats(int loaded, int total) {
-    loadedOverAllStats = loaded;
-    totalOverAllStats = total;
+    loadedOverStats = loaded;
+    totalOverStats = total;
     notifyListeners();
   }
   @override
   void onLoadingPublicStats(int loaded, int total) {
     _onLoadingPublicStats(loaded,total);
   }
-  double getPublicStatsLoadingProgress(int loaded, int total) {
-    if (total == 0) {
-      return 0.0;
-    }
-    return loaded / total;
-  }
-
 
   int loadedTasks = 0;
   int totalTasks = 0;

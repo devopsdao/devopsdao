@@ -21,7 +21,6 @@ class TotalProcessStats extends StatefulWidget {
 
 class _TotalProcessStatsState extends State<TotalProcessStats> {
   List<ChartItem>? _chartItems;
-
   @override
   void initState() {
     super.initState();
@@ -106,21 +105,21 @@ class _TotalProcessStatsState extends State<TotalProcessStats> {
 
             return Consumer<LoadingModel>(
                 builder: (context, loadingModel, child) {
-                // if (loadingModel) {
-                //   progress = loadingModel.onLoadingPublicStats(tasksServices.tasksLoaded, tasksServices.totalTaskLen);
-                // } else {
-                //   progress = 0.0;
-                // }
+                int handled = loadingModel.totalOverStats - loadingModel.loadedOverStats;
+                int total = loadingModel.totalOverStats;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text('Overall Stats', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    const Text('Overall Stats', style: TextStyle(fontSize: 12, )),
                     Container(
-                      height: 130,
+                      height: widget.extended ? 220.0 : 130,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Fetching data will start after other tasks.', style: TextStyle(fontSize: 12)),
+                          if (total == 0)
+                          const Text('Fetching data will start soon.', style: TextStyle(fontSize: 12)),
+                          if (total > 0)
+                          Text('Handled $handled Tasks of $total', style: const TextStyle(fontSize: 12)),
                           Center(child: LoadingAnimationWidget.prograssiveDots(
                             size: 25,
                             color: DodaoTheme.of(context).secondaryText,

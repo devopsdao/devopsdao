@@ -14,7 +14,6 @@ import 'package:dodao/widgets/loading/loading_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:isolate_manager/isolate_manager.dart';
 import 'package:provider/provider.dart';
 
 import 'package:webthree/browser.dart';
@@ -34,8 +33,6 @@ import 'package:dodao/blockchain/task_services.dart';
 import 'config/utils/platform.dart';
 import 'navigation/beamer_delegate.dart';
 import 'package:beamer/beamer.dart';
-
-late IsolateManager isolate ;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
