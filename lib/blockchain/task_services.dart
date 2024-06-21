@@ -169,6 +169,8 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
   Map<EthereumAddress, bool> monitoredTasks = {};
+  Map<EthereumAddress, StreamSubscription> taskSubscriptions = {};
+  StreamSubscription? taskCreatedSubscription;
 
   // Map<String, Account> accountsData = {};
 
@@ -759,7 +761,11 @@ class TasksServices extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 200));
     // await myBalance();
     // await Future.delayed(const Duration(milliseconds: 200));
+    if (taskCreatedSubscription != null) {
+      await taskCreatedSubscription?.cancel();
+    }
     await monitorEvents();
+
     // notifyListeners();
     isLoadingBackground = false;
   }
@@ -870,7 +876,7 @@ class TasksServices extends ChangeNotifier {
 
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
-    final subscription = taskCreateFacet.taskCreatedEvents().listen((event) async {
+    taskCreatedSubscription = taskCreateFacet.taskCreatedEvents().listen((event) async {
       log.fine('monitorEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
         // tasks[event.contractAdr] = await getTaskData(event.contractAdr);
@@ -918,7 +924,7 @@ class TasksServices extends ChangeNotifier {
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
     TaskContract taskContract = TaskContract(address: taskAddress, client: web3client, chainId: WalletService.chainId);
-    final subscription = taskContract.taskUpdatedEvents().listen((event) async {
+    taskSubscriptions[taskAddress] = taskContract.taskUpdatedEvents().listen((event) async {
       log.fine('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
         final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
