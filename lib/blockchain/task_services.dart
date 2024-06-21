@@ -169,6 +169,8 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
   Map<EthereumAddress, bool> monitoredTasks = {};
+  Map<EthereumAddress, StreamSubscription> taskSubscriptions = {};
+  StreamSubscription? taskCreatedSubscription;
 
   // Map<String, Account> accountsData = {};
 
@@ -713,14 +715,14 @@ class TasksServices extends ChangeNotifier {
   late Debouncing thr;
   late String searchKeyword = '';
 
-  Future<void> listenToEvents() async {
-    final JobContractCreated = _deployedContract.event('JobContractCreated');
-    final subscription = web3client.events(FilterOptions.events(contract: _deployedContract, event: JobContractCreated)).listen((event) {
-      final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
-      //
-      print('event fired');
-    });
-  }
+  // Future<void> listenToEvents() async {
+  //   final JobContractCreated = _deployedContract.event('JobContractCreated');
+  //   final subscription = web3client.events(FilterOptions.events(contract: _deployedContract, event: JobContractCreated)).listen((event) {
+  //     final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
+  //     //
+  //     print('event fired');
+  //   });
+  // }
 
   late bool contractsInitialized = false;
 
@@ -762,7 +764,11 @@ class TasksServices extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 200));
     // await myBalance();
     // await Future.delayed(const Duration(milliseconds: 200));
+    if (taskCreatedSubscription != null) {
+      await taskCreatedSubscription?.cancel();
+    }
     await monitorEvents();
+
     // notifyListeners();
     isLoadingBackground = false;
   }
@@ -873,16 +879,24 @@ class TasksServices extends ChangeNotifier {
 
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
-    taskCreateFacet.taskCreatedEvents().listen((event) async {
+    taskCreatedSubscription = taskCreateFacet.taskCreatedEvents().listen((event) async {
       log.fine('monitorEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
+        // await Future.delayed(Duration(milliseconds: 501));
+
         // tasks[event.contractAdr] = await getTaskData(event.contractAdr);
         // await refreshTask(tasks[event.contractAdr]!);
         // print('refreshed task: ${tasks[event.contractAdr]!.title}');
         // await myBalance();
-        await monitorTaskEvents(event.contractAdr);
-      } on GetTaskException {
-        log.warning('could not get task ${event.contractAdr} from blockchain');
+        log.fine('monitorEvents >> before if');
+        if (monitoredTasks[event.contractAdr] == null || monitoredTasks[event.contractAdr] == false) {
+          log.fine('monitorEvents >> monitorTaskEvents(event.contractAdr)');
+          await monitorTaskEvents(event.contractAdr);
+        }
+        monitoredTasks[event.contractAdr] = true;
+        log.fine('monitorEvents >> true');
+      // } on GetTaskException {
+      //   log.warning('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
         log.severe(e);
       }
@@ -918,9 +932,11 @@ class TasksServices extends ChangeNotifier {
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
     TaskContract taskContract = TaskContract(address: taskAddress, client: web3client, chainId: WalletService.chainId);
-    final subscription = taskContract.taskUpdatedEvents().listen((event) async {
+    taskSubscriptions[taskAddress] = taskContract.taskUpdatedEvents().listen((event) async {
       log.fine('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
+        // await Future.delayed(Duration(milliseconds: 501));
+
         log.fine('before getTasksData');
         final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
         log.fine('tasksTemp ${tasksTemp.length}');
@@ -945,8 +961,8 @@ class TasksServices extends ChangeNotifier {
         // } else {
         //   lastContractAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
         // }
-      } on GetTaskException {
-        log.severe('could not get task ${event.contractAdr} from blockchain');
+      // } on GetTaskException {
+      //   log.severe('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
         log.severe(e);
       }
@@ -1671,7 +1687,6 @@ class TasksServices extends ChangeNotifier {
   //     }
   //   } on GetTaskException {}
   // }
-
   Future<void> monitorTasks(List<EthereumAddress> taskList) async {
     // isLoadingBackground = true;
 
@@ -2358,6 +2373,7 @@ class TasksServices extends ChangeNotifier {
         // completedTimestamps.addAll(result[22].cast<BigInt>());
         // canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
+
       await Future.delayed(const Duration(milliseconds: 201));
     }
 

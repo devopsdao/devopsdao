@@ -24,13 +24,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 // import 'package:walletconnect_dart/walletconnect_dart.dart';
+import '../statistics/model_view/horizontal_list_view_model.dart';
 import '../task_dialog/services/task_update_service.dart';
 import '../wallet/services/wallet_service.dart';
+import '../widgets/loading/loading_model.dart';
 import 'chain_presets/get_addresses.dart';
 import 'abi/TaskCreateFacet.g.dart';
 import 'abi/TaskDataFacet.g.dart';
 import 'abi/TaskStatsFacet.g.dart';
 import 'abi/AccountFacet.g.dart';
+import 'abi/AccountDataFacet.g.dart';
 import 'abi/TokenFacet.g.dart';
 import 'abi/TokenDataFacet.g.dart';
 import 'abi/TaskContract.g.dart';
@@ -149,6 +152,7 @@ class TasksServices extends ChangeNotifier {
   bool hardhatLive = false;
   int liveAccount = 0; // choose hardhat account(wallet) to use;
   Map<EthereumAddress, Task> tasks = {};
+  int monitorTasksCount = 0;
   Map<EthereumAddress, Task> filterResults = {};
   Map<EthereumAddress, Task> tasksNew = {};
   Map<EthereumAddress, Task> tasksAuditPending = {};
@@ -165,6 +169,8 @@ class TasksServices extends ChangeNotifier {
   Map<EthereumAddress, Task> tasksCustomerComplete = {};
 
   Map<EthereumAddress, bool> monitoredTasks = {};
+  Map<EthereumAddress, StreamSubscription> taskSubscriptions = {};
+  StreamSubscription? taskCreatedSubscription;
 
   // Map<String, Account> accountsData = {};
 
@@ -581,8 +587,6 @@ class TasksServices extends ChangeNotifier {
 
   late ContractAbi _abiCode;
 
-  int totalTaskLen = 0;
-  int tasksLoaded = 0;
   int monitorTasksLoaded = 0;
   int monitorTotalTaskLen = 0;
   late EthereumAddress _contractAddress;
@@ -684,14 +688,18 @@ class TasksServices extends ChangeNotifier {
   // double? ethBalanceToken = 0;
   // double? pendingBalance = 0;
   // double? pendingBalanceToken = 0;
-  int score = 0;
-  int scoredTaskCount = 0;
-  double myScore = 0.0;
+  int performerScore = 0;
+  int customerScore = 0;
+  int totalScoredPerformerTasks = 0;
+  int totalScoredCustomerTasks = 0;
+  double myCustomerScore = 0.0;
+  double myPerformerScore = 0.0;
 
   late TaskCreateFacet taskCreateFacet;
   late TaskDataFacet taskDataFacet;
   late TaskStatsFacet taskStatsFacet;
   late AccountFacet accountFacet;
+  late AccountDataFacet accountDataFacet;
   late TokenFacet tokenFacet;
   late TokenDataFacet tokenDataFacet;
   late AxelarFacet axelarFacet;
@@ -707,14 +715,14 @@ class TasksServices extends ChangeNotifier {
   late Debouncing thr;
   late String searchKeyword = '';
 
-  Future<void> listenToEvents() async {
-    final JobContractCreated = _deployedContract.event('JobContractCreated');
-    final subscription = web3client.events(FilterOptions.events(contract: _deployedContract, event: JobContractCreated)).listen((event) {
-      final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
-      //
-      print('event fired');
-    });
-  }
+  // Future<void> listenToEvents() async {
+  //   final JobContractCreated = _deployedContract.event('JobContractCreated');
+  //   final subscription = web3client.events(FilterOptions.events(contract: _deployedContract, event: JobContractCreated)).listen((event) {
+  //     final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
+  //     //
+  //     print('event fired');
+  //   });
+  // }
 
   late bool contractsInitialized = false;
 
@@ -756,7 +764,15 @@ class TasksServices extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 200));
     // await myBalance();
     // await Future.delayed(const Duration(milliseconds: 200));
-    // await monitorEvents();
+<<<<<<< HEAD
+    await monitorEvents();
+=======
+    if (taskCreatedSubscription != null) {
+      await taskCreatedSubscription?.cancel();
+    }
+    await monitorEvents();
+
+>>>>>>> 16db8cabcb01a5d259de0f8009c93c2598305d9f
     // notifyListeners();
     isLoadingBackground = false;
   }
@@ -770,6 +786,7 @@ class TasksServices extends ChangeNotifier {
     taskDataFacet = TaskDataFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     taskStatsFacet = TaskStatsFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     accountFacet = AccountFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
+    accountDataFacet = AccountDataFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     tokenFacet = TokenFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     tokenDataFacet = TokenDataFacet(address: _contractAddress, client: web3client, chainId: WalletService.chainId);
     //templorary fix:
@@ -866,14 +883,21 @@ class TasksServices extends ChangeNotifier {
 
   // EthereumAddress lastJobContract;
   Future<void> monitorEvents() async {
-    final subscription = taskCreateFacet.taskCreatedEvents().listen((event) async {
+<<<<<<< HEAD
+    taskCreateFacet.taskCreatedEvents().listen((event) async {
+=======
+    taskCreatedSubscription = taskCreateFacet.taskCreatedEvents().listen((event) async {
+>>>>>>> 16db8cabcb01a5d259de0f8009c93c2598305d9f
       log.fine('monitorEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
         // tasks[event.contractAdr] = await getTaskData(event.contractAdr);
         // await refreshTask(tasks[event.contractAdr]!);
         // print('refreshed task: ${tasks[event.contractAdr]!.title}');
         // await myBalance();
-        await monitorTaskEvents(event.contractAdr);
+        if (monitoredTasks[event.contractAdr] == null || monitoredTasks[event.contractAdr] == false) {
+          await monitorTaskEvents(event.contractAdr);
+        }
+        monitoredTasks[event.contractAdr] = true;
       } on GetTaskException {
         log.warning('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
@@ -911,20 +935,25 @@ class TasksServices extends ChangeNotifier {
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
     TaskContract taskContract = TaskContract(address: taskAddress, client: web3client, chainId: WalletService.chainId);
-    final subscription = taskContract.taskUpdatedEvents().listen((event) async {
+    taskSubscriptions[taskAddress] = taskContract.taskUpdatedEvents().listen((event) async {
       log.fine('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
+        log.fine('before getTasksData');
         final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
+        log.fine('tasksTemp ${tasksTemp.length}');
         tasks[event.contractAdr] = tasksTemp[event.contractAdr]!;
+        tasks[event.contractAdr]!.loadingIndicator = false;
         await refreshTask(tasks[event.contractAdr]!);
         log.fine('refreshed task: ${tasks[event.contractAdr]!.title}');
         await myBalance();
 
         mainDebounce.debounce(() {
           // log.fine('debounced initCheckingOpenedTask fired');
+          log.fine('inside debaunce, before initCheckingOpenedTask');
           _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
+          log.fine('inside debaunce, after initCheckingOpenedTask');
         });
-
+        log.fine('debaunce, then notifylisteners');
         // var duration = DateTime.now().difference(monitorTimestamp);
         // if (duration.inSeconds > 2 && lastContractAdr != event.contractAdr) {
         //   _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
@@ -933,12 +962,12 @@ class TasksServices extends ChangeNotifier {
         // } else {
         //   lastContractAdr = EthereumAddress.fromHex('0x0000000000000000000000000000000000000000');
         // }
-        notifyListeners();
       } on GetTaskException {
         log.severe('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
         log.severe(e);
       }
+      notifyListeners();
     });
   }
 
@@ -1099,7 +1128,21 @@ class TasksServices extends ChangeNotifier {
       for (var tag in tagsList) {
         if (tag != '#') {
           filteredWithTags = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tags.contains(tag));
-          filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) => !value.tokenNames.last.contains(tag));
+          // filteredWithNfts = Map.from(filterResultsTags)..removeWhere((key, value) {
+          //   return !value.tokenNames.last.contains(tag);
+          // });
+          filteredWithNfts = Map.from(filterResultsTags)
+            ..removeWhere((key, value) {
+              bool result = false;
+              for (var nftNameList in value.tokenNames) {
+                for (var nftName in nftNameList) {
+                  if (nftName == tag) {
+                    result = true;
+                  }
+                }
+              }
+              return !result;
+            });
         }
       }
       filterResults = {...filteredWithTags, ...filteredWithNfts};
@@ -1177,7 +1220,13 @@ class TasksServices extends ChangeNotifier {
 
   Future<Map<EthereumAddress, Task>> getTasksData(List<EthereumAddress> taskAddresses) async {
     Map<EthereumAddress, Task> tasks = {};
-    final rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
+    List rawTasksList = [];
+    try {
+      rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
+      print('getTasksData >> rawTasksList ${rawTasksList.length}');
+    } catch (e) {
+      log.severe(e);
+    }
     late int i = 0;
     for (final task in rawTasksList) {
       List<double> tokenValues = [];
@@ -1223,10 +1272,11 @@ class TasksServices extends ChangeNotifier {
           // temporary solution. in the future "transport" String name will come directly from the block:
           transport: (task[0][9] == transportAxelarAdr || task[0][9] == transportHyperlaneAdr) ? task[9] : '');
       tasks[taskAddresses[i]] = taskObject;
-      await refreshTask(taskObject);
+      // await refreshTask(taskObject);
+      // log.fine(taskObject.title);
       i++;
     }
-
+    print('getTasksData >> tasks ${tasks.length} forloop  exit');
     return tasks;
   }
 
@@ -1419,23 +1469,6 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<void> refreshTask(Task task) async {
-    // Who participate in the TASK:
-    if (task.performer == publicAddress) {
-      // Calculate Pending among:
-      // if ((task.tokenBalances[0] != 0 || task.tokenBalances[0] != 0)) {
-      //   if (task.taskState == "agreed" || task.taskState == "progress" || task.taskState == "review" || task.taskState == "completed") {
-      //     final double ethBalancePreciseToken = task.tokenBalances[0].toDouble() / pow(10, 18);
-      //     final double ethBalanceToken = (((ethBalancePreciseToken * 10000).floor()) / 10000).toDouble();
-      //     pendingBalance = pendingBalance! + ethBalanceToken;
-      //     pendingBalanceToken = pendingBalanceToken! + 0;
-      //   }
-      // }
-      // add all scored Task for calculation:
-      if (task.performerRating != 0) {
-        score = score + task.performerRating;
-        scoredTaskCount++;
-      }
-    }
 
     // if (tasksAuditPending[task.taskAddress] != null) {
     tasksNew.remove(task.taskAddress);
@@ -1470,7 +1503,7 @@ class TasksServices extends ChangeNotifier {
     if (task.taskState != "" && task.taskState == "new") {
       if (hardhatDebug == true) {
         tasksNew[task.taskAddress] = task;
-        filterResults[task.taskAddress] = task;
+        // filterResults[task.taskAddress] = task;
       }
       if (task.contractOwner == publicAddress) {
         tasksCustomerSelection[task.taskAddress] = task;
@@ -1485,23 +1518,36 @@ class TasksServices extends ChangeNotifier {
           tasksPerformerParticipate[task.taskAddress] = task;
         } else {
           tasksNew[task.taskAddress] = task;
-          filterResults[task.taskAddress] = task;
-          // tasksNew.add(task);
-          // filterResults.add(task);
+          // filterResults[task.taskAddress] = task;
         }
       } else {
         tasksNew[task.taskAddress] = task;
-        filterResults[task.taskAddress] = task;
-        // tasksNew.add(task);
-        // filterResults.add(task);
+        // filterResults[task.taskAddress] = task;
       }
     }
 
     if (task.taskState != "" && (task.taskState == "completed" || task.taskState == "canceled")) {
       if (task.contractOwner == publicAddress) {
+        if (task.customerRating != 0 && task.taskState == "completed") {
+          customerScore = customerScore + task.customerRating;
+          totalScoredCustomerTasks++;
+        }
         tasksCustomerComplete[task.taskAddress] = task;
-      } else if (task.performer == publicAddress) {
+      } else if (task.performer == publicAddress ) {
+        if (task.performerRating != 0 && task.taskState == "completed") {
+          performerScore = performerScore + task.performerRating;
+          totalScoredPerformerTasks++;
+        }
         tasksPerformerComplete[task.taskAddress] = task;
+      }
+      // add all scored Task for calculation:
+      if (task.taskState == "completed") {
+        if (customerScore != 0 ) {
+          myCustomerScore = customerScore / totalScoredCustomerTasks;
+        }
+        if (performerScore != 0) {
+          myPerformerScore = performerScore / totalScoredPerformerTasks;
+        }
       }
       if (hardhatDebug == true) {
         tasksPerformerComplete[task.taskAddress] = task;
@@ -1654,80 +1700,101 @@ class TasksServices extends ChangeNotifier {
     int batchItemCount = 0;
     monitorTasksLoaded = 0;
     monitorTotalTaskLen = totalBatches;
-
+    int index = 0;
     for (var i = 0; i < taskList.length; i++) {
+      index = i;
       try {
         if (monitoredTasks[taskList[i]] == null || monitoredTasks[taskList[i]] == false) {
           monitors.add(monitorTaskEvents(taskList[i]));
+          monitoredTasks[taskList[i]] = true;
           batchItemCount++;
         }
         // print('batchItemCount: ${batchItemCount}');
         if (batchItemCount == batchSize) {
-          monitorBatches.add([...monitors]);
+          // monitorBatches.add([...monitors]);
+
+          try {
+            log.info('will monitor tasks in ${totalBatches} batches');
+            // for (var batchId = 0; batchId < totalBatches; batchId++) {
+            await Future.wait<void>(monitors);
+            log.fine('monitoring ${index + 1} tasks | total: $totalBatches batches');
+            await Future.delayed(const Duration(milliseconds: 201));
+            // monitorTasksLoaded = index;
+            // notifyListeners();
+            // loadingUpdatedData.updateData();
+            // }
+          } on GetTaskException {}
+
           monitors.clear();
           batchItemCount = 0;
         }
       } on GetTaskException {
-        log.severe('could not get task ${taskList[i]} from blockchain');
+        log.severe('could not subscribe for task ${taskList[i]} events');
       }
     }
     if (batchItemCount > 0) {
-      monitorBatches.add([...monitors]);
+      log.info('will monitor tasks in ${totalBatches} batches');
+      await Future.wait<void>(monitors);
+      log.fine('monitoring ${index + 1} tasks | total: $totalBatches batches');
+      await Future.delayed(const Duration(milliseconds: 201));
+      // monitorBatches.add([...monitors]);
       monitors.clear();
       batchItemCount = 0;
     }
+    monitorTasksCount = monitorTasksCount + index;
 
-    try {
-      log.info('will monitor tasks in ${totalBatches} batches');
-      for (var batchId = 0; batchId < totalBatches; batchId++) {
-        await Future.wait<void>(monitorBatches[batchId]);
-        log.fine('monitoring ${batchId + 1} batch| total: $totalBatches batches');
-        await Future.delayed(const Duration(milliseconds: 201));
-        monitorTasksLoaded = batchId;
-        notifyListeners();
-      }
-    } on GetTaskException {}
     monitorTotalTaskLen = 0;
+  }
+
+  LoadingDelegate? _loadingDelegate;
+  void setDelegate(LoadingDelegate delegate) {
+    _loadingDelegate = delegate;
   }
 
   Future<Map<EthereumAddress, Task>> getTasksBatch(List<EthereumAddress> taskList) async {
     const requestBatchSize = 10;
     const downloadBatchSize = 5;
 
-    tasksLoaded = 0;
-    totalTaskLen = taskList.length;
+    int tasksLoaded = 0;
+    int totalTaskLen = taskList.length;
 
     final batches = taskList.slices(requestBatchSize).toList();
     final batchesResults = <Map<EthereumAddress, Task>>[];
 
-    final downloadBatches = <List<Future<Map<EthereumAddress, Task>>>>[];
+    var downloadBatches = <List<Future<Map<EthereumAddress, Task>>>>[];
 
+    log.info(
+      'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests',
+    );
     for (final batch in batches) {
+      int index = batches.indexOf(batch);
       final downloaders = <Future<Map<EthereumAddress, Task>>>[];
 
       for (final taskAddress in batch) {
-        downloaders.add(getTasksData([taskAddress]).then((result) => result));
+        try {
+          downloaders.add(getTasksData([taskAddress]).then((result) => result));
+        } catch (e) {
+          log.severe(e);
+        }
       }
-
-      downloadBatches.add(downloaders);
-    }
-
-    try {
-      log.info(
-        'will download ${taskList.length} tasks in ${downloadBatches.length} batches of ${downloadBatchSize} downloaders of ${requestBatchSize} requests',
-      );
-
-      for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
-        final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloadBatches[batchId]);
+      try {
+        // for (var batchId = 0; batchId < downloadBatches.length; batchId++) {
+        final batchResults = await Future.wait<Map<EthereumAddress, Task>>(downloaders);
         batchesResults.addAll(batchResults);
-        log.fine('downloaded ${batchId + 1} batch | total: ${downloadBatches.length} batches');
-        await Future.delayed(const Duration(milliseconds: 201));
+        log.fine('downloaded ${index + 1} batch | total: ${downloadBatches.length} batches');
+        // await Future.delayed(const Duration(milliseconds: 201));
         tasksLoaded += batchResults.length;
-        notifyListeners();
+        // notifyListeners();
+        _loadingDelegate?.onTaskLoadingUpdated(tasksLoaded, totalTaskLen);
+
+        // }
+      } on GetTaskException catch (e) {
+        log.severe('EXCEPTION: $e');
       }
-    } on GetTaskException catch (e) {
-      log.severe('EXCEPTION: $e');
+
+      // downloadBatches.add(downloaders);
     }
+    // downloadBatches = downloadBatches.slice(0, 1);
 
     tasks = Map.fromEntries(batchesResults.expand((map) => map.entries));
 
@@ -1745,30 +1812,49 @@ class TasksServices extends ChangeNotifier {
     // if (duplicateTaskList.isNotEmpty) {
     //   log.warning('Found ${duplicateTaskList.length} duplicate tasks in taskList:');
     //   final duplicateTaskListAddresses = duplicateTaskList.map((address) => address.hex).toList()..sort();
-    //   log.warning('Duplicate Task List Addresses:\n${duplicateTaskListAddresses.join('\n')}');
+    //   log.warning('Duplicate Task List Addresses:\n${duplicateTa skListAddresses.join('\n')}');
     // }
 
     await Future.forEach<Task>(tasks.values, refreshTask);
 
     final sortedTasksList = tasks.values.toList()..sort((a, b) => b.createTime.compareTo(a.createTime));
     final sortedTasks = {for (final task in sortedTasksList) task.taskAddress: task};
+    // _walletService.writeTasksLoadingAndMonitorDoneOnNetId(WalletService.chainId);
 
     totalTaskLen = 0;
+    _loadingDelegate?.onTaskLoadingUpdated(tasksLoaded, totalTaskLen);
+    notifyListeners();
     return sortedTasks;
   }
 
   Future<void> refreshTasksForAccount(EthereumAddress address, String refresh) async {
     if (refresh == 'new') {
       await fetchTasksByState('new');
+    } else if (refresh == 'performer') {
+      await fetchTasksPerformer(address);
+    } else if (refresh == 'customer') {
+      await fetchTasksCustomer(address);
+    } else if (refresh == 'audit') {
+      await fetchTasksByState('audit');
     } else {
+      performerScore = 0;
+      customerScore = 0;
+      totalScoredPerformerTasks = 0;
+      totalScoredCustomerTasks = 0;
+      myCustomerScore = 0.0;
+      myPerformerScore = 0.0;
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
-      await fetchTasksByState('new');
+
+      // await fetchTasksByState('new');
+      // for (Task task in tasksNew.values) {
+      //   await refreshTask(task);
+      // }
     }
-    // notifyListeners();
   }
 
   Future<void> getTaskListFullThenFetchIt() async {
+    // work for hardhat
     List<EthereumAddress> taskList = await getTaskListFull();
     fetchTasksBatch(taskList);
   }
@@ -1797,8 +1883,6 @@ class TasksServices extends ChangeNotifier {
 
     pendingBalance = 0;
     pendingBalanceToken = 0;
-    score = 0;
-    scoredTaskCount = 0;
 
     tasks = await getTasksBatch(taskList);
 
@@ -1813,9 +1897,7 @@ class TasksServices extends ChangeNotifier {
     await aggregateStats();
 
     // Final Score Calculation
-    if (score != 0) {
-      myScore = score / scoredTaskCount;
-    }
+
 
     isLoading = false;
     isLoadingBackground = false;
@@ -1825,11 +1907,17 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<List<EthereumAddress>> getTaskContractsByState(String state) async {
-    int taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    int tasksLoaded = 0;
+    late int taskCount;
+    try {
+      taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    } catch (e) {
+      log.severe(e);
+    }
     log.info('Total task count: $taskCount');
 
-    const int batchSize = 100;
-    const int maxSimultaneousRequests = 10;
+    const int batchSize = 50;
+    const int maxSimultaneousRequests = 8;
 
     List<EthereumAddress> taskContractAddresses = [];
     int offset = 0;
@@ -1843,34 +1931,46 @@ class TasksServices extends ChangeNotifier {
 
       for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
         int currentLimit = min(limit, remainingTasks);
-        futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(currentLimit)));
+        futures.add(taskDataFacet.getTaskContractsByStateLimit(state, BigInt.from(offset), BigInt.from(currentLimit), BigInt.from(0)));
         remainingTasks -= currentLimit;
         offset += currentLimit;
       }
 
       List<List<EthereumAddress>> results = await Future.wait(futures);
       int retrievedCount = results.fold<int>(0, (sum, result) => sum + result.length);
-      log.info('Retrieved $retrievedCount task contract addresses');
+      log.info('Retrieved $retrievedCount task contract addresses result.length ${results.length}, remainingTasks: $remainingTasks');
 
       taskContractAddresses.addAll(results.expand((result) => result));
       log.info('Total task contract addresses so far: ${taskContractAddresses.length}');
-      await Future.delayed(const Duration(milliseconds: 201));
+      // await Future.delayed(const Duration(milliseconds: 201));
+      _loadingDelegate?.onTaskPreparationUpdated(offset, taskCount);
     }
 
-    log.info(taskContractAddresses);
+    // log.info(taskContractAddresses);
 
     log.info('Finished retrieving task contract addresses. Total count: ${taskContractAddresses.length}');
 
     // Remove duplicates from the taskContractAddresses list
     taskContractAddresses = taskContractAddresses.toSet().toList();
-
+    _loadingDelegate?.onTaskPreparationUpdated(offset, 0);
+    notifyListeners();
     return taskContractAddresses;
   }
 
+  bool _isFetchTasksByStateRunning = false;
   Future<void> fetchTasksByState(String state) async {
+    if (_isFetchTasksByStateRunning) {
+      return;
+    }
+    _isFetchTasksByStateRunning = true;
     isLoadingBackground = true;
-
-    List<EthereumAddress> taskList = await getTaskContractsByState(state);
+    late List<EthereumAddress> taskList;
+    late List<EthereumAddress> taskListMonitor;
+    try {
+      taskList = await getTaskContractsByState(state);
+    } catch (e) {
+      log.severe(e);
+    }
 
     filterResults.clear();
 
@@ -1901,24 +2001,36 @@ class TasksServices extends ChangeNotifier {
 
     await aggregateStats();
 
-    await monitorTasks(taskList);
+    if (state == "new") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == "agreed" || state == "progress" || state == "review") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == 'audit') {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == "completed" || state == "canceled") {
+      taskListMonitor = [];
+    }
+
+    await monitorTasks(taskListMonitor);
 
     isLoading = false;
     isLoadingBackground = false;
-    // await myBalance();
-    // notifyListeners();
+    _isFetchTasksByStateRunning = false;
   }
 
+  bool _isFetchTasksCustomerRunning = false;
   Future<void> fetchTasksCustomer(EthereumAddress publicAddress) async {
+    if (_isFetchTasksCustomerRunning) {
+      return;
+    }
+    _isFetchTasksCustomerRunning = true;
     isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
 
     filterResults.clear();
-
-    tasksAuditPending.clear();
-    tasksAuditApplied.clear();
-    tasksAuditWorkingOn.clear();
-    tasksAuditComplete.clear();
 
     tasksCustomerSelection.clear();
     tasksCustomerProgress.clear();
@@ -1937,19 +2049,19 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     isLoadingBackground = false;
     await myBalance();
-    // notifyListeners(); // notified in mybalance
+    _isFetchTasksCustomerRunning = false;
   }
 
+  bool _isFetchTasksPerformerRunning = false;
   Future<void> fetchTasksPerformer(EthereumAddress publicAddress) async {
+    if (_isFetchTasksPerformerRunning) {
+      return;
+    }
+    _isFetchTasksPerformerRunning = true;
     isLoadingBackground = true;
     List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsPerformer(publicAddress);
 
     filterResults.clear();
-
-    tasksAuditPending.clear();
-    tasksAuditApplied.clear();
-    tasksAuditWorkingOn.clear();
-    tasksAuditComplete.clear();
 
     tasksPerformerParticipate.clear();
     tasksPerformerProgress.clear();
@@ -1961,14 +2073,14 @@ class TasksServices extends ChangeNotifier {
       await refreshTask(task);
     }
 
-    await aggregateStats();
+    // await aggregateStats();
 
     await monitorTasks(taskList);
 
     isLoading = false;
     isLoadingBackground = false;
     await myBalance();
-    // notifyListeners(); // notified in mybalance()
+    _isFetchTasksPerformerRunning = false;
   }
 
   Future<String> addAccountToBlacklist(EthereumAddress accountAddress) async {
@@ -2011,16 +2123,16 @@ class TasksServices extends ChangeNotifier {
     final List<EthereumAddress> accountsList;
     final List accountsDataList;
     if (defaultListType == 'regular_list') {
-      accountsList = await accountFacet.getAccountsList();
+      accountsList = await accountDataFacet.getAccountsList();
     } else if (defaultListType == 'black_list') {
-      accountsList = await accountFacet.getAccountsBlacklist();
+      accountsList = await accountDataFacet.getAccountsBlacklist();
     } else if (defaultListType == 'raw_list') {
-      accountsList = await accountFacet.getRawAccountsList();
+      accountsList = await accountDataFacet.getRawAccountsList();
     } else {
       accountsList = requestedAccountsList;
     }
 
-    accountsDataList = await accountFacet.getAccountsData(accountsList);
+    accountsDataList = await accountDataFacet.getAccountsData(accountsList);
 
     late Map<String, Account> myAccountsData = {};
     for (final accountData in accountsDataList) {
@@ -2096,7 +2208,7 @@ class TasksServices extends ChangeNotifier {
   }
 
   Future<AccountStats> getAccountStats() async {
-    final accountsList = await accountFacet.getRawAccountsList();
+    final accountsList = await accountDataFacet.getRawAccountsList();
     final accountsData = await getAccountsData(requestedAccountsList: accountsList, defaultListType: 'raw_list');
 
     List<EthereumAddress> accountAddresses = [];
@@ -2165,8 +2277,26 @@ class TasksServices extends ChangeNotifier {
 
   TaskStats? _taskStats;
   TaskStats? get taskStats => _taskStats;
+
+  // bool stopTaskStatsInit = false;
+  // static bool stopTaskDownloadInit = false;
+  // static bool stopTaskMonitorInit = false;
+  // Future<void> stopTaskStatsInitialization() async {
+  //   stopTaskStatsInit = true;
+  // }
+  // Future<void> stopDownloadAndMonitoringInitialization() async {
+  //   stopTaskDownloadInit = true;
+  //   stopTaskMonitorInit = true;
+  // }
+
+  bool _isInitTaskStatsRunning = false;
   Future<void> initTaskStats() async {
-    const int batchSize = 10;
+    if (_isInitTaskStatsRunning) {
+      return;
+    }
+    _isInitTaskStatsRunning = true;
+
+    const int batchSize = 50;
     const int maxSimultaneousRequests = 10;
 
     int offset = 0;
@@ -2207,6 +2337,7 @@ class TasksServices extends ChangeNotifier {
 
       List<Future<dynamic>> futures = [];
       int remainingTasks = taskCount - offset;
+      _loadingDelegate?.onLoadingPublicStats(remainingTasks, taskCount);
 
       for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
         int currentLimit = min(limit, remainingTasks);
@@ -2244,7 +2375,6 @@ class TasksServices extends ChangeNotifier {
         // completedTimestamps.addAll(result[22].cast<BigInt>());
         // canceledTimestamps.addAll(result[23].cast<BigInt>());
       }
-
       await Future.delayed(const Duration(milliseconds: 201));
     }
 
@@ -2268,16 +2398,6 @@ class TasksServices extends ChangeNotifier {
         topETHBalances: topETHBalances,
         topETHAmounts: topETHAmounts,
         createTimestamps: createTimestamps
-<<<<<<< HEAD
-      // newTimestamps: newTimestamps,
-      // agreedTimestamps: agreedTimestamps,
-      // progressTimestamps: progressTimestamps,
-      // reviewTimestamps: reviewTimestamps,
-      // completedTimestamps: completedTimestamps,
-      // canceledTimestamps: canceledTimestamps,
-    );
-    notifyListeners();
-=======
         // newTimestamps: newTimestamps,
         // agreedTimestamps: agreedTimestamps,
         // progressTimestamps: progressTimestamps,
@@ -2285,9 +2405,11 @@ class TasksServices extends ChangeNotifier {
         // completedTimestamps: completedTimestamps,
         // canceledTimestamps: canceledTimestamps,
         );
-     notifyListeners();
->>>>>>> 1e8d1b8c66b97716d4e065a603920fcd0b504c04
+    // _walletService.writeStatsLoadingDoneOnNetId(WalletService.chainId);
+    _isInitTaskStatsRunning = false;
+    notifyListeners();
   }
+
   // Future<Map<EthereumAddress, Task>> getTasks(List taskList) async {
   //   Map<EthereumAddress, Task> tasks = {};
   //   totalTaskLen = taskList.length;
@@ -3666,5 +3788,10 @@ class TasksServices extends ChangeNotifier {
 
     // TaskContract taskContract = TaskContract(address: taskContracts[0], client: web3client, chainId: chainId);
     // var taskInfo = await taskContract.getTaskInfo();
+  }
+
+  Future<List<Task>> fetchTasksForPagination(int pageKey, int pageSize) async {
+    await Future.delayed(const Duration(seconds: 2));
+    return filterResults.values.skip(pageKey).take(pageSize).toList();
   }
 }
