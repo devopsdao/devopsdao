@@ -2753,7 +2753,17 @@ class TasksServices extends ChangeNotifier {
         } else if ((!_walletService.checkAllowedChainId() && WalletService.chainId != 31337) && interchainSelected == 'wormhole') {
           txn = await wormholeFacet.createTaskContractWormhole(senderAddress, taskData, credentials: credentials, transaction: transaction);
         } else {
-          txn = await taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction);
+          try {
+            txn = await retryFunction(
+              () => taskCreateFacet.createTaskContract(senderAddress, taskData, credentials: creds, transaction: transaction),
+              maxRetries: 5,
+              delay: Duration(seconds: 2),
+            );
+            // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+          } catch (e) {
+            print('taskParticipate  Failed after all retries: $e');
+            rethrow;
+          }
         }
       } on JsonRpcError catch (e) {
         errorCase('createTaskContract', nanoId, contractAddress, e.code!);
@@ -2796,7 +2806,17 @@ class TasksServices extends ChangeNotifier {
       }
 
       try {
-        txn = await taskDataFacet.addTaskToBlacklist(taskAddress, credentials: creds);
+        try {
+          txn = await retryFunction(
+            () => taskDataFacet.addTaskToBlacklist(taskAddress, credentials: creds),
+            maxRetries: 5,
+            delay: Duration(seconds: 2),
+          );
+          // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+        } catch (e) {
+          print('taskParticipate  Failed after all retries: $e');
+          rethrow;
+        }
       } on JsonRpcError catch (e) {
         errorCase('addTaskToBlackList', nanoId, contractAddress, e.code!);
       } on EthereumUserRejected catch (e) {
@@ -2967,7 +2987,17 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskAuditParticipate(message, replyTo, credentials: creds, transaction: transaction);
     // }
     try {
-      txn = await taskContract.taskAuditParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+      try {
+        txn = await retryFunction(
+          () => taskContract.taskAuditParticipate(senderAddress, message!, replyTo!, credentials: creds, transaction: transaction),
+          maxRetries: 5,
+          delay: Duration(seconds: 2),
+        );
+        // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+      } catch (e) {
+        print('taskParticipate  Failed after all retries: $e');
+        rethrow;
+      }
     } on JsonRpcError catch (e) {
       errorCase('taskAuditParticipate', nanoId, contractAddress, e.code!);
     } on EthereumUserRejected catch (e) {
@@ -3032,8 +3062,18 @@ class TasksServices extends ChangeNotifier {
     //       credentials: creds, transaction: transaction);
     // }
     try {
-      txn = await taskContract.taskStateChange(senderAddress, participantAddress, state, message, replyTo, score,
-          credentials: creds, transaction: transaction);
+      try {
+        txn = await retryFunction(
+          () => taskContract.taskStateChange(senderAddress, participantAddress, state, message!, replyTo!, score!,
+              credentials: creds, transaction: transaction),
+          maxRetries: 5,
+          delay: Duration(seconds: 2),
+        );
+        // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+      } catch (e) {
+        print('taskParticipate  Failed after all retries: $e');
+        rethrow;
+      }
     } on JsonRpcError catch (e) {
       errorCase('taskStateChange', nanoId, contractAddress, e.code!);
     } on EthereumUserRejected catch (e) {
@@ -3089,7 +3129,17 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.taskAuditDecision(favour, message, replyTo, score, credentials: creds, transaction: transaction);
     // }
     try {
-      txn = await taskContract.taskAuditDecision(senderAddress, favour, message, replyTo, score, credentials: creds, transaction: transaction);
+      try {
+        txn = await retryFunction(
+          () => taskContract.taskAuditDecision(senderAddress, favour, message!, replyTo!, score!, credentials: creds, transaction: transaction),
+          maxRetries: 5,
+          delay: Duration(seconds: 2),
+        );
+        // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+      } catch (e) {
+        print('taskParticipate  Failed after all retries: $e');
+        rethrow;
+      }
     } on JsonRpcError catch (e) {
       errorCase('taskAuditDecision', nanoId, contractAddress, e.code!);
     } on EthereumUserRejected catch (e) {
@@ -3139,7 +3189,17 @@ class TasksServices extends ChangeNotifier {
     //   txn = await taskContract.sendMessage(message, replyTo, credentials: creds, transaction: transaction);
     // }
     try {
-      txn = await taskContract.sendMessage(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+      try {
+        txn = await retryFunction(
+          () => taskContract.sendMessage(senderAddress, message, replyTo!, credentials: creds, transaction: transaction),
+          maxRetries: 5,
+          delay: Duration(seconds: 2),
+        );
+        // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+      } catch (e) {
+        print('taskParticipate  Failed after all retries: $e');
+        rethrow;
+      }
     } on JsonRpcError catch (e) {
       errorCase('sendChatMessage_$messageNanoID', nanoId, contractAddress, e.code!);
     } on EthereumUserRejected catch (e) {
@@ -3196,7 +3256,17 @@ class TasksServices extends ChangeNotifier {
       // gasPrice: gasPrice
     );
     try {
-      txn = await taskContract.withdrawAndRate(contractAddress, senderAddress, chain, rateScore, credentials: creds, transaction: transaction);
+      try {
+        txn = await retryFunction(
+          () => taskContract.withdrawAndRate(contractAddress, senderAddress, chain, rateScore, credentials: creds, transaction: transaction),
+          maxRetries: 5,
+          delay: Duration(seconds: 2),
+        );
+        // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+      } catch (e) {
+        print('taskParticipate  Failed after all retries: $e');
+        rethrow;
+      }
     } on JsonRpcError catch (e) {
       errorCase('withdrawAndRate', nanoId, contractAddress, e.code!);
     } on EthereumUserRejected catch (e) {
