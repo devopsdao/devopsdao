@@ -890,13 +890,13 @@ class TasksServices extends ChangeNotifier {
           print('refreshed task: ${tasks[event.contractAdr]!.title}');
         }
         // await myBalance();
-        log.fine('monitorEvents >> before if');
+        // log.fine('monitorEvents >> before if');
         if (monitoredTasks[event.contractAdr] == null || monitoredTasks[event.contractAdr] == false) {
-          log.fine('monitorEvents >> monitorTaskEvents(event.contractAdr)');
+          // log.fine('monitorEvents >> monitorTaskEvents(event.contractAdr)');
           await monitorTaskEvents(event.contractAdr);
         }
         monitoredTasks[event.contractAdr] = true;
-        log.fine('monitorEvents >> true');
+        // log.fine('monitorEvents >> true');
         // } on GetTaskException {
         //   log.warning('could not get task ${event.contractAdr} from blockchain');
       } catch (e) {
@@ -933,16 +933,16 @@ class TasksServices extends ChangeNotifier {
   // EthereumAddress lastJobContract;
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
-    log.fine('listening task ${taskAddress} events');
+    // log.fine('listening task ${taskAddress} events');
     TaskContract taskContract = TaskContract(address: taskAddress, client: web3client, chainId: WalletService.chainId);
     taskSubscriptions[taskAddress] = taskContract.taskUpdatedEvents().listen((event) async {
       log.fine('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
       try {
         // await Future.delayed(Duration(milliseconds: 501));
 
-        log.fine('before getTasksData');
+        // log.fine('before getTasksData');
         final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
-        log.fine('tasksTemp ${tasksTemp.length}');
+        // log.fine('tasksTemp ${tasksTemp.length}');
         tasks[event.contractAdr] = tasksTemp[event.contractAdr]!;
         if (tasks[event.contractAdr] != null) {
           tasks[event.contractAdr]!.loadingIndicator = false;
@@ -953,11 +953,11 @@ class TasksServices extends ChangeNotifier {
 
         mainDebounce.debounce(() {
           // log.fine('debounced initCheckingOpenedTask fired');
-          log.fine('inside debaunce, before initCheckingOpenedTask');
+          // log.fine('inside debaunce, before initCheckingOpenedTask');
           _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
-          log.fine('inside debaunce, after initCheckingOpenedTask');
+          // log.fine('inside debaunce, after initCheckingOpenedTask');
         });
-        log.fine('debaunce, then notifylisteners');
+        // log.fine('debaunce, then notifylisteners');
         // var duration = DateTime.now().difference(monitorTimestamp);
         // if (duration.inSeconds > 2 && lastContractAdr != event.contractAdr) {
         //   _taskUpdateService.initCheckingOpenedTask(event.contractAdr);
@@ -1223,14 +1223,40 @@ class TasksServices extends ChangeNotifier {
     throw (GetTaskException);
   }
 
+  Future<T> retryFunction<T>(
+    Future<T> Function() function, {
+    int maxRetries = 3,
+    Duration delay = const Duration(seconds: 1),
+  }) async {
+    int attempts = 0;
+    while (true) {
+      try {
+        return await function();
+      } catch (e) {
+        attempts++;
+        if (attempts >= maxRetries) {
+          rethrow;
+        }
+        await Future.delayed(delay);
+        print('Retrying... Attempt $attempts of $maxRetries');
+      }
+    }
+  }
+
   Future<Map<EthereumAddress, Task>> getTasksData(List<EthereumAddress> taskAddresses) async {
     Map<EthereumAddress, Task> tasks = {};
     List rawTasksList = [];
+
     try {
-      rawTasksList = await taskDataFacet.getTasksData(taskAddresses);
-      print('getTasksData >> rawTasksList ${rawTasksList.length}');
+      rawTasksList = await retryFunction(
+        () => taskDataFacet.getTasksData(taskAddresses),
+        maxRetries: 5,
+        delay: Duration(seconds: 2),
+      );
+      // print('getTasksData >> rawTasksList ${rawTasksList.length}');
     } catch (e) {
-      log.severe(e);
+      print('getTasksData >> rawTasksList  Failed after all retries: $e');
+      rethrow;
     }
     late int i = 0;
     for (final task in rawTasksList) {
@@ -1281,7 +1307,7 @@ class TasksServices extends ChangeNotifier {
       // log.fine(taskObject.title);
       i++;
     }
-    print('getTasksData >> tasks ${tasks.length} forloop  exit');
+    // print('getTasksData >> tasks ${tasks.length} forloop  exit');
     return tasks;
   }
 
