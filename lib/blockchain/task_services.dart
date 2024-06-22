@@ -937,12 +937,7 @@ class TasksServices extends ChangeNotifier {
         // await Future.delayed(Duration(milliseconds: 501));
 
         // log.fine('before getTasksData');
-        final Map<EthereumAddress, Task> tasksTemp = await getTasksData([event.contractAdr]);
-        // log.fine('tasksTemp ${tasksTemp.length}');
-        tasks[event.contractAdr] = tasksTemp[event.contractAdr]!;
-        if (tasks[event.contractAdr] != null) {
-          tasks[event.contractAdr]!.loadingIndicator = false;
-        }
+        tasks[event.contractAdr] = (await getTasksData([event.contractAdr]))[event.contractAdr]!;
         await refreshTask(tasks[event.contractAdr]!);
         log.fine('refreshed task: ${tasks[event.contractAdr]!.title}');
         await myBalance();
