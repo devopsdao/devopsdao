@@ -61,12 +61,12 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Participate',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidth + calcTextSize('Participate', const TextStyle(fontSize: 18)).width,
-          callback: () async {
+          callback: () {
             task.loadingIndicator = true;
             String message = '[performer application] ${interface.taskMessage}';
-            await tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: message);
+            tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: message);
             Navigator.pop(context);
-            await interface.emptyTaskMessage();
+            interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/tasks');
             Beamer.of(context).updateRouteInformation(routeInfo);
 
@@ -96,18 +96,18 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Start the task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong + calcTextSize('Start the task', const TextStyle(fontSize: 18)).width,
-          callback: () async {
+          callback: () {
             task.loadingIndicator = true;
 
             String message = '[in progress] ${interface.taskMessage}';
-            await tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
+            tasksServices.taskStateChange(task.taskAddress, task.performer, 'progress', task.nanoId,
                 message: message);
             Navigator.pop(context);
-            await interface.emptyTaskMessage();
+            interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/performer');
             Beamer.of(context).updateRouteInformation(routeInfo);
 
-            await showDialog(
+            showDialog(
                 barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletActionDialog(
@@ -123,16 +123,16 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Submit for Review',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong  + calcTextSize('Submit for Review', const TextStyle(fontSize: 18)).width,
-          callback: () async {
+          callback: () {
             task.loadingIndicator = true;
             String message = '[sent to review] ${interface.taskMessage}';
-            await tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
+            tasksServices.taskStateChange(task.taskAddress, task.performer, 'review', task.nanoId,
                 message: message);
             Navigator.pop(context);
-            await interface.emptyTaskMessage();
+            interface.emptyTaskMessage();
             RouteInformation routeInfo = const RouteInformation(location: '/performer');
             Beamer.of(context).updateRouteInformation(routeInfo);
-            await showDialog(
+            showDialog(
                 barrierDismissible: false,
                 context: context,
                 builder: (context) => WalletActionDialog(
@@ -179,7 +179,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Complete Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong + calcTextSize('Complete Task', const TextStyle(fontSize: 18)).width,
-          callback: () async {
+          callback: () {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
             task.loadingIndicator = true;
@@ -208,7 +208,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: buttonText,
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong + calcTextSize(buttonText, const TextStyle(fontSize: 18)).width,
-          callback: () async {
+          callback: () {
             task.loadingIndicator = true;
             tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(taskModelView.state.rating));
             Navigator.pop(context);
