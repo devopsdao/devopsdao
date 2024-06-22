@@ -882,6 +882,8 @@ class TasksServices extends ChangeNotifier {
         await refreshTask(tasks[event.contractAdr]!);
         if (tasks[event.contractAdr] != null) {
           print('refreshed task: ${tasks[event.contractAdr]!.title}');
+        } else {
+          print('could not refresh task: ${event.contractAdr}');
         }
         // await myBalance();
         // log.fine('monitorEvents >> before if');
