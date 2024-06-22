@@ -17,10 +17,54 @@ class ScoreStats extends StatelessWidget {
 
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     var tasksServices = context.read<TasksServices>();
-    double performerScore = tasksServices.myPerformerScore;
-    double customerScore = tasksServices.myCustomerScore;
-    double totalScore = (performerScore + customerScore) / 2;
-    int totalScoredTasks = tasksServices.totalScoredCustomerTasks + tasksServices.totalScoredPerformerTasks;
+    // double performerScore = tasksServices.myPerformerScore;
+    // double customerScore = tasksServices.myCustomerScore;
+    // double totalScore = (performerScore + customerScore) / 2;
+    //
+    // for (var task in tasksServices.tasksCustomerComplete) {
+    //
+    // }
+    double performerScore = 0.0;
+    double customerScore = 0.0;
+    int totalScoredPerformerTasks = 0;
+    int totalScoredCustomerTasks = 0;
+    double myCustomerScore = 0.0;
+    double myPerformerScore = 0.0;
+    double totalScore = 0.0;
+    int totalScoredTasks = 0;
+
+    tasksServices.tasksCustomerComplete.forEach((address, task) {
+      if (task.taskState == "completed") {
+        if (task.contractOwner == tasksServices.publicAddress) {
+          if (task.customerRating != 0) {
+            customerScore += task.customerRating;
+            totalScoredCustomerTasks++;
+          }
+        }
+      }
+    });
+
+    tasksServices.tasksPerformerComplete.forEach((address, task) {
+      if (task.taskState == "completed") {
+        if (task.performer == tasksServices.publicAddress) {
+          if (task.performerRating != 0) {
+            performerScore += task.performerRating;
+            totalScoredPerformerTasks++;
+          }
+        }
+      }
+    });
+
+    if (totalScoredCustomerTasks > 0) {
+      myCustomerScore = customerScore / totalScoredCustomerTasks;
+    }
+
+    if (totalScoredPerformerTasks > 0) {
+      myPerformerScore = performerScore / totalScoredPerformerTasks;
+    }
+
+    totalScoredTasks = totalScoredCustomerTasks + totalScoredPerformerTasks;
+    totalScore  = (myPerformerScore + myCustomerScore) / 2;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -37,7 +81,6 @@ class ScoreStats extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
                     if (listenWalletAddress == null)
                       Text(
                         'Not Connected',
@@ -52,15 +95,18 @@ class ScoreStats extends StatelessWidget {
                       )
                     else
                       Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-
                         children: [
                           Column(
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 6.0),
-                                child: SelectableText(
-                                  'Total: $totalScoredTasks tasks',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                child: Center(
+                                  child: SelectableText(
+                                    'Total completed\n'
+                                    'and rated $totalScoredTasks tasks',
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
                                 ),
                               ),
                               RatingStars(
@@ -99,12 +145,13 @@ class ScoreStats extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 6.0),
                                   child: SelectableText(
-                                    'Performed: ${tasksServices.totalScoredPerformerTasks} tasks',
+                                    'Performed\nwith rate ${totalScoredPerformerTasks} tasks',
                                     style: Theme.of(context).textTheme.bodyMedium,
+                                      textAlign: TextAlign.center
                                   ),
                                 ),
                                 RatingStars(
-                                  value: performerScore,
+                                  value: myPerformerScore,
                                   starCount: 5,
                                   starSize: 15,
                                   // valueLabelColor: Colors.orangeAccent,
@@ -139,12 +186,13 @@ class ScoreStats extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 6.0),
                                   child: SelectableText(
-                                    'Created: ${tasksServices.totalScoredCustomerTasks} tasks',
+                                    'Created\nwith rate ${totalScoredCustomerTasks} tasks',
                                     style: Theme.of(context).textTheme.bodyMedium,
+                                      textAlign: TextAlign.center
                                   ),
                                 ),
                                 RatingStars(
-                                  value: customerScore,
+                                  value: myCustomerScore,
                                   starCount: 5,
                                   starSize: 15,
                                   // valueLabelColor: Colors.orangeAccent,
