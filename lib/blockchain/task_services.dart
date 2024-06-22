@@ -2905,7 +2905,17 @@ class TasksServices extends ChangeNotifier {
         txn = await wormholeFacet.taskParticipateWormhole(senderAddress, contractAddress, message, replyTo,
             credentials: creds, transaction: transaction);
       } else {
-        txn = await taskContract.taskParticipate(senderAddress, message, replyTo, credentials: creds, transaction: transaction);
+        try {
+          txn = await retryFunction(
+            () => taskContract.taskParticipate(senderAddress, message!, replyTo!, credentials: creds, transaction: transaction),
+            maxRetries: 5,
+            delay: Duration(seconds: 2),
+          );
+          // print('getTasksData >> rawTasksList ${rawTasksList.length}');
+        } catch (e) {
+          print('taskParticipate  Failed after all retries: $e');
+          rethrow;
+        }
       }
     } on JsonRpcError catch (e) {
       errorCase('taskParticipate', nanoId, contractAddress, e.code!);
