@@ -407,7 +407,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
                             selected: e.value.selected,
                             wrapperRole: WrapperRole.selectNew,
                           );
-                        }).toList()),
+                        }).take(99).toList()),
                   );
                 }),
               ),

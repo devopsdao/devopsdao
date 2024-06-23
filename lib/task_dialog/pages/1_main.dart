@@ -318,7 +318,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: RichText(
-                                    text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
+                                    text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: <TextSpan>[
                                   TextSpan(
                                       text: 'There '
                                           '${task.participants.length == 1 ? 'is' : 'are'} '
@@ -391,7 +391,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 Expanded(
                                   flex: 2,
                                   child: RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                                     TextSpan(
                                         text: 'Thank you for your contribution. This Task completed. You have earned: ',
                                         style: TextStyle(
@@ -425,7 +425,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: RichText(
-                                      text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                      text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                                     TextSpan(text: 'Tokens and Tags: '),
                                   ])),
                                 ),
@@ -478,7 +478,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       return Row(
                                         children: <Widget>[
                                           RichText(
-                                              text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                              text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                                             TextSpan(
                                                 text: 'Nothing here',
                                                 style: TextStyle(
@@ -537,7 +537,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                           Padding(
                             padding: const EdgeInsets.only( left: 4.0),
                             child: RichText(
-                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const <TextSpan>[
+                                text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                                   TextSpan(text: 'Task rating: '),
                                 ])),
                           ),
@@ -550,7 +550,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 4.0),
-                                      child: Text('Customer rating', style: Theme.of(context).textTheme.bodySmall,),
+                                      child: Text('Customer rating', style: Theme.of(context).textTheme.bodyMedium,),
                                     ),
                                     RatingStars(
                                       value: task.customerRating.toDouble(),
@@ -584,7 +584,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 4.0),
-                                      child: Text('Performer rating', style: Theme.of(context).textTheme.bodySmall,),
+                                      child: Text('Performer rating', style: Theme.of(context).textTheme.bodyMedium,),
                                     ),
                                     RatingStars(
                                       value: task.performerRating.toDouble(),
@@ -756,7 +756,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       alignment: Alignment.topLeft,
                                       child: Text.rich(
-                                        TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                        TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                           WidgetSpan(
                                               child: Padding(
                                             padding: const EdgeInsets.only(right: 5.0),
@@ -775,7 +775,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         // RichText(
-                                        //     text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                        //     text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                         //   const WidgetSpan(
                                         //       child: Padding(
                                         //     padding: EdgeInsets.only(right: 5.0),
@@ -822,7 +822,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                 }
                                               },
                                               child: RichText(
-                                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                                  text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                                 WidgetSpan(
                                                     child: Padding(
                                                   padding: const EdgeInsets.only(right: 5.0),
@@ -938,7 +938,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: RichText(
-                                                text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                                text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                               WidgetSpan(
                                                   child: Padding(
                                                 padding: const EdgeInsets.only(right: 5.0),
@@ -999,7 +999,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             Padding(
                                               padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                                               child: RichText(
-                                                  text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                                  text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                                 WidgetSpan(
                                                     child: Padding(
                                                   padding: const EdgeInsets.only(right: 5.0),
@@ -1029,7 +1029,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           //   padding: const EdgeInsets.all(8.0),
                                           //   alignment: Alignment.topLeft,
                                           //   child: RichText(
-                                          //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: const [
+                                          //       text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const [
                                           //     WidgetSpan(
                                           //         child: Padding(
                                           //       padding: EdgeInsets.only(right: 5.0),
@@ -1181,7 +1181,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   //   padding: const EdgeInsets.all(8.0),
                                   //   alignment: Alignment.topLeft,
                                   //   child: RichText(
-                                  //       text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                  //       text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                   //         const WidgetSpan(
                                   //             child: Padding(
                                   //               padding: EdgeInsets.only(right: 5.0),
@@ -1215,7 +1215,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       alignment: Alignment.topLeft,
                                       child: RichText(
-                                          text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: [
+                                          text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: [
                                         WidgetSpan(
                                             child: Padding(
                                           padding: const EdgeInsets.only(right: 5.0),

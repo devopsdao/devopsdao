@@ -82,8 +82,8 @@ class SearchServices extends ChangeNotifier {
 
         }
       }
-      addToNewTaskFilterResults = {...tempNfts, ...nftBalanceMap};
-      selectionPageInitialCombined = {...tempNfts, ...nftBalanceMap}; // initial combined copied map for tagsSearchFilter()
+      addToNewTaskFilterResults = {...nftBalanceMap, ...tempNfts };
+      selectionPageInitialCombined = {...nftBalanceMap, ...tempNfts, }; // initial combined copied map for tagsSearchFilter()
 
     }
     notifyListeners();

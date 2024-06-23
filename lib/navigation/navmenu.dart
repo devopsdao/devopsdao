@@ -389,14 +389,14 @@ class SideBar extends StatelessWidget {
             context.beamToNamed('/performer');
           },
         ),
-        if (tasksServices.roleNfts['governor'] > 0 && listenWalletConnected)
-          SidebarXItem(
-            icon: Icons.engineering_rounded,
-            label: 'Stats',
-            onTap: () {
-              context.beamToNamed('/stats');
-            },
-          ),
+        // if (tasksServices.roleNfts['governor'] > 0 && listenWalletConnected)
+        //   SidebarXItem(
+        //     icon: Icons.engineering_rounded,
+        //     label: 'Stats',
+        //     onTap: () {
+        //       context.beamToNamed('/stats');
+        //     },
+        //   ),
         if (tasksServices.roleNfts['auditor'] > 0 && listenWalletConnected)
           SidebarXItem(
             icon: Icons.engineering_rounded,

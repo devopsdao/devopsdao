@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../../../config/theme.dart';
 import '../../../model_view/wc_model.dart';
 import '../../shared/network_selection.dart';
 
@@ -36,9 +37,18 @@ class QrCodeImage extends StatelessWidget {
             QrImageView(
               padding: const EdgeInsets.all(0),
               data: walletConnectUri,
+              backgroundColor: DodaoTheme.of(context).background,
               size: qrSize,
               gapless: false,
-              backgroundColor: Colors.white,
+              eyeStyle: QrEyeStyle(
+                eyeShape: QrEyeShape.square,
+                color: DodaoTheme.of(context).primaryText,
+              ),
+              dataModuleStyle: QrDataModuleStyle(
+                dataModuleShape: QrDataModuleShape.square,
+                color: DodaoTheme.of(context).primaryText,
+              ),
+              // backgroundColor: Colors.white,
             ),
         ],
       ),

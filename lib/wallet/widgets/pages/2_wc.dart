@@ -43,6 +43,7 @@ class _WalletConnectState extends State<WalletConnect> {
         Padding(
           padding: const EdgeInsets.only(bottom: 20.0, top: 10.0),
           child: Material(
+            color: DodaoTheme.of(context).background,
             elevation: DodaoTheme.of(context).elevation,
             borderRadius: DodaoTheme.of(context).borderRadius,
             child: Container(

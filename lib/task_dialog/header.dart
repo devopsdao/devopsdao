@@ -27,7 +27,14 @@ class TaskDialogHeader extends StatefulWidget {
 
 class _TaskDialogHeaderState extends State<TaskDialogHeader> {
 
-  Color _containerColor = Colors.transparent;
+  LinearGradient _containerColor = const LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [
+      Colors.purpleAccent,
+      Colors.deepOrange,
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -108,27 +115,28 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                     ),
                   ),
                  Padding(
-                   padding: EdgeInsets.only(left: 5),
+                   padding: EdgeInsets.only(left: 6),
                    child: AnimatedContainer(
-                     padding: EdgeInsets.all(4),
+                     padding: EdgeInsets.all(7),
                      duration: const Duration(milliseconds: 400),
                      curve: Curves.easeInOut,
                      decoration: BoxDecoration(
-                       color: _containerColor,
-                       borderRadius: BorderRadius.circular(6.0),
+                       gradient: _containerColor,
+                       borderRadius: BorderRadius.circular(18.0),
                      ),
                      child: Row(
                        children: [
                          Padding(
-                           padding:  EdgeInsets.only(right: 5),
+                           padding:  EdgeInsets.only(right: 6),
                            child: Text('${task.taskAddress.toString().substring(task.taskAddress.toString().length - 6)}',
-                               style: Theme.of(context).textTheme.bodySmall),
+
+                               style: Theme.of(context).textTheme.bodySmall!.apply(color: Colors.white,)),
                          ),
 
                          Icon(
                            FontAwesomeIcons.arrowUpFromBracket,
                            size: 16,
-                           color: DodaoTheme.of(context).secondaryText,
+                           color: Colors.white,
                          ),
                        ],
                      ),
@@ -138,12 +146,27 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
               ),
               onTap: () async {
                 setState(() {
-                  _containerColor = Colors.grey.withAlpha(100); // Change this to your desired color
+                  _containerColor = const LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    colors: [
+                      Colors.blueAccent,
+                      Colors.purple,
+                      Colors.deepOrange,
+                    ],
+                  );
                 });
 
-                Future.delayed(const Duration(milliseconds: 500), () {
+                Future.delayed(const Duration(milliseconds: 800), () {
                   setState(() {
-                    _containerColor = Colors.transparent;
+                    _containerColor = const LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        Colors.purpleAccent,
+                        Colors.deepOrange,
+                      ],
+                    );
                   });
                 });
                 // Clipboard.setData(ClipboardData(text: 'https://dodao.dev/#/${widget.fromPage}/${task.taskAddress}')).then((_) {
@@ -154,9 +177,20 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
                       size: 20,
                       color: DodaoTheme.of(context).flushTextColor,
                     ),
-                    message: 'Task URL copied to your clipboard!',
+                    message: 'Task "${task.title} '
+                        '...${task.taskAddress.toString().substring(task.taskAddress.toString().length - 8)}" '
+                        'URL copied to your clipboard!',
                     duration: const Duration(seconds: 2),
-                    backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                    // backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                      backgroundGradient: const LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [
+                          Colors.blueAccent,
+                          Colors.purple,
+                          Colors.deepOrange,
+                        ],
+                      ),
                     shouldIconPulse: false)
                   .show(context);
                 });

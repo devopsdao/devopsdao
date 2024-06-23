@@ -39,6 +39,8 @@ class PerformerPageWidget extends StatefulWidget {
 class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
+  int tabIndex = 0;
   final colors = [const Color(0xFFF62BAD), const Color(0xFFF75D21)  , const Color(
       0xFF448AF7)];
   late Color indicatorColor = colors[0];
@@ -92,10 +94,6 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
     );
   }
 
-
-
-  int tabIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     var tasksServices = context.watch<TasksServices>();
@@ -103,15 +101,10 @@ class _PerformerPageWidgetState extends State<PerformerPageWidget> with SingleTi
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
 
-    // AppBarWithSearchSwitch.of(appbarServices.searchBarContext)?.stopSearch();
-
-    Map tabs = {"new": 0, "agreed": 1, "progress": 1, "review": 1, "audit": 1, "completed": 2, "canceled": 2};
-
     late bool desktopWidth = false;
     if (MediaQuery.of(context).size.width > 700) {
       desktopWidth = true;
     }
-
 
     if (widget.taskAddress != null) {
       final task = tasksServices.tasks[widget.taskAddress];
