@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:easy_infinite_pagination/easy_infinite_pagination.dart';
@@ -48,7 +47,6 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
     artboard.addController(controller!);
     _bump = controller.findInput<bool>('Trigger 1') as SMITrigger;
     // _bump?.controller.isActive = false;
-
   }
 
   Future<void> _hitBump() async {
@@ -64,11 +62,10 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
   int _currentIndex = 0;
   final int batchSize = 20;
 
-
   void _fetchData() async {
     if (_isLoading) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _isLoading = true;
         });
@@ -93,10 +90,9 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
     final tasksServices = context.watch<TasksServices>();
     _filterResults = tasksServices.filterResults.values.toList();
 
-    if (_newList.isEmpty
-        || _filterResults.isNotEmpty
-        && _filterResults.first != _newList.first
-        || _controlListNumber != _filterResults.length) {
+    Function deepEq = const DeepCollectionEquality().equals;
+
+    if (_newList.isEmpty || _filterResults.isNotEmpty && !deepEq(_filterResults, _newList) || _controlListNumber != _filterResults.length) {
       _newList.clear();
       _currentIndex = 0;
       _hasReachedMax = false;
@@ -197,11 +193,13 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                         child: SizedBox(
                           child: (widget.paw == null)
                               ? const SizedBox.shrink()
-                              : RiveAnimation.direct(widget.paw!,
-                            fit: BoxFit.fitHeight,
-                            // stateMachines: const ['State Machine 1'],
-                            // controllers: [_controller],
-                            onInit: _onRiveInit,),
+                              : RiveAnimation.direct(
+                                  widget.paw!,
+                                  fit: BoxFit.fitHeight,
+                                  // stateMachines: const ['State Machine 1'],
+                                  // controllers: [_controller],
+                                  onInit: _onRiveInit,
+                                ),
 
                           // RiveAnimation.asset(
                           //   'assets/rive_animations/paw.riv',
@@ -233,8 +231,7 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                     ],
                   );
                 },
-                child: child
-            );
+                child: child);
           },
           child: InfiniteListView(
             controller: _scrollController,
@@ -245,14 +242,13 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
                   child: TaskTransition(
                     fromPage: widget.pageName,
                     task: _newList[index],
-                  )
-              ),
+                  )),
               firstPageLoadingBuilder: (_) => Container(
-                // child: Text('firstPageLoadingBuilder'),
-              ),
+                  // child: Text('firstPageLoadingBuilder'),
+                  ),
               firstPageNoItemsBuilder: (_) => Container(
-                // child: Text('firstPageNoItemsBuilder'),
-              ),
+                  // child: Text('firstPageNoItemsBuilder'),
+                  ),
               loadMoreLoadingBuilder: (_) => Center(
                 child: SizedBox(
                   height: 40,
@@ -279,7 +275,6 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
             ),
           ),
 
-
           // child:  ListView.builder(
           //   padding: EdgeInsets.zero,
           //   scrollDirection: Axis.vertical,
@@ -294,7 +289,6 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
           //     );
           //   },
           // ),
-
         ));
   }
 }
