@@ -1905,7 +1905,7 @@ class TasksServices extends ChangeNotifier {
     } catch (e) {
       log.severe(e);
     }
-    log.info('Total task count: $taskCount');
+    log.info('Total $state task count: $taskCount');
 
     const int batchSize = 50;
     const int maxSimultaneousRequests = 8;
