@@ -2074,6 +2074,38 @@ class TasksServices extends ChangeNotifier {
     _isFetchTasksPerformerRunning = false;
   }
 
+  bool _isFetchTasksAuditorRunning = false;
+  Future<void> fetchTasksAuditor(EthereumAddress publicAddress) async {
+    if (_isFetchTasksAuditorRunning) {
+      return;
+    }
+    _isFetchTasksAuditorRunning = true;
+    isLoadingBackground = true;
+    List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsAuditor(publicAddress);
+
+    filterResults.clear();
+
+    tasksAuditApplied.clear();
+    tasksAuditPending.clear();
+    tasksAuditWorkingOn.clear();
+    tasksAuditComplete.clear();
+
+    Map<EthereumAddress, Task> tasks = await getTasksBatch(taskList.reversed.toList());
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    // await aggregateStats();
+
+    await monitorTasks(taskList);
+
+    isLoading = false;
+    isLoadingBackground = false;
+    await myBalance();
+    _isFetchTasksAuditorRunning = false;
+  }
+
   Future<String> addAccountToBlacklist(EthereumAddress accountAddress) async {
     transactionStatuses['addAccountToBlacklist'] = {
       'addAccountToBlacklist': {'status': 'pending', 'txn': 'initial'}

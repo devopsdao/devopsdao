@@ -121,8 +121,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                   borderRadius: DodaoTheme.of(context).borderRadius,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      // maxWidth: maxStaticInternalDialogWidth,
-                    ),
+                        // maxWidth: maxStaticInternalDialogWidth,
+                        ),
                     child: GestureDetector(
                       onTap: () {
                         interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['description']!,
@@ -150,8 +150,9 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               Container(
                                 padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                                 child: LimitedBox(
-                                  maxHeight:
-                                      textHeight.didExceedMaxLines ? textHeight.height + 26 : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
+                                  maxHeight: textHeight.didExceedMaxLines
+                                      ? textHeight.height + 26
+                                      : (oneLineHeight.height * (numLines < 3 ? 3 : numLines)) + 12,
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -174,8 +175,10 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                             icon: const Icon(Icons.chat_outlined, size: 18, color: Colors.white),
                                             tooltip: 'Go to chat page',
                                             onPressed: () {
-                                              interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
-                                                  duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                              interface.dialogPagesController.animateToPage(
+                                                  interface.dialogCurrentState['pages']['widgets.chat'] ?? 99,
+                                                  duration: const Duration(milliseconds: 400),
+                                                  curve: Curves.ease);
                                             },
                                           ),
                                         ),
@@ -215,7 +218,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                     ),
                   ),
                 ),
-                  if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
+                if ((interface.dialogCurrentState['name'] == 'performer-completed' ||
                     (interface.dialogCurrentState['name'] == 'customer-review' || tasksServices.hardhatDebug == true)))
                   RateTask(task: task),
 
@@ -250,8 +253,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                       const Text(
                                         'Warning, this contract on Audit state!',
                                       ),
-                                      if (task.auditInitiator == listenWalletAddress &&
-                                          interface.dialogCurrentState['pages'].containsKey('select'))
+                                      if (task.contractOwner == listenWalletAddress && interface.dialogCurrentState['pages'].containsKey('select'))
                                         Text(
                                             'There '
                                             '${task.auditors.length == 1 ? 'is' : 'are'} '
@@ -262,7 +264,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                 // height: 1.1,
                                                 )),
                                       if (task.auditor == EthereumAddress.fromHex('0x0000000000000000000000000000000000000000') &&
-                                          task.auditInitiator != listenWalletAddress)
+                                          task.contractOwner != listenWalletAddress)
                                         const Text('the auditor is expected to be selected', style: TextStyle(height: 1.1)),
                                       if (task.auditor != EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'))
                                         const Text('Your request is being resolved by: ', style: TextStyle(height: 1.1)),
@@ -274,7 +276,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                               // backgroundColor: Colors.black12
                                             )),
                                     ])),
-                                if (task.auditInitiator == listenWalletAddress && interface.dialogCurrentState['pages'].containsKey('select'))
+                                if (task.contractOwner == listenWalletAddress && interface.dialogCurrentState['pages'].containsKey('select'))
                                   TaskDialogButton(
                                     padding: 6.0,
                                     inactive: false,
@@ -393,7 +395,7 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                   child: RichText(
                                       text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
                                     TextSpan(
-                                        text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                        text: 'Thank you for your contribution. This Task is now completed.',
                                         style: TextStyle(
                                           height: 1,
                                         )),
@@ -464,8 +466,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                                       selected: false,
                                                       name: e.name,
                                                       bunch: {
-                                                        BigInt.from(0):
-                                                            TokenItem(name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
+                                                        BigInt.from(0): TokenItem(
+                                                            name: e.name, nft: e.nft, inactive: e.inactive, balance: e.balance, collection: true)
                                                       },
                                                     )),
                                                 page: 'tasks',
@@ -493,132 +495,128 @@ class _MainTaskPageState extends State<MainTaskPage> {
                               ],
                             ),
                           ),
-
                           if (interface.dialogCurrentState['name'] == 'customer-new' || tasksServices.hardhatDebug == true)
-                          Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                gradient: DodaoTheme.of(context).smallButtonGradient,
-                                borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
-                                tooltip: 'Go to topup page',
-                                onPressed: () {
-                                  interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
-                                      duration: const Duration(milliseconds: 400), curve: Curves.ease);
-                                },
+                            Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  gradient: DodaoTheme.of(context).smallButtonGradient,
+                                  borderRadius: DodaoTheme.of(context).borderRadiusSmallIcon,
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.monetization_on, size: 18, color: Colors.white),
+                                  tooltip: 'Go to topup page',
+                                  onPressed: () {
+                                    interface.dialogPagesController.animateToPage(interface.dialogCurrentState['pages']['topup'] ?? 99,
+                                        duration: const Duration(milliseconds: 400), curve: Curves.ease);
+                                  },
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
                   ),
                 ),
-
 
                 // ******** Show rating info ******* //
                 if (task.performerRating != 0 || task.customerRating != 0)
-                Container(
-                  padding: const EdgeInsets.only(top: 14.0),
-                  child: Material(
-                    elevation: DodaoTheme.of(context).elevation,
-                    borderRadius: DodaoTheme.of(context).borderRadius,
-                    child: Container(
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: materialMainBoxDecoration,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only( left: 4.0),
-                            child: RichText(
-                                text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
-                                  TextSpan(text: 'Task rating: '),
-                                ])),
-                          ),
-                          Row(
+                  Container(
+                    padding: const EdgeInsets.only(top: 14.0),
+                    child: Material(
+                      elevation: DodaoTheme.of(context).elevation,
+                      borderRadius: DodaoTheme.of(context).borderRadius,
+                      child: Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: materialMainBoxDecoration,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: RichText(
+                                  text: TextSpan(style: Theme.of(context).textTheme.bodyMedium, children: const <TextSpan>[
+                                TextSpan(text: 'Task rating: '),
+                              ])),
+                            ),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 4.0),
-                                      child: Text('Customer rating', style: Theme.of(context).textTheme.bodyMedium,),
-                                    ),
-                                    RatingStars(
-                                      value: task.customerRating.toDouble(),
-                                      starCount: 5,
-                                      starSize: 15,
-                                      // valueLabelColor: Colors.orangeAccent,
-                                      valueLabelTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w200,
-                                          fontStyle: FontStyle.normal,
-                                          fontSize: 10.0),
-                                      valueLabelRadius: 12,
-                                      starOffColor: Colors.grey,
-                                      maxValue: 5,
-                                      starSpacing: 2,
-                                      maxValueVisibility: false,
-                                      valueLabelVisibility: true,
-                                      animationDuration: Duration(milliseconds: 2000),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 4.0),
+                                        child: Text(
+                                          'Customer rating',
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                      ),
+                                      RatingStars(
+                                        value: task.customerRating.toDouble(),
+                                        starCount: 5,
+                                        starSize: 15,
+                                        // valueLabelColor: Colors.orangeAccent,
+                                        valueLabelTextStyle: const TextStyle(
+                                            color: Colors.white, fontWeight: FontWeight.w200, fontStyle: FontStyle.normal, fontSize: 10.0),
+                                        valueLabelRadius: 12,
+                                        starOffColor: Colors.grey,
+                                        maxValue: 5,
+                                        starSpacing: 2,
+                                        maxValueVisibility: false,
+                                        valueLabelVisibility: true,
+                                        animationDuration: Duration(milliseconds: 2000),
 
-                                      valueLabelPadding:
-                                      const EdgeInsets.symmetric(vertical: 1, horizontal: 6),
-                                      valueLabelMargin: const EdgeInsets.only(right: 6),
-                                      starColor: Colors.orangeAccent,
-                                    ),
-                                  ],
+                                        valueLabelPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 6),
+                                        valueLabelMargin: const EdgeInsets.only(right: 6),
+                                        starColor: Colors.orangeAccent,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 4.0),
-                                      child: Text('Performer rating', style: Theme.of(context).textTheme.bodyMedium,),
-                                    ),
-                                    RatingStars(
-                                      value: task.performerRating.toDouble(),
-                                      starCount: 5,
-                                      starSize: 15,
-                                      // valueLabelColor: Colors.orangeAccent,
-                                      valueLabelTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w200,
-                                          fontStyle: FontStyle.normal,
-                                          fontSize: 10.0),
-                                      valueLabelRadius: 12,
-                                      starOffColor: Colors.grey,
-                                      maxValue: 5,
-                                      starSpacing: 2,
-                                      maxValueVisibility: false,
-                                      valueLabelVisibility: true,
-                                      animationDuration: Duration(milliseconds: 2000),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 4.0),
+                                        child: Text(
+                                          'Performer rating',
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                      ),
+                                      RatingStars(
+                                        value: task.performerRating.toDouble(),
+                                        starCount: 5,
+                                        starSize: 15,
+                                        // valueLabelColor: Colors.orangeAccent,
+                                        valueLabelTextStyle: const TextStyle(
+                                            color: Colors.white, fontWeight: FontWeight.w200, fontStyle: FontStyle.normal, fontSize: 10.0),
+                                        valueLabelRadius: 12,
+                                        starOffColor: Colors.grey,
+                                        maxValue: 5,
+                                        starSpacing: 2,
+                                        maxValueVisibility: false,
+                                        valueLabelVisibility: true,
+                                        animationDuration: Duration(milliseconds: 2000),
 
-                                      valueLabelPadding:
-                                      const EdgeInsets.symmetric(vertical: 1, horizontal: 6),
-                                      valueLabelMargin: const EdgeInsets.only(right: 6),
-                                      starColor: Colors.orangeAccent,
-                                    ),
-                                  ],
+                                        valueLabelPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 6),
+                                        valueLabelMargin: const EdgeInsets.only(right: 6),
+                                        starColor: Colors.orangeAccent,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
                 // ********* Text Input ************ //
                 if (interface.dialogCurrentState['name'] == 'tasks-new-logged' ||
@@ -1226,7 +1224,8 @@ class _MainTaskPageState extends State<MainTaskPage> {
                                           ),
                                         )),
                                         TextSpan(
-                                            text: 'https://github.com/${widget.task.repository}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            text: 'https://github.com/${widget.task.repository}',
+                                            style: const TextStyle(fontWeight: FontWeight.bold)),
                                       ])),
                                     ),
                                   ),

@@ -134,7 +134,9 @@ class _AuditorPageWidgetState extends State<AuditorPageWidget> with TickerProvid
                 icon: const Icon(Icons.search),
               ),
               if (tasksServices.platform == 'web' || tasksServices.platform == 'linux')
-                LoadButtonIndicator(refresh: 'audit',),
+                LoadButtonIndicator(
+                  refresh: 'audit',
+                ),
             ],
           );
         },
@@ -314,12 +316,11 @@ class _PendingTabWidgetState extends State<PendingTabWidget> {
           itemCount: objList.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-              child: TaskTransition(
-                fromPage: 'auditor',
-                task: tasksServices.filterResults.values.toList()[index],
-              )
-            );
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                child: TaskTransition(
+                  fromPage: 'auditor',
+                  task: tasksServices.filterResults.values.toList()[index],
+                ));
           },
         ),
       ),
