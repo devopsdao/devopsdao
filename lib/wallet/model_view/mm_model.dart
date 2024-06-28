@@ -11,8 +11,8 @@ import "package:universal_html/html.dart" hide Platform;
 
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../blockchain/task_services.dart';
-import '../../statistics/services/statistics_service.dart';
 import '../../config/utils/platform.dart';
+import '../../statistics/services/pending_service.dart';
 import '../services/mm_service.dart';
 import 'wallet_model.dart';
 
@@ -36,7 +36,6 @@ class MMModelViewState {
   String errorMessage = '';
   late MMScreenStatus mmScreenStatus = MMScreenStatus.mmNotConnected;
 
-
   MMModelViewState({
     required this.initComplete,
     required this.selectedChainIdOnMMApp,
@@ -53,9 +52,9 @@ class MetamaskModel extends ChangeNotifier {
   final _walletService = WalletService();
   final _mmSessions = MMSessions();
   final _mmServices = MMService();
-  final _statisticsService = StatisticsService();
+  final _tokenPendingService = TokenPendingService();
 
-  // final _statisticsModel = StatisticsModel();
+  // final _TokenPendingModel = TokenPendingModel();
 
   MetamaskModel() {
     _state.selectedChainIdOnMMApp = WalletService.defaultNetwork;
@@ -117,7 +116,7 @@ class MetamaskModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onCreateMetamaskConnection(tasksServices, walletModel, context) async {
+  Future<void> onCreateMetamaskConnection(tasksServices, walletModel, context, bool onStartup) async {
     if (_platform.platform != 'web' || window.ethereum == null) {
       log.warning("eth not initialized");
       return;
@@ -129,20 +128,20 @@ class MetamaskModel extends ChangeNotifier {
     await setMmScreenState(state: MMScreenStatus.loadingMetamask);
     await onResetMM(tasksServices, walletModel);
     _mmSessions.initUnsubscribe();
-    Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices);
+    Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices, onStartup);
 
     if (resultData == null) {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'something went wrong, try again \nBlockchain connection error');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'something went wrong, try again \nBlockchain connection error');
       return;
     }
 
     int chainId = resultData['chainId'];
     EthereumAddress publicAddress = resultData['public_address'];
 
-    if (await _mmServices.checkAllowedChainId(chainId, tasksServices)
-        && chainId == _state.selectedChainIdOnMMApp
-    ) {
+    if (await _mmServices.checkAllowedChainId(chainId, tasksServices) && chainId == _state.selectedChainIdOnMMApp) {
       await walletModel.onWalletUpdate(
         connectionState: true,
         walletType: WalletSelected.metamask,
@@ -155,9 +154,10 @@ class MetamaskModel extends ChangeNotifier {
     } else {
       log.warning('mm_model.dart->invalid chainId $chainId');
       int defaultChainId = WalletService.defaultNetwork;
-      await setMmScreenState(state: MMScreenStatus.error, error:
-          'Wrong network on the wallet, \'will be redirected to \''
-            '${_walletService.readChainNameById(defaultChainId)}');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Wrong network on the wallet, \'will be redirected to \''
+              '${_walletService.readChainNameById(defaultChainId)}');
       await walletModel.onWalletUpdate(
         connectionState: true,
         walletType: WalletSelected.metamask,
@@ -178,18 +178,22 @@ class MetamaskModel extends ChangeNotifier {
       if (result == 'add_network') {
         bool result = await _mmServices.initAddNetworkMM(chainId);
         if (!result) {
-          await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-              'Cannot add network \nBlockchain connection error');
+          await setMmScreenState(
+              state: MMScreenStatus.error,
+              error: 'Opps... '
+                  'Cannot add network \nBlockchain connection error');
           return;
         }
       }
 
-      Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices);
+      Map<String, dynamic>? resultData = await _mmServices.initCreateWalletConnection(tasksServices, false);
       // _mmSessions.initUnsubscribe();
 
       if (resultData == null) {
-        await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-            'something went wrong, try again \nBlockchain connection error');
+        await setMmScreenState(
+            state: MMScreenStatus.error,
+            error: 'Opps... '
+                'something went wrong, try again \nBlockchain connection error');
         return;
       }
       await walletModel.onWalletUpdate(
@@ -201,20 +205,27 @@ class MetamaskModel extends ChangeNotifier {
       await onFinalConnectAndCollectData(resultData['chainId'], tasksServices);
       // _mmSessions.initMMCreateSessions(MMService.eth!, walletModel, tasksServices);
     }
-    
+
     if (result == 'user_rejected') {
       await setMmScreenState(state: MMScreenStatus.rejected);
     } else if (result == 'error') {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'something went wrong, try again');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'something went wrong, try again');
     }
   }
 
   Future<void> onResetMM(TasksServices tasksServices, WalletModel walletModel) async {
     walletModel.onWalletReset();
     tasksServices.reset('onResetMM');
-    List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-    await tasksServices.fetchTasksBatch(taskList);
+    // if (walletModel.state.walletAddress != null) {
+    //   await tasksServices.refreshTasksForAccount(walletModel.state.walletAddress!, "refresh");
+    // } else {
+    //   await tasksServices.fetchTasksByState("new");
+    // }
+    // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
+    // await tasksServices.fetchTasksBatch(taskList);
   }
 
   Future<void> onDisconnectButtonPressed(tasksServices, walletModel) async {
@@ -225,23 +236,28 @@ class MetamaskModel extends ChangeNotifier {
 
   Future<void> onFinalConnectAndCollectData(int chainId, tasksServices) async {
     if (!ChainPresets.chains.keys.contains(chainId)) {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'Unfortunately does not support\nthis network');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'Unfortunately does not support\nthis network');
       return;
     }
     _state.selectedChainIdOnMMApp = chainId;
-    bool result = await _mmServices.initConnectAndCollectData(chainId, tasksServices);
+    bool result = await _mmServices.initFinalConnect(chainId, tasksServices);
     if (result) {
-      onRequestBalances(chainId, tasksServices);
       await setMmScreenState(state: MMScreenStatus.mmConnectedNetworkMatch);
+      await onRequestBalances(chainId, tasksServices);
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // await tasksServices.monitorEvents();
+      await _mmServices.initFinalCollectData(chainId, tasksServices);
     } else {
-      await setMmScreenState(state: MMScreenStatus.error, error: 'Opps... '
-          'something went wrong, try again \nBlockchain connection error');
+      await setMmScreenState(
+          state: MMScreenStatus.error,
+          error: 'Opps... '
+              'something went wrong, try again \nBlockchain connection error');
     }
   }
 
-  Future<void> onRequestBalances(int chainId, tasksServices) async =>
-      _statisticsService.initRequestBalances(chainId, tasksServices);
-  Future<void> setSelectedChainIdOnApp(int value) async =>
-      _state.selectedChainIdOnMMApp = value;
+  Future<void> onRequestBalances(int chainId, tasksServices) async => _tokenPendingService.initRequestBalances(chainId, tasksServices);
+  Future<void> setSelectedChainIdOnApp(int value) async => _state.selectedChainIdOnMMApp = value;
 }

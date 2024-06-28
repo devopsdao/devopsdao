@@ -18,7 +18,7 @@ import '../widgets/tags/wrapped_chip.dart';
 import '../widgets/tags_on_page_open_container.dart';
 import '../config/utils/platform.dart';
 import '/blockchain/task_services.dart';
-import '/widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '/config/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -98,12 +98,11 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
     final PlatformAndBrowser platformAndBrowser = PlatformAndBrowser();
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
     final listenIsLoading = context.select((TasksServices vm) => vm.isLoading);
-    var tasksServices = context.read<TasksServices>();
-    var interface = context.read<InterfaceServices>();
+    var tasksServices = context.watch<TasksServices>();
+    // var interface = context.read<InterfaceServices>();
     var searchServices = context.read<SearchServices>();
     var modelTheme = context.read<ModelTheme>();
     // final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
-    final walletService = WalletService();
     late bool desktopWidth = false;
     if (MediaQuery.of(context).size.width > 700) {
       desktopWidth = true;
@@ -131,6 +130,10 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
 
     return Stack(
       children: [
+        Positioned(
+            top:55.0,
+            width: MediaQuery.of(context).size.width,
+            child: const LoadIndicator()),
         if (!desktopWidth)
           Image.asset(
             "assets/images/background_cat_orange.png",
@@ -181,7 +184,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       ),
                     ),
                   ),
-                  if (platformAndBrowser.platform == 'web' || platformAndBrowser.platform == 'linux') const LoadButtonIndicator(),
+                  if (platformAndBrowser.platform == 'web' || platformAndBrowser.platform == 'linux') LoadButtonIndicator(refresh: 'new',),
                 ],
               );
             },
@@ -223,7 +226,7 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
             height: double.infinity,
             alignment: Alignment.center,
             child: SizedBox(
-              width: interface.maxStaticGlobalWidth,
+              width: InterfaceSettings.maxStaticGlobalWidth,
               child: DefaultTabController(
                 length: 1,
                 initialIndex: 0,
@@ -283,38 +286,36 @@ class _TasksPageWidgetState extends State<TasksPageWidget> {
                       //   ],
                       // ),
 
-                      listenIsLoading
-                          ? const LoadIndicator()
-                          : Expanded(
-                              child: TabBarView(
-                                children: [
-                                  PawRefreshAndTasksList(pageName: 'tasks', paw: _file,),
-                                  // Padding(
-                                  //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
-                                  //   child: RefreshIndicator(
-                                  //     onRefresh: () async {
-                                  //       tasksServices.isLoadingBackground = true;
-                                  //       // tasksServices.refreshTasksForAccount(listenWalletAddress!);
-                                  //     },
-                                  //     child: ListView.builder(
-                                  //       padding: EdgeInsets.zero,
-                                  //       scrollDirection: Axis.vertical,
-                                  //       itemCount: tasksServices.filterResults.values.toList().length,
-                                  //       itemBuilder: (context, index) {
-                                  //         return Container(
-                                  //             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
-                                  //
-                                  //             child: TaskTransition(
-                                  //               fromPage: 'tasks',
-                                  //               task: tasksServices.filterResults.values.toList()[index],
-                                  //             ));
-                                  //       },
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            PawRefreshAndTasksList(pageName: 'tasks', paw: _file,),
+                            // Padding(
+                            //   padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+                            //   child: RefreshIndicator(
+                            //     onRefresh: () async {
+                            //       tasksServices.isLoadingBackground = true;
+                            //       // tasksServices.refreshTasksForAccount(listenWalletAddress!);
+                            //     },
+                            //     child: ListView.builder(
+                            //       padding: EdgeInsets.zero,
+                            //       scrollDirection: Axis.vertical,
+                            //       itemCount: tasksServices.filterResults.values.toList().length,
+                            //       itemBuilder: (context, index) {
+                            //         return Container(
+                            //             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 12),
+                            //
+                            //             child: TaskTransition(
+                            //               fromPage: 'tasks',
+                            //               task: tasksServices.filterResults.values.toList()[index],
+                            //             ));
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
                     ],
                   );
                 }),

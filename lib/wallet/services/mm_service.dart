@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import '../../blockchain/chain_presets/chains_presets.dart';
 import '../../blockchain/classes.dart';
@@ -22,49 +23,77 @@ class MMService {
   EthereumAddress? publicAddressMM;
   static Ethereum? eth;
 
-  Future<Map<String, dynamic>?> initCreateWalletConnection(TasksServices tasksServices) async {
+  Future<Map<String, dynamic>?> initCreateWalletConnection(TasksServices tasksServices, bool onStartup) async {
     tasksServices.credentials = {};
     eth = window.ethereum;
     final List<CredentialsWithKnownAddress> accounts;
     late String chainIdHex;
+    bool accountConnected = await isAccountsConnected();
+    print('wallet is connected: $accountConnected');
     if (eth == null) {
       log.info('metamask_services.dart->initCreateWalletConnection MetaMask is not available');
       return null;
-    } else {
-      var ethRPC = eth?.asRpcService();
-
-      final client = Web3Client.custom(ethRPC!);
+    } else if (onStartup && !accountConnected) {
+      log.info('onStartup');
+      // try {
+      //   await tasksServices.initAccountStats();
+      // } catch (e) {
+      //   log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
+      // }
       try {
-        accounts = await eth!.requestAccounts();
-        CredentialsWithKnownAddress credentials = accounts[0];
-
-        publicAddressMM = credentials.address;
-        tasksServices.credentials = credentials;
-        tasksServices.publicAddress = publicAddressMM;
-        try {
-          chainIdHex = await eth?.rawRequest('eth_chainId');
-          return {'public_address' : publicAddressMM, 'chainId' : int.parse(chainIdHex)};
-        } catch (e) {
-          String errorJson = stringify(e);
-          final error = JSON.parse(errorJson);
-          if (error['code'] == 4902) {}
-          log.severe(e);
-          return null;
-        }
+        await tasksServices.initTaskStats();
       } catch (e) {
+        log.severe('mm_service->initFinalCollectData->initTaskStats error: $e');
+      }
+      await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
+      await Future.delayed(const Duration(milliseconds: 200));
+      // await tasksServices.monitorEvents();
+      return null;
+    }
+
+    var ethRPC = eth?.asRpcService();
+
+    final client = Web3Client.custom(ethRPC!);
+    try {
+      accounts = await eth!.requestAccounts();
+      CredentialsWithKnownAddress credentials = accounts[0];
+
+      publicAddressMM = credentials.address;
+      tasksServices.credentials = credentials;
+      tasksServices.publicAddress = publicAddressMM;
+      try {
+        chainIdHex = await eth?.rawRequest('eth_chainId');
+        return {'public_address': publicAddressMM, 'chainId': int.parse(chainIdHex)};
+      } catch (e) {
+        String errorJson = stringify(e);
+        final error = JSON.parse(errorJson);
+        if (error['code'] == 4902) {}
         log.severe(e);
         return null;
       }
+    } catch (e) {
+      log.severe(e);
+      return null;
     }
   }
 
+  Future<bool> isAccountsConnected() async {
+    try {
+      List accounts = await eth!.rawRequest('eth_accounts');
+      if (accounts.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
 
   Future<String> initSwitchNetworkMM(changeTo) async {
     try {
-      await eth!.rawRequest(
-          'wallet_switchEthereumChain',
-          params: [JSrawRequestSwitchChainParams(chainId: '0x${changeTo.toRadixString(16)}')]
-      );
+      await eth!.rawRequest('wallet_switchEthereumChain', params: [JSrawRequestSwitchChainParams(chainId: '0x${changeTo.toRadixString(16)}')]);
       return 'network_switched';
     } on EthereumException catch (e) {
       if (e.code == 4902) {
@@ -114,7 +143,6 @@ class MMService {
     // }
   }
 
-
   Future<bool> initAddNetworkMM(changeTo) async {
     final eth = window.ethereum;
     if (eth == null) {
@@ -127,7 +155,6 @@ class MMService {
       addBlockExplorer = false;
     }
     try {
-
       ChainInfo networkParams = _chainPresets.readChainInfo(changeTo);
 
       // final params = {
@@ -173,18 +200,72 @@ class MMService {
     }
   }
 
-  Future<bool> initConnectAndCollectData(int newChainId, tasksServices) async {
+  Future<bool> initFinalConnect(int newChainId, tasksServices) async {
     try {
-      // List<EthereumAddress> taskList = await tasksServices.getTaskListFull();
-      // await tasksServices.fetchTasksBatch(taskList);
-      await tasksServices.connectRPC(newChainId);
-      await tasksServices.startup();
-      await tasksServices.collectMyTokens();
-      await tasksServices.myBalance();
-      // await tasksServices.getAccountBalances(newChainId);
+      try {
+        await tasksServices.connectRPC(newChainId);
+      } catch (e) {
+        log.severe('mm_service->initFinalConnect->connectRPC error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.startup();
+      } catch (e) {
+        log.severe('mm_service->initFinalConnect->startup() error: $e');
+        return false;
+      }
       return true;
     } catch (e) {
-      log.severe('metamask_service->initConnectAndCollectData error: $e');
+      log.severe('metamask_service->initFinalConnect error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> initFinalCollectData(int newChainId, tasksServices) async {
+    try {
+      // try {
+      //   await tasksServices.initAccountStats();
+      // } catch (e) {
+      //   log.severe('mm_service->initFinalCollectData->initAccountStats error: $e');
+      //   return false;
+      // }
+      // try {
+      //   await tasksServices.initTaskStats();
+      // } catch (e) {
+      //   log.severe('mm_service->initFinalCollectData->initTaskStats error: $e');
+      //   return false;
+      // }
+      try {
+        await tasksServices.collectMyTokens();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->collectMyTokens error: $e');
+        return false;
+      }
+      try {
+        await tasksServices.myBalance();
+      } catch (e) {
+        log.severe('mm_service->initFinalCollectData->myBalance() error: $e');
+        return false;
+      }
+      await tasksServices.refreshTasksForAccount(publicAddressMM, "refresh");
+      await tasksServices.refreshTasksForAccount(publicAddressMM, "new");
+      if (tasksServices.roleNfts['auditor'] > 0) {
+        try { // on final
+          await tasksServices.refreshTasksForAccount(WalletService.walletAddress, "audit");
+        } catch (e) {
+          log.severe('wc_sessions->initFinalCollectData->refreshTasksForAccount error: $e');
+        }
+      }
+      try {
+        await tasksServices.initTaskStats();
+      } catch (e) {
+        log.severe('MyApp->initState->initTaskStats error: $e');
+      }
+      // await Future.delayed(const Duration(milliseconds: 200));
+      // await tasksServices.monitorEvents();
+      return true;
+    } catch (e) {
+      log.severe('metamask_service->initFinalCollectData error: $e');
       return false;
     }
   }
@@ -208,5 +289,3 @@ class MMService {
     }
   }
 }
-
-

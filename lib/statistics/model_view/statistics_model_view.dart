@@ -1,80 +1,85 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import '../../config/preferences.dart';
 
-import '../../../blockchain/classes.dart';
-import '../services/statistics_service.dart';
+class StatsManagerStates {
 
-// model - service:
-// get -> read
-// set -> write
-// on -> init
-// ... -> check (logic with bool return(not bool stored data))
-
-
-class StatisticsModelState {
-  List<TokenItem> tags = [];
-  Map<String, Map<String, BigInt>> initialEmptyBalance = {};
-  double valueOnWallet = 0.0; // for value_input max
-
-  StatisticsModelState({
-    required this.tags,
-    required this.initialEmptyBalance,
-    required this.valueOnWallet,
-  });
 }
 
-class StatisticsModel extends ChangeNotifier {
-  final _statisticsService = StatisticsService();
+class StatisticsWidgetsManager extends ChangeNotifier {
+  late List<int> smallListOrderIndex;
+  late List<int> largeListOrderIndex;
+  final Completer<void> _initializationCompleter = Completer<void>();
 
-  var _state = StatisticsModelState(
-    tags: [],
-    initialEmptyBalance: {},
-    valueOnWallet: 0.0,
-  );
-  StatisticsModelState get state => _state;
-  StreamSubscription<List<TokenItem>>? tagSubscription;
-
-  StatisticsModel() {
-    StatisticsModelState(
-      tags: _statisticsService.tags,
-      initialEmptyBalance: _statisticsService.initialEmptyBalance,
-      valueOnWallet: 0.0,
-    );
+  StatisticsWidgetsManager() {
+    _initializeIndexes();
   }
 
-  void subscribeToStatistics () {
-    tagSubscription = _statisticsService.statisticsTokenItems.listen((data) {
-      _state = StatisticsModelState(
-        tags: data,
-        initialEmptyBalance: _statisticsService.initialEmptyBalance,
-        valueOnWallet: data.first.balance,
-      );
-      notifyListeners();
-    });
+  Future<void> _initializeIndexes() async {
+    final prefs = StatisticsOrderPreferences();
+    smallListOrderIndex = await prefs.getSmallList();
+    largeListOrderIndex = await prefs.getLargeList();
+    _initializationCompleter.complete();
+    // notifyListeners(); // Notify listeners after initialization
   }
 
-  void unsubscribeStatistics () {
-    tagSubscription!.cancel();
+  Future<List<Widget>> getStatsWidgets(List<Widget> children) async {
+    return children;
   }
 
-  Future<void> onRequestBalances(int chainId, tasksServices) async {
-    _statisticsService.initRequestBalances(chainId, tasksServices);
-  }
-
-  // void _updateState() {
-  //   bool initialized = _state.initialized;
-  //   _state = StatisticsModelState(
-  //     initialized: initialized,
-  //     tags: [],
-  //     initialEmptyBalance:
-  //   );
-  //   notifyListeners();
+  // void update() {
+  //   print('update  $smallListOrderIndex');
   // }
-  //
-  // @override
-  // void dispose() {
-  //   print('disposed');
-  //   tagSubscription?.cancel();
-  //   super.dispose();
-  // }
+
+  List<int> getOrderList(bool walletConnected) {
+    // print('getOrderList ${smallListOrderIndex.length}');
+    return walletConnected ? largeListOrderIndex : smallListOrderIndex;
+  }
+
+  Future<List<Widget>> getOrderedChildren(List<Widget> children, bool walletConnected) async {
+    await _initializationCompleter.future;
+    if ((!walletConnected && children.length != smallListOrderIndex.length) ||
+        (walletConnected && children.length != largeListOrderIndex.length)) {
+      print('smallListOrderIndex or largeListOrderIndex not equal, clear prefs!');
+      final prefs = StatisticsOrderPreferences();
+      prefs.setDefaultStatisticsPrefs();
+      await _initializeIndexes(); // Reinitialize the indices
+    }
+    return walletConnected
+        ? largeListOrderIndex.map((index) => children[index]).toList()
+        : smallListOrderIndex.map((index) => children[index]).toList();
+  }
+
+  void reorder(int oldIndex, int newIndex, bool walletConnected) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    if (walletConnected) {
+      final item = largeListOrderIndex.removeAt(oldIndex);
+      largeListOrderIndex.insert(newIndex, item);
+    } else {
+      final item = smallListOrderIndex.removeAt(oldIndex);
+      smallListOrderIndex.insert(newIndex, item);
+    }
+    notifyListeners();
+    saveOrderPreferences(walletConnected);
+  }
+
+  Future<void> saveOrderPreferences(walletConnected) async {
+    final prefs = StatisticsOrderPreferences();
+    if (walletConnected) {
+      await prefs.setLargeList(largeListOrderIndex);
+    } else {
+      await prefs.setSmallList(smallListOrderIndex);
+    }
+  }
 }
+
+
+
+
+
+
+
+
+

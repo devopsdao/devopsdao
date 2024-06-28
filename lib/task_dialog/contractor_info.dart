@@ -18,7 +18,8 @@ class ContractorInfo extends StatefulWidget {
   // final Account account;
   // final String fromPage;
 
-  const ContractorInfo({Key? key,
+  const ContractorInfo({
+    Key? key,
     // required this.account,
     // required this.fromPage
   }) : super(key: key);
@@ -28,7 +29,6 @@ class ContractorInfo extends StatefulWidget {
 }
 
 class ContractorInfoState extends State<ContractorInfo> {
-
   final double participantPaddingSize = 2.0;
 
   @override
@@ -38,12 +38,12 @@ class ContractorInfoState extends State<ContractorInfo> {
     final emptyClasses = EmptyClasses();
 
     double customerRating = 0.0;
-    BigInt tmpCustomerRating = BigInt.from(0);
-
+    // BigInt tmpCustomerRating = BigInt.from(0);
+    double tmpCustomerRating = 0;
     for (int i = 0; i < interface.selectedUser.customerRating.length; i++) {
-      tmpCustomerRating += interface.selectedUser.customerRating[i];
+      tmpCustomerRating += interface.selectedUser.customerRating.length;
     }
-    if (tmpCustomerRating != BigInt.from(0)) {
+    if (tmpCustomerRating != 0) {
       customerRating = tmpCustomerRating.toDouble() / interface.selectedUser.customerRating.length;
     }
 
@@ -55,7 +55,6 @@ class ContractorInfoState extends State<ContractorInfo> {
     if (tmpPerformerRating != BigInt.from(0)) {
       performerRating = tmpPerformerRating.toDouble() / interface.selectedUser.performerRating.length;
     }
-
 
     return Column(
       children: [
@@ -70,8 +69,7 @@ class ContractorInfoState extends State<ContractorInfo> {
                 maxLines: 10,
                 softWrap: true,
                 text: TextSpan(style: Theme.of(context).textTheme.bodySmall, children: <TextSpan>[
-                  TextSpan(
-                      text: interface.selectedUser.nickName.isNotEmpty ? interface.selectedUser.nickName : 'Nameless'),
+                  TextSpan(text: interface.selectedUser.nickName.isNotEmpty ? interface.selectedUser.nickName : 'Nameless'),
                 ])),
             InkWell(
               onTap: () {
@@ -128,7 +126,10 @@ class ContractorInfoState extends State<ContractorInfo> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(participantPaddingSize),
-                            child: BadgeSmallColored(count: interface.selectedUser.customerTasks.length, color: Colors.lightBlue,),
+                            child: BadgeSmallColored(
+                              count: interface.selectedUser.customerTasks.length,
+                              color: Colors.lightBlue,
+                            ),
                           ),
                           Text(
                             'Created',
@@ -137,7 +138,6 @@ class ContractorInfoState extends State<ContractorInfo> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
-
                         ],
                       ),
                       Row(
@@ -145,9 +145,9 @@ class ContractorInfoState extends State<ContractorInfo> {
                           Padding(
                             padding: EdgeInsets.all(participantPaddingSize),
                             child: BadgeSmallColored(
-                              count: interface.selectedUser.agreedTasks.length -
-                                  interface.selectedUser.completedTasks.length,
-                              color: Colors.amber,),
+                              count: interface.selectedUser.performerAgreedTasks.length - interface.selectedUser.performerCompletedTasks.length,
+                              color: Colors.amber,
+                            ),
                           ),
                           Text(
                             'Now working',
@@ -162,7 +162,10 @@ class ContractorInfoState extends State<ContractorInfo> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(participantPaddingSize),
-                            child: BadgeSmallColored(count: interface.selectedUser.completedTasks.length, color: Colors.greenAccent.shade700,),
+                            child: BadgeSmallColored(
+                              count: interface.selectedUser.performerCompletedTasks.length,
+                              color: Colors.greenAccent.shade700,
+                            ),
                           ),
                           Text(
                             'Completed',
@@ -171,7 +174,6 @@ class ContractorInfoState extends State<ContractorInfo> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
-
                         ],
                       ),
                     ],
@@ -186,7 +188,10 @@ class ContractorInfoState extends State<ContractorInfo> {
                           children: [
                             Padding(
                               padding: EdgeInsets.all(participantPaddingSize),
-                              child: BadgeSmallColored(count: interface.selectedUser.participantTasks.length, color: Colors.yellow,),
+                              child: BadgeSmallColored(
+                                count: interface.selectedUser.participantTasks.length,
+                                color: Colors.yellow,
+                              ),
                             ),
                             Text(
                               'Participated',
@@ -201,7 +206,10 @@ class ContractorInfoState extends State<ContractorInfo> {
                           children: [
                             Padding(
                               padding: EdgeInsets.all(participantPaddingSize),
-                              child: BadgeSmallColored(count: interface.selectedUser.auditParticipantTasks.length, color: Colors.redAccent,),
+                              child: BadgeSmallColored(
+                                count: interface.selectedUser.auditParticipantTasks.length,
+                                color: Colors.redAccent,
+                              ),
                             ),
                             Text(
                               'Audit requested',
@@ -212,12 +220,14 @@ class ContractorInfoState extends State<ContractorInfo> {
                             ),
                           ],
                         ),
-
                         Row(
                           children: [
                             Padding(
                               padding: EdgeInsets.all(participantPaddingSize),
-                              child: BadgeSmallRatingColored(count: customerRating, color: Colors.deepPurpleAccent,),
+                              child: BadgeSmallRatingColored(
+                                count: customerRating,
+                                color: Colors.deepPurpleAccent,
+                              ),
                             ),
                             Text(
                               'Customer rating',
@@ -226,14 +236,16 @@ class ContractorInfoState extends State<ContractorInfo> {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
-
                           ],
                         ),
                         Row(
                           children: [
                             Padding(
                               padding: EdgeInsets.all(participantPaddingSize),
-                              child: BadgeSmallRatingColored(count: performerRating, color: Colors.deepPurple,),
+                              child: BadgeSmallRatingColored(
+                                count: performerRating,
+                                color: Colors.deepPurple,
+                              ),
                             ),
                             Text(
                               'Performer rating',
@@ -253,7 +265,9 @@ class ContractorInfoState extends State<ContractorInfo> {
             )
           ],
         ),
-        SizedBox(height: 3,),
+        SizedBox(
+          height: 3,
+        ),
         Text(
           '${interface.selectedUser.walletAddress}',
           style: DodaoTheme.of(context).bodyText3,

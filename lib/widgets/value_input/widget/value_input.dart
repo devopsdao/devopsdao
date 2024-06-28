@@ -7,7 +7,7 @@ import 'package:throttling/throttling.dart';
 import '../../../blockchain/interface.dart';
 import '../../../blockchain/task_services.dart';
 import '../../../config/theme.dart';
-import '../../../statistics/model_view/statistics_model_view.dart';
+import '../../../statistics/model_view/pending_model_view.dart';
 
 
 
@@ -44,9 +44,9 @@ class _ValueInputState extends State<ValueInput> {
     valueController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      StatisticsModel statisticsModel = context.read<StatisticsModel>();
-      if (statisticsModel.state.valueOnWallet != 0.0) {
-        devHighPrice = statisticsModel.state.valueOnWallet;
+      TokenPendingModel tokenPendingModel = context.read<TokenPendingModel>();
+      if (tokenPendingModel.state.valueOnWallet != 0.0) {
+        devHighPrice = tokenPendingModel.state.valueOnWallet;
       }
       var tasksServices = Provider.of<TasksServices>(context, listen: false);
       selectToken = <String>[tasksServices.chainTicker, 'USDC'];
@@ -66,7 +66,7 @@ class _ValueInputState extends State<ValueInput> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    late double borderRadius = interface.borderRadius;
+    late double borderRadius = InterfaceSettings.borderRadius;
     late double innerPaddingWidth = widget.innerPaddingWidth;
     if (tasksServices.taskTokenSymbol == 'ETH') {
       dropdownValue = tasksServices.chainTicker;

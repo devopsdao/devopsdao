@@ -141,7 +141,7 @@ class _TaskDialogButtonState extends State<TaskDialogButton> with SingleTickerPr
 }
 
 
-class TaskDialogFAB extends StatefulWidget {
+class TaskDialogFAB extends StatelessWidget {
   final String buttonName;
   final Color buttonColorRequired;
   final VoidCallback callback;
@@ -150,7 +150,7 @@ class TaskDialogFAB extends StatefulWidget {
   final double? padding;
   final bool expand;
   final double widthSize;
-  const TaskDialogFAB(
+  TaskDialogFAB(
       {Key? key,
         required this.buttonName,
         required this.buttonColorRequired,
@@ -162,21 +162,17 @@ class TaskDialogFAB extends StatefulWidget {
         this.expand = false})
       : super(key: key);
 
-  @override
-  _TaskDialogFABState createState() => _TaskDialogFABState();
-}
-
-class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProviderStateMixin{
   late Color buttonColor;
-  late Color textColor = Colors.white;
-  late bool _buttonState = true;
 
+  late Color textColor = Colors.white;
+
+  late bool _buttonState = true;
 
   @override
   Widget build(BuildContext context) {
-    buttonColor = widget.buttonColorRequired;
+    buttonColor = buttonColorRequired;
 
-    if (widget.inactive == true) {
+    if (inactive == true) {
       textColor = Colors.white;
       buttonColor = Colors.blueGrey.shade200;
       _buttonState = false;
@@ -185,13 +181,76 @@ class _TaskDialogFABState extends State<TaskDialogFAB> with SingleTickerProvider
     }
 
     late Widget child = FloatingActionButton.extended(
-      onPressed: _buttonState ? widget.callback : null,
+      onPressed: _buttonState ? callback : null,
       backgroundColor: buttonColor,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(17.0))),
       label: Text(
-        widget.buttonName,
+        buttonName,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 18, color: textColor),
+      ),
+    );
+
+    return AnimatedContainer(
+      duration:  const Duration(milliseconds: 500),
+      width:  widthSize,
+      child: child,
+    );
+  }
+}
+
+class TaskDialogConnectWallet extends StatefulWidget {
+  final String buttonName;
+  final VoidCallback callback;
+  final double widthSize;
+  const TaskDialogConnectWallet(
+      {Key? key,
+        required this.buttonName,
+        required this.callback,
+        required this.widthSize,})
+      : super(key: key);
+
+  @override
+  _TaskDialogConnectWalletState createState() => _TaskDialogConnectWalletState();
+}
+
+class _TaskDialogConnectWalletState extends State<TaskDialogConnectWallet> with SingleTickerProviderStateMixin{
+  late Color buttonColor;
+  late Color textColor = Colors.white;
+  late bool _buttonState = true;
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    late Widget child = Container(
+      decoration: BoxDecoration(
+        // shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              offset: const Offset(0, 2),
+              blurRadius: 6,
+            ),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(17.0)),
+          gradient: const LinearGradient(
+            colors: [Colors.purpleAccent, Colors.deepOrangeAccent, Color(0xfffadb00)],
+            stops: [0.1, 0.5, 1],
+          )
+      ),
+      child: FloatingActionButton.extended(
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        backgroundColor: Colors.transparent,
+        onPressed: _buttonState ? widget.callback : null,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(17.0))),
+        label: Text(
+          widget.buttonName,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, color: textColor),
+        ),
       ),
     );
 

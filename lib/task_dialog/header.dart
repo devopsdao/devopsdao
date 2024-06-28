@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../blockchain/empty_classes.dart';
@@ -25,6 +26,16 @@ class TaskDialogHeader extends StatefulWidget {
 }
 
 class _TaskDialogHeaderState extends State<TaskDialogHeader> {
+
+  LinearGradient _containerColor = const LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [
+      Colors.purpleAccent,
+      Colors.deepOrange,
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     var interface = context.watch<InterfaceServices>();
@@ -34,7 +45,7 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      width: interface.maxStaticDialogWidth,
+      width: InterfaceSettings.maxStaticDialogWidth,
       child: Row(
         children: [
           SizedBox(
@@ -86,55 +97,105 @@ class _TaskDialogHeaderState extends State<TaskDialogHeader> {
           ),
           const Spacer(),
           Expanded(
-              flex: 10,
-              child: GestureDetector(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: RichText(
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            WidgetSpan(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 5.0),
-                                child: Icon(
-                                  Icons.copy,
-                                  size: 20,
-                                  color: DodaoTheme.of(context).secondaryText,
-                                ),
-                              )
-                            ),
-                            TextSpan(
-                              text: task.title,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ],
-                        ),
+            flex: 14  ,
+            child: GestureDetector(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: RichText(
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text: task.title,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                    )
-                  ],
-                ),
-                onTap: () async {
-                  Clipboard.setData(ClipboardData(text: 'https://dodao.dev/index.html#/${widget.fromPage}/${task.taskAddress}')).then((_) {
-                    Flushbar(
-                            icon: Icon(
-                              Icons.copy,
-                              size: 20,
-                              color: DodaoTheme.of(context).flushTextColor,
-                            ),
-                            message: 'Task URL copied to your clipboard!',
-                            duration: const Duration(seconds: 2),
-                            backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
-                            shouldIconPulse: false)
-                        .show(context);
+                    ),
+                  ),
+                 Padding(
+                   padding: EdgeInsets.only(left: 6),
+                   child: AnimatedContainer(
+                     padding: EdgeInsets.all(7),
+                     duration: const Duration(milliseconds: 400),
+                     curve: Curves.easeInOut,
+                     decoration: BoxDecoration(
+                       gradient: _containerColor,
+                       borderRadius: BorderRadius.circular(18.0),
+                     ),
+                     child: Row(
+                       children: [
+                         Padding(
+                           padding:  EdgeInsets.only(right: 6),
+                           child: Text('${task.taskAddress.toString().substring(task.taskAddress.toString().length - 6)}',
+
+                               style: Theme.of(context).textTheme.bodySmall!.apply(color: Colors.white,)),
+                         ),
+
+                         Icon(
+                           FontAwesomeIcons.arrowUpFromBracket,
+                           size: 16,
+                           color: Colors.white,
+                         ),
+                       ],
+                     ),
+                   ),
+                 )
+                ],
+              ),
+              onTap: () async {
+                setState(() {
+                  _containerColor = const LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    colors: [
+                      Colors.blueAccent,
+                      Colors.purple,
+                      Colors.deepOrange,
+                    ],
+                  );
+                });
+
+                Future.delayed(const Duration(milliseconds: 800), () {
+                  setState(() {
+                    _containerColor = const LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        Colors.purpleAccent,
+                        Colors.deepOrange,
+                      ],
+                    );
                   });
-                },
-              )),
+                });
+                // Clipboard.setData(ClipboardData(text: 'https://dodao.dev/#/${widget.fromPage}/${task.taskAddress}')).then((_) {
+                Clipboard.setData(ClipboardData(text: 'https://dodao.dev/#/tasks/${task.taskAddress}')).then((_) {
+                  Flushbar(
+                    icon: Icon(
+                      FontAwesomeIcons.arrowUpFromBracket,
+                      size: 20,
+                      color: DodaoTheme.of(context).flushTextColor,
+                    ),
+                    message: 'Task "${task.title} '
+                        '...${task.taskAddress.toString().substring(task.taskAddress.toString().length - 8)}" '
+                        'URL copied to your clipboard!',
+                    duration: const Duration(seconds: 2),
+                    // backgroundColor: DodaoTheme.of(context).flushForCopyBackgroundColor,
+                      backgroundGradient: const LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [
+                          Colors.blueAccent,
+                          Colors.purple,
+                          Colors.deepOrange,
+                        ],
+                      ),
+                    shouldIconPulse: false)
+                  .show(context);
+                });
+              },
+            )),
           const Spacer(),
           InkWell(
             onTap: () {

@@ -13,14 +13,15 @@ import '../blockchain/classes.dart';
 import '../create_job/main.dart';
 import '../create_job/create_job_call_button.dart';
 import '../navigation/navmenu.dart';
+import '../statistics/model_view/pending_model_view.dart';
+import '../statistics/widget/tasks_statistics.dart';
+import '../statistics/widget/token_statistics.dart';
 import '../wallet/model_view/wallet_model.dart';
 import '../wallet/model_view/mm_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
-import '../statistics/model_view/statistics_model_view.dart';
-import '../statistics/widget/home_statistics.dart';
 import '../widgets/icon_image.dart';
-import '../widgets/loading.dart';
+import '../widgets/loading/loading.dart';
 import '../config/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -67,18 +68,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    var tasksServices = context.read<TasksServices>();
-    var interface = context.read<InterfaceServices>();
-    final isDeviceConnected = context.select((TasksServices vm) => vm.isDeviceConnected);
+    // var tasksServices = context.read<TasksServices>();
+    // var interface = context.read<InterfaceServices>();
+    // final isDeviceConnected = context.select((TasksServices vm) => vm.isDeviceConnected);
     final allowedChainId = context.select((WalletModel vm) => vm.state.allowedChainId);
-    final walletConnected = context.select((WalletModel vm) => vm.state.walletConnected);
+    // final walletConnected = context.select((WalletModel vm) => vm.state.walletConnected);
     final listenWalletAddress = context.select((WalletModel vm) => vm.state.walletAddress);
-    StatisticsModel statisticsModel = context.read<StatisticsModel>();
+    // TokenPendingModel tokenPendingModel = context.read<TokenPendingModel>();
 
-    bool isFloatButtonVisible = false;
-    if (listenWalletAddress != null && allowedChainId) {
-      isFloatButtonVisible = true;
-    }
+    // bool isFloatButtonVisible = false;
+    // if (listenWalletAddress != null && allowedChainId) {
+    //   isFloatButtonVisible = true;
+    // }
 
     late bool desktopWidth = false;
     if (MediaQuery.of(context).size.width > 700) {
@@ -150,25 +151,25 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
               actions: [
                 const WalletConnectButton(),
-                if (!isDeviceConnected)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0, right: 14),
-                    child: Icon(
-                      Icons.cloud_off,
-                      color: DodaoTheme.of(context).primaryText,
-                      size: 26,
-                    ),
-                  ),
+                // if (!isDeviceConnected)
+                //   Padding(
+                //     padding: const EdgeInsets.only(left: 0.0, right: 14),
+                //     child: Icon(
+                //       Icons.cloud_off,
+                //       color: DodaoTheme.of(context).primaryText,
+                //       size: 26,
+                //     ),
+                //   ),
               ],
               centerTitle: false,
             ),
             // backgroundColor: Colors.black,
-            floatingActionButton: isFloatButtonVisible ? const CreateCallButton() : null,
+            floatingActionButton: listenWalletAddress != null && allowedChainId ? const CreateCallButton() : null,
             body: Align(
                 alignment: Alignment.center,
                 child: Container(
                     padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                    width: interface.maxStaticDialogWidth,
+                    width: InterfaceSettings.maxStaticDialogWidth,
                     child: LayoutBuilder(builder: (context, constraints) {
                       // final double halfWidth = constraints.maxWidth / 2 - 8;
                       // final double fullWidth = constraints.maxWidth;
@@ -182,8 +183,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ? const LoadIndicator()
                                 : Image.asset(
                                     'assets/images/LColor.png',
-                                    width: 250,
-                                    height: 250,
+                                    width: 200,
+                                    height: 200,
                                     filterQuality: FilterQuality.medium,
                                     // fit: BoxFit.fitHeight,
                                   ),
@@ -192,60 +193,20 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 children: [
                                   BlurryContainer(
 
-                                    blur: 4,
+                                    blur: 3,
                                     color: DodaoTheme.of(context).transparentCloud,
                                     padding: const EdgeInsets.all(0.5),
                                     child: Container(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(14, 8, 14, 8),
                                       decoration: BoxDecoration(
                                         borderRadius: DodaoTheme.of(context).borderRadius,
                                         border: DodaoTheme.of(context).borderGradient,
                                       ),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(22, 12, 22, 12),
-                                        child: LayoutBuilder(builder: (context, constraints) {
-                                          return const HomeStatistics();
-                                        }),
-                                      ),
+                                      child: const TokensStats(),
                                     ),
                                   ),
                                   const SizedBox(height: 16,),
-                                  BlurryContainer(
-                                    width: interface.maxStaticDialogWidth,
-                                    color: DodaoTheme.of(context).transparentCloud,
-                                    blur: 4,
-                                    padding: const EdgeInsets.all(0.5),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: DodaoTheme.of(context).borderRadius,
-                                        border: DodaoTheme.of(context).borderGradient,
-                                      ),
-                                      padding: const EdgeInsetsDirectional.fromSTEB(22, 12, 12, 12),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('Your score:',
-                                              style: Theme.of(context).textTheme.bodyMedium),
-                                          if (listenWalletAddress == null)
-                                            Text(
-                                              'Not Connected',
-                                              style: Theme.of(context).textTheme.titleSmall,
-                                            )
-                                          else if (tasksServices.scoredTaskCount == 0)
-                                            Text(
-                                              'No completed evaluated tasks',
-                                              style: Theme.of(context).textTheme.titleSmall,
-                                            )
-                                          else
-                                            SelectableText(
-                                              '${tasksServices.myScore} of ${tasksServices.scoredTaskCount} tasks',
-                                              style: Theme.of(context).textTheme.titleSmall,
-                                            )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  const TasksStatistics(),
                                   // const SizedBox(height: 1,),
                                   Container(
                                       padding: const EdgeInsets.only(top: 10.0, bottom: 6),

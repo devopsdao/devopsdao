@@ -10,14 +10,19 @@ import '../model_view/wallet_model.dart';
 // on -> init ->
 // ... -> check (logic with bool return(not bool stored data))
 
-
 class WalletService {
+  static bool hardhatDebug = false;
+  static bool hardhatLive = false;
   static bool walletConnected = false;
   static bool allowedChainId = false;
   static WalletSelected walletSelected = WalletSelected.none;
   static EthereumAddress? walletAddress;
   static const int defaultNetwork = 855456;
+  // static const int defaultNetwork = 64165;
   static int chainId = defaultNetwork;
+  // static int statsLoadingDoneOnNetId = 0;
+  // static int tasksLoadingAndMonitorDoneOnNetId = 0;
+
   // static int chainId = ChainPresets.chains.keys.firstWhere(
   //         (k) => ChainPresets.chains[k]?.chainName == defaultNetwork);
 
@@ -33,6 +38,7 @@ class WalletService {
   bool checkContainedChainInAllowedList(int id) {
     return ChainPresets.chains.keys.contains(id);
   }
+
   bool checkAllowedChainId({int id = 0}) {
     int chainIdToCheck;
     id == 0 ? chainIdToCheck = chainId : chainIdToCheck = id;
@@ -45,29 +51,40 @@ class WalletService {
     allowedChainId = checkContainedChainInAllowedList(chain);
     chainId = chain;
   }
+
   void writeWalletAddress(EthereumAddress? address) {
     walletAddress = address;
   }
+
+  // void writeStatsLoadingDoneOnNetId(int id) {
+  //   statsLoadingDoneOnNetId = id;
+  // }
+  //
+  // void writeTasksLoadingAndMonitorDoneOnNetId(int id) {
+  //   tasksLoadingAndMonitorDoneOnNetId = id;
+  // }
+
   void writeAllowedChainId(bool state) {
     allowedChainId = state;
   }
+
   void writeWalletConnected(bool state) {
     walletConnected = state;
   }
+
   void writeWalletSelected(WalletSelected state) {
     walletSelected = state;
   }
+
   Future<void> writeDefaultChainId() async {
     writeChainId(defaultNetwork);
   }
 
   int readChainIdByName(String name) {
-    return ChainPresets.chains.keys.firstWhere(
-            (k) => ChainPresets.chains[k]?.chainName == name, orElse: () => 0);
+    return ChainPresets.chains.keys.firstWhere((k) => ChainPresets.chains[k]?.chainName == name, orElse: () => 0);
   }
+
   String readChainNameById(int id) {
     return ChainPresets.chains[id]!.chainName;
   }
 }
-
-

@@ -21,7 +21,7 @@ class _WalletDialogState extends State<WalletDialog> {
   @override
   Widget build(BuildContext context) {
     WalletModel walletModel = context.read<WalletModel>();
-
+    // pageController = PageController(initialPage: 0);
     if (walletModel.state.walletSelected != WalletSelected.none) {
       if (walletModel.state.walletSelected == WalletSelected.metamask) {
         pageController = PageController(initialPage: 1);

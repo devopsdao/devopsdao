@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:webthree/credentials.dart';
 import 'accounts.dart';
 
+class InterfaceSettings {
+  // ****** MAIN SCREEN SETTINGS ******** //
+  // border radius:
+  static double borderRadius = 8.0;
+  // -------------------- Sizes for Dialog window ------------------------- //
+  static double maxStaticDialogWidth = 700;
+  static double maxStaticInternalDialogWidth = 480;
+  static double maxStaticGlobalWidth = 1000;
+}
+
 class InterfaceServices extends ChangeNotifier {
   late double tokensEntered = 0.0;
   late String tokenSelected = '';
@@ -107,7 +117,15 @@ class InterfaceServices extends ChangeNotifier {
       participantTasks: [],
       auditParticipantTasks: [],
       performerRating: [],
-      customerRating: [], agreedTasks: [], auditAgreed: [], completedTasks: []);
+      customerRating: [],
+      performerAgreedTasks: [],
+      customerAgreedTasks: [],
+      auditAgreed: [],
+      auditCompleted: [],
+      performerAuditedTasks: [],
+      customerAuditedTasks: [],
+      performerCompletedTasks: [],
+      customerCompletedTasks: []);
   // participants_list.dart & 3_selection.dart & auditor
   final double tileHeight = 36;
   final double participantInfoHeight = 165;
@@ -143,9 +161,8 @@ class InterfaceServices extends ChangeNotifier {
 
   // ****** MAIN SCREEN SETTINGS ******** //
   // border radius:
-  final double borderRadius = 8.0;
+  // final double borderRadius = 8.0;
   // -------------------- Sizes for Dialog window ------------------------- //
-  final double maxStaticDialogWidth = 600;
-  final double maxStaticInternalDialogWidth = 480;
-  final double maxStaticGlobalWidth = 1000;
+  // final double maxStaticInternalDialogWidth = 480;
+  // final double maxStaticGlobalWidth = 1000;
 }

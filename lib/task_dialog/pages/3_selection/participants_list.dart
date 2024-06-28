@@ -60,7 +60,7 @@ class _ParticipantListState extends State<ParticipantList> {
       participants = widget.task.auditors;
     }
     final participationList = tasksServices.getAccountsData(requestedAccountsList: participants.cast<EthereumAddress>());
-    setState((){
+    setState(() {
       futureParticipationList = participationList;
     });
   }
@@ -87,113 +87,130 @@ class _ParticipantListState extends State<ParticipantList> {
       controller: selectionScrollController,
       // physics: AlwaysScrollableScrollPhysics(),
       child: FutureBuilder(
-        future: futureParticipationList,
-        builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot)  {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              snapshot.error.toString();
-              return Text(snapshot.error.toString());
-            } else if (snapshot.hasData) {
-              final list = snapshot.data?.values.toList();
+          future: futureParticipationList,
+          builder: (BuildContext context, AsyncSnapshot<Map<String, Account>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                snapshot.error.toString();
+                return Text(snapshot.error.toString());
+              } else if (snapshot.hasData) {
+                final list = snapshot.data?.values.toList();
 
-              return ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  // scrollDirection: Axis.vertical,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: list?.length,
-                  itemBuilder: (context2, index2) {
-                    return Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: SizedBox(
-                        height: interface.tileHeight,
-                        child: ListTile(
-                          title: Row(
-                            children: [
-                              RichText(
-                                  text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                      '${list?[index2].walletAddress.toString().substring(0, 5)}...'
-                                      '${list?[index2].walletAddress.toString().substring(listenWalletAddress.toString().length - 5)}',
-                                    ),
-                                  ]
-                                  )
-                              ),
-                              // const Spacer(),
-                              // RichText(
-                              //     text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
-                              //       TextSpan(
-                              //         text: list![index2].nickName.isNotEmpty ?
-                              //         list[index2].nickName :
-                              //             'Nameless'
-                              //       ),
-                              //     ]
-                              //     )
-                              // ),
-                              const Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list![index2].customerTasks.length, color: Colors.lightBlue,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].agreedTasks.length - list[index2].completedTasks.length, color: Colors.yellow.shade700,),
-                              ),
-                              // Padding(
-                              //   padding: const EdgeInsets.all(2.0),
-                              //   child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
-                              // ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].completedTasks.length , color: Colors.greenAccent.shade700,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].auditParticipantTasks.length, color: Colors.redAccent.shade400,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].auditParticipantTasks.length, color: Colors.red.shade800,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].customerRating.length, color: Colors.deepPurpleAccent,),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: BadgeSmallColored(count: list[index2].performerRating.length, color: Colors.deepPurple,),
-                              ),
-                            ],
+                return ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    // scrollDirection: Axis.vertical,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: list?.length,
+                    itemBuilder: (context2, index2) {
+                      return Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: SizedBox(
+                          height: interface.tileHeight,
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                RichText(
+                                    text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                                  TextSpan(
+                                    text: '${list?[index2].walletAddress.toString().substring(0, 5)}...'
+                                        '${list?[index2].walletAddress.toString().substring(listenWalletAddress.toString().length - 5)}',
+                                  ),
+                                ])),
+                                // const Spacer(),
+                                // RichText(
+                                //     text: TextSpan(style: DodaoTheme.of(context).bodyText3, children: <TextSpan>[
+                                //       TextSpan(
+                                //         text: list![index2].nickName.isNotEmpty ?
+                                //         list[index2].nickName :
+                                //             'Nameless'
+                                //       ),
+                                //     ]
+                                //     )
+                                // ),
+                                const Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list![index2].customerTasks.length,
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list[index2].performerAgreedTasks.length - list[index2].performerCompletedTasks.length,
+                                    color: Colors.yellow.shade700,
+                                  ),
+                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(2.0),
+                                //   child: BadgeSmallColored(count: list[index2].participantTasks.length, color: Colors.amber.shade800,),
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list[index2].performerCompletedTasks.length,
+                                    color: Colors.greenAccent.shade700,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list[index2].auditParticipantTasks.length,
+                                    color: Colors.redAccent.shade400,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list[index2].auditParticipantTasks.length,
+                                    color: Colors.red.shade800,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list[index2].customerRating.length,
+                                    color: Colors.deepPurpleAccent,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: BadgeSmallColored(
+                                    count: list[index2].performerRating.length,
+                                    color: Colors.deepPurple,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+                            visualDensity: const VisualDensity(vertical: -3),
+                            dense: true,
+                            selected: index2 == selectedIndex,
+                            selectedTileColor: DodaoTheme.of(context).nftInfoBackgroundColor,
+                            onTap: () {
+                              selectionScrollController.animateTo(
+                                (interface.tileHeight * index2) - (interface.tileHeight * 3),
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOutCirc,
+                              );
+                              setState(() {
+                                selectedIndex = index2.toDouble();
+                                interface.selectedUser = list[index2];
+                              });
+                              myNotifyListener.myNotifyListeners();
+                            },
                           ),
-                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
-                          visualDensity: const VisualDensity(vertical: -3),
-                          dense: true,
-                          selected: index2 == selectedIndex,
-                          selectedTileColor: DodaoTheme.of(context).nftInfoBackgroundColor,
-                          onTap: () {
-                            selectionScrollController.animateTo(
-                              (interface.tileHeight * index2) - (interface.tileHeight * 3),
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOutCirc,
-                            );
-                            setState(() {
-                              selectedIndex = index2.toDouble();
-                              interface.selectedUser = list[index2];
-                            });
-                            myNotifyListener.myNotifyListeners();
-                          },
                         ),
-                      ),
-                    );
-                  });
-            } else {
-              return const Text('Nothing to load..');
+                      );
+                    });
+              } else {
+                return const Text('Nothing to load..');
+              }
             }
-          }
-          return const Text('...');
-        }
-      ),
+            return const Text('...');
+          }),
     );
   }
 }

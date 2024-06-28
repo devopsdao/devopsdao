@@ -2,14 +2,23 @@ import 'package:dodao/blockchain/empty_classes.dart';
 import 'package:dodao/blockchain/notify_listener.dart';
 import 'package:dodao/config/preload_assets.dart';
 import 'package:dodao/nft_manager/collection_services.dart';
+import 'package:dodao/statistics/model_view/pending_model_view.dart';
+import 'package:dodao/statistics/model_view/horizontal_list_view_model.dart';
+import 'package:dodao/statistics/model_view/statistics_model_view.dart';
+import 'package:dodao/statistics/widget/tasks_statistics_widgets/model/cashed_personal_stats_model.dart';
 import 'package:dodao/wallet/model_view/mm_model.dart';
 import 'package:dodao/wallet/model_view/wallet_model.dart';
 import 'package:dodao/wallet/model_view/wc_model.dart';
-import 'package:dodao/statistics/model_view/statistics_model_view.dart';
+import 'package:dodao/wallet/services/wallet_service.dart';
+import 'package:dodao/widgets/loading/loading_model.dart';
 import 'package:dodao/widgets/tags/search_services.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'package:webthree/browser.dart';
+import 'package:webthree/webthree.dart';
+import "package:universal_html/html.dart" hide Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,7 +30,7 @@ import 'config/internationalization.dart';
 
 import 'package:dodao/blockchain/task_services.dart';
 
-import 'navigation/authenticator.dart';
+import 'config/utils/platform.dart';
 import 'navigation/beamer_delegate.dart';
 import 'package:beamer/beamer.dart';
 
@@ -30,28 +39,40 @@ void main() async {
 
   await DodaoTheme.initialize();
 
-  // createAuthenticator();
+  // // final rpcUrl = 'http://localhost:8545';
+  // // final wsUrl = 'ws://localhost:8545';
+  // final  web3ClientInitializer =  Web3ClientInitializer();
+  // final walletService = WalletService();
+  // final contractConnector = ContractConnector(web3ClientInitializer);
+  // TaskStatsInitializer taskStatsInitializer = TaskStatsInitializer(
+  //   contractConnector.taskDataFacet,
+  //   contractConnector.taskStatsFacet,
+  // );
+  //
+  // isolate = IsolateManager.create(
+  //     initTaskStats,
+  //     workerName: 'initTaskStats', // Add this line
+  //     concurrent: 2
+  // );
+
   createBeamerDelegate();
   beamerDelegate.setDeepLink('/home');
-  // await PreloadAssets.preload();
-  // beamerDelegate.beamToNamed('/tasks/1');
-
-  // runApp(MyApp());
-  // var taskServices = TasksServices();
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => TasksServices()),
+        ChangeNotifierProvider(create: (context) => TasksServices(),),
         ChangeNotifierProvider(create: (context) => InterfaceServices()),
-        // ChangeNotifierProvider(create: (context) => EmptyClasses()),
+        ChangeNotifierProvider(create: (context) => StatisticsWidgetsManager()),
+        ChangeNotifierProvider(create: (context) => LoadingModel()),
         ChangeNotifierProvider(create: (context) => SearchServices()),
         ChangeNotifierProvider(create: (context) => CollectionServices()),
         ChangeNotifierProvider(create: (context) => MetamaskModel()),
         ChangeNotifierProvider(create: (context) => WCModelView()),
         ChangeNotifierProvider(create: (context) => WalletModel()),
+        ChangeNotifierProvider(create: (context) => HorizontalListViewModel()),
         ChangeNotifierProvider(create: (context) => MyNotifyListener()),
-        ChangeNotifierProvider(create: (_) => StatisticsModel()),
+        ChangeNotifierProvider(create: (_) => CachedPersonalStatisticsDataModel()),
+        ChangeNotifierProvider(create: (_) => TokenPendingModel()),
         // ChangeNotifierProxyProvider<TasksServices, SearchServices>(
         //   create: (_) => SearchServices(),
         //   update: (_, tasksServices, searchServices) {
@@ -80,26 +101,14 @@ void main() async {
       ],
       child: MyApp(),
     ),
-    // ChangeNotifierProvider(
-    //   create: (context) => TasksServices(),
-    //   child: MyApp(),
-    // ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   State<MyApp> createState() => _MyAppState();
 
   static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
-
-  // Widget build(BuildContext context) {
-  //   return MaterialApp.router(
-  //     routerDelegate: beamerDelegate,
-  //     routeInformationParser: BeamerParser(),
-  //   );
-  // }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -110,7 +119,43 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+    // Future.delayed(const Duration(seconds: 1), () => setState(() => displaySplashImage = false));
+
+    final tasksServices = Provider.of<TasksServices>(context, listen: false);
+    final taskStatsModel = Provider.of<LoadingModel>(context, listen: false);
+    tasksServices.setDelegate(taskStatsModel);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      MetamaskModel metamaskProvider = context.read<MetamaskModel>();
+      WalletModel walletModel = context.read<WalletModel>();
+      var tasksServices = context.read<TasksServices>();
+      final platform = PlatformAndBrowser();
+      await Future.doWhile(() => Future.delayed(const Duration(milliseconds: 500)).then((_) {
+        print('wait: contracts initializing');
+        return !tasksServices.contractsInitialized;
+      }));
+      if (platform.platform != 'web' || window.ethereum == null) {
+        // try {
+        //   await tasksServices.initAccountStats();
+        // } catch (e) {
+        //   log.severe('MyApp->initState->initAccountStats error: $e');
+        // }
+        try {
+          // isolate.sendMessage(tasksServices.connectContracts);
+          // if (WalletService.statsLoadingDoneOnNetId != WalletService.chainId) {
+          //   await tasksServices.initTaskStats();
+          // }
+          await tasksServices.initTaskStats();
+        } catch (e) {
+          log.severe('MyApp->initState->initTaskStats error: $e');
+        }
+        await tasksServices.refreshTasksForAccount(EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'), "new");
+        // await Future.delayed(const Duration(milliseconds: 200));
+        // await tasksServices.monitorEvents();
+      } else {
+        metamaskProvider.onCreateMetamaskConnection(tasksServices, walletModel, context, true);
+      }
+    });
   }
 
   void setLocale(Locale value) => setState(() => _locale = value);
@@ -118,36 +163,33 @@ class _MyAppState extends State<MyApp> {
         DodaoTheme.saveThemeMode(mode);
       });
 
-  // final beamerRouter = MaterialApp.router(
-  //     routerDelegate: beamerDelegate, routeInformationParser: BeamerParser());
-
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp.router(
-    //   routerDelegate: beamerDelegate,
-    //   routeInformationParser: BeamerParser(),
-    // );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     return ChangeNotifierProvider(
       create: (_) => ModelTheme(),
       child: Consumer<ModelTheme>(
       builder: (context, ModelTheme themeNotifier, child) {
-        return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen.navigate(
-            name: 'assets/rive_animations/cat-blinking.riv',
-            until: () => Future.delayed(const Duration(seconds: 1)),
-            startAnimation: 'Opening one eye',
-            width: 210,
-            height: 210,
+        // return MaterialApp(
+        //   debugShowCheckedModeBanner: false,
+        //   home: SplashScreen.navigate(
+        //     name: 'assets/rive_animations/cat-blinking.riv',
+        //     until: () => Future.delayed(const Duration(seconds: 1)),
+        //     startAnimation: 'Opening one eye',
+        //     width: 210,
+        //     height: 210,
+        //
+        //     next: (context) =>
 
-            next: (context) => MaterialApp.router(
+               return MaterialApp.router(
+
 
               routerDelegate: beamerDelegate,
-              routeInformationParser: BeamerParser(),
+              routeInformationParser: parser,
               backButtonDispatcher: BeamerBackButtonDispatcher(delegate: beamerDelegate),
               debugShowCheckedModeBanner: false,
               title: 'dodao.dev',
@@ -156,7 +198,7 @@ class _MyAppState extends State<MyApp> {
               localizationsDelegates: const [
                 FFLocalizationsDelegate(),
                 GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate ,
                 GlobalCupertinoLocalizations.delegate,
               ],
               locale: _locale,
@@ -278,12 +320,8 @@ class _MyAppState extends State<MyApp> {
               ),
               // Theme mode settings:
               themeMode: themeNotifier.isDark  ? ThemeMode.dark : ThemeMode.light,
-            ),
-        )
-
-
-
-        );
+            );
+        // ));
       }
     ));
   }

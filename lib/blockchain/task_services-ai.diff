@@ -1,0 +1,79 @@
+// Remove unused imports
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+// Remove unused fields
+late String _rpcUrlMoonbeam;
+late String _wsUrlMoonbeam;
+late String _rpcUrlGoerli;
+late String _wsUrlGoerli;
+late String _rpcUrlSepolia;
+late String _wsUrlSepolia;
+late String _rpcUrlFantom;
+late String _wsUrlFantom;
+late String _rpcUrlZksync;
+late String _wsUrlZksync;
+late String _rpcUrlTanssi;
+late String _wsUrlTanssi;
+late String _rpcUrlBlast;
+late String _wsUrlBlast;
+late String _rpcUrlScroll;
+late String _wsUrlScroll;
+late String _rpcUrlZkevm;
+late String _wsUrlZkevm;
+late String _rpcUrlManta;
+late String _wsUrlManta;
+late String _rpcUrlSatoshivm;
+late String _wsUrlSatoshivm;
+late String _rpcUrlBTTC;
+late String _wsUrlBTTC;
+
+// Remove unused local variables and unnecessary code
+final StreamSubscription subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+late ContractAbi _abiCode;
+final decoded = JobContractCreated.decodeResults(event.topics!, event.data!);
+EthereumAddress tokenContractAddressGoerli = EthereumAddress.fromHex('0xD1633F7Fb3d716643125d6415d4177bC36b7186b');
+if (event.from == publicAddress || event.to == publicAddress) {
+await myBalance();
+Map<EthereumAddress, Task> filterResultsTags = filterResultsSearch;
+final double ethBalancePrecise = 0;
+tasksCustomerSelection.clear();
+tasksPerformerParticipate.clear();
+tasksCustomerProgress.clear();
+isLoadingBackground = true;
+List<EthereumAddress> taskList = await taskDataFacet.getTaskContractsCustomer(publicAddress);
+filterResults.clear();
+Map<String, Map<String, Map<String, int>>> dailyStats = {};
+var supportsInterface = await ierc165.supportsInterface(interfaceID);
+
+// Remove unnecessary non-null assertions
+tasks[event.contractAdr]!
+tasks[event.contractAdr]!.title
+transactionStatuses[nanoId]!['postWitnetRequest']!
+transactionStatuses[nanoId]!['postWitnetRequest']!
+
+// Update code
+// List<String> _tagsList = [];
+// List<String> get tagsList => _tagsList;
+// set tagsList(List<String> value) {
+//   if (value != tagsList) {
+//     _tagsList = value;
+//     runFilter();
+//   }
+// }
+
+if (tagsList.isNotEmpty) {
+  late Map<EthereumAddress, Task> filteredWithTags;
+  late Map<EthereumAddress, Task> filteredWithNfts;
+  for (var tag in tagsList) {
+    filteredWithTags = Map.from(filterResultsSearch)..removeWhere((key, value) => !value.tags.contains(tag));
+    filteredWithNfts = Map.from(filterResultsSearch)
+      ..removeWhere((key, value) => !value.tokenNames.last.contains(tag));
+  }
+  filterResults = {...filteredWithTags, ...filteredWithNfts};
+}
+
+// taskList = Map.fromEntries(
+//     taskList.entries.where((entry) => tagsList.contains(entry.value.name)
+// )

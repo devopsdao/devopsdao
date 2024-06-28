@@ -70,7 +70,7 @@ class _TopUpPageState extends State<TopUpPage> {
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: interface.maxStaticInternalDialogWidth,
+            maxWidth: InterfaceSettings.maxStaticInternalDialogWidth,
             maxHeight: widget.screenHeightSize,
           ),
           child: SingleChildScrollView(

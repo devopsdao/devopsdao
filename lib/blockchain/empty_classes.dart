@@ -74,7 +74,15 @@ class EmptyClasses {
       participantTasks: [],
       auditParticipantTasks: [],
       performerRating: [BigInt.from(0)],
-      customerRating: [BigInt.from(0)], agreedTasks: [], auditAgreed: [], completedTasks: []);
+      customerRating: [BigInt.from(0)],
+      performerAgreedTasks: [],
+      customerAgreedTasks: [],
+      auditAgreed: [],
+      auditCompleted: [],
+      performerAuditedTasks: [],
+      customerAuditedTasks: [],
+      performerCompletedTasks: [],
+      customerCompletedTasks: []);
 
   final emptyAccount = Account(
       nickName: 'Empty',
@@ -84,7 +92,15 @@ class EmptyClasses {
       participantTasks: [],
       auditParticipantTasks: [],
       performerRating: [BigInt.from(0)],
-      customerRating: [BigInt.from(0)], agreedTasks: [], auditAgreed: [], completedTasks: []);
+      customerRating: [BigInt.from(0)],
+      performerAgreedTasks: [],
+      customerAgreedTasks: [],
+      auditAgreed: [],
+      auditCompleted: [],
+      performerAuditedTasks: [],
+      customerAuditedTasks: [],
+      performerCompletedTasks: [],
+      customerCompletedTasks: []);
 
   Map<EthereumAddress, Task> tasksForShimmer = {
     EthereumAddress.fromHex('0x0000000000000000000000000000000000000000'): Task(

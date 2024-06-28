@@ -71,7 +71,7 @@ class _NetworkSelectionState extends State<NetworkSelection> {
                     if (chainId == walletModel.state.chainId) { return; }
                     await metamaskModel.onSwitchNetworkMM(tasksServices, walletModel, chainId);
                   } else {
-                    await metamaskModel.onCreateMetamaskConnection(tasksServices, walletModel, context);
+                    await metamaskModel.onCreateMetamaskConnection(tasksServices, walletModel, context, false);
                   }
                 }
               },

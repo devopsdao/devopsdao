@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'package:dodao/blockchain/task_services.dart';
 import 'package:dodao/wallet/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:logging/logging.dart';
 import '../../blockchain/chain_presets/chains_presets.dart';
-import '../../statistics/services/statistics_service.dart';
 import '../../config/utils/platform.dart';
+import '../../statistics/services/pending_service.dart';
 import '../services/wc_service.dart';
 import '../sessions/wc_sessions.dart';
 
@@ -44,15 +42,13 @@ class WCModelViewState {
   });
 }
 
-
 class WCModelView extends ChangeNotifier {
   final _walletService = WalletService();
   final _wcService = WCService();
   final _wcSessions = WCSessions();
-  final _statisticsService = StatisticsService();
+  final _tokenPendingService = TokenPendingService();
   // utils:
   final _platformAndBrowser = PlatformAndBrowser();
-
 
   final log = Logger('WCModelView');
 
@@ -61,15 +57,12 @@ class WCModelView extends ChangeNotifier {
 
   /// Init:
   WCModelView() {
-    if (_platformAndBrowser.platform == 'mobile'
-        || _platformAndBrowser.browserPlatform == 'android'
-        || _platformAndBrowser.browserPlatform == 'ios') {
+    if (_platformAndBrowser.platform == 'mobile' ||
+        _platformAndBrowser.browserPlatform == 'android' ||
+        _platformAndBrowser.browserPlatform == 'ios') {
       _state.mobile = true;
-
-    } else if (_platformAndBrowser.platform == 'linux'
-        || _platformAndBrowser.platform == 'web'
-        && _platformAndBrowser.browserPlatform != 'android'
-        && _platformAndBrowser.browserPlatform != 'ios') {
+    } else if (_platformAndBrowser.platform == 'linux' ||
+        _platformAndBrowser.platform == 'web' && _platformAndBrowser.browserPlatform != 'android' && _platformAndBrowser.browserPlatform != 'ios') {
       _state.mobile = false;
     }
     init();
@@ -181,6 +174,7 @@ class WCModelView extends ChangeNotifier {
   Future<void> setChainOnWCWallet(int value) async {
     _state.chainIdOnWCWallet = value;
   }
+
   Future<void> setSelectedChainIdOnApp(int value) async {
     _state.selectedChainIdOnApp = value;
   }
@@ -194,6 +188,7 @@ class WCModelView extends ChangeNotifier {
       log.severe('walletconnectv2->connectWallet error: onSwitchNetwork');
     }
   }
+
   Future<void> onNetworkChangeInMenu(String value) async {
     setWcScreenState(state: WCScreenStatus.loadingWc);
     int changeTo = _walletService.readChainIdByName(value);
@@ -201,7 +196,7 @@ class WCModelView extends ChangeNotifier {
   }
 
   Future<void> onFinalConnection(chainId, tasksServices) async {
-    _statisticsService.initRequestBalances(chainId, tasksServices);
+    _tokenPendingService.initRequestBalances(chainId, tasksServices);
   }
 
   Future<void> registerEventHandlers() async {
@@ -211,6 +206,7 @@ class WCModelView extends ChangeNotifier {
     }
     _wcService.registerEventHandlers(chains);
   }
+
   Future<Web3App?> getWeb3App() async {
     return _wcService.readWeb3App();
   }

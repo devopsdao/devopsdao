@@ -9,6 +9,13 @@ class SearchServices extends ChangeNotifier {
   //
   late ValueNotifier<bool> searchBarStart = ValueNotifier(true);
 
+  Future<List<String>> getMintList() async {
+    List<String>list = [];
+    for (var v in mintPageFilterResults.values) {
+      list.add(v.name);
+    }
+    return list;
+  }
 
   Map<String, NftCollection> mintPageFilterResults = {};
   Map<String, NftCollection> treasuryPageFilterResults = {};
@@ -45,32 +52,39 @@ class SearchServices extends ChangeNotifier {
     if (listToRefresh == 'mint') {
       mintPageFilterResults.clear();
       mintPageFilterResults = Map.from(collectionMap);
+      mintPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (listToRefresh == 'treasury') {
       treasuryPageFilterResults.clear();
       treasuryPageFilterResults = Map.from(nftBalanceMap);
+      treasuryPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (listToRefresh == 'filter') {
       taskFilterResults.clear();
       taskFilterResults = Map.from(collectionMap);
+      taskFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (listToRefresh == 'selection') {
       Map<String, NftCollection> tempNfts = {};
       if (collectionMap.entries.isNotEmpty) {
         for (var e in collectionMap.entries) {
-          tempNfts['collection ${e.key}'] = NftCollection(
-            name: e.key,
-            bunch: { BigInt.from(0) : (
-              TokenItem(
+          if (e.value.name != '') {
+            tempNfts['collection ${e.key}'] = NftCollection(
                 name: e.key,
-                collection: false,
-                nft: false,
+                bunch: { BigInt.from(0) : (
+                    TokenItem(
+                        name: e.key,
+                        collection: false,
+                        nft: false,
+                        selected: false
+                    )
+                )},
                 selected: false
-              )
-            )},
-            selected: false
-          );
+            );
+          }
+
         }
       }
-      addToNewTaskFilterResults = {...tempNfts, ...nftBalanceMap};
-      selectionPageInitialCombined = {...tempNfts, ...nftBalanceMap}; // initial combined copied map for tagsSearchFilter()
+      addToNewTaskFilterResults = {...nftBalanceMap, ...tempNfts };
+      selectionPageInitialCombined = {...nftBalanceMap, ...tempNfts, }; // initial combined copied map for tagsSearchFilter()
+
     }
     notifyListeners();
   }
@@ -272,15 +286,19 @@ class SearchServices extends ChangeNotifier {
     if (page == 'mint') {
       mintPageFilterResults.clear();
       mintPageFilterResults = resultMap;
+      mintPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (page == 'selection') {
       addToNewTaskFilterResults.clear();
       addToNewTaskFilterResults = resultMap;
+      addToNewTaskFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (page == 'treasury') {
       treasuryPageFilterResults.clear();
       treasuryPageFilterResults = resultMap;
+      treasuryPageFilterResults.removeWhere((String key, dynamic value) => key == '');
     } else if (page == 'filter') {
       taskFilterResults.clear();
       taskFilterResults = resultMap;
+      taskFilterResults.removeWhere((String key, dynamic value) => key == '');
     }
     notifyListeners();
   }
@@ -454,13 +472,6 @@ class SearchServices extends ChangeNotifier {
             e.value.selected = false;
           }
         }
-
-
-        // if (e.value.selected && e.value.name == tagName) {
-        //   e.value.selected = false;
-        // } else if (!e.value.selected && e.value.name == tagName){
-        //   e.value.selected = true;
-        // }
       }
 
       nftSelected = false;
@@ -504,6 +515,7 @@ class SearchServices extends ChangeNotifier {
 
       }
     } else if (typeSelection == 'mint') {
+
       for (String key in mintPageFilterResults.keys) {
         if (mintPageFilterResults[key]?.name == tagName) {
           if (mintPageFilterResults[key]!.selected) {
@@ -514,27 +526,8 @@ class SearchServices extends ChangeNotifier {
         } else if (key != tagName || unselectAll) {
           mintPageFilterResults[key]!.selected = false;
         }
-
-        // if (mintPageFilterResults[key]?.name.toLowerCase() == tagName.toLowerCase()) {
-        //   if (mintPageFilterResults[key]!.selected) {
-        //     mintPageFilterResults[key]!.selected = false;
-        //   } else {
-        //     mintPageFilterResults[key]!.selected = true;
-        //   }
-        // } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
-        //   mintPageFilterResults[key]!.selected = false;
-        // }
-
-        // if (unselectAll) {
-        //   mintPageFilterResults[key]!.selected = false;
-        // } else {
-        //   if (mintPageFilterResults[key]!.selected) {
-        //     mintPageFilterResults[key]!.selected = false;
-        //   } else {
-        //     mintPageFilterResults[key]!.selected = true;
-        //   }
-        // }
       }
+
     } else if (typeSelection == 'treasury') {
       for (String key in treasuryPageFilterResults.keys) {
         if (key.toLowerCase() == tagName.toLowerCase() && !unselectAll) {
@@ -547,23 +540,4 @@ class SearchServices extends ChangeNotifier {
     // reset counter
     countSelection();
   }
-
-  // Future<void> combinedTagsSelection({required String typeSelection, required String tagName}) async {
-  //   // fires from wrapped_chip on 'add new Task' page.
-  //   if (typeSelection == 'selection') {
-  //
-  //   }
-  //   notifyListeners();
-  // }
-
-  // Future<void> nftInfoSelection({required String tagName, required bool unselectAll}) async {
-  //   for (String key in treasuryPageFilterResults.keys) {
-  //     if (key.toLowerCase() == tagName.toLowerCase()) {
-  //       treasuryPageFilterResults[key]!.selected = true;
-  //     } else if (key.toLowerCase() != tagName.toLowerCase() || unselectAll) {
-  //       treasuryPageFilterResults[key]!.selected = false;
-  //     }
-  //   }
-  //   notifyListeners();
-  // }
 }

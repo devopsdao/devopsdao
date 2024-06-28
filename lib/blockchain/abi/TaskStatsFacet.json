@@ -1,0 +1,136 @@
+[
+  {
+    "inputs": [],
+    "name": "contractTaskStatsFacet",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "offset",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTaskStatsWithTimestamps",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "countNew",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countAgreed",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countProgress",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countReview",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countCompleted",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countCanceled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countPrivate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countPublic",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "countHackaton",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "avgTaskDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "avgPerformerRating",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "avgCustomerRating",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string[]",
+            "name": "topTags",
+            "type": "string[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "topTagCounts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "topTokenNames",
+            "type": "string[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "topTokenBalances",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "topETHBalances",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "topETHAmounts",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "createTimestamps",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct TaskStatsWithTimestamps",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

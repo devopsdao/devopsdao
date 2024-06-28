@@ -8,7 +8,7 @@ import '../../blockchain/task_services.dart';
 import '../../task_dialog/beamer.dart';
 import '../../task_dialog/task_transition_effect.dart';
 import '../../widgets/badgetab.dart';
-import '../../widgets/loading.dart';
+import '../../widgets/loading/loading.dart';
 import '../../widgets/tags/search_services.dart';
 import '../../widgets/tags/tag_open_container.dart';
 import '../../config/theme.dart';
@@ -148,11 +148,17 @@ class _TreasuryWidget extends State<TreasuryWidget> {
                             ],
                           ),
                           const Spacer(),
-                          Padding(
+                          Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 250,
+                            ),
                             padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                             child: Text(
                               collectionName,
-                              style: Theme.of(context).textTheme.bodyLarge,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ),
                           const Spacer(),

@@ -84,7 +84,7 @@ class _TaskDialogPagesState extends State<TaskDialogPages> with TickerProviderSt
                 screenHeightSize: widget.screenHeightSize,
                 innerPaddingWidth: innerPaddingWidth,
                 task: task,
-                borderRadius: interface.borderRadius,
+                borderRadius: InterfaceSettings.borderRadius,
                 fromPage: fromPage,
               ),
             if (interface.dialogCurrentState['pages'].containsKey('description'))

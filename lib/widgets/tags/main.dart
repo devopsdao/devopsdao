@@ -91,7 +91,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
 
   @override
   Widget build(BuildContext context) {
-    InterfaceServices interfaceServices = context.read<InterfaceServices>();
+    // InterfaceServices interfaceServices = context.read<InterfaceServices>();
     SearchServices searchServices = context.read<SearchServices>();
     TasksServices tasksServices = context.read<TasksServices>();
     CollectionServices collectionServices = context.read<CollectionServices>();
@@ -105,7 +105,7 @@ class _MainTagsPageState extends State<MainTagsPage> {
       actualPage = 'filter';
     }
 
-    final double maxStaticDialogWidth = interfaceServices.maxStaticDialogWidth;
+    final double maxStaticDialogWidth = InterfaceSettings.maxStaticDialogWidth;
     const double myPadding = 8.0;
     // const List<Widget> filter = <Widget>[Text('Tags'), Text('Both'), Text('Nft\'s')];
 
@@ -334,79 +334,81 @@ class _MainTagsPageState extends State<MainTagsPage> {
                   } else {
                     localFilterResults = searchServices.taskFilterResults;
                   }
-                  return Wrap(
-                      alignment: WrapAlignment.start,
-                      direction: Axis.horizontal,
-                      children: localFilterResults.entries.map((e) {
-                        final String name = e.key;
-                        if (!tagsCompare.containsKey(name)) {
-                          if (e.value.selected) {
-                            tagsCompare[name] = TagsCompare(
-                              state: 'remain',
-                            );
-                          } else {
-                            tagsCompare[name] = TagsCompare(
-                              state: 'none',
-                            );
+                  return SingleChildScrollView(
+                    child: Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.horizontal,
+                        children: localFilterResults.entries.map((e) {
+                          final String name = e.key;
+                          if (!tagsCompare.containsKey(name)) {
+                            if (e.value.selected) {
+                              tagsCompare[name] = TagsCompare(
+                                state: 'remain',
+                              );
+                            } else {
+                              tagsCompare[name] = TagsCompare(
+                                state: 'none',
+                              );
+                            }
+                          } else if (tagsCompare.containsKey(name)) {
+                            if (e.value.selected) {
+                              if (tagsCompare[name]!.state == 'start') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'remain',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'none') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'start',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'end') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'start',
+                                        ));
+                              }
+                            } else {
+                              if (tagsCompare[name]!.state == 'end') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'none',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'start') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'end',
+                                        ));
+                              }
+                              if (tagsCompare[name]!.state == 'remain') {
+                                tagsCompare.update(
+                                    name,
+                                    (val) => val = TagsCompare(
+                                          state: 'end',
+                                        ));
+                              }
+                            }
                           }
-                        } else if (tagsCompare.containsKey(name)) {
-                          if (e.value.selected) {
-                            if (tagsCompare[name]!.state == 'start') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'remain',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'none') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'start',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'end') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'start',
-                                      ));
-                            }
-                          } else {
-                            if (tagsCompare[name]!.state == 'end') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'none',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'start') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'end',
-                                      ));
-                            }
-                            if (tagsCompare[name]!.state == 'remain') {
-                              tagsCompare.update(
-                                  name,
-                                  (val) => val = TagsCompare(
-                                        state: 'end',
-                                      ));
-                            }
-                          }
-                        }
-                        return WrappedChip(
-                          key: ValueKey(e),
-                          item: e,
-                          // selection or filter:
-                          page: actualPage,
-                          startScale: false,
-                          animationCicle: tagsCompare[name]!.state,
-                          selected: e.value.selected,
-                          wrapperRole: WrapperRole.selectNew,
-                        );
-                      }).toList());
+                          return WrappedChip(
+                            key: ValueKey(e),
+                            item: e,
+                            // selection or filter:
+                            page: actualPage,
+                            startScale: false,
+                            animationCicle: tagsCompare[name]!.state,
+                            selected: e.value.selected,
+                            wrapperRole: WrapperRole.selectNew,
+                          );
+                        }).take(99).toList()),
+                  );
                 }),
               ),
               const BottomItemInfo()
@@ -423,106 +425,109 @@ class _MainTagsPageState extends State<MainTagsPage> {
         safeAreaWidth = (myMaxWidth - maxStaticDialogWidth) / 2;
       }
 
-      return SafeArea(
-        minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
-          body: body,
-          floatingActionButtonAnimator: NoScalingAnimation(),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
-          floatingActionButton: Consumer<CollectionServices>(builder: (context, model, child) {
-            late bool splitScreen = false;
-            if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
-              splitScreen = true;
-            }
-            return Padding(
-              padding: const EdgeInsets.only(right: 4, left: 37),
-              // AnimatedCOntainer needs to show button 'Apply' over Tag Info:
-              child: AnimatedContainer(
-                padding: EdgeInsets.only(bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0) ? 300.0 : 0),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeInOutQuart,
-                child: TaskDialogFAB(
-                  inactive: false,
-                  expand: true,
-                  buttonName: 'Apply',
-                  buttonColorRequired: Colors.lightBlue.shade300,
-                  widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen) ? 600 : 120, // Keyboard shown?
-                  callback: () {
-                    searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
-                    if (widget.page == 'audit') {
-                      if (widget.tabIndex == 0) {
+      return Container(
+        color: DodaoTheme.of(context).taskBackgroundColor,
+        child: SafeArea(
+          minimum: EdgeInsets.only(left: safeAreaWidth, right: safeAreaWidth),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: DodaoTheme.of(context).taskBackgroundColor,
+            body: body,
+            floatingActionButtonAnimator: NoScalingAnimation(),
+            // floatingActionButtonLocation: FloatingActionButtonLocation.startFloat ,
+            floatingActionButton: Consumer<CollectionServices>(builder: (context, model, child) {
+              late bool splitScreen = false;
+              if (model.treasuryNftsInfoSelected.bunch.entries.first.value.name != 'empty') {
+                splitScreen = true;
+              }
+              return Padding(
+                padding: const EdgeInsets.only(right: 4, left: 37),
+                // AnimatedCOntainer needs to show button 'Apply' over Tag Info:
+                child: AnimatedContainer(
+                  padding: EdgeInsets.only(bottom: (splitScreen && MediaQuery.of(context).viewInsets.bottom == 0) ? 300.0 : 0),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOutQuart,
+                  child: TaskDialogFAB(
+                    inactive: false,
+                    expand: true,
+                    buttonName: 'Apply',
+                    buttonColorRequired: Colors.lightBlue.shade300,
+                    widthSize: (MediaQuery.of(context).viewInsets.bottom == 0 && !splitScreen) ? 600 : 120, // Keyboard shown?
+                    callback: () {
+                      searchServices.selectTagListOnTasksPages(page: widget.page, initial: false);
+                      if (widget.page == 'audit') {
+                        if (widget.tabIndex == 0) {
+                          tasksServices.runFilter(
+                            taskList: tasksServices.tasksAuditPending,
+                            tagsMap: searchServices.auditorTagsList,
+                            enteredKeyword: searchServices.searchKeywordController.text,
+                          );
+                        } else if (widget.tabIndex == 1) {
+                          tasksServices.runFilter(
+                            taskList: tasksServices.tasksAuditApplied,
+                            tagsMap: searchServices.auditorTagsList,
+                            enteredKeyword: searchServices.searchKeywordController.text,
+                          );
+                        } else if (widget.tabIndex == 2) {
+                          tasksServices.runFilter(
+                            taskList: tasksServices.tasksAuditWorkingOn,
+                            tagsMap: searchServices.auditorTagsList,
+                            enteredKeyword: searchServices.searchKeywordController.text,
+                          );
+                        } else if (widget.tabIndex == 3) {
+                          tasksServices.runFilter(
+                            taskList: tasksServices.tasksAuditComplete,
+                            tagsMap: searchServices.auditorTagsList,
+                            enteredKeyword: searchServices.searchKeywordController.text,
+                          );
+                        }
+                      } else if (widget.page == 'tasks') {
                         tasksServices.runFilter(
-                          taskList: tasksServices.tasksAuditPending,
-                          tagsMap: searchServices.auditorTagsList,
-                          enteredKeyword: searchServices.searchKeywordController.text,
-                        );
-                      } else if (widget.tabIndex == 1) {
-                        tasksServices.runFilter(
-                          taskList: tasksServices.tasksAuditApplied,
-                          tagsMap: searchServices.auditorTagsList,
-                          enteredKeyword: searchServices.searchKeywordController.text,
-                        );
-                      } else if (widget.tabIndex == 2) {
-                        tasksServices.runFilter(
-                          taskList: tasksServices.tasksAuditWorkingOn,
-                          tagsMap: searchServices.auditorTagsList,
-                          enteredKeyword: searchServices.searchKeywordController.text,
-                        );
-                      } else if (widget.tabIndex == 3) {
-                        tasksServices.runFilter(
-                          taskList: tasksServices.tasksAuditComplete,
-                          tagsMap: searchServices.auditorTagsList,
-                          enteredKeyword: searchServices.searchKeywordController.text,
-                        );
+                            taskList: tasksServices.tasksNew,
+                            tagsMap: searchServices.tasksTagsList,
+                            enteredKeyword: searchServices.searchKeywordController.text);
+                      } else if (widget.page == 'customer') {
+                        if (widget.tabIndex == 0) {
+                          tasksServices.runFilter(
+                              taskList: tasksServices.tasksCustomerSelection,
+                              tagsMap: searchServices.customerTagsList,
+                              enteredKeyword: searchServices.searchKeywordController.text);
+                        } else if (widget.tabIndex == 1) {
+                          tasksServices.runFilter(
+                              taskList: tasksServices.tasksCustomerProgress,
+                              tagsMap: searchServices.customerTagsList,
+                              enteredKeyword: searchServices.searchKeywordController.text);
+                        } else if (widget.tabIndex == 2) {
+                          tasksServices.runFilter(
+                              taskList: tasksServices.tasksCustomerComplete,
+                              tagsMap: searchServices.customerTagsList,
+                              enteredKeyword: searchServices.searchKeywordController.text);
+                        }
+                      } else if (widget.page == 'performer') {
+                        if (widget.tabIndex == 0) {
+                          tasksServices.runFilter(
+                              taskList: tasksServices.tasksPerformerParticipate,
+                              tagsMap: searchServices.performerTagsList,
+                              enteredKeyword: searchServices.searchKeywordController.text);
+                        } else if (widget.tabIndex == 1) {
+                          tasksServices.runFilter(
+                              taskList: tasksServices.tasksPerformerProgress,
+                              tagsMap: searchServices.performerTagsList,
+                              enteredKeyword: searchServices.searchKeywordController.text);
+                        } else if (widget.tabIndex == 2) {
+                          tasksServices.runFilter(
+                              taskList: tasksServices.tasksPerformerComplete,
+                              tagsMap: searchServices.performerTagsList,
+                              enteredKeyword: searchServices.searchKeywordController.text);
+                        }
                       }
-                    } else if (widget.page == 'tasks') {
-                      tasksServices.runFilter(
-                          taskList: tasksServices.tasksNew,
-                          tagsMap: searchServices.tasksTagsList,
-                          enteredKeyword: searchServices.searchKeywordController.text);
-                    } else if (widget.page == 'customer') {
-                      if (widget.tabIndex == 0) {
-                        tasksServices.runFilter(
-                            taskList: tasksServices.tasksCustomerSelection,
-                            tagsMap: searchServices.customerTagsList,
-                            enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 1) {
-                        tasksServices.runFilter(
-                            taskList: tasksServices.tasksCustomerProgress,
-                            tagsMap: searchServices.customerTagsList,
-                            enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 2) {
-                        tasksServices.runFilter(
-                            taskList: tasksServices.tasksCustomerComplete,
-                            tagsMap: searchServices.customerTagsList,
-                            enteredKeyword: searchServices.searchKeywordController.text);
-                      }
-                    } else if (widget.page == 'performer') {
-                      if (widget.tabIndex == 0) {
-                        tasksServices.runFilter(
-                            taskList: tasksServices.tasksPerformerParticipate,
-                            tagsMap: searchServices.performerTagsList,
-                            enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 1) {
-                        tasksServices.runFilter(
-                            taskList: tasksServices.tasksPerformerProgress,
-                            tagsMap: searchServices.performerTagsList,
-                            enteredKeyword: searchServices.searchKeywordController.text);
-                      } else if (widget.tabIndex == 2) {
-                        tasksServices.runFilter(
-                            taskList: tasksServices.tasksPerformerComplete,
-                            tagsMap: searchServices.performerTagsList,
-                            enteredKeyword: searchServices.searchKeywordController.text);
-                      }
-                    }
-                    Navigator.pop(context);
-                  },
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
         ),
       );
     });

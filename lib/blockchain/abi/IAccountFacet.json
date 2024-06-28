@@ -7,6 +7,42 @@
         "type": "address"
       },
       {
+        "internalType": "string",
+        "name": "identity",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "about",
+        "type": "string"
+      }
+    ],
+    "name": "addAccountData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "accountAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addAccountToBlacklist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_performer",
+        "type": "address"
+      },
+      {
         "internalType": "address",
         "name": "taskAddress",
         "type": "address"
@@ -75,7 +111,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_sender",
+        "name": "_performer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_customer",
         "type": "address"
       },
       {
@@ -100,6 +141,83 @@
         "internalType": "address",
         "name": "taskAddress",
         "type": "address"
+      }
+    ],
+    "name": "addCustomerAgreedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCustomerAuditedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCustomerCompletedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "customer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addCustomerEarnedTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -108,6 +226,29 @@
       }
     ],
     "name": "addCustomerRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "customer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addCustomerSpentTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -141,6 +282,83 @@
         "internalType": "address",
         "name": "taskAddress",
         "type": "address"
+      }
+    ],
+    "name": "addPerformerAgreedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addPerformerAuditedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addPerformerCompletedTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "performer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addPerformerEarnedTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "taskAddress",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -149,6 +367,42 @@
       }
     ],
     "name": "addPerformerRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "performer",
+        "type": "address"
+      },
+      {
+        "internalType": "string[]",
+        "name": "tokenNames",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenBalances",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "addPerformerSpentTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "accountAddress",
+        "type": "address"
+      }
+    ],
+    "name": "removeAccountFromBlacklist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

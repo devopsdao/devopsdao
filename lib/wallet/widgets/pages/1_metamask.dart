@@ -55,26 +55,28 @@ class _MetamaskPageState extends State<MetamaskPage> {
       buttonText = 'Connect';
     }
 
-    return interface.walletButtonPressed == 'metamask' ? Column(
+    return ( interface.walletButtonPressed == 'metamask'
+            || walletModel.state.walletSelected == WalletSelected.metamask)
+        ? Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-        MetamaskMainScreen(innerPaddingWidth: widget.innerPaddingWidth),
-
-      const SizedBox(height: 50),
-        WalletActionButton(
-          buttonName: buttonText,
-          // buttonFunction: 'metamask',
-          callback: () async {
-            if (!listenWalletConnected) {
-              await metamaskModel.onCreateMetamaskConnection(tasksServices, walletModel, context);
-            } else if (listenWalletConnected && !listenAllowedChainId) {
-              // await metamaskModel.onSwitchNetworkMM(context);
-            } else if (listenWalletConnected && listenAllowedChainId) {
-              await metamaskModel.onDisconnectButtonPressed(tasksServices, walletModel);
-            }
-          },
-        ),
-      const SizedBox(height: 30),
+          MetamaskMainScreen(innerPaddingWidth: widget.innerPaddingWidth),
+          const SizedBox(height: 50),
+            // if(listenWalletConnected)
+          WalletActionButton(
+            buttonName: buttonText,
+            // buttonFunction: 'metamask',
+            callback: () async {
+              if (!listenWalletConnected) {
+                await metamaskModel.onCreateMetamaskConnection(tasksServices, walletModel, context, false);
+              } else if (listenWalletConnected && !listenAllowedChainId) {
+                // await metamaskModel.onSwitchNetworkMM(context);
+              } else if (listenWalletConnected && listenAllowedChainId) {
+                await metamaskModel.onDisconnectButtonPressed(tasksServices, walletModel);
+              }
+            },
+          ),
+          const SizedBox(height: 30),
     ]) : const Center();
   }
 }

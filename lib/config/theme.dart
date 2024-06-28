@@ -184,7 +184,7 @@ class LightModeTheme extends DodaoTheme {
   late Color iconWrong = Colors.redAccent;
 
   late Color rateStroke = Colors.transparent;
-  late Color rateBody = Colors.grey.shade200;
+  late Color rateBody = Colors.black38;
   late Color rateBodySelected = Colors.purple.shade400;
   late Color rateGlowAndSparks = Colors.purple;
 

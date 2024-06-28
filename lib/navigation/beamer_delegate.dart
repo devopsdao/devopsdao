@@ -2,11 +2,11 @@
 
 import 'package:beamer/beamer.dart';
 import 'package:dodao/pages/auditor_page.dart';
+import 'package:dodao/pages/stats_page.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:webthree/webthree.dart';
 import '../wallet/widgets/main/main.dart';
 import 'appbar.dart';
-import 'authenticator.dart';
 // import '../../screens.dart';
 import '../index.dart';
 
@@ -15,15 +15,15 @@ import 'package:flutter/material.dart';
 import 'navbar.dart';
 import 'navmenu.dart';
 
-// import './screens.dart';
-
 late final BeamerDelegate beamerDelegate;
+final parser = BeamerParser();
 
 void createBeamerDelegate() {
   beamerDelegate = BeamerDelegate(
+    // initialPath: '/home',
     transitionDelegate: const NoAnimationTransitionDelegate(),
     locationBuilder: RoutesLocationBuilder(
-        routes: {
+      routes: {
         '/home': (context, state, data) => const Scaffold(
             body: HomePageWidget(),
             bottomNavigationBar: NavBarPage(
@@ -59,10 +59,28 @@ void createBeamerDelegate() {
                 initialPage: '/accounts',
               ),
             ),
+        // '/stats': (context, state, data) => const Scaffold(
+        //       body: StatisticsPage(),
+        //       bottomNavigationBar: NavBarPage(
+        //         initialPage: '/stats',
+        //       ),
+        //     ),
+        // '/statistics': (context, state, data) => const Scaffold(
+        //   body: StatisticsPageFinal(),
+        //   bottomNavigationBar: NavBarPage(
+        //     initialPage: '/statistics',
+        //   ),
+        // ),
+        // '/leaderboard': (context, state, data) => Scaffold(
+        //       body: AccountLeaderboard(),
+        //       bottomNavigationBar: NavBarPage(
+        //         initialPage: '/leaderboard',
+        //       ),
+        //     ),
         '/wallet': (context, state, data) => showDialog(
-            context: context,
-            builder: (context) => const WalletDialog(),
-          ),
+              context: context,
+              builder: (context) => const WalletDialog(),
+            ),
         '/tasks/:taskAddress': (context, state, data) {
           EthereumAddress taskAddress = EthereumAddress.fromHex(state.pathParameters['taskAddress']!);
           return Scaffold(
@@ -110,26 +128,5 @@ void createBeamerDelegate() {
         },
       },
     ),
-    // updateListenable: authenticator,
-    // guards: [
-    //   // BeamGuard(
-    //   //   pathPatterns: ['/home1'],
-    //   //   check: (_, __) => authenticator.isLoading,
-    //   //   beamToNamed: (_, __, deepLink) => authenticator.isAuthenticated ? (deepLink ?? '/home') : '/home',
-    //   // ),
-    //   //   BeamGuard(
-    //   //     pathPatterns: ['/login'],
-    //   //     check: (_, __) => authenticator.isNotAuthenticated,
-    //   //     beamToNamed: (_, __, deepLink) =>
-    //   //         authenticator.isAuthenticated ? (deepLink ?? '/home') : '/splash',
-    //   //   ),
-    //   // BeamGuard(
-    //   //   pathPatterns: ['/tasks/:taskAddress', '/performer/:taskAddress'],
-    //   //   guardNonMatching: true,
-    //   //   check: (_, __) => authenticator.isAuthenticated,
-    //   //   beamToNamed: (context, state, data) =>
-    //   //       authenticator.isNotAuthenticated ? '/home' : '/splash',
-    //   // ),
-    // ],
   );
 }

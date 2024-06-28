@@ -58,7 +58,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
     var tasksServices = context.watch<TasksServices>();
     var interface = context.watch<InterfaceServices>();
 
-    final double maxStaticInternalDialogWidth = interface.maxStaticInternalDialogWidth;
+    final double maxStaticInternalDialogWidth = InterfaceSettings.maxStaticInternalDialogWidth;
     final double innerPaddingWidth = widget.innerPaddingWidth;
     final Account account = widget.account;
     final String fromPage = widget.fromPage;
@@ -238,7 +238,7 @@ class _AccountCloseUpPageState extends State<AccountCloseUpPage> {
                               child: RichText(
                                   text: TextSpan(style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.0), children: const <TextSpan>[
                                 TextSpan(
-                                    text: 'Thank you for your contribution. This Task completed. You have earned: ',
+                                    text: 'Thank you for your contribution. This Task is now completed.',
                                     style: TextStyle(
                                       height: 1,
                                     )),

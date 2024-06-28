@@ -13,6 +13,7 @@ import '../config/utils/my_tools.dart';
 import '../wallet/model_view/wallet_model.dart';
 import '../wallet/services/wallet_service.dart';
 import '../wallet/services/wc_service.dart';
+import '../wallet/widgets/main/main.dart';
 import '../widgets/wallet_action_dialog.dart';
 import 'model_view/task_model_view.dart';
 
@@ -50,7 +51,7 @@ class SetsOfFabButtons extends StatelessWidget {
       // ##################### ACTION BUTTONS PART ######################## //
       // ************************ NEW (EXCHANGE) ************************** //
       if (fromPage == 'tasks') {
-        return TaskDialogFAB(
+        return listenWalletAddress != null ? TaskDialogFAB(
           inactive: (task.contractOwner != listenWalletAddress || tasksServices.hardhatDebug == true) &&
               listenAllowedChainId &&
                   listenWalletAddress != null
@@ -62,7 +63,6 @@ class SetsOfFabButtons extends StatelessWidget {
           widthSize: buttonWidth + calcTextSize('Participate', const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
-            /// need to be finished
             String message = '[performer application] ${interface.taskMessage}';
             tasksServices.taskParticipate(task.taskAddress, task.nanoId, message: message);
             Navigator.pop(context);
@@ -77,6 +77,15 @@ class SetsOfFabButtons extends StatelessWidget {
                       nanoId: task.nanoId,
                       actionName: 'taskParticipate',
                     ));
+          },
+        ) : TaskDialogConnectWallet(
+          buttonName: 'Connect wallet',
+          widthSize: buttonWidth + calcTextSize('Connect wallet', const TextStyle(fontSize: 18)).width,
+          callback: () {
+            showDialog(
+              context: context,
+              builder: (context) => const WalletDialog(),
+            );
           },
         );
       } else if (task.taskState == "agreed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
@@ -170,7 +179,7 @@ class SetsOfFabButtons extends StatelessWidget {
           buttonName: 'Complete Task',
           buttonColorRequired: Colors.lightBlue.shade300,
           widthSize: buttonWidthLong + calcTextSize('Complete Task', const TextStyle(fontSize: 18)).width,
-          callback: () async {
+          callback: () {
             // interface.statusText = const TextSpan(text: 'Checking ...', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green));
             // // tasksServices.myNotifyListeners();
             task.loadingIndicator = true;
@@ -192,17 +201,20 @@ class SetsOfFabButtons extends StatelessWidget {
           },
         );
       } else if (task.taskState == "completed" && (fromPage == 'performer' || tasksServices.hardhatDebug == true)) {
+        String buttonText = 'Withdraw & Rate Task';
         return TaskDialogFAB(
-          inactive: taskModelView.state.rating == 0.0 ? true : false,
+          inactive: task.customerRating != 0 || taskModelView.state.rating == 0  ? true : false,
           expand: true,
-          buttonName: 'Withdraw & Rate Task',
+          buttonName: buttonText,
           buttonColorRequired: Colors.lightBlue.shade300,
-          widthSize: buttonWidthLong + calcTextSize('Withdraw & Rate Task', const TextStyle(fontSize: 18)).width,
+          widthSize: buttonWidthLong + calcTextSize(buttonText, const TextStyle(fontSize: 18)).width,
           callback: () {
             task.loadingIndicator = true;
             tasksServices.withdrawAndRate(task.taskAddress, task.nanoId, BigInt.from(taskModelView.state.rating));
             Navigator.pop(context);
             interface.emptyTaskMessage();
+            RouteInformation routeInfo = const RouteInformation(location: '/performer');
+            Beamer.of(context).updateRouteInformation(routeInfo);
             showDialog(
                 barrierDismissible: false,
                 context: context,
@@ -240,7 +252,7 @@ class SetsOfFabButtons extends StatelessWidget {
       // *********************** CUSTOMER BUTTONS *********************** //
       else if (task.taskState == 'review' && (fromPage == 'customer' || tasksServices.hardhatDebug == true)) {
         return TaskDialogFAB(
-          inactive: taskModelView.state.rating == 0.0 ? true : false,
+          inactive: task.performerRating != 0.0 || taskModelView.state.rating == 0 ?  true : false,
           expand: true,
           buttonName: 'Sign Review & Rate',
           buttonColorRequired: Colors.lightBlue.shade300,
@@ -249,7 +261,7 @@ class SetsOfFabButtons extends StatelessWidget {
             task.loadingIndicator = true;
             String message = '[review signed] ${interface.taskMessage}';
             tasksServices.taskStateChange(task.taskAddress, task.performer, 'completed', task.nanoId,
-                message: message);
+                message: message, score: BigInt.from(taskModelView.state.rating));
             // context.beamToNamed('/customer');
             Navigator.pop(context);
             interface.emptyTaskMessage();

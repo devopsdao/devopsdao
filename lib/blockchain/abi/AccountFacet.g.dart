@@ -4,7 +4,7 @@
 import 'package:webthree/webthree.dart' as _i1;
 
 final _contractAbi = _i1.ContractAbi.fromJson(
-  '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"ownerAddr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"AccountCreated","type":"event"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"nickname","type":"string"},{"internalType":"string","name":"about","type":"string"}],"name":"addAccountData","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"addAccountToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addCustomerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addPerformerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"contractAccountFacet","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccountsBlacklist","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accountAddresses","type":"address[]"}],"name":"getAccountsData","outputs":[{"components":[{"internalType":"address","name":"accountOwner","type":"address"},{"internalType":"string","name":"nickname","type":"string"},{"internalType":"string","name":"about","type":"string"},{"internalType":"address[]","name":"ownerTasks","type":"address[]"},{"internalType":"address[]","name":"participantTasks","type":"address[]"},{"internalType":"address[]","name":"auditParticipantTasks","type":"address[]"},{"internalType":"address[]","name":"agreedTasks","type":"address[]"},{"internalType":"address[]","name":"auditAgreedTasks","type":"address[]"},{"internalType":"address[]","name":"completedTasks","type":"address[]"},{"internalType":"address[]","name":"auditCompletedTasks","type":"address[]"},{"internalType":"uint256[]","name":"customerRatings","type":"uint256[]"},{"internalType":"uint256[]","name":"performerRatings","type":"uint256[]"}],"internalType":"struct Account[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAccountsList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getRawAccountsList","outputs":[{"internalType":"address[]","name":"","type":"address[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"removeAccountFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
+  '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"ownerAddr","type":"address"},{"indexed":false,"internalType":"string","name":"message","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"AccountCreated","type":"event"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"string","name":"identity","type":"string"},{"internalType":"string","name":"about","type":"string"}],"name":"addAccountData","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"addAccountToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_performer","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addAuditParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_performer","type":"address"},{"internalType":"address","name":"_customer","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerAuditedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addCustomerCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"customer","type":"address"},{"internalType":"string[]","name":"tokenNames","type":"string[]"},{"internalType":"uint256[]","name":"tokenBalances","type":"uint256[]"}],"name":"addCustomerEarnedTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addCustomerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"customer","type":"address"},{"internalType":"string[]","name":"tokenNames","type":"string[]"},{"internalType":"uint256[]","name":"tokenBalances","type":"uint256[]"}],"name":"addCustomerSpentTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addParticipantTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerAgreedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerAuditedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_sender","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"}],"name":"addPerformerCompletedTask","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"performer","type":"address"},{"internalType":"string[]","name":"tokenNames","type":"string[]"},{"internalType":"uint256[]","name":"tokenBalances","type":"uint256[]"}],"name":"addPerformerEarnedTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"address","name":"taskAddress","type":"address"},{"internalType":"uint256","name":"rating","type":"uint256"}],"name":"addPerformerRating","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"performer","type":"address"},{"internalType":"string[]","name":"tokenNames","type":"string[]"},{"internalType":"uint256[]","name":"tokenBalances","type":"uint256[]"}],"name":"addPerformerSpentTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"contractAccountFacet","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"accountAddress","type":"address"}],"name":"removeAccountFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"}]',
   'AccountFacet',
 );
 
@@ -27,7 +27,7 @@ class AccountFacet extends _i1.GeneratedContract {
   /// set by the contract.
   Future<String> addAccountData(
     _i1.EthereumAddress _sender,
-    String nickname,
+    String identity,
     String about, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
@@ -36,7 +36,7 @@ class AccountFacet extends _i1.GeneratedContract {
     assert(checkSignature(function, '56fd9644'));
     final params = [
       _sender,
-      nickname,
+      identity,
       about,
     ];
     return write(
@@ -70,7 +70,7 @@ class AccountFacet extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> addAgreedTask(
-    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _performer,
     _i1.EthereumAddress taskAddress, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
@@ -78,7 +78,7 @@ class AccountFacet extends _i1.GeneratedContract {
     final function = self.abi.functions[2];
     assert(checkSignature(function, 'a543bc4b'));
     final params = [
-      _sender,
+      _performer,
       taskAddress,
     ];
     return write(
@@ -162,16 +162,112 @@ class AccountFacet extends _i1.GeneratedContract {
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
   Future<String> addCompletedTask(
-    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress _performer,
+    _i1.EthereumAddress _customer,
     _i1.EthereumAddress taskAddress, {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
     final function = self.abi.functions[6];
-    assert(checkSignature(function, '6b732d87'));
+    assert(checkSignature(function, '21f753fa'));
+    final params = [
+      _performer,
+      _customer,
+      taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addCustomerAgreedTask(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress taskAddress, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[7];
+    assert(checkSignature(function, 'cd6a7e91'));
     final params = [
       _sender,
       taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addCustomerAuditedTask(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress taskAddress, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[8];
+    assert(checkSignature(function, '1819f275'));
+    final params = [
+      _sender,
+      taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addCustomerCompletedTask(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress taskAddress, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[9];
+    assert(checkSignature(function, 'c23e3be0'));
+    final params = [
+      _sender,
+      taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addCustomerEarnedTokens(
+    _i1.EthereumAddress customer,
+    List<String> tokenNames,
+    List<BigInt> tokenBalances, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[10];
+    assert(checkSignature(function, 'c30081f4'));
+    final params = [
+      customer,
+      tokenNames,
+      tokenBalances,
     ];
     return write(
       credentials,
@@ -191,12 +287,37 @@ class AccountFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[7];
+    final function = self.abi.functions[11];
     assert(checkSignature(function, '4bc27b63'));
     final params = [
       _account,
       taskAddress,
       rating,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addCustomerSpentTokens(
+    _i1.EthereumAddress customer,
+    List<String> tokenNames,
+    List<BigInt> tokenBalances, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[12];
+    assert(checkSignature(function, 'fee61bea'));
+    final params = [
+      customer,
+      tokenNames,
+      tokenBalances,
     ];
     return write(
       credentials,
@@ -215,11 +336,105 @@ class AccountFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[8];
+    final function = self.abi.functions[13];
     assert(checkSignature(function, '3c8b0dcb'));
     final params = [
       _sender,
       taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addPerformerAgreedTask(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress taskAddress, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[14];
+    assert(checkSignature(function, '2ba6fc52'));
+    final params = [
+      _sender,
+      taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addPerformerAuditedTask(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress taskAddress, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[15];
+    assert(checkSignature(function, 'c37d4f73'));
+    final params = [
+      _sender,
+      taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addPerformerCompletedTask(
+    _i1.EthereumAddress _sender,
+    _i1.EthereumAddress taskAddress, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[16];
+    assert(checkSignature(function, '30033f1b'));
+    final params = [
+      _sender,
+      taskAddress,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addPerformerEarnedTokens(
+    _i1.EthereumAddress performer,
+    List<String> tokenNames,
+    List<BigInt> tokenBalances, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[17];
+    assert(checkSignature(function, 'ac336a60'));
+    final params = [
+      performer,
+      tokenNames,
+      tokenBalances,
     ];
     return write(
       credentials,
@@ -239,12 +454,37 @@ class AccountFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[9];
+    final function = self.abi.functions[18];
     assert(checkSignature(function, 'f20b7b31'));
     final params = [
       _account,
       taskAddress,
       rating,
+    ];
+    return write(
+      credentials,
+      transaction,
+      function,
+      params,
+    );
+  }
+
+  /// The optional [transaction] parameter can be used to override parameters
+  /// like the gas price, nonce and max gas. The `data` and `to` fields will be
+  /// set by the contract.
+  Future<String> addPerformerSpentTokens(
+    _i1.EthereumAddress performer,
+    List<String> tokenNames,
+    List<BigInt> tokenBalances, {
+    required _i1.Credentials credentials,
+    _i1.Transaction? transaction,
+  }) async {
+    final function = self.abi.functions[19];
+    assert(checkSignature(function, 'df6062f8'));
+    final params = [
+      performer,
+      tokenNames,
+      tokenBalances,
     ];
     return write(
       credentials,
@@ -261,7 +501,7 @@ class AccountFacet extends _i1.GeneratedContract {
     _i1.BlockNum? atBlock,
     _i1.EthereumAddress? sender,
   }) async {
-    final function = self.abi.functions[10];
+    final function = self.abi.functions[20];
     assert(checkSignature(function, '4bf83d01'));
     final params = [];
     final response = await read(
@@ -273,83 +513,6 @@ class AccountFacet extends _i1.GeneratedContract {
     return (response[0] as bool);
   }
 
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<_i1.EthereumAddress>> getAccountsBlacklist({
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[11];
-    assert(checkSignature(function, '5587b594'));
-    final params = [];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<_i1.EthereumAddress>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<dynamic>> getAccountsData(
-    List<_i1.EthereumAddress> accountAddresses, {
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[12];
-    assert(checkSignature(function, '2a13a5e8'));
-    final params = [accountAddresses];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<dynamic>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<_i1.EthereumAddress>> getAccountsList({
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[13];
-    assert(checkSignature(function, 'f02e4b04'));
-    final params = [];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<_i1.EthereumAddress>();
-  }
-
-  /// The optional [atBlock] parameter can be used to view historical data. When
-  /// set, the function will be evaluated in the specified block. By default, the
-  /// latest on-chain block will be used.
-  Future<List<_i1.EthereumAddress>> getRawAccountsList({
-    _i1.BlockNum? atBlock,
-    _i1.EthereumAddress? sender,
-  }) async {
-    final function = self.abi.functions[14];
-    assert(checkSignature(function, 'c6a8ade3'));
-    final params = [];
-    final response = await read(
-      sender,
-      function,
-      params,
-      atBlock,
-    );
-    return (response[0] as List<dynamic>).cast<_i1.EthereumAddress>();
-  }
-
   /// The optional [transaction] parameter can be used to override parameters
   /// like the gas price, nonce and max gas. The `data` and `to` fields will be
   /// set by the contract.
@@ -358,7 +521,7 @@ class AccountFacet extends _i1.GeneratedContract {
     required _i1.Credentials credentials,
     _i1.Transaction? transaction,
   }) async {
-    final function = self.abi.functions[15];
+    final function = self.abi.functions[21];
     assert(checkSignature(function, '89a76332'));
     final params = [accountAddress];
     return write(

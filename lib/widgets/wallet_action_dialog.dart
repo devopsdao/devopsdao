@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:dodao/config/utils/util.dart';
@@ -11,6 +12,7 @@ import 'package:rive/rive.dart' as rive;
 import '../blockchain/interface.dart';
 import '../blockchain/task_services.dart';
 import '../config/utils/platform.dart';
+import '../create_job/expanded_selection.dart';
 import '../navigation/beamer_delegate.dart';
 import '../nft_manager/collection_services.dart';
 import '../wallet/model_view/wc_model.dart';
@@ -35,6 +37,30 @@ class _WalletActionDialog extends State<WalletActionDialog> {
 
   late String riveAssetPath;
 
+  late Timer? _timer = null;
+  late bool showWarning = false;
+  int _start = 10;
+
+  void startWarningTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          if (_timer != null) {
+            setState(() {
+              showWarning = true;
+              timer.cancel();
+              _timer = null;
+            });
+          }
+        } else {
+          _start--;
+        }
+      },
+    );
+  }
+
   @override
   void initState() {
     if (Random().nextInt(2) == 1) {
@@ -44,6 +70,16 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     }
     super.initState();
   }
+
+  @override
+  void dispose() {
+    if (_timer != null) {
+      _timer!.cancel();
+      _timer = null;
+    }
+    super.dispose();
+  }
+
   final PlatformAndBrowser platformAndBrowser = PlatformAndBrowser();
   @override
   Widget build(BuildContext context) {
@@ -53,6 +89,15 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     var collectionServices = context.read<CollectionServices>();
 
     final String status = tasksServices.transactionStatuses[widget.nanoId]?[widget.actionName]?['status'];
+
+    if (status == 'confirmed') {
+      startWarningTimer();
+    } else {
+      if (_timer != null) {
+        _timer!.cancel();
+        _timer = null;
+      }
+    }
 
     if (widget.actionName == 'createTaskContract' && tasksServices.isRequestApproved) {
       final String? tokenApproved = tasksServices.transactionStatuses[widget.nanoId]?[widget.actionName]?['tokenApproved'];
@@ -167,7 +212,6 @@ class _WalletActionDialog extends State<WalletActionDialog> {
         transactionStagesMinted = 'done';
         Future.delayed(const Duration(milliseconds: 400)).whenComplete(() {
           // if (mounted) {Navigator.pop(context);}
-
         });
       }
     } else if (widget.actionName == 'saveLastWitnetResult') {
@@ -234,6 +278,35 @@ class _WalletActionDialog extends State<WalletActionDialog> {
     }
     var width = MediaQuery.of(context).size.width;
 
+    Widget warningContainer = Container(
+      padding: const EdgeInsets.only(bottom: 25),
+      height: 160,
+      width: width < 360 ? width - 40 : 310,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: const Icon(
+              Icons.warning,
+              color: Colors.orangeAccent,
+              size: 40,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'If the transaction takes longer than usual, Check its status in Metamask. '
+              'If it stuck in pending mode, Set a higher(aggressive) Gas fee.\n'
+              'If transaction got a JSON-rpc error, Submit a new transaction with'
+              ' increased Gas. '
+              'If it still does not go through, Clear activity and nonce data in '
+              'Metamask settings -> Advanced',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
+
     return Dialog(
       // title: Text('Connect your wallet'),
       shape: RoundedRectangleBorder(
@@ -270,6 +343,11 @@ class _WalletActionDialog extends State<WalletActionDialog> {
               ),
               const SizedBox(
                 height: 15,
+              ),
+              ExpandedSection(
+                expand: showWarning,
+                callback: () {},
+                child: warningContainer,
               ),
               Row(
                 children: [
@@ -309,9 +387,10 @@ class _WalletActionDialog extends State<WalletActionDialog> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 16,
-                  ),
+                  if ((transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading') && !platformAndBrowser.metamaskAvailable)
+                    const SizedBox(
+                      width: 16,
+                    ),
                   if ((transactionStagesApprove == 'loading' || transactionStagesConfirmed == 'loading') && !platformAndBrowser.metamaskAvailable)
                     Expanded(
                       child: InkWell(
