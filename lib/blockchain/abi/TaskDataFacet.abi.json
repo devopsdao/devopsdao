@@ -144,6 +144,59 @@
     "inputs": [
       {
         "internalType": "string",
+        "name": "_taskAuditState",
+        "type": "string"
+      }
+    ],
+    "name": "getTaskContractsByAuditState",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_taskAuditState",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "offset",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "limit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fromTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTaskContractsByAuditStateLimit",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
         "name": "_taskState",
         "type": "string"
       }

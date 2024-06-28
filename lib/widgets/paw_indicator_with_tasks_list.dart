@@ -92,14 +92,11 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
 
     Function deepEq = const DeepCollectionEquality().equals;
 
-    if (_newList.isEmpty
-        || _filterResults.isNotEmpty
-            && _filterResults.first != _newList.first
-        || _controlListNumber != _filterResults.length) {
-    // if (_newList.isEmpty
-    //     || _filterResults.isNotEmpty
-    //         && !deepEq(_filterResults, _newList)
-    //     || _controlListNumber != _filterResults.length) {
+    if (_newList.isEmpty || _filterResults.isNotEmpty && _filterResults.first != _newList.first || _controlListNumber != _filterResults.length) {
+      // if (_newList.isEmpty
+      //     || _filterResults.isNotEmpty
+      //         && !deepEq(_filterResults, _newList)
+      //     || _controlListNumber != _filterResults.length) {
       _newList.clear();
       _currentIndex = 0;
       _hasReachedMax = false;
@@ -146,7 +143,8 @@ class PawRefreshAndTasksListState extends State<PawRefreshAndTasksList> {
               }
             } else if (widget.pageName == 'auditor') {
               if (listenWalletAddress != null) {
-                await tasksServices.fetchTasksByState('audit');
+                await tasksServices.fetchTasksByAuditState('requested');
+                await tasksServices.fetchTasksAuditor(listenWalletAddress);
               }
             }
             _hitBump();

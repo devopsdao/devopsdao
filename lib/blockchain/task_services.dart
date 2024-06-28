@@ -929,7 +929,7 @@ class TasksServices extends ChangeNotifier {
   // EthereumAddress lastJobContract;
   Future<void> monitorTaskEvents(EthereumAddress taskAddress) async {
     // listen for the Transfer event when it's emitted by the contract
-    // log.fine('listening task ${taskAddress} events');
+    log.fine('listening task ${taskAddress} events');
     TaskContract taskContract = TaskContract(address: taskAddress, client: web3client, chainId: WalletService.chainId);
     taskSubscriptions[taskAddress] = taskContract.taskUpdatedEvents().listen((event) async {
       log.fine('monitorTaskEvents received event for contract ${event.contractAdr} message: ${event.message} timestamp: ${event.timestamp}');
@@ -1572,10 +1572,10 @@ class TasksServices extends ChangeNotifier {
           }
           if (contrExist) {
             tasksAuditApplied[task.taskAddress] = task;
-          } else {
+          } else if (task.contractOwner != publicAddress) {
             tasksAuditPending[task.taskAddress] = task;
           }
-        } else {
+        } else if (task.contractOwner != publicAddress) {
           tasksAuditPending[task.taskAddress] = task;
         }
       }
@@ -1838,7 +1838,8 @@ class TasksServices extends ChangeNotifier {
     } else if (refresh == 'customer') {
       await fetchTasksCustomer(address);
     } else if (refresh == 'audit') {
-      await fetchTasksByState('audit');
+      await fetchTasksByAuditState('requested');
+      await fetchTasksAuditor(address);
     } else {
       await fetchTasksCustomer(address);
       await fetchTasksPerformer(address);
@@ -1948,6 +1949,57 @@ class TasksServices extends ChangeNotifier {
     return taskContractAddresses;
   }
 
+  Future<List<EthereumAddress>> getTaskContractsByAuditState(String state) async {
+    int tasksLoaded = 0;
+    late int taskCount;
+    try {
+      taskCount = (await taskDataFacet.getTaskContractsCount()).toInt();
+    } catch (e) {
+      log.severe(e);
+    }
+    log.info('Total $state task count: $taskCount');
+
+    const int batchSize = 50;
+    const int maxSimultaneousRequests = 8;
+
+    List<EthereumAddress> taskContractAddresses = [];
+    int offset = 0;
+
+    while (offset < taskCount) {
+      int limit = min(batchSize, taskCount - offset);
+      log.info('Fetching tasks from offset $offset with limit $limit');
+
+      List<Future<List<EthereumAddress>>> futures = [];
+      int remainingTasks = taskCount - offset;
+
+      for (int i = 0; i < maxSimultaneousRequests && remainingTasks > 0; i++) {
+        int currentLimit = min(limit, remainingTasks);
+        futures.add(taskDataFacet.getTaskContractsByAuditStateLimit(state, BigInt.from(offset), BigInt.from(currentLimit), BigInt.from(0)));
+        remainingTasks -= currentLimit;
+        offset += currentLimit;
+      }
+
+      List<List<EthereumAddress>> results = await Future.wait(futures);
+      int retrievedCount = results.fold<int>(0, (sum, result) => sum + result.length);
+      log.info('Retrieved $retrievedCount task contract addresses result.length ${results.length}, remainingTasks: $remainingTasks');
+
+      taskContractAddresses.addAll(results.expand((result) => result));
+      log.info('Total task contract addresses so far: ${taskContractAddresses.length}');
+      // await Future.delayed(const Duration(milliseconds: 201));
+      _loadingDelegate?.onTaskPreparationUpdated(offset, taskCount);
+    }
+
+    // log.info(taskContractAddresses);
+
+    log.info('Finished retrieving task contract addresses. Total count: ${taskContractAddresses.length}');
+
+    // Remove duplicates from the taskContractAddresses list
+    taskContractAddresses = taskContractAddresses.toSet().toList();
+    _loadingDelegate?.onTaskPreparationUpdated(offset, 0);
+    notifyListeners();
+    return taskContractAddresses;
+  }
+
   bool _isFetchTasksByStateRunning = false;
   Future<void> fetchTasksByState(String state) async {
     if (_isFetchTasksByStateRunning) {
@@ -1988,8 +2040,6 @@ class TasksServices extends ChangeNotifier {
       await refreshTask(task);
     }
 
-    log.info(statsTagsListCounts);
-
     await aggregateStats();
 
     if (state == "new") {
@@ -2010,6 +2060,57 @@ class TasksServices extends ChangeNotifier {
     isLoading = false;
     isLoadingBackground = false;
     _isFetchTasksByStateRunning = false;
+  }
+
+  bool _isFetchTasksByAuditStateRunning = false;
+  Future<void> fetchTasksByAuditState(String state) async {
+    if (_isFetchTasksByAuditStateRunning) {
+      return;
+    }
+    _isFetchTasksByAuditStateRunning = true;
+    isLoadingBackground = true;
+    List<EthereumAddress> taskList = [];
+    List<EthereumAddress> taskListMonitor = [];
+    try {
+      taskList = await getTaskContractsByAuditState(state);
+    } catch (e) {
+      log.severe(e);
+    }
+
+    filterResults.clear();
+
+    if (state == "requested") {
+      tasksAuditPending.clear();
+    } else if (state == "performing") {
+      tasksAuditApplied.clear();
+      tasksAuditWorkingOn.clear();
+    } else if (state == "finished") {
+      tasksAuditComplete.clear();
+    }
+
+    Map<EthereumAddress, Task> tasks = await getTasksBatch(taskList.reversed.toList());
+
+    for (Task task in tasks.values) {
+      await refreshTask(task);
+    }
+
+    await aggregateStats();
+
+    if (state == "requested") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == "performing") {
+      int limit = min(500, (taskList.length - monitorTasksCount).abs());
+      taskListMonitor = taskList.take(limit).toList();
+    } else if (state == "finished") {
+      taskListMonitor = [];
+    }
+
+    await monitorTasks(taskListMonitor);
+
+    isLoading = false;
+    isLoadingBackground = false;
+    _isFetchTasksByAuditStateRunning = false;
   }
 
   bool _isFetchTasksCustomerRunning = false;
@@ -2085,8 +2186,8 @@ class TasksServices extends ChangeNotifier {
 
     filterResults.clear();
 
+    // tasksAuditPending.clear();
     tasksAuditApplied.clear();
-    tasksAuditPending.clear();
     tasksAuditWorkingOn.clear();
     tasksAuditComplete.clear();
 
@@ -2095,8 +2196,6 @@ class TasksServices extends ChangeNotifier {
     for (Task task in tasks.values) {
       await refreshTask(task);
     }
-
-    // await aggregateStats();
 
     await monitorTasks(taskList);
 
